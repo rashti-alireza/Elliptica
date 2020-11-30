@@ -11,7 +11,6 @@
 #define By      KS_glob_var(By) /* B=v/c (boost) */
 #define Bz      KS_glob_var(Bz) /* B=v/c (boost) */
 #define B2      KS_glob_var(B2) /* B^i B_i */
-#define r0      KS_glob_var(r0) /* roll off radius */
 #define Lambda  KS_glob_var(Lambda) /* flat data => 0, kerr-schild => 1 */
 
 /* mathematica */
@@ -84,7 +83,6 @@ extern double M_BH,a_BH;/* mass and spin of BH */
 extern double phiy,phiz;/* rotation angels */
 extern double Bx,By,Bz;/* B=v/c (boost) */
 extern double B2;/* B^i B_i */
-extern double r0;/* roll off radius */
 extern double Lambda;/* flat data => 0, kerr-schild => 1 */
 
 void frda_kerr_schild_g_analytic(
