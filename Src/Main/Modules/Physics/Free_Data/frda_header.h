@@ -29,6 +29,35 @@ void frda_add_fields_ChrisConf_dChrisConf(Grid_T *const grid);
 void frda_add_fields_trK_dtrK(Grid_T *const grid);
 void frda_add_fields_RicciConf(Grid_T *const grid);
 void frda_ks_free_data_set_params(Physics_T *const phys);
+void frda_populate_gConf_dgConf_igConf_KerrSchild(Physics_T *const phys);
+
+void frda_kerr_schild_g_analytic(
+        Patch_T *const patch,
+        const double BH_center_x,
+        const double BH_center_y,
+        const double BH_center_z,
+        const char *const stem);
+        
+void frda_kerr_schild_dg_analytic(
+        Patch_T *const patch,
+        const double BH_center_x,
+        const double BH_center_y,
+        const double BH_center_z,
+        const char *const stem);
+	
+void frda_kerr_schild_ddg_analytic(
+        Patch_T *const patch,
+        const double BH_center_x,
+        const double BH_center_y,
+        const double BH_center_z,
+        const char *const stem);
+
+void frda_kerr_schild_dddg_analytic(
+        Patch_T *const patch,
+        const double BH_center_x,
+        const double BH_center_y,
+        const double BH_center_z,
+        const char *const stem);
 
 
 #endif
