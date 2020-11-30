@@ -3,7 +3,7 @@
 // November 2020
 */
 
-/* frd general affairs. one can add new different function readily
+/* free data general affairs. one can add new different function readily
 // by adding new parameter and the name of the function as shown. */
 
 #include "frda_main.h"
@@ -96,7 +96,8 @@ static int populate_free_data(Physics_T *const phys)
       Pcmps(P_"conformal_Ricci"             ,"KerrSchild") 
      )
   {
-    UNUSED(phys);
+    frda_populate_gConf_dgConf_igConf_KerrSchild(phys);
+    
   }
   else
     Error0(NO_OPTION);
