@@ -33,5 +33,8 @@ void free_info(Field_T *f);
 void free_field(Field_T *fld);
 void empty_field(Field_T *fld);
 int free_coeffs(Field_T *fld);
+void remove_field_with_regex(Patch_T *const patch,const char *const regex);
+
+
 
 

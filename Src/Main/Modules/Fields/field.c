@@ -851,6 +851,27 @@ void free_info(Field_T *f)
   f->info = 0;
 }
 
+
+/* removing all fields in the given patch whose name matches with 
+// the given regex pattern */
+void remove_field_with_regex(Patch_T *const patch,const char *const regex)
+{
+  if (!patch)
+    return;
+    
+  unsigned f = 0;
+  
+  while (patch->nfld && f < patch->nfld)
+  {
+    if (regex_search(regex,patch->fields[f]->name))
+    {
+      remove_field(patch->fields[f]);
+    }
+    f++;
+  }
+  
+}
+
 /* freeing field */
 void free_field(Field_T *fld)
 {
