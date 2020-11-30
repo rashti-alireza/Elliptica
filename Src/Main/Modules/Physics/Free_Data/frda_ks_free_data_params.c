@@ -4,7 +4,9 @@
 */
 
 /* setting parameters e.g. global variables for 
-// analytic Kerr-Schild free data  NOTE: NOT thread safe. */
+// analytic Kerr-Schild free data.
+// NOTE: before each call and for each BH one must updata the paramters.
+// NOTE: NOT thread safe. */
 
 #include "frda_header.h"
 
