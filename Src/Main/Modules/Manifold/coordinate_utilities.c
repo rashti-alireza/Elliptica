@@ -717,12 +717,14 @@ void theta_phi_of_XY_CS(double *const theta,double *const phi,const double *cons
   }
 }
 
-/* ->: collected patches which cover the region and number of patches Np.
+/* ->: collected patches which cover the region in 
+// patch->CoordSysInfo->region and number of patches Np.
 // one can collect an assortment of patches separated with comma, eg:
 //
 // Patch_T **patches = collect_patches(grid,"NS1_around,NS1",&np); 
 // which cover NS1 and NS1_around regardless of direction. 
-// note: it's blind with respect to repetition in the specified region. */
+// note: it's blind with respect to repetition in the specified region.
+// NOTE: if region = ".*" it collects all of the grid patches. */
 Patch_T **
 collect_patches
   (
@@ -732,6 +734,7 @@ collect_patches
   )
 {
   Patch_T **patches = 0;
+  const int IsMatchAll = !strcmp(region,".*");
   unsigned np,p;
   
   /* init */
@@ -741,7 +744,7 @@ collect_patches
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    if (IsItCovering(patch,region))
+    if (IsMatchAll || IsItCovering(patch,region))
     {
       patches = realloc(patches,(np+2)*sizeof(*patches));
       IsNull(patches);
