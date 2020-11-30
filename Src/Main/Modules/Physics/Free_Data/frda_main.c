@@ -90,6 +90,8 @@ static int add_free_data_fields(Physics_T *const phys)
 /* populate free data */
 static int populate_free_data(Physics_T *const phys)
 {
+  FUNC_TIC
+  
   if (Pcmps(P_"conformal_metric"            ,"KerrSchild") &&
       Pcmps(P_"conformal_Christoffel_symbol","KerrSchild") &&
       Pcmps(P_"trK"                         ,"KerrSchild") &&
@@ -102,5 +104,6 @@ static int populate_free_data(Physics_T *const phys)
   else
     Error0(NO_OPTION);
   
+  FUNC_TOC
   return EXIT_SUCCESS;
 }
