@@ -56,6 +56,8 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
     
     case FREE_DATA_ADD_PARAMS:
     case FREE_DATA_ADD_FIELDS:
+    case FREE_DATA_POPULATE:
+    
       ret = frda_main(phys);
     break;
     
@@ -324,10 +326,14 @@ void phys_set_region(Physics_T *const phys)
 const char *phys_autoindex_stype(Physics_T *const phys,
                                const char *const stype)
 {
+  /* if matches all */
+  if (!strcmp(stype,".*"))
+    return ".*";
+    
   /* some checks: */
   /* if there is no NS or BH */
   if (!strstr(stype,"NS") && !strstr(stype,"BH"))
-      Error1("Argument (%s) is not supported!",stype);
+      Error1("Argument '%s' is not supported!",stype);
   /* if two different object asked, right now this is not supported! */
   if (strstr(stype,"NS") && strstr(stype,"BH"))
       Error1("Two different objects (%s) are not supported!",stype);
