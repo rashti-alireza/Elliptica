@@ -9,14 +9,14 @@
 #########################
 # Issue the following (TAKES A VERY VERY LONG TIME):
 # 
-# $ cpi frda_ks_free_data_g_dg_ddg_dddg.math > \
-#   frda_ks_free_data_g_dg_ddg_dddg.c && \
-#   sed -i '/Welcome to Cpi/,$d' frda_ks_free_data_g_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bk0\b\(/frda_ks_k0\(/g' frda_ks_free_data_g_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bk1\b\(/frda_ks_k1\(/g' frda_ks_free_data_g_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bk2\b\(/frda_ks_k2\(/g' frda_ks_free_data_g_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bc\b\(/frda_ks_c\(/g'   frda_ks_free_data_g_dg_ddg_dddg.c && \
-#   sed -i -E -f frda_ks_free_data_substitute_derives.sed frda_ks_free_data_g_dg_ddg_dddg.c
+# $ cpi frda_KerrSchild_g_dg_ddg_dddg.math > \
+#   frda_KerrSchild_g_dg_ddg_dddg.c && \
+#   sed -i '/Welcome to Cpi/,$d' frda_KerrSchild_g_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bk0\b\(/frda_ks_k0\(/g' frda_KerrSchild_g_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bk1\b\(/frda_ks_k1\(/g' frda_KerrSchild_g_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bk2\b\(/frda_ks_k2\(/g' frda_KerrSchild_g_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bc\b\(/frda_ks_c\(/g'   frda_KerrSchild_g_dg_ddg_dddg.c && \
+#   sed -i -E -f frda_KerrSchild_substitute_derives.sed frda_KerrSchild_g_dg_ddg_dddg.c
 
 Dimension = 3;
 point     = x;
@@ -217,7 +217,7 @@ Command["sed -i 's/_,/,/g'"];
 ``
 ``
 `print('#include "frda_header.h"')`
-`print('#include "frda_ks_free_data_header.h"')`
+`print('#include "frda_KerrSchild_header.h"')`
 ``
 
 `print('#undef x')`

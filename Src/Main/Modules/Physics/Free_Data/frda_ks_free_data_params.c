@@ -11,7 +11,7 @@
 #include "frda_header.h"
 
 /* for external variables. NOTE: MUST be the same as 
-// the one in 'frda_ks_free_data_header.h' DON'T CHANGE. */
+// the one in 'frda_KerrSchild_header.h' DON'T CHANGE. */
 #define KS_glob_var(x) frda_ks_glob##x
 
 #define M_BH    KS_glob_var(M_BH) /* BH mass */
@@ -34,8 +34,8 @@ double r0;/* roll off radius */
 double Lambda;/* flat data => 0, kerr-schild => 1 */
 
 
-void frda_ks_free_data_set_params(Physics_T *const phys);
-void frda_ks_free_data_set_params(Physics_T *const phys)
+void frda_KerrSchild_set_params(Physics_T *const phys);
+void frda_KerrSchild_set_params(Physics_T *const phys)
 {
   const double BH_center_x = Getd("center_x");
   const double BH_center_y = Getd("center_y");

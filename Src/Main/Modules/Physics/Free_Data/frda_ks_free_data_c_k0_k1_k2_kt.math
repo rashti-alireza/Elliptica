@@ -15,10 +15,10 @@
 #########################
 # Issue the following:
 # 
-# $ cpi frda_ks_free_data_c_k0_k1_k2_kt.math > \
-#   frda_ks_free_data_c_k0_k1_k2_kt.c && \
-#   sed -i '/Welcome to Cpi/,$d' frda_ks_free_data_c_k0_k1_k2_kt.c && \
-#   sed -i -E -f frda_ks_free_data_substitute_derives.sed frda_ks_free_data_c_k0_k1_k2_kt.c
+# $ cpi frda_KerrSchild_c_k0_k1_k2_kt.math > \
+#   frda_KerrSchild_c_k0_k1_k2_kt.c && \
+#   sed -i '/Welcome to Cpi/,$d' frda_KerrSchild_c_k0_k1_k2_kt.c && \
+#   sed -i -E -f frda_KerrSchild_substitute_derives.sed frda_KerrSchild_c_k0_k1_k2_kt.c
 
 
 Dimension = 3;
@@ -212,7 +212,7 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `kt,k0,k1,k2 = get_ks(Bx,By,Bz,B2,phiy,phiz)`
 `c           = 2*frda_ks_H(x,y,z)`
 ``
-`print('#include "frda_ks_free_data_header.h"')`
+`print('#include "frda_KerrSchild_header.h"')`
 ``
 Declare =
 {

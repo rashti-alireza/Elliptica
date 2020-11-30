@@ -6,9 +6,9 @@
 #########################
 # Issue the following:
 # 
-# $ cpi frda_ks_free_data_RollOff.math > \
-#   frda_ks_free_data_RollOff.c && \
-#   sed -i '/Welcome to Cpi/,$d' frda_ks_free_data_RollOff.c
+# $ cpi frda_KerrSchild_RollOff.math > \
+#   frda_KerrSchild_RollOff.c && \
+#   sed -i '/Welcome to Cpi/,$d' frda_KerrSchild_RollOff.c
 
 Dimension = 3;
 point     = x;
@@ -136,7 +136,7 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `r=(x**2+y**2+z**2)**(0.5)`
 `rolloff = exp(-(r/r0)**4)`
 ``
-`print('#include "frda_ks_free_data_header.h"')`
+`print('#include "frda_KerrSchild_header.h"')`
 ``
 Declare =
 {

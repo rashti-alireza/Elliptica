@@ -28,7 +28,7 @@ void frda_add_fields_gConf_dgConf_igConf(Grid_T *const grid);
 void frda_add_fields_ChrisConf_dChrisConf(Grid_T *const grid);
 void frda_add_fields_trK_dtrK(Grid_T *const grid);
 void frda_add_fields_RicciConf(Grid_T *const grid);
-void frda_ks_free_data_set_params(Physics_T *const phys);
+void frda_KerrSchild_set_params(Physics_T *const phys);
 void frda_populate_gConf_dgConf_igConf_KerrSchild(Physics_T *const phys);
 
 void frda_kerr_schild_g_analytic(

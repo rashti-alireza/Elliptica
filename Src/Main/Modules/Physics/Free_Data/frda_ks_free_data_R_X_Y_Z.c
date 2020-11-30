@@ -1,7 +1,7 @@
 /* msimplify(X) */
 /* msimplify(Y) */
 /* msimplify(Z) */
-#include "frda_ks_free_data_header.h"
+#include "frda_KerrSchild_header.h"
 KS_func_def_macro(X) KS_func_args_macro;
 KS_func_def_macro(dX_D2) KS_func_args_macro;
 KS_func_def_macro(dX_D1) KS_func_args_macro;
