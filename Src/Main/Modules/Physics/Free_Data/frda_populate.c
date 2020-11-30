@@ -26,6 +26,24 @@ void frda_compatible_Christoffel_symbol(Physics_T *const phys,const char *const 
   FUNC_TOC
 }
 
+/* compute 1st derivative Christoffel symbol */
+void frda_1st_derivative_Christoffel_symbol(Physics_T *const phys,const char *const dChris)
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,".*");
+  unsigned p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    dChristoffel_symbol_3d(patch,dChris);
+  }
+  
+  FUNC_TOC
+}
+
 /* populate confromal metric, inverse of confromal metric 
 // and first order derivative of confromal metric. */
 void frda_populate_gConf_dgConf_igConf_KerrSchild(Physics_T *const phys)

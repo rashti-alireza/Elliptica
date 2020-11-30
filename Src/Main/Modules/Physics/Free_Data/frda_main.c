@@ -100,6 +100,8 @@ static int populate_free_data(Physics_T *const phys)
   {
     frda_populate_gConf_dgConf_igConf_KerrSchild(phys);
     frda_compatible_Christoffel_symbol(phys,"igConf","dgConf","ChrisConf");
+    frda_1st_derivative_Christoffel_symbol(phys,"dChrisConf");
+    
   }
   else
     Error0(NO_OPTION);

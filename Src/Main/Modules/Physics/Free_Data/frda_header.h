@@ -61,6 +61,7 @@ void frda_kerr_schild_dddg_analytic(
         const char *const stem);
 
 void frda_compatible_Christoffel_symbol(Physics_T *const phys,const char *const ig,const char *const dg, const char *const Chris);
+void frda_1st_derivative_Christoffel_symbol(Physics_T *const phys,const char *const dChris);
 
 #endif
 
