@@ -33,6 +33,7 @@ MODULE += $(MODULE_DIR)/Maths/Spectral_Methods
 MODULE += $(MODULE_DIR)/Maths/Special_Functions
 MODULE += $(MODULE_DIR)/Maths/Calculus
 MODULE += $(MODULE_DIR)/Maths/Complex
+MODULE += $(MODULE_DIR)/Maths/Diff_Geom
 MODULE += $(MODULE_DIR)/Physics/StressEnergy_Tensor
 MODULE += $(MODULE_DIR)/Physics
 MODULE += $(MODULE_DIR)/Physics/EoS

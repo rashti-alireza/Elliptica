@@ -1,0 +1,61 @@
+# calculate Christoffel symbol compatible with given g and ig.
+
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = read_ig(name);
+C_macro2 = read_dg(name);
+C_macro3 = write_Chris(name);
+
+`#include "dg_header.h"`
+``
+`#define STR_LEN (99)`
+``
+`#define read_ig(x) indx = strrchr(#x,'_'); sprintf(fname,"%s%s",ig,indx); \`
+`    const double *const x = patch->fields[Ind(fname)]->v;`
+``
+`#define read_dg(x) indx = strrchr(#x,'_'); sprintf(fname,"%s%s",dg,indx); \`
+`    const double *const x = patch->fields[Ind(fname)]->v;`
+``
+`#define write_Chris(x) indx = strrchr(#x,'_'); sprintf(fname,"%s%s",Chris,indx); \`
+`    free_coeffs(patch->fields[Ind(fname)]); \`
+`    double *const x = patch->fields[Ind(fname)]->v; assert(x);`
+``
+``
+
+`void Christoffel_symbol_3d(Patch_T *const patch,const char *const ig,const char *const dg,const char *const Chris);`
+`void Christoffel_symbol_3d(Patch_T *const patch,const char *const ig,const char *const dg,const char *const Chris)`
+`{`
+
+`char fname[STR_LEN] = {'\0'};`
+`const char *indx = 0;`
+
+Declare = 
+{
+ # conformal metric inverse
+ (obj = Field,name = ig, rank = UU, C_macro);
+ # partial derivative of conformal metric
+ (obj = Field,name = dg, rank = DDD, C_macro2);
+ # Christoffer symbol value
+ (obj = Field,name = Chris, rank = UDD, C_macro3);
+}
+
+# symmetries:
+Symm[ig(i,j)       = ig(j,i)];
+Symm[dg(i,j,k)     = dg(j,i,k)];
+Symm[Chris(i,j,k)  = Chris(i,k,j)];
+
+`FOR_ALL_ijk`
+`{`
+
+# Chris calculation
+GAMMA(i,-k,-l) = 1/2*ig(i,-m)*(dg(m,k,l)+dg(m,l,k)-dg(k,l,m));
+Symm[GAMMA(i,j,k) = GAMMA(i,k,j)];
+Cpopulate[Chris = GAMMA];
+`}`
+`}`
+
