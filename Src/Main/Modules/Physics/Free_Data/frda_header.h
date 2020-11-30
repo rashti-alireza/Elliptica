@@ -30,8 +30,15 @@ void frda_add_fields_ChrisConf_dChrisConf(Grid_T *const grid);
 void frda_add_fields_trK_dtrK(Grid_T *const grid);
 void frda_add_fields_RicciConf(Grid_T *const grid);
 void frda_KerrSchild_set_params(Physics_T *const phys);
-void frda_populate_gConf_dgConf_igConf_KerrSchild(Physics_T *const phys);
-
+void 
+frda_populate_gConf_dgConf_igConf_KerrSchild
+ (
+ Physics_T *const phys,
+ const char *const region/* where computations take place */,
+ const char *const gConf/* metric stem */,
+ const char *const igConf/* inverse of metric stem */,
+ const char *const dgConf/* derivative of metric stem */
+ );
 void frda_kerr_schild_g_analytic(
         Patch_T *const patch,
         const double BH_center_x,

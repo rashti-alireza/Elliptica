@@ -92,17 +92,24 @@ static int populate_free_data(Physics_T *const phys)
 {
   FUNC_TIC
   
-  if (Pcmps(P_"conformal_metric"            ,"KerrSchild") &&
+  if (phys->sys                             == SBH         && 
+      Pcmps(P_"conformal_metric"            ,"KerrSchild") &&
       Pcmps(P_"conformal_Christoffel_symbol","KerrSchild") &&
       Pcmps(P_"conformal_Ricci"             ,"KerrSchild") &&
       Pcmps(P_"trK"                         ,"KerrSchild")
      )
   {
-    frda_populate_gConf_dgConf_igConf_KerrSchild(phys);
+    frda_populate_gConf_dgConf_igConf_KerrSchild(phys,".*","gConf",
+                                                "igConf","dgConf");
+    
     frda_compatible_Christoffel_symbol(phys,"igConf","dgConf","ChrisConf");
+    
     frda_1st_derivative_Christoffel_symbol(phys,"dChrisConf");
+    
     frda_conformal_Ricci(phys,"igConf","ChrisConf","dChrisConf",
                               "RicciConf","trRicciConf");
+    
+    
   }
   else
     Error0(NO_OPTION);
