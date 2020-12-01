@@ -67,10 +67,10 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
     
     case ADM_ADD_PARAMS:
     case ADM_ADD_FIELDS:
-    case ADM_UPDATE_beta:
     case ADM_UPDATE_Kij:
     case ADM_UPDATE_KIJ:
     case ADM_UPDATE_gij:
+    case ADM_UPDATE_B1I:
     case ADM_UPDATE_AConfIJ:
     case ADM_COMPUTE_CONSTRAINTS:
       ret = adm_main(phys);

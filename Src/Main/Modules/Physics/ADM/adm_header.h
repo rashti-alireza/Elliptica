@@ -13,13 +13,27 @@
 /* parameter prefix */
 #define P_ "adm_"
 
+/* general struct for argument pass */
+struct General_Arg_S
+{
+  /* for B1I */
+  double omega;
+  double CM[3];
+  double Vr;
+  double D;
+};
+
 /* function typedefs */
 typedef void fFunc_adm_update_AConfIJ_T(Patch_T *const patch);
 typedef void fFunc_adm_update_adm_Kij_T(Patch_T *const patch);
 typedef void fFunc_adm_update_adm_KIJ_T(Patch_T *const patch);
+typedef void fFunc_adm_update_B1I_T(Patch_T *const patch,void *params);
 
 
 int adm_main(Physics_T *const phys);
+void adm_update_adm_B1I(Physics_T *const phys,const char *const region);
+void adm_update_B1I_inspiral(Patch_T *const patch,void *params);
+void adm_update_B1I_zero(Patch_T *const patch,void *params);
 void adm_add_3plus1_fields(Grid_T *const grid);
 void adm_update_adm_Kij_useAIJ(Patch_T *const patch);
 void adm_update_adm_KIJ_useAIJ(Patch_T *const patch);

@@ -43,7 +43,10 @@ int adm_main(Physics_T *const phys)
       ret = compute_adm_gij(phys);
     break;
     
-     
+    case ADM_UPDATE_B1I:
+      ret = compute_B1I(phys);
+    break;
+    
     default:
       Error0(NO_OPTION);
   }
@@ -83,6 +86,23 @@ static int add_adm_params(Physics_T *const phys)
   // use_AIJ: => use formula K^{ij} = A^{ij} +1/3 trK g^{ij}.
   // use_Kij: => use formula K^{ij} = g^{il} g^{jk} *K_{lk}*/
   Pset_default(P_"compute_adm_Kuu_method","use_AIJ");
+  
+  /* computing B1^i for beta^i = B0^i + B1^i:
+  // options:
+  // zero:     => B1^i = 0
+  // inspiral: => B1^i = omega*(r-r_CM) + v/D*(r-r_CM) */
+  Pset_default(P_"B1I_form","inspiral");
+  
+  if(Pcmps(P_"B1I_form","inspiral"))
+  {
+    adm_update_B1I_patch = adm_update_B1I_inspiral;
+  }
+  else if (Pcmps(P_"B1I_form","zero"))
+  {
+    adm_update_B1I_patch = adm_update_B1I_zero;
+  }
+  else
+    Error0(NO_OPTION);
   
   
   if(Pcmps(P_"compute_AConfIJ","XCTS_MConfIJ0"))
@@ -182,6 +202,17 @@ static int compute_adm_gij(Physics_T *const phys)
   FUNC_TIC
   
   adm_update_adm_gij(phys,".*");
+  
+  FUNC_TOC
+  return EXIT_SUCCESS; 
+}
+
+/* compute B1 in beta = B0+B1 */
+static int compute_B1I(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  adm_update_adm_B1I(phys,".*");
   
   FUNC_TOC
   return EXIT_SUCCESS; 
