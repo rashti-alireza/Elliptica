@@ -37,7 +37,7 @@ void adm_ham_and_mom_from_scratch(Patch_T *const patch,
 {
 
   adm_update_adm_KIJ_patch(patch);
-  adm_update_adm_g(patch);
+  adm_update_adm_g_patch(patch);
 
 {
     READ_v(adm_g_D2D2)

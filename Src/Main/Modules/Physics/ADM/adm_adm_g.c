@@ -5,9 +5,9 @@
 
 
 #include "adm_header.h"
-void adm_update_adm_g(Patch_T *const patch);
+void adm_update_adm_g_patch(Patch_T *const patch);
 
-void adm_update_adm_g(Patch_T *const patch)
+void adm_update_adm_g_patch(Patch_T *const patch)
 {
 
   /* declaring: */

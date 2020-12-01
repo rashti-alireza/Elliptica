@@ -52,7 +52,7 @@ C_macro6 = add_field_get_v(name);
 
 ``
 `  adm_update_adm_KIJ_patch(patch);`
-`  adm_update_adm_g(patch);`
+`  adm_update_adm_g_patch(patch);`
 ``
 
 # compute inverse of g (locally)
