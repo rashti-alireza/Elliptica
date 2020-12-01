@@ -1167,10 +1167,10 @@ Patch_T *X_in_which_patch(const double X[3],Patch_T **const patches,
 
 /* ->: collected patches which have the given regex match in patch->name.
 // ex:
-// Patch_T **patches = regex_collect_patches(grid,".+(left|right)_NS.?_around.+",&np); 
+// Patch_T **patches = collect_patches_with_regex(grid,".+(left|right)_NS.?_around.+",&np); 
 // which in a NSNS system covers NS1_around and NS2_around regardless of direction. */
 Patch_T **
-regex_collect_patches
+collect_patches_with_regex
   (
   Grid_T *const grid,/* the grid */
   const char *const regex,/* regex */

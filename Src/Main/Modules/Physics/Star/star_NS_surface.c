@@ -901,7 +901,7 @@ double star_NS_mass_shedding_indicator(Physics_T *const phys)
     
     /* approx. equator value  (X,Y,Z)=(0,0,1) */
     sprintf(regex,".*%s_%s_%s.*",phys->spos,phys->stype,side);
-    patches = regex_collect_patches(phys->grid,regex,&Np);
+    patches = collect_patches_with_regex(phys->grid,regex,&Np);
     X[0] = 0;
     X[1] = 0;
     X[2] = 1;
@@ -944,7 +944,7 @@ double star_NS_mass_shedding_indicator(Physics_T *const phys)
     
     /* approx. north pole value (X,Y,Z)=(0,0,1) */
     sprintf(regex,".*%s_%s_up.*",phys->spos,phys->stype);
-    patches = regex_collect_patches(phys->grid,regex,&Np);
+    patches = collect_patches_with_regex(phys->grid,regex,&Np);
     X[0] = 0;
     X[1] = 0;
     X[2] = 1;

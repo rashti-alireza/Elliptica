@@ -123,7 +123,7 @@ void find_theta_phi_of_XYZ_CS(double *const theta,double *const phi,
                               
                               
 Patch_T **
-regex_collect_patches
+collect_patches_with_regex
   (
   Grid_T *const grid,/* the grid */
   const char *const regex,/* regex */
