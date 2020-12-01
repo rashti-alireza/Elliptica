@@ -4,7 +4,7 @@ Dimension = 3;
 # point on manifold shown by:
 Point = ijk;
 
-C_macro  = ADD_FIELD(name);
+C_macro  =  ADD_FIELD(name);
 C_macro2 = ADD_AND_ALLOC_FIELD(name);
 
 `#include "adm_header.h"`
@@ -48,10 +48,10 @@ Declare =
  (obj = Field,name = ham2, rank = 0, C_macro);
 
  # momentum constraints with method 1
- (obj = Field,name = mom1, rank = D, C_macro);
+ (obj = Field,name = mom1, rank = U, C_macro);
 
  # momentum constraints with method 2
- (obj = Field,name = mom2, rank = D, C_macro);
+ (obj = Field,name = mom2, rank = U, C_macro);
 
  # beta: shift = B0+B1
  (obj = Field,name = beta, rank = U, C_macro);
@@ -99,7 +99,7 @@ Declare =
  (obj = Field,name = psi, rank = 0, C_macro);
 
  # dpsi
- (obj = Field,name = psi, rank = D, C_macro);
+ (obj = Field,name = dpsi, rank = D, C_macro);
 
  # ddpsi
  (obj = Field,name = ddpsi, rank = DD, C_macro);
