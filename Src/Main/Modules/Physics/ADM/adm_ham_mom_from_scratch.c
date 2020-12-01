@@ -5,14 +5,14 @@
 
 
 #include "adm_header.h"
-
+#include "maths_linear_algebra_lib.h"
 
 
 
 #define add_field_get_v(name) ADD_AND_ALLOC_FIELD(name); WRITE_v(name);
 
 
-#define add_dfield_and_get_v(name) ADD_FIELD(name); dField_di(name); READ_v(name);
+#define add_dfield_and_get_v(name) ADD_FIELD(name); dField_di(name); READ_v_UNUSED(name);
 
 #define add_compute_get_Chris(name)  \
   Christoffel_symbol_3d(patch,"adm_ig","dadm_g","Gamma");\
@@ -25,8 +25,8 @@ void adm_ham_and_mom_from_scratch(Patch_T *const patch,
         const char *const Ham,const char *const Mom)
 {
 
-  adm_adm_KIJ(patch);
-  adm_adm_g(patch);
+  adm_update_adm_KIJ(patch);
+  adm_update_adm_g(patch);
 
 {
     READ_v(adm_g_D2D2)
