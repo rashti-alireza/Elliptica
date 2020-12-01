@@ -317,9 +317,9 @@ void star_W_spin_vector_idealfluid_update(Physics_T *const phys)
   Omega_NS[0] = Getd("Omega_U0");
   Omega_NS[1] = Getd("Omega_U1");
   Omega_NS[2] = Getd("Omega_U2");
-  C_NS[0]     = Getd("Center_x");
-  C_NS[1]     = Getd("Center_y");
-  C_NS[2]     = Getd("Center_z");
+  C_NS[0]     = Getd("center_x");
+  C_NS[1]     = Getd("center_y");
+  C_NS[2]     = Getd("center_z");
   
   FOR_ALL_PATCHES(p,grid)
   {
