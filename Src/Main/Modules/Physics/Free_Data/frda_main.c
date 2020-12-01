@@ -81,6 +81,7 @@ static int add_free_data_fields(Physics_T *const phys)
   frda_add_fields_ChrisConf_dChrisConf(phys->grid);
   frda_add_fields_trK_dtrK(phys->grid);
   frda_add_fields_RicciConf(phys->grid);
+  frda_add_fields_MConfIJ(phys->grid);
   
   FUNC_TOC
   return EXIT_SUCCESS; 

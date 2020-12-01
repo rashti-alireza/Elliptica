@@ -92,6 +92,7 @@ void frda_extrinsic_curvature_KerrSchild(Physics_T *const phys,
                                          const char *const trK,
                                          const char *const dtrK);
 
+void frda_add_fields_MConfIJ(Grid_T *const grid);
  
 #endif
 
