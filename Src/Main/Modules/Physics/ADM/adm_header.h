@@ -14,7 +14,8 @@
 #define P_ "adm_"
 
 int adm_main(Physics_T *const phys);
+void adm_add_3plus1_fields(Grid_T *const grid);
 
- 
+
 #endif
 

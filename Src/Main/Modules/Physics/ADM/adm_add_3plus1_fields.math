@@ -1,0 +1,119 @@
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = ADD_FIELD(name);
+C_macro2 = ADD_AND_ALLOC_FIELD(name);
+
+`#include "adm_header.h"`
+``
+``
+
+`void adm_add_3plus1_fields(Grid_T *const grid);`
+`void adm_add_3plus1_fields(Grid_T *const grid)`
+`{`
+
+` unsigned p;`
+` FOR_ALL_PATCHES(p,grid)`
+` {`
+` Patch_T *patch = grid->patch[p];`
+``
+Declare =
+{
+
+ # adm_g
+ (obj = Field,name = adm_g, rank = DD, C_macro);
+
+ # adm_Kji
+ (obj = Field,name = adm_Kij, rank = DD, C_macro);
+
+ # adm_KIJ
+ (obj = Field,name = adm_KIJ, rank = UU, C_macro);
+
+ # AConfIJ: conformal traceless part of adm_KIJ
+ (obj = Field,name = AConfIJ, rank = UU, C_macro);
+
+ # AConfij*AConfIJ: AConf^{ij} AConf_{ij}
+ (obj = Field,name = AConfIJ2, rank = 0, C_macro);
+
+ # Hamiltonian constraint method 1
+ (obj = Field,name = ham1, rank = 0, C_macro);
+
+ # Hamiltonian constraint method 2
+ (obj = Field,name = ham2, rank = 0, C_macro);
+
+ # momentum constraints with method 1
+ (obj = Field,name = mom1, rank = D, C_macro);
+
+ # momentum constraints with method 2
+ (obj = Field,name = mom2, rank = D, C_macro);
+
+ # beta: shift = B0+B1
+ (obj = Field,name = beta, rank = U, C_macro);
+
+ # dbeta
+ (obj = Field,name = dbeta, rank = UD, C_macro);
+
+ # ddbeta
+ (obj = Field,name = ddbeta, rank = UDD, C_macro);
+
+ # B0
+ (obj = Field,name = B0, rank = U, C_macro);
+
+ # dB0
+ (obj = Field,name = dB0, rank = UD, C_macro);
+
+ # ddB0
+ (obj = Field,name = ddB0, rank = UDD, C_macro);
+
+ # B1
+ (obj = Field,name = B1, rank = U, C_macro);
+
+ # dB1
+ (obj = Field,name = dB1, rank = UD, C_macro);
+
+ # ddB1
+ (obj = Field,name = ddB1, rank = UDD, C_macro);
+
+ # alpha: lapse
+ (obj = Field,name = alpha, rank = 0, C_macro);
+
+ # dalpha
+ (obj = Field,name = dalpha, rank = D, C_macro);
+
+ # eta: psi*lapse
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # deta
+ (obj = Field,name = deta, rank = D, C_macro);
+
+ # ddeta
+ (obj = Field,name = ddeta, rank = DD, C_macro);
+
+ # psi: conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # dpsi
+ (obj = Field,name = psi, rank = D, C_macro);
+
+ # ddpsi
+ (obj = Field,name = ddpsi, rank = DD, C_macro);
+
+}
+
+Symm[adm_g(i,j)    = adm_g(j,i)];
+Symm[adm_Kij(i,j)  = adm_Kij(j,i)];
+Symm[adm_KIJ(i,j)  = adm_KIJ(j,i)];
+Symm[AConfIJ(i,j)  = AConfIJ(j,i)];
+
+Symm[ddbeta(k,i,j) = ddbeta(k,j,i)];
+Symm[ddB0(k,i,j)   = ddB0(k,j,i)];
+Symm[ddB1(k,i,j)   = ddB1(k,j,i)];
+Symm[ddeta(i,j)    = ddeta(j,i)];
+Symm[ddpsi(i,j)    = ddpsi(j,i)];
+
+` }`
+`}`
+

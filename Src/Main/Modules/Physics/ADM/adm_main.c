@@ -59,8 +59,8 @@ static int add_adm_fields(Physics_T *const phys)
   
   assert(phys->grid);
   
-  /* adm_g = psi^4*gConf */
-  adm_add_fields_adm_k_and_adm_g(phys->grid);
+  adm_add_3plus1_fields(phys->grid);
+  
   
   FUNC_TOC
   return EXIT_SUCCESS; 
