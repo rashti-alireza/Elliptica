@@ -13,9 +13,9 @@
 
 
 
-void adm_update_AConfIJ_Sigmaalphapsim6_Wbeta_MConf0(Patch_T *const patch);
+void adm_update_AConfIJ_XCTS_MConfIJ0(Patch_T *const patch);
 
-void adm_update_AConfIJ_Sigmaalphapsim6_Wbeta_MConf0(Patch_T *const patch)
+void adm_update_AConfIJ_XCTS_MConfIJ0(Patch_T *const patch)
 {
 
 

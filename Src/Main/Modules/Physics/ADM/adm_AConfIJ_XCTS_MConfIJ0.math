@@ -1,5 +1,6 @@
-## computing AConf^{ij} = 1./(alpha*pis^-6)*((LConf(beta)^{ij})
-## => sigma = alpha*pis^-6, W = beta and MConf^{ij} = 0.
+## computing AConf^{ij} = 1./(sigma)*(LConf(W)^{ij}) + MConf^{ij}:
+## XCTS_MConfIJ0: => sigma = alpha*pis^-6, W = beta and MConf^{ij} = 0. */
+
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -22,9 +23,9 @@ C_macro4 = add_dfield_read_v(name);
 ``
 ``
 ``
-`void adm_update_AConfIJ_Sigmaalphapsim6_Wbeta_MConf0(Patch_T *const patch);`
+`void adm_update_AConfIJ_XCTS_MConfIJ0(Patch_T *const patch);`
 ``
-`void adm_update_AConfIJ_Sigmaalphapsim6_Wbeta_MConf0(Patch_T *const patch)`
+`void adm_update_AConfIJ_XCTS_MConfIJ0(Patch_T *const patch)`
 `{`
 ``
 Declare = 
