@@ -1,0 +1,173 @@
+# calculating hamiltonian and momentum constraints from scratch
+
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro1 = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v_STEM(name,Ham);
+C_macro3 = REALLOC_v_WRITE_v_STEM(name,Mom);
+C_macro4 = dfield_and_get_v(name);
+C_macro5 = add_compute_get_Chris(name);
+C_macro6 = add_field_get_v(name);
+
+
+`#include "adm_header.h"`
+``
+``
+``
+``
+`#define add_field_get_v(name) ADD_AND_ALLOC_FIELD(name); WRITE_v(name);`
+``
+``
+`#define dfield_and_get_v(name) dField_di(name); READ_v(name);`
+``
+`#define add_compute_get_Chris(name)  \`
+`  Christoffel_symbol_3d(patch,"adm_ig","dadm_g","Gamma");\`
+`  READ_v(name);`
+``
+`void adm_ham_and_mom_from_identities(Patch_T *const patch,`
+`        const char *const Ham,const char *const Mom);`
+``
+`void adm_ham_and_mom_from_identities(Patch_T *const patch,`
+`        const char *const Ham,const char *const Mom)`
+`{`
+
+``
+`  adm_adm_KIJ(patch);`
+`  adm_adm_g(patch);`
+``
+
+# compute inverse of g (locally)
+`{`
+`    READ_v(adm_g_D2D2)`
+`    READ_v(adm_g_D0D2)`
+`    READ_v(adm_g_D0D0)`
+`    READ_v(adm_g_D0D1)`
+`    READ_v(adm_g_D1D2)`
+`    READ_v(adm_g_D1D1)`
+``
+`    add_field_get_v(adm_ig_U2U2)`
+`    add_field_get_v(adm_ig_U0U2)`
+`    add_field_get_v(adm_ig_U0U0)`
+`    add_field_get_v(adm_ig_U0U1)`
+`    add_field_get_v(adm_ig_U1U2)`
+`    add_field_get_v(adm_ig_U1U1)`
+``
+`    FOR_ALL_ijk`
+`    {`
+`      Matrix_Inverse_3x3_Symmetric_Field(adm_g,D,adm_ig,U,ijk);`
+`    }`
+`}`
+``
+Declare = 
+{
+ # Hamiltonian constraint
+ (obj = Field,name = ham, rank = 0, C_macro2);
+
+ # Momentum constraints
+ (obj = Field,name = mom, rank = U, C_macro3);
+
+ # K^{ij}
+ (obj = Field,name = adm_KIJ, rank = UU, C_macro1);
+
+ # dK^{ij}
+ (obj = Field,name = dadm_KIJ, rank = UUD, C_macro4);
+
+ # psi
+ (obj = Field,name = psi, rank = 0, C_macro1);
+
+ # metric 
+ (obj = Field,name = adm_g, rank = DD, C_macro1);
+
+ # dmetric 
+ (obj = Field,name = dadm_g, rank = DD, C_macro4);
+
+ # metric inverse
+ (obj = Field,name = adm_ig, rank = UU, C_macro1);
+
+ # Christoffer symbol value
+ (obj = Field,name = Gamma, rank = UDD, C_macro5);
+
+ # Christoffer symbol derivatives
+ (obj = Field,name = dGamma, rank = UDDD, C_macro4);
+
+ # EConf
+ (obj = Field,name = EConf, rank = 0, C_macro1);
+
+ # conformal momentum current
+ (obj = Field,name = JConf, rank = U, C_macro1);
+
+ # trKij
+ (obj = Field,name = trK, rank = 0, C_macro1);
+
+ # dtrKij
+ (obj = Field,name = dtrK, rank = D, C_macro1);
+
+}
+# symmetries:
+Symm[adm_KIJ(i,j)     = adm_KIJ(j,i)];
+Symm[dadm_KIJ(i,j,l)  = dadm_KIJ(j,i,l)];
+Symm[adm_g(i,j)       = adm_g(j,i)];
+Symm[adm_ig(i,j)      = adm_ig(j,i)];
+Symm[Gamma(i,j,k)     = Gamma(i,k,j)];
+Symm[dGamma(i,j,k,l)  = dGamma(i,k,j,l)];
+
+``
+`FOR_ALL_ijk`
+`{`
+``
+## Calculate Hamiltonian and Momentum constraints:
+#################################################################
+psim6  = psi**(-6);
+J(i)   = psim6*JConf(i);
+E      = psim6*EConf;
+
+Ric1(-a,-b)    =   dGamma(c,ap,bp,i)*KD(-i,-c)*KD(-ap,a)*KD(-bp,b);
+Symm[Ric1(i,j) = Ric1(j,i)];
+
+Ric2(-a,-b)    = - dGamma(c,a,i,b)*KD(-i,-c);
+Symm[Ric2(i,j) = Ric2(j,i)];
+
+Ric3(-a,-b)    =   Gamma(d,a,b)*Gamma(c,i,j)*KD(-i,-c)*KD(-j,-d);
+Symm[Ric3(i,j) = Ric3(j,i)];
+
+Ric4(-a,-b)    = - Gamma(d,a,i)*Gamma(c,b,j)*KD(-i,-c)*KD(-j,-d);
+Symm[Ric4(i,j) = Ric4(j,i)];
+
+Ric(-a,-b)     = Ric1(-a,-b)+Ric2(-a,-b)+Ric3(-a,-b)+Ric4(-a,-b);
+Symm[Ric(i,j)  = Ric(j,i)];
+
+R        = adm_ig(a,b)*Ric(-a,-b);
+
+KijKij   = adm_KIJ(i,j)*adm_KIJ(l,m)*adm_g(-i,-l)*adm_g(-j,-m);
+
+DjKij(i) = dadm_KIJ(i,j,l)*KD(-j,-l)+\
+Gamma(i,j,l)*adm_KIJ(-l,-j)+\
+Gamma(j,jp,l)*adm_KIJ(i,-l)*KD(-j,-jp);
+
+
+#### Hamiltonian:
+Ham_Constraint =  R-KijKij+trK**2-16*pi*E;
+
+
+#### Momentum:
+Mom_constraint(i) = DjKij(i)-adm_ig(i,j)*dtrK(-j)-8*pi*J(i);
+
+
+### populate:
+   Cpopulate[mom = Mom_constraint];
+     `  ham[ijk] = Ham_Constraint;`
+
+`}`
+``
+`remove_field_with_regex(patch,"^adm_ig_U");`
+`remove_field_with_regex(patch,"^adm_KIJ_U");`
+`remove_field_with_regex(patch,"^dadm_KIJ_U");`
+`remove_field_with_regex(patch,"^Gamma_U");`
+`remove_field_with_regex(patch,"^dGamma_U");`
+`}`
+
