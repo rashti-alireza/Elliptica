@@ -42,7 +42,7 @@ static int add_adm_params(Physics_T *const phys)
   
   /* how to compute constraints:
   // options:
-  // from_scratch: using beta,psi,alphaConf and trK to make Kij, 
+  // from_scratch: using beta,psi,alphaPsi and trK to make Kij, 
   //               then using psi, gConf to make g
   //               and then finally make R and using sources 
   //               to calucalte constraints.
