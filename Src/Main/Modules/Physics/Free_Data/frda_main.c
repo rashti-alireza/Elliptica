@@ -110,7 +110,7 @@ static int populate_free_data(Physics_T *const phys)
                          "RicciConf","trRicciConf");
     
     frda_extrinsic_curvature_KerrSchild(phys,".*","igConf","ChrisConf",
-                                        "Kij","trK","dtrK");
+                                        "adm_Kij","trK","dtrK");
   }
   else
     Error0(NO_OPTION);
