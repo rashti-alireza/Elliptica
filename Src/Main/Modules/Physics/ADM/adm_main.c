@@ -27,17 +27,22 @@ int adm_main(Physics_T *const phys)
       ret = compute_ham_and_mom_constraints(phys);
     break;
     
-   case ADM_UPDATE_AConfIJ:
+    case ADM_UPDATE_AConfIJ:
       ret = compute_AConfIJ(phys);
     break;
    
-   case ADM_UPDATE_KIJ:
+    case ADM_UPDATE_KIJ:
       ret = compute_adm_KIJ(phys);
     break;
    
-   case ADM_UPDATE_Kij:
+    case ADM_UPDATE_Kij:
       ret = compute_adm_Kij(phys);
     break;
+    
+    case ADM_UPDATE_gij:
+      ret = compute_adm_gij(phys);
+    break;
+    
      
     default:
       Error0(NO_OPTION);
@@ -166,6 +171,17 @@ static int compute_adm_KIJ(Physics_T *const phys)
   FUNC_TIC
   
   adm_update_adm_KIJ(phys,".*");
+  
+  FUNC_TOC
+  return EXIT_SUCCESS; 
+}
+
+/* compute adm_g_{ij} */
+static int compute_adm_gij(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  adm_update_adm_gij(phys,".*");
   
   FUNC_TOC
   return EXIT_SUCCESS; 

@@ -12,5 +12,6 @@ void adm_compute_constraints(Physics_T *const phys,
 void adm_update_AConfIJ(Physics_T *const phys,const char *const region);
 void adm_update_adm_Kij(Physics_T *const phys,const char *const region);
 void adm_update_adm_KIJ(Physics_T *const phys,const char *const region);
+void adm_update_adm_gij(Physics_T *const phys,const char *const region);
 
 

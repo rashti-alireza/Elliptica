@@ -40,6 +40,9 @@ void adm_compute_constraints(Physics_T *const phys,
                                   const char *const mom);
 
 void adm_update_AConfIJ(Physics_T *const phys,const char *const region);
+void adm_update_adm_g_patch(Patch_T *const patch);
+void adm_update_adm_gij(Physics_T *const phys,const char *const region);
+
 
 #endif
 

@@ -112,3 +112,19 @@ void adm_update_adm_Kij(Physics_T *const phys,const char *const region)
   }
 }
 
+/* update adm_g_{ij} */
+void adm_update_adm_gij(Physics_T *const phys,const char *const region)
+{
+  Grid_T *const grid = mygrid(phys,region);
+  unsigned p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *const patch = grid->patch[p];
+    
+    adm_update_adm_g_patch(patch);
+    
+  }
+}
+
