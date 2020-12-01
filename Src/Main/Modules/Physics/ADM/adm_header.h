@@ -18,6 +18,8 @@ void adm_add_3plus1_fields(Grid_T *const grid);
 void adm_update_adm_Kij(Patch_T *const patch);
 void adm_update_adm_KIJ(Patch_T *const patch);
 void adm_update_adm_g(Patch_T *const patch);
+void adm_update_AConfIJ(Patch_T *const patch);
+
 void adm_ham_and_mom_from_identities(Patch_T *const patch,
               const char *const Ham,const char *const Mom);
 void adm_ham_and_mom_from_scratch(Patch_T *const patch,

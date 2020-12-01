@@ -12,7 +12,7 @@
 /* measuring Hamiltonian constraint.
 // method:
 // =======
-// from_scratch: using beta,psi,eta and trK to make Kij, 
+// from_scratch: using beta,psi,alphaConf and trK to make Kij, 
 //               then using psi, gConf to make g
 //               and then finally make R and using sources 
 //               to calucalte constraints.
