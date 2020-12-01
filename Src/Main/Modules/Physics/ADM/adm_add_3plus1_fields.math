@@ -81,19 +81,19 @@ Declare =
  (obj = Field,name = ddB1, rank = UDD, C_macro);
 
  # alpha: lapse
- (obj = Field,name = alpha, rank = 0, C_macro);
+ #(obj = Field,name = alpha, rank = 0, C_macro);
 
  # dalpha
- (obj = Field,name = dalpha, rank = D, C_macro);
+ #(obj = Field,name = dalpha, rank = D, C_macro);
 
- # eta: psi*lapse
- (obj = Field,name = eta, rank = 0, C_macro);
+ # alphaPsi: psi*lapse
+ (obj = Field,name = alphaPsi, rank = 0, C_macro);
 
- # deta
- (obj = Field,name = deta, rank = D, C_macro);
+ # dalphaPsi
+ (obj = Field,name = dalphaPsi, rank = D, C_macro);
 
- # ddeta
- (obj = Field,name = ddeta, rank = DD, C_macro);
+ # ddalphaPsi
+ (obj = Field,name = ddalphaPsi, rank = DD, C_macro);
 
  # psi: conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
@@ -111,12 +111,11 @@ Symm[adm_Kij(i,j)    = adm_Kij(j,i)];
 Symm[adm_KIJ(i,j)    = adm_KIJ(j,i)];
 Symm[AConfIJ(i,j)    = AConfIJ(j,i)];
 Symm[dAConfIJ(i,j,k) = dAConfIJ(j,i,k)];
-
-Symm[ddbeta(k,i,j) = ddbeta(k,j,i)];
-Symm[ddB0(k,i,j)   = ddB0(k,j,i)];
-Symm[ddB1(k,i,j)   = ddB1(k,j,i)];
-Symm[ddeta(i,j)    = ddeta(j,i)];
-Symm[ddpsi(i,j)    = ddpsi(j,i)];
+Symm[ddbeta(k,i,j)   = ddbeta(k,j,i)];
+Symm[ddB0(k,i,j)     = ddB0(k,j,i)];
+Symm[ddB1(k,i,j)     = ddB1(k,j,i)];
+Symm[ddalphaPsi(i,j) = ddalphaPsi(j,i)];
+Symm[ddpsi(i,j)      = ddpsi(j,i)];
 
 ` }`
 `}`
