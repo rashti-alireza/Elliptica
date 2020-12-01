@@ -110,46 +110,46 @@ typedef enum CMD_T
  CMD_UNDEFINED = 0,
  
  /* star related */
- STAR_TUNE_EULER_CONST,
- STAR_TUNE_FORCE_BALANCE,
- STAR_TUNE_CENTER,
- STAR_EXTRAPOLATE_MATTERS,
- STAR_START,
- STAR_ADD_PARAMS,
- STAR_ADD_FIELDS,
- STAR_FIND_SURFACE,
+ STAR_TUNE_EULER_CONST,/* Euler const. in fluid eq. */
+ STAR_TUNE_FORCE_BALANCE,/* dh/d? at star center */
+ STAR_TUNE_CENTER,/* avoid star drifting */
+ STAR_EXTRAPOLATE_MATTERS,/* extrapolate outside star */
+ STAR_START,/* initiation before first grid */
+ STAR_ADD_PARAMS,/* add params */
+ STAR_ADD_FIELDS,/* add fields */
+ STAR_FIND_SURFACE,/* find new star surface */
  
  /* stress energy related */
- STRESS_ENERGY_UPDATE,
- STRESS_ENERGY_ADD_PARAMS,
- STRESS_ENERGY_ADD_FIELDS,
+ STRESS_ENERGY_UPDATE,/* update whole matter related fields */
+ STRESS_ENERGY_ADD_PARAMS,/* add params */
+ STRESS_ENERGY_ADD_FIELDS,/* add fields */
  
  /* BH related */
- BH_TUNE_RADIUS,
- BH_TUNE_SPIN,
- BH_FILL,
- BH_FIND_SURFACE,
- BH_START,
- BH_ADD_PARAMS,
- BH_ADD_FIELDS,
+ BH_TUNE_RADIUS,/* adjust BH radius */
+ BH_TUNE_SPIN,/* adjust BH spin */
+ BH_FILL,/* BH-filler */
+ BH_FIND_SURFACE,/* find surface of BH to create grid */
+ BH_START,/* initiation before first grid */
+ BH_ADD_PARAMS,/* add params */
+ BH_ADD_FIELDS,/* add fields */
  
  /* free data related */
- FREE_DATA_ADD_PARAMS,
- FREE_DATA_ADD_FIELDS,
- FREE_DATA_POPULATE,
+ FREE_DATA_ADD_PARAMS,/* add params */
+ FREE_DATA_ADD_FIELDS,/* add fields */
+ FREE_DATA_POPULATE,/* populate free data */
  
  /* system related */
- SYS_TUNE_P_ADM,
+ SYS_TUNE_P_ADM,/* adjust P_adm of the system */
  
  /* adm related */
- ADM_ADD_PARAMS,
- ADM_ADD_FIELDS,
- ADM_UPDATE_beta,
- ADM_UPDATE_Kij,
- ADM_UPDATE_KIJ,
- ADM_UPDATE_gij,
- ADM_UPDATE_AConfIJ, 
- ADM_COMPUTE_CONSTRAINTS,
+ ADM_ADD_PARAMS,/* add params */
+ ADM_ADD_FIELDS,/* add fields */
+ ADM_UPDATE_Kij,/* adm_K_{ij} */
+ ADM_UPDATE_KIJ,/* adm_K^{ij} */
+ ADM_UPDATE_gij,/* adm_g_{ij} = psi^4 *gConf_{ij} */
+ ADM_UPDATE_AConfIJ,/* conformal traceless part of K^{ij} */
+ ADM_UPDATE_B1I,/* beta = B0+B1 in which B1 can be rotation pieces */
+ ADM_COMPUTE_CONSTRAINTS,/* ham and mom constrains */
  
  CMD_END
 }cmd_T;
