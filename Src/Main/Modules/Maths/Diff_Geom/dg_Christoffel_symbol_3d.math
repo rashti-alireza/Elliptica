@@ -1,5 +1,9 @@
 # calculate Christoffel symbol compatible with given g and ig.
-
+#
+# NOTE:
+#######
+# DON'T use realloc befor populate Chris fields.
+# this causes problem for other functions.
 
 # Manifold or grid Dimension
 Dimension = 3;

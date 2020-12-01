@@ -1,4 +1,10 @@
 # Ricci tensor and scalar
+#
+# NOTE:
+#######
+# DON'T use realloc befor populate Chris fields.
+# this causes problem for other functions.
+
 
 # Manifold or grid Dimension
 Dimension = 3;
