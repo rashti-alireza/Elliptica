@@ -27,6 +27,8 @@
 #define Compute_Christoffel(name)  \
   Christoffel_symbol_3d(patch,"adm_ig","dadm_g","Gamma");
 
+extern fFunc_adm_update_adm_KIJ_T (*adm_update_adm_KIJ_patch);
+
 void adm_ham_and_mom_from_scratch(Patch_T *const patch,
         const char *const Ham,const char *const Mom);
 
@@ -34,7 +36,7 @@ void adm_ham_and_mom_from_scratch(Patch_T *const patch,
         const char *const Ham,const char *const Mom)
 {
 
-  adm_update_adm_KIJ(patch);
+  adm_update_adm_KIJ_patch(patch);
   adm_update_adm_g(patch);
 
 {
