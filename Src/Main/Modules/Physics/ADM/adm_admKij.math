@@ -1,0 +1,67 @@
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
+
+`#include "adm_header.h"`
+
+`void adm_update_adm_Kij(Patch_T *const patch);`
+`void adm_update_adm_Kij(Patch_T *const patch)`
+`{`
+
+Declare = 
+{
+ # K_{ij}
+ (obj = Field,name = adm_Kij, rank = DD, C_macro2);
+
+ # shift
+ (obj = Field,name = beta, rank = U, C_macro);
+
+ # d(shift)/d?
+ (obj = Field,name = dbeta, rank = UD, C_macro);
+
+ # psi
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # eta
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # trK
+ (obj = Field,name = trK, rank = 0, C_macro);
+
+ # conformal metric 
+ (obj = Field,name = gConf, rank = DD, C_macro);
+
+ # Christoffer symbol value
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro);
+
+}
+
+# symmetries:
+Symm[gConf(i,j)       = gConf(j,i)];
+Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
+Symm[adm_Kij(i,j)     = adm_Kij(j,i)];
+
+Ccode["    unsigned nn = patch->nn;"];
+Ccode["    unsigned ijk;"];
+Ccode["    for(ijk = 0; ijk < nn; ++ijk)"];
+Ccode["    {"];
+
+# calculating K_{ij}:
+  psi4 = psi**4;
+  _DB_UD(i,-j)     = (dbeta(i,j)+ChrisConf(i,j,m)*beta(-m));# _D_{j}B^{i}
+  _LV_DD(-i,-j)    = gConf(i,-l)*_DB_UD(l,j)+gConf(j,-m)*_DB_UD(m,i)-2/3*gConf(i,j)*_DB_UD(m,-m);
+  Symm[_LV_DD(i,j) = _LV_DD(j,i)];
+
+  K_DDij(-i,-j)    = psi4*(psi*_LV_DD(i,j)/(2*eta)+1/3*trK*gConf(i,j));
+  Symm[K_DDij(i,j) = K_DDij(j,i)];
+  Cpopulate[adm_Kij = K_DDij];
+
+Ccode["    }/*end of for(ijk = 0; ijk < nn; ++ijk)*/"];
+
+`}`
+
