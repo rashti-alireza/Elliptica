@@ -47,7 +47,8 @@ static int add_adm_params(Physics_T *const phys)
   //               and then finally make R and using sources 
   //               to calucalte constraints.
   // from_identities: using AConfIJ and various other identities
-  //                  to calculate constraints. */
+  //                  to calculate constraints.
+  // from_residuals : using residual of elliptic eqs to compute. */
   Pset_default(P_"constraints_method","from_scratch");
   
   
