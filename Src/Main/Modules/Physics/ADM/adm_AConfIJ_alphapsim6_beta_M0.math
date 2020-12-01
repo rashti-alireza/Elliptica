@@ -1,0 +1,142 @@
+## computing AConf^{ij} = 1./(alpha*pis^-6)*((LConf(beta)^{ij})
+## => sigma = alpha*pis^-6, W = beta and MConf^{ij} = 0.
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
+C_macro3 = add_field_and_get_v(name);
+C_macro4 = add_dfield_read_v(name);
+
+`#include "adm_header.h"`
+
+`#define add_field_and_get_v(name) ADD_FIELD(name) REALLOC_v_WRITE_v(name)`
+``
+`#define add_dfield_read_v(name) ADD_FIELD(name); dField_di(name); READ_v(name)` 
+``
+``
+``
+``
+``
+`void adm_update_AConfIJ_Sigmaalphapsim6_Wbeta_MConf0(Patch_T *const patch);`
+``
+`void adm_update_AConfIJ_Sigmaalphapsim6_Wbeta_MConf0(Patch_T *const patch)`
+`{`
+``
+Declare = 
+{
+ # AConf^{ij}
+ (obj = Field,name = AConfIJ, rank = UU, C_macro2);
+
+ # partial derivative of AConf^{ij}
+ (obj = Field,name = dAConfIJ, rank = UUD, C_macro2);
+
+ # AConf^{ij}*AConf_{ij}
+ (obj = Field,name = AConfIJ2, rank = 0, C_macro2);
+
+ # shift
+ (obj = Field,name = beta, rank = U, C_macro);
+
+ # d(shift)/d?
+ (obj = Field,name = dbeta, rank = UD, C_macro);
+
+ # psi
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # dpsi
+ (obj = Field,name = dpsi, rank = D, C_macro);
+
+ # alphaPsi
+ (obj = Field,name = alphaPsi, rank = 0, C_macro);
+
+ # dalphaPsi
+ (obj = Field,name = dalphaPsi, rank = D, C_macro);
+
+ # conformal metric 
+ (obj = Field,name = gConf, rank = DD, C_macro);
+
+ # Christoffer symbol value
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro);
+
+ # conformal metric inverse
+ (obj = Field,name = igConf, rank = UU, C_macro);
+
+ # _D^iB^j
+ (obj = Field,name = _LBij, rank = UU, C_macro3);
+
+ # partial derivative of conformal killing operator
+ (obj = Field,name = _dLBij, rank = UUD, none);
+
+}
+
+# symmetries:
+Symm[AConfIJ(i,j)      = AConfIJ(j,i)];
+Symm[dAConfIJ(i,j,l)   = dAConfIJ(j,i,l)];
+Symm[_dLBij(i,j,l)     = _dLBij(j,i,l)];
+Symm[_LBij(i,j)        = _LBij(j,i)];
+Symm[gConf(i,j)        = gConf(j,i)];
+Symm[igConf(i,j)       = igConf(j,i)];
+Symm[ChrisConf(i,j,k)  = ChrisConf(i,k,j)];
+
+`FOR_ALL_ijk`
+`{`
+
+# _A^{ij} calculation (NOTE Mconf^{ij} ASSUEMD 0) :
+  psi7 = psi**7;
+  _DB_UU(i,j)  = igConf(i,-l)*(dbeta(j,l)+ChrisConf(j,l,m)*beta(-m));# _D^i(B^j)
+  _LV_UU(i,j)  = _DB_UU(i,j)+_DB_UU(j,i)-2/3*igConf(i,j)*gConf(-l,-m)*_DB_UU(l,m);
+  Symm[_LV_UU(i,j) = _LV_UU(j,i)];
+
+  _A_UUij(i,j) = psi7*_LV_UU(i,j)/(2*alphaPsi);
+  Symm[_A_UUij(i,j)   = _A_UUij(j,i)];
+
+  _AijAij = _A_UUij(i,j)*_A_UUij(l,m)*gConf(-i,-l)*gConf(-j,-m);
+  
+  Cpopulate[AConfIJ   = _A_UUij];
+  Cpopulate[_LBij     = _LV_UU];
+  Ccode["    AConfIJ2[ijk] = _AijAij;"];
+
+`}`
+
+
+# taking the derivatives:
+`  add_dfield_read_v(_dLBij_U2U2D2)`
+`  add_dfield_read_v(_dLBij_U2U2D0)`
+`  add_dfield_read_v(_dLBij_U2U2D1)`
+`  add_dfield_read_v(_dLBij_U1U1D2)`
+`  add_dfield_read_v(_dLBij_U1U1D0)`
+`  add_dfield_read_v(_dLBij_U1U1D1)`
+`  add_dfield_read_v(_dLBij_U0U0D2)`
+`  add_dfield_read_v(_dLBij_U0U0D0)`
+`  add_dfield_read_v(_dLBij_U0U0D1)`
+`  add_dfield_read_v(_dLBij_U0U1D2)`
+`  add_dfield_read_v(_dLBij_U0U1D1)`
+`  add_dfield_read_v(_dLBij_U0U1D0)`
+`  add_dfield_read_v(_dLBij_U1U2D1)`
+`  add_dfield_read_v(_dLBij_U1U2D0)`
+`  add_dfield_read_v(_dLBij_U1U2D2)`
+`  add_dfield_read_v(_dLBij_U0U2D0)`
+`  add_dfield_read_v(_dLBij_U0U2D1)`
+`  add_dfield_read_v(_dLBij_U0U2D2)`
+
+`FOR_ALL_ijk`
+`{`
+psi7_     = psi**7;
+dLnOf_alpha_(i) = dalphaPsi(i)/alphaPsi -7*dpsi(i)/psi; 
+
+dlAij(i,j,-l) = psi7_*(-_LBij(i,j)*dLnOf_alpha_(l)+_dLBij(i,j,l))/(2*alphaPsi);
+Symm[dlAij(i,j,l)  = dlAij(j,i,l)];
+
+Cpopulate[dAConfIJ = dlAij];
+
+`}`
+
+`remove_field_with_regex(patch,"^_LBij_U.+");`
+`remove_field_with_regex(patch,"^_dLBij_U.+");`
+
+`}`
+
