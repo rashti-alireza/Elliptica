@@ -27,6 +27,18 @@ int adm_main(Physics_T *const phys)
       ret = compute_ham_and_mom_constraints(phys);
     break;
     
+   case ADM_UPDATE_AConfIJ:
+      ret = compute_AConfIJ(phys);
+    break;
+   
+   case ADM_UPDATE_KIJ:
+      ret = compute_adm_KIJ(phys);
+    break;
+   
+   case ADM_UPDATE_Kij:
+      ret = compute_adm_Kij(phys);
+    break;
+     
     default:
       Error0(NO_OPTION);
   }
@@ -51,6 +63,47 @@ static int add_adm_params(Physics_T *const phys)
   // from_residuals : using residual of elliptic eqs to compute. */
   Pset_default(P_"constraints_method","from_scratch");
   
+  /* computing AConf^{ij} = 1./(sigma)*(LConf(W)^{ij}) + MConf^{ij}:
+  // options:
+  // XCTS_MConfIJ0: => sigma = alpha*psi^-6, W = beta and MConf^{ij} = 0. */
+  Pset_default(P_"compute_AConfIJ","XCTS_MConfIJ0");
+  
+  /* computing K_{ij}:
+  // options:
+  // use_AIJ: => use formula K_{ij} = g_{il} g_{jk} A^{lk} +1/3 trK g_{ij}. */
+  Pset_default(P_"compute_adm_Kdd_method","use_AIJ");
+  
+  /* computing K^{ij}:
+  // options:
+  // use_AIJ: => use formula K^{ij} = A^{ij} +1/3 trK g^{ij}.
+  // use_Kij: => use formula K^{ij} = g^{il} g^{jk} *K_{lk}*/
+  Pset_default(P_"compute_adm_Kuu_method","use_AIJ");
+  
+  
+  if(Pcmps(P_"compute_AConfIJ","XCTS_MConfIJ0"))
+  {
+    adm_update_AConfIJ_patch = adm_update_AConfIJ_XCTS_MConfIJ0;
+  }
+  else
+    Error0(NO_OPTION);
+  
+  if(Pcmps(P_"compute_adm_Kdd_method","use_AIJ"))
+  {
+    adm_update_adm_Kij_patch = adm_update_adm_Kij_useAIJ;
+  }
+  else
+    Error0(NO_OPTION);
+  
+  if(Pcmps(P_"compute_adm_Kuu_method","use_AIJ"))
+  {
+    adm_update_adm_KIJ_patch = adm_update_adm_KIJ_useAIJ;
+  }
+  else if(Pcmps(P_"compute_adm_Kuu_method","use_Kij"))
+  {
+    adm_update_adm_KIJ_patch = adm_update_adm_KIJ_useKij;
+  }
+  else
+    Error0(NO_OPTION);
   
   UNUSED(phys);
   FUNC_TOC
@@ -80,6 +133,39 @@ static int compute_ham_and_mom_constraints(Physics_T *const phys)
     
   if(strstr_i(Pgets(P_"constraints_method"),"from_identities"))
     adm_compute_constraints(phys,".*","from_identities","ham2","mom2");
+  
+  FUNC_TOC
+  return EXIT_SUCCESS; 
+}
+
+/* compute AConf^{ij} */
+static int compute_AConfIJ(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  adm_update_AConfIJ(phys,".*");
+  
+  FUNC_TOC
+  return EXIT_SUCCESS; 
+}
+
+/* compute adm_K_{ij} */
+static int compute_adm_Kij(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  adm_update_adm_Kij(phys,".*");
+  
+  FUNC_TOC
+  return EXIT_SUCCESS; 
+}
+
+/* compute adm_K^{ij} */
+static int compute_adm_KIJ(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  adm_update_adm_KIJ(phys,".*");
   
   FUNC_TOC
   return EXIT_SUCCESS; 

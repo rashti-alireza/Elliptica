@@ -4,10 +4,10 @@
 */
 
 
-/* computing Hamiltonian and momentum constraints */
+/* functions for updates and computations pertinent to adm */
 
 
-#include "adm_constraints.h"
+#include "adm_updates.h"
 
 /* measuring Hamiltonian constraint.
 // method:
@@ -63,3 +63,52 @@ void adm_compute_constraints(Physics_T *const phys,
     Error0(NO_OPTION);
   
 }
+
+/* update AConf^{ij} */
+void adm_update_AConfIJ(Physics_T *const phys,const char *const region)
+{
+  Grid_T *const grid = mygrid(phys,region);
+  unsigned p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *const patch = grid->patch[p];
+    
+    adm_update_AConfIJ_patch(patch);
+    
+  }
+}
+
+/* update adm_K^{ij} */
+void adm_update_adm_KIJ(Physics_T *const phys,const char *const region)
+{
+  Grid_T *const grid = mygrid(phys,region);
+  unsigned p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *const patch = grid->patch[p];
+    
+    adm_update_adm_KIJ_patch(patch);
+    
+  }
+}
+
+/* update adm_K_{ij} */
+void adm_update_adm_Kij(Physics_T *const phys,const char *const region)
+{
+  Grid_T *const grid = mygrid(phys,region);
+  unsigned p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *const patch = grid->patch[p];
+    
+    adm_update_adm_Kij_patch(patch);
+    
+  }
+}
+
