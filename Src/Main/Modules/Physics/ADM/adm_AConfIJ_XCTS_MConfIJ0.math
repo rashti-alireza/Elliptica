@@ -1,5 +1,5 @@
 ## computing AConf^{ij} = 1./(sigma)*(LConf(W)^{ij}) + MConf^{ij}:
-## XCTS_MConfIJ0: => sigma = alpha*pis^-6, W = beta and MConf^{ij} = 0. */
+## XCTS_MConfIJ0: => sigma = alpha*psi^-6, W = beta and MConf^{ij} = 0. */
 
 
 # Manifold or grid Dimension
