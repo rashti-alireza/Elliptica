@@ -134,7 +134,7 @@ void adm_update_adm_B1I(Physics_T *const phys,const char *const region)
   Grid_T *const grid = mygrid(phys,region);
   unsigned p;
   
-  if(Pcmps(P_"B1I_type","inspiral"))
+  if(Pcmps(P_"B1I_form","inspiral"))
   {
     struct General_Arg_S param[1] = {0};
     
@@ -154,7 +154,7 @@ void adm_update_adm_B1I(Physics_T *const phys,const char *const region)
       
     }
   }
-  else if(Pcmps(P_"B1I_type","zero"))
+  else if(Pcmps(P_"B1I_form","zero"))
   {
     OpenMP_Patch_Pragma(omp parallel for)
     for (p = 0; p < grid->np; ++p)
