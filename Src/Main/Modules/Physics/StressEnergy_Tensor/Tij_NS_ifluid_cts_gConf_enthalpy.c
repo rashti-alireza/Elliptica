@@ -32,7 +32,7 @@ void Tij_NS_IF_CTS_gConf_enthalpy(Patch_T *const patch,const double Euler_C)
   READ_v(dphi_D2)
   READ_v(dphi_D1)
   READ_v(dphi_D0)
-  READ_v(eta)
+  READ_v(alphaPsi)
   READ_v(Beta_U1)
   READ_v(Beta_U0)
   READ_v(Beta_U2)
@@ -42,7 +42,7 @@ void Tij_NS_IF_CTS_gConf_enthalpy(Patch_T *const patch,const double Euler_C)
   for(ijk = 0; ijk < nn; ++ijk)
   {
   double alpha = 
-eta[ijk]/psi[ijk];
+alphaPsi[ijk]/psi[ijk];
 
   double psim4 = 
 pow(psi[ijk], -4);

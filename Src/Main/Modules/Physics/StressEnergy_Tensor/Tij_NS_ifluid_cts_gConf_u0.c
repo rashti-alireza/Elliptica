@@ -32,7 +32,7 @@ void Tij_NS_IF_CTS_gConf_u0(Patch_T *const patch)
   READ_v(dphi_D2)
   READ_v(dphi_D1)
   READ_v(dphi_D0)
-  READ_v(eta)
+  READ_v(alphaPsi)
   READ_v(psi)
   REALLOC_v_WRITE_v(u0)
 
@@ -40,7 +40,7 @@ void Tij_NS_IF_CTS_gConf_u0(Patch_T *const patch)
   for(ijk = 0; ijk < nn; ++ijk)
   {
   double alpha = 
-eta[ijk]/psi[ijk];
+alphaPsi[ijk]/psi[ijk];
 
   double psim4 = 
 pow(psi[ijk], -4);

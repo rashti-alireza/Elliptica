@@ -39,8 +39,8 @@ Declare =
  # d(phi)/d? for irrotional part of fluid
  (obj = Field,name = dphi, rank = D, C_macro);
 
- # eta
- (obj = Field,name = eta, rank = 0, C_macro);
+ # alphaPsi
+ (obj = Field,name = alphaPsi, rank = 0, C_macro);
 
  # Beta
  (obj = Field,name = Beta, rank = U, C_macro);
@@ -63,7 +63,7 @@ Symm[gConf(i,j)   = gConf(j,i)];
 # calculate enthalpy:
 Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["  {"];
-     alpha = eta/psi;
+     alpha = alphaPsi/psi;
      psim4 = psi**(-4);
      psi4  = psi**(4);
      P2    = psim4*igConf(i,j)*dphi(-i)*dphi(-j)+2*dphi(-i)*W(i)+psi4*gConf(-i,-j)*W(i)*W(j);

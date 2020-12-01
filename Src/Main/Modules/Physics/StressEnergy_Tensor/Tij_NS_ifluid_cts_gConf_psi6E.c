@@ -14,7 +14,7 @@ void Tij_NS_IF_CTS_gConf_psi6E(Patch_T *const patch)
 
   /* declaring: */
   READ_v(enthalpy)
-  READ_v(eta)
+  READ_v(alphaPsi)
   READ_v(u0)
   READ_v(psi)
   READ_v(rho0)
@@ -27,7 +27,7 @@ void Tij_NS_IF_CTS_gConf_psi6E(Patch_T *const patch)
     eos->h   = enthalpy[ijk];
     double p = eos->pressure(eos);
     double alpha = 
-eta[ijk]/psi[ijk];
+alphaPsi[ijk]/psi[ijk];
 
     double psi6 = 
 pow(psi[ijk], 6);

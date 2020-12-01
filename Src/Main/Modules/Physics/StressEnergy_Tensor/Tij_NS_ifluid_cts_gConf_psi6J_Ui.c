@@ -29,7 +29,7 @@ void Tij_NS_IF_CTS_gConf_psi6J_Ui(Patch_T *const patch)
   REALLOC_v_WRITE_v(JConf_U0)
   REALLOC_v_WRITE_v(JConf_U1)
   REALLOC_v_WRITE_v(JConf_U2)
-  READ_v(eta)
+  READ_v(alphaPsi)
   READ_v(psi)
   READ_v(u0)
 
@@ -37,7 +37,7 @@ void Tij_NS_IF_CTS_gConf_psi6J_Ui(Patch_T *const patch)
   for(ijk = 0; ijk < nn; ++ijk)
   {
   double alpha = 
-eta[ijk]/psi[ijk];
+alphaPsi[ijk]/psi[ijk];
 
   double psim4 = 
 pow(psi[ijk], -4);
