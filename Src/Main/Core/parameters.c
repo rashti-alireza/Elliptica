@@ -858,8 +858,8 @@ update_iteration_params
   char *str;
   unsigned i;
   
-  /* if the initialization is from checkpoint_file do nothing */
-  if (Pcmps(PrefixIt(prefix,"initialization"),"checkpoint_file"))
+  /* if the start is from checkpoint_file do nothing */
+  if (Pcmps(PrefixIt(prefix,"start"),"checkpoint_file"))
     return 0;
   
   /* when starting from checkpoint, iter_n > main_loop_iter 
