@@ -869,7 +869,8 @@ void remove_field_with_regex(Patch_T *const patch,const char *const regex)
         printf("(regex,name) = (%s,%s)\n",regex,patch->fields[f]->name);
       remove_field(patch->fields[f]);
     }
-    f++;
+    else
+      f++;
   }
   
 }
