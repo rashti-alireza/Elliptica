@@ -1,0 +1,53 @@
+## computing K_{ij} = A_{ij} + 1/3 g_{ij} K.
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
+
+`#include "adm_header.h"`
+
+`void adm_update_adm_Kij_useAij(Patch_T *const patch);`
+`void adm_update_adm_Kij_useAij(Patch_T *const patch)`
+`{`
+
+Declare = 
+{
+ # K^{ij}
+ (obj = Field,name = adm_KIJ, rank = UU, C_macro2);
+
+ # AConf^{ij}
+ (obj = Field,name = AConfIJ, rank = UU, C_macro);
+
+ # psi
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # trK
+ (obj = Field,name = trK, rank = 0, C_macro);
+
+ # conformal metric 
+ (obj = Field,name = igConf, rank = UU, C_macro);
+
+}
+
+# symmetries:
+Symm[igConf(i,j)  = igConf(j,i)];
+Symm[AConfIJ(i,j) = AConfIJ(j,i)];
+Symm[adm_KIJ(i,j) = adm_KIJ(j,i)];
+
+`FOR_ALL_ijk`
+`{`
+  psim10        = psi**-10;
+  psim4         = psi**-4;
+  KIJ(-i,-j)    = psim10*AConfIJ(i,j)+trK*psim4/3*igConf(i,j);
+  Symm[KIJ(i,j) = KIJ(j,i)];
+
+  Cpopulate[adm_KIJ = KIJ];
+`}`
+
+`}`
+
