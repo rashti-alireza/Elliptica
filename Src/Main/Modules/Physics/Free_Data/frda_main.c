@@ -64,6 +64,12 @@ static int add_free_data_params(Physics_T *const phys)
   // KerrSchild: RicciConf = made out of Kerr-Schild black hole metric */
   Pset_default(P_"conformal_Ricci","KerrSchild");
   
+ 
+  /* how to set MConf^{ij} in AConf^{ij} = 1/sigma (LConf W)^{ij} + MConf^{ij}
+  // options:
+  // zero:       MConf^{ij} = 0 */
+  Pset_default(P_"MConfIJ","zero");
+  
   
   UNUSED(phys);
   FUNC_TOC
@@ -97,7 +103,8 @@ static int populate_free_data(Physics_T *const phys)
       Pcmps(P_"conformal_metric"            ,"KerrSchild") &&
       Pcmps(P_"conformal_Christoffel_symbol","KerrSchild") &&
       Pcmps(P_"conformal_Ricci"             ,"KerrSchild") &&
-      Pcmps(P_"trK"                         ,"KerrSchild")
+      Pcmps(P_"trK"                         ,"KerrSchild") &&
+      Pcmps(P_"MConfIJ"                     ,"zero"      )
      )
   {
     frda_populate_gConf_dgConf_igConf_KerrSchild(phys,".*","gConf",
