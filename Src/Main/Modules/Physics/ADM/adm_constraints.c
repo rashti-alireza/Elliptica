@@ -27,6 +27,9 @@ void adm_compute_constraints(Physics_T *const phys,
 {
   if (strcmp_i(method,"from_identities"))
   {
+    printf(Pretty0"method: from_identities.\n");
+    fflush(stdout);
+    
     Grid_T *const grid = mygrid(phys,region);
     unsigned p;
     
@@ -43,6 +46,9 @@ void adm_compute_constraints(Physics_T *const phys,
   {
     Grid_T *const grid = mygrid(phys,region);
     unsigned p;
+    
+    printf(Pretty0"method: from_scratch.\n");
+    fflush(stdout);
     
     OpenMP_Patch_Pragma(omp parallel for)
     for (p = 0; p < grid->np; ++p)
