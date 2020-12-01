@@ -8,6 +8,29 @@
 #define COMMA ','
 #define MAX_STR_LEN (100)
 
+/* taking partial derivatives using a regex comma separated list.
+// using the regex, it finds the field->name match and take derivative
+// according to the name. */
+void partial_derivative_with_regex(Patch_T *const patch,
+                                   const char *const regex_list)
+{
+  char **regex = read_separated_items_in_string(regex_list,',');
+  unsigned i = 0;
+  
+  while (regex[i])
+  {
+    unsigned f;
+    for (f = 0; f < patch->nfld; ++f)
+    {
+      if (regex_search(regex[i],patch->fields[f]->name))
+        partial_derivative(patch->fields[f]);
+    }
+    i++;
+  }
+  
+  free_2d(regex);
+}
+
 /* this function parses the dfield->name and then takes partial derivative 
 // in Cartesian coords (this can be changend lated by a if statement)
 // some conventions:

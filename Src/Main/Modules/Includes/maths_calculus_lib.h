@@ -67,7 +67,8 @@ double dLegendre_dx(const unsigned n, const double x);
 void init_Legendre_root_function(void);
 void init_dLegendre_dx(void);
 double Integrate_ChebTn(const unsigned n,const double xi,const double xf);
-
+void partial_derivative_with_regex(Patch_T *const patch,
+                                   const char *const regex_list);
 
 #endif
 
