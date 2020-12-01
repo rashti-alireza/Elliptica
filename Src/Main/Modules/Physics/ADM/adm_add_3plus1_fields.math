@@ -35,6 +35,9 @@ Declare =
  # AConfIJ: conformal traceless part of adm_KIJ
  (obj = Field,name = AConfIJ, rank = UU, C_macro);
 
+ # dAConfIJ: derivative of conformal traceless part of adm_KIJ
+ (obj = Field,name = dAConfIJ, rank = UUD, C_macro);
+
  # AConfij*AConfIJ: AConf^{ij} AConf_{ij}
  (obj = Field,name = AConfIJ2, rank = 0, C_macro);
 
@@ -103,10 +106,11 @@ Declare =
 
 }
 
-Symm[adm_g(i,j)    = adm_g(j,i)];
-Symm[adm_Kij(i,j)  = adm_Kij(j,i)];
-Symm[adm_KIJ(i,j)  = adm_KIJ(j,i)];
-Symm[AConfIJ(i,j)  = AConfIJ(j,i)];
+Symm[adm_g(i,j)      = adm_g(j,i)];
+Symm[adm_Kij(i,j)    = adm_Kij(j,i)];
+Symm[adm_KIJ(i,j)    = adm_KIJ(j,i)];
+Symm[AConfIJ(i,j)    = AConfIJ(j,i)];
+Symm[dAConfIJ(i,j,k) = dAConfIJ(j,i,k)];
 
 Symm[ddbeta(k,i,j) = ddbeta(k,j,i)];
 Symm[ddB0(k,i,j)   = ddB0(k,j,i)];
