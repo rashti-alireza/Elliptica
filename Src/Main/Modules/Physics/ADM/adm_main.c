@@ -23,6 +23,10 @@ int adm_main(Physics_T *const phys)
       ret = add_adm_fields(phys);
     break;
     
+    case ADM_COMPUTE_CONSTRAINTS:
+      ret = compute_ham_and_mom_constraints(phys);
+    break;
+    
     default:
       Error0(NO_OPTION);
   }
@@ -61,6 +65,20 @@ static int add_adm_fields(Physics_T *const phys)
   
   adm_add_3plus1_fields(phys->grid);
   
+  FUNC_TOC
+  return EXIT_SUCCESS; 
+}
+
+/* compute constraints */
+static int compute_ham_and_mom_constraints(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  if(strstr_i(Pgets(P_"constraints_method"),"from_scratch"))
+    adm_compute_constraints(phys,".*","from_scratch"  ,"ham1","mom1");
+    
+  if(strstr_i(Pgets(P_"constraints_method"),"from_identities"))
+    adm_compute_constraints(phys,".*","from_identities","ham2","mom2");
   
   FUNC_TOC
   return EXIT_SUCCESS; 

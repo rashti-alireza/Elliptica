@@ -7,7 +7,7 @@
 /* computing Hamiltonian and momentum constraints */
 
 
-#include "obs_constraints.h"
+#include "adm_constraints.h"
 
 /* measuring Hamiltonian constraint.
 // method:
@@ -19,13 +19,13 @@
 // from_identities: using AConfIJ and various other identities
 //                  to calculate constraints.
 // */
-void adm_Hamiltonian_constraint(Physics_T *const phys,
+void adm_compute_constraints(Physics_T *const phys,
                                   const char *const region,
                                   const char *const method,
                                   const char *const ham,
                                   const char *const mom)
 {
-  if (strcmp_i(method,"from_scratch"))
+  if (strcmp_i(method,"from_identities"))
   {
     Grid_T *const grid = mygrid(phys,region);
     unsigned p;
@@ -35,7 +35,7 @@ void adm_Hamiltonian_constraint(Physics_T *const phys,
     {
       Patch_T *const patch = grid->patch[p];
       
-      adm_Kij(patch,"adm_Kij",);
+      adm_ham_and_mom_from_identities(patch,ham,mom);
       
     }
   }

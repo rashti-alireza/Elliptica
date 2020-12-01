@@ -15,7 +15,14 @@
 
 int adm_main(Physics_T *const phys);
 void adm_add_3plus1_fields(Grid_T *const grid);
-
-
+void adm_update_adm_Kij(Patch_T *const patch);
+void adm_ham_and_mom_from_identities(Patch_T *const patch,
+              const char *const Ham,const char *const Mom);
+              
+void adm_compute_constraints(Physics_T *const phys,
+                                  const char *const region,
+                                  const char *const method,
+                                  const char *const ham,
+                                  const char *const mom);
 #endif
 
