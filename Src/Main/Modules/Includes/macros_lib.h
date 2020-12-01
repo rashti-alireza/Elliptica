@@ -194,7 +194,8 @@
 // func_updator = the function updates the field (with its arguments)
 // patch        = computing patch
 // fld          = field name (not in string format)
-// w            = update weight (<=1.) */
+// w            = update weight (<=1.).
+// NOTE: it frees field->v and assume func_updator allocate memory. */
 #define RELAX_UPDATE_FUNC(func_updator,patch,fld,w) \
 {\
  double w2_##fld = 1.-(w);/* weight */\
@@ -205,7 +206,7 @@
  /* if we can relax update */\
  if (new_field__##fld->v)\
  {\
-  const double *old_value__##fld = new_field__##fld->v;\
+  double *const old_value__##fld = new_field__##fld->v;\
   new_field__##fld->v = 0;\
   /* update */\
   func_updator;\
@@ -215,6 +216,7 @@
       (w)*new_field__##fld->v[(ijk__##fld)]+\
       (w2_##fld)*old_value__##fld[(ijk__##fld)];\
   }\
+  free(old_value__##fld);\
  }\
  else {func_updator;}\
 }
