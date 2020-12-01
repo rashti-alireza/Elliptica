@@ -11,8 +11,8 @@ C_macro2 = REALLOC_v_WRITE_v(name);
 
 `#include "adm_header.h"`
 
-`void adm_update_adm_Kij_useAij(Patch_T *const patch);`
-`void adm_update_adm_Kij_useAij(Patch_T *const patch)`
+`void adm_update_adm_KIJ_useAIJ(Patch_T *const patch);`
+`void adm_update_adm_KIJ_useAIJ(Patch_T *const patch)`
 `{`
 
 Declare = 
@@ -43,7 +43,7 @@ Symm[adm_KIJ(i,j) = adm_KIJ(j,i)];
 `{`
   psim10        = psi**-10;
   psim4         = psi**-4;
-  KIJ(-i,-j)    = psim10*AConfIJ(i,j)+trK*psim4/3*igConf(i,j);
+  KIJ(i,j)      = psim10*AConfIJ(i,j)+trK*psim4/3*igConf(i,j);
   Symm[KIJ(i,j) = KIJ(j,i)];
 
   Cpopulate[adm_KIJ = KIJ];

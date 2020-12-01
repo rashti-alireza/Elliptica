@@ -5,8 +5,8 @@
 
 
 #include "adm_header.h"
-void adm_update_adm_Kij_useAij(Patch_T *const patch);
-void adm_update_adm_Kij_useAij(Patch_T *const patch)
+void adm_update_adm_KIJ_useAIJ(Patch_T *const patch);
+void adm_update_adm_KIJ_useAIJ(Patch_T *const patch)
 {
 
   /* declaring: */
@@ -40,27 +40,27 @@ pow(psi[ijk], -10);
   double psim4 = 
 pow(psi[ijk], -4);
 
-  double KIJ_D2D2 = 
-AConfIJ_U2U2[ijk]*psim10 + (1.0/3.0)*igConf_U2U2[ijk]*psim4*
-trK[ijk];
-
-  double KIJ_D0D1 = 
+  double KIJ_U0U1 = 
 AConfIJ_U0U1[ijk]*psim10 + (1.0/3.0)*igConf_U0U1[ijk]*psim4*
 trK[ijk];
 
-  double KIJ_D0D0 = 
+  double KIJ_U0U0 = 
 AConfIJ_U0U0[ijk]*psim10 + (1.0/3.0)*igConf_U0U0[ijk]*psim4*
 trK[ijk];
 
-  double KIJ_D0D2 = 
+  double KIJ_U0U2 = 
 AConfIJ_U0U2[ijk]*psim10 + (1.0/3.0)*igConf_U0U2[ijk]*psim4*
 trK[ijk];
 
-  double KIJ_D1D1 = 
+  double KIJ_U2U2 = 
+AConfIJ_U2U2[ijk]*psim10 + (1.0/3.0)*igConf_U2U2[ijk]*psim4*
+trK[ijk];
+
+  double KIJ_U1U1 = 
 AConfIJ_U1U1[ijk]*psim10 + (1.0/3.0)*igConf_U1U1[ijk]*psim4*
 trK[ijk];
 
-  double KIJ_D1D2 = 
+  double KIJ_U1U2 = 
 AConfIJ_U1U2[ijk]*psim10 + (1.0/3.0)*igConf_U1U2[ijk]*psim4*
 trK[ijk];
 
