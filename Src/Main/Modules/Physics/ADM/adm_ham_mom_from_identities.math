@@ -10,12 +10,17 @@ C_macro1 = READ_v_UNUSED(name);
 C_macro2 = REALLOC_v_WRITE_v_STEM(name,Ham);
 C_macro3 = REALLOC_v_WRITE_v_STEM(name,Mom);
 C_macro4 = dfield_and_get_v(name);
+C_macro5 = add_dfield_and_get_v(name);
 
 `#include "adm_header.h"`
 ``
 ``
 ``
 `#define dfield_and_get_v(name) dField_di(name); READ_v_UNUSED(name);`
+``
+``
+`#define add_dfield_and_get_v(name) ADD_FIELD(name); dField_di(name); READ_v_UNUSED(name);`
+``
 ``
 `void adm_ham_and_mom_from_identities(Patch_T *const patch,`
 `        const char *const Ham,const char *const Mom);`
@@ -54,10 +59,10 @@ Declare =
  (obj = Field,name = igConf, rank = UU, C_macro1);
 
  # derivative of conformal metric inverse
- (obj = Field,name = digConf, rank = UUD, C_macro4);
+ (obj = Field,name = digConf, rank = UUD, C_macro5);
 
- # Christoffer symbol value
- (obj = Field,name = Chris, rank = UDD, C_macro1);
+ # conformal Christoffer symbol value
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro1);
 
  # EConf
  (obj = Field,name = EConf, rank = 0, C_macro1);
@@ -72,7 +77,7 @@ Declare =
  (obj = Field,name = dtrK, rank = D, C_macro1);
 
  # Ricci
- (obj = Field,name = RicciConf, rank = 0, C_macro1);
+ (obj = Field,name = trRicciConf, rank = 0, C_macro1);
 
 }
 # symmetries:
@@ -80,7 +85,7 @@ Symm[AConfIJ(i,j)    = AConfIJ(j,i)];
 Symm[dAConfIJ(i,j,l) = dAConfIJ(j,i,l)];
 Symm[gConf(i,j)      = gConf(j,i)];
 Symm[igConf(i,j)     = igConf(j,i)];
-Symm[Chris(i,j,k)    = Chris(i,k,j)];
+Symm[ChrisConf(i,j,k)= ChrisConf(i,k,j)];
 Symm[ddpsi(i,j)      = ddpsi(j,i)];
 Symm[digConf(i,j,k)  = digConf(j,i,k)];
 
@@ -95,8 +100,8 @@ E         = psim6*EConf;
 dLnpsi(-i)= dpsi(i)/psi;
 
 DDpsi =  igConf(i,j)*ddpsi(-i,-j) \
-       - igConf(-i,-j)*Chris(l,i,j)*dpsi(-l);
-R     = psim4*(RicciConf-8*DDpsi/psi);
+       - igConf(-i,-j)*ChrisConf(l,i,j)*dpsi(-l);
+R     = psim4*(trRicciConf-8*DDpsi/psi);
 
 Kbar(i,j) = psim6*AConfIJ(i,j)+trK*igConf(i,j)/3;
 Symm[Kbar(i,j) = Kbar(j,i)];
@@ -116,7 +121,7 @@ djKj(i)     = psim4*\
 +dtrK(-j)*igConf(i,j)/3 - 4*trK*dLnpsi(-j)*igConf(i,j)/3 \
 +trK*digConf(i,j,jp)*KD(-j,-jp)/3);
 
-GammaKbar(i) = Chris(i,j,l)*Kbar(-l,-j)+Chris(j,jp,l)*Kbar(i,-l)*KD(-j,-jp);
+GammaKbar(i) = ChrisConf(i,j,l)*Kbar(-l,-j)+ChrisConf(j,jp,l)*Kbar(i,-l)*KD(-j,-jp);
 DbarjKj(i)   = djKj(i)+GammaKbar(i)*psim4;
 
 CKbar(i) = c(i,j,l)*Kbar(-l,-j)+c(j,jp,l)*Kbar(i,-l)*KD(-j,-jp);
@@ -131,5 +136,5 @@ Cpopulate[mom = Mom_constraint];
 
 `}`
 
-`remove_field_with_regex(patch,"^digConf");`
+`remove_field_with_regex(patch,"^digConf_U.+");`
 `}`
