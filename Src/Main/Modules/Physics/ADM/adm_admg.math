@@ -1,0 +1,46 @@
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
+
+`#include "adm_header.h"`
+
+`void adm_update_adm_g(Patch_T *const patch);`
+``
+`void adm_update_adm_g(Patch_T *const patch)`
+`{`
+
+Declare = 
+{
+ # psi
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # conformal metric
+ (obj = Field,name = gConf, rank = DD, C_macro);
+
+ # adm metric
+ (obj = Field,name = adm_g, rank = DD, C_macro2);
+
+}
+
+# symmetries:
+Symm[gConf(i,j)  = gConf(j,i)];
+Symm[adm_g(i,j)  = adm_g(j,i)];
+
+
+`FOR_ALL_ijk`
+`{`
+	psi4     = psi**(4);
+	g(-i,-j) = psi4*gConf(i,j);
+	Symm[g(i,j) = g(j,i)];
+
+	Cpopulate[adm_g = g];
+`}`
+
+
+`}`
+
