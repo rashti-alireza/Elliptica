@@ -859,7 +859,7 @@ update_iteration_params
   unsigned i;
   
   /* if the start is from checkpoint_file do nothing */
-  if (Pcmps(PrefixIt(prefix,"start"),"checkpoint_file"))
+  if (Pcmps(PrefixIt(prefix,"start_off"),"checkpoint_file"))
     return 0;
   
   /* when starting from checkpoint, iter_n > main_loop_iter 
