@@ -10,14 +10,22 @@
 
 
 
+#define add_and_alloc_with_stem(xNAME,stem) \
+ char field__name__##xNAME[99] = {'\0'};\
+ const char *const field__index__##xNAME   = strrchr(#xNAME,'_');\
+ if (field__index__##xNAME) {sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);}\
+ else                       {sprintf(field__name__##xNAME,"%s"  ,stem);}\
+ add_field(field__name__##xNAME,0,patch,YES);
+
+
+
 #define add_field_get_v(name) ADD_AND_ALLOC_FIELD(name); WRITE_v(name);
 
 
 #define add_dfield_and_get_v(name) ADD_FIELD(name); dField_di(name); READ_v_UNUSED(name);
 
-#define add_compute_get_Chris(name)  ADD_AND_ALLOC_FIELD(name);\
-  Christoffel_symbol_3d(patch,"adm_ig","dadm_g","Gamma");\
-  READ_v(name);
+#define Compute_Christoffel(name)  \
+  Christoffel_symbol_3d(patch,"adm_ig","dadm_g","Gamma");
 
 void adm_ham_and_mom_from_scratch(Patch_T *const patch,
         const char *const Ham,const char *const Mom);
@@ -87,39 +95,76 @@ void adm_ham_and_mom_from_scratch(Patch_T *const patch,
   READ_v(adm_g_D1D2)
   READ_v(adm_g_D1D1)
   READ_v(adm_g_D2D2)
-  add_dfield_and_get_v(dadm_g_D1D2)
-  add_dfield_and_get_v(dadm_g_D1D1)
-  add_dfield_and_get_v(dadm_g_D1D0)
-  add_dfield_and_get_v(dadm_g_D2D0)
-  add_dfield_and_get_v(dadm_g_D2D1)
-  add_dfield_and_get_v(dadm_g_D2D2)
-  add_dfield_and_get_v(dadm_g_D0D2)
-  add_dfield_and_get_v(dadm_g_D0D0)
-  add_dfield_and_get_v(dadm_g_D0D1)
+  add_dfield_and_get_v(dadm_g_D2D2D2)
+  add_dfield_and_get_v(dadm_g_D1D1D1)
+  add_dfield_and_get_v(dadm_g_D1D2D1)
+  add_dfield_and_get_v(dadm_g_D2D2D0)
+  add_dfield_and_get_v(dadm_g_D1D2D0)
+  add_dfield_and_get_v(dadm_g_D0D0D0)
+  add_dfield_and_get_v(dadm_g_D0D0D1)
+  add_dfield_and_get_v(dadm_g_D0D0D2)
+  add_dfield_and_get_v(dadm_g_D1D2D2)
+  add_dfield_and_get_v(dadm_g_D0D1D1)
+  add_dfield_and_get_v(dadm_g_D0D1D0)
+  add_dfield_and_get_v(dadm_g_D1D1D2)
+  add_dfield_and_get_v(dadm_g_D0D1D2)
+  add_dfield_and_get_v(dadm_g_D1D1D0)
+  add_dfield_and_get_v(dadm_g_D0D2D2)
+  add_dfield_and_get_v(dadm_g_D2D2D1)
+  add_dfield_and_get_v(dadm_g_D0D2D0)
+  add_dfield_and_get_v(dadm_g_D0D2D1)
   READ_v(adm_ig_U1U1)
   READ_v(adm_ig_U1U2)
   READ_v(adm_ig_U0U1)
   READ_v(adm_ig_U0U0)
   READ_v(adm_ig_U0U2)
   READ_v(adm_ig_U2U2)
-  add_compute_get_Chris(Gamma_U1D0D0)
-  add_compute_get_Chris(Gamma_U0D2D2)
-  add_compute_get_Chris(Gamma_U1D0D2)
-  add_compute_get_Chris(Gamma_U2D1D2)
-  add_compute_get_Chris(Gamma_U1D0D1)
-  add_compute_get_Chris(Gamma_U1D2D2)
-  add_compute_get_Chris(Gamma_U2D0D2)
-  add_compute_get_Chris(Gamma_U2D0D0)
-  add_compute_get_Chris(Gamma_U0D0D1)
-  add_compute_get_Chris(Gamma_U0D0D0)
-  add_compute_get_Chris(Gamma_U2D0D1)
-  add_compute_get_Chris(Gamma_U0D0D2)
-  add_compute_get_Chris(Gamma_U2D2D2)
-  add_compute_get_Chris(Gamma_U1D1D1)
-  add_compute_get_Chris(Gamma_U0D1D1)
-  add_compute_get_Chris(Gamma_U0D1D2)
-  add_compute_get_Chris(Gamma_U1D1D2)
-  add_compute_get_Chris(Gamma_U2D1D1)
+  add_and_alloc_with_stem(add_Gamma_U2D2D1,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U0D1D0,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U2D2D2,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U1D2D2,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U0D1D1,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U0D1D2,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U1D2D1,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U1D2D0,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U0D2D1,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U1D0D0,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U1D0D1,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U1D0D2,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U2D1D1,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U1D1D1,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U1D1D0,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U1D1D2,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U2D0D2,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U2D0D0,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U0D0D1,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U0D0D0,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U2D0D1,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U0D0D2,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U2D2D0,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U2D1D2,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U0D2D2,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U2D1D0,"Gamma")
+  add_and_alloc_with_stem(add_Gamma_U0D2D0,"Gamma")
+  Compute_Christoffel(compute_Gamma)
+  READ_v(Gamma_U1D0D0)
+  READ_v(Gamma_U0D2D2)
+  READ_v(Gamma_U1D0D2)
+  READ_v(Gamma_U2D1D2)
+  READ_v(Gamma_U1D0D1)
+  READ_v(Gamma_U1D2D2)
+  READ_v(Gamma_U2D0D2)
+  READ_v(Gamma_U2D0D0)
+  READ_v(Gamma_U0D0D1)
+  READ_v(Gamma_U0D0D0)
+  READ_v(Gamma_U2D0D1)
+  READ_v(Gamma_U0D0D2)
+  READ_v(Gamma_U2D2D2)
+  READ_v(Gamma_U1D1D1)
+  READ_v(Gamma_U0D1D1)
+  READ_v(Gamma_U0D1D2)
+  READ_v(Gamma_U1D1D2)
+  READ_v(Gamma_U2D1D1)
   add_dfield_and_get_v(dGamma_U1D0D1D2)
   add_dfield_and_get_v(dGamma_U1D2D2D2)
   add_dfield_and_get_v(dGamma_U1D0D1D0)

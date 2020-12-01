@@ -43,7 +43,7 @@ Declare =
  (obj = Field,name = EConf, rank = 0, C_macro2);
 
  # JConf
- (obj = Field,name = JConf, rank = 0, C_macro2);
+ (obj = Field,name = JConf, rank = U, C_macro2);
 
  # SConf
  (obj = Field,name = SConf, rank = 0, C_macro2);

@@ -11,7 +11,8 @@ C_macro1 = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v_STEM(name,Ham);
 C_macro3 = REALLOC_v_WRITE_v_STEM(name,Mom);
 C_macro4 = add_dfield_and_get_v(name);
-C_macro5 = add_compute_get_Chris(name);
+C_macro5 = add_and_alloc_with_stem(name,"Gamma");
+C_macro7 = Compute_Christoffel(name);
 C_macro6 = add_field_get_v(name);
 
 
@@ -22,14 +23,23 @@ C_macro6 = add_field_get_v(name);
 ``
 ``
 ``
+`#define add_and_alloc_with_stem(xNAME,stem) \`
+` char field__name__##xNAME[99] = {'\0'};\`
+` const char *const field__index__##xNAME   = strrchr(#xNAME,'_');\`
+` if (field__index__##xNAME) {sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);}\`
+` else                       {sprintf(field__name__##xNAME,"%s"  ,stem);}\`
+` add_field(field__name__##xNAME,0,patch,YES);`
+
+``
+``
+``
 `#define add_field_get_v(name) ADD_AND_ALLOC_FIELD(name); WRITE_v(name);`
 ``
 ``
 `#define add_dfield_and_get_v(name) ADD_FIELD(name); dField_di(name); READ_v_UNUSED(name);`
 ``
-`#define add_compute_get_Chris(name)  ADD_AND_ALLOC_FIELD(name);\`
-`  Christoffel_symbol_3d(patch,"adm_ig","dadm_g","Gamma");\`
-`  READ_v(name);`
+`#define Compute_Christoffel(name)  \`
+`  Christoffel_symbol_3d(patch,"adm_ig","dadm_g","Gamma");`
 ``
 `void adm_ham_and_mom_from_scratch(Patch_T *const patch,`
 `        const char *const Ham,const char *const Mom);`
@@ -86,13 +96,19 @@ Declare =
  (obj = Field,name = adm_g, rank = DD, C_macro1);
 
  # dmetric 
- (obj = Field,name = dadm_g, rank = DD, C_macro4);
+ (obj = Field,name = dadm_g, rank = DDD, C_macro4);
 
  # metric inverse
  (obj = Field,name = adm_ig, rank = UU, C_macro1);
 
- # Christoffer symbol value
- (obj = Field,name = Gamma, rank = UDD, C_macro5);
+ # add Christoffer symbol field
+ (obj = Field,name = add_Gamma, rank = UDD, C_macro5);
+
+ # calculate Christoffer symbol value
+ (obj = Field,name = compute_Gamma, rank = 0, C_macro7);
+
+ # read Christoffer symbol value
+ (obj = Field,name = Gamma, rank = UDD, C_macro1);
 
  # Christoffer symbol derivatives
  (obj = Field,name = dGamma, rank = UDDD, C_macro4);
@@ -114,6 +130,7 @@ Declare =
 Symm[adm_KIJ(i,j)     = adm_KIJ(j,i)];
 Symm[dadm_KIJ(i,j,l)  = dadm_KIJ(j,i,l)];
 Symm[adm_g(i,j)       = adm_g(j,i)];
+Symm[dadm_g(i,j,k)    = dadm_g(j,i,k)];
 Symm[adm_ig(i,j)      = adm_ig(j,i)];
 Symm[Gamma(i,j,k)     = Gamma(i,k,j)];
 Symm[dGamma(i,j,k,l)  = dGamma(i,k,j,l)];

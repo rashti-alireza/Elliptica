@@ -29,7 +29,9 @@ void Tij_NS_idealfluid_CTS_gConf_add_fields(Grid_T *const grid)
   ADD_FIELD(drho0_D0)
   ADD_FIELD(drho0_D1)
   ADD_AND_ALLOC_FIELD(EConf)
-  ADD_AND_ALLOC_FIELD(JConf)
+  ADD_AND_ALLOC_FIELD(JConf_U0)
+  ADD_AND_ALLOC_FIELD(JConf_U1)
+  ADD_AND_ALLOC_FIELD(JConf_U2)
   ADD_AND_ALLOC_FIELD(SConf)
 
 
