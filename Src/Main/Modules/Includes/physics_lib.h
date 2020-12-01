@@ -148,7 +148,7 @@ typedef enum CMD_T
  ADM_UPDATE_KIJ,/* adm_K^{ij} */
  ADM_UPDATE_gij,/* adm_g_{ij} = psi^4 *gConf_{ij} */
  ADM_UPDATE_AConfIJ,/* conformal traceless part of K^{ij} */
- ADM_UPDATE_B1I,/* beta = B0+B1 in which B1 can be rotation pieces */
+ ADM_UPDATE_B1I,/* beta = B0+B1 in which B1 can be rotational piece */
  ADM_COMPUTE_CONSTRAINTS,/* ham and mom constrains */
  
  CMD_END
