@@ -20,6 +20,8 @@ void adm_update_adm_KIJ(Patch_T *const patch);
 void adm_update_adm_g(Patch_T *const patch);
 void adm_ham_and_mom_from_identities(Patch_T *const patch,
               const char *const Ham,const char *const Mom);
+void adm_ham_and_mom_from_scratch(Patch_T *const patch,
+              const char *const Ham,const char *const Mom);
               
 void adm_compute_constraints(Physics_T *const phys,
                                   const char *const region,

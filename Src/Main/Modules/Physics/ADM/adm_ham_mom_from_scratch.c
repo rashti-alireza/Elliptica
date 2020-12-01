@@ -9,12 +9,13 @@
 
 
 
+
 #define add_field_get_v(name) ADD_AND_ALLOC_FIELD(name); WRITE_v(name);
 
 
 #define add_dfield_and_get_v(name) ADD_FIELD(name); dField_di(name); READ_v_UNUSED(name);
 
-#define add_compute_get_Chris(name)  \
+#define add_compute_get_Chris(name)  ADD_AND_ALLOC_FIELD(name);\
   Christoffel_symbol_3d(patch,"adm_ig","dadm_g","Gamma");\
   READ_v(name);
 
@@ -436,9 +437,9 @@ adm_ig_U1U1[ijk]*dtrK_D1[ijk] - adm_ig_U1U2[ijk]*dtrK_D2[ijk];
   ham[ijk] = Ham_Constraint;
 }
 
-remove_field_with_regex(patch,"^adm_ig_U");
-remove_field_with_regex(patch,"^adm_KIJ_U");
-remove_field_with_regex(patch,"^dadm_KIJ_U");
-remove_field_with_regex(patch,"^Gamma_U");
-remove_field_with_regex(patch,"^dGamma_U");
+remove_field_with_regex(patch,"^adm_ig_U.+");
+remove_field_with_regex(patch,"^adm_KIJ_U.+");
+remove_field_with_regex(patch,"^dadm_KIJ_U.+");
+remove_field_with_regex(patch,"^Gamma_U.+");
+remove_field_with_regex(patch,"^dGamma_U.+");
 }
