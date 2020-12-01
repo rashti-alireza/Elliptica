@@ -5,9 +5,9 @@
 
 
 #include "adm_header.h"
-void adm_update_adm_KIJ(Patch_T *const patch);
+void adm_update_adm_KIJ_useKij(Patch_T *const patch);
 
-void adm_update_adm_KIJ(Patch_T *const patch)
+void adm_update_adm_KIJ_useKij(Patch_T *const patch)
 {
 
   /* declaring: */
