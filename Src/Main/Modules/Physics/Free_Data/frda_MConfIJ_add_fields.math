@@ -11,9 +11,9 @@ C_macro2 = ADD_AND_ALLOC_FIELD(name);
 ``
 ``
 
-`void frda_add_fields_MConf(Grid_T *const grid);`
+`void frda_add_fields_MConfIJ(Grid_T *const grid);`
 ``
-`void frda_add_fields_MConf(Grid_T *const grid)`
+`void frda_add_fields_MConfIJ(Grid_T *const grid)`
 `{`
 
 ` unsigned p;`
@@ -24,11 +24,11 @@ C_macro2 = ADD_AND_ALLOC_FIELD(name);
 Declare =
 {
  # MConf^{ij}
- (obj = Field,name = MConf, rank = UU, C_macro2);
+ (obj = Field,name = MConfIJ, rank = UU, C_macro2);
 
 }
 
-Symm[MConf(i,j)    = MConf(j,i)];
+Symm[MConfIJ(i,j) = MConfIJ(j,i)];
 
 ` }`
 `}`
