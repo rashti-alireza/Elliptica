@@ -10,7 +10,7 @@ Point = ijk;
 C_macro1 = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v_STEM(name,Ham);
 C_macro3 = REALLOC_v_WRITE_v_STEM(name,Mom);
-C_macro4 = dfield_and_get_v(name);
+C_macro4 = add_dfield_and_get_v(name);
 C_macro5 = add_compute_get_Chris(name);
 C_macro6 = add_field_get_v(name);
 
@@ -23,16 +23,16 @@ C_macro6 = add_field_get_v(name);
 `#define add_field_get_v(name) ADD_AND_ALLOC_FIELD(name); WRITE_v(name);`
 ``
 ``
-`#define dfield_and_get_v(name) dField_di(name); READ_v(name);`
+`#define add_dfield_and_get_v(name) ADD_FIELD(name); dField_di(name); READ_v(name);`
 ``
 `#define add_compute_get_Chris(name)  \`
 `  Christoffel_symbol_3d(patch,"adm_ig","dadm_g","Gamma");\`
 `  READ_v(name);`
 ``
-`void adm_ham_and_mom_from_identities(Patch_T *const patch,`
+`void adm_ham_and_mom_from_scratch(Patch_T *const patch,`
 `        const char *const Ham,const char *const Mom);`
 ``
-`void adm_ham_and_mom_from_identities(Patch_T *const patch,`
+`void adm_ham_and_mom_from_scratch(Patch_T *const patch,`
 `        const char *const Ham,const char *const Mom)`
 `{`
 
