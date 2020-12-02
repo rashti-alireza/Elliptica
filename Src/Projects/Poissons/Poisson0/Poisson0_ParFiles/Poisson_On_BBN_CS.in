@@ -68,7 +68,7 @@ dF/du_for_Newton_Method               = Spectral
 
 print_coords     = yes
 print_interfaces = yes
-output_3d_hdf5   = alpha
+output_3d_silo   = alpha
 
 #-----------------------------------------------------------------------#
 # The End                                                               #
