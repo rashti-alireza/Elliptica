@@ -6,6 +6,9 @@
 #include "manifold_lib.h"
 #include "fields_lib.h"
 #include "pr_for_fields_structs.h"
+#include  <unistd.h>
+
+#define STR_LEN (999)
 
 void pr_fields(Pr_Field_T *const pr);
 Pr_Field_T *init_PrField(const Grid_T *const grid);
@@ -13,5 +16,8 @@ void free_PrField(Pr_Field_T *pr);
 void pr_hdf5_silo(Pr_Field_T *const pr);
 static void parse_parameter_3d(const char *const par,Pr_Field_T *const pr);
 int print_fields_3D(const Grid_T *const grid,const int iteration,const char *const dir);
+double print_field_1D(const Grid_T *const grid,const int iteration,const char *const folder);
+
+
 
 
