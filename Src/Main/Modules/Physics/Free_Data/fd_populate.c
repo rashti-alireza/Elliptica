@@ -228,13 +228,11 @@ fd_populate_psi_alpha_beta_KerrSchild
      {
        Matrix_Inverse_3x3_Symmetric_Field(g,D,ig,U,ijk);
      }
-     
+     fd_psi_alpha_beta_KerrSchild_patch(patch,BHx,BHy,BHz,
+                                       "fd_ks__ig",Psi,Alpha,Beta);
      /* remove redundant */
      remove_field_with_regex(patch,"^fd_ks__g_D.+");
      remove_field_with_regex(patch,"^fd_ks__ig_U.+");
-     
-     fd_psi_alpha_beta_KerrSchild_patch(patch,BHx,BHy,BHz,
-                                       "fd_ks__ig",Psi,Alpha,Beta);
     }
     else
      fd_psi_alpha_beta_KerrSchild_patch(patch,BHx,BHy,BHz,
