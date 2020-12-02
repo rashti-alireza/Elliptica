@@ -12,6 +12,7 @@ C_macro2  = READ_v_STEM(name,Chris);
 C_macro3  = REALLOC_v_WRITE_v_STEM(name,Kij);
 C_macro4  = REALLOC_v_WRITE_v_STEM(name,trK);
 C_macro5  = add_alloc_get(name);
+C_macro6  = ADD_FIELD(name);
 
 
 `#include "fd_header.h"`
@@ -19,6 +20,9 @@ C_macro5  = add_alloc_get(name);
 ``
 ``
 `#define add_alloc_get(name) ADD_AND_ALLOC_FIELD(name);WRITE_v(name);`
+``
+``
+`#define dfield_and_get_v(x) dField_di(x); READ_v(x);`
 ``
 `#undef x`
 `#undef y`
@@ -78,8 +82,8 @@ Declare =
   # beta
   (obj = Field,name = KS__beta, rank = D, C_macro5);
 
-  # beta
-  (obj = Field,name = dKS__beta, rank = DD, C_macro5);
+  # dbeta
+  (obj = Field,name = dKS__beta, rank = DD, C_macro6);
 
   # alpha
   (obj = Field,name = KS__alpha, rank = 0, C_macro5);
@@ -109,17 +113,17 @@ Symm[Chris(i,j,k) = Chris(i,k,j)];
 
 ## take derivatives dbeta_i
 
-`dField_di(dKS__beta_D0D0);`
-`dField_di(dKS__beta_D0D1);`
-`dField_di(dKS__beta_D0D2);`
+`dfield_and_get_v(dKS__beta_D0D0);`
+`dfield_and_get_v(dKS__beta_D0D1);`
+`dfield_and_get_v(dKS__beta_D0D2);`
 ``
-`dField_di(dKS__beta_D1D0);`
-`dField_di(dKS__beta_D1D1);`
-`dField_di(dKS__beta_D1D2);`
+`dfield_and_get_v(dKS__beta_D1D0);`
+`dfield_and_get_v(dKS__beta_D1D1);`
+`dfield_and_get_v(dKS__beta_D1D2);`
 ``
-`dField_di(dKS__beta_D2D0);`
-`dField_di(dKS__beta_D2D1);`
-`dField_di(dKS__beta_D2D2);`
+`dfield_and_get_v(dKS__beta_D2D0);`
+`dfield_and_get_v(dKS__beta_D2D1);`
+`dfield_and_get_v(dKS__beta_D2D2);`
 ``
 ``
 ## covariant derivatives

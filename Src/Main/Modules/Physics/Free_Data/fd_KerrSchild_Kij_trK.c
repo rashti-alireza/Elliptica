@@ -10,6 +10,9 @@
 
 #define add_alloc_get(name) ADD_AND_ALLOC_FIELD(name);WRITE_v(name);
 
+
+#define dfield_and_get_v(x) dField_di(x); READ_v(x);
+
 #undef x
 #undef y
 #undef z
@@ -85,15 +88,15 @@ void fd_Kij_trK_KerrSchild(Patch_T *const patch,
   add_alloc_get(KS__beta_D2)
   add_alloc_get(KS__beta_D0)
   add_alloc_get(KS__beta_D1)
-  add_alloc_get(dKS__beta_D0D2)
-  add_alloc_get(dKS__beta_D0D1)
-  add_alloc_get(dKS__beta_D0D0)
-  add_alloc_get(dKS__beta_D1D2)
-  add_alloc_get(dKS__beta_D1D0)
-  add_alloc_get(dKS__beta_D1D1)
-  add_alloc_get(dKS__beta_D2D1)
-  add_alloc_get(dKS__beta_D2D0)
-  add_alloc_get(dKS__beta_D2D2)
+  ADD_FIELD(dKS__beta_D0D2)
+  ADD_FIELD(dKS__beta_D0D1)
+  ADD_FIELD(dKS__beta_D0D0)
+  ADD_FIELD(dKS__beta_D1D2)
+  ADD_FIELD(dKS__beta_D1D0)
+  ADD_FIELD(dKS__beta_D1D1)
+  ADD_FIELD(dKS__beta_D2D1)
+  ADD_FIELD(dKS__beta_D2D0)
+  ADD_FIELD(dKS__beta_D2D2)
   add_alloc_get(KS__alpha)
 
 
@@ -110,17 +113,17 @@ FOR_ALL_ijk
   KS__beta_D2[ijk] = fd_ks_c(x,y,z)*fd_ks_kt(x, y, z)*fd_ks_k2(x, y, z);
   KS__alpha[ijk]   = 1./sqrt(1+fd_ks_c(x,y,z)*fd_ks_k0(x, y, z)*fd_ks_k0(x, y, z));
 }
-dField_di(dKS__beta_D0D0);
-dField_di(dKS__beta_D0D1);
-dField_di(dKS__beta_D0D2);
+dfield_and_get_v(dKS__beta_D0D0);
+dfield_and_get_v(dKS__beta_D0D1);
+dfield_and_get_v(dKS__beta_D0D2);
 
-dField_di(dKS__beta_D1D0);
-dField_di(dKS__beta_D1D1);
-dField_di(dKS__beta_D1D2);
+dfield_and_get_v(dKS__beta_D1D0);
+dfield_and_get_v(dKS__beta_D1D1);
+dfield_and_get_v(dKS__beta_D1D2);
 
-dField_di(dKS__beta_D2D0);
-dField_di(dKS__beta_D2D1);
-dField_di(dKS__beta_D2D2);
+dfield_and_get_v(dKS__beta_D2D0);
+dfield_and_get_v(dKS__beta_D2D1);
+dfield_and_get_v(dKS__beta_D2D2);
 
 
 FOR_ALL_ijk
