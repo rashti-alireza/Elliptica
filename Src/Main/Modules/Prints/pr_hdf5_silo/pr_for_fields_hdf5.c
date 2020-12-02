@@ -14,8 +14,8 @@
 //
 // usage examples:
 // ===============
-// # parameter that is determined in input file is like:
-// output_3d_hdf5 = (V_U0,V_U1,V_U2),psi,eta,(a_U0,a_U1,a_U2)
+// # parameter that is determined in input file is like (supporting regular expression):
+// output_3d_silo = (V_U0,V_U1,V_U2),psi,eta,(a_U0,a_U1,a_U2),^dpsi_D.+
 // # as one can see the vector quantities determined by parenthesis 
 //
 // Pr_Field_T *pr  = init_PrField(grid);
@@ -448,7 +448,7 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   int dims[] = 
     {(int)pr->patch->n[0],(int)pr->patch->n[1],(int)pr->patch->n[2]};
   const int ndims = 3;
-  const int v_ind = _Ind(subg->field);
+  int v_ind = _Ind(subg->field);
   int DB_ret;
   const char *mesh_name = strstr(pr->patch->name,"_");/* grid\d?_ */
   Uint ijk,i,j,k;
@@ -456,33 +456,73 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   assert(mesh_name);
   mesh_name++;
   
-  /* if field does not exists or empty */
-  if (v_ind < 0 || !patch->fields[v_ind]->v)
-    return;
-  
-  /* fields value */
-  data = alloc_double(nn);
-  for (ijk = 0; ijk < nn; ++ijk)
+  /* if field did not find a match maybe there is a regex */
+  if (v_ind < 0)
   {
-    IJK(ijk,n,&i,&j,&k);
-    data[row2col(i,j,k)] = patch->fields[v_ind]->v[ijk];
+    Uint Nf   = 0;
+    Uint *fInd = find_field_index_with_regex(patch,subg->field,&Nf);
+    Uint f = 0;
+    
+    for (f = 0; f < Nf; ++f)
+    {
+      if (!patch->fields[fInd[f]]->v)
+        continue;
+        
+      /* fields value */
+      data = alloc_double(nn);
+      for (ijk = 0; ijk < nn; ++ijk)
+      {
+        IJK(ijk,n,&i,&j,&k);
+        data[row2col(i,j,k)] = patch->fields[fInd[f]]->v[ijk];
+      }
+       
+      DB_ret = DBPutQuadvar1(dbfile,patch->fields[fInd[f]]->name,mesh_name,
+        data,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
+      if (DB_ret == -1)
+        Error0("Silo library failed to print.\n");
+      
+      /* if there is another file that the field needs to be printed */
+      if (pr->file2)
+      {
+        DB_ret = DBPutQuadvar1(pr->file2,patch->fields[fInd[f]]->name,mesh_name,
+          data,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
+        if (DB_ret == -1)
+          Error0("Silo library failed to print.\n");
+      }
+      
+      _free(data);
+    }
+    _free(fInd);
   }
-   
-  DB_ret = DBPutQuadvar1(dbfile,subg->field,mesh_name,
-    data,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
-  if (DB_ret == -1)
-    Error0("Silo library failed to print.\n");
-  
-  /* if there is another file that the field needs to be printed */
-  if (pr->file2)
+  else
   {
-    DB_ret = DBPutQuadvar1(pr->file2,subg->field,mesh_name,
+    if (!patch->fields[v_ind]->v)
+      return;
+      
+    /* fields value */
+    data = alloc_double(nn);
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      IJK(ijk,n,&i,&j,&k);
+      data[row2col(i,j,k)] = patch->fields[v_ind]->v[ijk];
+    }
+     
+    DB_ret = DBPutQuadvar1(dbfile,subg->field,mesh_name,
       data,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
     if (DB_ret == -1)
       Error0("Silo library failed to print.\n");
-  }
-  
-  _free(data);
+    
+    /* if there is another file that the field needs to be printed */
+    if (pr->file2)
+    {
+      DB_ret = DBPutQuadvar1(pr->file2,subg->field,mesh_name,
+        data,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
+      if (DB_ret == -1)
+        Error0("Silo library failed to print.\n");
+    }
+    
+    _free(data);
+  }/* else */
 }
 
 /* printing vector field on structured 3d mesh with node centered format. */
