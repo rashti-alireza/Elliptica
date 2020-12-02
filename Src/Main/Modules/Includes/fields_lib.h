@@ -51,6 +51,7 @@ void free_field(Field_T *fld);
 void empty_field(Field_T *fld);
 int free_coeffs(Field_T *fld);
 void remove_field_with_regex(Patch_T *const patch,const char *const regex);
+Uint *find_field_index_with_regex(const Patch_T *const patch,const char *const regex,Uint *const Nm);
 
 #endif
 

@@ -121,6 +121,30 @@ void add_attribute(Field_T *const fld,const char *const attribute)
   
 }
 
+/* ->: a list of fields index match with regex, null, if not found any.
+// the number of of matched is put in Nm. */
+Uint *find_field_index_with_regex(const Patch_T *const patch,const char *const regex,Uint *const Nm)
+{
+  Uint *ind = 0;
+  Uint nm   = 0;
+  Uint f;
+  
+  *Nm = 0;
+  for(f = 0; f < patch->nfld; ++f)
+  {
+    if (regex_search(regex,patch->fields[f]->name))
+    {
+      ind = realloc(ind,(nm+1)*sizeof(*ind));
+      IsNull(ind);
+      ind[nm] = f;
+      nm++;
+    }
+  }
+  
+  *Nm = nm;
+  return ind;
+}
+
 /* given name and patch find the index of a field in the fields.
 // ->return value: index of field in the fields. INT_MIN if doesn't exist. */
 int LookUpField(const char *const name,const Patch_T *const patch)
