@@ -164,12 +164,12 @@ fd_populate_gConf_dgConf_igConf_KerrSchild
 
 /* populate psi, alpha and beta KerrSchild value. */
 void 
-fd_populate_psi_alpha_beta_KerrSchild
+fd_populate_psi_alphaPsi_beta_KerrSchild
  (
  Physics_T *const phys,
  const char *const region,
  const char *const Psi,
- const char *const Alpha,
+ const char *const AlphaPsi,
  const char *const Beta,
  const char *const ig/*(inverse metric) if ig is null, it makes them */
  )
@@ -228,15 +228,15 @@ fd_populate_psi_alpha_beta_KerrSchild
      {
        Matrix_Inverse_3x3_Symmetric_Field(g,D,ig,U,ijk);
      }
-     fd_psi_alpha_beta_KerrSchild_patch(patch,BHx,BHy,BHz,
-                                       "fd_ks__ig",Psi,Alpha,Beta);
+     fd_psi_alphaPsi_beta_KerrSchild_patch(patch,BHx,BHy,BHz,
+                                       "fd_ks__ig",Psi,AlphaPsi,Beta);
      /* remove redundant */
      remove_field_with_regex(patch,"^fd_ks__g_D.+");
      remove_field_with_regex(patch,"^fd_ks__ig_U.+");
     }
     else
-     fd_psi_alpha_beta_KerrSchild_patch(patch,BHx,BHy,BHz,
-                                        ig,Psi,Alpha,Beta);
+     fd_psi_alphaPsi_beta_KerrSchild_patch(patch,BHx,BHy,BHz,
+                                        ig,Psi,AlphaPsi,Beta);
   }
   
   FUNC_TOC

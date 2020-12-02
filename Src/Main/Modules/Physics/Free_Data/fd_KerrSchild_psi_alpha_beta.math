@@ -8,7 +8,7 @@ Point = ijk;
 
 C_macro1  = READ_v_STEM(name,ig);
 C_macro2  = REALLOC_v_WRITE_v_STEM(name,Psi);
-C_macro3  = REALLOC_v_WRITE_v_STEM(name,Alpha);
+C_macro3  = REALLOC_v_WRITE_v_STEM(name,AlphaPsi);
 C_macro4  = REALLOC_v_WRITE_v_STEM(name,Beta);
 C_arg     = ;
 
@@ -43,17 +43,17 @@ C_arg     = ;
 ``
 ``
 
-`void fd_psi_alpha_beta_KerrSchild_patch(Patch_T *const patch,`
+`void fd_psi_alphaPsi_beta_KerrSchild_patch(Patch_T *const patch,`
 ` const double BH_center_x,const double BH_center_y,`
 ` const double BH_center_z,const char *const ig,`
-` const char *const Psi,const char *const Alpha,`
+` const char *const Psi,const char *const AlphaPsi,`
 ` const char *const Beta);`
 ``
 ``
-`void fd_psi_alpha_beta_KerrSchild_patch(Patch_T *const patch,`
+`void fd_psi_alphaPsi_beta_KerrSchild_patch(Patch_T *const patch,`
 ` const double BH_center_x,const double BH_center_y,`
 ` const double BH_center_z,const char *const ig,`
-` const char *const Psi,const char *const Alpha,`
+` const char *const Psi,const char *const AlphaPsi,`
 ` const char *const Beta)`
 `{`
 
@@ -65,8 +65,8 @@ Declare =
   # psi
   (obj = Field,name = psi, rank = 0, C_macro2);
 
-  # alpha
-  (obj = Field,name = alpha, rank = 0, C_macro3);
+  # alphaPsi
+  (obj = Field,name = alphaPsi, rank = 0, C_macro3);
 
   # beta
   (obj = Field,name = beta, rank = U, C_macro4);
@@ -92,9 +92,9 @@ Symm[ig(i,j)      = ig(j,i)];
 `  double betaD_D1 = fd_ks_c(x,y,z)*fd_ks_kt(x, y, z)*fd_ks_k1(x, y, z);`
 `  double betaD_D2 = fd_ks_c(x,y,z)*fd_ks_kt(x, y, z)*fd_ks_k2(x, y, z);`
 
-   betaU(i)   = ig(i,j)*betaD(-j);
-`  alpha[ijk] = 1./sqrt(1+fd_ks_c(x,y,z)*fd_ks_k0(x, y, z)*fd_ks_k0(x, y, z));`
-`  psi[ijk]   = 1.;`
+   betaU(i)      = ig(i,j)*betaD(-j);
+`  alphaPsi[ijk] = 1./sqrt(1+fd_ks_c(x,y,z)*fd_ks_k0(x, y, z)*fd_ks_k0(x, y, z));`
+`  psi[ijk]      = 1.;`
 
 Cpopulate[beta = betaU];
 

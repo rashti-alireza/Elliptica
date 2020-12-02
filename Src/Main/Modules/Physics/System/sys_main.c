@@ -53,8 +53,8 @@ static int initialize_fields(Physics_T *const phys)
   {
     if(Pcmps(P_"initialize_fields","XCTS"))
     {
-      fd_populate_psi_alpha_beta_KerrSchild(phys,".*",
-                                            "psi","alpha","beta",0);
+      fd_populate_psi_alphaPsi_beta_KerrSchild(phys,".*",
+                                            "psi","alphaPsi","beta",0);
     }
     else
       Error0(NO_OPTION);

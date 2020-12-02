@@ -34,17 +34,17 @@
   farg->dZ_D2 = fd_ks_dZ_D2 KS_func_pass_args_sed;
 
 
-void fd_psi_alpha_beta_KerrSchild_patch(Patch_T *const patch,
+void fd_psi_alphaPsi_beta_KerrSchild_patch(Patch_T *const patch,
  const double BH_center_x,const double BH_center_y,
  const double BH_center_z,const char *const ig,
- const char *const Psi,const char *const Alpha,
+ const char *const Psi,const char *const AlphaPsi,
  const char *const Beta);
 
 
-void fd_psi_alpha_beta_KerrSchild_patch(Patch_T *const patch,
+void fd_psi_alphaPsi_beta_KerrSchild_patch(Patch_T *const patch,
  const double BH_center_x,const double BH_center_y,
  const double BH_center_z,const char *const ig,
- const char *const Psi,const char *const Alpha,
+ const char *const Psi,const char *const AlphaPsi,
  const char *const Beta)
 {
 
@@ -56,7 +56,7 @@ void fd_psi_alpha_beta_KerrSchild_patch(Patch_T *const patch,
   READ_v_STEM(ig_U0U2,ig)
   READ_v_STEM(ig_U2U2,ig)
   REALLOC_v_WRITE_v_STEM(psi,Psi)
-  REALLOC_v_WRITE_v_STEM(alpha,Alpha)
+  REALLOC_v_WRITE_v_STEM(alphaPsi,AlphaPsi)
   REALLOC_v_WRITE_v_STEM(beta_U1,Beta)
   REALLOC_v_WRITE_v_STEM(beta_U0,Beta)
   REALLOC_v_WRITE_v_STEM(beta_U2,Beta)
@@ -85,8 +85,8 @@ ig_U0U2[ijk];
 betaD_D0*ig_U0U2[ijk] + betaD_D1*ig_U1U2[ijk] + betaD_D2*
 ig_U2U2[ijk];
 
-  alpha[ijk] = 1./sqrt(1+fd_ks_c(x,y,z)*fd_ks_k0(x, y, z)*fd_ks_k0(x, y, z));
-  psi[ijk]   = 1.;
+  alphaPsi[ijk] = 1./sqrt(1+fd_ks_c(x,y,z)*fd_ks_k0(x, y, z)*fd_ks_k0(x, y, z));
+  psi[ijk]      = 1.;
 
   /* populating: */
   beta_U1[ijk] = betaU_U1;
