@@ -10,7 +10,8 @@
 
 /* taking partial derivatives using a regex comma separated list.
 // using the regex, it finds the field->name match and take derivative
-// according to the name. please read notes about partial_derivative. */
+// according to the name. please read notes about partial_derivative.
+// NOTE: no space is accepted. */
 void partial_derivative_with_regex(Patch_T *const patch,
                                    const char *const regex_list)
 {
@@ -20,6 +21,8 @@ void partial_derivative_with_regex(Patch_T *const patch,
   while (regex[i])
   {
     Uint f;
+    if (strchr(regex[i],' '))
+      Error0("NO SPACE in field's name is accepted!\n");
     for (f = 0; f < patch->nfld; ++f)
     {
       if (regex_search(regex[i],patch->fields[f]->name))
