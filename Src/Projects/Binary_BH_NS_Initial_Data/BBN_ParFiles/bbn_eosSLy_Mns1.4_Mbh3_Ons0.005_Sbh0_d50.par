@@ -98,7 +98,7 @@ n_c = 12(x360)->14(x100)->16(x50)->18(x25)->20(x25)
 # Print:                                                                #
 #-----------------------------------------------------------------------#
 
-output_2d_txt  = ham_constraint,mom_constraint_U0,\
+txt_output_1d  = ham_constraint,mom_constraint_U0,\
                  mom_constraint_U1,mom_constraint_U2,\
                  ham_constraint_2nd,mom_constraint_2nd_U0,\
                  mom_constraint_2nd_U1,mom_constraint_2nd_U2,\

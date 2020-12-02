@@ -334,7 +334,7 @@ void bbn_print_residual_norms(Grid_T *const grid,const Uint iteration, const cha
 {
   /* list of the fields to be printed out */
   char **f = 
-     read_separated_items_in_string(PgetsEZ("output_2d_txt"),',');
+     read_separated_items_in_string(PgetsEZ("txt_output_1d"),',');
   double largest_L2_error = 0;                   
   Uint i,p;
   
