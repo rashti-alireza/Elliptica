@@ -485,6 +485,7 @@ adm_ig_U1U1[ijk]*dtrK_D1[ijk] - adm_ig_U1U2[ijk]*dtrK_D2[ijk];
 }
 
 remove_field_with_regex(patch,"^adm_ig_U.+");
+remove_field_with_regex(patch,"^dadm_g_D.+");
 remove_field_with_regex(patch,"^dadm_KIJ_U.+");
 remove_field_with_regex(patch,"^Gamma_U.+");
 remove_field_with_regex(patch,"^dGamma_U.+");
