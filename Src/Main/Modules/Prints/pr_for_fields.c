@@ -12,7 +12,7 @@
 // usage examples:
 // ===============
 // # parameter that is determined in input file is like:
-// output_3d_silo = (V_U0,V_U1,V_U2),psi,eta,(a_U0,a_U1,a_U2)
+// silo_output_3d = (V_U0,V_U1,V_U2),psi,eta,(a_U0,a_U1,a_U2)
 // # as one can see the vector quantities determined by parenthesis 
 //
 // Pr_Field_T *pr  = init_PrField(grid);
@@ -47,9 +47,9 @@ void pr_fields(Pr_Field_T *const pr)
     return;
   
   /* using silo */  
-  if (PgetsEZ("output_3d_silo"))
+  if (PgetsEZ("silo_output_3d"))
   {
-    parse_parameter_3d(Pgets("output_3d_silo"),pr);
+    parse_parameter_3d(Pgets("silo_output_3d"),pr);
     pr_hdf5_silo(pr);
   }
   

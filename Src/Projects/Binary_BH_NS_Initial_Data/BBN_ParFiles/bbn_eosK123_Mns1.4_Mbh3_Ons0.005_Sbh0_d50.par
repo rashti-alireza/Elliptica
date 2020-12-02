@@ -105,7 +105,7 @@ output_2d_txt  = ham_constraint,mom_constraint_U0,\
                  B0_U2_residual,psi_residual,\
                  eta_residual,phi_residual
 
-output_3d_silo = \
+silo_output_3d = \
         ham_constraint,\
 	mom_constraint_U0,mom_constraint_U1,mom_constraint_U2,\
 	surface_function,phi,phi_residual,\
