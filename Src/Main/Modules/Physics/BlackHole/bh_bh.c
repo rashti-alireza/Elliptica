@@ -75,7 +75,8 @@ void bh_find_bh_surface_perfect_s2(Physics_T *const phys)
   grid_char->params[phys->igc]->r_max  = Getd("max_radius");
   grid_char->params[phys->igc]->lmax   = lmax;
   grid_char->params[phys->igc]->occupied = 1;
-    
+  
+  _free(rbh);
 }
 
 
