@@ -51,12 +51,12 @@ void free_project_db(void)
   np = 0;
   while (projects_global != 0 && projects_global[np] != 0)
   {
-    _free(projects_global[np]->name);
-    _free(projects_global[np]->des);
+    Free(projects_global[np]->name);
+    Free(projects_global[np]->des);
     free(projects_global[np]);
     np++;
   }
-  _free(projects_global);
+  Free(projects_global);
   
 }
 

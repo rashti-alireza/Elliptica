@@ -2910,21 +2910,21 @@ void free_patch_interface(Patch_T *const patch)
     subface = face[f]->subface;
     for (i = 0; i < face[f]->ns; ++i)
     {
-      _free(subface[i]->flags_str);
-      _free(subface[i]->id);
-      _free(subface[i]->adjid);
-      _free(subface[i]);
+      Free(subface[i]->flags_str);
+      Free(subface[i]->id);
+      Free(subface[i]->adjid);
+      Free(subface[i]);
     }
-    _free(subface);
+    Free(subface);
     
     /* free point set */
-    _free(face[f]->innerP);
-    _free(face[f]->edgeP);
+    Free(face[f]->innerP);
+    Free(face[f]->edgeP);
     
     /* free face */
-    _free(face[f]);
+    Free(face[f]);
   }
-  _free(face);
+  Free(face);
 
   patch->interface = 0;
 }
@@ -3538,15 +3538,15 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
         assert(faces[f]->df_dn_set);
         ssubf->df_dn = faces[f]->df_dn;
         sprintf(sflgs,"%s,Dn:%u",ssubf->flags_str,ssubf->df_dn);
-        _free(ssubf->flags_str);
+        Free(ssubf->flags_str);
         ssubf->flags_str = dup_s(sflgs);
       }
     }
   }
   
   /* free */
-  _free(frank);
-  _free(isD);
+  Free(frank);
+  Free(isD);
 }
 
 /* count the number of adjacent faces the give face has */
@@ -3589,8 +3589,8 @@ static Uint counter_n_adjacent_faces(const Interface_T *const face)
     count++;
   }
   
-  _free(pn);
-  _free(fn); 
+  Free(pn);
+  Free(fn); 
   
   return count;   
 }

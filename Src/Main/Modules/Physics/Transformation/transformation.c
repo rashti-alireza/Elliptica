@@ -55,5 +55,5 @@ Transformation_T *initialize_transformation(void)
 /* free transformation */
 void free_transformation(Transformation_T *t)
 {
-  _free(t);
+  Free(t);
 }

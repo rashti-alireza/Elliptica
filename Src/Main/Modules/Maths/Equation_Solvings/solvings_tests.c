@@ -36,7 +36,7 @@ static int root_finder_SteepestDescent(Grid_T *const grid)
   {
     char *s = regex_find("[[:digit:]]+",par);
     MaxIter = (Uint)atoi(s);
-    _free(s);
+    Free(s);
   }
   
   /* testing with the derivatives are given: */

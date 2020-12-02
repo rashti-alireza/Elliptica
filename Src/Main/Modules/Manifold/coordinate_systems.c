@@ -837,8 +837,8 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     set_params_split_CS(grid_char);
     
     /* free */
-    _free(rns);
-    _free(rbh);
+    Free(rns);
+    Free(rbh);
     free_grid_char(grid_char);
   }
   else if (Pcmps("grid_kind","SplitCubedSpherical(NS+NS)"))
@@ -915,8 +915,8 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     set_params_split_CS(grid_char);
     
     /* free */
-    _free(rns1);
-    _free(rns2);
+    Free(rns1);
+    Free(rns2);
     free_grid_char(grid_char);
   }
   else if (Pcmps("grid_kind","SplitCubedSpherical(BH+BH)"))
@@ -997,8 +997,8 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     set_params_split_CS(grid_char);
     
     /* free */
-    _free(rbh1);
-    _free(rbh2);
+    Free(rbh1);
+    Free(rbh2);
     free_grid_char(grid_char);
   }
   else if (Pcmps("grid_kind","SplitCubedSpherical(BH)"))
@@ -1055,7 +1055,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     set_params_split_CS(grid_char);
     
     /* free */
-    _free(rbh);
+    Free(rbh);
     free_grid_char(grid_char);
   }
   else if (Pcmps("grid_kind","SplitCubedSpherical(NS)"))
@@ -1110,7 +1110,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     set_params_split_CS(grid_char);
     
     /* free */
-    _free(rns);
+    Free(rns);
     free_grid_char(grid_char);
   }
   else

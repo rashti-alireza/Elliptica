@@ -470,9 +470,9 @@ static void P_ADM_control(Grid_T *const grid)
   if (P_ADM_control_2)
     P_ADM_control_2(grid);
     
-  _free(adjust[0]);
-  _free(adjust[1]);
-  _free(adjust[2]);
+  Free(adjust[0]);
+  Free(adjust[1]);
+  Free(adjust[2]);
   
   printf("} Adjusting ADM momentums ==> Done.\n");
   pr_clock();
@@ -668,9 +668,9 @@ static void force_balance_eq(Grid_T *const grid)
   if (force_balance_2)
     force_balance_2(grid);
     
-  _free(adjust[0]);
-  _free(adjust[1]);
-  _free(adjust[2]);
+  Free(adjust[0]);
+  Free(adjust[1]);
+  Free(adjust[2]);
   
   /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
   bbn_update_stress_energy_tensor(grid,0);
@@ -4040,9 +4040,9 @@ static void extrapolate_insideBH_CS_C0_Ylm(Grid_T *const grid,const char *const 
   }/* end of FOR_ALL_PATCHES(p,grid) */
   
   /* free */
-  _free(field_R_min);
-  _free(realClm);
-  _free(imagClm);
+  Free(field_R_min);
+  Free(realClm);
+  Free(imagClm);
 }
 #ifdef ij
 #undef ij
@@ -4361,9 +4361,9 @@ static void extrapolate_outsideNS_CS_Ylm_method(Grid_T *const grid,const char *c
   }/* end of FOR_ALL_PATCHES(p,grid) */
   
   /* free */
-  _free(field_R_min);
-  _free(realClm);
-  _free(imagClm);
+  Free(field_R_min);
+  Free(realClm);
+  Free(imagClm);
 }
 #ifdef ij
 #undef ij
@@ -6647,9 +6647,9 @@ static struct Grid_Params_S *init_GridParams(void)
 /* free Grid_Params struct */
 static void free_Grid_Params_S(struct Grid_Params_S *par)
 {
-  _free(par->NS_R_Ylm->realClm);
-  _free(par->NS_R_Ylm->imagClm);
-  _free(par);
+  Free(par->NS_R_Ylm->realClm);
+  Free(par->NS_R_Ylm->imagClm);
+  Free(par);
 }
 
 /* find r such that f(h(r)) = h(r)-1 = 0.

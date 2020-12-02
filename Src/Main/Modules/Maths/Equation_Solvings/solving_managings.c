@@ -87,19 +87,19 @@ void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEqu
     patch->solving_man->field_name = calloc(nf,sizeof(*patch->solving_man->field_name));
     IsNull(patch->solving_man->field_name);
     
-    _free(patch->solving_man->field_eq);
+    Free(patch->solving_man->field_eq);
     patch->solving_man->field_eq = calloc(nf,sizeof(*patch->solving_man->field_eq));
     IsNull(patch->solving_man->field_eq);
     
-    _free(patch->solving_man->bc_eq);
+    Free(patch->solving_man->bc_eq);
     patch->solving_man->bc_eq = calloc(nf,sizeof(*patch->solving_man->bc_eq));
     IsNull(patch->solving_man->bc_eq);
     
-    _free(patch->solving_man->jacobian_field_eq);
+    Free(patch->solving_man->jacobian_field_eq);
     patch->solving_man->jacobian_field_eq = calloc(nf,sizeof(*patch->solving_man->jacobian_field_eq));
     IsNull(patch->solving_man->jacobian_field_eq);
     
-    _free(patch->solving_man->jacobian_bc_eq);
+    Free(patch->solving_man->jacobian_bc_eq);
     patch->solving_man->jacobian_bc_eq = calloc(nf,sizeof(*patch->solving_man->jacobian_bc_eq));
     IsNull(patch->solving_man->jacobian_bc_eq);
     

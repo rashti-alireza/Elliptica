@@ -130,8 +130,8 @@ static void extrap_free(struct Extrap_S *const extrap)
     return;
   
   free_2d_mem(extrap->fld,extrap->nf);
-  _free(extrap->patches_out);
-  _free(extrap->patches_in);
+  Free(extrap->patches_out);
+  Free(extrap->patches_in);
   free(extrap);
 }
 
@@ -754,9 +754,9 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
   Setd("max_radius",Max_R_NS);
   Setd("min_radius",Min_R_NS);
   
-  _free(patches_NS);
-  _free(patches_Ar);
-  _free(patches_s);
+  Free(patches_NS);
+  Free(patches_Ar);
+  Free(patches_s);
   
   UNUSED(NS_surface_denthalpy_dr_root_finder);
   FUNC_TOC
@@ -906,7 +906,7 @@ double star_NS_mass_shedding_indicator(Physics_T *const phys)
     X[1] = 0;
     X[2] = 1;
     patch = X_in_which_patch(X,patches,Np);
-    _free(patches);
+    Free(patches);
     assert(patch);
     x[0] -= patch->c[0];
     x[1] -= patch->c[1];
@@ -949,7 +949,7 @@ double star_NS_mass_shedding_indicator(Physics_T *const phys)
     X[1] = 0;
     X[2] = 1;
     patch = X_in_which_patch(X,patches,Np);
-    _free(patches);
+    Free(patches);
     assert(patch);
     x_of_X(x,X,patch);
     x[0] -= patch->c[0];

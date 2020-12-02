@@ -16,7 +16,7 @@ void update_parameter_string(const char *const lv, const char *const rv)
   par = get_parameter(lv);
   if (par)/* if this parameter exists update it */
   {
-    _free(par->rv);
+    Free(par->rv);
     par->rv = dup_s(rv);
     par->double_flg = 0;
   }
@@ -38,7 +38,7 @@ void update_parameter_integer(const char *const lv, const int rv)
   par = get_parameter(lv);
   if (par)/* if this parameter exists update it */
   {
-    _free(par->rv);
+    Free(par->rv);
     par->rv = dup_s(str_rv);
     par->double_flg = 0;
   }
@@ -71,7 +71,7 @@ void update_parameter_double_format(const char *const lv, const double rv,const 
       printf("         |--> v_new - v_old = %+e\n",rv-par->rv_double);
     }
     sprintf(str_rv,"%15.18f",rv);
-    _free(par->rv);
+    Free(par->rv);
     
     /* NOTE:crucial to write in str format for checkpoint file purposes */
     par->rv         = dup_s(str_rv);
@@ -152,7 +152,7 @@ void update_parameter_array(const char *const lv, const double *const rv,const U
     
     par->double_flg = 0;
       
-    _free(par->rv_array);
+    Free(par->rv_array);
   }
   else
   {  
@@ -775,10 +775,10 @@ void free_parameter(const char *const par_name)
     {
       last_par = parameters_global[np-1];
       
-      _free(parameters_global[i]->lv);
-      _free(parameters_global[i]->rv);
-      _free(parameters_global[i]->rv_ip);
-      _free(parameters_global[i]->rv_array);
+      Free(parameters_global[i]->lv);
+      Free(parameters_global[i]->rv);
+      Free(parameters_global[i]->rv_ip);
+      Free(parameters_global[i]->rv_array);
       free(parameters_global[i]);
       
       parameters_global[i] = last_par;
@@ -801,10 +801,10 @@ void free_given_parameter(Parameter_T *par)
   if (!par)
     return;
     
-  _free(par->lv);
-  _free(par->rv);
-  _free(par->rv_ip);
-  _free(par->rv_array);
+  Free(par->lv);
+  Free(par->rv);
+  Free(par->rv_ip);
+  Free(par->rv_array);
   free(par);
 }
 
@@ -817,15 +817,15 @@ void free_parameter_db(void)
   while (parameters_global != 0 && parameters_global[np] != 0)
   {
   
-    _free(parameters_global[np]->lv);
-    _free(parameters_global[np]->rv);
-    _free(parameters_global[np]->rv_ip);
-    _free(parameters_global[np]->rv_array);
+    Free(parameters_global[np]->lv);
+    Free(parameters_global[np]->rv);
+    Free(parameters_global[np]->rv_ip);
+    Free(parameters_global[np]->rv_array);
     free(parameters_global[np]);
     np++;
   }
   
-  _free(parameters_global);
+  Free(parameters_global);
   
   parameters_global = 0;
 }

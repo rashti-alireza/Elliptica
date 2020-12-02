@@ -279,7 +279,7 @@ void free_grid(Grid_T *grid)
     Patch_T *patch = grid->patch[p];
     free_patch(patch);
   }
-  _free(grid->patch);
+  Free(grid->patch);
   
   /* shrink the grids_global */
   Grid_T *last_grid = 0;
@@ -314,13 +314,13 @@ void free_patch(Patch_T *patch)
   
   nn = patch->nn;
   
-  _free(patch->name);
+  Free(patch->name);
   
   if (patch->node)
   {
     if (patch->coordsys != Cartesian)
       for (ijk = 0; ijk < nn; ++ijk)
-        _free(patch->node[ijk]->X);
+        Free(patch->node[ijk]->X);
     
     free_2d_mem(patch->node,nn);
     patch->node = 0;
@@ -330,17 +330,17 @@ void free_patch(Patch_T *patch)
     Field_T *field = patch->fields[f];
     free_field(field);
   }
-  _free(patch->fields);
-  _free(patch->JacobianT);
+  Free(patch->fields);
+  Free(patch->JacobianT);
   free_patch_interface(patch);
   if (patch->solving_man)
   {
     free_patch_SolMan_jacobian(patch);
     free_patch_SolMan_method_Schur(patch);
-    _free(patch->solving_man->field_eq);
-    _free(patch->solving_man->bc_eq);
-    _free(patch->solving_man->jacobian_field_eq);
-    _free(patch->solving_man->jacobian_bc_eq);
+    Free(patch->solving_man->field_eq);
+    Free(patch->solving_man->bc_eq);
+    Free(patch->solving_man->jacobian_field_eq);
+    Free(patch->solving_man->jacobian_bc_eq);
     free_2d_mem(patch->solving_man->field_name,patch->solving_man->nf);
     free(patch->solving_man);
   }

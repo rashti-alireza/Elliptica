@@ -1917,9 +1917,9 @@ void free_patch_SolMan_jacobian(Patch_T *const patch)
   for (i = 0; i < SolMan->nj; ++i)
   {
     free_matrix(SolMan->jacobian[i]->J);
-    _free(SolMan->jacobian[i]);
+    Free(SolMan->jacobian[i]);
   }
-  _free(SolMan->jacobian);
+  Free(SolMan->jacobian);
   
   SolMan->jacobian = 0;
   SolMan->nj       = 0;

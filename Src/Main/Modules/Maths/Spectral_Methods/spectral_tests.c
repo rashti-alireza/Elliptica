@@ -74,7 +74,7 @@ static int Ylm_trans_test(Grid_T *const grid)
   {
     char *s = regex_find("[[:digit:]]+",par);
     N = (Uint)atoi(s);
-    _free(s);
+    Free(s);
   }
   else
     N = 10;
@@ -158,8 +158,8 @@ static int Ylm_trans_test(Grid_T *const grid)
       }
     }
     printf("Max Error = %e\n",df);
-    _free(ran_theta);
-    _free(ran_phi);
+    Free(ran_theta);
+    Free(ran_phi);
   }
   
   free(f);
@@ -197,7 +197,7 @@ static int Ylm_derivatives_test(Grid_T *const grid)
   {
     char *s = regex_find("[[:digit:]]+",par);
     N = (Uint)atoi(s);
-    _free(s);
+    Free(s);
   }
   else
     N = 14;
@@ -553,7 +553,7 @@ static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid)
   {
     char *s = regex_find("[[:digit:]]+",par);
     N = (Uint)atoi(s);
-    _free(s);
+    Free(s);
   }
   else
     N = 20;

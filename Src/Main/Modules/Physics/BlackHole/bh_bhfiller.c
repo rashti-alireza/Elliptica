@@ -292,14 +292,14 @@ static void bhf_free(struct BHFiller_S *const bhf)
   {
     for (i = 0; i < MAX_COEFFS; ++i)
     {
-      _free(bhf->fld[f]->radial_coeffs[i]);
-      _free(bhf->fld[f]->realYlm_coeffs[i]);
-      _free(bhf->fld[f]->imagYlm_coeffs[i]);
+      Free(bhf->fld[f]->radial_coeffs[i]);
+      Free(bhf->fld[f]->realYlm_coeffs[i]);
+      Free(bhf->fld[f]->imagYlm_coeffs[i]);
     }
   }
   free_2d_mem(bhf->fld,bhf->nf);
-  _free(bhf->patches_outBH);
-  _free(bhf->patches_inBH);
+  Free(bhf->patches_outBH);
+  Free(bhf->patches_inBH);
   free(bhf);
 }
 

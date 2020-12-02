@@ -1078,19 +1078,19 @@ void bbn_free_obs_CS(Observable_T *obs)
         REMOVE_FIELD(ADM_integrand_xiG_U1);
       }
     }
-    _free(adm[i]->g00);
-    _free(adm[i]->g01);
-    _free(adm[i]->g02);
-    _free(adm[i]->g11);
-    _free(adm[i]->g12);
-    _free(adm[i]->g22);
-    _free(adm[i]->n_U0);
-    _free(adm[i]->n_U1);
-    _free(adm[i]->n_U2);
+    Free(adm[i]->g00);
+    Free(adm[i]->g01);
+    Free(adm[i]->g02);
+    Free(adm[i]->g11);
+    Free(adm[i]->g12);
+    Free(adm[i]->g22);
+    Free(adm[i]->n_U0);
+    Free(adm[i]->n_U1);
+    Free(adm[i]->n_U2);
     
     free(adm[i]);
   }
-  _free(adm);
+  Free(adm);
 }
 
 /* calculating ADM momentum in x component */
@@ -1636,15 +1636,15 @@ void bbn_define_spin_integral(double S[3],Grid_T *const grid,const char *const k
     DECLARE_FIELD(SPIN_integrand_U2);
     REMOVE_FIELD(SPIN_integrand_U2);
     free_integration(I);    
-    _free(normal->n_U0);
-    _free(normal->n_U1);
-    _free(normal->n_U2);
-    _free(g00);
-    _free(g01);
-    _free(g02);
-    _free(g11);
-    _free(g12);
-    _free(g22);
+    Free(normal->n_U0);
+    Free(normal->n_U1);
+    Free(normal->n_U2);
+    Free(g00);
+    Free(g01);
+    Free(g02);
+    Free(g11);
+    Free(g12);
+    Free(g22);
   }
   S[0] /= (8*M_PI);
   S[1] /= (8*M_PI);
@@ -1771,15 +1771,15 @@ bbn_define_spin_akv
     DECLARE_FIELD(SPIN_integrand_U2);
     REMOVE_FIELD(SPIN_integrand_U2);
     free_integration(I);    
-    _free(normal->n_U0);
-    _free(normal->n_U1);
-    _free(normal->n_U2);
-    _free(g00);
-    _free(g01);
-    _free(g02);
-    _free(g11);
-    _free(g12);
-    _free(g22);
+    Free(normal->n_U0);
+    Free(normal->n_U1);
+    Free(normal->n_U2);
+    Free(g00);
+    Free(g01);
+    Free(g02);
+    Free(g11);
+    Free(g12);
+    Free(g22);
   }
   S[0] /= (8*M_PI);
   S[1] /= (8*M_PI);

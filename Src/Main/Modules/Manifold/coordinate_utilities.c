@@ -852,11 +852,11 @@ void free_grid_char(Grid_Char_T *g)
   {
     if (g->params[i]->occupied)
     {
-    _free(g->params[i]->relClm);
-    _free(g->params[i]->imgClm);
+    Free(g->params[i]->relClm);
+    Free(g->params[i]->imgClm);
     }
   }
-  _free(g);
+  Free(g);
 }
 
 Grid_Kind_T set_grid_kind(const char *const grid_kind)

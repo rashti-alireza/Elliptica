@@ -629,13 +629,6 @@ void free_2d_mem(void *mem0, const Uint long c)
     
 }
 
-/* free only if p != NULL */
-void _free(void *p)
-{
-  if (p)
-    free(p);
-}
-
 /* ->: memory usage, default Kb.
 // The maximum resident set size used. That is, the maximum number of 
 // physical memory that processes used simultaneously. */

@@ -44,7 +44,6 @@ void free_2d_mem(void *mem0, const Uint long c);
 void free_2d(void *mem0);
 double **alloc_2D_double(const long Uint R,const long Uint C);
 double *alloc_double(const Uint N);
-void _free(void *p);
 Uint IsItFarthestOutermostPatch(const Patch_T *const patch);
 
 double 

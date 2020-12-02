@@ -52,9 +52,9 @@ int sys_tune_ADM_momenta(Physics_T *const phys)
   if (P_ADM_control_2)
     P_ADM_control_2(phys);
     
-  _free(adjust[0]);
-  _free(adjust[1]);
-  _free(adjust[2]);
+  Free(adjust[0]);
+  Free(adjust[1]);
+  Free(adjust[2]);
   
   FUNC_TOC
   

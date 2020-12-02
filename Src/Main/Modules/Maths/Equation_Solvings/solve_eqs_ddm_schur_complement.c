@@ -368,7 +368,7 @@ static void update_field(Patch_T *const patch)
     u_bckup[i_node] = u_old[i_node];
     u_new[i_node]   = u_old[i_node]-lambda*y[i];
   }
-  _free(patch->solving_man->settings->last_sol);
+  Free(patch->solving_man->settings->last_sol);
   patch->solving_man->settings->last_sol = 0;
   patch->solving_man->settings->last_sol = u_bckup;
   
@@ -397,7 +397,7 @@ static void update_field_single_patch(Patch_T *const patch)
     u_bckup[s_node] = u_old[s_node];
     u_new[s_node]   = u_old[s_node]-lambda*x[s];
   }
-  _free(patch->solving_man->settings->last_sol);
+  Free(patch->solving_man->settings->last_sol);
   patch->solving_man->settings->last_sol = 0;
   patch->solving_man->settings->last_sol = u_bckup;
 }
@@ -526,9 +526,9 @@ static char *making_sub_S_matrix(Patch_T *const patch)
   const Uint *const NI_p = Schur->NI_p;
   const Uint NI          = Schur->NI;
   const Uint NI_total    = Schur->NI_total;
-  Matrix_T **const FxE = Schur->F_by_E_prime;
-  Matrix_T **const C   = Schur->C;
-  Matrix_T **stack     = calloc(Np,sizeof(*stack)); IsNull(stack);
+  Matrix_T ** FxE  = Schur->F_by_E_prime;
+  Matrix_T ** C    = Schur->C;
+  Matrix_T **stack = calloc(Np,sizeof(*stack)); IsNull(stack);
   double **a,**b,**c;
   long a_row,a_col,b_row,b_col;
   long row,col;
@@ -590,11 +590,11 @@ static char *making_sub_S_matrix(Patch_T *const patch)
   Schur->subS = compress_stack2ccs(stack,Np,NI_p,NI_total,NI,YES);
   
   /* free */
-  _free(C);
-  _free(FxE);
+  Free(C);
+  Free(FxE);
   Schur->F_by_E_prime = 0;
   Schur->C = 0;
-  _free(stack);
+  Free(stack);
   
   sprintf(msg,"{ Make subS ...\n"
               "} Make subS --> Done. ( Wall-Clock = %.0fs )\n",
@@ -2629,11 +2629,11 @@ static void free_solving_man_settings(Grid_T *const grid)
   {
     Patch_T *patch = grid->patch[p];
     
-    _free(patch->solving_man->settings->HFrms);
+    Free(patch->solving_man->settings->HFrms);
     patch->solving_man->settings->HFrms  = 0;
     patch->solving_man->settings->NHFrms = 0;
     
-    _free(patch->solving_man->settings->last_sol);
+    Free(patch->solving_man->settings->last_sol);
     patch->solving_man->settings->last_sol = 0;
   }
    
@@ -3168,12 +3168,12 @@ void free_patch_SolMan_method_Schur(Patch_T *const patch)
   
   /* note, those matrices and double populated during solver
   // won't needed to be freed */
-  _free(s->map);
-  _free(s->inv);
-  _free(s->Imap);
-  _free(s->Iinv);
-  _free(s->NS_p);
-  _free(s->NI_p);
+  Free(s->map);
+  Free(s->inv);
+  Free(s->Imap);
+  Free(s->Iinv);
+  Free(s->NS_p);
+  Free(s->NI_p);
   
   for (i = 0; i < s->nsewing; ++i)
   {
@@ -3182,34 +3182,34 @@ void free_patch_SolMan_method_Schur(Patch_T *const patch)
     {
       if (se[i]->patchN != patch->pn)
       {
-        _free(se[i]->map);
-        _free(se[i]->inv);
-        _free(se[i]->Imap);
-        _free(se[i]->Iinv);
+        Free(se[i]->map);
+        Free(se[i]->inv);
+        Free(se[i]->Imap);
+        Free(se[i]->Iinv);
       }
       p = se[i]->pair;
       for (j = 0; j < se[i]->npair; ++j)
       {
-        _free(p[j]->ip);
-        _free(p[j]->nv);
+        Free(p[j]->ip);
+        Free(p[j]->nv);
         
         /* because only for the following patches we allocate memory */
         if (se[i]->patchN != patch->pn)
         {
-          _free(p[j]->subface->flags_str);
-          _free(p[j]->subface->id);
-          _free(p[j]->subface->adjid);
-          _free(p[j]->subface);  
+          Free(p[j]->subface->flags_str);
+          Free(p[j]->subface->id);
+          Free(p[j]->subface->adjid);
+          Free(p[j]->subface);  
           p[j]->subface = 0;
         }
         free(p[j]);
       }
-      _free(p);
+      Free(p);
     }
-    _free(se[i]);
+    Free(se[i]);
   }
-  _free(se);
-  _free(s);
+  Free(se);
+  Free(s);
   
   patch->solving_man->method->SchurC = 0;
 }

@@ -453,7 +453,7 @@ Parameter_T *parameter_query_from_checkpoint(const char *const par_name,FILE *co
   FReadP_bin(match_str);
   if (strcmp(match_str,PARAM_HEADER))
     Error0("It could not find the parameter header.\n");
-  _free(match_str);
+  Free(match_str);
   
   found = 0;
   /* start reading one by one */
@@ -488,7 +488,7 @@ Parameter_T *parameter_query_from_checkpoint(const char *const par_name,FILE *co
     FReadP_bin(match_str);
     if (strcmp(match_str,PARAM_FOOTER))
       Error0("It could not find the parameter footer.\n");
-    _free(match_str);
+    Free(match_str);
   }
  
   return par;
@@ -509,7 +509,7 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
   FReadP_bin(match_str);
   if (strcmp(match_str,PARAM_HEADER))
     Error0("It could not find the parameter header.\n");
-  _free(match_str);
+  Free(match_str);
   
   /* start reading one by one */
   for (i = 0; i < npar; ++i)
@@ -542,7 +542,7 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
   FReadP_bin(match_str);
   if (strcmp(match_str,PARAM_FOOTER))
     Error0("It could not find the parameter footer.\n");
-  _free(match_str);
+  Free(match_str);
   
   /* incorporate the modified parameter in the parameter file
   // into parameter data base */
@@ -565,13 +565,13 @@ static void free_modified_checkpoint_par(void)
   
   for (i = 0; i < n_modified_checkpoint_par; i++)
   {
-    _free(modified_checkpoint_par[i]->lv);
-    _free(modified_checkpoint_par[i]->rv);
-    _free(modified_checkpoint_par[i]->rv_ip);
-    _free(modified_checkpoint_par[i]->rv_array);
+    Free(modified_checkpoint_par[i]->lv);
+    Free(modified_checkpoint_par[i]->rv);
+    Free(modified_checkpoint_par[i]->rv_ip);
+    Free(modified_checkpoint_par[i]->rv_array);
     free(modified_checkpoint_par[i]);
   }
-  _free(modified_checkpoint_par);
+  Free(modified_checkpoint_par);
   modified_checkpoint_par   = 0;
   n_modified_checkpoint_par = 0;
 }
@@ -604,8 +604,8 @@ static void incorporate_modified_checkpoint_par(void)
           /* we must not have array type */
           assert(!parameters_global[np]->rv_array);
           
-          _free(parameters_global[np]->rv);
-          _free(parameters_global[np]->rv_ip);
+          Free(parameters_global[np]->rv);
+          Free(parameters_global[np]->rv_ip);
           
           parameters_global[np]->rv         = modified_checkpoint_par[i]->rv;
           modified_checkpoint_par[i]->rv    = 0;
@@ -655,7 +655,7 @@ void read_fields_from_checkpoint(Grid_T *const grid,FILE *const file)
   FReadP_bin(match_str);
   if (strcmp(match_str,FIELD_HEADER))
     Error0("It could not find the field header.\n");
-  _free(match_str);
+  Free(match_str);
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -676,7 +676,7 @@ void read_fields_from_checkpoint(Grid_T *const grid,FILE *const file)
       //FReadP_bin(attr);
       
       field = patch->fields[Ind(name)];
-      _free(name);
+      Free(name);
       field->v = v;
       v = 0;
     }
@@ -686,7 +686,7 @@ void read_fields_from_checkpoint(Grid_T *const grid,FILE *const file)
   FReadP_bin(match_str);
   if (strcmp(match_str,FIELD_FOOTER))
     Error0("It could not find the field footer.\n");
-  _free(match_str);
+  Free(match_str);
 }
 
 

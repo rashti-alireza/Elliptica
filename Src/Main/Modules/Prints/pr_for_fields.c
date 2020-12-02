@@ -83,8 +83,8 @@ void free_PrField(Pr_Field_T *pr)
       free(info[i].field);
     
   }
-  _free(info);
-  _free(pr);
+  Free(info);
+  Free(pr);
 }
 
 /* it reads the parameter to find out what and how it's going to be print.

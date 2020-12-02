@@ -1378,18 +1378,18 @@ static void define_spin_campanelli(Observe_T *const obs)
     DECLARE_FIELD(SPIN_integrand_U2);
     REMOVE_FIELD(SPIN_integrand_U2);
     free_integration(I);    
-    _free(normal->n_U0);
-    _free(normal->n_U1);
-    _free(normal->n_U2);
-    _free(g00);
-    _free(g01);
-    _free(g02);
-    _free(g11);
-    _free(g12);
-    _free(g22);
+    Free(normal->n_U0);
+    Free(normal->n_U1);
+    Free(normal->n_U2);
+    Free(g00);
+    Free(g01);
+    Free(g02);
+    Free(g11);
+    Free(g12);
+    Free(g22);
   }
   
-  _free(patches);
+  Free(patches);
   
   S[0] /= (8*M_PI);
   S[1] /= (8*M_PI);
@@ -1501,15 +1501,15 @@ static void define_spin_akv(Observe_T *const obs)
     DECLARE_FIELD(SPIN_integrand_U2);
     REMOVE_FIELD(SPIN_integrand_U2);
     free_integration(I);    
-    _free(normal->n_U0);
-    _free(normal->n_U1);
-    _free(normal->n_U2);
-    _free(g00);
-    _free(g01);
-    _free(g02);
-    _free(g11);
-    _free(g12);
-    _free(g22);
+    Free(normal->n_U0);
+    Free(normal->n_U1);
+    Free(normal->n_U2);
+    Free(g00);
+    Free(g01);
+    Free(g02);
+    Free(g11);
+    Free(g12);
+    Free(g22);
   }
   S[0] /= (8*M_PI);
   S[1] /= (8*M_PI);

@@ -595,12 +595,12 @@ void TOV_free(TOV_T *TOV)
   if (!TOV)
     return;
     
-  _free(TOV->m);
-  _free(TOV->r);
-  _free(TOV->p);
-  _free(TOV->h);
-  _free(TOV->phi);
-  _free(TOV->rbar);
-  _free(TOV->psi);
+  Free(TOV->m);
+  Free(TOV->r);
+  Free(TOV->p);
+  Free(TOV->h);
+  Free(TOV->phi);
+  Free(TOV->rbar);
+  Free(TOV->psi);
   free(TOV);
 }

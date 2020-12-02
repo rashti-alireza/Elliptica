@@ -196,7 +196,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
         patch->innerB = 1;
       }
       
-      _free(patches);
+      Free(patches);
     }
     
   }
@@ -298,7 +298,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
         Patch_T *patch = patches[p];
         patch->innerB = 1;
       }
-      _free(patches);
+      Free(patches);
       
       /* BH 2 */
       patches = collect_patches(grid,"BH2_around_IB",&nbh);
@@ -307,7 +307,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
         Patch_T *patch = patches[p];
         patch->innerB = 1;
       }
-      _free(patches);
+      Free(patches);
     }
   }
   else if (grid->kind == Grid_SplitCubedSpherical_SBH)
@@ -361,7 +361,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
         Patch_T *patch = patches[p];
         patch->innerB = 1;
       }
-      _free(patches);
+      Free(patches);
     }
     
   }
@@ -3510,8 +3510,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               update_parameter_array(parD,rD,N_total);
             }/* for (p = 0; p < 6; ++p) */
           }
-          _free(rU);
-          _free(rD);
+          Free(rU);
+          Free(rD);
         }/* for (d2 = 0; d2 <  Nsd[2]; d2++) */
       }/* for (d1 = 0; d1 <  Nsd[1]; d1++) */
     }/* for (d0 = 0; d0 < Nsd[0]; d0++) */
@@ -3869,8 +3869,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               update_parameter_array(parD,rD,N_total);
             }/* for (p = 0; p < 6; ++p) */
           }
-          _free(rU);
-          _free(rD);
+          Free(rU);
+          Free(rD);
         }/* for (d2 = 0; d2 <  Nsd[2]; d2++) */
       }/* for (d1 = 0; d1 <  Nsd[1]; d1++) */
     }/* for (d0 = 0; d0 < Nsd[0]; d0++) */
@@ -4129,8 +4129,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               update_parameter_array(parD,rD,N_total);
             }/* for (p = 0; p < 6; ++p) */
           }
-          _free(rU);
-          _free(rD);
+          Free(rU);
+          Free(rD);
         }/* for (d2 = 0; d2 <  Nsd[2]; d2++) */
       }/* for (d1 = 0; d1 <  Nsd[1]; d1++) */
     }/* for (d0 = 0; d0 < Nsd[0]; d0++) */
@@ -4595,8 +4595,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               update_parameter_array(parD,rD,N_total);
             }/* for (p = 0; p < 6; ++p) */
           }
-          _free(rU);
-          _free(rD);
+          Free(rU);
+          Free(rD);
         }/* for (d2 = 0; d2 <  Nsd[2]; d2++) */
       }/* for (d1 = 0; d1 <  Nsd[1]; d1++) */
     }/* for (d0 = 0; d0 < Nsd[0]; d0++) */
@@ -4918,8 +4918,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               update_parameter_array(parD,rD,N_total);
             }/* for (p = 0; p < 6; ++p) */
           }
-          _free(rU);
-          _free(rD);
+          Free(rU);
+          Free(rD);
         }/* for (d2 = 0; d2 <  Nsd[2]; d2++) */
       }/* for (d1 = 0; d1 <  Nsd[1]; d1++) */
     }/* for (d0 = 0; d0 < Nsd[0]; d0++) */
@@ -5173,8 +5173,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               update_parameter_array(parD,rD,N_total);
             }/* for (p = 0; p < 6; ++p) */
           }
-          _free(rU);
-          _free(rD);
+          Free(rU);
+          Free(rD);
         }/* for (d2 = 0; d2 <  Nsd[2]; d2++) */
       }/* for (d1 = 0; d1 <  Nsd[1]; d1++) */
     }/* for (d0 = 0; d0 < Nsd[0]; d0++) */

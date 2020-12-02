@@ -136,19 +136,19 @@ static void free_obs(Observe_T *obs)
         REMOVE_FIELD(ADM_integrand_xiG_U1);
       }
     }
-    _free(adm[i]->g00);
-    _free(adm[i]->g01);
-    _free(adm[i]->g02);
-    _free(adm[i]->g11);
-    _free(adm[i]->g12);
-    _free(adm[i]->g22);
-    _free(adm[i]->n_U0);
-    _free(adm[i]->n_U1);
-    _free(adm[i]->n_U2);
+    Free(adm[i]->g00);
+    Free(adm[i]->g01);
+    Free(adm[i]->g02);
+    Free(adm[i]->g11);
+    Free(adm[i]->g12);
+    Free(adm[i]->g22);
+    Free(adm[i]->n_U0);
+    Free(adm[i]->n_U1);
+    Free(adm[i]->n_U2);
     
     free(adm[i]);
   }
-  _free(adm);
+  Free(adm);
   
   }
   else

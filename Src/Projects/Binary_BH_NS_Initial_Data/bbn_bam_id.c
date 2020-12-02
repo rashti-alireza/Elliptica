@@ -60,13 +60,13 @@ void bbn_bam_export_id(void)
   
   /* free */
   free_grid(grid);
-  _free(points->x);
-  _free(points->y);
-  _free(points->z);
-  _free(points->X);
-  _free(points->Y);
-  _free(points->Z);
-  _free(points->patchn);
+  Free(points->x);
+  Free(points->y);
+  Free(points->z);
+  Free(points->X);
+  Free(points->Y);
+  Free(points->Z);
+  Free(points->patchn);
   
   /* print some description */
   printf("} Exporting initial data for BAM ==> Done.\n");
@@ -306,7 +306,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   FWriteP_bin(p_msg,strlen(msg)+1);
   fclose(file);
   
-  _free(interp_v);
+  Free(interp_v);
   free_2d(fields_name);
   free_2d(bam_fields);
   free_2d_mem(pnt->f_index,grid->np);
@@ -356,7 +356,7 @@ static void load_coords_from_coords_file(struct interpolation_points *const pnt)
   FReadP_bin(match_str)
   if (strcmp(match_str,HEADER))
     bbn_bam_error("It could not find the header.\n",__FILE__,__LINE__);
-  _free(match_str);
+  Free(match_str);
   
   /* allocating */
   FReadV_bin(npoints)
@@ -389,7 +389,7 @@ static void load_coords_from_coords_file(struct interpolation_points *const pnt)
   FReadP_bin(match_str)
   if (strcmp(match_str,FOOTER))
     bbn_bam_error("It could not find the footer.\n",__FILE__,__LINE__);
-  _free(match_str);
+  Free(match_str);
   
   fclose(file);
 }
@@ -735,7 +735,7 @@ bam_output_doctest
   }/* while(fields_name[f]) */
   free_2d_mem(pnt->f_index,grid->np);
   pnt->f_index = 0;
-  _free(interp_v);
+  Free(interp_v);
   
   /* horizon location */
   sprintf(fname,"horizon_%.1f.txt",x0);
@@ -936,7 +936,7 @@ bam_output_doctest
     fclose(file);
     f++;
   }/* while(bssn_fields_name[f]) */
-  _free(interp_v);
+  Free(interp_v);
 
   if (1)/* check det(BSSN metric) */
   {

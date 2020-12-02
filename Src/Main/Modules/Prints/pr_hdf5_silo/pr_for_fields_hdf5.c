@@ -490,9 +490,9 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
           Error0("Silo library failed to print.\n");
       }
       
-      _free(data);
+      Free(data);
     }
-    _free(fInd);
+    Free(fInd);
   }
   else
   {
@@ -521,7 +521,7 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
         Error0("Silo library failed to print.\n");
     }
     
-    _free(data);
+    Free(data);
   }/* else */
 }
 
@@ -592,9 +592,9 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
       Error0("Silo library failed to print.\n");
   }
   
-  _free(comp[0]);
-  _free(comp[1]);
-  _free(comp[2]);
+  Free(comp[0]);
+  Free(comp[1]);
+  Free(comp[2]);
   
 }
 

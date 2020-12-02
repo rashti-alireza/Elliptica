@@ -301,10 +301,10 @@ void free_physics(Physics_T *phys)
     /* free temp grid */
     for (i = 0; i < phys->Ngridtemp; ++i)
     {
-      _free(phys->gridtemp[i]->patch);
-      _free(phys->gridtemp[i]);
+      Free(phys->gridtemp[i]->patch);
+      Free(phys->gridtemp[i]);
     }
-    _free(phys->gridtemp);
+    Free(phys->gridtemp);
   
     /* free grid and its parameters */
     if (phys->IsThisParent)

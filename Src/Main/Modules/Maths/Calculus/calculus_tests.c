@@ -626,7 +626,7 @@ static int GQ_ChebExtrema(Grid_T *const grid)
   {
     char *s = regex_find("[[:digit:]]+",par);
     N = (Uint)atoi(s);
-    _free(s);
+    Free(s);
   }
   else
     N = 20000;
@@ -677,7 +677,7 @@ static int GQ_Lobatto(Grid_T *const grid)
   {
     char *s = regex_find("[[:digit:]]+",par);
     N = (Uint)atoi(s);
-    _free(s);
+    Free(s);
   }
   else
     N = 14;
@@ -728,7 +728,7 @@ static int GQ_Legendre(Grid_T *const grid)
   {
     char *s = regex_find("[[:digit:]]+",par);
     N = (Uint)atoi(s);
-    _free(s);
+    Free(s);
   }
   else
     N = 14;
@@ -778,7 +778,7 @@ static int csr_1d(Grid_T *const grid)
   {
     char *s = regex_find("[[:digit:]]+",par);
     N = (Uint)atoi(s);
-    _free(s);
+    Free(s);
   }
   else
     N = 2019;

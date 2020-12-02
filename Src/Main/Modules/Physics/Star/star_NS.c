@@ -167,9 +167,9 @@ int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys)
   if (force_balance_2)
     force_balance_2(phys);
     
-  _free(adjust[0]);
-  _free(adjust[1]);
-  _free(adjust[2]);
+  Free(adjust[0]);
+  Free(adjust[1]);
+  Free(adjust[2]);
   
   /* update stress energy tensor and related */
   Seti("enthalpy_neat",0);
