@@ -4,11 +4,11 @@
 */
 
 
-#include "frda_header.h"
+#include "fd_header.h"
 
 
-void frda_add_fields_ChrisConf_dChrisConf(Grid_T *const grid);
-void frda_add_fields_ChrisConf_dChrisConf(Grid_T *const grid)
+void fd_add_fields_ChrisConf_dChrisConf(Grid_T *const grid);
+void fd_add_fields_ChrisConf_dChrisConf(Grid_T *const grid)
 {
  unsigned p;
  FOR_ALL_PATCHES(p,grid)

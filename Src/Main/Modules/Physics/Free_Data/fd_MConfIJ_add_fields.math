@@ -7,13 +7,13 @@ Point = ijk;
 C_macro  = ADD_FIELD(name);
 C_macro2 = ADD_AND_ALLOC_FIELD(name);
 
-`#include "frda_header.h"`
+`#include "fd_header.h"`
 ``
 ``
 
-`void frda_add_fields_MConfIJ(Grid_T *const grid);`
+`void fd_add_fields_MConfIJ(Grid_T *const grid);`
 ``
-`void frda_add_fields_MConfIJ(Grid_T *const grid)`
+`void fd_add_fields_MConfIJ(Grid_T *const grid)`
 `{`
 
 ` unsigned p;`

@@ -58,7 +58,7 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
     case FREE_DATA_ADD_FIELDS:
     case FREE_DATA_POPULATE:
     
-      ret = frda_main(phys);
+      ret = fd_main(phys);
     break;
     
     case SYS_TUNE_P_ADM:

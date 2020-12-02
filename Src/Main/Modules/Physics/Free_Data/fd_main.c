@@ -6,10 +6,10 @@
 /* free data general affairs. one can add new different function readily
 // by adding new parameter and the name of the function as shown. */
 
-#include "frda_main.h"
+#include "fd_main.h"
 
 /* main function to issue command */
-int frda_main(Physics_T *const phys)
+int fd_main(Physics_T *const phys)
 {
   int ret = EXIT_SUCCESS;
   
@@ -83,11 +83,11 @@ static int add_free_data_fields(Physics_T *const phys)
   
   assert(phys->grid);
   
-  frda_add_fields_gConf_dgConf_igConf(phys->grid);
-  frda_add_fields_ChrisConf_dChrisConf(phys->grid);
-  frda_add_fields_trK_dtrK(phys->grid);
-  frda_add_fields_RicciConf(phys->grid);
-  frda_add_fields_MConfIJ(phys->grid);
+  fd_add_fields_gConf_dgConf_igConf(phys->grid);
+  fd_add_fields_ChrisConf_dChrisConf(phys->grid);
+  fd_add_fields_trK_dtrK(phys->grid);
+  fd_add_fields_RicciConf(phys->grid);
+  fd_add_fields_MConfIJ(phys->grid);
   
   FUNC_TOC
   return EXIT_SUCCESS; 
@@ -107,17 +107,17 @@ static int populate_free_data(Physics_T *const phys)
       Pcmps(P_"MConfIJ"                     ,"zero"      )
      )
   {
-    frda_populate_gConf_dgConf_igConf_KerrSchild(phys,".*","gConf",
+    fd_populate_gConf_dgConf_igConf_KerrSchild(phys,".*","gConf",
                                                 "igConf","dgConf");
     
-    frda_compatible_Christoffel_symbol(phys,".*","igConf","dgConf","ChrisConf");
+    fd_compatible_Christoffel_symbol(phys,".*","igConf","dgConf","ChrisConf");
     
-    frda_1st_derivative_Christoffel_symbol(phys,".*","dChrisConf");
+    fd_1st_derivative_Christoffel_symbol(phys,".*","dChrisConf");
     
-    frda_conformal_Ricci(phys,".*","igConf","ChrisConf","dChrisConf",
+    fd_conformal_Ricci(phys,".*","igConf","ChrisConf","dChrisConf",
                          "RicciConf","trRicciConf");
     
-    frda_extrinsic_curvature_KerrSchild(phys,".*","igConf","ChrisConf",
+    fd_extrinsic_curvature_KerrSchild(phys,".*","igConf","ChrisConf",
                                         "adm_Kij","trK","dtrK");
   }
   else

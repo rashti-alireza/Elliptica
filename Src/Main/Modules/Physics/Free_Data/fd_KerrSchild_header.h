@@ -1,7 +1,7 @@
-#include "frda_header.h"
+#include "fd_header.h"
 
 /* for external variables DON'T CHANGE THIS */
-#define KS_glob_var(x) (frda_ks_glob##x)
+#define KS_glob_var(x) (fd_ks_glob##x)
 
 #define M_BH    KS_glob_var(M_BH) /* BH mass */
 #define a_BH    KS_glob_var(a_BH) /* BH spin */
@@ -31,8 +31,8 @@
 
 /* function prefix DON NOT change this prefix macro some fields 
 // using this prefix which then you must change them too.*/
-#define KS_prefix           "frda_ks_"
-#define KS_func_prefix(name) frda_ks_##name
+#define KS_prefix           "fd_ks_"
+#define KS_func_prefix(name) fd_ks_##name
 
 /* function names and prototype */
 #define KS_func_def_macro(name) double KS_func_prefix(name)
@@ -44,34 +44,34 @@
 #define KS_func_pass_args_macro  (farg)
 
 /* pass arguments for the following functions */
-#define frda_ks_rolloff(x,y,z)  (frda_ks_rolloff KS_func_pass_args_macro)
-#define frda_ks_H(x,y,z)  (frda_ks_H  KS_func_pass_args_macro)
-#define frda_ks_k0(x,y,z) (frda_ks_k0 KS_func_pass_args_macro)
-#define frda_ks_k1(x,y,z) (frda_ks_k1 KS_func_pass_args_macro)
-#define frda_ks_k2(x,y,z) (frda_ks_k2 KS_func_pass_args_macro)
-#define frda_ks_kt(x,y,z) (frda_ks_kt KS_func_pass_args_macro)
-#define frda_ks_c(x,y,z)  (frda_ks_c  KS_func_pass_args_macro)
+#define fd_ks_rolloff(x,y,z)  (fd_ks_rolloff KS_func_pass_args_macro)
+#define fd_ks_H(x,y,z)  (fd_ks_H  KS_func_pass_args_macro)
+#define fd_ks_k0(x,y,z) (fd_ks_k0 KS_func_pass_args_macro)
+#define fd_ks_k1(x,y,z) (fd_ks_k1 KS_func_pass_args_macro)
+#define fd_ks_k2(x,y,z) (fd_ks_k2 KS_func_pass_args_macro)
+#define fd_ks_kt(x,y,z) (fd_ks_kt KS_func_pass_args_macro)
+#define fd_ks_c(x,y,z)  (fd_ks_c  KS_func_pass_args_macro)
 
-#define frda_ks_K0(x,y,z) (frda_ks_K0 KS_func_pass_args_macro)
-#define frda_ks_K1(x,y,z) (frda_ks_K1 KS_func_pass_args_macro)
-#define frda_ks_K2(x,y,z) (frda_ks_K2 KS_func_pass_args_macro)
+#define fd_ks_K0(x,y,z) (fd_ks_K0 KS_func_pass_args_macro)
+#define fd_ks_K1(x,y,z) (fd_ks_K1 KS_func_pass_args_macro)
+#define fd_ks_K2(x,y,z) (fd_ks_K2 KS_func_pass_args_macro)
 
-#define frda_ks_X(x,y,z)  (farg->X)
-#define frda_ks_Y(x,y,z)  (farg->Y)
-#define frda_ks_Z(x,y,z)  (farg->Z)
-#define frda_ks_R(x,y,z)  (farg->R)
+#define fd_ks_X(x,y,z)  (farg->X)
+#define fd_ks_Y(x,y,z)  (farg->Y)
+#define fd_ks_Z(x,y,z)  (farg->Z)
+#define fd_ks_R(x,y,z)  (farg->R)
 
-#define frda_ks_dX_D0_  (farg->dX_D0)
-#define frda_ks_dX_D1_  (farg->dX_D1)
-#define frda_ks_dX_D2_  (farg->dX_D2)
+#define fd_ks_dX_D0_  (farg->dX_D0)
+#define fd_ks_dX_D1_  (farg->dX_D1)
+#define fd_ks_dX_D2_  (farg->dX_D2)
 
-#define frda_ks_dY_D0_  (farg->dY_D0)
-#define frda_ks_dY_D1_  (farg->dY_D1)
-#define frda_ks_dY_D2_  (farg->dY_D2)
+#define fd_ks_dY_D0_  (farg->dY_D0)
+#define fd_ks_dY_D1_  (farg->dY_D1)
+#define fd_ks_dY_D2_  (farg->dY_D2)
 
-#define frda_ks_dZ_D0_  (farg->dZ_D0)
-#define frda_ks_dZ_D1_  (farg->dZ_D1)
-#define frda_ks_dZ_D2_  (farg->dZ_D2)
+#define fd_ks_dZ_D0_  (farg->dZ_D0)
+#define fd_ks_dZ_D1_  (farg->dZ_D1)
+#define fd_ks_dZ_D2_  (farg->dZ_D2)
 
 #define x  (farg->x)
 #define y  (farg->y)
@@ -85,28 +85,28 @@ extern double Bx,By,Bz;/* B=v/c (boost) */
 extern double B2;/* B^i B_i */
 extern double Lambda;/* flat data => 0, kerr-schild => 1 */
 
-void frda_kerr_schild_g_analytic(
+void fd_kerr_schild_g_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
         const double BH_center_z,
         const char *const stem);
         
-void frda_kerr_schild_dg_analytic(
+void fd_kerr_schild_dg_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
         const double BH_center_z,
         const char *const stem);
 	
-void frda_kerr_schild_ddg_analytic(
+void fd_kerr_schild_ddg_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
         const double BH_center_z,
         const char *const stem);
 
-void frda_kerr_schild_dddg_analytic(
+void fd_kerr_schild_dddg_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,

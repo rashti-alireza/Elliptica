@@ -1,23 +1,24 @@
-### analytic Kerr-Schild free data :X,Y,Z,R and their derivatives
+### analytic Kerr-Schild free data :kt,k0,k1,k2,c and their derivatives
 ###
-### note: X=X(x,y,z),Y=Y(x,y,z),Z=Z(x,y,z) and R=R(x,y,z)
+### note: k0,k1,k2 and c are used in:
+### _gamma_D?D? =
+### _gamma_D?D?(k0(x,y,z),k1(x,y,z),k2(x,y,z),
+###             c(x,y,z),H(x,y,z))
+###
+### and kt is used in lapse.
 ###
 ### note: capital quantities or those with '_' prefix are 
-###       in inertial frame (not in rotating frame
+###       in inertial frame (not in rotating frame)
 
 #########################
 ### H O W  T O  U S E ###
 #########################
 # Issue the following:
 # 
-# $ cpi frda_KerrSchild_R_X_Y_Z.math > frda_KerrSchild_R_X_Y_Z.c && \
-#   sed -i '/Welcome to Cpi/,$d' frda_KerrSchild_R_X_Y_Z.c && \
-#   sed -i -E 's/Blank\((\w+)\)/\1/g' frda_KerrSchild_R_X_Y_Z.c && \
-#   sed -i -E 's/\bXX\b\(/frda_ks_X\(/g' frda_KerrSchild_R_X_Y_Z.c && \
-#   sed -i -E 's/\bYY\b\(/frda_ks_Y\(/g' frda_KerrSchild_R_X_Y_Z.c && \
-#   sed -i -E 's/\bZZ\b\(/frda_ks_Z\(/g' frda_KerrSchild_R_X_Y_Z.c && \
-#   sed -i -E 's/\bList\b//g' frda_KerrSchild_R_X_Y_Z.c && \
-#   sed -i -E -f frda_KerrSchild_substitute_derives.sed frda_KerrSchild_R_X_Y_Z.c
+# $ cpi fd_KerrSchild_c_k0_k1_k2_kt.math > \
+#   fd_KerrSchild_c_k0_k1_k2_kt.c && \
+#   sed -i '/Welcome to Cpi/,$d' fd_KerrSchild_c_k0_k1_k2_kt.c && \
+#   sed -i -E -f fd_KerrSchild_substitute_derives.sed fd_KerrSchild_c_k0_k1_k2_kt.c
 
 
 Dimension = 3;
@@ -42,7 +43,7 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `import os`
 
 ### ccode generator
-`def mcode(m,s=1):`
+`def mcode(m,s=2):`
 `  print('/* mcode in progress ... */')`
 `  sys.stdout.flush()`
 `  m = (m).doit()`
@@ -140,19 +141,13 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `r0,M_BH,a_BH,Lambda = symbols('r0,M_BH,a_BH,Lambda')`
 `Bx,By,Bz,B2         = symbols('Bx,By,Bz,B2')`
 `phiy,phiz           = symbols('phiy,phiz')`
+``
+`### functions`
+`fd_ks_K0  = symbols('fd_ks_K0',cls=Function)`
+`fd_ks_K1  = symbols('fd_ks_K1',cls=Function)`
+`fd_ks_K2  = symbols('fd_ks_K2',cls=Function)`
+`fd_ks_H   = symbols('fd_ks_H',cls=Function)`
 
-## functions same as X,Y,Z but withoul explicit expansion to low file size
-`XX = symbols('XX',cls=Function)`
-`YY = symbols('YY',cls=Function)`
-`ZZ = symbols('ZZ',cls=Function)`
-``
-``
-`### radius function in Kerr-Schild coords:`
-`def KS_radius(_x,_y,_z,a):`
-`  r2 = (_x**2+_y**2+_z**2)`
-`  a2 = a**2`
-`  return (0.5*(r2-a2+((r2-a2)**2+4*a2*_z**2)**0.5))**0.5`
-``
 ``
 `### perform boost and rotation transformation, dir = [1,-1]`
 `def Boost_Rotation(B,Ry,Rz,dir,v):`
@@ -162,7 +157,6 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `    return simplify(Ry**-1*Rz**-1)*(simplify(B**-1))*v`
 `  else:`
 `    raise Exception('Bad argument')`
-``
 ``
 `### populate boost transformation matrix:`
 `def Boost_matrix(Bx,By,Bz,B2):`
@@ -197,146 +191,180 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `     [0,0 ,0  ,1]`
 `     ])`
 `     `
-`  return ty, tz  `
-
-`### evaluates:`
-
-`x_mu     = transpose(Matrix([[0,x,y,z]]))`
-`tB       = Boost_matrix(Bx,By,Bz,B2)`
-`tRy, tRz = Rotation_matrix(phiy,phiz)`
-`_x_mu = Boost_Rotation(tB,tRy,tRz,-1,x_mu)`
-`X    = msimplify(_x_mu[1,0],"X")`
-`Y    = msimplify(_x_mu[2,0],"Y")`
-`Z    = msimplify(_x_mu[3,0],"Z")`
-`a    = a_BH`
-`R    = KS_radius(XX(x,y,z),YY(x,y,z),ZZ(x,y,z),a)`
-
+`  return ty, tz`
 ``
-`print('#include "frda_KerrSchild_header.h"')`
+``
+`### get k's to populate Kerr-Schild`
+`def get_ks(Bx,By,Bz,B2,phiy,phiz):`
+`  tB       = Boost_matrix(Bx,By,Bz,B2)`
+`  tRy, tRz = Rotation_matrix(phiy,phiz)`
+`  _k_mu    = transpose(Matrix(`
+           `[[1,fd_ks_K0(x,y,z),`
+           `fd_ks_K1(x,y,z),fd_ks_K2(x,y,z)]]))`
+`  k_mu     = Boost_Rotation(tB,tRy,tRz,1,_k_mu)`
+`  kt = (k_mu[0,0])`
+`  k0 = (k_mu[1,0])`
+`  k1 = (k_mu[2,0])`
+`  k2 = (k_mu[3,0])`
+`  return kt,k0,k1,k2`
+``
+`### evaluates:`
+`kt,k0,k1,k2 = get_ks(Bx,By,Bz,B2,phiy,phiz)`
+`c           = 2*fd_ks_H(x,y,z)`
+``
+`print('#include "fd_KerrSchild_header.h"')`
 ``
 Declare =
 {
 #### diff
 
- # dX
- (obj = Field,name = dX, rank = D, C_macro);
- # dd X
- (obj = Field,name = ddX, rank = DD, C_macro);
- # ddd X
- (obj = Field,name = dddX, rank = DDD, C_macro);
+ # dk0
+ (obj = Field,name = dk0, rank = D, C_macro);
+ # dd k0
+ (obj = Field,name = ddk0, rank = DD, C_macro);
+ # ddd k0
+ (obj = Field,name = dddk0, rank = DDD, C_macro);
 
- # d Y
- (obj = Field,name = dY, rank = D, C_macro);
- # dd Y
- (obj = Field,name = ddY, rank = DD, C_macro);
- # ddd Y
- (obj = Field,name = dddY, rank = DDD, C_macro);
+ # d k1
+ (obj = Field,name = dk1, rank = D, C_macro);
+ # dd k1
+ (obj = Field,name = ddk1, rank = DD, C_macro);
+ # ddd k1
+ (obj = Field,name = dddk1, rank = DDD, C_macro);
 
- # d Z
- (obj = Field,name = dZ, rank = D, C_macro);
- # dd Z
- (obj = Field,name = ddZ, rank = DD, C_macro);
- # ddd Z
- (obj = Field,name = dddZ, rank = DDD, C_macro);
+ # d k2
+ (obj = Field,name = dk2, rank = D, C_macro);
+ # dd k2
+ (obj = Field,name = ddk2, rank = DD, C_macro);
+ # ddd k2
+ (obj = Field,name = dddk2, rank = DDD, C_macro);
 
- # d R
- (obj = Field,name = dR, rank = D, C_macro);
- # dd R
- (obj = Field,name = ddR, rank = DD, C_macro);
- # ddd R
- (obj = Field,name = dddR, rank = DDD, C_macro);
+ # d kt
+ (obj = Field,name = dkt, rank = D, C_macro);
+ # dd kt
+ (obj = Field,name = ddkt, rank = DD, C_macro);
+ # ddd kt
+ (obj = Field,name = dddkt, rank = DDD, C_macro);
+
+ # d c
+ (obj = Field,name = dc, rank = D, C_macro);
+ # dd c
+ (obj = Field,name = ddc, rank = DD, C_macro);
+ # ddd c
+ (obj = Field,name = dddc, rank = DDD, C_macro);
 
 #### c function declarations
 
- # X
- (obj = Field,name = X, rank = 0, C_macro2);
- # dX
- (obj = Field,name = dX, rank = D, C_macro2);
- # dd X
- (obj = Field,name = ddX, rank = DD, C_macro2);
- # ddd X
- (obj = Field,name = dddX, rank = DDD, C_macro2);
+ # k0
+ (obj = Field,name = k0, rank = 0, C_macro2);
+ # dk0
+ (obj = Field,name = dk0, rank = D, C_macro2);
+ # dd k0
+ (obj = Field,name = ddk0, rank = DD, C_macro2);
+ # ddd k0
+ (obj = Field,name = dddk0, rank = DDD, C_macro2);
 
- # Y
- (obj = Field,name = Y, rank = 0, C_macro2);
- # d Y
- (obj = Field,name = dY, rank = D, C_macro2);
- # dd Y
- (obj = Field,name = ddY, rank = DD, C_macro2);
- # ddd Y
- (obj = Field,name = dddY, rank = DDD, C_macro2);
+ # k1
+ (obj = Field,name = k1, rank = 0, C_macro2);
+ # d k1
+ (obj = Field,name = dk1, rank = D, C_macro2);
+ # dd k1
+ (obj = Field,name = ddk1, rank = DD, C_macro2);
+ # ddd k1
+ (obj = Field,name = dddk1, rank = DDD, C_macro2);
 
- # Z
- (obj = Field,name = Z, rank = 0, C_macro2);
- # d Z
- (obj = Field,name = dZ, rank = D, C_macro2);
- # dd Z
- (obj = Field,name = ddZ, rank = DD, C_macro2);
- # ddd Z
- (obj = Field,name = dddZ, rank = DDD, C_macro2);
+ # k2
+ (obj = Field,name = k2, rank = 0, C_macro2);
+ # d k2
+ (obj = Field,name = dk2, rank = D, C_macro2);
+ # dd k2
+ (obj = Field,name = ddk2, rank = DD, C_macro2);
+ # ddd k2
+ (obj = Field,name = dddk2, rank = DDD, C_macro2);
 
- # R
- (obj = Field,name = R, rank = 0, C_macro2);
- # d R
- (obj = Field,name = dR, rank = D, C_macro2);
- # dd R
- (obj = Field,name = ddR, rank = DD, C_macro2);
- # ddd R
- (obj = Field,name = dddR, rank = DDD, C_macro2);
+ # kt
+ (obj = Field,name = kt, rank = 0, C_macro2);
+ # d kt
+ (obj = Field,name = dkt, rank = D, C_macro2);
+ # dd kt
+ (obj = Field,name = ddkt, rank = DD, C_macro2);
+ # ddd kt
+ (obj = Field,name = dddkt, rank = DDD, C_macro2);
+
+ # c
+ (obj = Field,name = c, rank = 0, C_macro2);
+ # d c
+ (obj = Field,name = dc, rank = D, C_macro2);
+ # dd c
+ (obj = Field,name = ddc, rank = DD, C_macro2);
+ # ddd c
+ (obj = Field,name = dddc, rank = DDD, C_macro2);
 
 
 #### c function definition
 
- # X
- (obj = Field,name = X, rank = 0, C_macro3);
- # dX
- (obj = Field,name = dX, rank = D, C_macro3);
- # dd X
- (obj = Field,name = ddX, rank = DD, C_macro3);
- # ddd X
- (obj = Field,name = dddX, rank = DDD, C_macro3);
+ # k0
+ (obj = Field,name = k0, rank = 0, C_macro3);
+ # dk0
+ (obj = Field,name = dk0, rank = D, C_macro3);
+ # dd k0
+ (obj = Field,name = ddk0, rank = DD, C_macro3);
+ # ddd k0
+ (obj = Field,name = dddk0, rank = DDD, C_macro3);
 
- # Y
- (obj = Field,name = Y, rank = 0, C_macro3);
- # d Y
- (obj = Field,name = dY, rank = D, C_macro3);
- # dd Y
- (obj = Field,name = ddY, rank = DD, C_macro3);
- # ddd Y
- (obj = Field,name = dddY, rank = DDD, C_macro3);
+ # k1
+ (obj = Field,name = k1, rank = 0, C_macro3);
+ # d k1
+ (obj = Field,name = dk1, rank = D, C_macro3);
+ # dd k1
+ (obj = Field,name = ddk1, rank = DD, C_macro3);
+ # ddd k1
+ (obj = Field,name = dddk1, rank = DDD, C_macro3);
 
- # Z
- (obj = Field,name = Z, rank = 0, C_macro3);
- # d Z
- (obj = Field,name = dZ, rank = D, C_macro3);
- # dd Z
- (obj = Field,name = ddZ, rank = DD, C_macro3);
- # ddd Z
- (obj = Field,name = dddZ, rank = DDD, C_macro3);
+ # k2
+ (obj = Field,name = k2, rank = 0, C_macro3);
+ # d k2
+ (obj = Field,name = dk2, rank = D, C_macro3);
+ # dd k2
+ (obj = Field,name = ddk2, rank = DD, C_macro3);
+ # ddd k2
+ (obj = Field,name = dddk2, rank = DDD, C_macro3);
 
- # R
- (obj = Field,name = R, rank = 0, C_macro3);
- # d R
- (obj = Field,name = dR, rank = D, C_macro3);
- # dd R
- (obj = Field,name = ddR, rank = DD, C_macro3);
- # ddd R
- (obj = Field,name = dddR, rank = DDD, C_macro3);
+ # kt
+ (obj = Field,name = kt, rank = 0, C_macro3);
+ # d kt
+ (obj = Field,name = dkt, rank = D, C_macro3);
+ # dd kt
+ (obj = Field,name = ddkt, rank = DD, C_macro3);
+ # ddd kt
+ (obj = Field,name = dddkt, rank = DDD, C_macro3);
+
+ # c
+ (obj = Field,name = c, rank = 0, C_macro3);
+ # d c
+ (obj = Field,name = dc, rank = D, C_macro3);
+ # dd c
+ (obj = Field,name = ddc, rank = DD, C_macro3);
+ # ddd c
+ (obj = Field,name = dddc, rank = DDD, C_macro3);
 
 }
 
 # symmetries:
-Symm[ddX(i,j)    = ddX(j,i)];
-Symm[dddX(i,j,k) = dddX(j,i,k)];
+Symm[ddk0(i,j)    = ddk0(j,i)];
+Symm[dddk0(i,j,k) = dddk0(j,i,k)];
 
-Symm[ddY(i,j)    = ddY(j,i)];
-Symm[dddY(i,j,k) = dddY(j,i,k)];
+Symm[ddk1(i,j)    = ddk1(j,i)];
+Symm[dddk1(i,j,k) = dddk1(j,i,k)];
 
-Symm[ddZ(i,j)    = ddZ(j,i)];
-Symm[dddZ(i,j,k) = dddZ(j,i,k)];
+Symm[ddk2(i,j)    = ddk2(j,i)];
+Symm[dddk2(i,j,k) = dddk2(j,i,k)];
 
-Symm[ddR(i,j)    = ddR(j,i)];
-Symm[dddR(i,j,k) = dddR(j,i,k)];
+Symm[ddkt(i,j)    = ddkt(j,i)];
+Symm[dddkt(i,j,k) = dddkt(j,i,k)];
+
+Symm[ddc(i,j)     = ddc(j,i)];
+Symm[dddc(i,j,k)  = dddc(j,i,k)];
 
 
 ### make it ready for python:

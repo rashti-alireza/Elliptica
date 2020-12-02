@@ -8,11 +8,11 @@
 // NOTE: before each call and for each BH one must updata the paramters.
 // NOTE: NOT thread safe. */
 
-#include "frda_header.h"
+#include "fd_header.h"
 
 /* for external variables. NOTE: MUST be the same as 
-// the one in 'frda_KerrSchild_header.h' DON'T CHANGE. */
-#define KS_glob_var(x) frda_ks_glob##x
+// the one in 'fd_KerrSchild_header.h' DON'T CHANGE. */
+#define KS_glob_var(x) fd_ks_glob##x
 
 #define M_BH    KS_glob_var(M_BH) /* BH mass */
 #define a_BH    KS_glob_var(a_BH) /* BH spin */
@@ -32,8 +32,8 @@ double B2;/* B^i B_i */
 double Lambda;/* flat data => 0, kerr-schild => 1 */
 
 
-void frda_KerrSchild_set_params(Physics_T *const phys);
-void frda_KerrSchild_set_params(Physics_T *const phys)
+void fd_KerrSchild_set_params(Physics_T *const phys);
+void fd_KerrSchild_set_params(Physics_T *const phys)
 {
   const double chi_U0      = Getd("chi_U0");
   const double chi_U1      = Getd("chi_U1");

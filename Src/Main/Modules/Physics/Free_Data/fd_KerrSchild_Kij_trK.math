@@ -14,8 +14,8 @@ C_macro4  = REALLOC_v_WRITE_v_STEM(name,trK);
 C_macro5  = add_alloc_get(name);
 
 
-`#include "frda_header.h"`
-`#include "frda_KerrSchild_header.h"`
+`#include "fd_header.h"`
+`#include "fd_KerrSchild_header.h"`
 ``
 ``
 `#define add_alloc_get(name) ADD_AND_ALLOC_FIELD(name);WRITE_v(name);`
@@ -31,29 +31,29 @@ C_macro5  = add_alloc_get(name);
 `  farg->x = x;\`
 `  farg->y = y;\`
 `  farg->z = z;\`
-`  farg->X = frda_ks_X KS_func_pass_args_macro;\`
-`  farg->Y = frda_ks_Y KS_func_pass_args_macro;\`
-`  farg->Z = frda_ks_Z KS_func_pass_args_macro;\`
-`  farg->R = frda_ks_R KS_func_pass_args_macro;\`
-`  farg->dX_D0 = frda_ks_dX_D0 KS_func_pass_args_sed;\`
-`  farg->dX_D1 = frda_ks_dX_D1 KS_func_pass_args_sed;\`
-`  farg->dX_D2 = frda_ks_dX_D2 KS_func_pass_args_sed;\`
-`  farg->dY_D0 = frda_ks_dY_D0 KS_func_pass_args_sed;\`
-`  farg->dY_D1 = frda_ks_dY_D1 KS_func_pass_args_sed;\`
-`  farg->dY_D2 = frda_ks_dY_D2 KS_func_pass_args_sed;\`
-`  farg->dZ_D0 = frda_ks_dZ_D0 KS_func_pass_args_sed;\`
-`  farg->dZ_D1 = frda_ks_dZ_D1 KS_func_pass_args_sed;\`
-`  farg->dZ_D2 = frda_ks_dZ_D2 KS_func_pass_args_sed;`
+`  farg->X = fd_ks_X KS_func_pass_args_macro;\`
+`  farg->Y = fd_ks_Y KS_func_pass_args_macro;\`
+`  farg->Z = fd_ks_Z KS_func_pass_args_macro;\`
+`  farg->R = fd_ks_R KS_func_pass_args_macro;\`
+`  farg->dX_D0 = fd_ks_dX_D0 KS_func_pass_args_sed;\`
+`  farg->dX_D1 = fd_ks_dX_D1 KS_func_pass_args_sed;\`
+`  farg->dX_D2 = fd_ks_dX_D2 KS_func_pass_args_sed;\`
+`  farg->dY_D0 = fd_ks_dY_D0 KS_func_pass_args_sed;\`
+`  farg->dY_D1 = fd_ks_dY_D1 KS_func_pass_args_sed;\`
+`  farg->dY_D2 = fd_ks_dY_D2 KS_func_pass_args_sed;\`
+`  farg->dZ_D0 = fd_ks_dZ_D0 KS_func_pass_args_sed;\`
+`  farg->dZ_D1 = fd_ks_dZ_D1 KS_func_pass_args_sed;\`
+`  farg->dZ_D2 = fd_ks_dZ_D2 KS_func_pass_args_sed;`
 ``
 ``
 
-`void frda_Kij_trK_KerrSchild(Patch_T *const patch,`
+`void fd_Kij_trK_KerrSchild(Patch_T *const patch,`
 ` const double BH_center_x,const double BH_center_y,`
 ` const double BH_center_z,const char *const ig,`
 ` const char *const Chris,const char *const Kij,`
 ` const char *const trK);`
 ``
-`void frda_Kij_trK_KerrSchild(Patch_T *const patch,`
+`void fd_Kij_trK_KerrSchild(Patch_T *const patch,`
 ` const double BH_center_x,const double BH_center_y,`
 ` const double BH_center_z,const char *const ig,`
 ` const char *const Chris,const char *const Kij,`
@@ -100,10 +100,10 @@ Symm[Chris(i,j,k) = Chris(i,k,j)];
 `  z = patch->node[ijk]->x[2]-BH_center_z;`
 `  KS_set_args`
 ``
-`  KS__beta_D0[ijk] = frda_ks_c(x,y,z)*frda_ks_kt(x, y, z)*frda_ks_k0(x, y, z);`
-`  KS__beta_D1[ijk] = frda_ks_c(x,y,z)*frda_ks_kt(x, y, z)*frda_ks_k1(x, y, z);`
-`  KS__beta_D2[ijk] = frda_ks_c(x,y,z)*frda_ks_kt(x, y, z)*frda_ks_k2(x, y, z);`
-`  KS__alpha[ijk]   = 1./sqrt(1+frda_ks_c(x,y,z)*frda_ks_k0(x, y, z)*frda_ks_k0(x, y, z));`
+`  KS__beta_D0[ijk] = fd_ks_c(x,y,z)*fd_ks_kt(x, y, z)*fd_ks_k0(x, y, z);`
+`  KS__beta_D1[ijk] = fd_ks_c(x,y,z)*fd_ks_kt(x, y, z)*fd_ks_k1(x, y, z);`
+`  KS__beta_D2[ijk] = fd_ks_c(x,y,z)*fd_ks_kt(x, y, z)*fd_ks_k2(x, y, z);`
+`  KS__alpha[ijk]   = 1./sqrt(1+fd_ks_c(x,y,z)*fd_ks_k0(x, y, z)*fd_ks_k0(x, y, z));`
 
 `}`
 

@@ -16,14 +16,14 @@
 #########################
 # Issue the following:
 # 
-# $ cpi frda_KerrSchild_H_K0_K1_K2.math > \
-#   frda_KerrSchild_H_K0_K1_K2.c && \
-#   sed -i '/Welcome to Cpi/,$d' frda_KerrSchild_H_K0_K1_K2.c && \
-#   sed -i -E 's/\bX\b\(/frda_ks_X\(/g' frda_KerrSchild_H_K0_K1_K2.c &&\
-#   sed -i -E 's/\bY\b\(/frda_ks_Y\(/g' frda_KerrSchild_H_K0_K1_K2.c &&\
-#   sed -i -E 's/\bZ\b\(/frda_ks_Z\(/g' frda_KerrSchild_H_K0_K1_K2.c &&\
-#   sed -i -E 's/\bR\b\(/frda_ks_R\(/g' frda_KerrSchild_H_K0_K1_K2.c &&\
-#   sed -i -E -f frda_KerrSchild_substitute_derives.sed frda_KerrSchild_H_K0_K1_K2.c
+# $ cpi fd_KerrSchild_H_K0_K1_K2.math > \
+#   fd_KerrSchild_H_K0_K1_K2.c && \
+#   sed -i '/Welcome to Cpi/,$d' fd_KerrSchild_H_K0_K1_K2.c && \
+#   sed -i -E 's/\bX\b\(/fd_ks_X\(/g' fd_KerrSchild_H_K0_K1_K2.c &&\
+#   sed -i -E 's/\bY\b\(/fd_ks_Y\(/g' fd_KerrSchild_H_K0_K1_K2.c &&\
+#   sed -i -E 's/\bZ\b\(/fd_ks_Z\(/g' fd_KerrSchild_H_K0_K1_K2.c &&\
+#   sed -i -E 's/\bR\b\(/fd_ks_R\(/g' fd_KerrSchild_H_K0_K1_K2.c &&\
+#   sed -i -E -f fd_KerrSchild_substitute_derives.sed fd_KerrSchild_H_K0_K1_K2.c
 
 
 Dimension = 3;
@@ -173,7 +173,7 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `H  = KS_Hfunc(m,_r,a,Z(x,y,z),Lambda)`
 ``
 ``
-`print('#include "frda_KerrSchild_header.h"')`
+`print('#include "fd_KerrSchild_header.h"')`
 ``
 Declare =
 {

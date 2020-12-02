@@ -5,10 +5,10 @@
 
 /* various functions and ways to populate free data */
 
-#include "frda_populate.h"
+#include "fd_populate.h"
 
 /* compute trK = ig^{ij} K_{ij} and its partial derivatives dtrK */
-void frda_extrinsic_curvature_KerrSchild(Physics_T *const phys,
+void fd_extrinsic_curvature_KerrSchild(Physics_T *const phys,
                                          const char *const region,
                                          const char *const ig,
                                          const char *const Chris,
@@ -24,13 +24,13 @@ void frda_extrinsic_curvature_KerrSchild(Physics_T *const phys,
   const double BHz   = Getd("center_z");
   unsigned p;
   
-  frda_KerrSchild_set_params(phys);
+  fd_KerrSchild_set_params(phys);
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    frda_Kij_trK_KerrSchild(patch,BHx,BHy,BHz,ig,Chris,Kij,trK);
+    fd_Kij_trK_KerrSchild(patch,BHx,BHy,BHz,ig,Chris,Kij,trK);
     
     dField_di_STEM(dtrK_D0,dtrK);
     dField_di_STEM(dtrK_D1,dtrK);
@@ -42,7 +42,7 @@ void frda_extrinsic_curvature_KerrSchild(Physics_T *const phys,
 }
 
 /* compute confromal Ricci_{ij} and its trace */
-void frda_conformal_Ricci(Physics_T *const phys,
+void fd_conformal_Ricci(Physics_T *const phys,
                           const char *const region,
                           const char *const ig,
                           const char *const Chris,
@@ -66,7 +66,7 @@ void frda_conformal_Ricci(Physics_T *const phys,
 }
 
 /* compute Christoffel symbol compatible with given metric */
-void frda_compatible_Christoffel_symbol(Physics_T *const phys,
+void fd_compatible_Christoffel_symbol(Physics_T *const phys,
                                         const char *const region,
                                         const char *const ig,
                                         const char *const dg,
@@ -89,7 +89,7 @@ void frda_compatible_Christoffel_symbol(Physics_T *const phys,
 }
 
 /* compute 1st derivative Christoffel symbol */
-void frda_1st_derivative_Christoffel_symbol(Physics_T *const phys,
+void fd_1st_derivative_Christoffel_symbol(Physics_T *const phys,
                                             const char *const region,
                                             const char *const dChris)
 {
@@ -112,7 +112,7 @@ void frda_1st_derivative_Christoffel_symbol(Physics_T *const phys,
 // and first order derivative of confromal metric.
 // the nomenclature of fields determined by the passed stems */
 void 
-frda_populate_gConf_dgConf_igConf_KerrSchild
+fd_populate_gConf_dgConf_igConf_KerrSchild
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -129,15 +129,15 @@ frda_populate_gConf_dgConf_igConf_KerrSchild
   const double BHz   = Getd("center_z");
   unsigned p;
   
-  frda_KerrSchild_set_params(phys);
+  fd_KerrSchild_set_params(phys);
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
   {
     Patch_T *patch = grid->patch[p];
     
-    frda_kerr_schild_g_analytic(patch,BHx,BHy,BHz,gConf);
-    frda_kerr_schild_dg_analytic(patch,BHx,BHy,BHz,dgConf);
+    fd_kerr_schild_g_analytic(patch,BHx,BHy,BHz,gConf);
+    fd_kerr_schild_dg_analytic(patch,BHx,BHy,BHz,dgConf);
     
     READ_v_STEM(gConf_D2D2,gConf)
     READ_v_STEM(gConf_D0D2,gConf)

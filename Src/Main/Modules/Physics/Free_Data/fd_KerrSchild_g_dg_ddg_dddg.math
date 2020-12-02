@@ -9,14 +9,14 @@
 #########################
 # Issue the following (TAKES A VERY VERY LONG TIME):
 # 
-# $ cpi frda_KerrSchild_g_dg_ddg_dddg.math > \
-#   frda_KerrSchild_g_dg_ddg_dddg.c && \
-#   sed -i '/Welcome to Cpi/,$d' frda_KerrSchild_g_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bk0\b\(/frda_ks_k0\(/g' frda_KerrSchild_g_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bk1\b\(/frda_ks_k1\(/g' frda_KerrSchild_g_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bk2\b\(/frda_ks_k2\(/g' frda_KerrSchild_g_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bc\b\(/frda_ks_c\(/g'   frda_KerrSchild_g_dg_ddg_dddg.c && \
-#   sed -i -E -f frda_KerrSchild_substitute_derives.sed frda_KerrSchild_g_dg_ddg_dddg.c
+# $ cpi fd_KerrSchild_g_dg_ddg_dddg.math > \
+#   fd_KerrSchild_g_dg_ddg_dddg.c && \
+#   sed -i '/Welcome to Cpi/,$d' fd_KerrSchild_g_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bk0\b\(/fd_ks_k0\(/g' fd_KerrSchild_g_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bk1\b\(/fd_ks_k1\(/g' fd_KerrSchild_g_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bk2\b\(/fd_ks_k2\(/g' fd_KerrSchild_g_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bc\b\(/fd_ks_c\(/g'   fd_KerrSchild_g_dg_ddg_dddg.c && \
+#   sed -i -E -f fd_KerrSchild_substitute_derives.sed fd_KerrSchild_g_dg_ddg_dddg.c
 
 Dimension = 3;
 point     = x;
@@ -216,8 +216,8 @@ Command["sed -i 's/_,/,/g'"];
 `########################`
 ``
 ``
-`print('#include "frda_header.h"')`
-`print('#include "frda_KerrSchild_header.h"')`
+`print('#include "fd_header.h"')`
+`print('#include "fd_KerrSchild_header.h"')`
 ``
 
 `print('#undef x')`
@@ -241,26 +241,26 @@ Command["sed -i 's/_,/,/g'"];
 `print('  farg->x = x;\\')`
 `print('  farg->y = y;\\')`
 `print('  farg->z = z;\\')`
-`print('  farg->X = frda_ks_X KS_func_pass_args_macro;\\')`
-`print('  farg->Y = frda_ks_Y KS_func_pass_args_macro;\\')`
-`print('  farg->Z = frda_ks_Z KS_func_pass_args_macro;\\')`
-`print('  farg->R = frda_ks_R KS_func_pass_args_macro;\\')`
-`print('  farg->dX_D0 = frda_ks_dX_D0 KS_func_pass_args_sed;\\')`
-`print('  farg->dX_D1 = frda_ks_dX_D1 KS_func_pass_args_sed;\\')`
-`print('  farg->dX_D2 = frda_ks_dX_D2 KS_func_pass_args_sed;\\')`
-`print('  farg->dY_D0 = frda_ks_dY_D0 KS_func_pass_args_sed;\\')`
-`print('  farg->dY_D1 = frda_ks_dY_D1 KS_func_pass_args_sed;\\')`
-`print('  farg->dY_D2 = frda_ks_dY_D2 KS_func_pass_args_sed;\\')`
-`print('  farg->dZ_D0 = frda_ks_dZ_D0 KS_func_pass_args_sed;\\')`
-`print('  farg->dZ_D1 = frda_ks_dZ_D1 KS_func_pass_args_sed;\\')`
-`print('  farg->dZ_D2 = frda_ks_dZ_D2 KS_func_pass_args_sed;')`
+`print('  farg->X = fd_ks_X KS_func_pass_args_macro;\\')`
+`print('  farg->Y = fd_ks_Y KS_func_pass_args_macro;\\')`
+`print('  farg->Z = fd_ks_Z KS_func_pass_args_macro;\\')`
+`print('  farg->R = fd_ks_R KS_func_pass_args_macro;\\')`
+`print('  farg->dX_D0 = fd_ks_dX_D0 KS_func_pass_args_sed;\\')`
+`print('  farg->dX_D1 = fd_ks_dX_D1 KS_func_pass_args_sed;\\')`
+`print('  farg->dX_D2 = fd_ks_dX_D2 KS_func_pass_args_sed;\\')`
+`print('  farg->dY_D0 = fd_ks_dY_D0 KS_func_pass_args_sed;\\')`
+`print('  farg->dY_D1 = fd_ks_dY_D1 KS_func_pass_args_sed;\\')`
+`print('  farg->dY_D2 = fd_ks_dY_D2 KS_func_pass_args_sed;\\')`
+`print('  farg->dZ_D0 = fd_ks_dZ_D0 KS_func_pass_args_sed;\\')`
+`print('  farg->dZ_D1 = fd_ks_dZ_D1 KS_func_pass_args_sed;\\')`
+`print('  farg->dZ_D2 = fd_ks_dZ_D2 KS_func_pass_args_sed;')`
 `print('')`
 
 ### NOTE the function "get_v" is for geting the value of a field
 ### according to the parameter and the given name. it is used for
 ### different name formats
 
-`print('void frda_kerr_schild_g_analytic(')`
+`print('void fd_kerr_schild_g_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -268,7 +268,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('        const char *const stem);')`
 
 
-`print('void frda_kerr_schild_dg_analytic(')`
+`print('void fd_kerr_schild_dg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -276,7 +276,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('        const char *const stem);')`
 
 
-`print('void frda_kerr_schild_ddg_analytic(')`
+`print('void fd_kerr_schild_ddg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -284,14 +284,14 @@ Command["sed -i 's/_,/,/g'"];
 `print('        const char *const stem);')`
 
 
-`print('void frda_kerr_schild_dddg_analytic(')`
+`print('void fd_kerr_schild_dddg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
 `print('        const double BH_center_z,')`
 `print('        const char *const stem);')`
 
-`print('void frda_kerr_schild_g_analytic(')`
+`print('void fd_kerr_schild_g_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -345,7 +345,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('    }')`
 `print('}')`
 ``
-`print('void frda_kerr_schild_dg_analytic(')`
+`print('void fd_kerr_schild_dg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -443,7 +443,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('}')`
 ``
 `print('')`
-`print('void frda_kerr_schild_ddg_analytic(')`
+`print('void fd_kerr_schild_ddg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -683,7 +683,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('  }	')`
 `print('}')`
 `print('')`
-`print('void frda_kerr_schild_dddg_analytic(')`
+`print('void fd_kerr_schild_dddg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
