@@ -16,7 +16,7 @@ void free_PrField(Pr_Field_T *pr);
 void pr_hdf5_silo(Pr_Field_T *const pr);
 static void parse_parameter_3d(const char *const par,Pr_Field_T *const pr);
 int print_fields_3D(const Grid_T *const grid,const int iteration,const char *const dir);
-double print_field_1D(const Grid_T *const grid,const int iteration,const char *const folder);
+double print_fields_1D(const Grid_T *const grid,const int iteration,const char *const folder);
 
 
 

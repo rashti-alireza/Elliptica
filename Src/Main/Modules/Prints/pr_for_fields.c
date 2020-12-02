@@ -173,7 +173,7 @@ int print_fields_3D(const Grid_T *const grid,const int iteration,
 /* ->: largest L2 norm.
 // print norms L2, L1 and L_inf of the specified fields 
 // in parameter "txt_output_1d" (supporting regular expression) */
-double print_field_1D(const Grid_T *const grid,const int iteration, 
+double print_fields_1D(const Grid_T *const grid,const int iteration, 
                       const char *const folder)
 {
   FUNC_TIC
