@@ -10,7 +10,7 @@
 
 /* taking partial derivatives using a regex comma separated list.
 // using the regex, it finds the field->name match and take derivative
-// according to the name. */
+// according to the name. please read notes about partial_derivative. */
 void partial_derivative_with_regex(Patch_T *const patch,
                                    const char *const regex_list)
 {
