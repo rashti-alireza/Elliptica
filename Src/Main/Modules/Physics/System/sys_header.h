@@ -9,9 +9,13 @@
 #include "physics_EoS_lib.h"
 #include "physics_observe_lib.h"
 #include "physics_lib.h"
+#include "physics_freedata_lib.h"
 #include "fields_lib.h"
 #include "maths_equation_solvings_lib.h"
 #include "maths_spectral_methods_lib.h"
+
+/* parameter prefix */
+#define P_ "sys_"
 
 int sys_tune_ADM_momenta(Physics_T *const phys);
 

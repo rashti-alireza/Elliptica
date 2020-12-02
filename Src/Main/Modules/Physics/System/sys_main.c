@@ -19,6 +19,9 @@ int sys_main(Physics_T *const phys)
     case SYS_TUNE_P_ADM:
       ret = tune_system_ADM_momenta(phys);
     break;
+    case SYS_INITIALIZE_FIELDS:
+      ret = initialize_fields(phys);
+    break;
     
     default:
       Error0(NO_OPTION);
@@ -38,5 +41,28 @@ static int tune_system_ADM_momenta(Physics_T *const phys)
   
   FUNC_TOC
   return ret;
+}
+
+/* initialize fields for the very first time to start off the 
+// initial data procedure, using known cases, like TOV, KerrSchild etc. */
+static int initialize_fields(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  if(Pcmps(P_"initialize","one_exact_KerrSchild"))
+  {
+    if(Pcmps(P_"initialize_fields","XCTS"))
+    {
+      fd_populate_psi_alpha_beta_KerrSchild(phys,".*",
+                                            "psi","alpha","beta",0);
+    }
+    else
+      Error0(NO_OPTION);
+  }
+  else
+    Error0(NO_OPTION);
+  
+  FUNC_TOC
+  return EXIT_SUCCESS;
 }
 

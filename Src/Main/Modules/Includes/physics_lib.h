@@ -140,6 +140,7 @@ typedef enum CMD_T
  
  /* system related */
  SYS_TUNE_P_ADM,/* adjust P_adm of the system */
+ SYS_INITIALIZE_FIELDS,/* start off with these fields */
  
  /* adm related */
  ADM_ADD_PARAMS,/* add params */

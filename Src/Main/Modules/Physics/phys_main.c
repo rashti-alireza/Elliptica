@@ -62,6 +62,7 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
     break;
     
     case SYS_TUNE_P_ADM:
+    case SYS_INITIALIZE_FIELDS:
       ret = sys_main(phys);
     break;
     
