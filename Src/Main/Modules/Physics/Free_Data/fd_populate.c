@@ -161,3 +161,85 @@ fd_populate_gConf_dgConf_igConf_KerrSchild
   
   FUNC_TOC
 }
+
+/* populate psi, alpha and beta KerrSchild value. */
+void 
+fd_populate_psi_alpha_beta_KerrSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Psi,
+ const char *const Alpha,
+ const char *const Beta,
+ const char *const ig/*(inverse metric) if ig is null, it makes them */
+ )
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,region);
+  const double BHx   = Getd("center_x");
+  const double BHy   = Getd("center_y");
+  const double BHz   = Getd("center_z");
+  unsigned p;
+  
+  fd_KerrSchild_set_params(phys);
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    /* if there is no ig, make one */
+    if (!ig)
+    {
+     /* populate g */
+     ADD_AND_ALLOC_FIELD(fd_ks__g_D2D2)
+     ADD_AND_ALLOC_FIELD(fd_ks__g_D0D2)
+     ADD_AND_ALLOC_FIELD(fd_ks__g_D0D0)
+     ADD_AND_ALLOC_FIELD(fd_ks__g_D0D1)
+     ADD_AND_ALLOC_FIELD(fd_ks__g_D1D2)
+     ADD_AND_ALLOC_FIELD(fd_ks__g_D1D1)
+     
+     fd_kerr_schild_g_analytic(patch,BHx,BHy,BHz,"fd_ks__g");
+     
+     READ_v_STEM(g_D2D2,"fd_ks__g")
+     READ_v_STEM(g_D0D2,"fd_ks__g")
+     READ_v_STEM(g_D0D0,"fd_ks__g")
+     READ_v_STEM(g_D0D1,"fd_ks__g")
+     READ_v_STEM(g_D1D2,"fd_ks__g")
+     READ_v_STEM(g_D1D1,"fd_ks__g")
+     
+     /* populate ig */
+     ADD_FIELD(fd_ks__ig_U2U2)
+     ADD_FIELD(fd_ks__ig_U0U2)
+     ADD_FIELD(fd_ks__ig_U0U0)
+     ADD_FIELD(fd_ks__ig_U0U1)
+     ADD_FIELD(fd_ks__ig_U1U2)
+     ADD_FIELD(fd_ks__ig_U1U1)
+     
+     REALLOC_v_WRITE_v_STEM(ig_U2U2,"fd_ks__ig")
+     REALLOC_v_WRITE_v_STEM(ig_U0U2,"fd_ks__ig")
+     REALLOC_v_WRITE_v_STEM(ig_U0U0,"fd_ks__ig")
+     REALLOC_v_WRITE_v_STEM(ig_U0U1,"fd_ks__ig")
+     REALLOC_v_WRITE_v_STEM(ig_U1U2,"fd_ks__ig")
+     REALLOC_v_WRITE_v_STEM(ig_U1U1,"fd_ks__ig")
+     
+     FOR_ALL_ijk
+     {
+       Matrix_Inverse_3x3_Symmetric_Field(g,D,ig,U,ijk);
+     }
+     
+     /* remove redundant */
+     remove_field_with_regex(patch,"^fd_ks__g_D.+");
+     remove_field_with_regex(patch,"^fd_ks__ig_U.+");
+     
+     fd_psi_alpha_beta_KerrSchild_patch(patch,BHx,BHy,BHz,
+                                       "fd_ks__ig",Psi,Alpha,Beta);
+    }
+    else
+     fd_psi_alpha_beta_KerrSchild_patch(patch,BHx,BHy,BHz,
+                                        ig,Psi,Alpha,Beta);
+  }
+  
+  FUNC_TOC
+}

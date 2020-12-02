@@ -100,7 +100,17 @@ void fd_psi_alpha_beta_KerrSchild_patch(Patch_T *const patch,
  const double BH_center_z,const char *const ig,
  const char *const Psi,const char *const Alpha,
  const char *const Beta);
-
+ 
+void 
+fd_populate_psi_alpha_beta_KerrSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Psi,
+ const char *const Alpha,
+ const char *const Beta,
+ const char *const ig
+ );
    
 #endif
 
