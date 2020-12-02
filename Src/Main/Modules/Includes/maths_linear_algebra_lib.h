@@ -1,5 +1,6 @@
 #ifndef maths_linear_algebra_LIB_H
 #define maths_linear_algebra_LIB_H
+#include "elliptica_system_lib.h"
 
 
 /* MLA stands for "maths_linear_algebra" */
@@ -101,13 +102,13 @@ typedef enum MATRIX_SF_T
 /* matrix */
 typedef struct MATRIX_T
 {
-  unsigned reg_f: 1;/* regular format */
-  unsigned tri_f: 1;/* 1 if tripet storage format, 0 otherwise*/
-  unsigned ccs_f: 1;/* 1 if compressed column storage format, 0 otherwise */
-  unsigned crs_f: 1;/* 1 if compressed row storage format,0 otherwise */
-  unsigned tri_l_f: 1;/* 1 if long tripet storage format, 0 otherwise*/
-  unsigned ccs_l_f: 1;/* 1 if long compressed column storage format, 0 otherwise */
-  unsigned crs_l_f: 1;/* 1 if long compressed row storage format,0 otherwise */
+  Uint reg_f: 1;/* regular format */
+  Uint tri_f: 1;/* 1 if tripet storage format, 0 otherwise*/
+  Uint ccs_f: 1;/* 1 if compressed column storage format, 0 otherwise */
+  Uint crs_f: 1;/* 1 if compressed row storage format,0 otherwise */
+  Uint tri_l_f: 1;/* 1 if long tripet storage format, 0 otherwise*/
+  Uint ccs_l_f: 1;/* 1 if long compressed column storage format, 0 otherwise */
+  Uint crs_l_f: 1;/* 1 if long compressed row storage format,0 otherwise */
   long row;
   long col;
   struct/* triplet storage format */
@@ -164,7 +165,7 @@ int matrix_by_vector(const Matrix_T *const m, const double *const v,double *cons
 Matrix_T *matrix_by_matrix(const Matrix_T *const a, const Matrix_T *const b,const char *const dir);
 Matrix_T *cast_matrix_ccs_long(Matrix_T *const m);
 void copy_ccs_long2ccs_long(const Matrix_T *const ccs_l1,Matrix_T *const ccs_l2);
-Matrix_T *compress_stack2ccs(Matrix_T **const S,const unsigned nm,const unsigned *const nr,const unsigned Nrow,const unsigned Ncol,const Flag_T flg);
+Matrix_T *compress_stack2ccs(Matrix_T **const S,const Uint nm,const Uint *const nr,const Uint Nrow,const Uint Ncol,const Flag_T flg);
 Matrix_T *CCSOpCCS(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op);
 int matrix_comparison(const Matrix_T *const M1,const Matrix_T *const M2);
 Matrix_T *alloc_matrix(const Matrix_SF_T type_e,const long row,const long col);

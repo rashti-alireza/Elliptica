@@ -10,7 +10,7 @@ int make_patches(Grid_T *const grid)
 {
   FUNC_TIC
   
-  unsigned p;
+  Uint p;
   
   /* allocate patches  */
   alloc_patches(grid);
@@ -83,7 +83,7 @@ static char *bases_str(const Patch_T *const patch,char *const str)
 {
   assert(patch);
   assert(str);
-  unsigned i,l;
+  Uint i,l;
   
   str[0] = '\0';
   for (i = 0; i < 3; ++i)
@@ -94,7 +94,7 @@ static char *bases_str(const Patch_T *const patch,char *const str)
       strcat(str,"Not defined!");
   }
   
-  l = (unsigned)strlen(str);
+  l = (Uint)strlen(str);
   str[l]   = '\0';
   str[l-1] = '\0';
   str[l-2] = '\0';
@@ -107,7 +107,7 @@ static char *collocation_str(const Patch_T *const patch,char *const str)
 {
   assert(patch);
   assert(str);
-  unsigned i,l;
+  Uint i,l;
   
   str[0] = '\0';
   for (i = 0; i < 3; ++i)
@@ -122,7 +122,7 @@ static char *collocation_str(const Patch_T *const patch,char *const str)
       strcat(str,"Not defined!");
   }
   
-  l = (unsigned)strlen(str);
+  l = (Uint)strlen(str);
   str[l]   = '\0';
   str[l-1] = '\0';
   str[l-2] = '\0';
@@ -194,7 +194,7 @@ void free_temp_patch(Patch_T *const patch)
 /* free the whole date base of grid */
 void free_grid_db(void)
 {
-  unsigned i;
+  Uint i;
   
   i = 0;
   while (grids_global != 0 && grids_global[i] != 0)
@@ -215,7 +215,7 @@ void free_grid_db(void)
 */
 void *alloc_grid(void)
 {
-  unsigned i;
+  Uint i;
   
   for (i = 0; grids_global != 0 && grids_global[i] != 0; i++);
   
@@ -269,7 +269,7 @@ void alloc_patches(Grid_T *const grid)
 /* free the given grid completely */
 void free_grid(Grid_T *grid)
 {
-  unsigned p,i,ng;
+  Uint p,i,ng;
   
   if (!grid)
     return;
@@ -307,7 +307,7 @@ void free_grid(Grid_T *grid)
 /* free the patch completely */
 void free_patch(Patch_T *patch)
 {
-  unsigned ijk,nn,f;
+  Uint ijk,nn,f;
   
   if (!patch)
     return;
@@ -357,7 +357,7 @@ void free_grid_params(const Grid_T *const grid)
     return;
   
   char suffix[STR_LEN1] = {'\0'};
-  unsigned i,np;
+  Uint i,np;
   
   np = 0;
   while (parameters_global != 0 && parameters_global[np] != 0)

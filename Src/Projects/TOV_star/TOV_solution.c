@@ -11,7 +11,7 @@
 TOV_T *TOV_solution(TOV_T *const TOV)
 {
   const double Fac = 0.25;
-  const unsigned MAX_iter = 1000;
+  const Uint MAX_iter = 1000;
   double h_cent_prev = 1;
   double h_cent_new;
   double a = 0,b = 0;
@@ -19,7 +19,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   Flag_T increase  = YES;
   Flag_T bisection = NO;
   EoS_T *eos = 0;
-  unsigned i,iter;
+  Uint i,iter;
   
   pr_line_custom('=');
   printf("{ Solving TOV equations for %s ...\n",TOV->description);
@@ -34,7 +34,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   /* some initialization and preparation */
   iter = 0;
   h_cent_new = 1.5;
-  TOV->N = (unsigned)Pgeti("TOV_Star_n");
+  TOV->N = (Uint)Pgeti("TOV_Star_n");
   TOV->m = alloc_double(TOV->N);
   TOV->r = alloc_double(TOV->N);
   TOV->h = alloc_double(TOV->N);
@@ -190,7 +190,7 @@ static void isotropic_coords_transformation(TOV_T *const TOV)
   double r,m;/* interpolated values for r and m */
   Interpolation_T *interp_r = init_interpolation();
   Interpolation_T *interp_m = init_interpolation();
-  unsigned i;
+  Uint i;
   
   interp_r->method         = "Natural_Cubic_Spline_1D";
   interp_r->N_cubic_spline_1d->f   = TOV->r;
@@ -260,7 +260,7 @@ static double c_rbar(TOV_T *const TOV)
   const double R = r[TOV->N-1];
 
   double c,s;
-  unsigned i;
+  Uint i;
   
   f[0] = 0;
   for (i = 1; i < TOV->N; ++i)
@@ -290,7 +290,7 @@ static void calculate_phi(TOV_T *const TOV)
   const double R = TOV->r[TOV->N-1],
                M = TOV->m[TOV->N-1],
                *const h = TOV->h;
-  unsigned i;
+  Uint i;
   TOV->phi = alloc_double(TOV->N);
   
   for (i = 0; i < TOV->N; ++i)
@@ -343,7 +343,7 @@ static double *Komar_mass_integrand(const TOV_T *const TOV)
                *const h = TOV->h,
                *const phi = TOV->phi;
   EoS_T *eos = initialize_EoS();
-  unsigned i;
+  Uint i;
   
   f[0] = 0;
   for (i = 1; i < TOV->N; ++i)
@@ -367,7 +367,7 @@ static double *ADM_mass_integrand(const TOV_T *const TOV)
                *const m = TOV->m,
                *const h = TOV->h;
   EoS_T *eos = initialize_EoS();
-  unsigned i;
+  Uint i;
   
   f[0] = 0;
   for (i = 1; i < TOV->N; ++i)
@@ -414,7 +414,7 @@ static double *baryonic_mass_integrand(const TOV_T *const TOV)
                *const h = TOV->h;
   EoS_T *eos = initialize_EoS();
   double s;
-  unsigned i;
+  Uint i;
   
   f[0] = 0;
   for (i = 1; i < TOV->N; ++i)
@@ -455,7 +455,7 @@ static void solve_ODE_enthalpy_approach(TOV_T *const TOV)
                                // from the center which has greater value
                                // of h compare to the NS's surface. */
   double t;/* independent variable h, we conventionally called it t */
-  unsigned i;
+  Uint i;
   enum {R = 0,M = 1};
   
   /* initialization */

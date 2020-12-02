@@ -14,8 +14,8 @@ static void build_Gamma_derivatives(Patch_T *const patch);
 
 void bbn_make_metric_and_Gamma_and_derivatives(Grid_T *const grid)
 {
-  const unsigned np = grid->np;
-  unsigned p;
+  const Uint np = grid->np;
+  Uint p;
 
   OpenMP_Patch_Pragma(omp parallel for)
   for(p = 0; p < np; ++p)
@@ -126,8 +126,8 @@ void bbn_make_metric_and_Gamma_and_derivatives(Grid_T *const grid)
     ADD_FIELD(dGamma_U2D1D2D1)
 
 
-    unsigned nn = patch->nn;
-    unsigned ijk;
+    Uint nn = patch->nn;
+    Uint ijk;
     for(ijk = 0; ijk < nn; ++ijk)
     {
     double GAMMA_U1D0D0 = 
@@ -386,8 +386,8 @@ static void build_Gamma_derivatives(Patch_T *const patch)
 // this function does that. */
 static void build_metric_and_metric_inverse(Patch_T *const patch)
 {
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
 
   READ_v(_gamma_D2D2)
   READ_v(_gamma_D0D2)
@@ -529,8 +529,8 @@ static void build_metric_derivatives(Patch_T *const patch)
 /* freeing metric derivatives */
 void bbn_free_metric_and_Gamma_and_derivatives(Grid_T *const grid)
 {
-  const unsigned np = grid->np;
-  unsigned p;
+  const Uint np = grid->np;
+  Uint p;
 
   OpenMP_Patch_Pragma(omp parallel for)
   for(p = 0; p < np; ++p)

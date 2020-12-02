@@ -34,8 +34,8 @@ int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const n
   int stop_abnormal = 1;
   const double res_d    = Pgetd("Solving_Residual");/* desired residual */
   const int max_step    = Pgeti("Solving_Max_Number_of_Newton_Step");
-  const unsigned npatch = grid->np;
-  unsigned p;
+  const Uint npatch = grid->np;
+  Uint p;
 
   for (p = 0; p < npatch; ++p)
   {
@@ -141,7 +141,7 @@ void free_solve_equations(Solve_Equations_T *solve)
   
   if (solve->Sgrid)
   {
-    unsigned i = 0;
+    Uint i = 0;
     while (solve->Sgrid[i])
     {
       free(solve->Sgrid[i]->name);
@@ -164,7 +164,7 @@ Grid_T *get_grid_solve_equations(Solve_Equations_T *const solve)
   
   if (solve->Sgrid)
   {
-    unsigned i = 0;
+    Uint i = 0;
     while (solve->Sgrid[i])
     {
       if (!strcmp(solve->Sgrid[i]->name,name))
@@ -178,7 +178,7 @@ Grid_T *get_grid_solve_equations(Solve_Equations_T *const solve)
 /* give grid and name, add them to the Sgrid */
 void add_special_grid_solve_equations(Grid_T *const grid,const char *const name, Solve_Equations_T *const solve)
 {
-  unsigned N = 0;
+  Uint N = 0;
   if (solve->Sgrid)/* if there is any Sgrid then count */
     N = countf(solve->Sgrid);
   
@@ -205,7 +205,7 @@ void sync_patch_pools(const Grid_T*const latest_grid,Solve_Equations_T *const so
   if (!solve->Sgrid)
     return;
     
-  unsigned p1;
+  Uint p1;
   
   FOR_ALL_PATCHES(p1,latest_grid)
   {
@@ -214,7 +214,7 @@ void sync_patch_pools(const Grid_T*const latest_grid,Solve_Equations_T *const so
     Grid_T *outdated_grid;
     Patch_T *patch2;
     const char *name2;
-    unsigned i,p2;
+    Uint i,p2;
     name1++;
     
     outdated_grid = solve->grid;/* default grid */

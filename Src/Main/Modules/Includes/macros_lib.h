@@ -1,5 +1,6 @@
 #ifndef macros_LIB_H
 #define macros_LIB_H
+#include "elliptica_system_lib.h"
 
 /* str length */
 #define MACRO__STR__LEN1 (99)
@@ -29,7 +30,7 @@
 #define FOR_ALL_PATCHES(n,grid) for ((n) = 0; (n) < (grid)->np; ++(n))/* loop over all patches of the given grid */
 #define FOR_ALL_POINTS(n,patch) for ((n) = 0; (n) < (patch)->nn; ++(n))/* loop over all points of the given patch */
 #define FOR_ALL(x,y) for((x) = 0; y[(x)] != 0; (x)++)
-#define FOR_ALL_ijk   for (unsigned ijk = 0; ijk < patch->nn; ++ijk)/* define ijk and loop */
+#define FOR_ALL_ijk   for (Uint ijk = 0; ijk < patch->nn; ++ijk)/* define ijk and loop */
 #define TIMER_ON(x) double x = get_time_sec();
 #define TIMER_OFF(x) pr_spent_time(x,#x);
 #define FOR_SURFACE(x,y,z,n0,n1,n2) (z) = (n2); for ((x) = 0; (x) < (n0); ++(x))\
@@ -199,7 +200,7 @@
 #define RELAX_UPDATE_FUNC(func_updator,patch,fld,w) \
 {\
  double w2_##fld = 1.-(w);/* weight */\
- unsigned ijk__##fld;/* dummy index */\
+ Uint ijk__##fld;/* dummy index */\
  /* find field and take care of values */\
  Field_T *const new_field__##fld = patch->fields[Ind(#fld)];\
  free_coeffs(new_field__##fld);\

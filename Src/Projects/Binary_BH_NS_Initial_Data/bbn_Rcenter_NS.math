@@ -23,7 +23,7 @@ C_macro2 = add_and_get_field(name);
 `  const double Madm = Pgetd("NS_ADM_mass");`
 `  const double x_CM = Pgetd("x_CM");`
 `  const double y_CM = Pgetd("y_CM");`
-`  unsigned p;`
+`  Uint p;`
 ``
 `  Rc[0] = 0;`
 `  Rc[1] = 0;`
@@ -61,8 +61,8 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
 Symm[ddpsi(i,j)    = ddpsi(j,i)];
 Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 
-`    unsigned nn  = patch->nn;`
-`    unsigned ijk;`
+`    Uint nn  = patch->nn;`
+`    Uint ijk;`
 ``
 `    ADD_FIELD(Rc_integrandx)`
 `    ADD_FIELD(Rc_integrandy)`

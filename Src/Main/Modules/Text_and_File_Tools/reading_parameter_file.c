@@ -95,8 +95,8 @@ static void *make_buffer(FILE *const input)
 {
   char *buff = 0;
   int c;
-  unsigned i;
-  unsigned long j;
+  Uint i;
+  Uint long j;
   
   j = 0;
   i = 0;

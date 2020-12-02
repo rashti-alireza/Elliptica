@@ -107,7 +107,7 @@ static int test_solver_series_umfpack_di(void)
   Matrix_T *A = alloc_matrix(REG_SF,4,4);
   Matrix_T *ccs;
   const int N = 3;
-  const unsigned int dim = 4;
+  const Uint int dim = 4;
   double **const a = A->reg->A;
   double *b[N];
   double *x[N];
@@ -178,7 +178,7 @@ static int test_solver_series_umfpack_di(void)
   eg->a = ccs;
   eg->bs = b;
   eg->xs = x;
-  eg->ns = (unsigned)N;
+  eg->ns = (Uint)N;
   /* solving */
   direct_solver_series_umfpack_di(eg);
   

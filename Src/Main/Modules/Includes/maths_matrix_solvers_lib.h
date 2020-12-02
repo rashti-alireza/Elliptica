@@ -1,5 +1,6 @@
 #ifndef maths_matrix_solvers
 #define maths_matrix_solvers
+#include "elliptica_system_lib.h"
 
 struct MATRIX_T;
 
@@ -12,7 +13,7 @@ typedef struct UMFPACK_T
   double *x;/* in ax=b */
   double **xs;/* x for series solving Ax[i]=b[i], i runs 0,...,ns */
   double **bs;/* b for series solving Ax[i]=b[i], i runs 0,...,ns */
-  unsigned ns;/* number of series */
+  Uint ns;/* number of series */
   double refinement;/* max iter. refinement step, if DBL_MAX is set then it uses the default of UMFPACK which is 2 */
 }Umfpack_T;
 

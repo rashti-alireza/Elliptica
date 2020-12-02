@@ -1,5 +1,6 @@
 #ifndef physics_observe_LIB_H
 #define physics_observe_LIB_H
+#include "elliptica_system_lib.h"
 
 #define OBSERVE_STR_LEN (99)
 
@@ -19,7 +20,7 @@ typedef struct OBSERVE_T
                // the needed material and items to calculate 
                // the quantities of interest. this struct is populated
                // by plan and freed by free fucntions */
-  unsigned Nitems;/* number of items */
+  Uint Nitems;/* number of items */
   
 }Observe_T;
 

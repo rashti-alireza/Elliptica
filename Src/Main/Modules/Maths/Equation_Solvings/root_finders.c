@@ -73,7 +73,7 @@
 /* initializing a Root_Finder_T struct with calloc.
 // n is the number of equations or equivalently number of variables
 // ->return value: a pristine struct */
-Root_Finder_T *init_root_finder(const unsigned n)
+Root_Finder_T *init_root_finder(const Uint n)
 {
   Root_Finder_T *root = calloc(1,sizeof(*root));
   IsNull(root);
@@ -140,8 +140,8 @@ void free_root_finder(Root_Finder_T *root)
 static double *root_finder_bisect_single(Root_Finder_T *const root)
 {
   const double tic = get_time_sec();
-  const unsigned MaxIter = root->MaxIter;
-  const unsigned n = root->n;
+  const Uint MaxIter = root->MaxIter;
+  const Uint n = root->n;
   void *params     = root->params;
   const double TOL = root->tolerance;
   double (**f)(void *params,const double *const x) = root->f;
@@ -151,7 +151,7 @@ static double *root_finder_bisect_single(Root_Finder_T *const root)
   double *const x = alloc_double(n);
   double a = A,b = B;
   double FA,FP,p[1] = {0},d;
-  unsigned i;
+  Uint i;
   
   /* some checks */
   if (!f)
@@ -262,21 +262,21 @@ static double *root_finder_bisect_single(Root_Finder_T *const root)
 static double *root_finder_steepest_descent(Root_Finder_T *const root)
 {
   const double tic = get_time_sec();
-  const unsigned MaxIter = root->MaxIter;
-  const unsigned n = root->n;
+  const Uint MaxIter = root->MaxIter;
+  const Uint n = root->n;
   void *params     = root->params;
   const double *const x_gss = root->x_gss;
   const double TOL = root->tolerance;
   double (**f)(void *params,const double *const x) = root->f;
-  double (**df_dx)(void *params,const double *const x,const unsigned dir) = root->df_dx;
-  double (*dg_dx)(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir),Root_Finder_T *const root) = 0;
+  double (**df_dx)(void *params,const double *const x,const Uint dir) = root->df_dx;
+  double (*dg_dx)(void *params,double *const x,const Uint dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const Uint dir),Root_Finder_T *const root) = 0;
   const char *const desc = root->description;
   double *const x = alloc_double(n);
   double z[n],y[n];
   double g0,g1,g2,g3,g,h1,h2,h3,alpha0,alpha,alpha2,alpha3,z0;
   double res;
   Flag_T small_alpha3_flg = NO;
-  unsigned i,k;
+  Uint i,k;
   
   if (!f)
     Error0("\n~> No equation has been given.\n");
@@ -543,7 +543,7 @@ void print_root_finder_exit_status(const Root_Finder_T *const root)
 /* ->return value: f0^2(params,x)+f1^2(params,x) + ... */
 static double g_SD(double (**f)(void *params,const double *const x),void *params,const double *const x,Root_Finder_T *const root)
 {
-  unsigned i = 0;
+  Uint i = 0;
   double g = 0;
   
   while (f[i])
@@ -558,9 +558,9 @@ static double g_SD(double (**f)(void *params,const double *const x),void *params
 
 /* ->return value: derivative of e.g. f0^2(x0,x1)+f1^2(x0,x1) given df0_dx, df1_dx etc. 
 // at point x with respect to x^{dir} using the given df_dx's */
-static double dg_dx_of_df_dx_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir),Root_Finder_T *const root)
+static double dg_dx_of_df_dx_SD(void *params,double *const x,const Uint dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const Uint dir),Root_Finder_T *const root)
 {
-  unsigned i = 0;
+  Uint i = 0;
   double dg_dx = 0;
   
   while (f[i])
@@ -576,7 +576,7 @@ static double dg_dx_of_df_dx_SD(void *params,double *const x,const unsigned dir,
 
 /* ->return value: derivative of e.g. f0^2(x0,x1)+f1^2(x0,x1) 
 // at point x with respect to x^{dir} using finite difference (three-point midpoint formula)*/
-static double dg_dx_FD3M_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir),Root_Finder_T *const root)
+static double dg_dx_FD3M_SD(void *params,double *const x,const Uint dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const Uint dir),Root_Finder_T *const root)
 {
   const double eps    = 10E-5;
   const double fabsx  = fabs(x[dir])*eps;
@@ -599,7 +599,7 @@ static double dg_dx_FD3M_SD(void *params,double *const x,const unsigned dir,doub
 
 /* ->return value: derivative of e.g. f0^2(x0,x1)+f1^2(x0,x1)
 // at point x with respect to x^{dir} using finite difference (three-point right end formula)*/
-static double dg_dx_FD3R_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir),Root_Finder_T *const root)
+static double dg_dx_FD3R_SD(void *params,double *const x,const Uint dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const Uint dir),Root_Finder_T *const root)
 {
   const double eps    = 10E-5;
   const double fabsx  = fabs(x[dir])*eps;
@@ -624,7 +624,7 @@ static double dg_dx_FD3R_SD(void *params,double *const x,const unsigned dir,doub
 
 /* ->return value: derivative of e.g. f0^2(x0,x1)+f1^2(x0,x1)
 // at point x with respect to x^{dir} using finite difference (three-point left end formula)*/
-static double dg_dx_FD3L_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir),Root_Finder_T *const root)
+static double dg_dx_FD3L_SD(void *params,double *const x,const Uint dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const Uint dir),Root_Finder_T *const root)
 {
   const double eps    = 10E-5;
   const double fabsx  = fabs(x[dir])*eps;

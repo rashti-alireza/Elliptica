@@ -1,5 +1,6 @@
 #ifndef maths_calculus_LIB_H
 #define maths_calculus_LIB_H
+#include "elliptica_system_lib.h"
 
 
 struct FIELD_T;
@@ -20,33 +21,33 @@ typedef struct INTEGRATION_T
  struct
  {
   const struct FIELD_T *f;/* integrand */
-  unsigned X_surface : 1;/* integration on the hyper-surface X = const */
-  unsigned Y_surface : 1;/* integration on the hyper-surface Y = const */
-  unsigned Z_surface : 1;/* integration on the hyper-surface Z = const */
-  unsigned I;/* the index showing the hyper-surface X = const */
-  unsigned J;/* the index showing the hyper-surface Y = const */
-  unsigned K;/* the index showing the hyper-surface Z = const */
+  Uint X_surface : 1;/* integration on the hyper-surface X = const */
+  Uint Y_surface : 1;/* integration on the hyper-surface Y = const */
+  Uint Z_surface : 1;/* integration on the hyper-surface Z = const */
+  Uint I;/* the index showing the hyper-surface X = const */
+  Uint J;/* the index showing the hyper-surface Y = const */
+  Uint K;/* the index showing the hyper-surface Z = const */
  }Spectral[1];
  struct
  {
   double a,b;/* integral limits */
   const double *f;/* integrand */
-  unsigned n;/* odd positive integer  */
+  Uint n;/* odd positive integer  */
  }Composite_Simpson_1D[1];
  struct
  {
    const double *f;/* integrand in \integral_{-1}^{1} f(x)/sqrt(1-x^2) dx */
-   unsigned n;/* number of collocation points for function f */
+   Uint n;/* number of collocation points for function f */
  }GQ_ChebyshevExtrema[1];/* Gauss Quadrature using chebyshev Extrema collocation */
  struct
  {
    const double *f;/* integrand in \integral_{-1}^{1} f(x) dx */
-   unsigned n;/* number of collocation points for function f */
+   Uint n;/* number of collocation points for function f */
  }GQ_Lobatto[1];/* Gauss Quadrature using Lobatto's collocation */
  struct
  {
    const double *f;/* integrand in \integral_{-1}^{1} f(x) dx */
-   unsigned n;/* number of collocation points for function f */
+   Uint n;/* number of collocation points for function f */
  }GQ_Legendre[1];/* Gauss Quadrature using Legendre's collocation */
  double (*integration_func)(struct INTEGRATION_T *const I);/* function that integrates */
 }Integration_T;
@@ -58,15 +59,15 @@ void plan_integration(Integration_T *const I);
 double execute_integration(Integration_T *const I);
 Integration_T *init_integration(void);
 int integration_tests(Grid_T *const grid);
-double Lobatto_weight_function(const double x, const unsigned N);
-double Lobatto_root_function(const unsigned rootN, const unsigned N);
+double Lobatto_weight_function(const double x, const Uint N);
+double Lobatto_root_function(const Uint rootN, const Uint N);
 void init_Lobatto_root_function(void);
-double Legendre_root_function(const unsigned rootN, const unsigned N);
-double Legendre_weight_function(const double x, const unsigned N);
-double dLegendre_dx(const unsigned n, const double x);
+double Legendre_root_function(const Uint rootN, const Uint N);
+double Legendre_weight_function(const double x, const Uint N);
+double dLegendre_dx(const Uint n, const double x);
 void init_Legendre_root_function(void);
 void init_dLegendre_dx(void);
-double Integrate_ChebTn(const unsigned n,const double xi,const double xf);
+double Integrate_ChebTn(const Uint n,const double xi,const double xf);
 void partial_derivative_with_regex(Patch_T *const patch,
                                    const char *const regex_list);
 

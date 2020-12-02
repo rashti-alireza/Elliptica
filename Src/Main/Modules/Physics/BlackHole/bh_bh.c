@@ -48,15 +48,15 @@ void bh_start_off_KerrSchild_perfect_s2(Physics_T *const phys)
 void bh_find_bh_surface_perfect_s2(Physics_T *const phys)
 {
   Grid_Char_T *grid_char = phys->grid_char;
-  const unsigned lmax   = (unsigned)Geti("surface_Ylm_expansion_max_l");
-  const unsigned Ntheta = Ntheta_Ylm(lmax);
-  const unsigned Nphi   = Nphi_Ylm(lmax);
-  const unsigned Ntot   = Ntotal_Ylm(lmax);
+  const Uint lmax   = (Uint)Geti("surface_Ylm_expansion_max_l");
+  const Uint Ntheta = Ntheta_Ylm(lmax);
+  const Uint Nphi   = Nphi_Ylm(lmax);
+  const Uint Ntot   = Ntotal_Ylm(lmax);
   const double R_BH     = Getd("perfect_S2_radius");
   double *rbh = alloc_double(Ntot);/* surface function r = r(th,ph). */
   double *reClm_rbh = alloc_ClmYlm(lmax),
          *imClm_rbh = alloc_ClmYlm(lmax);
-  unsigned ij;
+  Uint ij;
   
   init_Legendre_root_function();
   for (ij = 0; ij < Ntot; ++ij)

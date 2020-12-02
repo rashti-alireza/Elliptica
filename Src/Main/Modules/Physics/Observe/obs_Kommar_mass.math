@@ -14,8 +14,8 @@ C_macro  = READ_v(name);
 `{`
 `  double Kommar_mass = 0;`
 `  struct items_S **const kommar = obs->items;`
-`  const unsigned N = obs->Nitems;`
-`  unsigned p;`
+`  const Uint N = obs->Nitems;`
+`  Uint p;`
 ``
 `  for(p = 0; p < N; ++p)`
 `  {`
@@ -23,8 +23,8 @@ C_macro  = READ_v(name);
 `    const double *n_U0 = kommar[p]->n_U0;`
 `    const double *n_U1 = kommar[p]->n_U1;`
 `    const double *n_U2 = kommar[p]->n_U2;`
-`    unsigned nn        = patch->nn;`
-`    unsigned ijk;`
+`    Uint nn        = patch->nn;`
+`    Uint ijk;`
 ``
 `    ADD_FIELD(Kommar_mass_integrand)`
 ``

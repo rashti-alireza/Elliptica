@@ -59,12 +59,12 @@ void bbn_plan_obs_CS(Observable_T *obs)
       
   if (strcmp_i(obs->quantity,"ADM(P,J)|BBN"))
   {  
-    const unsigned N_outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
+    const Uint N_outermost = (Uint) Pgeti("Number_of_Outermost_Split");
     Patch_T **patches = 0,*patch = 0;
     char stem[1000];
     struct items_S **adm = 0;
-    unsigned p = 0;
-    unsigned n,N,ijk,nn;
+    Uint p = 0;
+    Uint n,N,ijk,nn;
     
     if (N_outermost == 0)
       Error0("No outermost patch for integration.\n");
@@ -188,8 +188,8 @@ void bbn_plan_obs_CS(Observable_T *obs)
   {  
     Patch_T **patches = 0,*patch = 0;
     struct items_S **adm = 0;
-    unsigned p = 0;
-    unsigned n,N,ijk,nn;
+    Uint p = 0;
+    Uint n,N,ijk,nn;
     
     N = 6/* 6 sides for arounds */;
         
@@ -276,8 +276,8 @@ void bbn_plan_obs_CS(Observable_T *obs)
   {  
     Patch_T **patches = 0,*patch = 0;
     struct items_S **adm = 0;
-    unsigned p = 0;
-    unsigned n,N,ijk,nn;
+    Uint p = 0;
+    Uint n,N,ijk,nn;
     
     N = 6/* 6 sides for arounds */;
         
@@ -364,8 +364,8 @@ void bbn_plan_obs_CS(Observable_T *obs)
   {  
     Patch_T **patches = 0,*patch = 0;
     struct items_S **kommar = 0;
-    unsigned p = 0;
-    unsigned n,N,ijk,nn;
+    Uint p = 0;
+    Uint n,N,ijk,nn;
     
     N = 6/* 6 sides for arounds */;
         
@@ -446,8 +446,8 @@ void bbn_plan_obs_CS(Observable_T *obs)
   {  
     Patch_T **patches = 0,*patch = 0;
     struct items_S **kommar = 0;
-    unsigned p = 0;
-    unsigned n,N,ijk,nn;
+    Uint p = 0;
+    Uint n,N,ijk,nn;
     
     N = 6/* 6 sides for arounds */;
         
@@ -528,8 +528,8 @@ void bbn_plan_obs_CS(Observable_T *obs)
   {  
     Patch_T **patches = 0,*patch = 0;
     struct items_S **kommar = 0;
-    unsigned p = 0;
-    unsigned n,N,ijk,nn;
+    Uint p = 0;
+    Uint n,N,ijk,nn;
     
     N = 10/* 10 sides for arounds */;
         
@@ -613,12 +613,12 @@ void bbn_plan_obs_CS(Observable_T *obs)
   }
   else if (strcmp_i(obs->quantity,"ADM(M)|BBN"))
   {  
-    const unsigned N_outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
+    const Uint N_outermost = (Uint) Pgeti("Number_of_Outermost_Split");
     Patch_T **patches = 0,*patch = 0;
     char stem[1000];
     struct items_S **adm = 0;
-    unsigned p = 0,surface_index = 0;
-    unsigned n,N,ijk,nn;
+    Uint p = 0,surface_index = 0;
+    Uint n,N,ijk,nn;
     
     if (N_outermost == 0)
       Error0("No outermost patch for integration.\n");
@@ -754,8 +754,8 @@ void bbn_plan_obs_CS(Observable_T *obs)
   {  
     Patch_T **patches = 0,*patch = 0;
     struct items_S **adm = 0;
-    unsigned p = 0;
-    unsigned n,N,ijk,nn;
+    Uint p = 0;
+    Uint n,N,ijk,nn;
     
     N = 6/* 6 sides for arounds for area integral */;
     patches = calloc(N,sizeof(*patches));
@@ -834,8 +834,8 @@ void bbn_plan_obs_CS(Observable_T *obs)
   {  
     Patch_T **patches = 0,*patch = 0;
     struct items_S **adm = 0;
-    unsigned p = 0;
-    unsigned n,N,ijk,nn;
+    Uint p = 0;
+    Uint n,N,ijk,nn;
     
     N = 7/* 6 Ns patches for vol integral */;
     patches = calloc(N,sizeof(*patches));
@@ -915,11 +915,11 @@ void bbn_plan_obs_CS(Observable_T *obs)
 static void n_physical_metric_around(struct items_S *const adm,const Dd_T dir)
 {
   Patch_T *const patch = adm->patch;
-  const unsigned nn = patch->nn;
+  const Uint nn = patch->nn;
   double *n_U0 = alloc_double(nn);
   double *n_U1 = alloc_double(nn);
   double *n_U2 = alloc_double(nn);
-  unsigned ijk;
+  Uint ijk;
   
   READ_v(_gamma_D2D2)
   READ_v(_gamma_D0D2)
@@ -960,11 +960,11 @@ n_U2[ijk] + _gamma_D2D2[ijk]*pow(n_U2[ijk], 2));
 static void n_conformal_metric_around(struct items_S *const adm,const Dd_T dir)
 {
   Patch_T *const patch = adm->patch;
-  const unsigned nn = patch->nn;
+  const Uint nn = patch->nn;
   double *n_U0 = alloc_double(nn);
   double *n_U1 = alloc_double(nn);
   double *n_U2 = alloc_double(nn);
-  unsigned ijk;
+  Uint ijk;
   
   READ_v(_gamma_D2D2)
   READ_v(_gamma_D0D2)
@@ -1008,7 +1008,7 @@ void bbn_free_obs_CS(Observable_T *obs)
     Error0(NO_OPTION);
   
   struct items_S **adm = obs->items;
-  unsigned i;
+  Uint i;
     
   for (i = 0; i < obs->Nitems; ++i)
   {
@@ -1098,9 +1098,9 @@ static double ADM_momentum_x_BBN_CS(Observable_T *const obs)
 {
   double Px = 0;
   struct items_S **const adm = obs->items;
-  const unsigned N = obs->Nitems;
+  const Uint N = obs->Nitems;
   Integration_T *I;
-  unsigned p;
+  Uint p;
   assert(N);
   
   //populate_ADM_momentums_integrand_PdS_GdV(obs);
@@ -1168,9 +1168,9 @@ static double ADM_momentum_y_BBN_CS(Observable_T *const obs)
 {
   double Py = 0;
   struct items_S **const adm = obs->items;
-  const unsigned N = obs->Nitems;
+  const Uint N = obs->Nitems;
   Integration_T *I;
-  unsigned p;
+  Uint p;
   assert(N);
   
   //populate_ADM_momentums_integrand_PdS_GdV(obs);
@@ -1238,9 +1238,9 @@ static double ADM_momentum_z_BBN_CS(Observable_T *const obs)
 {
   double Pz = 0;
   struct items_S **const adm = obs->items;
-  const unsigned N = obs->Nitems;
+  const Uint N = obs->Nitems;
   Integration_T *I;
-  unsigned p;
+  Uint p;
   assert(N);
   
   //populate_ADM_momentums_integrand_PdS_GdV(obs);
@@ -1308,9 +1308,9 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
 {
   double Jz = 0;
   struct items_S **const adm = obs->items;
-  const unsigned N = obs->Nitems;
+  const Uint N = obs->Nitems;
   Integration_T *I;
-  unsigned p;
+  Uint p;
   assert(N);
   
   /* surface integration */
@@ -1380,9 +1380,9 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
 {
   double Jx = 0;
   struct items_S **const adm = obs->items;
-  const unsigned N = obs->Nitems;
+  const Uint N = obs->Nitems;
   Integration_T *I;
-  unsigned p;
+  Uint p;
   assert(N);
   
   /* surface integration */
@@ -1451,9 +1451,9 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
 {
   double Jy = 0;
   struct items_S **const adm = obs->items;
-  const unsigned N = obs->Nitems;
+  const Uint N = obs->Nitems;
   Integration_T *I;
-  unsigned p;
+  Uint p;
   assert(N);
   
   /* surface integration */
@@ -1524,10 +1524,10 @@ void bbn_define_spin_integral(double S[3],Grid_T *const grid,const char *const k
   if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
     Error0(NO_OPTION);
     
-  const unsigned N     = 6;  
+  const Uint N     = 6;  
   double obj_center[3] = {0};
   Patch_T *patches[N];
-  unsigned p = 0;
+  Uint p = 0;
   
   S[0] = S[1] = S[2] = 0;
   
@@ -1566,7 +1566,7 @@ void bbn_define_spin_integral(double S[3],Grid_T *const grid,const char *const k
   {
     Patch_T *patch = patches[p];
     Integration_T *I = 0;
-    unsigned nn  = patch->nn;
+    Uint nn  = patch->nn;
     struct items_S normal[1] = {0};
     const double *n_comp[3];
     double *g00 = alloc_double(nn);
@@ -1575,7 +1575,7 @@ void bbn_define_spin_integral(double S[3],Grid_T *const grid,const char *const k
     double *g11 = alloc_double(nn);
     double *g12 = alloc_double(nn);
     double *g22 = alloc_double(nn);
-    unsigned ijk;
+    Uint ijk;
     
     READ_v(_gamma_D2D2)
     READ_v(_gamma_D0D2)
@@ -1666,9 +1666,9 @@ bbn_define_spin_akv
   if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
     Error0(NO_OPTION);
     
-  const unsigned N     = 6;  
+  const Uint N     = 6;  
   Patch_T *patches[N];
-  unsigned p = 0;
+  Uint p = 0;
   
   S[0] = S[1] = S[2] = 0;
   
@@ -1701,7 +1701,7 @@ bbn_define_spin_akv
   {
     Patch_T *patch = patches[p];
     Integration_T *I = 0;
-    unsigned nn  = patch->nn;
+    Uint nn  = patch->nn;
     struct items_S normal[1] = {0};
     const double *n_comp[3];
     double *g00 = alloc_double(nn);
@@ -1710,7 +1710,7 @@ bbn_define_spin_akv
     double *g11 = alloc_double(nn);
     double *g12 = alloc_double(nn);
     double *g22 = alloc_double(nn);
-    unsigned ijk;
+    Uint ijk;
     
     READ_v(_gamma_D2D2)
     READ_v(_gamma_D0D2)

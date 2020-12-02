@@ -27,9 +27,9 @@
 
 
 void bbn_study_initial_data(Grid_T *const grid);
-void bbn_print_fields(Grid_T *const grid,const unsigned iteration, const char *const folder);
-void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const char *const folder);
-void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const char *const folder,const char *const open_file_mode,const int pr_flg);
+void bbn_print_fields(Grid_T *const grid,const Uint iteration, const char *const folder);
+void bbn_print_residual_norms(Grid_T *const grid,const Uint iteration, const char *const folder);
+void bbn_print_properties(Grid_T *const grid,const Uint iteration, const char *const folder,const char *const open_file_mode,const int pr_flg);
 void bbn_measures(Grid_T *const grid);
 void bbn_Rc_NS(double Rc[3],Grid_T *const grid);
 void bbn_Rc_BH(double Rc[3],Grid_T *const grid);

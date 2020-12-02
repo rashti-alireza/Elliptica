@@ -27,8 +27,8 @@ C_macro2 = WRITE_v(name);
 ` double (*psi_punc0) `
 `    (const double r, const double Mb,const double r_CutOff) =`
 `    gauge->psi_punc0;`
-` const unsigned np = grid->np;`
-` unsigned p;`
+` const Uint np = grid->np;`
+` Uint p;`
 ``
 ` OpenMP_Patch_Pragma(omp parallel for)`
 ` for (p = 0; p < np; ++p)`
@@ -68,14 +68,14 @@ Declare =
 # symmetries:
 Symm[bam_adm_g(i,j)   = bam_adm_g(j,i)];
 
-` unsigned nn = patch->nn;`
-` unsigned ijk;`
+` Uint nn = patch->nn;`
+` Uint ijk;`
 
 ## alpha = 1/bssn_psi^2
 #######################
 ` if (strcmp_i(lapse_type,"puncture1"))`
 ` {`
-` unsigned modify = IsItInsideBHPatch(patch);`
+` Uint modify = IsItInsideBHPatch(patch);`
   ` for(ijk = 0; ijk < nn; ++ijk)`
   ` {`
   ` double detg;`
@@ -113,7 +113,7 @@ Symm[bam_adm_g(i,j)   = bam_adm_g(j,i)];
 #######################
 ` else if (strcmp_i(lapse_type,"puncture2"))`
 ` {`
-` unsigned modify = IsItInsideBHPatch(patch);`
+` Uint modify = IsItInsideBHPatch(patch);`
   ` for(ijk = 0; ijk < nn; ++ijk)`
   ` {`
   ` double detg;`

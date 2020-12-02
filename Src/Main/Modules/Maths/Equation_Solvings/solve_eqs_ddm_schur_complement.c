@@ -41,8 +41,8 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
 {
   Grid_T *grid;
   char **field_name = 0;/* name of all fields to be solved */
-  unsigned nf = 0;/* number of all fields */
-  unsigned f;/* dummy index */
+  Uint nf = 0;/* number of all fields */
+  Uint f;/* dummy index */
   
   pr_line_custom('=');
   
@@ -166,13 +166,13 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
   {
     while (CONTINUE)
     {
-      const unsigned npatch = grid->np;
+      const Uint npatch = grid->np;
       double *g_prime = 0;
       Matrix_T *S;
       double time1 = get_time_sec();
       double time_temp;
       char *pr_msg = 0;
-      unsigned p;
+      Uint p;
       
       /* set current step */
       set_solving_man_settings_solver_step(grid,step);
@@ -340,20 +340,20 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
 static void update_field(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
-  const unsigned NS = Schur->NS;
-  const unsigned NI = Schur->NI;
-  const unsigned *const inv = Schur->inv;
-  const unsigned *const Iinv = Schur->Iinv;
+  const Uint NS = Schur->NS;
+  const Uint NI = Schur->NI;
+  const Uint *const inv = Schur->inv;
+  const Uint *const Iinv = Schur->Iinv;
   const double *const y = Schur->y;
   const double *const x = Schur->x;
-  const unsigned cf = patch->solving_man->cf;
+  const Uint cf = patch->solving_man->cf;
   const char *const field_name = patch->solving_man->field_name[cf];
   Field_T *const f = patch->fields[Ind(field_name)];
   const double lambda = patch->solving_man->settings->relaxation_factor;
   const double *const u_old = f->v;
   double *const u_new = f->v;
   double *const u_bckup = alloc_double(patch->nn);
-  unsigned s,s_node,i,i_node;
+  Uint s,s_node,i,i_node;
   
   free_coeffs(f);
   for (s = 0; s < NS; ++s)
@@ -378,17 +378,17 @@ static void update_field(Patch_T *const patch)
 static void update_field_single_patch(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
-  const unsigned NS = Schur->NS;
-  const unsigned *const inv = Schur->inv;
+  const Uint NS = Schur->NS;
+  const Uint *const inv = Schur->inv;
   const double *const x = Schur->x;
-  const unsigned cf = patch->solving_man->cf;
+  const Uint cf = patch->solving_man->cf;
   const char *const field_name = patch->solving_man->field_name[cf];
   Field_T *const f = patch->fields[Ind(field_name)];
   const double lambda = patch->solving_man->settings->relaxation_factor;
   const double *const u_old = f->v;
   double *const u_new = f->v;
   double *const u_bckup = alloc_double(patch->nn);
-  unsigned s,s_node;
+  Uint s,s_node;
   
   free_coeffs(f);
   for (s = 0; s < NS; ++s)
@@ -433,14 +433,14 @@ static void free_E_Trans_prime(Patch_T *const patch)
 static void compute_x(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
-  const unsigned NS            = Schur->NS;
-  const unsigned NI            = Schur->NI;
+  const Uint NS            = Schur->NS;
+  const Uint NI            = Schur->NI;
   double *f_prime  = Schur->f_prime;
   double **const E_Trans_prime = Schur->E_Trans_prime->reg->A;
   const double *const y = Schur->y;
   double *const x = alloc_double(NS);
   double Ey;/* E_Trans_prime by y */
-  unsigned i,s;
+  Uint i,s;
   
   for(s = 0; s < NS; ++s)
   {
@@ -458,15 +458,15 @@ static void compute_x(Patch_T *const patch)
 static char *solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *const grid)
 {
   /* since NI_total and NI_p are unique we pick one of them from patch[0] */
-  const unsigned NI_total    = 
+  const Uint NI_total    = 
                   grid->patch[0]->solving_man->method->SchurC->NI_total;
-  const unsigned *const NI_p = 
+  const Uint *const NI_p = 
                   grid->patch[0]->solving_man->method->SchurC->NI_p;
   double *y = alloc_double(NI_total);
   Umfpack_T *umfpack = init_umfpack();
   DDM_Schur_Complement_T *Schur;
-  unsigned R = 0;
-  unsigned p;
+  Uint R = 0;
+  Uint p;
   char *msg = calloc(MSG_SIZE2,1);
   IsNull(msg);
   
@@ -522,17 +522,17 @@ static char *making_sub_S_matrix(Patch_T *const patch)
   const double time1 = get_time_sec();
   DDM_Schur_Complement_T *const Schur = 
               patch->solving_man->method->SchurC;
-  const unsigned Np          = Schur->np;
-  const unsigned *const NI_p = Schur->NI_p;
-  const unsigned NI          = Schur->NI;
-  const unsigned NI_total    = Schur->NI_total;
+  const Uint Np          = Schur->np;
+  const Uint *const NI_p = Schur->NI_p;
+  const Uint NI          = Schur->NI;
+  const Uint NI_total    = Schur->NI_total;
   Matrix_T **const FxE = Schur->F_by_E_prime;
   Matrix_T **const C   = Schur->C;
   Matrix_T **stack     = calloc(Np,sizeof(*stack)); IsNull(stack);
   double **a,**b,**c;
   long a_row,a_col,b_row,b_col;
   long row,col;
-  unsigned p;  
+  Uint p;  
   char *msg = calloc(MSG_SIZE1,1);
   IsNull(msg);
   
@@ -608,15 +608,15 @@ static char *making_sub_S_matrix(Patch_T *const patch)
 static Matrix_T *compute_S_CCS_long(Grid_T *const grid)
 {
   /* since NI_total and NI_p are unique we pick one of them from patch[0] */
-  const unsigned NI_total    = 
+  const Uint NI_total    = 
                   grid->patch[0]->solving_man->method->SchurC->NI_total;
-  const unsigned npatch = grid->np;
+  const Uint npatch = grid->np;
   Matrix_T *S = alloc_matrix(CCS_L_SF,NI_total,NI_total);
   long *Ap = 0;
   long *Ai = 0;
   double *Ax = 0;
   long i,j,nnz,R;
-  unsigned p;
+  Uint p;
   
   /* to be safe we used long format data type */
   Ap = calloc(NI_total+1,sizeof(*Ap));
@@ -632,9 +632,9 @@ static Matrix_T *compute_S_CCS_long(Grid_T *const grid)
     double *Ax1 = subS->ccs->Ax;
     long Nc1    = subS->col;
     
-    Ai = realloc(Ai,(long unsigned)(Ap[R]+Ap1[Nc1])*sizeof(*Ai));
+    Ai = realloc(Ai,(long Uint)(Ap[R]+Ap1[Nc1])*sizeof(*Ai));
     IsNull(Ai);
-    Ax = realloc(Ax,(long unsigned)(Ap[R]+Ap1[Nc1])*sizeof(*Ax));
+    Ax = realloc(Ax,(long Uint)(Ap[R]+Ap1[Nc1])*sizeof(*Ax));
     IsNull(Ax);
     
     for (i = 0; i < Nc1; ++i)
@@ -665,16 +665,16 @@ static Matrix_T *compute_S_CCS_long(Grid_T *const grid)
 static Matrix_T *compute_S_CCS(Grid_T *const grid)
 {
   /* since NI_total and NI_p are unique we pick one of them from patch[0] */
-  const unsigned NI_total    = 
+  const Uint NI_total    = 
                   grid->patch[0]->solving_man->method->SchurC->NI_total;
-  const unsigned npatch = grid->np;
+  const Uint npatch = grid->np;
   Matrix_T *S = alloc_matrix(CCS_SF,NI_total,NI_total);
   int *Ap = 0;
   int *Ai = 0;
   double *Ax = 0;
   int nnz;
   long i,j,R;
-  unsigned p;
+  Uint p;
   
   Ap = calloc(NI_total+1,sizeof(*Ap));
   IsNull(Ap);
@@ -689,9 +689,9 @@ static Matrix_T *compute_S_CCS(Grid_T *const grid)
     double *Ax1 = subS->ccs->Ax;
     long Nc1    = subS->col;
     
-    Ai = realloc(Ai,(long unsigned)(Ap[R]+Ap1[Nc1])*sizeof(*Ai));
+    Ai = realloc(Ai,(long Uint)(Ap[R]+Ap1[Nc1])*sizeof(*Ai));
     IsNull(Ai);
-    Ax = realloc(Ax,(long unsigned)(Ap[R]+Ap1[Nc1])*sizeof(*Ax));
+    Ax = realloc(Ax,(long Uint)(Ap[R]+Ap1[Nc1])*sizeof(*Ax));
     IsNull(Ax);
     
     for (i = 0; i < Nc1; ++i)
@@ -725,15 +725,15 @@ static double *compute_g_prime(Grid_T *const grid)
   // of them thus we not only don't need to alloc memory but also we skip one of
   // the calculations and then start from patch[1]. same for NI_total. */
   double *const Ff = grid->patch[0]->solving_man->method->SchurC->F_by_f_prime;
-  const unsigned NI_total = grid->patch[0]->solving_man->method->SchurC->NI_total;
+  const Uint NI_total = grid->patch[0]->solving_man->method->SchurC->NI_total;
   DDM_Schur_Complement_T *Schur;
   double *const g_prime = Ff;/* to save some memory */
   double *g;
   double *Ffp;
-  unsigned NI;
-  const unsigned np = grid->np;
-  unsigned R = 0;/* reference */
-  unsigned p,i;
+  Uint NI;
+  const Uint np = grid->np;
+  Uint R = 0;/* reference */
+  Uint p,i;
   
   for (p = 1; p < np; ++p)
   {
@@ -776,10 +776,10 @@ static char *making_F_by_E_prime(Patch_T *const patch)
 {
   const double time1 = get_time_sec();
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
-  const unsigned np = Schur->np;
+  const Uint np = Schur->np;
   const Matrix_T *const E_Trans_prime = Schur->E_Trans_prime;
   Matrix_T *MxM;
-  unsigned p;
+  Uint p;
   char *msg = calloc(MSG_SIZE1,1);
   IsNull(msg);
   
@@ -817,12 +817,12 @@ static char *making_F_by_f_prime(Patch_T *const patch)
 {
   const double time1 = get_time_sec();
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
-  const unsigned np = Schur->np;
-  const unsigned *const NI_p = Schur->NI_p;
-  unsigned R = 0;/* reference */
+  const Uint np = Schur->np;
+  const Uint *const NI_p = Schur->NI_p;
+  Uint R = 0;/* reference */
   const double *const f_prime = Schur->f_prime;
   double *const F_by_f_prime = alloc_double(Schur->NI_total);
-  unsigned p;
+  Uint p;
   char *msg = calloc(MSG_SIZE1,1);
   IsNull(msg);
   
@@ -852,8 +852,8 @@ static char *making_F_and_C(Patch_T *const patch)
   const double time1 = get_time_sec();
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
   Sewing_T **const sewing = Schur->sewing;
-  const unsigned np = Schur->np;
-  unsigned p;
+  const Uint np = Schur->np;
+  Uint p;
   char *msg = calloc(MSG_SIZE1,1);
   IsNull(msg);
   
@@ -866,8 +866,8 @@ static char *making_F_and_C(Patch_T *const patch)
   /* go thru all of sewings  */
   for (p = 0; p < np; ++p)
   {
-    unsigned pr;
-    unsigned rowF,colF,rowC,colC;
+    Uint pr;
+    Uint rowF,colF,rowC,colC;
     
     /* if there is no connection bewteen the patches, skip */
     if (!sewing[p])
@@ -903,8 +903,8 @@ static void making_F_and_C_Regular(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
   Sewing_T **const sewing = Schur->sewing;
-  const unsigned np = Schur->np;
-  unsigned p;
+  const Uint np = Schur->np;
+  Uint p;
   
   /* allocation matrices */
   Schur->F = calloc(np,sizeof(*Schur->F));
@@ -915,8 +915,8 @@ static void making_F_and_C_Regular(Patch_T *const patch)
   /* go thru all of sewings  */
   for (p = 0; p < np; ++p)
   {
-    unsigned pr;
-    unsigned rowF,colF,rowC,colC;
+    Uint pr;
+    Uint rowF,colF,rowC,colC;
     
     /* if there is no connection bewteen the patches, skip */
     if (!sewing[p])
@@ -1000,16 +1000,16 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
   // to their patch numbers. */
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
   const SubFace_T *const subface = pair->subface;
-  const unsigned ppn = pair->patchN;
-  const unsigned NsubFP1    = subface->np;
-  const unsigned NsubFP2    = subface->np;
-  const unsigned NsubM1     = Schur->NS;
-  const unsigned NinterFP1  = Schur->NI;
+  const Uint ppn = pair->patchN;
+  const Uint NsubFP1    = subface->np;
+  const Uint NsubFP2    = subface->np;
+  const Uint NsubM1     = Schur->NS;
+  const Uint NinterFP1  = Schur->NI;
   double **const F = Schur->F[ppn]->reg->A;
   double **const C = Schur->C[ppn]->reg->A;
   double *i2_point;
   double sign;
-  unsigned subfp1,subfp2,i1,i1_node,i2,s1,s1_node,ip1,ip1_node;
+  Uint subfp1,subfp2,i1,i1_node,i2,s1,s1_node,ip1,ip1_node;
   
   /* "if normal derivatives of the interpolated fields must be continuous" */
   if (subface->df_dn)
@@ -1020,10 +1020,10 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
     if (patch->pn == ppn)
     {
       sign = -1;
-      const unsigned *const inv1 = Schur->inv;
-      const unsigned *const Imap1 = Schur->Imap;
-      const unsigned *const Iinv1 = Schur->Iinv;
-      const unsigned *const node1 = subface->id;
+      const Uint *const inv1 = Schur->inv;
+      const Uint *const Imap1 = Schur->Imap;
+      const Uint *const Iinv1 = Schur->Iinv;
+      const Uint *const node1 = subface->id;
       const char *types[] = {"dfx_df","dfy_df","dfz_df",0};
       fJs_T *dfx_df = 0,*dfy_df = 0,*dfz_df = 0;
       Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
@@ -1073,11 +1073,11 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
     else
     {
       sign = 1;
-      const unsigned *const Imap2 = pair->sewing->Imap;
-      const unsigned *const inv1  = Schur->inv;
-      const unsigned *const Iinv1 = Schur->Iinv;
-      const unsigned *const node2 = subface->id;
-      const unsigned plane        = const_index_of_face(patch,subface);
+      const Uint *const Imap2 = pair->sewing->Imap;
+      const Uint *const inv1  = Schur->inv;
+      const Uint *const Iinv1 = Schur->Iinv;
+      const Uint *const node2 = subface->id;
+      const Uint plane        = const_index_of_face(patch,subface);
       fdInterp_dfs_T *const dInterp_df_x = get_dInterp_df(patch,subface,"x derivative");
       fdInterp_dfs_T *const dInterp_df_y = get_dInterp_df(patch,subface,"y derivative");
       fdInterp_dfs_T *const dInterp_df_z = get_dInterp_df(patch,subface,"z derivative");
@@ -1123,8 +1123,8 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
     if (patch->pn == ppn)
     {
       sign = 1;
-      const unsigned *const Imap1 = Schur->Imap;
-      const unsigned *const node1 = subface->id;
+      const Uint *const Imap1 = Schur->Imap;
+      const Uint *const node1 = subface->id;
       
       /* F should be zero */
       /* C part */
@@ -1142,10 +1142,10 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
     else
     {
       sign = -1;
-      const unsigned *const Imap2 = pair->sewing->Imap;
-      const unsigned *const inv1 = Schur->inv;
-      const unsigned *const Iinv1 = Schur->Iinv;
-      const unsigned *const node2 = subface->id;
+      const Uint *const Imap2 = pair->sewing->Imap;
+      const Uint *const inv1 = Schur->inv;
+      const Uint *const Iinv1 = Schur->Iinv;
+      const Uint *const node2 = subface->id;
       fdInterp_dfs_T *const dInterp_df = get_dInterp_df(patch,subface,"none");
       
       for (subfp2 = 0; subfp2 < NsubFP2; ++subfp2)
@@ -1186,19 +1186,19 @@ static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
   // to their patch numbers. */
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
   const SubFace_T *const subface = pair->subface;
-  const unsigned *const Imap1 = Schur->Imap;
-  const unsigned *const Imap2 = pair->sewing->Imap;
-  const unsigned *const inv1 = Schur->inv;
-  const unsigned *const Iinv1 = Schur->Iinv;
-  const unsigned ppn = pair->patchN;
-  const unsigned NsubFP2 = subface->np;
-  const unsigned NsubM1 = Schur->NS;
-  const unsigned NinterFP1 = Schur->NI;
-  const unsigned *node1 = 0,*node2 = 0;
+  const Uint *const Imap1 = Schur->Imap;
+  const Uint *const Imap2 = pair->sewing->Imap;
+  const Uint *const inv1 = Schur->inv;
+  const Uint *const Iinv1 = Schur->Iinv;
+  const Uint ppn = pair->patchN;
+  const Uint NsubFP2 = subface->np;
+  const Uint NsubM1 = Schur->NS;
+  const Uint NinterFP1 = Schur->NI;
+  const Uint *node1 = 0,*node2 = 0;
   double **const F = Schur->F[ppn]->reg->A;
   double **const C = Schur->C[ppn]->reg->A;
   double sign;
-  unsigned subfp2,i1,i2,s1,s1_node,i1_node,i2_node;
+  Uint subfp2,i1,i2,s1,s1_node,i1_node,i2_node;
   
   /* if this pair is for the same patch */
   if (patch->pn == ppn)
@@ -1296,8 +1296,8 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   double **xs,**bs;
   Matrix_T *E_prime;
   Umfpack_T *umfpack = init_umfpack();
-  unsigned ns = 1;
-  unsigned i;
+  Uint ns = 1;
+  Uint i;
   char *msg = calloc(MSG_SIZE2,1);
   IsNull(msg);
   
@@ -1312,7 +1312,7 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   S->B = 0;/* making sure B refers to null */
   
   /* if there is any interface points */
-  ns += (unsigned)S->E_Trans->row;
+  ns += (Uint)S->E_Trans->row;
     
   xs = calloc(ns,sizeof(*xs));
   IsNull(xs);
@@ -1371,7 +1371,7 @@ static char *making_B_and_E(Patch_T *const patch)
 {
   const double time1 = get_time_sec();
   Solving_Man_T *const S      = patch->solving_man;
-  const unsigned cf           = S->cf;
+  const Uint cf           = S->cf;
   fEquation_T *const jacobian_field_eq = S->jacobian_field_eq[cf];
   fEquation_T *const jacobian_bc_eq = S->jacobian_bc_eq[cf];
   const long Brow = (long)S->method->SchurC->NS;
@@ -1398,7 +1398,7 @@ static char *making_B_and_E(Patch_T *const patch)
 static void making_B_single_patch(Patch_T *const patch)
 {
   Solving_Man_T *const S      = patch->solving_man;
-  const unsigned cf           = S->cf;
+  const Uint cf           = S->cf;
   fEquation_T *const jacobian_field_eq = S->jacobian_field_eq[cf];
   fEquation_T *const jacobian_bc_eq = S->jacobian_bc_eq[cf];
   const long Brow = (long)S->method->SchurC->NS;
@@ -1418,11 +1418,11 @@ static void make_g(Grid_T *const grid)
   DDM_Schur_Complement_T *Schur;
   Sewing_T *sewing;
   Pair_T *pair1, *pair2;
-  unsigned *Imap;/* interface map */
-  unsigned *Smap;/* subface map */
+  Uint *Imap;/* interface map */
+  Uint *Smap;/* subface map */
   double *g,*pg1,*pg2;/* g and partial g's */
-  unsigned npair,NSubFP;
-  unsigned p,s,pr;
+  Uint npair,NSubFP;
+  Uint p,s,pr;
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -1450,7 +1450,7 @@ static void make_g(Grid_T *const grid)
       
       for (s = 0; s < NSubFP; ++s)
       {
-        unsigned s_node = Smap[s];
+        Uint s_node = Smap[s];
         if (Imap[s_node] == UINT_MAX)
           continue;
         /* NOTE: because we've filled each pg's in order 
@@ -1476,8 +1476,8 @@ static void preparing_ingredients(Solve_Equations_T *const SolveEqs)
 {
   Grid_T *const grid = get_grid_solve_equations(SolveEqs);
   
-  unsigned p;
-  unsigned count = 0;
+  Uint p;
+  Uint count = 0;
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -1531,7 +1531,7 @@ static void preparing_ingredients(Solve_Equations_T *const SolveEqs)
 static void checks_and_constraints(const Grid_T *const grid)
 {
   DDM_Schur_Complement_T *Schur;
-  unsigned p,count;
+  Uint p,count;
   
   count = 0;
   FOR_ALL_PATCHES(p,grid)
@@ -1559,14 +1559,14 @@ static void set_NSs_NIs(Patch_T *const patch)
 {	
   Grid_T *const grid = patch->grid;
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
-  unsigned np = grid->np;
-  unsigned NS_total = 0;
-  unsigned NI_total = 0;
-  unsigned *NS_p = calloc(np,sizeof(*NS_p));
-  unsigned *NI_p = calloc(np,sizeof(*NI_p));
+  Uint np = grid->np;
+  Uint NS_total = 0;
+  Uint NI_total = 0;
+  Uint *NS_p = calloc(np,sizeof(*NS_p));
+  Uint *NI_p = calloc(np,sizeof(*NI_p));
   IsNull(NS_p);
   IsNull(NI_p);
-  unsigned p;
+  Uint p;
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -1591,9 +1591,9 @@ static void miscellany_in_sewing(Patch_T *const patch)
   DDM_Schur_Complement_T *S2;
   Sewing_T *sewing;
   Grid_T *const grid = patch->grid;
-  const unsigned np  = grid->np;
-  const unsigned cp  = patch->pn;
-  unsigned p;
+  const Uint np  = grid->np;
+  const Uint cp  = patch->pn;
+  Uint p;
   
   /* go thru all sewings */
   for (p = 0; p < np; ++p)
@@ -1640,9 +1640,9 @@ static void populate_sewing(Patch_T *const patch)
   Grid_T *const grid = patch->grid;
   DDM_Schur_Complement_T *const SchurC = 
                                 patch->solving_man->method->SchurC;
-  const unsigned np = patch->grid->np;
+  const Uint np = patch->grid->np;
   Sewing_T **sewing = 0;
-  unsigned p;
+  Uint p;
   
   sewing = calloc(np,sizeof(*sewing));
   IsNull(sewing);
@@ -1673,7 +1673,7 @@ static void mirror_pairs(Patch_T *const patch)
   DDM_Schur_Complement_T *const SchurC = 
                                 patch->solving_man->method->SchurC;
   Sewing_T *const sewing = SchurC->sewing[patch->pn];
-  unsigned p;
+  Uint p;
   
   /* if there is no sewing, happen for single patch */
   if (!sewing)
@@ -1682,7 +1682,7 @@ static void mirror_pairs(Patch_T *const patch)
   for (p = 0; p < sewing->npair; ++p)
   {
     Pair_T *pair = sewing->pair[p];
-    unsigned ap = pair->subface->adjPatch;
+    Uint ap = pair->subface->adjPatch;
     Sewing_T *sewing2 = 
           grid->patch[ap]->solving_man->method->SchurC->sewing[patch->pn];
     pair->mirror = find_pair_in_sewing(sewing2,pair->subface);
@@ -1697,7 +1697,7 @@ static void mirror_pairs(Patch_T *const patch)
 static Pair_T *find_pair_in_sewing(const Sewing_T *const sewing,const SubFace_T *const subface)
 {
   Pair_T *pair = 0;
-  unsigned i;
+  Uint i;
   
   for (i = 0; i < sewing->npair; ++i)
   {
@@ -1719,16 +1719,16 @@ static Pair_T *find_pair_in_sewing(const Sewing_T *const sewing,const SubFace_T 
 /* making all of sewings deduced form its own subfaces */
 static void make_its_sewing(const Patch_T *const patch,Sewing_T **const sewing)
 {
-  const unsigned nintfc = countf(patch->interface);
-  const unsigned p = patch->pn;
-  unsigned intfc;
+  const Uint nintfc = countf(patch->interface);
+  const Uint p = patch->pn;
+  Uint intfc;
 
   /* loop over all interfaces */
   for (intfc = 0; intfc < nintfc; ++intfc)
   {
     Interface_T *interface = patch->interface[intfc];
-    unsigned nsfc = interface->ns;
-    unsigned sfc;
+    Uint nsfc = interface->ns;
+    Uint sfc;
     
     /* loop over all subfaces */
     for (sfc = 0; sfc < nsfc; ++sfc)
@@ -1766,16 +1766,16 @@ static void make_its_sewing(const Patch_T *const patch,Sewing_T **const sewing)
 /* making all of sewings deduced from subfaces of patch2 */
 static void make_others_sewing(const Patch_T *const patch,const Patch_T *const patch2,Sewing_T **const sewing)
 {
-  const unsigned nintfc = countf(patch2->interface);
-  const unsigned p2 = patch2->pn;
-  unsigned intfc;
+  const Uint nintfc = countf(patch2->interface);
+  const Uint p2 = patch2->pn;
+  Uint intfc;
 
   /* loop over all interfaces */
   for (intfc = 0; intfc < nintfc; ++intfc)
   {
     Interface_T *interface = patch2->interface[intfc];
-    unsigned nsfc = interface->ns;
-    unsigned sfc;
+    Uint nsfc = interface->ns;
+    Uint sfc;
     
     /* loop over all subfaces */
     for (sfc = 0; sfc < nsfc; ++sfc)
@@ -1817,8 +1817,8 @@ static void populate_pair(Sewing_T *const sewing,SubFace_T *const subface,const 
 {
   Grid_T *const grid = subface->patch->grid;
   Pair_T *const pair = calloc(1,sizeof(*pair));
-  const unsigned np = subface->np;
-  unsigned i;
+  const Uint np = subface->np;
+  Uint i;
   IsNull(pair);
   
   if (flag == OTHERS)
@@ -1859,7 +1859,7 @@ static void populate_pair(Sewing_T *const sewing,SubFace_T *const subface,const 
   /* if this interface is an interpolation one and is for others */
   if (!subface->copy && flag == OTHERS)
   {
-    const unsigned *const node = subface->id;
+    const Uint *const node = subface->id;
     const Patch_T *adjPatch = grid->patch[subface->adjPatch];
     double X[3];
     
@@ -1894,17 +1894,17 @@ static void make_map_and_inv(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *const SchurC = 
     patch->solving_man->method->SchurC;
-  unsigned *const map = SchurC->map;
-  unsigned *const inv = SchurC->inv;
-  unsigned *Imap = 0;
-  unsigned *Iinv = 0;
-  const unsigned nn = patch->nn;
-  const unsigned *n = patch->n;
-  const unsigned nintfc = countf(patch->interface);
-  unsigned i,j,j2, intfc;/* dummy indices and counters */
+  Uint *const map = SchurC->map;
+  Uint *const inv = SchurC->inv;
+  Uint *Imap = 0;
+  Uint *Iinv = 0;
+  const Uint nn = patch->nn;
+  const Uint *n = patch->n;
+  const Uint nintfc = countf(patch->interface);
+  Uint i,j,j2, intfc;/* dummy indices and counters */
   
   /* keep tracking of points, 1 means counted, 0 means not */
-  unsigned *flag_point = calloc(nn,sizeof(*flag_point));
+  Uint *flag_point = calloc(nn,sizeof(*flag_point));
   IsNull(flag_point);
   
   if (patch->is_a_closed || patch->is_b_closed || patch->is_c_closed)
@@ -1930,14 +1930,14 @@ static void make_map_and_inv(Patch_T *const patch)
   for (intfc = 0; intfc < nintfc; ++intfc)
   {
     Interface_T *interface = patch->interface[intfc];
-    unsigned nsfc = interface->ns;
-    unsigned sfc;
+    Uint nsfc = interface->ns;
+    Uint sfc;
     
     /* loop over all subfaces to filling boundary */
     for (sfc = 0; sfc < nsfc; ++sfc)
     {
       SubFace_T *subface = interface->subface[sfc];
-      const unsigned *const B = subface->id;
+      const Uint *const B = subface->id;
       
       if (subface->outerB || subface->innerB)/* if it reaches any kind of boundaries */
       {
@@ -1972,14 +1972,14 @@ static void make_map_and_inv(Patch_T *const patch)
   for (intfc = 0; intfc < nintfc; ++intfc)
   {
     Interface_T *interface = patch->interface[intfc];
-    unsigned nsfc = interface->ns;
-    unsigned sfc;
+    Uint nsfc = interface->ns;
+    Uint sfc;
     
     /* loop over all subfaces to filling boundary points */
     for (sfc = 0; sfc < nsfc; ++sfc)
     {
       SubFace_T *subface = interface->subface[sfc];
-      unsigned *T = subface->id;
+      Uint *T = subface->id;
       
       if (!subface->exterF)/* if subface is internal */
       {
@@ -2025,7 +2025,7 @@ static void make_map_and_inv(Patch_T *const patch)
 // in order given in the input file.
 // the parameter is called Solving_Order
 // ->return value: name and number of fields. */
-char **get_solving_field_name(const char *const solving_order,unsigned *const nf)
+char **get_solving_field_name(const char *const solving_order,Uint *const nf)
 {
   char COMMA = ',';
   char *par;
@@ -2054,7 +2054,7 @@ static void set_solving_man_cf(Solve_Equations_T *const SolveEqs)
 {
   Grid_T *const grid = get_grid_solve_equations(SolveEqs);
   const char *const field_name = SolveEqs->field_name;
-  unsigned p;
+  Uint p;
   
   assert(field_name);
     
@@ -2062,7 +2062,7 @@ static void set_solving_man_cf(Solve_Equations_T *const SolveEqs)
   {
     Patch_T *patch = grid->patch[p];
     char **fields = patch->solving_man->field_name;
-    unsigned nf = patch->solving_man->nf;
+    Uint nf = patch->solving_man->nf;
     patch->solving_man->cf = find_index_string(fields,nf,field_name);
   }
 }
@@ -2071,7 +2071,7 @@ static void set_solving_man_cf(Solve_Equations_T *const SolveEqs)
 static void set_solving_man_settings(Solve_Equations_T *const SolveEqs)
 {
   Grid_T *const grid = get_grid_solve_equations(SolveEqs);
-  unsigned p;
+  Uint p;
     
   for (p = 0; p < grid->np; ++p)
   {
@@ -2115,13 +2115,13 @@ static void make_partial_g(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
   Sewing_T **const sewing = Schur->sewing;
-  const unsigned np = Schur->np;
-  unsigned p;
+  const Uint np = Schur->np;
+  Uint p;
   
   /* go thru all of sewings  */
   for (p = 0; p < np; ++p)
   {
-    unsigned pr;
+    Uint pr;
     
     if (!sewing[p])
       continue;
@@ -2179,15 +2179,15 @@ static void make_pg(Patch_T *const patch, Pair_T *const pair)
 static void pg_collocation(Patch_T *const patch, Pair_T *const pair)
 {
   SubFace_T *const subface = pair->subface;
-  const unsigned cf = patch->solving_man->cf;
+  const Uint cf = patch->solving_man->cf;
   const char *const field_name = patch->solving_man->field_name[cf];
   Field_T *const f   = patch->fields[Ind(field_name)];
-  const unsigned ppn = pair->patchN;
-  const unsigned NSubFP = subface->np;
-  const unsigned *node = 0;
+  const Uint ppn = pair->patchN;
+  const Uint NSubFP = subface->np;
+  const Uint *node = 0;
   double *const pg = pair->pg; 
   double sign;
-  unsigned s,s_node;
+  Uint s,s_node;
   
   /* if this pg is for the same patch */
   if (patch->pn == ppn)
@@ -2241,14 +2241,14 @@ static void pg_collocation(Patch_T *const patch, Pair_T *const pair)
 static void pg_interpolation(Patch_T *const patch, Pair_T *const pair)
 {
   SubFace_T *const subface = pair->subface;
-  const unsigned cf = patch->solving_man->cf;
+  const Uint cf = patch->solving_man->cf;
   const char *const field_name = patch->solving_man->field_name[cf];
   Field_T *const f   = patch->fields[Ind(field_name)];
-  const unsigned np = subface->np;
-  const unsigned ppn = pair->patchN;
+  const Uint np = subface->np;
+  const Uint ppn = pair->patchN;
   double *const pg = pair->pg; 
   double sign;
-  unsigned i;
+  Uint i;
   
   /* if normal derivatives of fields should be continuous */
   if (subface->df_dn)
@@ -2267,7 +2267,7 @@ static void pg_interpolation(Patch_T *const patch, Pair_T *const pair)
     if (patch->pn == ppn)
     {
       sign = -1;
-      unsigned *node = subface->id;
+      Uint *node = subface->id;
       
       for (i = 0; i < np; ++i)
       {
@@ -2343,7 +2343,7 @@ static void pg_interpolation(Patch_T *const patch, Pair_T *const pair)
     if (patch->pn == ppn)
     {
       sign = 1;
-      unsigned *node = subface->id;
+      Uint *node = subface->id;
       
       for (i = 0; i < np; ++i)
       {
@@ -2416,11 +2416,11 @@ static void fill_interpolation_flags(Interpolation_T *const it,Patch_T *const pa
 // returns I in case the subface of patch B which touches the mentioned interface is give.
 // ->return value: coordinate index of plane X = const. if they won't touch it gives UINT_MAX. */
 // ->return value: constant index(coords) of a given face, if not found UINT_MAX. */
-static unsigned const_index_of_face(Patch_T *const patch,const SubFace_T *const sf)
+static Uint const_index_of_face(Patch_T *const patch,const SubFace_T *const sf)
 {
-  const unsigned f = sf->adjFace;
-  const unsigned *const n = patch->n;
-  unsigned C = UINT_MAX;/* constant value */
+  const Uint f = sf->adjFace;
+  const Uint *const n = patch->n;
+  Uint C = UINT_MAX;/* constant value */
   
   if (sf->touch)
   {
@@ -2465,20 +2465,20 @@ static void f_in_equation_part(Patch_T *const patch)
 /* calculating the part of f coming from boundary points */
 static void f_in_boundary_part(Patch_T *const patch)
 {
-  const unsigned nintfc    = countf(patch->interface);
+  const Uint nintfc    = countf(patch->interface);
   Solving_Man_T *const S   = patch->solving_man;
-  const unsigned cf        = S->cf;
+  const Uint cf        = S->cf;
   fEquation_T *const bc_eq = S->bc_eq[cf];
   Boundary_Condition_T bc;
-  unsigned intfc;
+  Uint intfc;
   bc.patch   = patch;
   
   /* loop over all interfaces */
   for (intfc = 0; intfc < nintfc; ++intfc)
   {
     Interface_T *interface = patch->interface[intfc];
-    unsigned nsfc = interface->ns;
-    unsigned sfc;
+    Uint nsfc = interface->ns;
+    Uint sfc;
     
     /* loop over all subfaces and look for boundary */
     for (sfc = 0; sfc < nsfc; ++sfc)
@@ -2530,8 +2530,8 @@ static void set_solving_man_settings_Frms_i_single_patch(Patch_T *const patch)
 // and set it in patch->solving_man->settings->Frms_i */
 static void set_solving_man_settings_Frms_i(Grid_T *const grid)
 {
-  const unsigned npatch = grid->np;
-  unsigned p;
+  const Uint npatch = grid->np;
+  Uint p;
   
   DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
   for (p = 0; p < npatch; ++p)
@@ -2551,8 +2551,8 @@ static void set_solving_man_settings_Frms_i(Grid_T *const grid)
 // it is used for stop criteria */
 static void set_solving_man_settings_solver_step(Grid_T *const grid,const int current_step)
 {
-  const unsigned npatch = grid->np;
-  unsigned p;
+  const Uint npatch = grid->np;
+  Uint p;
   
   for (p = 0; p < npatch; ++p)
   {
@@ -2565,11 +2565,11 @@ static void set_solving_man_settings_solver_step(Grid_T *const grid,const int cu
 // and set it in patch->solving_man->Frms */
 static void calculate_residual(Grid_T *const grid)
 {
-  const unsigned npatch = grid->np;
+  const Uint npatch = grid->np;
   double *HFrms = alloc_double(npatch);
-  unsigned NHFrms;
+  Uint NHFrms;
   double *extd = 0;
-  unsigned p,i;
+  Uint p,i;
   
   DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
   for (p = 0; p < npatch; ++p)
@@ -2604,7 +2604,7 @@ static void calculate_residual(Grid_T *const grid)
   for (p = 0; p < npatch; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned cf = patch->solving_man->cf;
+    Uint cf = patch->solving_man->cf;
     const char *field_name = patch->solving_man->field_name[cf];
     
     printf("\nResidual History:\n");
@@ -2622,8 +2622,8 @@ static void calculate_residual(Grid_T *const grid)
 /* free patch->solving_man->settings */
 static void free_solving_man_settings(Grid_T *const grid)
 {
-  const unsigned npatch = grid->np;
-  unsigned p;
+  const Uint npatch = grid->np;
+  Uint p;
   
   for (p = 0; p < npatch; ++p)
   {
@@ -2643,9 +2643,9 @@ static void free_solving_man_settings(Grid_T *const grid)
 // base on number of points in each direction.
 // ->return value: if is on face 1, otherwise 0.
 */
-static unsigned OnFace(const unsigned *const n, const unsigned p)
+static Uint OnFace(const Uint *const n, const Uint p)
 {
-  unsigned i,j,k;
+  Uint i,j,k;
   
   IJK(p,n,&i,&j,&k);
   
@@ -2660,7 +2660,7 @@ static unsigned OnFace(const unsigned *const n, const unsigned p)
 static void solve_Bx_f(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
-  const unsigned NS = Schur->NS;
+  const Uint NS = Schur->NS;
   double *f = Schur->f;
   double *x = alloc_double(NS);
   Matrix_T *B = Schur->B;
@@ -2687,8 +2687,8 @@ static void solve_Bx_f(Patch_T *const patch)
 void test_Jacobian_of_equations(Solve_Equations_T *const SolveEqs)
 {
   char **field_name = 0;/* name of all fields to be solved */
-  unsigned nf = 0;/* number of all fields */
-  unsigned f;/* dummy index */
+  Uint nf = 0;/* number of all fields */
+  Uint f;/* dummy index */
   char status_str[100];
   int status;
   
@@ -2758,12 +2758,12 @@ static int Jwritten_vs_Jequation(Solve_Equations_T *const SolveEqs)
 // ->return value: TEST_UNSUCCESSFUL or TEST_SUCCESSFUL */
 static int compare_Js(Grid_T *const grid,const Matrix_T *const J_Reg,const Matrix_T *const J_Schur)
 {
-  const unsigned dim = grid->nn;
+  const Uint dim = grid->nn;
   const double ERR = 1e-9;
   double **const J_s = J_Schur->reg->A;
   double **const J_r = J_Reg->reg->A;
   Flag_T flg = NONE;
-  unsigned i,j;
+  Uint i,j;
   
   for (i = 0; i < dim; ++i)
   {
@@ -2788,7 +2788,7 @@ static int compare_Js(Grid_T *const grid,const Matrix_T *const J_Reg,const Matri
 static void free_schur_f_g(Grid_T *const grid)
 {
   DDM_Schur_Complement_T *Schur;
-  unsigned p;
+  Uint p;
   
   /* free f */
   for (p = 0; p < grid->np; ++p)
@@ -2808,11 +2808,11 @@ static Matrix_T *making_J_Old_Fashion(Solve_Equations_T *const SolveEqs)
   Matrix_T *J_Reg = alloc_matrix(REG_SF,grid->nn,grid->nn);
   double **const J = J_Reg->reg->A;
   const double CONST = 1.;
-  const unsigned npatch = grid->np;
+  const Uint npatch = grid->np;
    
   double *F1,*F2;
-  unsigned R;/* reference */
-  unsigned p,pn,ijk,df;
+  Uint R;/* reference */
+  Uint p,pn,ijk,df;
   
   /* making F1 = F(f) */
   for (p = 0; p < npatch; ++p)
@@ -2875,10 +2875,10 @@ static double *make_col_F(Grid_T *const grid)
   double *F = alloc_double(grid->nn);
   DDM_Schur_Complement_T *Schur;
   double *f,*g;
-  unsigned R;/* reference */
-  const unsigned *inv,*Iinv;
-  unsigned NS,NI;
-  unsigned p,i,j;
+  Uint R;/* reference */
+  const Uint *inv,*Iinv;
+  Uint NS,NI;
+  Uint p,i,j;
   
   R = 0;
   for (p = 0; p < grid->np; ++p)
@@ -2915,11 +2915,11 @@ static Matrix_T *making_J_Schur_Method(Solve_Equations_T *const SolveEqs)
   double **const J = J_Schur->reg->A; 
   DDM_Schur_Complement_T *Schur;
   Matrix_T *B,*Et,**F,**C;
-  const unsigned npatch = grid->np;
-  const unsigned *inv,*Iinv,*NI_p;
-  unsigned NS,NI;
-  unsigned R;/* reference */
-  unsigned p;
+  const Uint npatch = grid->np;
+  const Uint *inv,*Iinv,*NI_p;
+  Uint NS,NI;
+  Uint R;/* reference */
+  Uint p;
   
   DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
   for (p = 0; p < npatch; ++p)
@@ -2933,7 +2933,7 @@ static Matrix_T *making_J_Schur_Method(Solve_Equations_T *const SolveEqs)
   for (p = 0; p < npatch; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned i,j,k;
+    Uint i,j,k;
     
     Schur = patch->solving_man->method->SchurC;
     NS    = Schur->NS;
@@ -2958,11 +2958,11 @@ static Matrix_T *making_J_Schur_Method(Solve_Equations_T *const SolveEqs)
         
     free_matrix(Et);
     
-    unsigned r = 0;/* reference */
+    Uint r = 0;/* reference */
     for (k = 0; k < npatch; ++k)
     {
       DDM_Schur_Complement_T *Schur2;
-      const unsigned *Iinv2;
+      const Uint *Iinv2;
       Schur2 = grid->patch[k]->solving_man->method->SchurC;
       Iinv2 = Schur2->Iinv;
       
@@ -2998,8 +2998,8 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
 {
   Grid_T *grid;
   char **field_name = 0;/* name of all fields to be solved */
-  unsigned nf = 0;/* number of all fields */
-  unsigned f;/* dummy index */
+  Uint nf = 0;/* number of all fields */
+  Uint f;/* dummy index */
   
   pr_line_custom('=');
   
@@ -3039,9 +3039,9 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
       patch->fields[Ind(field_res)]->v = alloc_double(patch->nn);
         
       double *const res = patch->fields[Ind(field_res)]->v;
-      const unsigned NS = Schur->NS;
-      const unsigned *const inv = Schur->inv;
-      unsigned s,s_node;
+      const Uint NS = Schur->NS;
+      const Uint *const inv = Schur->inv;
+      Uint s,s_node;
       
       make_f(patch);/* making f */
       for (s = 0; s < NS; ++s)
@@ -3053,8 +3053,8 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
     }
     else/* multi-domains grid */
     {
-      const unsigned npatch = grid->np;
-      unsigned p;
+      const Uint npatch = grid->np;
+      Uint p;
       
       DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
       for (p = 0; p < npatch; ++p)
@@ -3077,11 +3077,11 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
         patch->fields[Ind(field_res)]->v = alloc_double(patch->nn);
         
         double *const res = patch->fields[Ind(field_res)]->v;
-        const unsigned NS = Schur->NS;
-        const unsigned NI = Schur->NI;
-        const unsigned *const inv  = Schur->inv;
-        const unsigned *const Iinv = Schur->Iinv;
-        unsigned s,s_node,i,i_node;
+        const Uint NS = Schur->NS;
+        const Uint NI = Schur->NI;
+        const Uint *const inv  = Schur->inv;
+        const Uint *const Iinv = Schur->Iinv;
+        Uint s,s_node,i,i_node;
         
         for (s = 0; s < NS; ++s)
         {
@@ -3164,7 +3164,7 @@ void free_patch_SolMan_method_Schur(Patch_T *const patch)
     
   Sewing_T **se             = s->sewing;
   Pair_T **p                = 0;
-  unsigned i,j;
+  Uint i,j;
   
   /* note, those matrices and double populated during solver
   // won't needed to be freed */

@@ -20,7 +20,7 @@
 // modify_checkpoint_par:Diagnostics           = path3
 // 
 */
-static unsigned n_modified_checkpoint_par;/* number of modify_checkpoint_par */
+static Uint n_modified_checkpoint_par;/* number of modify_checkpoint_par */
 static Parameter_T **modified_checkpoint_par;/* modified pars in par file
                                            // to be used after loading of
                                            // the checkpoint file. */
@@ -44,7 +44,7 @@ void bbn_write_checkpoint(Grid_T *const grid)
   
   FILE *file = 0;
   const char *const out_dir = Pgets("iteration_output");
-  const unsigned sol_it_n = (unsigned)PgetiEZ("solving_iteration_number");
+  const Uint sol_it_n = (Uint)PgetiEZ("solving_iteration_number");
   char file_path[MAX_ARR];
   char msg[MAX_ARR];
   char *const p_msg = msg;/* to avoid GCC warning for FWriteP_bin */
@@ -104,7 +104,7 @@ int bbn_IsCheckpointFileCompleted(const char *const file_path)
   file = Fopen(file_path,"r");
   
   fseek(file,-msg_len,SEEK_END);
-  assert(fread(msg,(unsigned)msg_len,1,file));
+  assert(fread(msg,(Uint)msg_len,1,file));
   
   if (strstr(msg,END_MSG))
     ret = 1;
@@ -122,7 +122,7 @@ static void write_header(const Grid_T *const grid)
   FILE *file = 0;
   const char *const folder = Pgets("iteration_output");
   char file_path[MAX_ARR];
-  unsigned np;
+  Uint np;
 
   sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
   if (!access(file_path,F_OK))/* if file exists */
@@ -170,7 +170,7 @@ static void write_parameters(const Grid_T *const grid)
   char file_path[MAX_ARR];
   char title_line[MAX_ARR] = {'\0'};
   char *const p_title_line = title_line;/* to avoid GCC warning for FWriteP_bin */
-  unsigned i,np;
+  Uint i,np;
 
   sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
   file = Fopen(file_path,"ab");
@@ -216,7 +216,7 @@ static void write_fields(const Grid_T *const grid)
   char file_path[MAX_ARR];
   char title_line[MAX_ARR] = {'\0'};
   char *const p_title_line = title_line;/* to avoid GCC warning for FWriteP_bin */
-  unsigned p;
+  Uint p;
   
   sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
   file = Fopen(file_path,"ab");
@@ -229,8 +229,8 @@ static void write_fields(const Grid_T *const grid)
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned nn = patch->nn;
-    unsigned f,count_nfld;
+    Uint nn = patch->nn;
+    Uint f,count_nfld;
     
     if (IsItInsideBHPatch(patch))
       continue;
@@ -359,8 +359,8 @@ Grid_T *bbn_init_from_checkpoint(FILE *const file)
 /* initialzing some mediate field */
 static void init_mediate_field(Grid_T *const grid)
 {
-  const unsigned np = grid->np;
-  unsigned p;
+  const Uint np = grid->np;
+  Uint p;
   
   /* W_U[0-2],Beta_U[0-2],B1_U[0-2] */
   const double Omega_NS_x = Pgetd("NS_Omega_U0");
@@ -374,8 +374,8 @@ static void init_mediate_field(Grid_T *const grid)
   for (p = 0; p < np; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned nn = patch->nn;
-    unsigned ijk;
+    Uint nn = patch->nn;
+    Uint ijk;
     
     bbn_update_B1_U012(patch);
     bbn_update_Beta_U0(patch);
@@ -434,15 +434,15 @@ static void read_header(struct checkpoint_header *const alloc_info,FILE *const f
     
     if (strstr(line,"number_of_parameters"))
     {
-      alloc_info->npar = (unsigned)atoi(v);
+      alloc_info->npar = (Uint)atoi(v);
     }
     //else if (strstr(line,"number_of_patches"))
     //{
-      //alloc_info->npatch = (unsigned)atoi(v);
+      //alloc_info->npatch = (Uint)atoi(v);
     //}
     else if (strstr(line,"grid_number"))
     {
-      alloc_info->grid_number = (unsigned)atoi(v);
+      alloc_info->grid_number = (Uint)atoi(v);
     }
     else if (strstr(line,"grid_kind"))
     {
@@ -463,7 +463,7 @@ static void find_and_save_modified_checkpoint_pars(void)
   n_modified_checkpoint_par = 0;/* global var in this file */
   const char *const keyword_prefix = "modify_checkpoint_par:";
   char str[MAX_ARR],*pstr;
-  unsigned np,nmpar;
+  Uint np,nmpar;
   
   /* find the modified pars and save them */
   np    = 0;
@@ -505,10 +505,10 @@ static void alloc_db(struct checkpoint_header *const alloc_info)
   printf("~> Allocating parameters and patches ...\n");
   fflush(stdout);
   
-  const unsigned grid_number = alloc_info->grid_number,
+  const Uint grid_number = alloc_info->grid_number,
                  npar        = alloc_info->npar;
   Grid_T *grid = 0;
-  unsigned i;
+  Uint i;
   
   /* find and save modified checkpoint pars specified at the pars file */
   find_and_save_modified_checkpoint_pars();
@@ -540,7 +540,7 @@ Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name
   Parameter_T *par = 0;
   char line[MAX_ARR] = {'\0'};
   char *match_str = 0;
-  unsigned i,npar = 0;
+  Uint i,npar = 0;
   int found;
   
   fseek(file,0,SEEK_SET);
@@ -564,7 +564,7 @@ Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name
     
     if (strstr(line,"number_of_parameters"))
     {
-      npar = (unsigned)atoi(v);
+      npar = (Uint)atoi(v);
     }
   }
     
@@ -623,9 +623,9 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
   printf("~> Reading parameters from checkpoint file ...\n");
   fflush(stdout);
   
-  const unsigned npar = alloc_info->npar;
+  const Uint npar = alloc_info->npar;
   char *match_str;
-  unsigned i;
+  Uint i;
 
   /* is the cursor matched? */
   FReadP_bin(match_str);
@@ -683,7 +683,7 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
 /* free modified_checkpoint_par */
 static void free_modified_checkpoint_par(void)
 {
-  unsigned i;
+  Uint i;
   
   for (i = 0; i < n_modified_checkpoint_par; i++)
   {
@@ -702,7 +702,7 @@ static void free_modified_checkpoint_par(void)
 // into parameter data base */
 static void incorporate_modified_checkpoint_par(void)
 {
-  unsigned np,i,n_found;
+  Uint np,i,n_found;
   
   /* free par "total_iterations_ip" since the new par file 
   // might have more iterations */
@@ -772,7 +772,7 @@ static void read_fields(struct checkpoint_header *const alloc_info,FILE *const f
   
   Grid_T *const grid = alloc_info->grid;
   char *match_str;
-  unsigned p;
+  Uint p;
   
   /* is the cursor matched? */
   FReadP_bin(match_str);
@@ -783,7 +783,7 @@ static void read_fields(struct checkpoint_header *const alloc_info,FILE *const f
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned f,count_nfld;
+    Uint f,count_nfld;
     
     if (IsItInsideBHPatch(patch))
       continue;

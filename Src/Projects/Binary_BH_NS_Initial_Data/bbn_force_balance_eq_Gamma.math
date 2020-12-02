@@ -56,8 +56,8 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
 `DECLARE_FIELD(dGAMMA_fb);`
 
 # calculating Gamma
-`const unsigned nn = patch->nn;`
-`unsigned ijk;`  
+`const Uint nn = patch->nn;`
+`Uint ijk;`  
 `for (ijk = 0; ijk < nn; ++ijk)`
 `{`
     alpha  = eta/psi;

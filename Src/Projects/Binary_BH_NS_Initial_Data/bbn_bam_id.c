@@ -83,15 +83,15 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   const double rmin      = rfill/2.;
   const double r_CutOff  = 1E-2;
   const double Mb        = 8*rfill;/* bare BH mass */
-  const unsigned npoints = pnt->npoints;
+  const Uint npoints = pnt->npoints;
   char **fields_name = 0,**bam_fields = 0;
   char title_line[STR_LEN_MAX];
   char *const p_title_line = title_line;/* to avoid GCC warning for FWriteP_bin */
   char msg[STR_LEN_MAX];
   char *const p_msg = msg;/* to avoid GCC warning for FWriteP_bin */
   double *interp_v = 0;
-  unsigned count_f;
-  unsigned p,f;
+  Uint count_f;
+  Uint p,f;
     
   /* populating pnt->(X,Y,Z) and pnt->patchn */
   printf("~> Preparing points for the interpolation ...\n");
@@ -128,7 +128,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   {
     Needle_T *needle = alloc_needle();
     double x[3],X[3];
-    unsigned pn = 0;
+    Uint pn = 0;
     
     needle->grid = grid;
     FOR_ALL_PATCHES(pn,grid)
@@ -182,7 +182,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   for (p = 0; p < grid->np; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned fn = 0;
+    Uint fn = 0;
     
     while(fields_name[fn])
     {
@@ -343,10 +343,10 @@ static void load_coords_from_coords_file(struct interpolation_points *const pnt)
   fflush(stdout);
   
   FILE *file = 0;
-  unsigned npoints = 0;
+  Uint npoints = 0;
   char *match_str  = 0;
   char str[STR_LEN_MAX] = {'\0'};
-  unsigned i = 0;
+  Uint i = 0;
   
   /* open and read coords file */
   file = Fopen(coords_file_path,"r");
@@ -400,7 +400,7 @@ static char **translate_fields_name(char ***const ptr_bam_fields)
   char **fields_name = 0;
   char **bam_fields  = 0;
   char msg[1000] = {'\0'};
-  unsigned nf = 0;
+  Uint nf = 0;
   
   bam_fields = read_separated_items_in_string(bam_fields_name,',');
   nf = 0;
@@ -517,14 +517,14 @@ bam_output_doctest
   const double Mb        = 8*rfill;/* bare BH mass */
   const double Ly        = 150;/* length of y-axis */
   const double y0        = -Ly/2; /* initial y */
-  const unsigned npoints = 3000;
+  const Uint npoints = 3000;
   const double x0        = 0;/* x-axis */
   const double step      = Ly/npoints;
   char fname[1000] = {'\0'};
   double *interp_v = 0;
   FILE *file;
-  unsigned count_f;
-  unsigned i,p,f;
+  Uint count_f;
+  Uint i,p,f;
   
   printf("|--> bam doctest ...\n");
   fflush(stdout);
@@ -577,7 +577,7 @@ bam_output_doctest
   {
     Needle_T *needle = alloc_needle();
     double x[3],X[3];
-    unsigned pn = 0;
+    Uint pn = 0;
     
     needle->grid = grid;
     FOR_ALL_PATCHES(pn,grid)
@@ -628,7 +628,7 @@ bam_output_doctest
   for (p = 0; p < grid->np; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned fn = 0;
+    Uint fn = 0;
     
     while(fields_name[fn])
     {
@@ -758,7 +758,7 @@ bam_output_doctest
     for (p = 0; p < grid->np; ++p)
     {
       Patch_T *patch = grid->patch[p];
-      unsigned fn = 0;
+      Uint fn = 0;
       
       while(adm_g[fn])
       {
@@ -825,12 +825,12 @@ bam_output_doctest
     for (p = 0; p < grid->np; p++)
     {
       Patch_T *patch = grid->patch[p];
-      unsigned nn = patch->nn;
-      unsigned ijk;
+      Uint nn = patch->nn;
+      Uint ijk;
       
       if (IsItInsideBHPatch(patch))
       {
-        unsigned fi = 0;
+        Uint fi = 0;
         while(fields_name[fi])
         {
           if (strstr(fields_name[fi],"bam_adm_K_") ||
@@ -885,7 +885,7 @@ bam_output_doctest
   for (p = 0; p < grid->np; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned fn = 0;
+    Uint fn = 0;
     
     while(bssn_fields_name[fn])
     {
@@ -950,7 +950,7 @@ bam_output_doctest
     for (p = 0; p < grid->np; ++p)
     {
       Patch_T *patch = grid->patch[p];
-      unsigned fn = 0;
+      Uint fn = 0;
       
       while(bssn_g[fn])
       {

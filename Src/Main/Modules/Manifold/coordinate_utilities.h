@@ -66,13 +66,13 @@ void needle_guess(Needle_T *const needle,const Patch_T *const patch);
 void needle_ans(Needle_T *const needle,const Patch_T *const patch);
 static void find(Needle_T *const needle,Mode_T mode);
 int X_of_x(double *const X,const double *const x,const Patch_T *const patch);
-unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg);
-double x_coord(const unsigned i,const Patch_T *const patch);
-double y_coord(const unsigned i,const Patch_T *const patch);
-double z_coord(const unsigned i,const Patch_T *const patch);
-double X_coord(const unsigned i,const Patch_T *const patch);
-double Y_coord(const unsigned i,const Patch_T *const patch);
-double Z_coord(const unsigned i,const Patch_T *const patch);
+Uint find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg);
+double x_coord(const Uint i,const Patch_T *const patch);
+double y_coord(const Uint i,const Patch_T *const patch);
+double z_coord(const Uint i,const Patch_T *const patch);
+double X_coord(const Uint i,const Patch_T *const patch);
+double Y_coord(const Uint i,const Patch_T *const patch);
+double Z_coord(const Uint i,const Patch_T *const patch);
 int x_of_X(double *const x,const double *const X,const Patch_T *const patch);
 static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *const patch,const int check_flg);
 static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_T *const patch,const int check_flg);
@@ -96,7 +96,7 @@ collect_patches
   (
   Grid_T *const grid,/* the grid */
   const char *const region,/* see the list in IsItCovering function */
-  unsigned *const Np/* number of patches found */
+  Uint *const Np/* number of patches found */
   );
  
 
@@ -113,11 +113,11 @@ find_XYZ_and_patch_of_theta_phi_CS
  const double theta/* given theta */,
  const double phi/* given phi */,
  Patch_T **const patches,/* search among these patches */
- const unsigned Np/* number of patches */
+ const Uint Np/* number of patches */
  );
 
-Patch_T *x_in_which_patch(const double x[3],Patch_T **const patches,const unsigned Np);
-Patch_T *X_in_which_patch(const double X[3],Patch_T **const patches,const unsigned Np);
+Patch_T *x_in_which_patch(const double x[3],Patch_T **const patches,const Uint Np);
+Patch_T *X_in_which_patch(const double X[3],Patch_T **const patches,const Uint Np);
 void find_theta_phi_of_XYZ_CS(double *const theta,double *const phi,
                               const double *const X,const Flag_T side);
                               
@@ -127,7 +127,7 @@ collect_patches_with_regex
   (
   Grid_T *const grid,/* the grid */
   const char *const regex,/* regex */
-  unsigned *const Np/* number of patches found */
+  Uint *const Np/* number of patches found */
   );
 
 

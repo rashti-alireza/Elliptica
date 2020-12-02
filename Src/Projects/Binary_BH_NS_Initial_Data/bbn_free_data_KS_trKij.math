@@ -13,8 +13,8 @@ C_macro2 = REALLOC_v_WRITE_v(name);
 # main function:
 Ccode["#include "bbn_headers.h"\n\n"];
 Ccode["void bbn_free_data_KS_trKij(Patch_T *const patch)\n{"];
-Ccode["  const unsigned nn = patch->nn;"];
-Ccode["  unsigned ijk;"];
+Ccode["  const Uint nn = patch->nn;"];
+Ccode["  Uint ijk;"];
 
 Declare = 
 {

@@ -9,7 +9,7 @@ typedef struct TOV_PROJECT_T
  double ADM_m;/* ADM mass of NS */
  double bar_m;/* baryonic mass of NS */
  double h_cent;/* enthalpy at the center of NS */
- unsigned N;/* number of interpolation points, choose them to be odd */
+ Uint N;/* number of interpolation points, choose them to be odd */
  double *m;/* total mass at each point */
  double *r;/* radius at each point for metric inside the star:
            // ds^{2}=-e^{2\phi \left( r\right) }dt^{2}+\left( 1-\frac {2m\left( r\right) }{r}\right) ^{-1}dr^{2}+r^{2}\left( d\theta^{2}+sin^{2} \left(\theta \right)d\phi^{2}) */
@@ -19,8 +19,8 @@ typedef struct TOV_PROJECT_T
  double *rbar; /* rbar -> radius at each point for metric inside the star:
              // d^{2}_{s}=-e^{2\phi }dt^{2}+\psi^{4}\left( \overline {r}\right) \left( d\overline {r}^{2}+\overline {r}^{2}d\Omega \right) */
  double *psi;/* conformal factor */
- unsigned status:1;/* status of exist: 0 = no error happens, 1 = some errors happened. */
- unsigned exit_if_error:1;/* 1 = if error happens exit Elliptica (default), 
+ Uint status:1;/* status of exist: 0 = no error happens, 1 = some errors happened. */
+ Uint exit_if_error:1;/* 1 = if error happens exit Elliptica (default), 
                           // 0 = if error happens don't exit Elliptica  */
 }TOV_T;
 

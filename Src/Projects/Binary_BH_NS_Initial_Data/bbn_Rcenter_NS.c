@@ -18,7 +18,7 @@ void bbn_Rc_NS(double Rc[3],Grid_T *const grid)
   const double Madm = Pgetd("NS_ADM_mass");
   const double x_CM = Pgetd("x_CM");
   const double y_CM = Pgetd("y_CM");
-  unsigned p;
+  Uint p;
 
   Rc[0] = 0;
   Rc[1] = 0;
@@ -72,8 +72,8 @@ void bbn_Rc_NS(double Rc[3],Grid_T *const grid)
   READ_v(_Gamma_U1D1D1)
 
 
-    unsigned nn  = patch->nn;
-    unsigned ijk;
+    Uint nn  = patch->nn;
+    Uint ijk;
 
     ADD_FIELD(Rc_integrandx)
     ADD_FIELD(Rc_integrandy)

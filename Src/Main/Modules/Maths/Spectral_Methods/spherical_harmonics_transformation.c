@@ -28,9 +28,9 @@ get_Ylm_coeffs(
 double *const realClm/* Re(C_{lm}) coeffs */,
 double *const imagClm/* Im(C_{lm}) coeffs */,
 const double *const f/* f(theta,phi) */,
-const unsigned Ntheta/* Ntheta points in theta direction */,
-const unsigned Nphi/* Nphi points in phi direction*/,
-const unsigned Lmax/* maximum l (inclusive) for the expansion */
+const Uint Ntheta/* Ntheta points in theta direction */,
+const Uint Nphi/* Nphi points in phi direction*/,
+const Uint Lmax/* maximum l (inclusive) for the expansion */
 )
 {
   const char *collocation = "GaussLegendre_EquiSpaced";
@@ -51,9 +51,9 @@ get_Ylm_coeffs_GaussLegendre_EquiSpaced(
 double *const realClm/* Re(C_{lm}) coeffs */,
 double *const imagClm/* Im(C_{lm}) coeffs */,
 const double *const f/* f(theta,phi) */,
-const unsigned Ntheta/* Ntheta points in theta direction */,
-const unsigned Nphi/* Nphi points in phi direction*/,
-const unsigned Lmax/* maximum l (inclusive) for the expansion */)
+const Uint Ntheta/* Ntheta points in theta direction */,
+const Uint Nphi/* Nphi points in phi direction*/,
+const Uint Lmax/* maximum l (inclusive) for the expansion */)
 {
   double **Ftheta    = calloc(Ntheta,sizeof(*Ftheta));IsNull(Ftheta);
   double *real_fYlm  = alloc_double(Ntheta);/* Re( \int f(theta,phi) Ylm^* sin(theta) exp^{-i m phi} dphi) */
@@ -61,7 +61,7 @@ const unsigned Lmax/* maximum l (inclusive) for the expansion */)
   double *theta      = alloc_double(Ntheta);
   double complex **v = calloc(Lmax+1,sizeof(*v));IsNull(v);/* v_{m}{theta} = \int f(theta,phi) exp^{-i m phi} dphi */
   Integration_T *I2  = init_integration();
-  unsigned i,j,l,m,lm;
+  Uint i,j,l,m,lm;
   
   /* initialize tables */
   init_Legendre_root_function();
@@ -123,11 +123,11 @@ const unsigned Lmax/* maximum l (inclusive) for the expansion */)
 
 /* ->return value: given point (theta,phi) and Ylm coeffs, 
 // it interpolates to (theta,phi) */
-double interpolation_Ylm(const double *const realClm,const double *const imagClm,const unsigned Lmax, const double theta, const double phi)
+double interpolation_Ylm(const double *const realClm,const double *const imagClm,const Uint Lmax, const double theta, const double phi)
 {
   const double sign[2] = {1.,-1.};
   double complex sum = 0;
-  unsigned l,m,lm;
+  Uint l,m,lm;
   
   for (l = 0; l <= Lmax; ++l)
   {
@@ -148,13 +148,13 @@ double interpolation_Ylm(const double *const realClm,const double *const imagClm
 
 /* ->return value: d(f(theta,phi))/dphi using Ylm expansion, 
 // assuming Legendre root in theta direction and EquiSpaced in phi direction. */
-double *df_dphi_Ylm(const double *const realClm,const double *const imagClm,const unsigned Ntheta, const unsigned Nphi,const unsigned Lmax)
+double *df_dphi_Ylm(const double *const realClm,const double *const imagClm,const Uint Ntheta, const Uint Nphi,const Uint Lmax)
 {
   double *df_dphi = alloc_double(Ntheta*Nphi);
   const double sign[2] = {1.,-1.};
   double theta,phi;
   double complex sum = 0;
-  unsigned i,j,l,m,lm;
+  Uint i,j,l,m,lm;
   
   /* initialize tables */
   init_Legendre_root_function();
@@ -187,13 +187,13 @@ double *df_dphi_Ylm(const double *const realClm,const double *const imagClm,cons
 
 /* ->return value: d(f(theta,phi))/dtheta using Ylm expansion, 
 // assuming Legendre root in theta direction and EquiSpaced in phi direction. */
-double *df_dtheta_Ylm(const double *const realClm,const double *const imagClm,const unsigned Ntheta, const unsigned Nphi,const unsigned Lmax)
+double *df_dtheta_Ylm(const double *const realClm,const double *const imagClm,const Uint Ntheta, const Uint Nphi,const Uint Lmax)
 {
   double *df_dtheta    = alloc_double(Ntheta*Nphi);
   const double sign[2] = {1.,-1.};
   double theta,phi;
   double complex sum = 0;
-  unsigned i,j,l,m,lm;
+  Uint i,j,l,m,lm;
   
   /* initialize tables */
   init_Legendre_root_function();
@@ -246,17 +246,17 @@ void n2lm_Ylm(const int n, int *const l, int *const m,const int lmax)
 /* map: (l,m) -> n  for mapping 2-d array to 1-d array for 0 <= m <= l, 
 // the inverse of this map won't be needed.
 // note: the order is C_{0}^{0},C_{1}^{0},C_{1}^{1},C_{2}^{0},C_{2}^{1},C_{2}^{2}, ...  */
-unsigned lm2n(const unsigned l, const unsigned m)
+Uint lm2n(const Uint l, const Uint m)
 {
   return l*(l+1)/2+m;
 }
 
 /* ->return value \integral_{0}^{2pi} f(phi)*exp(imagI*m*phi)dphi (trapezoidal rule) */
-static double complex integrate_expImphi(const double *const f, const unsigned n/* f array dimension */,const int m)
+static double complex integrate_expImphi(const double *const f, const Uint n/* f array dimension */,const int m)
 {
   double complex i0 = 0;
   const double complex phi0 = 2.*imagI*M_PI/n;
-  unsigned i;
+  Uint i;
   
   for (i = 0; i < n; ++i)
     i0 += f[i]*cexp(m*phi0*i);
@@ -267,7 +267,7 @@ static double complex integrate_expImphi(const double *const f, const unsigned n
 
 /* ->return value: allocating memory for Clm coeffs of Ylm expansion 
 // for given Lmax, which is (Lmax+1)*Lmax/2 + Lmax+1. */
-double *alloc_ClmYlm(unsigned Lmax)
+double *alloc_ClmYlm(Uint Lmax)
 {
   return alloc_double((Lmax+1)*Lmax/2 + Lmax+1);
 }

@@ -9,7 +9,7 @@
 double star_NS_baryonic_gConf_mass(Physics_T *const phys,const double Euler_C)
 {
   double NS_baryonic_mass = 0;
-  unsigned p;
+  Uint p;
 
   FOR_ALL_PATCHES(p,phys->grid)
   {
@@ -46,8 +46,8 @@ double star_NS_baryonic_gConf_mass(Physics_T *const phys,const double Euler_C)
 
 
     EoS_T *eos = initialize_EoS();
-    unsigned nn = patch->nn;
-    unsigned ijk;
+    Uint nn = patch->nn;
+    Uint ijk;
     double rho0;
   for(ijk = 0; ijk < nn; ++ijk)
   {

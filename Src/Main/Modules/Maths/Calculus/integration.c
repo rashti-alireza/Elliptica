@@ -113,7 +113,7 @@ void plan_integration(Integration_T *const I)
   Patch_T *patch;
   Coord_T coordsys;
   
-  unsigned i;
+  Uint i;
   
   if (strcmp_i(I->type,"Composite Simpson's Rule 1D"))
   {
@@ -157,7 +157,7 @@ void plan_integration(Integration_T *const I)
   {
     patch = I->Spectral->f->patch;
     coordsys = patch->coordsys;
-    unsigned count = 0;
+    Uint count = 0;
     
     if (I->Spectral->X_surface) count++;
     if (I->Spectral->Y_surface) count++;
@@ -204,7 +204,7 @@ static double Composite_Simpson_1D(Integration_T *const I)
   const double h = (I->Composite_Simpson_1D->b-I->Composite_Simpson_1D->a)/(I->Composite_Simpson_1D->n-1);
   const double *const f = I->Composite_Simpson_1D->f;
   double i0 = 0,i1 = 0,i2 = 0;
-  unsigned j;
+  Uint j;
   
   I->err = fabs(I->Composite_Simpson_1D->b-I->Composite_Simpson_1D->a)/180*pow(h,4)*100;
   
@@ -232,10 +232,10 @@ static double GaussQuadrature_ChebyshevExtrema(Integration_T *const I)
 {
   double i0 = 0;
   const double *const f = I->GQ_ChebyshevExtrema->f;
-  const unsigned n      = I->GQ_ChebyshevExtrema->n;
+  const Uint n      = I->GQ_ChebyshevExtrema->n;
   const double   w      = M_PI/(n-1);
   double err = M_PI;
-  unsigned i;
+  Uint i;
   
   err /= Factorial(2*(int)n);
   err *= L_inf(n,f);/* approximately */
@@ -260,11 +260,11 @@ static double GaussQuadrature_Lobatto(Integration_T *const I)
 {
   double i0 = 0;
   const double *const f = I->GQ_Lobatto->f;
-  const unsigned n      = I->GQ_Lobatto->n;
+  const Uint n      = I->GQ_Lobatto->n;
   const int ni          = (int)n;
-  double (*w)(const double x, const unsigned n) = Lobatto_weight_function;
+  double (*w)(const double x, const Uint n) = Lobatto_weight_function;
   double err;
-  unsigned i;
+  Uint i;
   
   /* initializing root tables */
   init_Lobatto_root_function();
@@ -302,11 +302,11 @@ static double GaussQuadrature_Legendre(Integration_T *const I)
 {
   double i0 = 0;
   const double *const f = I->GQ_Legendre->f;
-  const unsigned n      = I->GQ_Legendre->n;
+  const Uint n      = I->GQ_Legendre->n;
   const int ni          = (int)n;
-  double (*w)(const double x, const unsigned n) = Legendre_weight_function;
+  double (*w)(const double x, const Uint n) = Legendre_weight_function;
   double err;
-  unsigned i;
+  Uint i;
   
   /* initializing root tables */
   init_Legendre_root_function();
@@ -342,10 +342,10 @@ static double f_xyz_dV_Cheb_Ext_Spec(Integration_T *const I)
   const double *const fv = f->v;
   double *const Fv = F->v;
   const double *Fc;
-  const unsigned nn       = patch.nn;
-  const unsigned *const n = patch.n;
+  const Uint nn       = patch.nn;
+  const Uint *const n = patch.n;
   double sum = 0.,g;
-  unsigned ijk,i,j,k;
+  Uint ijk,i,j,k;
   
   for (ijk = 0; ijk < nn; ++ijk)
   {
@@ -391,9 +391,9 @@ static double f_xyz_dS_Cheb_Ext_Spec(Integration_T *const I)
   const double *const fv = f->v;
   double *const Fv = F->v;
   const double *Fc;
-  const unsigned *const n = patch.n;
+  const Uint *const n = patch.n;
   double sum = 0.;
-  unsigned ijk,i,j,k;
+  Uint ijk,i,j,k;
   
   /* populate integrand at X hypresurface */
   if (I->Spectral->X_surface)
@@ -466,7 +466,7 @@ static double f_xyz_dS_Cheb_Ext_Spec(Integration_T *const I)
 // from {xi,xf}, namaly: f = c_{0}+c_{N-1}*T(N-1,x) + 2*sum c_{n}*T(n,x)
 // note: n is the coeffs number in c_{n} and N is total number of coeffs.
 // -> return value: integral_{xi}^{xf} T(n,x)dx */
-double Integrate_ChebTn(const unsigned n,const double xi,const double xf)
+double Integrate_ChebTn(const Uint n,const double xi,const double xf)
 {
   if (fabs(xi) > 1. || fabs(xf) > 1.)
     Error0("Bad argument for Int_ChebTn function.\n");
@@ -490,7 +490,7 @@ double Integrate_ChebTn(const unsigned n,const double xi,const double xf)
 // in this version, we assume n is even, so it won't check it every time.
 // note: n is the coeffs number in c_{n} and N is total number of coeffs.
 // -> return value: integral_{-1}^{1} T(n,x)dx */
-static double Int_ChebTn_OPTM(const unsigned n,const unsigned N)
+static double Int_ChebTn_OPTM(const Uint n,const Uint N)
 {
   if (n == 0)
     return 2.;
@@ -506,7 +506,7 @@ static double Int_ChebTn_OPTM(const unsigned n,const unsigned N)
 // note: det (d(x,y,z)/d(N0,N1,N2)) = 1/(det (d(N0,N1,N2)/d(x,y,z)))
 // we use, this method, calculating d(N0,N1,N2)/d(x,y,z) is faster
 // than d(x,y,z)/d(N0,N1,N2). */
-static double J_xyzN0N1N2(Patch_T *const patch,const unsigned ijk)
+static double J_xyzN0N1N2(Patch_T *const patch,const Uint ijk)
 {
   const double a00 = dq2_dq1(patch,_N0_,_x_,ijk);
   const double a01 = dq2_dq1(patch,_N0_,_y_,ijk);

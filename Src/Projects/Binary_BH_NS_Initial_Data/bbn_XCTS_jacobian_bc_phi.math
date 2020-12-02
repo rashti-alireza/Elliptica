@@ -27,7 +27,7 @@ C_arg2 = [ijk == lmn]; # for kd
 # patch, S, B, E_Trans, node, I0, Ni, Nj, K0, Nk, i,j,k.
 # THUS, DO NOT DEFINE THEM AGAIN.
 `  DDM_SCHUR_JACOBIAN_BC_DECLARE`;
-`  unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */`;
+`  Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */`;
 
 # declare for Cpi
 Declare = 

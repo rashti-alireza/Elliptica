@@ -56,16 +56,16 @@ static int Ylm_trans_test(Grid_T *const grid)
 {
   const char *const par = Pgets("Test_Ylm_Transformation");
   const double sign[2] = {1.,-1.};
-  unsigned Ntheta = 0;
-  unsigned Nphi   = 0;
-  unsigned lmax   = 0;
-  unsigned N;
+  Uint Ntheta = 0;
+  Uint Nphi   = 0;
+  Uint lmax   = 0;
+  Uint N;
   double *f;/* f(theta,phi) theta = [0,phi], phi = [0,2pi] */
   double  *realClm;/* f(theta,phi) = Re(Clm)*Ylm(theta,phi) */
   double  *imagClm;/* f(theta,phi) = Im(Clm)*Ylm(theta,phi) */
   double phi,theta,df;
-  unsigned Smem;
-  unsigned i,j,l,m,lm;
+  Uint Smem;
+  Uint i,j,l,m,lm;
   
   /* initialize tables */
   init_Legendre_root_function();
@@ -73,7 +73,7 @@ static int Ylm_trans_test(Grid_T *const grid)
   if (regex_search("[[:digit:]]+",par))
   {
     char *s = regex_find("[[:digit:]]+",par);
-    N = (unsigned)atoi(s);
+    N = (Uint)atoi(s);
     _free(s);
   }
   else
@@ -175,10 +175,10 @@ static int Ylm_trans_test(Grid_T *const grid)
 static int Ylm_derivatives_test(Grid_T *const grid)
 {
   const char *const par = Pgets("Test_Ylm_Transformation");
-  unsigned Ntheta = 0;
-  unsigned Nphi   = 0;
-  unsigned lmax   = 0;
-  unsigned N;
+  Uint Ntheta = 0;
+  Uint Nphi   = 0;
+  Uint lmax   = 0;
+  Uint N;
   double *f;/* analytic: f(theta,phi), theta = [0,phi], phi = [0,2pi] */
   double *f_dphi;/* analytic: df(theta,phi)/dphi, theta = [0,phi], phi = [0,2pi] */
   double *f_dtheta;/* analytic: df(theta,phi)/dtheta, theta = [0,phi], phi = [0,2pi] */
@@ -187,8 +187,8 @@ static int Ylm_derivatives_test(Grid_T *const grid)
   double *realClm;/* f(theta,phi) = Re(Clm)*Ylm(theta,phi) */
   double *imagClm;/* f(theta,phi) = Im(Clm)*Ylm(theta,phi) */
   double phi,theta,df;
-  unsigned Smem;
-  unsigned i,j;
+  Uint Smem;
+  Uint i,j;
   
   /* initialize tables */
   init_Legendre_root_function();
@@ -196,7 +196,7 @@ static int Ylm_derivatives_test(Grid_T *const grid)
   if (regex_search("[[:digit:]]+",par))
   {
     char *s = regex_find("[[:digit:]]+",par);
-    N = (unsigned)atoi(s);
+    N = (Uint)atoi(s);
     _free(s);
   }
   else
@@ -282,11 +282,11 @@ static int Ylm_derivatives_test(Grid_T *const grid)
 // ->return value: TEST_SUCCESSFUL */
 static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
 {
-  const unsigned Nphi0 = 9;
-  const unsigned Nphi1 = 13;
-  const unsigned l0 = Nphi0/2+1;
-  const unsigned l1 = Nphi1/2+1;
-  const unsigned l0l1 = l0*l1;
+  const Uint Nphi0 = 9;
+  const Uint Nphi1 = 13;
+  const Uint l0 = Nphi0/2+1;
+  const Uint l1 = Nphi1/2+1;
+  const Uint l0l1 = l0*l1;
   double *f = alloc_double(Nphi0*Nphi1);
   double *df_dx = alloc_double(Nphi0*Nphi1);
   double *df_dy = alloc_double(Nphi0*Nphi1);
@@ -294,7 +294,7 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
   double *realC = 0;
   double *imagC = 0; 
   double x,y;
-  unsigned i,j,m0,m1,ij;
+  Uint i,j,m0,m1,ij;
   
   /* populate the values */
   for (i = 0; i < Nphi0; ++i)
@@ -329,7 +329,7 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
     {
       for (m1 = 0; m1 < l1; ++m1)
       {
-        unsigned m0m1 = IJ(m0,m1,l1);
+        Uint m0m1 = IJ(m0,m1,l1);
         printf("Crr(%u,%u)+Cri(%u,%u)I = %+.2f %+.2fI\n",
               m0,m1,m0,m1,realC[m0m1],imagC[m0m1]);
       }
@@ -340,7 +340,7 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
     {
       for (m1 = 0; m1 < l1; ++m1)
       {
-        unsigned m0m1 = IJ(m0,m1,l1);
+        Uint m0m1 = IJ(m0,m1,l1);
         printf("Cir(%u,%u)+Cii(%u,%u)I = %+.2f %+.2fI\n",
               m0,m1,m0,m1,realC[l0l1+m0m1],imagC[l0l1+m0m1]);
       }
@@ -413,11 +413,11 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
 // ->return value: TEST_SUCCESSFUL */
 static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
 {
-  const unsigned Ntheta = 10;
-  const unsigned Nphi = 10;
-  const unsigned l0   = Ntheta;
-  const unsigned l1   = Nphi/2+1;
-  const unsigned l0l1 = l0*l1;
+  const Uint Ntheta = 10;
+  const Uint Nphi = 10;
+  const Uint l0   = Ntheta;
+  const Uint l1   = Nphi/2+1;
+  const Uint l0l1 = l0*l1;
   double *f = alloc_double(Ntheta*Nphi);
   double *df_dx = alloc_double(Ntheta*Nphi);
   double *df_dy = alloc_double(Ntheta*Nphi);
@@ -425,7 +425,7 @@ static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
   double *realC = 0;
   double *imagC = 0; 
   double x,y;
-  unsigned i,j,ij,m0,m1;
+  Uint i,j,ij,m0,m1;
  
   /* populate the values */
   for (i = 0; i < Ntheta; ++i)
@@ -456,7 +456,7 @@ static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
     {
       for (m1 = 0; m1 < l1; ++m1)
       {
-        unsigned m0m1 = IJ(m0,m1,l1);
+        Uint m0m1 = IJ(m0,m1,l1);
         if ( GRT(fabs(realC[m0m1]),eps) ||
              GRT(fabs(imagC[m0m1]),eps) )
         printf("Crr(%u,%u)+Cri(%u,%u)I = %g %gI\n",
@@ -469,7 +469,7 @@ static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
     {
       for (m1 = 0; m1 < l1; ++m1)
       {
-        unsigned m0m1 = IJ(m0,m1,l1);
+        Uint m0m1 = IJ(m0,m1,l1);
         if ( GRT(fabs(realC[l0l1+m0m1]),eps) ||
              GRT(fabs(imagC[l0l1+m0m1]),eps))
         printf("Cir(%u,%u)+Cii(%u,%u)I = %+g %+gI\n",
@@ -542,17 +542,17 @@ static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
 // ->return value: TEST_SUCCESSFUL */
 static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid)
 {
-  unsigned N = 0;
+  Uint N = 0;
   const char *const par = Pgets("Test_FourierTransformation");
   double *f;/* f(x) x = [0,2pi] */
   double complex *c;/* f(x) = c_i*exp(imagI*i*x) */
   double x;
-  unsigned i,j;
+  Uint i,j;
   
   if (regex_search("[[:digit:]]+",par))
   {
     char *s = regex_find("[[:digit:]]+",par);
-    N = (unsigned)atoi(s);
+    N = (Uint)atoi(s);
     _free(s);
   }
   else
@@ -623,7 +623,7 @@ static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid)
 */
 int interpolation_tests(Grid_T *const grid)
 {
-  unsigned p;
+  Uint p;
   double *X,*Y,*Z;
   Field_T *field;
   int status;
@@ -631,7 +631,7 @@ int interpolation_tests(Grid_T *const grid)
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    const unsigned *n = patch->n;
+    const Uint *n = patch->n;
     const double *min = patch->min;
     const double *max = patch->max;
     
@@ -717,7 +717,7 @@ int interpolation_tests(Grid_T *const grid)
 static int interpolation_tests_N_cubic_spline_1d(void)
 {
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned N = (unsigned)Pgeti("n_a");
+  const Uint N = (Uint)Pgeti("n_a");
   double *f = alloc_double(N);
   double *x = alloc_double(N);
   const double a = -M_PI, b = 3/4*M_PI;/* an arbitrary interval  */
@@ -725,7 +725,7 @@ static int interpolation_tests_N_cubic_spline_1d(void)
   double s = (b-a)/(N-1);
   double t,interp;
   Flag_T flg = NONE;
-  unsigned i;
+  Uint i;
   
   for (i = 0; i < N; ++i)
   {
@@ -804,7 +804,7 @@ static int interpolation_tests_N_cubic_spline_1d(void)
 static int interpolation_tests_Neville_1d(void)
 {
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned N = (unsigned)Pgeti("n_a");
+  const Uint N = (Uint)Pgeti("n_a");
   double *f = alloc_double(N);
   double *x = alloc_double(N);
   const double a = -M_PI, b = 3/4*M_PI;/* an arbitrary interval  */
@@ -812,7 +812,7 @@ static int interpolation_tests_Neville_1d(void)
   const double s = (b-a)/(N-1);
   double t,interp;
   Flag_T flg = NONE;
-  unsigned i;
+  Uint i;
   
   for (i = 0; i < N; ++i)
   {
@@ -857,11 +857,11 @@ static int interpolation_tests_Neville_1d(void)
 /* testing interpolation in X direction and comparing
 // to analytical value and returning the result.
 // ->return value: result of test. */
-static int interpolation_tests_X(Field_T *const field,const double *const X,const unsigned N)
+static int interpolation_tests_X(Field_T *const field,const double *const X,const Uint N)
 {
   Interpolation_T *interp_s = init_interpolation();
   Patch_T *const patch = field->patch;
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
   double diff = 0;
   const double max_f = L_inf(patch->nn,field->v);
@@ -870,7 +870,7 @@ static int interpolation_tests_X(Field_T *const field,const double *const X,cons
   double xc[3];/* Cartesian coord */
   double Xc[3];/* Curvilinear coord */
   Flag_T flg;
-  unsigned i,j;
+  Uint i,j;
   
   /* setting up interpolation */
   interp_s->field = field;
@@ -880,8 +880,8 @@ static int interpolation_tests_X(Field_T *const field,const double *const X,cons
   flg = NONE;
   for (j = 0; j < N; ++j)/* -> choose different slices for testing */
   {
-    interp_s->J = (unsigned) floor(random_double(0,n[1],j));
-    interp_s->K = (unsigned) floor(random_double(0,n[2],1));
+    interp_s->J = (Uint) floor(random_double(0,n[1],j));
+    interp_s->K = (Uint) floor(random_double(0,n[2],1));
     
     Y = node[L(n,0,interp_s->J,0)]->X[1];
     Z = node[L(n,0,0,interp_s->K)]->X[2];
@@ -918,11 +918,11 @@ static int interpolation_tests_X(Field_T *const field,const double *const X,cons
 // to analytical value and returning the result.
 // ->return value: result of test.
 */
-static int interpolation_tests_Y(Field_T *const field,const double *const Y,const unsigned N)
+static int interpolation_tests_Y(Field_T *const field,const double *const Y,const Uint N)
 {
   Interpolation_T *interp_s = init_interpolation();
   Patch_T *const patch = field->patch;
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
   double diff = 0;
   const double max_f = L_inf(patch->nn,field->v);
@@ -931,7 +931,7 @@ static int interpolation_tests_Y(Field_T *const field,const double *const Y,cons
   double xc[3];/* Cartesian coord */
   double Xc[3];/* Curvilinear coord */
   Flag_T flg;
-  unsigned i,j;
+  Uint i,j;
   
   /* setting up interpolation */
   interp_s->field = field;
@@ -941,8 +941,8 @@ static int interpolation_tests_Y(Field_T *const field,const double *const Y,cons
   flg = NONE;
   for (j = 0; j < N; ++j)/* -> choose different slices for testing */
   {
-    interp_s->I = (unsigned) floor(random_double(0,n[0],j));
-    interp_s->K = (unsigned) floor(random_double(0,n[2],1));
+    interp_s->I = (Uint) floor(random_double(0,n[0],j));
+    interp_s->K = (Uint) floor(random_double(0,n[2],1));
     
     X = node[L(n,interp_s->I,0,0)]->X[0];
     Z = node[L(n,0,0,interp_s->K)]->X[2];
@@ -979,11 +979,11 @@ static int interpolation_tests_Y(Field_T *const field,const double *const Y,cons
 // to analytical value and returning the result.
 // ->return value: result of test.
 */
-static int interpolation_tests_Z(Field_T *const field,const double *const Z,const unsigned N)
+static int interpolation_tests_Z(Field_T *const field,const double *const Z,const Uint N)
 {
   Interpolation_T *interp_s = init_interpolation();
   Patch_T *const patch = field->patch;
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
   double diff = 0;
   const double max_f = L_inf(patch->nn,field->v);
@@ -992,7 +992,7 @@ static int interpolation_tests_Z(Field_T *const field,const double *const Z,cons
   double xc[3];/* Cartesian coord */
   double Xc[3];/* Curvilinear coord */
   Flag_T flg;
-  unsigned i,j;
+  Uint i,j;
   
   /* setting up interpolation */
   interp_s->field = field;
@@ -1002,8 +1002,8 @@ static int interpolation_tests_Z(Field_T *const field,const double *const Z,cons
   flg = NONE;
   for (j = 0; j < N; ++j)/* -> choose different slices for testing */
   {
-    interp_s->J = (unsigned) floor(random_double(0,n[1],j));
-    interp_s->I = (unsigned) floor(random_double(0,n[0],1));
+    interp_s->J = (Uint) floor(random_double(0,n[1],j));
+    interp_s->I = (Uint) floor(random_double(0,n[0],1));
     
     Y = node[L(n,0,interp_s->J,0)]->X[1];
     X = node[L(n,interp_s->I,0,0)]->X[0];
@@ -1040,11 +1040,11 @@ static int interpolation_tests_Z(Field_T *const field,const double *const Z,cons
 // to analytical value and returning the result.
 // ->return value: result of test.
 */
-static int interpolation_tests_XY(Field_T *const field,const double *const X,const double *const Y,const unsigned Nx,const unsigned Ny)
+static int interpolation_tests_XY(Field_T *const field,const double *const X,const double *const Y,const Uint Nx,const Uint Ny)
 {
   Interpolation_T *interp_s = init_interpolation();
   Patch_T *const patch = field->patch;
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
   double diff = 0;
   const double max_f = L_inf(patch->nn,field->v);
@@ -1053,7 +1053,7 @@ static int interpolation_tests_XY(Field_T *const field,const double *const X,con
   double xc[3];/* Cartesian coord */
   double Xc[3];/* Curvilinear coord */
   Flag_T flg;
-  unsigned a,b,c;
+  Uint a,b,c;
   
   /* setting up interpolation */
   interp_s->field = field;
@@ -1063,7 +1063,7 @@ static int interpolation_tests_XY(Field_T *const field,const double *const X,con
   flg = NONE;
   for (a = 0; a < Nx; ++a)/* -> choose different slices for testing */
   {
-    interp_s->K = (unsigned) floor(random_double(0,n[2],a));
+    interp_s->K = (Uint) floor(random_double(0,n[2],a));
     
     Z = node[L(n,0,0,interp_s->K)]->X[2];
     Xc[2] = Z;
@@ -1104,11 +1104,11 @@ static int interpolation_tests_XY(Field_T *const field,const double *const X,con
 // to analytical value and returning the result.
 // ->return value: result of test.
 */
-static int interpolation_tests_XZ(Field_T *const field,const double *const X,const double *const Z,const unsigned Nx,const unsigned Nz)
+static int interpolation_tests_XZ(Field_T *const field,const double *const X,const double *const Z,const Uint Nx,const Uint Nz)
 {
   Interpolation_T *interp_s = init_interpolation();
   Patch_T *const patch = field->patch;
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
   double diff = 0;
   const double max_f = L_inf(patch->nn,field->v);
@@ -1117,7 +1117,7 @@ static int interpolation_tests_XZ(Field_T *const field,const double *const X,con
   double xc[3];/* Cartesian coord */
   double Xc[3];/* Curvilinear coord */
   Flag_T flg;
-  unsigned a,b,c;
+  Uint a,b,c;
   
   /* setting up interpolation */
   interp_s->field = field;
@@ -1127,7 +1127,7 @@ static int interpolation_tests_XZ(Field_T *const field,const double *const X,con
   flg = NONE;
   for (a = 0; a < Nx; ++a)/* -> choose different slices for testing */
   {
-    interp_s->J = (unsigned) floor(random_double(0,n[1],a));
+    interp_s->J = (Uint) floor(random_double(0,n[1],a));
     
     Y = node[L(n,0,interp_s->J,0)]->X[1];
     Xc[1] = Y;
@@ -1169,11 +1169,11 @@ static int interpolation_tests_XZ(Field_T *const field,const double *const X,con
 // to analytical value and returning the result.
 // ->return value: result of test.
 */
-static int interpolation_tests_YZ(Field_T *const field,const double *const Y,const double *const Z,const unsigned Ny,const unsigned Nz)
+static int interpolation_tests_YZ(Field_T *const field,const double *const Y,const double *const Z,const Uint Ny,const Uint Nz)
 {
   Interpolation_T *interp_s = init_interpolation();
   Patch_T *const patch = field->patch;
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
   double diff = 0;
   const double max_f = L_inf(patch->nn,field->v);
@@ -1182,7 +1182,7 @@ static int interpolation_tests_YZ(Field_T *const field,const double *const Y,con
   double xc[3];/* Cartesian coord */
   double Xc[3];/* Curvilinear coord */
   Flag_T flg;
-  unsigned a,b,c;
+  Uint a,b,c;
   
   /* setting up interpolation */
   interp_s->field = field;
@@ -1192,7 +1192,7 @@ static int interpolation_tests_YZ(Field_T *const field,const double *const Y,con
   flg = NONE;
   for (a = 0; a < Ny; ++a)/* -> choose different slices for testing */
   {
-    interp_s->I = (unsigned) floor(random_double(0,n[0],a));
+    interp_s->I = (Uint) floor(random_double(0,n[0],a));
     
     X = node[L(n,interp_s->I,0,0)]->X[0];
     Xc[0] = X;
@@ -1234,18 +1234,18 @@ static int interpolation_tests_YZ(Field_T *const field,const double *const Y,con
 // to analytical value and returning the result.
 // ->return value: result of test.
 */
-static int interpolation_tests_XYZ(Field_T *const field,const double *const X,const double *const Y,const double *const Z,const unsigned Nx,const unsigned Ny,const unsigned Nz)
+static int interpolation_tests_XYZ(Field_T *const field,const double *const X,const double *const Y,const double *const Z,const Uint Nx,const Uint Ny,const Uint Nz)
 {
   Interpolation_T *interp_s = init_interpolation();
   Patch_T *const patch = field->patch;
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   double diff = 0;
   double max_f = L_inf(patch->nn,field->v);
   const double tol = n[0]*n[0]*n[1]*n[1]*n[2]*n[2]*1e-14*(max_f > 1 ? max_f : 1.);
   double xc[3];/* Cartesian coord */
   double Xc[3];/* Curvilinear coord */
   Flag_T flg;
-  unsigned a,b,c;
+  Uint a,b,c;
   
   /* setting up interpolation */
   interp_s->field = field;
@@ -1309,7 +1309,7 @@ int derivative_tests(Grid_T *const grid)
   const char *path_par;
   char *path;
   char der_s[MAXSTR];
-  unsigned fi;
+  Uint fi;
   Flag_T flg;
   
   path_par = Pgets("output_directory_path");
@@ -1429,7 +1429,7 @@ int derivative_tests(Grid_T *const grid)
     double *numc[N_FUNC];/* numeric */
     enum FUNC_E e;
     struct Error_S error[1] = {0};
-    unsigned p;
+    Uint p;
     
     /* initializing, make them to point to 0 */
     for (e = FUNC; e < N_FUNC; ++e)
@@ -1631,7 +1631,7 @@ static Flag_T compare_derivative(const char *const name,const double *const numc
 // 1e-14*max(func)*max(Jacobian)^(order of derivative )*n*n^(2*order of derivative)*10  */
 static double calculate_expected_precision_for_derivative(const Field_T *const func,const enum FUNC_E fn,const Patch_T *const patch)
 {
-  unsigned o = order_of_derivative(fn);
+  Uint o = order_of_derivative(fn);
   
   UNUSED(patch);
   
@@ -1639,9 +1639,9 @@ static double calculate_expected_precision_for_derivative(const Field_T *const f
 }
 
 /* ->retun value: order of derivative according to fn */
-static unsigned order_of_derivative(const enum FUNC_E fn)
+static Uint order_of_derivative(const enum FUNC_E fn)
 {
-  unsigned o = 0;
+  Uint o = 0;
   
   switch (fn)
   {
@@ -1687,10 +1687,10 @@ static unsigned order_of_derivative(const enum FUNC_E fn)
 /* making N random number in the within min and max.
 // ->return value: random number(s)
 */
-static double *make_random_number(const unsigned N,const double min,const double max)
+static double *make_random_number(const Uint N,const double min,const double max)
 {
   double *x = calloc(N,sizeof(*x));
-  unsigned i;
+  Uint i;
   
   for (i = 0; i < N; ++i)
   {
@@ -1703,7 +1703,7 @@ static double *make_random_number(const unsigned N,const double min,const double
 /* free function structure form grid to pointer to double */
 static void free_func_Patch2Pdouble(sFunc_Patch2Pdouble_T **func)
 {
-  unsigned i;
+  Uint i;
   
   for (i = 0; func[i] != 0; ++i)
   {

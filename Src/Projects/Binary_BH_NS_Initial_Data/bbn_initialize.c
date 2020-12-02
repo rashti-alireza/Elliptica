@@ -72,7 +72,7 @@ static int IsThereAnyUsefulCheckpointFile(void)
 {
   int ret = 0;
   const int FOLDER_TYPE   = 4;
-  const unsigned MAX_LIST_NUM = 10;
+  const Uint MAX_LIST_NUM = 10;
   DIR *prev_dir;
   struct dirent *ent;
   struct stat st = {0};/* status of files */
@@ -90,7 +90,7 @@ static int IsThereAnyUsefulCheckpointFile(void)
   char prev_data_file_path[MAX_ARRx5];
   char *aux,str[MAX_ARRx5];
   long latest_mtime = 0;
-  unsigned count,i;
+  Uint count,i;
   
   /* if there is no previous folder */
   if (!cur_folder_index)
@@ -780,7 +780,7 @@ static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
   double v2[3] = {0};
   double v0[3] = {0};
   double  v[3] = {0};
-  static unsigned iter = 0;
+  static Uint iter = 0;
   
   /* get previous P_ADMs */
   p1[0] = Pgetd("Px_ADM_prev");
@@ -852,7 +852,7 @@ static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
   double v2[3] = {0};
   double v0[3] = {0};
   double  v[3] = {0};
-  static unsigned iter = 0;
+  static Uint iter = 0;
   
   /* get previous P_ADMs */
   p1[1] = Pgetd("Py_ADM_prev");
@@ -923,7 +923,7 @@ static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
   double v2[3] = {0};
   double v0[3] = {0};
   double  v[3] = {0};
-  static unsigned iter = 0;
+  static Uint iter = 0;
   
   /* get previous P_ADMs */
   p1[2] = Pgetd("Pz_ADM_prev");
@@ -985,13 +985,13 @@ static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
 // the enthalpy be 0 at (0,NS_C,0), using Taylor expansion, assuming dh/dy|center = 0. */
 static void adjust_NS_center_tune_enthalpy(Grid_T *const grid,const double dhx0,const double dhz0)
 {
-  unsigned p;
+  Uint p;
   
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned nn    = patch->nn;
-    unsigned ijk;
+    Uint nn    = patch->nn;
+    Uint ijk;
     
     if (!IsItNSPatch(patch) && !IsItNSSurroundingPatch(patch))
       continue;
@@ -1040,7 +1040,7 @@ static void adjust_NS_center_draw_enthalpy(Grid_T *const grid)
   sprintf(par_name,"grid%u_NS_center_xyz",grid->gn);
   NS_center = Pgetdd(par_name);
   const double R[3] = {NS_center[0],NS_center[1]-C,NS_center[2]};
-  unsigned p,ijk;
+  Uint p,ijk;
   
   /* if it is already located at the designted point */
   if (EQL(0,R[0]) && EQL(0,R[1]) && EQL(0,R[2]))
@@ -1066,7 +1066,7 @@ static void adjust_NS_center_draw_enthalpy(Grid_T *const grid)
     assert(stem);
     stem++;
     sprintf(hint,"%s",stem);
-    unsigned nn = patch->nn;
+    Uint nn = patch->nn;
     double x[3],Xp[3];
     for (ijk = 0; ijk < nn; ++ijk)
     {
@@ -1276,7 +1276,7 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
   root->verbose       = 1;
   root->type          = Pgets("RootFinder_Method");
   root->tolerance     = Pgetd("RootFinder_Tolerance");
-  root->MaxIter       = (unsigned)Pgeti("RootFinder_Max_Number_of_Iteration");
+  root->MaxIter       = (Uint)Pgeti("RootFinder_Max_Number_of_Iteration");
   root->x_gss         = guess;
   root->params        = params;
   root->f[0]          = force_balance_root_finder_eq;
@@ -1317,14 +1317,14 @@ static void find_NS_center(Grid_T *const grid)
   Flag_T success_f = NONE;
   double guess[3];/* initial guess for root finder */
   char par_name[1000];
-  unsigned p;
+  Uint p;
   
   guess[0] = guess[2] = 0;
   guess[1] = -0.5*Pgetd("BH_NS_separation");
   params->root_finder = root;
   root->type        = Pgets("RootFinder_Method");
   root->tolerance   = Pgetd("RootFinder_Tolerance");
-  root->MaxIter     = (unsigned)Pgeti("RootFinder_Max_Number_of_Iteration");
+  root->MaxIter     = (Uint)Pgeti("RootFinder_Max_Number_of_Iteration");
   root->x_gss       = guess;
   root->params      = params;
   root->verbose     = 1;
@@ -1386,7 +1386,7 @@ static double dh_dx0_root_finder_eq(void *params,const double *const x)
   DECLARE_FIELD(denthalpy_D0);
   Interpolation_T *interp_s;
   Needle_T *needle = alloc_needle();
-  unsigned flg;
+  Uint flg;
   double interp,X[3];
   
   needle->grid = patch->grid;
@@ -1425,7 +1425,7 @@ static double dh_dx1_root_finder_eq(void *params,const double *const x)
   DECLARE_FIELD(denthalpy_D1);
   Interpolation_T *interp_s;
   Needle_T *needle = alloc_needle();
-  unsigned flg;
+  Uint flg;
   double interp,X[3];
   
   needle->grid = patch->grid;
@@ -1464,7 +1464,7 @@ static double dh_dx2_root_finder_eq(void *params,const double *const x)
   DECLARE_FIELD(denthalpy_D2);
   Interpolation_T *interp_s;
   Needle_T *needle = alloc_needle();
-  unsigned flg;
+  Uint flg;
   double interp,X[3];
   
   needle->grid = patch->grid;
@@ -1537,7 +1537,7 @@ static void find_Euler_eq_const(Grid_T *const grid)
   
   root->type        = Pgets("RootFinder_Method");
   root->tolerance   = Pgetd("RootFinder_Tolerance");
-  root->MaxIter     = (unsigned)Pgeti("RootFinder_Max_Number_of_Iteration");
+  root->MaxIter     = (Uint)Pgeti("RootFinder_Max_Number_of_Iteration");
   root->x_gss       = guess;
   root->params      = params;
   root->f[0]        = Euler_eq_const_rootfinder_eq;
@@ -1566,7 +1566,7 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   printf("|--> Solving {Px(y_CM) = 0 && Py(x_CM) = 0} ...\n");
   const double W      = Pgetd("P_ADM_control_update_weight");
   const double dP     = Pgetd("P_ADM_control_tolerance");
-  const unsigned Iter = (unsigned)Pgeti("P_ADM_control_iteration");
+  const Uint Iter = (Uint)Pgeti("P_ADM_control_iteration");
   Root_Finder_T *root = 0;
   struct PxPy_RootFinder_S params[1] = {0};
   const double x0[2] = {Pgetd("x_CM"),Pgetd("y_CM")};/* NOTE: index 0 is for x and 1 for y */
@@ -1575,7 +1575,7 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   Grid_T *freedata_grid = 0;/* don't update for inside BH patches */
   Patch_T **freedata_patch = 0;/* all but inside BH patches */
   double p_adm[3] = {0},j_adm[3] = {0};
-  unsigned i,p;
+  Uint i,p;
   
   /* populate Aij grid */
   freedata_grid = calloc(1,sizeof(*freedata_grid));
@@ -1719,7 +1719,7 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   Patch_T **freedata_patch = 0;/* all but inside BH patches */
   Observable_T *obs = 0;
   double p_adm[3] = {0},j_adm[3] = {0};
-  unsigned i,p;
+  Uint i,p;
   
   printf("|--> adjusting Px_ADM by y_CM ...\n");
   
@@ -1803,7 +1803,7 @@ static void Pz_ADM_is0_by_BH_Vz(Grid_T *const grid)
   Patch_T **freedata_patch = 0;/* all but inside BH patches */
   Observable_T *obs = 0;
   double p_adm[3] = {0},j_adm[3] = {0};
-  unsigned i,p;
+  Uint i,p;
   
   printf("|--> adjusting Pz_ADM by BH_Vz ...\n");
   
@@ -1887,7 +1887,7 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   Patch_T **freedata_patch = 0;/* all but inside BH patches */
   Observable_T *obs = 0;
   double p_adm[3] = {0},j_adm[3] = {0};
-  unsigned i,p;
+  Uint i,p;
   
   printf("|--> adjusting Py_ADM by x_CM ...\n");
   
@@ -1961,8 +1961,8 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
 // over the whole grid excluding inside of BH */
 static void update_B1_dB1_Beta_dBete_Aij_dAij(Grid_T *const grid)
 {
-  const unsigned np = grid->np;
-  unsigned p;
+  const Uint np = grid->np;
+  Uint p;
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < np; ++p)
@@ -2137,12 +2137,12 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     return;
   }
   
-  const unsigned np = grid_next->np;
+  const Uint np = grid_next->np;
   const int change_res_flg = Pgeti("did_resolution_change?");
   const int change_NS_flg  = Pgeti("did_NS_surface_change?");
   const int change_AH_flg  = Pgeti("did_AH_surface_change?");
  
-  unsigned p;
+  Uint p;
  
   /* the following fields are interpolated: */
   /* B0_U[0-2],psi,eta,phi,enthalpy */
@@ -2201,9 +2201,9 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     for (p = 0; p < np; ++p)
     {
       Patch_T *patch = grid_next->patch[p];
-      unsigned nn = patch->nn;
+      Uint nn = patch->nn;
       char hint[100],*root_name;
-      unsigned ijk;
+      Uint ijk;
       
       root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
       assert(root_name);
@@ -2290,7 +2290,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     for (p = 0; p < np; ++p)
     {
       Patch_T *patch = grid_next->patch[p];
-      unsigned nn    = patch->nn;
+      Uint nn    = patch->nn;
       char *root_name;
       
       root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
@@ -2300,7 +2300,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
       if (IsItNSPatch(patch))
       {
         Patch_T *patchp = GetPatch(root_name,grid_prev);
-        unsigned ijk;
+        Uint ijk;
         
         prep_and_call(phi)
         prep_and_call(enthalpy)
@@ -2340,7 +2340,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
                )
       {
         Patch_T *patchp = GetPatch(root_name,grid_prev);
-        unsigned ijk;
+        Uint ijk;
         
         prep_and_call(B0_U0)
         prep_and_call(B0_U1)
@@ -2373,7 +2373,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     }/* end of for (p = 0; p < np; ++p) */
     
     Patch_T *BH_patches[6] = {0};/* 6 cubed spherical */
-    unsigned count = 0;
+    Uint count = 0;
     for (p = 0; p < np; ++p)
     {
       Patch_T *patch = grid_next->patch[p];
@@ -2389,9 +2389,9 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     for (p = 0; p < 6; ++p)
     {
       Patch_T *patch = BH_patches[p];
-      unsigned nn = patch->nn;
+      Uint nn = patch->nn;
       char hint[100],*root_name;
-      unsigned ijk;
+      Uint ijk;
       
       root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
       assert(root_name);
@@ -2441,7 +2441,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     for (p = 0; p < np; ++p)
     {
       Patch_T *patch = grid_next->patch[p];
-      unsigned nn    = patch->nn;
+      Uint nn    = patch->nn;
       char *root_name;
       
       root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
@@ -2455,7 +2455,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
          )
       {
         Patch_T *patchp = GetPatch(root_name,grid_prev);
-        unsigned ijk;
+        Uint ijk;
         
         prep_and_call(B0_U0)
         prep_and_call(B0_U1)
@@ -2489,7 +2489,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     
     /* interpolating from the NS and around patches: */
     Patch_T *NS_patches[13] = {0};/* 2*6 cubed spherical + 1 box*/
-    unsigned count = 0;
+    Uint count = 0;
     for (p = 0; p < np; ++p)
     {
       Patch_T *patch = grid_next->patch[p];
@@ -2508,9 +2508,9 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     for (p = 0; p < 13; ++p)
     {
       Patch_T *patch = NS_patches[p];
-      unsigned nn = patch->nn;
+      Uint nn = patch->nn;
       char hint[100],*root_name;
-      unsigned ijk;
+      Uint ijk;
       
       root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
       assert(root_name);
@@ -2597,7 +2597,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     for (p = 0; p < np; ++p)
     {
       Patch_T *patch = grid_next->patch[p];
-      unsigned nn    = patch->nn;
+      Uint nn    = patch->nn;
       char *root_name;
       
       root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
@@ -2610,7 +2610,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
          )
       {
         Patch_T *patchp = GetPatch(root_name,grid_prev);
-        unsigned ijk;
+        Uint ijk;
       
         prep_and_call(B0_U0)
         prep_and_call(B0_U1)
@@ -2644,7 +2644,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     
     /* interpolating from the NS, BH around patches: */
     Patch_T *NS_BH_patches[19] = {0};/* 3*6 cubed spherical + 1 box*/
-    unsigned count = 0;
+    Uint count = 0;
     for (p = 0; p < np; ++p)
     {
       Patch_T *patch = grid_next->patch[p];
@@ -2665,9 +2665,9 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     for (p = 0; p < 19; ++p)
     {
       Patch_T *patch = NS_BH_patches[p];
-      unsigned nn = patch->nn;
+      Uint nn = patch->nn;
       char hint[100],*root_name;
-      unsigned ijk;
+      Uint ijk;
       
       root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
       assert(root_name);
@@ -2760,8 +2760,8 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   for (p = 0; p < np; ++p)
   {
     Patch_T *patch = grid_next->patch[p];
-    unsigned nn = patch->nn;
-    unsigned ijk;
+    Uint nn = patch->nn;
+    Uint ijk;
     
     bbn_update_B1_U012(patch);
     bbn_update_Beta_U0(patch);
@@ -2835,8 +2835,8 @@ static int find_X_and_patch(const double *const x,const char *const hint,Grid_T 
 {
   Needle_T *needle = alloc_needle();
   const double LOW_RES_ERR = 1E-9;
-  unsigned *found;
-  unsigned p;
+  Uint *found;
+  Uint p;
   int ret = 1;
   
   needle->grid = grid;
@@ -2937,8 +2937,8 @@ static void find_NS_surface_Ylm_SD_CS(Grid_T *const grid,struct Grid_Params_S *c
   
   /* the stucture for the root finder */
   struct NS_surface_RootFinder_S par[1];
-  unsigned Ntheta,Nphi;/* total number of theta and phi points */
-  const unsigned lmax = (unsigned)Pgeti("NS_surface_Ylm_expansion_max_l");
+  Uint Ntheta,Nphi;/* total number of theta and phi points */
+  const Uint lmax = (Uint)Pgeti("NS_surface_Ylm_expansion_max_l");
   const double RESIDUAL = sqrt(Pgetd("RootFinder_Tolerance"));
   const double max_h_L2_res = Pgetd("NS_enthalpy_allowed_residual");
   double h_L2_res = 0;
@@ -2953,14 +2953,14 @@ static void find_NS_surface_Ylm_SD_CS(Grid_T *const grid,struct Grid_Params_S *c
   double X[3],x[3],N[3];
   char stem[1000],*affix;
   int NS_surface_finder_work_flg = 1;/* whether surface finder worked or not */
-  unsigned i,j;
-  unsigned l,m;
+  Uint i,j;
+  Uint l,m;
   
   /* populate root finder */
   Root_Finder_T *root = init_root_finder(1);
   root->type      = "Steepest_Descent";
   root->tolerance = Pgetd("RootFinder_Tolerance");
-  root->MaxIter   = (unsigned)Pgeti("RootFinder_Max_Number_of_Iteration");
+  root->MaxIter   = (Uint)Pgeti("RootFinder_Max_Number_of_Iteration");
   root->x_gss     = &guess;
   root->params    = par;
   root->f[0]      = bbn_NS_surface_enthalpy_eq;
@@ -3127,7 +3127,7 @@ static void find_NS_surface_Ylm_SD_CS(Grid_T *const grid,struct Grid_Params_S *c
   l = lmax;
   for (m = 0; m <= l; ++m)
   {
-    unsigned lm = lm2n(l,m);
+    Uint lm = lm2n(l,m);
     printf("|--> Truncation error [Real(C[%u][%u])] = %e\n",l,m,realClm[lm]);
     printf("|--> Truncation error [Imag(C[%u][%u])] = %e\n",l,m,imagClm[lm]);
   }
@@ -3139,7 +3139,7 @@ static void find_NS_surface_Ylm_SD_CS(Grid_T *const grid,struct Grid_Params_S *c
     for (l = 0; l <= lmax; ++l)
       for (m = 0; m <= l; ++m)
       {
-        unsigned lm = lm2n(l,m);
+        Uint lm = lm2n(l,m);
         realClm[lm] /= (1+e*Pow2(l)*Pow2(l+1));
         imagClm[lm] /= (1+e*Pow2(l)*Pow2(l+1));
       }
@@ -3181,11 +3181,11 @@ static void find_NS_surface_Ylm_bisect_CS(Grid_T *const grid,struct Grid_Params_
   
   /* the stucture for the root finder */
   struct NS_surface_RootFinder_S par[1];
-  unsigned Ntheta,Nphi;/* total number of theta and phi points */
-  const unsigned lmax = (unsigned)Pgeti("NS_surface_Ylm_expansion_max_l");
+  Uint Ntheta,Nphi;/* total number of theta and phi points */
+  const Uint lmax = (Uint)Pgeti("NS_surface_Ylm_expansion_max_l");
   const double RESIDUAL = sqrt(Pgetd("RootFinder_Tolerance"));
   const double max_h_L2_res = Pgetd("NS_enthalpy_allowed_residual");
-  const unsigned Nincr = 100;
+  const Uint Nincr = 100;
   double h_L2_res = 0;
   double theta,phi;
   double *Rnew_NS = 0;/* new R for NS */
@@ -3195,14 +3195,14 @@ static void find_NS_surface_Ylm_bisect_CS(Grid_T *const grid,struct Grid_Params_
   double X[3],x[3],N[3];
   char stem[1000],*affix;
   int NS_surface_finder_work_flg = 1;/* whether surface finder worked or not */
-  unsigned i,j;
-  unsigned l,m;
+  Uint i,j;
+  Uint l,m;
   
   /* populate root finder */
   Root_Finder_T *root = init_root_finder(1);
   root->type      = "Bisect_Single";
   root->tolerance = Pgetd("RootFinder_Tolerance");
-  root->MaxIter   = (unsigned)Pgeti("RootFinder_Max_Number_of_Iteration");
+  root->MaxIter   = (Uint)Pgeti("RootFinder_Max_Number_of_Iteration");
   root->params    = par;
   root->f[0]      = bbn_NS_surface_enthalpy_eq;
   //root->verbose   = 1;
@@ -3228,7 +3228,7 @@ static void find_NS_surface_Ylm_bisect_CS(Grid_T *const grid,struct Grid_Params_
       Patch_T *h_patch = 0,*patch = 0;
       double y2[3] = {0};
       double h,*dr,a,b,Fa,Fb;
-      unsigned iincr;
+      Uint iincr;
       
       /* find patch and X,Y,Z at NS surface in which theta and phi take place */
       find_XYZ_and_patch_of_theta_phi_NS_CS(X,&patch,theta,phi,grid);
@@ -3384,7 +3384,7 @@ static void find_NS_surface_Ylm_bisect_CS(Grid_T *const grid,struct Grid_Params_
   l = lmax;
   for (m = 0; m <= l; ++m)
   {
-    unsigned lm = lm2n(l,m);
+    Uint lm = lm2n(l,m);
     printf("|--> Truncation error [Real(C[%u][%u])] = %e\n",l,m,realClm[lm]);
     printf("|--> Truncation error [Imag(C[%u][%u])] = %e\n",l,m,imagClm[lm]);
   }
@@ -3396,7 +3396,7 @@ static void find_NS_surface_Ylm_bisect_CS(Grid_T *const grid,struct Grid_Params_
     for (l = 0; l <= lmax; ++l)
       for (m = 0; m <= l; ++m)
       {
-        unsigned lm = lm2n(l,m);
+        Uint lm = lm2n(l,m);
         realClm[lm] /= (1+e*Pow2(l)*Pow2(l+1));
         imagClm[lm] /= (1+e*Pow2(l)*Pow2(l+1));
       }
@@ -3428,7 +3428,7 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
   const double tan_phi2   = Pow2(tan_phi);
   const double cos_theta2 = Pow2(cos_theta);
   Flag_T found_flg = NO;
-  unsigned p;
+  Uint p;
   
   X[2] = 1;/* since we are on NS surface */
   
@@ -3555,7 +3555,7 @@ static void find_XYZ_and_patch_of_theta_phi_BH_CS(double *const X,Patch_T **cons
   const double tan_phi2   = Pow2(tan_phi);
   const double cos_theta2 = Pow2(cos_theta);
   Flag_T found_flg = NO;
-  unsigned p;
+  Uint p;
   
   X[2] = 0;/* since we are on BH surface from BH around side */
   
@@ -3682,7 +3682,7 @@ void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid)
   pr_line_custom('=');
   printf("{ Extrapolating metric fields inside the BH ...\n");
   
-  unsigned p;
+  Uint p;
   
   /* add patches in side the excision region */
   add_patches_insideBH(grid);
@@ -3743,10 +3743,10 @@ static void add_patches_insideBH(Grid_T *const grid)
   if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
     Error0(NO_OPTION);
     
-  const unsigned np1 = grid->np;
-  const unsigned np2 = np1+7;/* 6 cubed spherical + 1 box */
+  const Uint np1 = grid->np;
+  const Uint np2 = np1+7;/* 6 cubed spherical + 1 box */
   Grid_T *bh_grid = 0;
-  unsigned i;
+  Uint i;
   
   /* allocating */
   grid->patch = realloc(grid->patch,(np2+1)*sizeof(*grid->patch));
@@ -3785,7 +3785,7 @@ static void add_patches_insideBH(Grid_T *const grid)
 // B1 is calculated fromm its formula "Omega cross r". */
 static void extrapolate_insideBH_CS_linear(Grid_T *const grid)
 {
-  unsigned p;
+  Uint p;
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -3794,7 +3794,7 @@ static void extrapolate_insideBH_CS_linear(Grid_T *const grid)
       continue;
       
     Patch_T *BHsur_patch;/* corresponding bh around patch */
-    const unsigned *n = patch->n;
+    const Uint *n = patch->n;
     double x[3],X[3],N[3];
     double rh,r,R;
     double a_BU0,b_BU0,
@@ -3802,7 +3802,7 @@ static void extrapolate_insideBH_CS_linear(Grid_T *const grid)
            a_BU2,b_BU2,
            a_eta,b_eta,
            a_psi,b_psi;
-    unsigned ijk,i,j,k;
+    Uint ijk,i,j,k;
  
     /* add fields: */
     bbn_add_fields_in_patch(patch);
@@ -3819,7 +3819,7 @@ static void extrapolate_insideBH_CS_linear(Grid_T *const grid)
     /* for the central box we have: */
     if (strstr(patch->name,"right_central_box"))
     {
-      unsigned nn = patch->nn;
+      Uint nn = patch->nn;
       for (ijk = 0; ijk < nn; ++ijk)
       {
         psi[ijk] = 1;
@@ -3931,12 +3931,12 @@ static void extrapolate_insideBH_CS_linear(Grid_T *const grid)
 static void extrapolate_insideBH_CS_C0_Ylm(Grid_T *const grid,const char *const field_name)
 {
   const double FRACTION = 1.;/* if you wanna use R_min = FRACTION*R_min */
-  const unsigned lmax = (unsigned)Pgeti("NS_surface_Ylm_expansion_max_l");
-  unsigned Ntheta,Nphi;/* total number of theta and phi points */
+  const Uint lmax = (Uint)Pgeti("NS_surface_Ylm_expansion_max_l");
+  Uint Ntheta,Nphi;/* total number of theta and phi points */
   double *field_R_min = 0;/* field(R_min,theta,phi) */
   double *realClm,*imagClm;/* Clm coeffs */
   double R_min = Pgetd("BH_R_size");
-  unsigned ijk,i,j,l,m,lm,p;
+  Uint ijk,i,j,l,m,lm,p;
   
   /* check if it is perfect sphere */
   if (!Pcmps("BH_R_type","PerfectSphere"))
@@ -4013,7 +4013,7 @@ static void extrapolate_insideBH_CS_C0_Ylm(Grid_T *const grid,const char *const 
   {
     /* around patch */
     Patch_T *patch = grid->patch[p];
-    const unsigned nn = patch->nn;
+    const Uint nn = patch->nn;
     Field_T *field;
     double *v;
     double x[3],r,theta,phi;
@@ -4061,15 +4061,15 @@ static void extrapolate_outsideNS_CS_exp_continuity_method(Grid_T *const grid)
   const double Omega_NS_y = Pgetd("NS_Omega_U1");
   const double Omega_NS_z = Pgetd("NS_Omega_U2");
   const double att = 0.1;/* exp(-att*(r2-r1)) */
-  unsigned p;
+  Uint p;
   
   FOR_ALL_PATCHES(p,grid)
   {
     /* around patch */
     Patch_T *patch = grid->patch[p];
-    const unsigned *n = patch->n;
-    const unsigned nn = patch->nn;
-    unsigned ijk,i,j,k;
+    const Uint *n = patch->n;
+    const Uint nn = patch->nn;
+    Uint ijk,i,j,k;
     
     if (!IsItNSSurroundingPatch(patch))
       continue;
@@ -4230,12 +4230,12 @@ static void extrapolate_outsideNS_CS_exp_continuity_method(Grid_T *const grid)
 static void extrapolate_outsideNS_CS_Ylm_method(Grid_T *const grid,const char *const field_name)
 {
   const double FRACTION = 1.;/* if you wanna use R_min = FRACTION*R_min */
-  const unsigned lmax = (unsigned)Pgeti("NS_surface_Ylm_expansion_max_l");
-  unsigned Ntheta,Nphi;/* total number of theta and phi points */
+  const Uint lmax = (Uint)Pgeti("NS_surface_Ylm_expansion_max_l");
+  Uint Ntheta,Nphi;/* total number of theta and phi points */
   double *field_R_min = 0;/* field(R_min,theta,phi) */
   double *realClm,*imagClm;/* Clm coeffs */
   double R_min = DBL_MAX;/* min radius of NS */
-  unsigned ijk,i,j,l,m,lm,p;
+  Uint ijk,i,j,l,m,lm,p;
   
   /* initialize tables */
   init_Legendre_root_function();
@@ -4334,7 +4334,7 @@ static void extrapolate_outsideNS_CS_Ylm_method(Grid_T *const grid,const char *c
   {
     /* around patch */
     Patch_T *patch = grid->patch[p];
-    const unsigned nn = patch->nn;
+    const Uint nn = patch->nn;
     Field_T *field;
     double *v;
     double x[3],r,theta,phi;
@@ -4371,10 +4371,10 @@ static void extrapolate_outsideNS_CS_Ylm_method(Grid_T *const grid,const char *c
 
 /* given r, theta, phi, it interpolates using:
 // field(r,theta,phi) = Sum{Clm * r^-(l+1) * Ylm(theta,phi)} */
-static double interpolate_Clm_r_Ylm_3d(double *const realClm,double *const imagClm,const unsigned lmax,const double r,const double theta,const double phi)
+static double interpolate_Clm_r_Ylm_3d(double *const realClm,double *const imagClm,const Uint lmax,const double r,const double theta,const double phi)
 {
   double interp = 0;
-  unsigned l,m,lm;
+  Uint l,m,lm;
   double rpow;
   
   /* multiplying coeff by r^-(l+1) */
@@ -4426,7 +4426,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
   const double FACTOR = 0.9;/* r1 = FACTOR*r2 */
   const double att    = 0.1;/* exp(-att*(r2-r1)) */
   //const double EXP    = 1;/* (r_out/r2)^EXP */
-  unsigned p;
+  Uint p;
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -4447,7 +4447,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
     REALLOC_v_WRITE_v(W_U2)
     
     Patch_T *NS_patch;/* corresponding NS patch, to extrapolate out */
-    const unsigned *n = patch->n;
+    const Uint *n = patch->n;
     double r1,r2,r_max,r_in,r_out,a,b;
     double phii,W_U0i,W_U1i,W_U2i;/* fields at r1 */
     double phif,W_U0f,W_U1f,W_U2f;/* fields at r2 */
@@ -4455,7 +4455,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
     //double sphi,sW_U0,sW_U1,sW_U2;/* signs */
     double x[3],X[3];
     double THETA,PHI;
-    unsigned ijk,i,j,k;
+    Uint ijk,i,j,k;
 
     /* find the corresponding NS patch to be used for extrapolation */
     char stem[1000];
@@ -4851,7 +4851,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Tij_IF_CTS_psi6Sources(grid);
   
   /* update u0 derivatives */
-  unsigned p;
+  Uint p;
   for (p = 0; p < grid->np; ++p)
   {
     Patch_T *patch = grid->patch[p];
@@ -4939,7 +4939,7 @@ Euler_C = -enthalpy/u0 - dphiP/(enthalpy*u0) + Beta(i)*dphi(-i);
 */
 static void find_Euler_eq_const_TOV_KerrSchild(Grid_T *const grid)
 {
-  unsigned p,ijk;
+  Uint p,ijk;
   double Euler_C = 0;
   
   FOR_ALL_PATCHES(p,grid)
@@ -4999,7 +4999,7 @@ void bbn_make_normal_vector_on_BH_horizon(Grid_T *const grid)
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
-  unsigned p,nn,ijk;
+  Uint p,nn,ijk;
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -5084,7 +5084,7 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
   const double y_CM  = Pgetd("y_CM");
   const double a_BH  = Pgetd("BH_net_spin");
   const double M_BH  = Pgetd("BH_irreducible_mass");
-  unsigned p;
+  Uint p;
   
   /* populate tB tR */
   Transformation_T *tB = initialize_transformation();
@@ -5095,8 +5095,8 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned nn = patch->nn;
-    unsigned ijk;
+    Uint nn = patch->nn;
+    Uint ijk;
     
     REALLOC_v_WRITE_v(Beta_U0)
     REALLOC_v_WRITE_v(Beta_U1)
@@ -5168,8 +5168,8 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned nn = patch->nn;
-    unsigned ijk;
+    Uint nn = patch->nn;
+    Uint ijk;
     
     REALLOC_v_WRITE_v(psi)
     REALLOC_v_WRITE_v(eta)
@@ -5272,8 +5272,8 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
   FOR_ALL_PATCHES(p,grid)
   {
      Patch_T *patch = grid->patch[p];
-     unsigned nn = patch->nn;
-     unsigned ijk;
+     Uint nn = patch->nn;
+     Uint ijk;
      double psim4;/* psi^-4 */
      
      bbn_update_B1_U012(patch);
@@ -5372,17 +5372,17 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   /* calculate the characteristics of this grid */
   const double Max_R_NS_l = GridParams->Max_R_NS_l;/* maximum radius of NS */
   const double R_BH_r     = GridParams->R_BH_r;
-  const unsigned gn = grid_next->gn;
+  const Uint gn = grid_next->gn;
   const double S    = Pgetd("BH_NS_separation");
-  const unsigned N_Outermost_Split = (unsigned)Pgeti("Number_of_Outermost_Split"); 
+  const Uint N_Outermost_Split = (Uint)Pgeti("Number_of_Outermost_Split"); 
   double *R_outermost = alloc_double(N_Outermost_Split);
   double box_size_l,box_size_r;
-  unsigned nlb[3]/*left box*/,n;
+  Uint nlb[3]/*left box*/,n;
   char var[100] = {'\0'};
   char par[100] = {'\0'};
   char val[100] = {'\0'};
   const char *kind;
-  unsigned i,p;
+  Uint i,p;
   
   /* finding the kind of grid */
   kind = Pgets("grid_kind");
@@ -5423,15 +5423,15 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   /* filling n */
   
   /* left box */
-  nlb[0] = (unsigned)PgetiEZ("n_a");
-  nlb[1] = (unsigned)PgetiEZ("n_b");
-  nlb[2] = (unsigned)PgetiEZ("n_c");
+  nlb[0] = (Uint)PgetiEZ("n_a");
+  nlb[1] = (Uint)PgetiEZ("n_b");
+  nlb[2] = (Uint)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)PgetiEZ("left_NS_n_a");
+  n = (Uint)PgetiEZ("left_NS_n_a");
   if (n != INT_MAX)   nlb[0] = n;
-  n = (unsigned)PgetiEZ("left_NS_n_b");
+  n = (Uint)PgetiEZ("left_NS_n_b");
   if (n != INT_MAX)   nlb[1] = n;
-  n = (unsigned)PgetiEZ("left_NS_n_c");
+  n = (Uint)PgetiEZ("left_NS_n_c");
   if (n != INT_MAX)   nlb[2] = n;
     
   if(nlb[0] == INT_MAX)
@@ -5472,15 +5472,15 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   Psetd(par,S);
   
   /* right box. NOTE: this is needed when we fill the excision region */
-  nlb[0] = (unsigned)PgetiEZ("n_a");
-  nlb[1] = (unsigned)PgetiEZ("n_b");
-  nlb[2] = (unsigned)PgetiEZ("n_c");
+  nlb[0] = (Uint)PgetiEZ("n_a");
+  nlb[1] = (Uint)PgetiEZ("n_b");
+  nlb[2] = (Uint)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)PgetiEZ("right_BH_n_a");
+  n = (Uint)PgetiEZ("right_BH_n_a");
   if (n != INT_MAX)   nlb[0] = n;
-  n = (unsigned)PgetiEZ("right_BH_n_b");
+  n = (Uint)PgetiEZ("right_BH_n_b");
   if (n != INT_MAX)   nlb[1] = n;
-  n = (unsigned)PgetiEZ("right_BH_n_c");
+  n = (Uint)PgetiEZ("right_BH_n_c");
   if (n != INT_MAX)   nlb[2] = n;
     
   if(nlb[0] == INT_MAX)
@@ -5615,7 +5615,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
       free_patch(patch2);
     }
     grid_next->np    -= 7;/* 6 cubed spherical + 1 box */
-    const unsigned np = grid_next->np;
+    const Uint np = grid_next->np;
     grid_next->patch  = 
         realloc(grid_next->patch,(np+1)*sizeof(*grid_next->patch));
     grid_next->patch[np] = 0;
@@ -5746,8 +5746,8 @@ static void move_solve_man_jacobian(Patch_T *const patch2,Patch_T *const patch1)
 // the previous geometry, i.e. put its interface pointer to 0 */
 static void move_geometry(Grid_T *const grid_next,Grid_T *const grid_prev)
 {
-  unsigned p2,p1;
-  unsigned f,sf;
+  Uint p2,p1;
+  Uint f,sf;
   
   assert(grid_next);
   
@@ -5819,7 +5819,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   double *R,*R_update;
   const double *R_old,*R_new;
   char par[1000] = {'\0'};
-  unsigned N[3],n,i,j,k,N_total,ijk;
+  Uint N[3],n,i,j,k,N_total,ijk;
   Patch_T patch[1] = {0};
   struct Collocation_s coll_s[2] = {0};
   double X[3],r;
@@ -5829,15 +5829,15 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   /* left NS */
   
   /* filling N */
-  N[0] = (unsigned)PgetiEZ("n_a");
-  N[1] = (unsigned)PgetiEZ("n_b");
-  N[2] = (unsigned)PgetiEZ("n_c");
+  N[0] = (Uint)PgetiEZ("n_a");
+  N[1] = (Uint)PgetiEZ("n_b");
+  N[2] = (Uint)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)PgetiEZ("left_NS_n_a");
+  n = (Uint)PgetiEZ("left_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)PgetiEZ("left_NS_n_b");
+  n = (Uint)PgetiEZ("left_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)PgetiEZ("left_NS_n_c");
+  n = (Uint)PgetiEZ("left_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -5878,7 +5878,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     /* we need interpolation */
     const double *const realClm = GridParams->NS_R_Ylm->realClm;
     const double *const imagClm = GridParams->NS_R_Ylm->imagClm;
-    const unsigned Lmax   = GridParams->NS_R_Ylm->Lmax;
+    const Uint Lmax   = GridParams->NS_R_Ylm->Lmax;
     double theta,phi;
     
     /* if coeffs exist */
@@ -6312,16 +6312,16 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   patch->basis[2] = Chebyshev_Tn_BASIS;
     
   /* filling N */
-  N[0] = (unsigned)PgetiEZ("n_a");
-  N[1] = (unsigned)PgetiEZ("n_b");
-  N[2] = (unsigned)PgetiEZ("n_c");
+  N[0] = (Uint)PgetiEZ("n_a");
+  N[1] = (Uint)PgetiEZ("n_b");
+  N[2] = (Uint)PgetiEZ("n_c");
   
   /* check for override */
-  n = (unsigned)PgetiEZ("right_BH_n_a");
+  n = (Uint)PgetiEZ("right_BH_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)PgetiEZ("right_BH_n_b");
+  n = (Uint)PgetiEZ("right_BH_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)PgetiEZ("right_BH_n_c");
+  n = (Uint)PgetiEZ("right_BH_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -6700,7 +6700,7 @@ static double bbn_NS_surface_enthalpy_eq(void *params,const double *const x)
 }
 
 /* denthalpy(r)/dr for NS surface root finder */
-static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,const unsigned dir)
+static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,const Uint dir)
 {
   assert(dir == 0);
   const struct NS_surface_RootFinder_S *const pars = params;
@@ -6804,7 +6804,7 @@ static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid)
 {
   pr_line_custom('=');
   printf("{ Extrapolating fluid fields outside NS ...\n");
-  unsigned p;
+  Uint p;
   
   if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
   {
@@ -6906,7 +6906,7 @@ void bbn_free_grid_and_its_parameters(Grid_T *grid)
     
   const int keep_grid = Pgeti("use_previous_data");
   char suffix[100] = {'\0'};
-  unsigned i,np,gn;
+  Uint i,np,gn;
   
   if (!keep_grid)
   {
@@ -6947,18 +6947,18 @@ void bbn_create_grid_prototype_BC(Grid_T *const grid)
   Grid_T *grid_temp = 0;
   double *R = 0;
   char par[1000] = {'\0'},par_b[1000] = {'\0'};
-  unsigned N[3],n,N_total,i,j,k,p;
+  Uint N[3],n,N_total,i,j,k,p;
   
   /* filling N */
-  N[0] = (unsigned)PgetiEZ("n_a");
-  N[1] = (unsigned)PgetiEZ("n_b");
-  N[2] = (unsigned)PgetiEZ("n_c");
+  N[0] = (Uint)PgetiEZ("n_a");
+  N[1] = (Uint)PgetiEZ("n_b");
+  N[2] = (Uint)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)PgetiEZ("left_NS_n_a");
+  n = (Uint)PgetiEZ("left_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)PgetiEZ("left_NS_n_b");
+  n = (Uint)PgetiEZ("left_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)PgetiEZ("left_NS_n_c");
+  n = (Uint)PgetiEZ("left_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)

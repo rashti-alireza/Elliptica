@@ -67,8 +67,8 @@ void fd_kerr_schild_g_analytic(
 
 {
   char f_name[STR_LEN];
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
     double *const _gamma_D2D2 = get_v(stem,"D2D2");
     double *const _gamma_D0D2 = get_v(stem,"D0D2");
     double *const _gamma_D0D0 = get_v(stem,"D0D0");
@@ -134,8 +134,8 @@ void fd_kerr_schild_dg_analytic(
 {
 
   char f_name[STR_LEN];
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
   
 double *const _dgamma_D1D2D2 = get_v(stem,"D1D2D2");
 double *const _dgamma_D0D0D1 = get_v(stem,"D0D0D1");
@@ -384,8 +384,8 @@ void fd_kerr_schild_ddg_analytic(
 {
 
   char f_name[STR_LEN];
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
 
 double *const _ddgamma_D2D2D0D2 = get_v(stem,"D2D2D0D2");
 double *const _ddgamma_D0D1D0D1 = get_v(stem,"D0D1D0D1");
@@ -1515,8 +1515,8 @@ void fd_kerr_schild_dddg_analytic(
 {
 
   char f_name[STR_LEN];
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
 
 double *const _dddgamma_D0D1D2D2D1 = get_v(stem,"D0D1D2D2D1");
 double *const _dddgamma_D0D1D2D0D1 = get_v(stem,"D0D1D2D0D1");

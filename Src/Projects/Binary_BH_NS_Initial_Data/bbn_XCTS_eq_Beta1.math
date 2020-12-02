@@ -21,7 +21,7 @@ C_macro4 = READ_v_UNUSED(name);
 # patch, S, F, node, N, n.
 # THUS, DO NOT DEFINE THEM AGAIN.
 `  DDM_SCHUR_EQ_DECLARE`;
-`  unsigned ijk;/* node index */`;
+`  Uint ijk;/* node index */`;
 
 # declare for Cpi:
 Declare = 

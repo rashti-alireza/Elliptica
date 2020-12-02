@@ -12,7 +12,7 @@
 void *bbn_eq_eta(void *vp1,void *vp2)
 {
   DDM_SCHUR_EQ_DECLARE
-  unsigned ijk;/* node index */
+  Uint ijk;/* node index */
 
   /* declaring: */
   READ_v(eta)

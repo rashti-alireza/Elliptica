@@ -56,7 +56,7 @@ struct Grid_Params_S
   {
     double *realClm;
     double *imagClm;
-    unsigned Lmax;
+    Uint Lmax;
   }NS_R_Ylm[1];
   
 };
@@ -116,7 +116,7 @@ static double Euler_eq_const_rootfinder_eq(void *params,const double *const x);
 static void extrapolate_outsideNS_CS_exp_continuity_method(Grid_T *const grid);
 static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid);
 static void extrapolate_outsideNS_CS_Ylm_method(Grid_T *const grid,const char *const field_name);
-static double interpolate_Clm_r_Ylm_3d(double *const realClm,double *const imagClm,const unsigned lmax,const double r,const double theta,const double phi);
+static double interpolate_Clm_r_Ylm_3d(double *const realClm,double *const imagClm,const Uint lmax,const double r,const double theta,const double phi);
 static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid);
 static void find_NS_surface_Ylm_bisect_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams);
 static void find_NS_surface_Ylm_SD_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams);
@@ -132,7 +132,7 @@ static double dh_dx0_root_finder_eq(void *params,const double *const x);
 static double dh_dx1_root_finder_eq(void *params,const double *const x);
 static double dh_dx2_root_finder_eq(void *params,const double *const x);
 static double bbn_NS_surface_enthalpy_eq(void *params,const double *const x);
-static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,const unsigned dir);
+static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,const Uint dir);
 static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid);
 static void find_NS_surface(Grid_T *const grid,struct Grid_Params_S *const GridParams);
 static void update_B1_dB1_Beta_dBete_Aij_dAij(Grid_T *const grid);

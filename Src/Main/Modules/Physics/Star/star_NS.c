@@ -247,7 +247,7 @@ int star_NS_idealfluid_gConf_find_Euler_const(Physics_T *const phys)
   
   root->type        = Gets("RootFinder_Method");
   root->tolerance   = Getd("RootFinder_Tolerance");
-  root->MaxIter     = (unsigned)Geti("RootFinder_Iteration");
+  root->MaxIter     = (Uint)Geti("RootFinder_Iteration");
   root->x_gss       = guess;
   root->params      = params;
   root->f[0]        = Euler_eq_const_gConf_rootfinder_eq;
@@ -312,7 +312,7 @@ void star_W_spin_vector_idealfluid_update(Physics_T *const phys)
   
   Grid_T *const grid = phys->grid;
   double Omega_NS[3],C_NS[3];
-  unsigned p;
+  Uint p;
   
   Omega_NS[0] = Getd("Omega_U0");
   Omega_NS[1] = Getd("Omega_U1");
@@ -340,8 +340,8 @@ void W_spin_vector_idealfluid(Patch_T *const patch,const double Omega_NS[3],cons
   REALLOC_v_WRITE_v(W_U0)
   REALLOC_v_WRITE_v(W_U1)
   REALLOC_v_WRITE_v(W_U2)
-  unsigned nn = patch->nn;
-  unsigned ijk;
+  Uint nn = patch->nn;
+  Uint ijk;
   
   for (ijk = 0; ijk < nn; ++ijk)
   {
@@ -518,7 +518,7 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   root->description   = s;
   root->type          = Gets("RootFinder_Method");
   root->tolerance     = Getd("RootFinder_Tolerance");
-  root->MaxIter       = (unsigned)Geti("RootFinder_Iteration");
+  root->MaxIter       = (Uint)Geti("RootFinder_Iteration");
   root->x_gss         = guess;
   root->params        = params;
   root->f[0]          = star_NS_idealfluid_gConf_root_force_bal;
@@ -658,7 +658,7 @@ static void adjust_NS_center_interpolation(Physics_T *const phys)
                          Getd("center_z")};
   double R[3]  = {0};
   double dR[3] = {0};
-  unsigned p;
+  Uint p;
   
   star_NS_find_where_denthalpy_is_0(phys,R);
   
@@ -745,7 +745,7 @@ void star_NS_find_where_denthalpy_is_0(Physics_T *const phys,double xdh0[3])
   params->root_finder = root;
   root->type        = Gets("RootFinder_Method");
   root->tolerance   = Getd("RootFinder_Tolerance");
-  root->MaxIter     = (unsigned)Geti("RootFinder_Iteration");
+  root->MaxIter     = (Uint)Geti("RootFinder_Iteration");
   root->x_gss       = guess;
   root->params      = params;
   root->f[0]        = dh_dx0_root_finder_eq;
@@ -788,7 +788,7 @@ static double dh_dx0_root_finder_eq(void *params,const double *const x)
 {
   struct NC_Center_RootFinder_S *const par = params;
   Patch_T **const patches = par->patches;
-  const unsigned Np       = par->Np;
+  const Uint Np       = par->Np;
   Patch_T *const patch    = x_in_which_patch(x,patches,Np);
   Interpolation_T *interp_s;
   double interp,X[3];
@@ -821,7 +821,7 @@ static double dh_dx1_root_finder_eq(void *params,const double *const x)
 {
   struct NC_Center_RootFinder_S *const par = params;
   Patch_T **const patches = par->patches;
-  const unsigned Np       = par->Np;
+  const Uint Np       = par->Np;
   Patch_T *const patch    = x_in_which_patch(x,patches,Np);
   Interpolation_T *interp_s;
   double interp,X[3];
@@ -854,7 +854,7 @@ static double dh_dx2_root_finder_eq(void *params,const double *const x)
 {
   struct NC_Center_RootFinder_S *const par = params;
   Patch_T **const patches = par->patches;
-  const unsigned Np       = par->Np;
+  const Uint Np       = par->Np;
   Patch_T *const patch    = x_in_which_patch(x,patches,Np);
   Interpolation_T *interp_s;
   double interp,X[3];
@@ -899,7 +899,7 @@ static void adjust_NS_center_Taylor_expansion(Physics_T *const phys)
   double dR[3] = {0};
   double dh[3] = {0};
   double Xc[3] = {0};
-  unsigned p;
+  Uint p;
   
   star_NS_find_where_denthalpy_is_0(phys,R);
   

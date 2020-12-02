@@ -13,8 +13,8 @@ C_macro2 = REALLOC_v_WRITE_v(name);
 # main function:
 Ccode["#include "bbn_headers.h"\n\n"];
 Ccode["void bbn_free_data_Ricci(Grid_T *const grid)\n{"];
-Ccode["  const unsigned np = grid->np;"];
-Ccode["  unsigned p;\n"];
+Ccode["  const Uint np = grid->np;"];
+Ccode["  Uint p;\n"];
 Ccode["  OpenMP_Patch_Pragma(omp parallel for)"];
 Ccode["  for(p = 0; p < np; ++p)"];
 Ccode["  {"];
@@ -38,8 +38,8 @@ Symm[_dGamma(i,j,k,l) = _dGamma(i,k,j,l)];
 Symm[_Gamma(i,j,k)    = _Gamma(i,k,j)];
 Symm[_Ric(i,j)        = _Ric(j,i)];
 
-Ccode["    unsigned nn = patch->nn;"];
-Ccode["    unsigned ijk;"];
+Ccode["    Uint nn = patch->nn;"];
+Ccode["    Uint ijk;"];
 Ccode["    REALLOC_v_WRITE_v(_R)"];
 Ccode["    for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["    {"];

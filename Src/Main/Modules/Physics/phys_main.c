@@ -294,7 +294,7 @@ init_physics
 /* free  */
 void free_physics(Physics_T *phys)
 {
-  unsigned i;
+  Uint i;
   
   if (phys)
   {
@@ -375,8 +375,8 @@ const char *phys_autoindex_stype(Physics_T *const phys,
 // NOTE: at each call it adds one grid to phys->gridtemp. */
 Grid_T *mygrid(Physics_T *const phys,const char *const region)
 {
-  const unsigned ng = phys->Ngridtemp;
-  unsigned Np;
+  const Uint ng = phys->Ngridtemp;
+  Uint Np;
   Patch_T **patches = collect_patches(phys->grid,Ftype(region),&Np);
   
   phys->gridtemp = realloc(phys->gridtemp,(ng+2)*sizeof(*phys->gridtemp));

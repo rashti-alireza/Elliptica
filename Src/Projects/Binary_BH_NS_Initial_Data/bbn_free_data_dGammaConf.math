@@ -41,8 +41,8 @@ Symm[_dgamma(i,j,k)    = _dgamma(j,i,k)];
 Symm[_ddgamma(i,j,k,l) = _ddgamma(j,i,k,l)];
 Symm[_dGamma(i,j,k,l)  = _dGamma(i,k,j,l)];
 
-`  const unsigned nn = patch->nn;`
-`  unsigned ijk;`
+`  const Uint nn = patch->nn;`
+`  Uint ijk;`
 `  for(ijk = 0; ijk < nn; ++ijk)`
 `  {`
 

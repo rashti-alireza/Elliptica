@@ -162,12 +162,12 @@ int direct_solver_series_umfpack_di(void *vp)
   double *const Ax = umf->a->ccs->Ax;
   double **const bs  = umf->bs;/* b's */
   double **const xs  = umf->xs;/* x's */
-  const unsigned ns = umf->ns;/* number of series to be solved */
+  const Uint ns = umf->ns;/* number of series to be solved */
   void *Symbolic,*Numeric;
   double Info[UMFPACK_INFO];
   double Control[UMFPACK_CONTROL];
   int status;
-  unsigned i;
+  Uint i;
   double time1 = get_time_sec();
   
   if (!umf->a->ccs_f)
@@ -229,12 +229,12 @@ int direct_solver_series_umfpack_dl(void *vp)
   double *const Ax  = umf->a->ccs_long->Ax;
   double **const bs = umf->bs;/* b's */
   double **const xs = umf->xs;/* x's */
-  const unsigned ns = umf->ns;/* number of series to be solved */
+  const Uint ns = umf->ns;/* number of series to be solved */
   void *Symbolic,*Numeric;
   double Info[UMFPACK_INFO];
   double Control[UMFPACK_CONTROL];
   long status;
-  unsigned i;
+  Uint i;
   double time1 = get_time_sec();
   
   if (!umf->a->ccs_l_f)

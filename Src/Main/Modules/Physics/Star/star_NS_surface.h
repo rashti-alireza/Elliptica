@@ -24,7 +24,7 @@
 struct NS_surface_RootFinder_S
 {
   Patch_T **hpatches;/* all possible patches to find h */
-  unsigned Nph;/* number of hpatches */
+  Uint Nph;/* number of hpatches */
   void *root_finder;
   double x0[3];/* (x,y,z) at the surface */
   double *N;/* the direction of increasing or decreasing of x = x0+N*d */
@@ -47,13 +47,13 @@ struct Extrap_S
   Grid_T *grid;/* the grid */
   Patch_T **patches_out;/* patches outside where extrapolation takes place */
   Patch_T **patches_in;/* patches inside where fields already exist */
-  unsigned npi;/* number of patches inside  */
-  unsigned npo;/* number of patches outside */
-  unsigned lmax;/* max l in Ylm expansion */
-  unsigned Ntheta;/* number of points in theta direction */
-  unsigned Nphi;/* number of points in phi direction */
-  unsigned NCoeffs;/* number of coeffs for in extrapolant function */
-  unsigned nf;/* number of fields */
+  Uint npi;/* number of patches inside  */
+  Uint npo;/* number of patches outside */
+  Uint lmax;/* max l in Ylm expansion */
+  Uint Ntheta;/* number of points in theta direction */
+  Uint Nphi;/* number of points in phi direction */
+  Uint NCoeffs;/* number of coeffs for in extrapolant function */
+  Uint nf;/* number of fields */
   char method[MAX_STR];/* the specified methods */
   struct
   {
@@ -61,8 +61,8 @@ struct Extrap_S
     char df[3][MAX_STR];/* df/dx */
     char ddf[6][MAX_STR];/* d^2f/dx^2 */
     double (*func_r0)(void *const params);/* function as we close to r0 */
-    unsigned did_add_df:1;/* 1 if automatically adds required df fields  , otherwise 0. */
-    unsigned did_add_ddf:1;/* 1 if automatically adds required ddf fields, otherwise 0. */
+    Uint did_add_df:1;/* 1 if automatically adds required df fields  , otherwise 0. */
+    Uint did_add_ddf:1;/* 1 if automatically adds required ddf fields, otherwise 0. */
   }**fld;/* field info */
   double (*extrap)(struct Demand_S *const demand);/* function used for extrapolation (approximation) */
   int (*fmain)(struct Extrap_S *const extap);/* call this to extrapolate  */
@@ -89,14 +89,14 @@ extrap_init
 
 static void collect_names(struct Extrap_S *const extrap,
                           const char **const fields_name,
-                          const unsigned nf);
+                          const Uint nf);
 static void extrap_free(struct Extrap_S *const extrap);
 static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap);
 static double approx_exp2(struct Demand_S *const demand);
 static double approx_poly2(struct Demand_S *const demand);
 static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys);
 static double NS_surface_enthalpy_root_finder_eq(void *params,const double *const x);
-static double NS_surface_denthalpy_dr_root_finder(void *params,const double *const x,const unsigned dir);
+static double NS_surface_denthalpy_dr_root_finder(void *params,const double *const x,const Uint dir);
 double star_NS_mass_shedding_indicator(Physics_T *const phys);
 int star_NS_find_star_surface(Physics_T *const phys);
 

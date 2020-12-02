@@ -1,5 +1,6 @@
 #ifndef physics_LIB_H
 #define physics_LIB_H
+#include "elliptica_system_lib.h"
 
 /* string length for string in Physics */
 #define PAR_LEN   (99)
@@ -181,10 +182,10 @@ typedef struct PHYSICS_T
 {
  struct GRID_T *grid;
  Grid_Char_T *grid_char;/* grid character when used for surface finder */
- unsigned igc;/* index of grid_char for this physics. */
+ Uint igc;/* index of grid_char for this physics. */
  
  cmd_T cmd;/* current command */
- unsigned IsThisParent:1;/* if this is a parent physics 1, otherwise 0. */
+ Uint IsThisParent:1;/* if this is a parent physics 1, otherwise 0. */
  const char *region;/* grid region you want to issue the command */
  const char *Uregion;/* grid region specifed by User before to issue 
                      // the command, this is a backup, in case we need 
@@ -208,7 +209,7 @@ typedef struct PHYSICS_T
  /* some temp variables */
  char stemp[STEMP_LEN];/* a temperory string for various use. */
  struct GRID_T **gridtemp;/* temporaty grid for mygrid function */
- unsigned Ngridtemp;/* number of gridtemp */
+ Uint Ngridtemp;/* number of gridtemp */
  
 }Physics_T;
 #undef PAR_LEN

@@ -7,9 +7,9 @@
 
 /* taking square root of vector v2-v1 which has n double type components.
 // ->return value: root square of v2-v1; i.e. sqrt(sum{(v2[i]-v1[i])^2}) */
-double root_square(const unsigned n, const double *const v2,const double *const v1)
+double root_square(const Uint n, const double *const v2,const double *const v1)
 {
-  unsigned i;
+  Uint i;
   double sum;
   sum = 0;
   
@@ -32,7 +32,7 @@ double root_square(const unsigned n, const double *const v2,const double *const 
 /* calculate the L2 norm of v2 - v1, i.e. :
 // L2Norm = sqrt(sum{(v2[i]-v1[i])^2}/n)
 // ->return value: L2 norm. */
-double L2_norm(const unsigned n, const double *const v2,const double *const v1)
+double L2_norm(const Uint n, const double *const v2,const double *const v1)
 {
   return root_square(n,v2,v1)/sqrt(n);
 }
@@ -40,9 +40,9 @@ double L2_norm(const unsigned n, const double *const v2,const double *const v1)
 /* calculate the L1 norm of v2 - v1, i.e. :
 // L1Norm = sum{|v2[i]-v1[i]|}/n
 // ->return value: L1 norm. */
-double L1_norm(const unsigned n, const double *const v2,const double *const v1)
+double L1_norm(const Uint n, const double *const v2,const double *const v1)
 {
-  unsigned i;
+  Uint i;
   double sum;
   sum = 0;
   
@@ -61,11 +61,11 @@ double L1_norm(const unsigned n, const double *const v2,const double *const v1)
 }
 
 /* taking root square of vector v2-v1 which has n double type components
-// and n is long unsigned type.
+// and n is long Uint type.
 // ->return value: root square of v2-v1 */
-long double root_square_long(const long unsigned n, const double *const v2, const double *const v1)
+long double root_square_long(const long Uint n, const double *const v2, const double *const v1)
 {
-  unsigned long i;
+  Uint long i;
   long double sum;
   sum = 0;
   
@@ -88,9 +88,9 @@ long double root_square_long(const long unsigned n, const double *const v2, cons
 /* taking dot product of two v1 and v2 vector with n components
 // ->return value : v2.v1
 */
-double dot(const unsigned n, const double *const v2,const double *const v1)
+double dot(const Uint n, const double *const v2,const double *const v1)
 {
-  unsigned i;
+  Uint i;
   double d = 0;
   
   for (i = 0; i < n; i++)
@@ -119,7 +119,7 @@ double ABS(const double v)
 // o. q # normalized point q i.e. -1 <= q <= 1
 //
 // ->return value: sum_0_^{n}{dC(i)/df(j)*dT_i(q)/dq}. */
-double sum_0_N_dCi_dfj_by_dTi_dq(const unsigned N,const unsigned j,const double q)
+double sum_0_N_dCi_dfj_by_dTi_dq(const Uint N,const Uint j,const double q)
 {
   /* some checks */
   if (q < -1.0 || q > 1)
@@ -168,7 +168,7 @@ double sum_0_N_dCi_dfj_by_dTi_dq(const unsigned N,const unsigned j,const double 
 // o. q # normalized point q i.e. -1 <= q <= 1
 //
 // ->return value: sum_0_^{n}{dC(i)/df(j)*cos(i*acos(q))}. */
-double sum_0_N_dCi_dfj_by_Ti_q(const unsigned N,const unsigned j,const double q)
+double sum_0_N_dCi_dfj_by_Ti_q(const Uint N,const Uint j,const double q)
 {
   /* some checks */
   if (q < -1.0 || q > 1.0)
@@ -313,7 +313,7 @@ double d_dq_sum_1_N_cos_ixb_cos_ixa(const int N, const double b,const double a)
 }
 
 /* ->return value: sum_1_^{N}{cos(i*theta)} */
-double sum_1_N_cos_ia(const unsigned N, const double a)
+double sum_1_N_cos_ia(const Uint N, const double a)
 {
   double sum = 0;
   
@@ -341,13 +341,13 @@ double MaxMag_d(const double a,const double b)
 /* given a double array and its dimension N, 
 // it finds the maximum magnitude of the elements, i.e. L infinity norm
 // ->return value: maximum magnitude of a double array (L infinity). */
-double L_inf(const unsigned N,const double *const v)
+double L_inf(const Uint N,const double *const v)
 {
   if (!v || !N)
     Error0("The given array is empty.");
   
   double max = ABS(v[0]);
-  unsigned i;
+  Uint i;
   
   for (i = 1; i < N; ++i)
   {

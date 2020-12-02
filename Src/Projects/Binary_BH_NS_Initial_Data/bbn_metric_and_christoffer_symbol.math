@@ -21,8 +21,8 @@ Ccode["#include "bbn_headers.h""];
 `#define add_field_and_get_field(name) ADD_FIELD(name) REALLOC_v_WRITE_v(name)`
 ``
 Ccode["void bbn_make_metric_and_Gamma_and_derivatives(Grid_T *const grid)\n{"];
-Ccode["  const unsigned np = grid->np;"];
-Ccode["  unsigned p;\n"];
+Ccode["  const Uint np = grid->np;"];
+Ccode["  Uint p;\n"];
 Ccode["  OpenMP_Patch_Pragma(omp parallel for)"];
 Ccode["  for(p = 0; p < np; ++p)"];
 Ccode["  {"];
@@ -55,8 +55,8 @@ Symm[dgamma(i,j,k) = dgamma(j,i,k)];
 Symm[Gamma(i,j,k)  = Gamma(i,k,j)];
 Symm[dGamma(i,j,k,l) = dGamma(i,k,j,l)];
 
-Ccode["    unsigned nn = patch->nn;"];
-Ccode["    unsigned ijk;"];
+Ccode["    Uint nn = patch->nn;"];
+Ccode["    Uint ijk;"];
 Ccode["    for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["    {"];
 
@@ -213,8 +213,8 @@ Ccode["}"];
 `// this function does that. */`
 `static void build_metric_and_metric_inverse(Patch_T *const patch)`
 `{`
-`  const unsigned nn = patch->nn;`
-`  unsigned ijk;`
+`  const Uint nn = patch->nn;`
+`  Uint ijk;`
 ``
 `  READ_v(_gamma_D2D2)`
 `  READ_v(_gamma_D0D2)`
@@ -356,8 +356,8 @@ Ccode["}"];
 `/* freeing metric derivatives */`
 `void bbn_free_metric_and_Gamma_and_derivatives(Grid_T *const grid)`
 `{`
-Ccode["  const unsigned np = grid->np;"];
-Ccode["  unsigned p;\n"];
+Ccode["  const Uint np = grid->np;"];
+Ccode["  Uint p;\n"];
 Ccode["  OpenMP_Patch_Pragma(omp parallel for)"];
 Ccode["  for(p = 0; p < np; ++p)"];
 Ccode["  {"];

@@ -17,9 +17,9 @@ double obs_ADM_mass(Observe_T *const obs)
 {
   double adm_mass = 0;
   struct items_S **adm = obs->items;
-  const unsigned N = obs->Nitems;
+  const Uint N = obs->Nitems;
   const double CUTOFF = 1E3;
-  unsigned p;
+  Uint p;
 
   for(p = 0; p < N; ++p)
   {
@@ -62,8 +62,8 @@ double obs_ADM_mass(Observe_T *const obs)
   READ_v(_Gamma_U1D1D1)
 
 
-    unsigned nn = patch->nn;
-    unsigned ijk;
+    Uint nn = patch->nn;
+    Uint ijk;
 
     if (adm[p]->surface_integration_flg)
     {

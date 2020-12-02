@@ -6,12 +6,12 @@
 
 #define ARRAY_SIZE_LEGENDRE 100
 double Legendre_root[ARRAY_SIZE_LEGENDRE][ARRAY_SIZE_LEGENDRE] = {{0}};
-double Legendre_weight_function(const double x, const unsigned N);
-double Legendre_root_function(const unsigned rootN, const unsigned N);
+double Legendre_weight_function(const double x, const Uint N);
+double Legendre_root_function(const Uint rootN, const Uint N);
 void init_Legendre_root_function(void);
 
 /* weight = 2./(dPn(cos(theta))/dtheta)^2) */
-double Legendre_weight_function(const double x, const unsigned n)
+double Legendre_weight_function(const double x, const Uint n)
 {
   const double dp_dth = d_associated_legendre_dtheta((int)n,0,x);
   return 2./(Pow2(dp_dth));
@@ -19,7 +19,7 @@ double Legendre_weight_function(const double x, const unsigned n)
 
 /* rootN is the n-th root of (legendere(N,x)). the following is like a table.
 // note: rootN starts from 0. */
-double Legendre_root_function(const unsigned rootN, const unsigned N)
+double Legendre_root_function(const Uint rootN, const Uint N)
 {
   if (N >= 100)
     Error0("N exceeds from the maximum.\n");

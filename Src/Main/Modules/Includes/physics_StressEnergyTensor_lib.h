@@ -1,5 +1,6 @@
 #ifndef physics_StressEnergyTensor_LIB_H
 #define physics_StressEnergyTensor_LIB_H
+#include "elliptica_system_lib.h"
 
 /* forward declaration */
 struct PHYSICS_T;

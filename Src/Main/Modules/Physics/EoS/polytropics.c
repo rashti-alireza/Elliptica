@@ -11,7 +11,7 @@ double EoS_p_h_pwp(EoS_T *const eos)
 {
   if (EQL(eos->h,1)) eos->h = 1;
   
-  const unsigned i = find_threshold_number_h(eos);
+  const Uint i = find_threshold_number_h(eos);
   const double K = eos->K[i];
   const double h = eos->h;
   const double a = eos->a[i];
@@ -26,7 +26,7 @@ double EoS_rho_h_pwp(EoS_T *const eos)
 {
   if (EQL(eos->h,1)) eos->h = 1;
   
-  const unsigned i = find_threshold_number_h(eos);    
+  const Uint i = find_threshold_number_h(eos);    
   const double K = eos->K[i];
   const double h = eos->h;
   const double a = eos->a[i];
@@ -41,7 +41,7 @@ double EoS_drho_dh_h_pwp(EoS_T *const eos)
 {
   if (EQL(eos->h,1)) eos->h = 1;
   
-  const unsigned i = find_threshold_number_h(eos);    
+  const Uint i = find_threshold_number_h(eos);    
   const double K = eos->K[i];
   const double h = eos->h;
   const double a = eos->a[i];
@@ -69,7 +69,7 @@ double EoS_e_h_pwp(EoS_T *const eos)
 {
   if (EQL(eos->h,1)) eos->h = 1;
   
-  const unsigned i = find_threshold_number_h(eos);
+  const Uint i = find_threshold_number_h(eos);
   const double h = eos->h;
   const double a = eos->a[i];
   const double n = eos->n[i];
@@ -83,7 +83,7 @@ double EoS_de_dh_h_pwp(EoS_T *const eos)
 {
   if (EQL(eos->h,1)) eos->h = 1;
   
-  const unsigned i = find_threshold_number_h(eos);
+  const Uint i = find_threshold_number_h(eos);
   const double h = eos->h;
   const double a = eos->a[i];
   const double n = eos->n[i];
@@ -148,9 +148,9 @@ double EoS_e_h_p(EoS_T *const eos)
 // then h is also comes out increasingly thus:
 // 1 < h[0] < h[1] < h[2] < ... < h[n]
 // ->return value: the threshold number which h is falls in. */
-static unsigned find_threshold_number_h(const EoS_T *const eos)
+static Uint find_threshold_number_h(const EoS_T *const eos)
 {
-  unsigned i;
+  Uint i;
   char str[1000];
   Flag_T flg = NONE;
   

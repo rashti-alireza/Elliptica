@@ -4,7 +4,7 @@
 #include "maths_general_lib.h"
 #include <complex.h>
 
-void *alloc_double_complex(const unsigned N);
+void *alloc_double_complex(const Uint N);
 
 
 

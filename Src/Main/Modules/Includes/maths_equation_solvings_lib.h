@@ -1,5 +1,6 @@
 #ifndef maths_equation_solvings_LIB_H
 #define maths_equation_solvings_LIB_H
+#include "elliptica_system_lib.h"
 
 #include "maths_linear_algebra_lib.h"
 
@@ -34,7 +35,7 @@ typedef struct PAIR_T
                      */
   struct PAIR_T *mirror;/* the pair that is mirror of itself but
                         // from the other patch. */
-  unsigned patchN;/* patch number which is equal to its sewing number */
+  Uint patchN;/* patch number which is equal to its sewing number */
   struct/* interpolation points;general coords of points
         // needed for interpolation subfaces */
   {
@@ -53,20 +54,20 @@ typedef struct PAIR_T
 typedef struct SEWING_T
 {
   Pair_T **pair;
-  unsigned patchN;/* patch number which is equal to its sewing number */
-  unsigned npair;/* number of pairs */
+  Uint patchN;/* patch number which is equal to its sewing number */
+  Uint npair;/* number of pairs */
   /* the following are the quantities that 
   // patch[patchN]->method->SchurC has.
   // it's used for purpose of concurrency and avoing race condition
   // bewteen pairs of different patches. more definition of each quantity
   // refer to SchurC strcut. */
-  unsigned NS;
-  unsigned NI;
-  unsigned Oi;
-  unsigned *map;
-  unsigned *inv;
-  unsigned *Imap;
-  unsigned *Iinv;
+  Uint NS;
+  Uint NI;
+  Uint Oi;
+  Uint *map;
+  Uint *inv;
+  Uint *Imap;
+  Uint *Iinv;
 }Sewing_T;
 
 /* ingredients needed for mapping, labeling and etc for
@@ -76,21 +77,21 @@ typedef struct DDM_SCHUR_COMPLEMENT_T
 {
   struct PATCH_T *patch;/* refers to its patch itself */
   /* regular means L(n,i,j,k) */
-  unsigned *map;/* map: regular -> relabeled. ex: map[2] = 5 */
-  unsigned *inv;/* inv: relabeled -> regular. ex: inv[5] = 2 */
-  unsigned *Imap;/* interface point map, if it is given a point
+  Uint *map;/* map: regular -> relabeled. ex: map[2] = 5 */
+  Uint *inv;/* inv: relabeled -> regular. ex: inv[5] = 2 */
+  Uint *Imap;/* interface point map, if it is given a point
                  // outside of its domain, it returns UINT_MAX. */
-  unsigned *Iinv;/* interface point inverse map */
-  unsigned NS;/* Number of subdomain points i.e. 
+  Uint *Iinv;/* interface point inverse map */
+  Uint NS;/* Number of subdomain points i.e. 
               // number of inner points + outerboundar points (NO) =>
               // total nodes - NS = number of interface points. Note:
               // outerboundary points excluded from interface points.
               */
-  unsigned NI;/* total number of interface points, if 0, it means there
+  Uint NI;/* total number of interface points, if 0, it means there
               // is no interface for this patch, for example when you
               // only have one single patch, all sides of the patch
               // are outerbounday so no interface with other patches. */
-  unsigned Oi;/* initial index of outer boundary points at new label.
+  Uint Oi;/* initial index of outer boundary points at new label.
               // e.g. if NS = 10 and the last 3 points are 
               // outer boundary points then Oi = 7. 
               // furthermore, if there is no any outer boundary points 
@@ -115,12 +116,12 @@ typedef struct DDM_SCHUR_COMPLEMENT_T
   struct MATRIX_T *subS;/* subS = C - F_by_E_prime_reg in ccs format */
   
   Sewing_T **sewing;/* sewing[patch_number] */
-  unsigned nsewing;/* number of sewings which is = number of patches */
-  unsigned np;/* total number of patches */
-  unsigned *NS_p;/* SchurC->NS for each patch p */
-  unsigned NS_total;/* summation of all NS_p */
-  unsigned *NI_p;/* SchurC->NI for each patch p */
-  unsigned NI_total;/* summation of all NI_p */
+  Uint nsewing;/* number of sewings which is = number of patches */
+  Uint np;/* total number of patches */
+  Uint *NS_p;/* SchurC->NS for each patch p */
+  Uint NS_total;/* summation of all NS_p */
+  Uint *NI_p;/* SchurC->NI for each patch p */
+  Uint NI_total;/* summation of all NI_p */
   
 }DDM_Schur_Complement_T;
 
@@ -129,8 +130,8 @@ typedef struct SOLVING_MAN_T
 {
   struct PATCH_T *patch;/* refers to its patch itself */
   char **field_name;/* field to be solved */
-  unsigned nf;/* number of fields */
-  unsigned cf;/* current field; index of the field is being solved */
+  Uint nf;/* number of fields */
+  Uint cf;/* current field; index of the field is being solved */
   double Frms;/* the current residual(rms) of F in, Jx=-F for this field 
               // at this patch. note: it's initialized to DBL_MAX. */
   fEquation_T **field_eq;/* the equation needed to be satisfied */
@@ -142,12 +143,12 @@ typedef struct SOLVING_MAN_T
     char type[MAX_STR_MATH_EQ_SOLVE_LIB];
     struct MATRIX_T *J;
   }**jacobian;
-  unsigned nj;/* number of jacobian */
+  Uint nj;/* number of jacobian */
   
   struct/* various method to solve */
   {
     /* type of method */
-    unsigned Schur_Complement: 1;/*1 if schur complement, 0 otherwise*/
+    Uint Schur_Complement: 1;/*1 if schur complement, 0 otherwise*/
     DDM_Schur_Complement_T *SchurC;
   }method[1];
   
@@ -159,7 +160,7 @@ typedef struct SOLVING_MAN_T
     double *HFrms;/* history of all Frms start form 0 to NFrms */
     double *last_sol;/* it is back up of last solution, 
                      // so in case the residula goes up, it uses this value. */
-    unsigned NHFrms;/* number of HFrms */
+    Uint NHFrms;/* number of HFrms */
     int solver_step;/* number of steps have been taken by solver till now. starting from 0 */
     int umfpack_size;/* 0 = di, otherwise dl (default is 0) */
     double umfpack_refine;/* max iter. refinement step, default is the default of UMFPACK which is 2 */
@@ -171,7 +172,7 @@ typedef int fEquation_Solver_T(void *vp);
 
 /* general function for variation of various kind of interpolation with 
 // respect to the field. */
-typedef double fdInterp_dfs_T(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane);
+typedef double fdInterp_dfs_T(Patch_T *const patch,const double *const X,const Uint df,const Uint plane);
 
 
 /* boundary condition struct */
@@ -180,9 +181,9 @@ typedef struct BOUNDARY_CONDITION_T
   Patch_T *patch;/* patch that has this boundary */
   SubFace_T *subface;/* the subface located at interesting boundary */
   struct FIELD_T *field;/* the field this B.C.s to be imposed */
-  unsigned cn;/* collection number */
-  unsigned *node;/* nodes's index at the boundary, i.e node[i] = node number used in the patch */
-  unsigned nn;/* number of nodes */
+  Uint cn;/* collection number */
+  Uint *node;/* nodes's index at the boundary, i.e node[i] = node number used in the patch */
+  Uint nn;/* number of nodes */
 }Boundary_Condition_T;
 
 
@@ -205,25 +206,25 @@ typedef struct ROOT_FINDER_T
   double residual;/* residual of the function from zero */
   double tolerance;/* tolerance for f(x) = 0, 
                    // if |f^{iter+1}(x)-f^{iter}(x)| < tol, the root finder stops */
-  unsigned n;/* number of variables (or equations) that make f = 0, 
+  Uint n;/* number of variables (or equations) that make f = 0, 
              // e.g in {f1(x1,x2) = 0,f2(x1,x2) = 0, n is 2 */
-  unsigned MaxIter;/* maximum iteration */
-  unsigned eq_number;/* current equation number, there are cases ,e.g. PDE, 
+  Uint MaxIter;/* maximum iteration */
+  Uint eq_number;/* current equation number, there are cases ,e.g. PDE, 
                      // that the equations are the same but they are 
                      // at different point, this could help to populate the
                      // root->f with one function but the funcation is evaluated
                      // at different points. */
   const double *x_gss;/* initial guess */
   double *x_sol;/* solution of f(x) = 0 */
-  unsigned FD_Left : 1;/* if 1 it uses finite difference with Left side stencil */
-  unsigned FD_Right: 1;/* if 1 it uses finite difference with Right side stencil */
+  Uint FD_Left : 1;/* if 1 it uses finite difference with Left side stencil */
+  Uint FD_Right: 1;/* if 1 it uses finite difference with Right side stencil */
   void *params;/* parameters needed for evaluation of f(x) */ 
   /* f(x1,x2,...) = 0, params is supposed to refere to whatever is needed for evaluation of f */
   // note: since it might be systems of equations like {f1=0,f2=0,...} I used pointer to pointer function */
   double (**f)(void *params,const double *const x);
   /* df/dx^{dir}, params is the parameters are used for evalution of df_dx,
   // x is the dependent variables and dir is the direction of derivative */
-  double (**df_dx)(void *params,const double *const x,const unsigned dir);
+  double (**df_dx)(void *params,const double *const x,const Uint dir);
   double *(*root_finder_func)(struct ROOT_FINDER_T *const root);
   enum ROOT_FINDER_enum exit_status;/* exit status of root finder */
   int interrupt;/* if interrupt != 0, the root finder is interrupted.
@@ -286,9 +287,9 @@ typedef struct SOLVE_EQUATIONS_T
 }Solve_Equations_T;
 
 void calculate_equation_residual(Solve_Equations_T *const SolveEqs);
-char **get_solving_field_name(const char *const solving_order,unsigned *const nf);
+char **get_solving_field_name(const char *const solving_order,Uint *const nf);
 void print_root_finder_exit_status(const Root_Finder_T *const root);
-Root_Finder_T *init_root_finder(const unsigned n);
+Root_Finder_T *init_root_finder(const Uint n);
 double *execute_root_finder(Root_Finder_T *const root);
 void plan_root_finder(Root_Finder_T *const root);
 void free_root_finder(Root_Finder_T *root);
@@ -326,12 +327,12 @@ void free_patch_SolMan_method_Schur(Patch_T *const patch);
   DDM_Schur_Complement_T *const S = vp2;\
   double **const B = S->B->reg->A;\
   double **E_Trans;\
-  const unsigned *const node = S->inv;\
-  const unsigned Ni = S->Oi;/* number of inner mesh nodes */\
-  const unsigned Nj = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
-  const unsigned K0 = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
-  const unsigned Nk = patch->nn;/* total number of nodes */\
-  unsigned i,j,k;
+  const Uint *const node = S->inv;\
+  const Uint Ni = S->Oi;/* number of inner mesh nodes */\
+  const Uint Nj = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
+  const Uint K0 = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
+  const Uint Nk = patch->nn;/* total number of nodes */\
+  Uint i,j,k;
 
 /* macro for B part of jacobian */
 #define DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN \
@@ -371,13 +372,13 @@ void free_patch_SolMan_method_Schur(Patch_T *const patch);
   DDM_Schur_Complement_T *const S = vp2;\
   double **const B = S->B->reg->A;\
   double **E_Trans;\
-  const unsigned *const node = S->inv;\
-  const unsigned I0 = S->Oi;/* number of inner mesh nodes */\
-  const unsigned Ni = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
-  const unsigned Nj = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
-  const unsigned K0 = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
-  const unsigned Nk = patch->nn;/* total number of nodes */\
-  unsigned i,j,k;
+  const Uint *const node = S->inv;\
+  const Uint I0 = S->Oi;/* number of inner mesh nodes */\
+  const Uint Ni = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
+  const Uint Nj = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
+  const Uint K0 = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
+  const Uint Nk = patch->nn;/* total number of nodes */\
+  Uint i,j,k;
 
 /* macro for B part of outer boundary jacobian */
 #define DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN \
@@ -416,9 +417,9 @@ void free_patch_SolMan_method_Schur(Patch_T *const patch);
   Patch_T *const patch = vp1;\
   DDM_Schur_Complement_T *const S = vp2;\
   double *const F = S->f;\
-  const unsigned *const node  = S->inv;/* inverse map to node */\
-  const unsigned N = S->Oi;/* number of inner mesh nodes */\
-  unsigned n;
+  const Uint *const node  = S->inv;/* inverse map to node */\
+  const Uint N = S->Oi;/* number of inner mesh nodes */\
+  Uint n;
   
 #define DDM_SCHUR_EQ_OPEN \
   for (n = 0; n < N; ++n)\
@@ -433,11 +434,11 @@ void free_patch_SolMan_method_Schur(Patch_T *const patch);
   Boundary_Condition_T *const bc = vp1;\
   DDM_Schur_Complement_T *const S = vp2;\
   double *const F      = S->f;\
-  unsigned *const map  = S->map;\
+  Uint *const map  = S->map;\
   Patch_T *const patch = bc->patch;\
-  const unsigned *const node = bc->node;/* nodes at boundary */\
-  const unsigned N = bc->nn;/* number of nodes at boundary */\
-  unsigned n;
+  const Uint *const node = bc->node;/* nodes at boundary */\
+  const Uint N = bc->nn;/* number of nodes at boundary */\
+  Uint n;
 
 #define DDM_SCHUR_BC_OPEN \
   for (n = 0; n < N; ++n)\

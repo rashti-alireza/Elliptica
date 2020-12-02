@@ -17,15 +17,15 @@
 // ->return value: the compressed stack matrix in ccs format. */
 Matrix_T *compress_stack2ccs
 ( Matrix_T **const S/* stack of matrices */,
-  const unsigned nm/* number of matrices in the stack */,
-  const unsigned *const nr/* number of rows in each matrix */,
-  const unsigned Nrow/* total number of rows */,
-  const unsigned Ncol/* common number of columns */,
+  const Uint nm/* number of matrices in the stack */,
+  const Uint *const nr/* number of rows in each matrix */,
+  const Uint Nrow/* total number of rows */,
+  const Uint Ncol/* common number of columns */,
   const Flag_T flg/* if YES means free all of the matrices from the stack, do nothing otherwise */
 )
 {
   Matrix_T *ccs = alloc_matrix(CCS_SF,Nrow,Ncol);
-  int *Ap   = calloc((long unsigned)Ncol+1,sizeof(*Ap));
+  int *Ap   = calloc((long Uint)Ncol+1,sizeof(*Ap));
   int *Ai   = 0;
   double *Ax = 0;
   
@@ -35,7 +35,7 @@ Matrix_T *compress_stack2ccs
   long R = 0;
   const double DropLimit = 0;
   double **m;
-  unsigned i;
+  Uint i;
   
   assert(Nrow < INT_MAX);
   
@@ -53,9 +53,9 @@ Matrix_T *compress_stack2ccs
         {
           if (GRT(ABS(m[r][c]),DropLimit))
           {
-            Ai = realloc(Ai,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ai));
+            Ai = realloc(Ai,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ai));
             IsNull(Ai);
-            Ax = realloc(Ax,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ax));
+            Ax = realloc(Ax,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ax));
             IsNull(Ax);
             Ai[Ap[c]+NN0] = (int)(r+R);
             Ax[Ap[c]+NN0] = m[r][c];
@@ -324,9 +324,9 @@ void copy_ccs2ccs(const Matrix_T *const ccs1,Matrix_T *const ccs2)
                                         */
   const int *const Ai1   = ccs1->ccs->Ai;
   const double *const Ax1 = ccs1->ccs->Ax;
-  int *const Ap2   = calloc((long unsigned)Nc+1,sizeof(*Ap2));
-  int *const Ai2   = calloc((long unsigned)Ap1[Nc],sizeof(*Ai2));
-  double *const Ax2 = calloc((long unsigned)Ap1[Nc],sizeof(*Ax2));
+  int *const Ap2   = calloc((long Uint)Nc+1,sizeof(*Ap2));
+  int *const Ai2   = calloc((long Uint)Ap1[Nc],sizeof(*Ai2));
+  double *const Ax2 = calloc((long Uint)Ap1[Nc],sizeof(*Ax2));
   long c,i;
   
   for (c = 0; c < Nc; c++)
@@ -363,9 +363,9 @@ void copy_ccs_long2ccs_long(const Matrix_T *const ccs_l1,Matrix_T *const ccs_l2)
                                         */
   const long *const Ai1   = ccs_l1->ccs_long->Ai;
   const double *const Ax1 = ccs_l1->ccs_long->Ax;
-  long *const Ap2   = calloc((long unsigned)Nc+1,sizeof(*Ap2));
-  long *const Ai2   = calloc((long unsigned)Ap1[Nc],sizeof(*Ai2));
-  double *const Ax2 = calloc((long unsigned)Ap1[Nc],sizeof(*Ax2));
+  long *const Ap2   = calloc((long Uint)Nc+1,sizeof(*Ap2));
+  long *const Ai2   = calloc((long Uint)Ap1[Nc],sizeof(*Ai2));
+  double *const Ax2 = calloc((long Uint)Ap1[Nc],sizeof(*Ax2));
   long c,i;
   
   for (c = 0; c < Nc; c++)
@@ -395,7 +395,7 @@ static void convert_reg2ccs(const Matrix_T *const reg,Matrix_T *const ccs,const 
   const long Nr = reg->row;
   const long Nc = reg->col;
   double **const m = reg->reg->A;
-  int *Ap   = calloc((long unsigned)Nc+1,sizeof(*Ap));
+  int *Ap   = calloc((long Uint)Nc+1,sizeof(*Ap));
   int *Ai   = 0;
   double *Ax = 0;
   long tNN0 = 0;/* total number of none zero entries */
@@ -409,9 +409,9 @@ static void convert_reg2ccs(const Matrix_T *const reg,Matrix_T *const ccs,const 
     {
       if (GRT(ABS(m[r][c]),DropLimit))
       {
-        Ai = realloc(Ai,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ai));
+        Ai = realloc(Ai,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ai));
         IsNull(Ai);
-        Ax = realloc(Ax,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ax));
+        Ax = realloc(Ax,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ax));
         IsNull(Ax);
         Ai[Ap[c]+NN0] = (int)r;
         Ax[Ap[c]+NN0] = m[r][c];
@@ -436,7 +436,7 @@ static void convert_reg2ccs_long(const Matrix_T *const reg,Matrix_T *const ccs_l
   const long Nr = reg->row;
   const long Nc = reg->col;
   double **const m = reg->reg->A;
-  long *Ap   = calloc((long unsigned)Nc+1,sizeof(*Ap));
+  long *Ap   = calloc((long Uint)Nc+1,sizeof(*Ap));
   long *Ai   = 0;
   double *Ax = 0;
   long tNN0 = 0;/* total number of none zero entries */
@@ -450,9 +450,9 @@ static void convert_reg2ccs_long(const Matrix_T *const reg,Matrix_T *const ccs_l
     {
       if (GRT(ABS(m[r][c]),DropLimit))
       {
-        Ai = realloc(Ai,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ai));
+        Ai = realloc(Ai,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ai));
         IsNull(Ai);
-        Ax = realloc(Ax,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ax));
+        Ax = realloc(Ax,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ax));
         IsNull(Ax);
         Ai[Ap[c]+NN0] = r;
         Ax[Ap[c]+NN0] = m[r][c];

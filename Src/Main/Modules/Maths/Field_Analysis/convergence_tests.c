@@ -19,8 +19,8 @@ int analytic_numeric_convergence_test(const Grid_T *const grid,const char *const
   //double scale;
   double *diff;
   double L1,L2,Linf;
-  unsigned nn;
-  unsigned p,i;
+  Uint nn;
+  Uint p,i;
   
   pr_line_custom('=');
   printf("Convergence test ... \n\n");

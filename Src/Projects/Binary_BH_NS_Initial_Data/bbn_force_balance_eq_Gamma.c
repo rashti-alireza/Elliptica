@@ -36,8 +36,8 @@ ADD_AND_ALLOC_FIELD(GAMMA_fb);
 ADD_FIELD(dGAMMA_fb);
 DECLARE_FIELD(GAMMA_fb);
 DECLARE_FIELD(dGAMMA_fb);
-const unsigned nn = patch->nn;
-unsigned ijk;
+const Uint nn = patch->nn;
+Uint ijk;
 for (ijk = 0; ijk < nn; ++ijk)
 {
   double alpha = 

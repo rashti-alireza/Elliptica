@@ -1,5 +1,6 @@
 #ifndef maths_diff_geom_LIB_H
 #define maths_diff_geom_LIB_H
+#include "elliptica_system_lib.h"
 
 /* forward declaration */
 

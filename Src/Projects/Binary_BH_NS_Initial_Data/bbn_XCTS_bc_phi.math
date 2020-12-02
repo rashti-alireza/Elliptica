@@ -21,7 +21,7 @@ C_macro3 = READ_v_IF_IN_NS(name);
 # patch, S, map, F, node, N, n.
 # THUS, DO NOT DEFINE THEM AGAIN.
 `  DDM_SCHUR_BC_DECLARE`;
-`  unsigned ijk;/* node index */`;
+`  Uint ijk;/* node index */`;
 
 # declare for Cpi
 Declare = 

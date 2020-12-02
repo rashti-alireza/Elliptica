@@ -33,7 +33,7 @@ void obs_calculate(Observe_T *const obs)
     const char *region = "outermost,filling_box,"
                          "NS_around_OB,BH_around_OB";
     struct items_S **adm = 0;
-    unsigned n,N,ijk,nn;
+    Uint n,N,ijk,nn;
     
     /* first collect all of the patches required */
     patches = collect_patches(grid,region,&N);
@@ -113,7 +113,7 @@ void obs_calculate(Observe_T *const obs)
     Patch_T *patch    = 0;
     struct items_S **adm = 0;
     const char *region = "NS_OB";
-    unsigned n,N,ijk,nn;
+    Uint n,N,ijk,nn;
     
     /* first collect all of the patches required */
     patches = collect_patches(grid,region,&N);
@@ -188,7 +188,7 @@ void obs_calculate(Observe_T *const obs)
     Patch_T *patch    = 0;
     struct items_S **adm = 0;
     const char *region = "BH_around_IB";
-    unsigned n,N,ijk,nn;
+    Uint n,N,ijk,nn;
     
     /* first collect all of the patches required */
     patches = collect_patches(grid,region,&N);
@@ -263,7 +263,7 @@ void obs_calculate(Observe_T *const obs)
     Patch_T *patch    = 0;
     struct items_S **kommar = 0;
     const char *region = "BH_around_IB";
-    unsigned n,N,ijk,nn;
+    Uint n,N,ijk,nn;
     
     /* first collect all of the patches required */
     patches = collect_patches(grid,region,&N);
@@ -332,7 +332,7 @@ void obs_calculate(Observe_T *const obs)
     Patch_T *patch    = 0;
     struct items_S **kommar = 0;
     const char *region = "NS_OB";
-    unsigned n,N,ijk,nn;
+    Uint n,N,ijk,nn;
     
     /* first collect all of the patches required */
     patches = collect_patches(grid,region,&N);
@@ -400,8 +400,8 @@ void obs_calculate(Observe_T *const obs)
     Patch_T **patches = 0;
     Patch_T *patch    = 0;
     struct items_S **kommar = 0;
-    unsigned p = 0;
-    unsigned n,N,ijk,nn;
+    Uint p = 0;
+    Uint n,N,ijk,nn;
     
     N = 10/* 10 sides for arounds */;
         
@@ -489,7 +489,7 @@ void obs_calculate(Observe_T *const obs)
     Patch_T *patch    = 0;
     const char *region;
     struct items_S **adm = 0;
-    unsigned n,N1,N2,ijk,nn;
+    Uint n,N1,N2,ijk,nn;
     
     /* volume part */
     region   = "outermost,filling_box,NS,NS_around,BH_around";
@@ -601,7 +601,7 @@ void obs_calculate(Observe_T *const obs)
     Patch_T *patch    = 0;
     struct items_S **adm = 0;
     const char *region = "BH_around_IB";
-    unsigned n,N,ijk,nn;
+    Uint n,N,ijk,nn;
     
     /* first collect all of the patches required */
     patches = collect_patches(grid,region,&N);
@@ -669,7 +669,7 @@ void obs_calculate(Observe_T *const obs)
     Patch_T *patch    = 0;
     struct items_S **adm = 0;
     const char *region = "NS";
-    unsigned n,N,ijk,nn;
+    Uint n,N,ijk,nn;
     
     /* first collect all of the patches required */
     patches = collect_patches(grid,region,&N);
@@ -762,11 +762,11 @@ void obs_calculate(Observe_T *const obs)
 static void n_physical_metric_around(struct items_S *const adm,const Dd_T dir)
 {
   Patch_T *const patch = adm->patch;
-  const unsigned nn = patch->nn;
+  const Uint nn = patch->nn;
   double *n_U0 = alloc_double(nn);
   double *n_U1 = alloc_double(nn);
   double *n_U2 = alloc_double(nn);
-  unsigned ijk;
+  Uint ijk;
   
   READ_v(gConf_D2D2)
   READ_v(gConf_D0D2)
@@ -807,11 +807,11 @@ n_U2[ijk] + gConf_D2D2[ijk]*pow(n_U2[ijk], 2));
 static void n_conformal_metric_around(struct items_S *const adm,const Dd_T dir)
 {
   Patch_T *const patch = adm->patch;
-  const unsigned nn = patch->nn;
+  const Uint nn = patch->nn;
   double *n_U0 = alloc_double(nn);
   double *n_U1 = alloc_double(nn);
   double *n_U2 = alloc_double(nn);
-  unsigned ijk;
+  Uint ijk;
   
   READ_v(gConf_D2D2)
   READ_v(gConf_D0D2)
@@ -850,9 +850,9 @@ static double ADM_momentum_x_BHNS_CS(Observe_T *const obs)
 {
   double Px = 0;
   struct items_S **const adm = obs->items;
-  const unsigned N = obs->Nitems;
+  const Uint N = obs->Nitems;
   Integration_T *I;
-  unsigned p;
+  Uint p;
   assert(N);
   
   //populate_ADM_momentums_integrand_PdS_GdV(obs);
@@ -920,9 +920,9 @@ static double ADM_momentum_y_BHNS_CS(Observe_T *const obs)
 {
   double Py = 0;
   struct items_S **const adm = obs->items;
-  const unsigned N = obs->Nitems;
+  const Uint N = obs->Nitems;
   Integration_T *I;
-  unsigned p;
+  Uint p;
   assert(N);
   
   //populate_ADM_momentums_integrand_PdS_GdV(obs);
@@ -990,9 +990,9 @@ static double ADM_momentum_z_BHNS_CS(Observe_T *const obs)
 {
   double Pz = 0;
   struct items_S **const adm = obs->items;
-  const unsigned N = obs->Nitems;
+  const Uint N = obs->Nitems;
   Integration_T *I;
-  unsigned p;
+  Uint p;
   assert(N);
   
   //populate_ADM_momentums_integrand_PdS_GdV(obs);
@@ -1060,9 +1060,9 @@ static double ADM_angular_momentum_z_BHNS_CS(Observe_T *const obs)
 {
   double Jz = 0;
   struct items_S **const adm = obs->items;
-  const unsigned N = obs->Nitems;
+  const Uint N = obs->Nitems;
   Integration_T *I;
-  unsigned p;
+  Uint p;
   assert(N);
   
   /* surface integration */
@@ -1132,9 +1132,9 @@ static double ADM_angular_momentum_x_BHNS_CS(Observe_T *const obs)
 {
   double Jx = 0;
   struct items_S **const adm = obs->items;
-  const unsigned N = obs->Nitems;
+  const Uint N = obs->Nitems;
   Integration_T *I;
-  unsigned p;
+  Uint p;
   assert(N);
   
   /* surface integration */
@@ -1203,9 +1203,9 @@ static double ADM_angular_momentum_y_BHNS_CS(Observe_T *const obs)
 {
   double Jy = 0;
   struct items_S **const adm = obs->items;
-  const unsigned N = obs->Nitems;
+  const Uint N = obs->Nitems;
   Integration_T *I;
-  unsigned p;
+  Uint p;
   assert(N);
   
   /* surface integration */
@@ -1278,7 +1278,7 @@ static void define_spin_campanelli(Observe_T *const obs)
   Patch_T **patches = 0;
   double obj_center[3] = {0};
   const char *region = 0;
-  unsigned N,p = 0;
+  Uint N,p = 0;
   
   S[0] = S[1] = S[2] = 0;
   
@@ -1308,7 +1308,7 @@ static void define_spin_campanelli(Observe_T *const obs)
   {
     Patch_T *patch = patches[p];
     Integration_T *I = 0;
-    unsigned nn  = patch->nn;
+    Uint nn  = patch->nn;
     struct items_S normal[1] = {0};
     const double *n_comp[3];
     double *g00 = alloc_double(nn);
@@ -1317,7 +1317,7 @@ static void define_spin_campanelli(Observe_T *const obs)
     double *g11 = alloc_double(nn);
     double *g12 = alloc_double(nn);
     double *g22 = alloc_double(nn);
-    unsigned ijk;
+    Uint ijk;
     
     READ_v(gConf_D2D2)
     READ_v(gConf_D0D2)
@@ -1404,7 +1404,7 @@ static void define_spin_akv(Observe_T *const obs)
   double *const S = obs->ret;
   Patch_T **patches = 0;
   const char *region = 0;
-  unsigned N,p = 0;
+  Uint N,p = 0;
   
   S[0] = S[1] = S[2] = 0;
   
@@ -1431,7 +1431,7 @@ static void define_spin_akv(Observe_T *const obs)
   {
     Patch_T *patch = patches[p];
     Integration_T *I = 0;
-    unsigned nn  = patch->nn;
+    Uint nn  = patch->nn;
     struct items_S normal[1] = {0};
     const double *n_comp[3];
     double *g00 = alloc_double(nn);
@@ -1440,7 +1440,7 @@ static void define_spin_akv(Observe_T *const obs)
     double *g11 = alloc_double(nn);
     double *g12 = alloc_double(nn);
     double *g22 = alloc_double(nn);
-    unsigned ijk;
+    Uint ijk;
     
     READ_v(gConf_D2D2)
     READ_v(gConf_D0D2)
@@ -1561,7 +1561,7 @@ static void Rc_BH(Observe_T *const obs)
   const double y_CM = sysGetd("y_CM");
   const double z_CM = sysGetd("z_CM");
   double *const Rc  = obs->ret;
-  unsigned p;
+  Uint p;
 
   Rc[0] = 0;
   Rc[1] = 0;
@@ -1573,8 +1573,8 @@ static void Rc_BH(Observe_T *const obs)
     if (!IsItCovering(patch,"BH_around_IB"))
       continue;
       
-    unsigned ijk;
-    unsigned nn = patch->nn;
+    Uint ijk;
+    Uint nn = patch->nn;
     
     READ_v(gConf_D2D2)
     READ_v(gConf_D0D2)

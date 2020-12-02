@@ -1,5 +1,6 @@
 #ifndef text_and_file_tools_LIB_H
 #define text_and_file_tools_LIB_H
+#include "elliptica_system_lib.h"
 
 /* this is how we write binary data: first write size and then value. 
 // thus, when we wanna read the data the first one gives of the memory allocation 
@@ -8,25 +9,25 @@
 /* write pointer: */
 #define FWriteP_bin(x,y) \
 if (x){\
-  unsigned SIZE_ = (unsigned)(y);\
+  Uint SIZE_ = (Uint)(y);\
   assert(fwrite(&SIZE_,sizeof(SIZE_),1,file));\
   assert(fwrite(x,sizeof(*(x)),SIZE_,file));\
 }else{\
-  unsigned SIZE_ = 0;\
+  Uint SIZE_ = 0;\
   assert(fwrite(&SIZE_,sizeof(SIZE_),1,file));\
 }
 
 /* write variable: */
 #define FWriteV_bin(x,y) \
 {\
-  unsigned SIZE_ = (unsigned)(y);\
+  Uint SIZE_ = (Uint)(y);\
   assert(fwrite(&SIZE_,sizeof(SIZE_),1,file));\
   assert(fwrite(&(x),sizeof(x),SIZE_,file));\
 }
 
 /* read pointer */
 #define FReadP_bin(x) {\
-  unsigned SIZE_ = 0;\
+  Uint SIZE_ = 0;\
   assert(fread(&SIZE_, sizeof(SIZE_),1,file));\
   if (SIZE_) {\
     x = calloc(SIZE_,sizeof(*(x))),IsNull(x);\
@@ -35,7 +36,7 @@ if (x){\
 
 /* read variable */
 #define FReadV_bin(x) {\
-  unsigned SIZE_ = 0;\
+  Uint SIZE_ = 0;\
   assert(fread(&SIZE_, sizeof(SIZE_),1,file));\
   assert(fread(&(x),sizeof(x),SIZE_,file));}
 
@@ -49,7 +50,7 @@ char *sub_s(char *const str,const char d1,const char d2,char **const save);
 int check_format_s(const char *str,const char *const format);
 char *make_folder(const char *const folder);
 char *open_folder(const char *const folder);
-unsigned find_index_string(char **const heystack,const unsigned N,const char *const needle);
+Uint find_index_string(char **const heystack,const Uint N,const char *const needle);
 int regex_search(const char *const regex_pattern,const char *const str);
 char *regex_find(const char *const regex_pattern,const char *const str);
 char **read_separated_items_in_string(const char *const string,const char delimiter);

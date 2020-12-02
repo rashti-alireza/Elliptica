@@ -46,7 +46,7 @@ double execute_interpolation(Interpolation_T *const interp_struct)
 // input file and patch and flags in interp_s. */
 void plan_interpolation(Interpolation_T *const interp_s)
 {
-  unsigned i;
+  Uint i;
   Patch_T *patch;
   /* choose method of interpolation based on inputs and patch
   // and narrow down the options. */
@@ -98,8 +98,8 @@ static void order_arrays_natural_cubic_spline_1d(Interpolation_T *const interp_s
   double *f = interp_s->N_cubic_spline_1d->f;
   double *y;/* ordered x */
   double *g;/* ordered f */
-  const unsigned N = interp_s->N_cubic_spline_1d->N;
-  unsigned i;
+  const Uint N = interp_s->N_cubic_spline_1d->N;
+  Uint i;
   
   if (EQL(x[0],x[N-1]))
   {
@@ -125,7 +125,7 @@ static void order_arrays_natural_cubic_spline_1d(Interpolation_T *const interp_s
 /* find a, b, c and d coeffs */
 static void find_coeffs_natural_cubic_spline_1d(Interpolation_T *const interp_s)
 {
-  const unsigned n = interp_s->N_cubic_spline_1d->N-1;
+  const Uint n = interp_s->N_cubic_spline_1d->N-1;
   const double *const x = interp_s->N_cubic_spline_1d->x;
   double *const a = interp_s->N_cubic_spline_1d->f;
   double *const b = alloc_double(n);
@@ -136,7 +136,7 @@ static void find_coeffs_natural_cubic_spline_1d(Interpolation_T *const interp_s)
          *z  = alloc_double(n+1),
          *al = alloc_double(n),
          *mu = alloc_double(n);
-  unsigned i;
+  Uint i;
   
   for (i = 0; i < n; ++i)
     h[i] = x[i+1]-x[i];
@@ -215,7 +215,7 @@ static double interpolation_natural_cubic_spline_1d(Interpolation_T *const inter
   const double h = interp_s->N_cubic_spline_1d->h;
   const double N = interp_s->N_cubic_spline_1d->N;
   double ret = DBL_MAX;
-  unsigned i;
+  Uint i;
   Flag_T flg = NONE;
   
   for (i = 0; i < N-1; ++i)
@@ -271,7 +271,7 @@ static double interpolation_Neville_1d(Interpolation_T *const interp_s)
   double **q;
   double interp = 0;
   Matrix_T *Q;
-  unsigned N,i,j;
+  Uint N,i,j;
   Flag_T flg = NO;
   
   if (interp_s->Neville_1d->max    			  && 
@@ -281,7 +281,7 @@ static double interpolation_Neville_1d(Interpolation_T *const interp_s)
   {
     flg = YES;
     N = interp_s->Neville_1d->max;
-    unsigned s = interp_s->Neville_1d->N/N;
+    Uint s = interp_s->Neville_1d->N/N;
     assert(s);
     Q = alloc_matrix(REG_SF,N,N);
     q = Q->reg->A;
@@ -328,7 +328,7 @@ static double interpolation_Neville_1d(Interpolation_T *const interp_s)
 static fInterpolation_T *interpolation_Chebyshev_Tn(Interpolation_T *const interp_s)
 {
   fInterpolation_T *func = 0;
-  unsigned count = 0;
+  Uint count = 0;
   
   if (interp_s->XYZ_dir_flag) count++;
   if (interp_s->XY_dir_flag)  count++;
@@ -375,12 +375,12 @@ static double interpolation_Chebyshev_Tn_X(Interpolation_T *const interp_s)
 {
   Field_T *const field = interp_s->field;/* interesting field */
   const double X = General2ChebyshevExtrema(interp_s->X,0,field->patch);/* X coord of the interesting point */
-  const unsigned *const n = interp_s->field->patch->n;
-  const unsigned J = interp_s->J;/* index of const coords */
-  const unsigned K = interp_s->K;/* index of const coords */
+  const Uint *const n = interp_s->field->patch->n;
+  const Uint J = interp_s->J;/* index of const coords */
+  const Uint K = interp_s->K;/* index of const coords */
   const double *C = 0;/* coeffs of expansion of field in Tn */
   double interp_v = 0;
-  unsigned i;
+  Uint i;
   
   make_coeffs_1d(field,0);
   C = field->v2;
@@ -398,12 +398,12 @@ static double interpolation_Chebyshev_Tn_Y(Interpolation_T *const interp_s)
 {
   Field_T *const field = interp_s->field;/* interesting field */
   const double Y = General2ChebyshevExtrema(interp_s->Y,1,field->patch);/* Y coord of the interesting point */
-  const unsigned *const n = interp_s->field->patch->n;
-  const unsigned I = interp_s->I;/* index of const coords */
-  const unsigned K = interp_s->K;/* index of const coords */
+  const Uint *const n = interp_s->field->patch->n;
+  const Uint I = interp_s->I;/* index of const coords */
+  const Uint K = interp_s->K;/* index of const coords */
   const double *C = 0;/* coeffs of expansion of field in Tn */
   double interp_v = 0;
-  unsigned j;
+  Uint j;
   
   make_coeffs_1d(field,1);
   C = field->v2;
@@ -421,12 +421,12 @@ static double interpolation_Chebyshev_Tn_Z(Interpolation_T *const interp_s)
 {
   Field_T *const field = interp_s->field;/* interesting field */
   const double Z = General2ChebyshevExtrema(interp_s->Z,2,field->patch);/* Z coord of the interesting point */
-  const unsigned *const n = interp_s->field->patch->n;
-  const unsigned I = interp_s->I;/* index of const coords */
-  const unsigned J = interp_s->J;/* index of const coords */
+  const Uint *const n = interp_s->field->patch->n;
+  const Uint I = interp_s->I;/* index of const coords */
+  const Uint J = interp_s->J;/* index of const coords */
   const double *C = 0;/* coeffs of expansion of field in Tn */
   double interp_v = 0;
-  unsigned k;
+  Uint k;
   
   make_coeffs_1d(field,2);
   C = field->v2;
@@ -445,11 +445,11 @@ static double interpolation_Chebyshev_Tn_XY(Interpolation_T *const interp_s)
   Field_T *const field = interp_s->field;/* interesting field */
   const double X = General2ChebyshevExtrema(interp_s->X,0,field->patch);/* X coord of the interesting point */
   const double Y = General2ChebyshevExtrema(interp_s->Y,1,field->patch);/* Y coord of the interesting point */
-  const unsigned *const n = interp_s->field->patch->n;
-  const unsigned K = interp_s->K;/* index of const coords */
+  const Uint *const n = interp_s->field->patch->n;
+  const Uint K = interp_s->K;/* index of const coords */
   const double *C = 0;/* coeffs of expansion of field in Tn */
   double interp_v = 0;
-  unsigned i,j;
+  Uint i,j;
   
   make_coeffs_2d(field,0,1);
   C = field->v2;
@@ -469,11 +469,11 @@ static double interpolation_Chebyshev_Tn_XZ(Interpolation_T *const interp_s)
   Field_T *const field = interp_s->field;/* interesting field */
   const double X = General2ChebyshevExtrema(interp_s->X,0,field->patch);/* X coord of the interesting point */
   const double Z = General2ChebyshevExtrema(interp_s->Z,2,field->patch);/* Z coord of the interesting point */
-  const unsigned *const n = interp_s->field->patch->n;
-  const unsigned J = interp_s->J;/* index of const coords. */
+  const Uint *const n = interp_s->field->patch->n;
+  const Uint J = interp_s->J;/* index of const coords. */
   const double *C = 0;/* coeffs of expansion of field in Tn */
   double interp_v = 0;
-  unsigned i,k;
+  Uint i,k;
   
   make_coeffs_2d(field,0,2);
   C = field->v2;
@@ -493,11 +493,11 @@ static double interpolation_Chebyshev_Tn_YZ(Interpolation_T *const interp_s)
   Field_T *const field = interp_s->field;/* interesting field */
   const double Y = General2ChebyshevExtrema(interp_s->Y,1,field->patch);/* Y coord of the interesting point */
   const double Z = General2ChebyshevExtrema(interp_s->Z,2,field->patch);/* Z coord of the interesting point */
-  const unsigned *const n = interp_s->field->patch->n;
-  const unsigned I = interp_s->I;/* index of const coords. */
+  const Uint *const n = interp_s->field->patch->n;
+  const Uint I = interp_s->I;/* index of const coords. */
   const double *C = 0;/* coeffs of expansion of field in Tn */
   double interp_v = 0;
-  unsigned j,k;
+  Uint j,k;
   
   make_coeffs_2d(field,1,2);
   C = field->v2;
@@ -517,10 +517,10 @@ static double interpolation_Chebyshev_Tn_XYZ(Interpolation_T *const interp_s)
   const double X = General2ChebyshevExtrema(interp_s->X,0,field->patch);/* X coord of the interesting point */
   const double Y = General2ChebyshevExtrema(interp_s->Y,1,field->patch);/* Y coord of the interesting point */
   const double Z = General2ChebyshevExtrema(interp_s->Z,2,field->patch);/* Z coord of the interesting point */
-  const unsigned *const n = interp_s->field->patch->n;
+  const Uint *const n = interp_s->field->patch->n;
   const double *C = 0;/* coeffs of expansion of field in Tn */
   double interp_v = 0;
-  unsigned i,j,k;
+  Uint i,j,k;
   
   make_coeffs_3d(field);
   C = field->v2;
@@ -539,7 +539,7 @@ static double interpolation_Chebyshev_Tn_XYZ(Interpolation_T *const interp_s)
 // for ease of using at interpolation implementation.
 // ->return value: value of this compound basis at specific point.
 */
-static double T(const unsigned n,const unsigned i,const double x)
+static double T(const Uint n,const Uint i,const double x)
 {
   double t = 0;
   

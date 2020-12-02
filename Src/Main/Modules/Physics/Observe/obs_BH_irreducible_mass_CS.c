@@ -12,13 +12,13 @@ void obs_BH_irreducible_mass_CS(Observe_T *const obs)
   Physics_T *const phys = obs->phys;
   Grid_T *const grid = mygrid(phys,"BH_around_IB");
   double A_AH = 0;
-  unsigned p;
+  Uint p;
 
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned nn    = patch->nn;
-    unsigned ijk;
+    Uint nn    = patch->nn;
+    Uint ijk;
 
     ADD_FIELD(A_AH_integrand)
 

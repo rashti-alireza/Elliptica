@@ -12,16 +12,16 @@ void bbn_adm_Kij(Patch_T *const patch);
 void bbn_bam_set_bam_fields(Grid_T *const grid);
 void bbn_bam_set_bam_fields(Grid_T *const grid)
 {
-  unsigned p;
-  const unsigned np = grid->np;
+  Uint p;
+  const Uint np = grid->np;
   const int BH_Kij = PgetiEZ("bbn_bhf_make_adm_Kij");
 
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < np; ++p)
   {
   Patch_T *patch = grid->patch[p];
-  unsigned nn    = patch->nn;
-  unsigned ijk;
+  Uint nn    = patch->nn;
+  Uint ijk;
   if (BH_Kij == 1 || !IsItInsideBHPatch(patch))
     bbn_adm_Kij(patch);
 

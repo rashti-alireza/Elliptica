@@ -1,5 +1,6 @@
 #ifndef fields_LIB_H
 #define fields_LIB_H
+#include "elliptica_system_lib.h"
 
 
 /* forward declaration structures */
@@ -37,8 +38,8 @@ void remove_field(Field_T *f);
 void add_attribute(Field_T *const fld,const char *const attribute);
 int LookUpField(const char *const name,const struct PATCH_T *const patch);
 int LookUpField_E(const char *const name,const struct PATCH_T *const patch);
-double *make_coeffs_1d(Field_T *const f,const unsigned dir);
-double *make_coeffs_2d(Field_T *const f,const unsigned dir1,const unsigned dir2);
+double *make_coeffs_1d(Field_T *const f,const Uint dir);
+double *make_coeffs_2d(Field_T *const f,const Uint dir1,const Uint dir2);
 double *make_coeffs_3d(Field_T *const f);
 void enable_fields(struct GRID_T *const grid);
 void free_v2(Field_T *f);

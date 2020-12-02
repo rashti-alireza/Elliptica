@@ -15,11 +15,11 @@ void test_start(const char *const file,const int line)
 /* count the number of pointers which end to null 
 // excluding the last one which is null
 */
-unsigned countf(void *const p)
+Uint countf(void *const p)
 {
   assert(p != 0);
   
-  unsigned c = 0;
+  Uint c = 0;
   void **const pp = p;
   
   while (pp[c] != 0)
@@ -29,9 +29,9 @@ unsigned countf(void *const p)
 }
 
 /* linear format to triple (i,j,k) format */
-void IJK(const unsigned l, const unsigned *const n, unsigned *const i, unsigned *const j, unsigned *const k)
+void IJK(const Uint l, const Uint *const n, Uint *const i, Uint *const j, Uint *const k)
 {
-  unsigned tmp;
+  Uint tmp;
   
   tmp = l % (n[2]*n[1]);
   *i  = l / (n[2]*n[1]);
@@ -40,30 +40,30 @@ void IJK(const unsigned l, const unsigned *const n, unsigned *const i, unsigned 
 }
 
 /* triple (i,j,k) format to linear format */
-unsigned L(const unsigned *const n, const unsigned i, const unsigned j, const unsigned k)
+Uint L(const Uint *const n, const Uint i, const Uint j, const Uint k)
 {
   return (k+n[2]*(j+n[1]*i));
 }
 
 /* linear format to i component */
-unsigned I(const unsigned l, const unsigned *const n)
+Uint I(const Uint l, const Uint *const n)
 {
   return l / (n[2]*n[1]);
 }
 
 /* linear format to j component */
-unsigned J(const unsigned l, const unsigned *const n)
+Uint J(const Uint l, const Uint *const n)
 {
-  unsigned tmp;
+  Uint tmp;
   
   tmp = l % (n[2]*n[1]);
   return tmp / n[2];
 }
 
 /* linear format to k component */
-unsigned K(const unsigned l, const unsigned *const n)
+Uint K(const Uint l, const Uint *const n)
 {
-  unsigned tmp;
+  Uint tmp;
   
   tmp = l % (n[2]*n[1]);
   return tmp % n[2];
@@ -111,9 +111,9 @@ Basis_T get_basis(const char *const basis)
 // note: it's only for points which are collocated
 // ->return value: 1 if found 0 if not.
 */
-int IsOnEdge(const unsigned *const n,const unsigned p)
+int IsOnEdge(const Uint *const n,const Uint p)
 {
-  unsigned i,j,k;
+  Uint i,j,k;
   int c;
   
   IJK(p,n,&i,&j,&k);
@@ -139,7 +139,7 @@ int IsOnEdge(const unsigned *const n,const unsigned p)
 // collocated as well.
 // ->return value: number of interface that found.
 */
-int IsOnFace(const double *const x, const Patch_T *const patch,unsigned *const f)
+int IsOnFace(const double *const x, const Patch_T *const patch,Uint *const f)
 {
   int u,c;
   double X[3];
@@ -164,10 +164,10 @@ int IsOnFace(const double *const x, const Patch_T *const patch,unsigned *const f
 /* check if X is on specific interface.
 // ->return value: 1 if yes, 0 otherwise.
 */
-static unsigned check_interface(const double *const X, const Patch_T *const patch, const int u)
+static Uint check_interface(const double *const X, const Patch_T *const patch, const int u)
 {
   
-  const unsigned ind = patch->interface[u]->point[0]->ind;
+  const Uint ind = patch->interface[u]->point[0]->ind;
   double res = EPS*root_square(3,X,0);
   double *Y;
   
@@ -206,16 +206,16 @@ static unsigned check_interface(const double *const X, const Patch_T *const patc
 // node to this given point and return its index.
 // ->return value: node index.
 */
-unsigned node_onFace(const double *const x, const unsigned f,const Patch_T *const patch)
+Uint node_onFace(const double *const x, const Uint f,const Patch_T *const patch)
 {
   const Interface_T *const face = patch->interface[f];
   Node_T **const node = patch->node;
   double nrm, s = DBL_MAX;
-  unsigned ind = UINT_MAX,i;
+  Uint ind = UINT_MAX,i;
   
   FOR_ALL(i,face->point)
   {
-    unsigned id = face->point[i]->ind;
+    Uint id = face->point[i]->ind;
     nrm = root_square(3,x,node[id]->x);
     if (LSS(nrm,s))
     {
@@ -242,10 +242,10 @@ SubFace_T *get_paired_subface(const SubFace_T *const sub)
 }
 
 /* ->return value: total number of nodes on the given grid */
-unsigned total_nodes_grid(const Grid_T *const grid)
+Uint total_nodes_grid(const Grid_T *const grid)
 {
-  unsigned pa;
-  unsigned sum = 0;
+  Uint pa;
+  Uint sum = 0;
   
   FOR_ALL(pa,grid->patch)
     sum += total_nodes_patch(grid->patch[pa]);
@@ -254,7 +254,7 @@ unsigned total_nodes_grid(const Grid_T *const grid)
 }
 
 /* ->return value: total number of nodes on the given patch */
-unsigned total_nodes_patch(const Patch_T *const patch)
+Uint total_nodes_patch(const Patch_T *const patch)
 {
   return patch->n[0]*patch->n[1]*patch->n[2];
 }
@@ -280,13 +280,13 @@ Coord_T find_coord(const char *const coordsys)
 // producing same random number in a loop.
 // ->return value: random number in the double data type within the range.
 */
-double random_double(const double initial,const double final,const unsigned s)
+double random_double(const double initial,const double final,const Uint s)
 {
   time_t t;
   
   /* Initializes random number generator */
   if (s == 0)
-    srand((unsigned) time(&t));
+    srand((Uint) time(&t));
    
   return initial+((final-initial)/RAND_MAX)*rand();
 }
@@ -294,7 +294,7 @@ double random_double(const double initial,const double final,const unsigned s)
 /* hard copy subface s1 to subface s2 */
 void copy_subface(SubFace_T *const s2,const SubFace_T *const s1)
 {
-  unsigned i;
+  Uint i;
 
   s2->patch = s1->patch;
   s2->flags_str = dup_s(s1->flags_str);
@@ -331,10 +331,10 @@ void copy_subface(SubFace_T *const s2,const SubFace_T *const s1)
 // this function gets n and return i mean invers(id[i]) = i;
 // ->return value : invers(id[i])
 */
-unsigned subface_map_invers_id(const SubFace_T *const subface,const unsigned n)
+Uint subface_map_invers_id(const SubFace_T *const subface,const Uint n)
 {
-  unsigned i;
-  unsigned s = UINT_MAX;
+  Uint i;
+  Uint s = UINT_MAX;
   
   for (i = 0; i < subface->np; ++i)
     if (subface->id[i] == n)
@@ -344,15 +344,15 @@ unsigned subface_map_invers_id(const SubFace_T *const subface,const unsigned n)
 }
 
 /* given array s and its dimension, duplicate the array.
-// ->return value: duplicated unsigned array. */
-unsigned *dup_UINT(const unsigned *const s,const unsigned N)
+// ->return value: duplicated Uint array. */
+Uint *dup_UINT(const Uint *const s,const Uint N)
 {
   if (!s)
     Error0("The given array to be duplicated is Null!");
   
-  unsigned *dup = calloc(N,sizeof(*dup));
+  Uint *dup = calloc(N,sizeof(*dup));
   IsNull(dup);
-  unsigned i;
+  Uint i;
   
   for (i = 0; i < N; ++i)
     dup[i] = s[i];
@@ -365,8 +365,8 @@ double max_Jacobian_dX_dx(Patch_T *const patch)
 {
   double max = 0;
   double abs_j;
-  const unsigned nn = patch->nn;
-  unsigned l; 
+  const Uint nn = patch->nn;
+  Uint l; 
   
   for (l = 0; l < nn; ++l)
   {
@@ -411,7 +411,7 @@ double max_Jacobian_dX_dx(Patch_T *const patch)
 double spectral_expansion_truncation_error(Field_T *const f)
 {
   const double *const Cijk = make_coeffs_3d(f);
-  const unsigned *const n  = f->patch->n;
+  const Uint *const n  = f->patch->n;
   
   return fabs(Cijk[L(n,n[0]-1,n[1]-1,n[2]-1)]);
 }
@@ -423,19 +423,19 @@ void print_spectral_expansion_truncation_error(Grid_T *const grid)
   pr_line_custom('=');
   printf("Truncation error at spectral expansion of the fields ...\n\n");
 
-  const unsigned np = grid->np;
-  unsigned p;
+  const Uint np = grid->np;
+  Uint p;
   
   UF_OpenMP(omp parallel for)
   for (p = 0; p < np; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned nfld  = patch->nfld;
+    Uint nfld  = patch->nfld;
     double max_err = 0;
     const char *max_err_field_name = 0;
     const char *max_err_patch_name = 0;
     int len;
-    unsigned f;
+    Uint f;
     
     for (f = 0; f < nfld; ++f)
     {
@@ -475,13 +475,13 @@ void print_spectral_expansion_truncation_error(Grid_T *const grid)
 // o : given order of derivative
 // ->return value: error in calculation = general idea is as follow:
 // 1e-14*max(func)*max(Jacobian)^(order of derivative )*n*n^(2*order of derivative)*10  */
-double spectral_derivative_max_error(const Field_T *const f,const unsigned o)
+double spectral_derivative_max_error(const Field_T *const f,const Uint o)
 {
   double e = 1e-15;
   double max_f,
          max_j;
-  unsigned max_n;
-  const unsigned *const n = f->patch->n;
+  Uint max_n;
+  const Uint *const n = f->patch->n;
   const char *der_par = PgetsEZ("Derivative_Method");
   
   if (strstr_i(der_par,"Spectral"))
@@ -512,7 +512,7 @@ Patch_T *GetPatch(const char *const stem,const Grid_T *const grid)
 {
   Patch_T *retPatch = 0;
   char name[1000];
-  unsigned p;
+  Uint p;
   
   sprintf(name,"grid%u_%s",grid->gn,stem);
   
@@ -535,9 +535,9 @@ Patch_T *GetPatch(const char *const stem,const Grid_T *const grid)
 
 
 /* print an array of double type with dimension n, for debuging purposes */
-void dbprint(const double *v,const unsigned n,const char *const desc)
+void dbprint(const double *v,const Uint n,const char *const desc)
 {
-  unsigned i;
+  Uint i;
   
   pr_line();
   
@@ -565,7 +565,7 @@ void shell_command(const char *const cmd)
 }
 
 /* return value-> N*sizeof(double), using calloc*/
-double *alloc_double(const unsigned N)
+double *alloc_double(const Uint N)
 {
   double *d;
   
@@ -576,10 +576,10 @@ double *alloc_double(const unsigned N)
 }
 
 /* return value-> M[R][C] double type memory using calloc */
-double **alloc_2D_double(const long unsigned R,const long unsigned C)
+double **alloc_2D_double(const long Uint R,const long Uint C)
 {
   double **M;
-  long unsigned row;
+  long Uint row;
   
   M = calloc(R,sizeof(*M));
   IsNull(M);
@@ -614,12 +614,12 @@ void free_2d(void *mem0)
 /* freeing 2 dimensions block of memory
 // knowing the number of rows is c
 */
-void free_2d_mem(void *mem0, const unsigned long c)
+void free_2d_mem(void *mem0, const Uint long c)
 {
   if (!mem0)
     return;
     
-  unsigned long i;
+  Uint long i;
   void **mem = mem0;
   
   for (i = 0; i < c; i++)

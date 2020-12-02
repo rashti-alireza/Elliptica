@@ -374,7 +374,7 @@ static Matrix_T *make_generic_matrix(const long Nr,const long Nc)
   {
     for (c = 0; c < Nc; ++c)
     {
-      A[r][c] = random_double((double)(Nr-Nc),(double)(Nr+Nc),(unsigned)r);
+      A[r][c] = random_double((double)(Nr-Nc),(double)(Nr+Nc),(Uint)r);
       if ((r+c)%4 == 1)
         A[r][c] = 0;
     }

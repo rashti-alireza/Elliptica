@@ -49,8 +49,8 @@ void bbn_free_data_g_gI_analytic(
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
     double *const _gamma_D2D2 = get_v("_gamma_D2D2",params);
     double *const _gamma_D0D2 = get_v("_gamma_D0D2",params);
     double *const _gamma_D0D0 = get_v("_gamma_D0D0",params);
@@ -221,8 +221,8 @@ void bbn_free_data_dg_analytic(
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
   
 double *const _dgamma_D1D2D2 = get_v("_dgamma_D1D2D2",params);
 double *const _dgamma_D0D0D1 = get_v("_dgamma_D0D0D1",params);
@@ -470,8 +470,8 @@ void bbn_free_data_ddg_analytic(
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
 
 double *const _ddgamma_D2D2D0D2 = get_v("_ddgamma_D2D2D0D2",params);
 double *const _ddgamma_D0D1D0D1 = get_v("_ddgamma_D0D1D0D1",params);
@@ -1599,8 +1599,8 @@ void bbn_free_data_dddg_analytic(
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
 
 double *const _dddgamma_D0D1D2D2D1 = get_v("_dddgamma_D0D1D2D2D1",params);
 double *const _dddgamma_D0D1D2D0D1 = get_v("_dddgamma_D0D1D2D0D1",params);

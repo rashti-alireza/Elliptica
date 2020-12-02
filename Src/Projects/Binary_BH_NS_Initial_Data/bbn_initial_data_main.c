@@ -33,7 +33,7 @@ void bbn_construct_id(void)
   
   /* the outer most iteration algorithm: */
   Grid_T *grid_prev = 0, *grid_next = 0, *grid = 0;
-  unsigned iter = 0;
+  Uint iter = 0;
     
   /* main iteration loop */
   while(!Pgeti("STOP"))
@@ -102,7 +102,7 @@ void bbn_elliptic_eqs_convergence_test(void)
   
   /* the outer most iteration algorithm: */
   Grid_T *grid_prev = 0, *grid_next = 0, *grid = 0;
-  unsigned iter = 0;
+  Uint iter = 0;
     
   /* main iteration loop */
   while(!Pgeti("STOP"))
@@ -146,14 +146,14 @@ void bbn_elliptic_eqs_convergence_test(void)
 
 /* updating iterative parameters, STOP parameter and output directories.
 // new output directory is made based on changing of resolution. */
-static void update_parameters_and_directories(const unsigned main_loop_iter)
+static void update_parameters_and_directories(const Uint main_loop_iter)
 {
   const char *const FOLDER_NANE_FORMAT = "BBN_%s_%ux%ux%u";
-  const unsigned total_iters = total_iterations_ip();
-  const unsigned total_ipars = total_iterative_parameters_ip();
-  const unsigned iter_n = (unsigned)Pgeti("iteration_number");
-  unsigned iter;/* number of iterations have been performed for the simulation */
-  unsigned n[3];/* number of points */
+  const Uint total_iters = total_iterations_ip();
+  const Uint total_ipars = total_iterative_parameters_ip();
+  const Uint iter_n = (Uint)Pgeti("iteration_number");
+  Uint iter;/* number of iterations have been performed for the simulation */
+  Uint n[3];/* number of points */
   const char *path_par = Pgets("output_directory_path");
   char folder_name_next[1000] = {'\0'},
        folder_name_prev[1000] = {'\0'};
@@ -162,7 +162,7 @@ static void update_parameters_and_directories(const unsigned main_loop_iter)
   const char *const parfile_stem = Pgets("parameter_file_name_stem");
   char cp_cmd[STR_LEN_MAX];
   char *str;
-  unsigned i;
+  Uint i;
   
   /* if the initialization is from checkpoint_file do nothing */
   if (Pcmps("BH_NS_initialization","checkpoint_file"))
@@ -192,9 +192,9 @@ static void update_parameters_and_directories(const unsigned main_loop_iter)
   } 
   
   /* find the previous folder name */
-  n[0] = (unsigned)PgetiEZ("n_a");
-  n[1] = (unsigned)PgetiEZ("n_b");
-  n[2] = (unsigned)PgetiEZ("n_c");
+  n[0] = (Uint)PgetiEZ("n_a");
+  n[1] = (Uint)PgetiEZ("n_b");
+  n[2] = (Uint)PgetiEZ("n_c");
   sprintf(folder_name_prev,FOLDER_NANE_FORMAT,parfile_stem,n[0],n[1],n[2]);  
   
   /* update the parameter accoding to the iteration number */
@@ -209,9 +209,9 @@ static void update_parameters_and_directories(const unsigned main_loop_iter)
   }
   
   /* find the name of next folder */
-  n[0] = (unsigned)PgetiEZ("n_a");
-  n[1] = (unsigned)PgetiEZ("n_b");
-  n[2] = (unsigned)PgetiEZ("n_c");
+  n[0] = (Uint)PgetiEZ("n_a");
+  n[1] = (Uint)PgetiEZ("n_b");
+  n[2] = (Uint)PgetiEZ("n_c");
   
   /* this parameter helps to use some of the previous grid data */
   Pseti("did_resolution_change?",0);

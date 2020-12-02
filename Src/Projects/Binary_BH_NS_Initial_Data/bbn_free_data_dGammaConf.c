@@ -149,8 +149,8 @@ void bbn_free_date_dGammaConf(Patch_T *const patch)
   REALLOC_v_WRITE_v(_dGamma_U0D0D1D2)
 
 
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
   for(ijk = 0; ijk < nn; ++ijk)
   {
   double dgI_U0U1D0 = 

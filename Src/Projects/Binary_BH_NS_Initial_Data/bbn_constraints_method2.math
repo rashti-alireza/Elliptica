@@ -18,15 +18,15 @@ Ccode["void bbn_calculate_constraints_2nd(Grid_T *const grid)"];
 ``
 `  bbn_make_K_UiUj_and_dK_UiUj(grid);`
 `  bbn_make_metric_and_Gamma_and_derivatives(grid);`
-`  const unsigned np = grid->np;`
-`  unsigned p;`
+`  const Uint np = grid->np;`
+`  Uint p;`
 ``
 `  OpenMP_Patch_Pragma(omp parallel for)`
 `  for(p = 0; p < np; ++p)`
 `  {`
 `    Patch_T *patch = grid->patch[p];`
-`    unsigned nn = patch->nn;`
-`    unsigned ijk;`
+`    Uint nn = patch->nn;`
+`    Uint ijk;`
 ``
 `    if(IsItInsideBHPatch(patch))`
 `       continue;`

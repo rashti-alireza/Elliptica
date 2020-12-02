@@ -10,13 +10,13 @@ double bbn_BH_irreducible_mass(Grid_T *const grid);
 double bbn_BH_irreducible_mass(Grid_T *const grid)
 {
   double A_AH = 0;
-  unsigned p;
+  Uint p;
 
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned nn    = patch->nn;
-    unsigned ijk;
+    Uint nn    = patch->nn;
+    Uint ijk;
 
     if (!IsItHorizonPatch(patch))
       continue;

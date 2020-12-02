@@ -23,13 +23,13 @@ Matrix_T *invert_matrix(Matrix_T *const M)
   Matrix_T *ccsM = 0;
   const long row  = M->row;
   const long col  = M->col;
-  const long unsigned max = col>=row?(long unsigned)col:(long unsigned)row;
+  const long Uint max = col>=row?(long Uint)col:(long Uint)row;
   int *Ap; 
   int *Ai;
   double *Ax;
   double **const inv = invertM->reg->A;
-  double *ej = alloc_double((unsigned)M->row);
-  double *x = alloc_double((unsigned)M->row);
+  double *ej = alloc_double((Uint)M->row);
+  double *x = alloc_double((Uint)M->row);
   double Info[UMFPACK_INFO];
   double Control[UMFPACK_CONTROL];
   void *Symbolic,*Numeric;
@@ -40,7 +40,7 @@ Matrix_T *invert_matrix(Matrix_T *const M)
   // dimensions in "int" range. one reason is this function uses
   // umfpack_di_*. so make sure this condition is held.
   */
-  assert(max<(long unsigned)INT_MAX);
+  assert(max<(long Uint)INT_MAX);
   
   if (M->ccs_f)
     ccsM = M;

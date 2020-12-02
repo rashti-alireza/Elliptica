@@ -12,7 +12,7 @@
 void *bbn_jacobian_eq_phi(void *vp1,void *vp2)
 {
   DDM_SCHUR_JACOBIAN_EQ_DECLARE
-  unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
+  Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
   if (!strcmp_i(Pgets("grid_kind"),"BBN_CubedSpherical_grid"))
     Error0("For this grid you need to figure out where to set phi = 0.\n");
   
@@ -241,7 +241,7 @@ t1_e_;
    const double Att_Con_Num = 1E-5;
    fdInterp_dfs_T *const dInterp_df = get_dInterp_df(patch,0,"none");
    const double NS_center[3] = {Pgetd("NS_center_x"),Pgetd("NS_center_y"),Pgetd("NS_center_z")};
-   const unsigned nn = patch->nn;
+   const Uint nn = patch->nn;
    double *d_df = alloc_double(nn);
    double X[3];
 

@@ -1,5 +1,6 @@
 #ifndef maths_special_function_LIB_H
 #define maths_special_function_LIB_H
+#include "elliptica_system_lib.h"
 
 #include <complex.h>
 #undef I

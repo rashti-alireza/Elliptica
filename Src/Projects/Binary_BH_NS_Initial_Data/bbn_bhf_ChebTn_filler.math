@@ -90,7 +90,7 @@ point     = x;
 
 ## print C function:
 `arg="(double *const a,const double fr0,const double fr1,"\`
-`"const double dfdr,const double ddfddr,const double rfill,const unsigned N)"`
+`"const double dfdr,const double ddfddr,const double rfill,const Uint N)"`
 `print('')`
 `print('#include "bbn_headers.h"')`
 `print('')`

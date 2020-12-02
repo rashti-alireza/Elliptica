@@ -8,8 +8,8 @@
 /* filling with cubed spherical coordinate patches for SBH grid */
 void fill_patches_SBH_CubedSpherical_grid(Grid_T *const grid)
 {
-  const unsigned N_outermost_split = (unsigned) Pgeti("Number_of_Outermost_Split");
-  unsigned i,pn;
+  const Uint N_outermost_split = (Uint) Pgeti("Number_of_Outermost_Split");
+  Uint i,pn;
   
   pn = 0;
   populate_central_BH_around(grid,pn);
@@ -26,8 +26,8 @@ void fill_patches_SBH_CubedSpherical_grid(Grid_T *const grid)
 /* filling with cubed spherical coordinate patches for SNS grid */
 void fill_patches_SNS_CubedSpherical_grid(Grid_T *const grid)
 {
-  const unsigned N_outermost_split = (unsigned) Pgeti("Number_of_Outermost_Split");
-  unsigned i,pn;
+  const Uint N_outermost_split = (Uint) Pgeti("Number_of_Outermost_Split");
+  Uint i,pn;
   
   pn = 0; /* patch number */
   populate_central_NS_central_box(grid,pn++);/* +1 */
@@ -47,8 +47,8 @@ void fill_patches_SNS_CubedSpherical_grid(Grid_T *const grid)
 /* filling with cubed spherical + box coordinate patches for SNS grid */
 void fill_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid)
 {
-  const unsigned N_outermost_split = (unsigned) Pgeti("Number_of_Outermost_Split");
-  unsigned i,pn;
+  const Uint N_outermost_split = (Uint) Pgeti("Number_of_Outermost_Split");
+  Uint i,pn;
   
   pn = 0; /* patch number */
   populate_left_NS_central_box(grid,pn++);/* +1 */
@@ -74,8 +74,8 @@ void fill_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid)
 /* filling cubed spherical coordinate patches for BNS grid */
 void fill_patches_BNS_CubedSpherical_grid(Grid_T *const grid)
 {
-  const unsigned N_outermost_split = (unsigned) Pgeti("Number_of_Outermost_Split");
-  unsigned i,pn;
+  const Uint N_outermost_split = (Uint) Pgeti("Number_of_Outermost_Split");
+  Uint i,pn;
   
   pn = 0; /* patch number */
   populate_left_NS_central_box(grid,pn++);/* +1 */
@@ -104,8 +104,8 @@ void fill_patches_BNS_CubedSpherical_grid(Grid_T *const grid)
 /* filling cubed spherical coordinate patches for BBN grid */
 void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
 {
-  const unsigned N_outermost_split = (unsigned) Pgeti("Number_of_Outermost_Split");
-  unsigned i,pn;
+  const Uint N_outermost_split = (Uint) Pgeti("Number_of_Outermost_Split");
+  Uint i,pn;
   
   pn = 0; /* patch number */
   populate_left_NS_central_box(grid,pn++);/* +1 */
@@ -132,7 +132,7 @@ void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
 void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
 {
   const double r_outermost = Pgetd("grid_outermost_radius");
-  unsigned pn = 0; /* patch number */
+  Uint pn = 0; /* patch number */
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS)
   {
@@ -186,7 +186,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     else
     {
       /* set innerB for BH_around */
-      unsigned nbh = 0,p;
+      Uint nbh = 0,p;
       Patch_T **patches = 
         collect_patches(grid,"BH_around_IB",&nbh);
       
@@ -288,7 +288,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     else
     {
       /* set innerB for BH_around */
-      unsigned nbh = 0,p;
+      Uint nbh = 0,p;
       Patch_T **patches = 0;
      
       /* BH1 */
@@ -351,7 +351,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     else
     {
       /* set innerB for BH_around */
-      unsigned nbh = 0,p;
+      Uint nbh = 0,p;
       Patch_T **patches = 0;
      
       /* BH */
@@ -392,7 +392,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     Error0(NO_OPTION);
   }
   
-  assert(pn == (unsigned)Pgeti("SplitCS_Npatches"));
+  assert(pn == (Uint)Pgeti("SplitCS_Npatches"));
   
 }
 
@@ -404,12 +404,12 @@ populate_CS_patch_SplitCS
   Grid_T *const grid,
   const char *const obj0,/* NS, BH or etc. */
   const Flag_T dir0,/* LEFT or RIGHT or CENTER or NONE */
-  unsigned *const pn/* starting patch number,is increased for each add */
+  Uint *const pn/* starting patch number,is increased for each add */
   )
 {
-  const unsigned Nsd[3] = {(unsigned)Pgeti("SplitCS_Nsplit_a"),
-                           (unsigned)Pgeti("SplitCS_Nsplit_b"),
-                           (unsigned)Pgeti("SplitCS_Nsplit_c")};
+  const Uint Nsd[3] = {(Uint)Pgeti("SplitCS_Nsplit_a"),
+                           (Uint)Pgeti("SplitCS_Nsplit_b"),
+                           (Uint)Pgeti("SplitCS_Nsplit_c")};
   char parU[STR_SIZE3] = {'\0'};
   char parD[STR_SIZE3] = {'\0'};
   char par[STR_SIZE3]  = {'\0'};
@@ -417,8 +417,8 @@ populate_CS_patch_SplitCS
   char name[STR_SIZE3] = {'\0'};
   const char *dir      = 0;
   Flag_T type = UNDEFINED;
-  unsigned d0,d1,d2,ijk;
-  unsigned p;/* patch number */
+  Uint d0,d1,d2,ijk;
+  Uint p;/* patch number */
   
   /* object name */
   set_object_name_split_CS(obj,obj0);
@@ -497,9 +497,9 @@ populate_CS_patch_SplitCS
           patch->pn = p;
           
           /* filling n */
-          patch->n[0] = (unsigned)Pgeti("SplitCS_n_a");
-          patch->n[1] = (unsigned)Pgeti("SplitCS_n_b");
-          patch->n[2] = (unsigned)Pgeti("SplitCS_n_c");
+          patch->n[0] = (Uint)Pgeti("SplitCS_n_a");
+          patch->n[1] = (Uint)Pgeti("SplitCS_n_b");
+          patch->n[2] = (Uint)Pgeti("SplitCS_n_c");
           
           /* filling nn */
           patch->nn = total_nodes_patch(patch);
@@ -578,9 +578,9 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
   const Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
   const Flag_T type = patch->CoordSysInfo->CubedSphericalCoord->type;
   double S = 0; /* sign */
-  unsigned a = 0, b = 0, c = 0;/* permuted indices */
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  Uint a = 0, b = 0, c = 0;/* permuted indices */
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   const Field_T *const R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f,
                 *const R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
   const double xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1,
@@ -589,7 +589,7 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
                 R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
                
   const double *const C = patch->c;/* center of origine translated */
-  unsigned i,j,k,l;
+  Uint i,j,k,l;
   
   initialize_collocation_struct(patch,&coll_s[0],0);
   initialize_collocation_struct(patch,&coll_s[1],1);
@@ -880,7 +880,7 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
     
     /* set sign and permutations */
     double sign = 0;
-    unsigned iper = 0,jper = 0,kper = 0;
+    Uint iper = 0,jper = 0,kper = 0;
     SignAndIndex_permutation_CubedSphere(side,&iper,&jper,&kper,&sign);
     patch->JacobianT->SCS->sign = sign;
     patch->JacobianT->SCS->iper = iper;
@@ -900,7 +900,7 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
     
     /* set sign and permutations */
     double sign = 0;
-    unsigned iper = 0,jper = 0,kper = 0;
+    Uint iper = 0,jper = 0,kper = 0;
     SignAndIndex_permutation_CubedSphere(side,&iper,&jper,&kper,&sign);
     patch->JacobianT->SCS->sign = sign;
     patch->JacobianT->SCS->iper = iper;
@@ -927,8 +927,8 @@ static void R1_derivative(Patch_T *const patch)
           *dR1_dy = add_field("dR1_dy",0,patch,YES),
           *dR1_dz = add_field("dR1_dz",0,patch,YES);
   Field_T *const R1 = patch->fields[Ind("surface_function")];
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
           
   dR1_dX->v = Partial_Derivative(R1,"a");
   dR1_dY->v = Partial_Derivative(R1,"b");
@@ -961,8 +961,8 @@ static void R2_derivative(Patch_T *const patch)
           *dR2_dy = add_field("dR2_dy",0,patch,YES),
           *dR2_dz = add_field("dR2_dz",0,patch,YES);
   Field_T *const R2 = patch->fields[Ind("surface_function")];
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
           
   dR2_dX->v = Partial_Derivative(R2,"a");
   dR2_dY->v = Partial_Derivative(R2,"b");
@@ -1004,8 +1004,8 @@ static void R12_derivatives_SCS(Patch_T *const patch)
           *dR1_dz = add_field("dR1_dz",0,patch,YES);
   Field_T *const R1 = patch->fields[Ind(SigmaD)];
   
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
           
   dR2_dX->v = Partial_Derivative(R2,"a");
   dR2_dY->v = Partial_Derivative(R2,"b");
@@ -1071,9 +1071,9 @@ double R_interpolation_CS(Field_T *const R,const double *const X)
 }
 
 /* populating properties of patch for left NS */
-static void populate_left_NS(Grid_T *const grid,const unsigned pn)
+static void populate_left_NS(Grid_T *const grid,const Uint pn)
 {
-  unsigned p;/* patch */
+  Uint p;/* patch */
   
   for (p = pn; p < pn+6; p++)
   {
@@ -1084,7 +1084,7 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
-    unsigned n,ijk;
+    Uint n,ijk;
     
     /* filling flags */
     patch->CoordSysInfo->CubedSphericalCoord->side = side;
@@ -1100,17 +1100,17 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
     patch->innerB = 0;
     
     /* filling n */
-    patch->n[0] = (unsigned)PgetiEZ("n_a");
-    patch->n[1] = (unsigned)PgetiEZ("n_b");
-    patch->n[2] = (unsigned)PgetiEZ("n_c");
+    patch->n[0] = (Uint)PgetiEZ("n_a");
+    patch->n[1] = (Uint)PgetiEZ("n_b");
+    patch->n[2] = (Uint)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"left_NS");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)PgetiEZ(ret.s0);
+    n = (Uint)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)PgetiEZ(ret.s1);
+    n = (Uint)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)PgetiEZ(ret.s2);
+    n = (Uint)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -1265,9 +1265,9 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of patch for right BH */
-void populate_right_BH(Grid_T *const grid,const unsigned pn)
+void populate_right_BH(Grid_T *const grid,const Uint pn)
 {
-  unsigned p;/* patch */
+  Uint p;/* patch */
   
   for (p = pn; p < pn+6; p++)
   {
@@ -1278,7 +1278,7 @@ void populate_right_BH(Grid_T *const grid,const unsigned pn)
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
-    unsigned n,ijk;
+    Uint n,ijk;
     
     /* filling flags */
     patch->CoordSysInfo->CubedSphericalCoord->side = side;
@@ -1294,17 +1294,17 @@ void populate_right_BH(Grid_T *const grid,const unsigned pn)
     patch->innerB = 0;
     
     /* filling n */
-    patch->n[0] = (unsigned)PgetiEZ("n_a");
-    patch->n[1] = (unsigned)PgetiEZ("n_b");
-    patch->n[2] = (unsigned)PgetiEZ("n_c");
+    patch->n[0] = (Uint)PgetiEZ("n_a");
+    patch->n[1] = (Uint)PgetiEZ("n_b");
+    patch->n[2] = (Uint)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"right_BH");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)PgetiEZ(ret.s0);
+    n = (Uint)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)PgetiEZ(ret.s1);
+    n = (Uint)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)PgetiEZ(ret.s2);
+    n = (Uint)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -1459,9 +1459,9 @@ void populate_right_BH(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of patch for central NS */
-static void populate_central_NS(Grid_T *const grid,const unsigned pn)
+static void populate_central_NS(Grid_T *const grid,const Uint pn)
 {
-  unsigned p;/* patch */
+  Uint p;/* patch */
   
   for (p = pn; p < pn+6; p++)
   {
@@ -1472,7 +1472,7 @@ static void populate_central_NS(Grid_T *const grid,const unsigned pn)
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
-    unsigned n,ijk;
+    Uint n,ijk;
     
     /* filling flags */
     patch->CoordSysInfo->CubedSphericalCoord->side = side;
@@ -1488,17 +1488,17 @@ static void populate_central_NS(Grid_T *const grid,const unsigned pn)
     patch->innerB = 0;
     
     /* filling n */
-    patch->n[0] = (unsigned)PgetiEZ("n_a");
-    patch->n[1] = (unsigned)PgetiEZ("n_b");
-    patch->n[2] = (unsigned)PgetiEZ("n_c");
+    patch->n[0] = (Uint)PgetiEZ("n_a");
+    patch->n[1] = (Uint)PgetiEZ("n_b");
+    patch->n[2] = (Uint)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"NS");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)PgetiEZ(ret.s0);
+    n = (Uint)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)PgetiEZ(ret.s1);
+    n = (Uint)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)PgetiEZ(ret.s2);
+    n = (Uint)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -1653,9 +1653,9 @@ static void populate_central_NS(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of patch for right NS */
-static void populate_right_NS(Grid_T *const grid,const unsigned pn)
+static void populate_right_NS(Grid_T *const grid,const Uint pn)
 {
-  unsigned p;/* patch */
+  Uint p;/* patch */
   
   for (p = pn; p < pn+6; p++)
   {
@@ -1666,7 +1666,7 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
-    unsigned n,ijk;
+    Uint n,ijk;
     
     /* filling flags */
     patch->CoordSysInfo->CubedSphericalCoord->side = side;
@@ -1682,17 +1682,17 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
     patch->innerB = 0;
     
     /* filling n */
-    patch->n[0] = (unsigned)PgetiEZ("n_a");
-    patch->n[1] = (unsigned)PgetiEZ("n_b");
-    patch->n[2] = (unsigned)PgetiEZ("n_c");
+    patch->n[0] = (Uint)PgetiEZ("n_a");
+    patch->n[1] = (Uint)PgetiEZ("n_b");
+    patch->n[2] = (Uint)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"right_NS");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)PgetiEZ(ret.s0);
+    n = (Uint)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)PgetiEZ(ret.s1);
+    n = (Uint)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)PgetiEZ(ret.s2);
+    n = (Uint)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -1847,9 +1847,9 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of patch for right NS around */
-static void populate_right_NS_around(Grid_T *const grid,const unsigned pn)
+static void populate_right_NS_around(Grid_T *const grid,const Uint pn)
 {
-  unsigned p;/* patch */
+  Uint p;/* patch */
   
   for (p = pn; p < pn+6; p++)
   {
@@ -1860,7 +1860,7 @@ static void populate_right_NS_around(Grid_T *const grid,const unsigned pn)
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
-    unsigned n,ijk;
+    Uint n,ijk;
     
     /* filling flags */
     patch->CoordSysInfo->CubedSphericalCoord->side = side;
@@ -1876,17 +1876,17 @@ static void populate_right_NS_around(Grid_T *const grid,const unsigned pn)
     patch->innerB = 0;
     
     /* filling n */
-    patch->n[0] = (unsigned)PgetiEZ("n_a");
-    patch->n[1] = (unsigned)PgetiEZ("n_b");
-    patch->n[2] = (unsigned)PgetiEZ("n_c");
+    patch->n[0] = (Uint)PgetiEZ("n_a");
+    patch->n[1] = (Uint)PgetiEZ("n_b");
+    patch->n[2] = (Uint)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"right_NS");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)PgetiEZ(ret.s0);
+    n = (Uint)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)PgetiEZ(ret.s1);
+    n = (Uint)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)PgetiEZ(ret.s2);
+    n = (Uint)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -2041,9 +2041,9 @@ static void populate_right_NS_around(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of patch for right BH around */
-static void populate_right_BH_around(Grid_T *const grid,const unsigned pn)
+static void populate_right_BH_around(Grid_T *const grid,const Uint pn)
 {
-  unsigned p;/* patch */
+  Uint p;/* patch */
   
   for (p = pn; p < pn+6; p++)
   {
@@ -2054,7 +2054,7 @@ static void populate_right_BH_around(Grid_T *const grid,const unsigned pn)
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
-    unsigned n,ijk;
+    Uint n,ijk;
     
     /* filling flags */
     patch->CoordSysInfo->CubedSphericalCoord->side = side;
@@ -2070,17 +2070,17 @@ static void populate_right_BH_around(Grid_T *const grid,const unsigned pn)
     patch->innerB = 1;
     
     /* filling n */
-    patch->n[0] = (unsigned)PgetiEZ("n_a");
-    patch->n[1] = (unsigned)PgetiEZ("n_b");
-    patch->n[2] = (unsigned)PgetiEZ("n_c");
+    patch->n[0] = (Uint)PgetiEZ("n_a");
+    patch->n[1] = (Uint)PgetiEZ("n_b");
+    patch->n[2] = (Uint)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"right_BH");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)PgetiEZ(ret.s0);
+    n = (Uint)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)PgetiEZ(ret.s1);
+    n = (Uint)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)PgetiEZ(ret.s2);
+    n = (Uint)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -2235,9 +2235,9 @@ static void populate_right_BH_around(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of patch for left NS around */
-static void populate_left_NS_around(Grid_T *const grid,const unsigned pn)
+static void populate_left_NS_around(Grid_T *const grid,const Uint pn)
 {
-  unsigned p;/* patch */
+  Uint p;/* patch */
   
   for (p = pn; p < pn+6; p++)
   {
@@ -2248,7 +2248,7 @@ static void populate_left_NS_around(Grid_T *const grid,const unsigned pn)
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
-    unsigned n,ijk;
+    Uint n,ijk;
     
     /* filling flags */
     patch->CoordSysInfo->CubedSphericalCoord->side = side;
@@ -2264,17 +2264,17 @@ static void populate_left_NS_around(Grid_T *const grid,const unsigned pn)
     patch->innerB = 0;
     
     /* filling n */
-    patch->n[0] = (unsigned)PgetiEZ("n_a");
-    patch->n[1] = (unsigned)PgetiEZ("n_b");
-    patch->n[2] = (unsigned)PgetiEZ("n_c");
+    patch->n[0] = (Uint)PgetiEZ("n_a");
+    patch->n[1] = (Uint)PgetiEZ("n_b");
+    patch->n[2] = (Uint)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"left_NS");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)PgetiEZ(ret.s0);
+    n = (Uint)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)PgetiEZ(ret.s1);
+    n = (Uint)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)PgetiEZ(ret.s2);
+    n = (Uint)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -2429,9 +2429,9 @@ static void populate_left_NS_around(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of patch for central BH around */
-static void populate_central_BH_around(Grid_T *const grid,const unsigned pn)
+static void populate_central_BH_around(Grid_T *const grid,const Uint pn)
 {
-  unsigned p;/* patch */
+  Uint p;/* patch */
   
   for (p = pn; p < pn+6; p++)
   {
@@ -2442,7 +2442,7 @@ static void populate_central_BH_around(Grid_T *const grid,const unsigned pn)
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
-    unsigned n,ijk;
+    Uint n,ijk;
     
     /* filling flags */
     patch->CoordSysInfo->CubedSphericalCoord->side = side;
@@ -2458,17 +2458,17 @@ static void populate_central_BH_around(Grid_T *const grid,const unsigned pn)
     patch->innerB = 1;
     
     /* filling n */
-    patch->n[0] = (unsigned)PgetiEZ("n_a");
-    patch->n[1] = (unsigned)PgetiEZ("n_b");
-    patch->n[2] = (unsigned)PgetiEZ("n_c");
+    patch->n[0] = (Uint)PgetiEZ("n_a");
+    patch->n[1] = (Uint)PgetiEZ("n_b");
+    patch->n[2] = (Uint)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"BH");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)PgetiEZ(ret.s0);
+    n = (Uint)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)PgetiEZ(ret.s1);
+    n = (Uint)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)PgetiEZ(ret.s2);
+    n = (Uint)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -2623,9 +2623,9 @@ static void populate_central_BH_around(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of patch for central NS around */
-static void populate_central_NS_around(Grid_T *const grid,const unsigned pn)
+static void populate_central_NS_around(Grid_T *const grid,const Uint pn)
 {
-  unsigned p;/* patch */
+  Uint p;/* patch */
   
   for (p = pn; p < pn+6; p++)
   {
@@ -2636,7 +2636,7 @@ static void populate_central_NS_around(Grid_T *const grid,const unsigned pn)
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
-    unsigned n,ijk;
+    Uint n,ijk;
     
     /* filling flags */
     patch->CoordSysInfo->CubedSphericalCoord->side = side;
@@ -2652,17 +2652,17 @@ static void populate_central_NS_around(Grid_T *const grid,const unsigned pn)
     patch->innerB = 0;
     
     /* filling n */
-    patch->n[0] = (unsigned)PgetiEZ("n_a");
-    patch->n[1] = (unsigned)PgetiEZ("n_b");
-    patch->n[2] = (unsigned)PgetiEZ("n_c");
+    patch->n[0] = (Uint)PgetiEZ("n_a");
+    patch->n[1] = (Uint)PgetiEZ("n_b");
+    patch->n[2] = (Uint)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"NS");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)PgetiEZ(ret.s0);
+    n = (Uint)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)PgetiEZ(ret.s1);
+    n = (Uint)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)PgetiEZ(ret.s2);
+    n = (Uint)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -2818,9 +2818,9 @@ static void populate_central_NS_around(Grid_T *const grid,const unsigned pn)
 
 
 /* populating properties of patch for right NS */
-static void populate_outermost(Grid_T *const grid,const unsigned pn,const unsigned o)
+static void populate_outermost(Grid_T *const grid,const Uint pn,const Uint o)
 {
-  unsigned p;/* patch */
+  Uint p;/* patch */
   
   for (p = pn; p < pn+6; p++)
   {
@@ -2829,7 +2829,7 @@ static void populate_outermost(Grid_T *const grid,const unsigned pn,const unsign
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
-    unsigned n;
+    Uint n;
     
     /* filling flags */
     patch->CoordSysInfo->CubedSphericalCoord->side = side;
@@ -2938,17 +2938,17 @@ static void populate_outermost(Grid_T *const grid,const unsigned pn,const unsign
     }
 
     /* filling n */
-    patch->n[0] = (unsigned)PgetiEZ("n_a");
-    patch->n[1] = (unsigned)PgetiEZ("n_b");
-    patch->n[2] = (unsigned)PgetiEZ("n_c");
+    patch->n[0] = (Uint)PgetiEZ("n_a");
+    patch->n[1] = (Uint)PgetiEZ("n_b");
+    patch->n[2] = (Uint)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"Outermost%u",o);
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)PgetiEZ(ret.s0);
+    n = (Uint)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)PgetiEZ(ret.s1);
+    n = (Uint)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)PgetiEZ(ret.s2);
+    n = (Uint)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -2994,15 +2994,15 @@ static void populate_outermost(Grid_T *const grid,const unsigned pn,const unsign
 /* memory alloc patches for BNS_CubedSpherical type */
 void alloc_patches_BNS_CubedSpherical_grid(Grid_T *const grid)
 {
-  unsigned Np = 30;/* number of patches without outermost's 
+  Uint Np = 30;/* number of patches without outermost's 
                    4 sets of cubed sphere = 4*6
                    4 filling box
                    2 central box */
-  unsigned outermost;
-  unsigned i;
+  Uint outermost;
+  Uint i;
   
-  outermost = (unsigned) PgetiEZ("Number_of_Outermost_Split");
-  if (outermost != (unsigned)INT_MAX)
+  outermost = (Uint) PgetiEZ("Number_of_Outermost_Split");
+  if (outermost != (Uint)INT_MAX)
     Np += 6*outermost;
   
   grid->patch = calloc((Np+1),sizeof(*grid->patch));
@@ -3019,15 +3019,15 @@ void alloc_patches_BNS_CubedSpherical_grid(Grid_T *const grid)
 /* memory alloc patches for BBN_CubedSpherical type */
 void alloc_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
 {
-  unsigned Np = 23;/* number of patches without outermost's 
+  Uint Np = 23;/* number of patches without outermost's 
                    3 sets of cubed sphere = 3*6
                    4 filling boxex
                    1 central box */
-  unsigned outermost;
-  unsigned i;
+  Uint outermost;
+  Uint i;
   
-  outermost = (unsigned) PgetiEZ("Number_of_Outermost_Split");
-  if (outermost != (unsigned)INT_MAX)
+  outermost = (Uint) PgetiEZ("Number_of_Outermost_Split");
+  if (outermost != (Uint)INT_MAX)
     Np += 6*outermost;
   
   grid->patch = calloc((Np+1),sizeof(*grid->patch));
@@ -3047,7 +3047,7 @@ void set_object_name_split_CS(char *const obj,const char *const type)
 {
   assert(obj);
   
-  unsigned i = 0;
+  Uint i = 0;
   while (SCS_ObjType[i])
   {
     if (strcmp_i(SCS_ObjType[i],type))
@@ -3073,8 +3073,8 @@ void set_object_name_split_CS(char *const obj,const char *const type)
 void set_params_split_CS(Grid_Char_T *const grid_char)
 {
   Grid_T *const grid = grid_char->grid;/* this is the new grid */
-  unsigned n[3] = {0};
-  unsigned i,j,k,d0,d1,d2;
+  Uint n[3] = {0};
+  Uint i,j,k,d0,d1,d2;
   
   assert(grid);
   
@@ -3084,16 +3084,16 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   /* find out the splits and resolutions */
   /* { */
   /* resolution in each dir. */
-  const unsigned givenN[3] = {(unsigned)Pgeti("n_a"),
-                              (unsigned)Pgeti("n_b"),
-                              (unsigned)Pgeti("n_c")};
-  const unsigned maxN[3] = {(unsigned)Pgeti("grid_SplitCS_max_n_a"),
-                            (unsigned)Pgeti("grid_SplitCS_max_n_b"),
-                            (unsigned)Pgeti("grid_SplitCS_max_n_c")};
-  unsigned newN[3] = {0};/* new number of nodes in each direction */
-  unsigned Nsd[3]  = {0};/* number of splits in each dir. */
-  unsigned Nns[3]  = {0};/* number of nodes in each split patch */
-  unsigned Np      = 0;/* total number of main patches */
+  const Uint givenN[3] = {(Uint)Pgeti("n_a"),
+                              (Uint)Pgeti("n_b"),
+                              (Uint)Pgeti("n_c")};
+  const Uint maxN[3] = {(Uint)Pgeti("grid_SplitCS_max_n_a"),
+                            (Uint)Pgeti("grid_SplitCS_max_n_b"),
+                            (Uint)Pgeti("grid_SplitCS_max_n_c")};
+  Uint newN[3] = {0};/* new number of nodes in each direction */
+  Uint Nsd[3]  = {0};/* number of splits in each dir. */
+  Uint Nns[3]  = {0};/* number of nodes in each split patch */
+  Uint Np      = 0;/* total number of main patches */
   const double r_outermost = Pgetd("grid_outermost_radius");
   
   assert(maxN[0]>2 && maxN[1]>2 && maxN[2]>2);
@@ -3181,7 +3181,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   /* for each direction divide until the max resolution */
   for (i = 0; i < 3; ++i)
   {
-    unsigned d = 1;/* divide */
+    Uint d = 1;/* divide */
     n[i] = givenN[i]/d;
     while (n[i] > maxN[i])
     {
@@ -3235,9 +3235,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
       Pcmps("grid_kind","SplitCubedSpherical(BH+BH)"))
   
   { 
-  const unsigned Num_Obj = 2;
+  const Uint Num_Obj = 2;
   const double S  = grid_char->S;/* separation */
-  unsigned obj_n;/* BH or NS */
+  Uint obj_n;/* BH or NS */
   
   /* two different directions */
   if (strstr_i(grid_char->params[0]->dir,"left"))
@@ -3279,7 +3279,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     char parD[STR_SIZE3] = {'\0'};
     char par[STR_SIZE3]  = {'\0'};
     char obj[STR_SIZE1]  = {'\0'};
-    unsigned N_total,p;
+    Uint N_total,p;
     
     const char *obj0 = grid_char->params[obj_n]->obj;
     const char *dir  = grid_char->params[obj_n]->dir;
@@ -3288,7 +3288,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     double h = grid_char->params[obj_n]->h;
     const double *reClm = grid_char->params[obj_n]->relClm;
     const double *imClm = grid_char->params[obj_n]->imgClm;
-    unsigned lmax = grid_char->params[obj_n]->lmax;
+    Uint lmax = grid_char->params[obj_n]->lmax;
     /* find r step */
     double diag = sqrt(Pow2(l)+Pow2(w)+Pow2(h))/2.;
     double rmin = diag;
@@ -3644,7 +3644,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     char parD[STR_SIZE3] = {'\0'};
     char par[STR_SIZE3]  = {'\0'};
     char obj[STR_SIZE1]  = {'\0'};
-    unsigned N_total,p;
+    Uint N_total,p;
     
     /* find r step */
     const char *objstem = grid_char->params[obj_n]->obj;
@@ -3654,7 +3654,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     double h = S;
     const double *reClm = grid_char->params[obj_n]->relClm;
     const double *imClm = grid_char->params[obj_n]->imgClm;
-    unsigned lmax = grid_char->params[obj_n]->lmax;
+    Uint lmax = grid_char->params[obj_n]->lmax;
     double diag = sqrt(Pow2(l)+Pow2(w)+Pow2(h))/2.;
     double rmax = l/2 > MaxMag_d(w/2,h/2) ? l/2 : MaxMag_d(w/2,h/2);
     double rmin = grid_char->params[obj_n]->r_min;
@@ -3919,7 +3919,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     char parD[STR_SIZE3] = {'\0'};
     char par[STR_SIZE3]  = {'\0'};
     char obj[STR_SIZE1]  = {'\0'};
-    unsigned N_total,p;
+    Uint N_total,p;
     
     /* find r step */
     const char *obj0 = "outermost";
@@ -4337,9 +4337,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   else if (Pcmps("grid_kind","SplitCubedSpherical(NS)") ||
            Pcmps("grid_kind","SplitCubedSpherical(BH)")   )
   {
-  const unsigned Num_Obj = 1;
+  const Uint Num_Obj = 1;
   const double S  = grid_char->S;/* size of box around the single object */
-  unsigned obj_n;/* BH or NS */
+  Uint obj_n;/* BH or NS */
   
   assert(strstr_i(grid_char->params[0]->dir,"center"));
   grid_char->params[0]->dir = "center";
@@ -4367,7 +4367,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     char parD[STR_SIZE3] = {'\0'};
     char par[STR_SIZE3]  = {'\0'};
     char obj[STR_SIZE1]  = {'\0'};
-    unsigned N_total,p;
+    Uint N_total,p;
     
     const char *obj0 = grid_char->params[obj_n]->obj;
     const char *dir  = grid_char->params[obj_n]->dir;
@@ -4376,7 +4376,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     double h = grid_char->params[obj_n]->h;
     const double *reClm = grid_char->params[obj_n]->relClm;
     const double *imClm = grid_char->params[obj_n]->imgClm;
-    unsigned lmax = grid_char->params[obj_n]->lmax;
+    Uint lmax = grid_char->params[obj_n]->lmax;
     /* find r step */
     double diag = sqrt(Pow2(l)+Pow2(w)+Pow2(h))/2.;
     double rmin = diag;
@@ -4695,7 +4695,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     char parD[STR_SIZE3] = {'\0'};
     char par[STR_SIZE3]  = {'\0'};
     char obj[STR_SIZE1]  = {'\0'};
-    unsigned N_total,p;
+    Uint N_total,p;
     
     /* find r step */
     const char *objstem = grid_char->params[obj_n]->obj;
@@ -4705,7 +4705,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     double h = S;
     const double *reClm = grid_char->params[obj_n]->relClm;
     const double *imClm = grid_char->params[obj_n]->imgClm;
-    unsigned lmax = grid_char->params[obj_n]->lmax;
+    Uint lmax = grid_char->params[obj_n]->lmax;
     double diag = sqrt(Pow2(l)+Pow2(w)+Pow2(h))/2.;
     double rmax = l/2 > MaxMag_d(w/2,h/2) ? l/2 : MaxMag_d(w/2,h/2);
     double rmin = grid_char->params[obj_n]->r_min;
@@ -4963,7 +4963,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     char parD[STR_SIZE3] = {'\0'};
     char par[STR_SIZE3]  = {'\0'};
     char obj[STR_SIZE1]  = {'\0'};
-    unsigned N_total,p;
+    Uint N_total,p;
     
     /* find r step */
     const char *obj0 = "outermost";
@@ -5206,8 +5206,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
 /* memory alloc patches for BBN_Split_CubedSpherical type */
 void alloc_patches_Split_CubedSpherical_grid(Grid_T *const grid)
 {
-  const unsigned Np = (unsigned)Pgeti("SplitCS_Npatches");
-  unsigned i;
+  const Uint Np = (Uint)Pgeti("SplitCS_Npatches");
+  Uint i;
   
   grid->patch = calloc((Np+1),sizeof(*grid->patch));
   IsNull(grid->patch);
@@ -5223,15 +5223,15 @@ void alloc_patches_Split_CubedSpherical_grid(Grid_T *const grid)
 /* memory alloc patches for single neutron star using cubed spherical + box grid */
 void alloc_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid)
 {
-  unsigned Np = 18;/* number of patches without outermost's 
+  Uint Np = 18;/* number of patches without outermost's 
                    2 sets of cubed sphere = 2*6
                    4 filling boxes
                    2 central boxes */
-  unsigned outermost;
-  unsigned i;
+  Uint outermost;
+  Uint i;
   
-  outermost = (unsigned) PgetiEZ("Number_of_Outermost_Split");
-  if (outermost != (unsigned)INT_MAX)
+  outermost = (Uint) PgetiEZ("Number_of_Outermost_Split");
+  if (outermost != (Uint)INT_MAX)
     Np += 6*outermost;
   
   grid->patch = calloc((Np+1),sizeof(*grid->patch));
@@ -5248,14 +5248,14 @@ void alloc_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid)
 /* memory alloc patches for single neutron star using cubed spherical grid */
 void alloc_patches_SNS_CubedSpherical_grid(Grid_T *const grid)
 {
-  unsigned Np = 13;/* number of patches without outermost's 
+  Uint Np = 13;/* number of patches without outermost's 
                    2 sets of cubed sphere = 2*6
                    1 central boxes */
-  unsigned outermost;
-  unsigned i;
+  Uint outermost;
+  Uint i;
   
-  outermost = (unsigned) PgetiEZ("Number_of_Outermost_Split");
-  if (outermost != (unsigned)INT_MAX)
+  outermost = (Uint) PgetiEZ("Number_of_Outermost_Split");
+  if (outermost != (Uint)INT_MAX)
     Np += 6*outermost;
   
   grid->patch = calloc((Np+1),sizeof(*grid->patch));
@@ -5272,13 +5272,13 @@ void alloc_patches_SNS_CubedSpherical_grid(Grid_T *const grid)
 /* memory alloc patches for single black hole using cubed spherical grid */
 void alloc_patches_SBH_CubedSpherical_grid(Grid_T *const grid)
 {
-  unsigned Np = 6;/* number of patches without outermost's 
+  Uint Np = 6;/* number of patches without outermost's 
                    1 sets of cubed sphere = 1*6 */
-  unsigned outermost;
-  unsigned i;
+  Uint outermost;
+  Uint i;
   
-  outermost = (unsigned) PgetiEZ("Number_of_Outermost_Split");
-  if (outermost != (unsigned)INT_MAX)
+  outermost = (Uint) PgetiEZ("Number_of_Outermost_Split");
+  if (outermost != (Uint)INT_MAX)
     Np += 6*outermost;
   
   grid->patch = calloc((Np+1),sizeof(*grid->patch));
@@ -5296,7 +5296,7 @@ void alloc_patches_SBH_CubedSpherical_grid(Grid_T *const grid)
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_OJ_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OJ_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -5307,15 +5307,15 @@ double JT_OJ_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const u
   const double *const C = patch->c;
   const double kd[2] = {0.,1.};/* delta Kronecker */
   const double S   = patch->JacobianT->SCS->sign; /* sign */
-  const unsigned i = patch->JacobianT->SCS->iper;
-  const unsigned j = patch->JacobianT->SCS->jper;
-  const unsigned k = patch->JacobianT->SCS->kper;
+  const Uint i = patch->JacobianT->SCS->iper;
+  const Uint j = patch->JacobianT->SCS->jper;
+  const Uint k = patch->JacobianT->SCS->kper;
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d3;
-  unsigned l;
+  Uint l;
   double xc1,xc2, R1,R2,
          dxc1_dx,dxc1_dy,dxc1_dz,
          dxc2_dx,dxc2_dy,dxc2_dz,
@@ -5426,7 +5426,7 @@ double JT_OJ_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const u
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_OT_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -5437,15 +5437,15 @@ double JT_OT_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const u
   const double *const C = patch->c;
   const double kd[2] = {0.,1.};/* delta Kronecker */
   const double S   = patch->JacobianT->SCS->sign; /* sign */
-  const unsigned i = patch->JacobianT->SCS->iper;
-  const unsigned j = patch->JacobianT->SCS->jper;
-  const unsigned k = patch->JacobianT->SCS->kper;
+  const Uint i = patch->JacobianT->SCS->iper;
+  const Uint j = patch->JacobianT->SCS->jper;
+  const Uint k = patch->JacobianT->SCS->kper;
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d3;
-  unsigned l;
+  Uint l;
   double xc1,ratio,R1,R2,
          dxc1_dx,dxc1_dy,dxc1_dz,
          dratio_dx,dratio_dy,dratio_dz,
@@ -5557,7 +5557,7 @@ double JT_OT_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const u
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_NS_T_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_NS_T_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -5568,13 +5568,13 @@ double JT_NS_T_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = 1; /* sign */
-  const unsigned i = 0,j = 1,k = 2;/* permuted indices */
+  const Uint i = 0,j = 1,k = 2;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d3;
-  unsigned l;
+  Uint l;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2,dR2_dx,dR2_dy,dR2_dz;
@@ -5653,7 +5653,7 @@ double JT_NS_T_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_NS_T_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_NS_T_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -5664,13 +5664,13 @@ double JT_NS_T_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = -1; /* sign */
-  const unsigned i = 1,j = 0,k = 2;/* permuted indices */
+  const Uint i = 1,j = 0,k = 2;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d3;
-  unsigned l;
+  Uint l;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2,dR2_dx,dR2_dy,dR2_dz;
@@ -5749,7 +5749,7 @@ double JT_NS_T_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_NS_T_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_NS_T_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -5760,13 +5760,13 @@ double JT_NS_T_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = -1; /* sign */
-  const unsigned i = 0,j = 2,k = 1;/* permuted indices */
+  const Uint i = 0,j = 2,k = 1;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d3;
-  unsigned l;
+  Uint l;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2,dR2_dx,dR2_dy,dR2_dz;
@@ -5845,7 +5845,7 @@ double JT_NS_T_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_NS_T_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_NS_T_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -5856,13 +5856,13 @@ double JT_NS_T_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = 1; /* sign */
-  const unsigned i = 2,j = 0,k = 1;/* permuted indices */
+  const Uint i = 2,j = 0,k = 1;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d3;
-  unsigned l;
+  Uint l;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2,dR2_dx,dR2_dy,dR2_dz;
@@ -5941,7 +5941,7 @@ double JT_NS_T_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_NS_T_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_NS_T_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -5952,13 +5952,13 @@ double JT_NS_T_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = -1; /* sign */
-  const unsigned i = 2,j = 1,k = 0;/* permuted indices */
+  const Uint i = 2,j = 1,k = 0;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d3;
-  unsigned l;
+  Uint l;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2,dR2_dx,dR2_dy,dR2_dz;
@@ -6037,7 +6037,7 @@ double JT_NS_T_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_NS_T_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_NS_T_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -6048,13 +6048,13 @@ double JT_NS_T_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = 1; /* sign */
-  const unsigned i = 1,j = 2,k = 0;/* permuted indices */
+  const Uint i = 1,j = 2,k = 0;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d3;
-  unsigned l;
+  Uint l;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2,dR2_dx,dR2_dy,dR2_dz;
@@ -6133,7 +6133,7 @@ double JT_NS_T_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_SR_T_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_SR_T_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -6144,13 +6144,13 @@ double JT_SR_T_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = 1; /* sign */
-  const unsigned i = 0,j = 1,k = 2;/* permuted indices */
+  const Uint i = 0,j = 1,k = 2;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d3;
-  unsigned l;
+  Uint l;
   double xc2,
          xc1, dxc1_dx,dxc1_dy,dxc1_dz,
          R1,dR1_dx,dR1_dy,dR1_dz;
@@ -6229,7 +6229,7 @@ double JT_SR_T_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_SR_T_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_SR_T_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -6240,13 +6240,13 @@ double JT_SR_T_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = -1; /* sign */
-  const unsigned i = 1,j = 0,k = 2;/* permuted indices */
+  const Uint i = 1,j = 0,k = 2;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d3;
-  unsigned l;
+  Uint l;
   double xc2,
          xc1, dxc1_dx,dxc1_dy,dxc1_dz,
          R1,dR1_dx,dR1_dy,dR1_dz;
@@ -6325,7 +6325,7 @@ double JT_SR_T_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_SR_T_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_SR_T_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -6336,13 +6336,13 @@ double JT_SR_T_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = -1; /* sign */
-  const unsigned i = 0,j = 2,k = 1;/* permuted indices */
+  const Uint i = 0,j = 2,k = 1;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d3;
-  unsigned l;
+  Uint l;
   double xc2,
          xc1, dxc1_dx,dxc1_dy,dxc1_dz,
          R1,dR1_dx,dR1_dy,dR1_dz;
@@ -6421,7 +6421,7 @@ double JT_SR_T_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_SR_T_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_SR_T_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -6432,13 +6432,13 @@ double JT_SR_T_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = 1; /* sign */
-  const unsigned i = 2,j = 0,k = 1;/* permuted indices */
+  const Uint i = 2,j = 0,k = 1;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d3;
-  unsigned l;
+  Uint l;
   double xc2,
          xc1, dxc1_dx,dxc1_dy,dxc1_dz,
          R1,dR1_dx,dR1_dy,dR1_dz;
@@ -6517,7 +6517,7 @@ double JT_SR_T_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_SR_T_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_SR_T_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -6528,13 +6528,13 @@ double JT_SR_T_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = -1; /* sign */
-  const unsigned i = 2,j = 1,k = 0;/* permuted indices */
+  const Uint i = 2,j = 1,k = 0;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d3;
-  unsigned l;
+  Uint l;
   double xc2,
          xc1, dxc1_dx,dxc1_dy,dxc1_dz,
          R1,dR1_dx,dR1_dy,dR1_dz;
@@ -6613,7 +6613,7 @@ double JT_SR_T_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_SR_T_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_SR_T_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -6624,13 +6624,13 @@ double JT_SR_T_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = 1; /* sign */
-  const unsigned i = 1,j = 2,k = 0;/* permuted indices */
+  const Uint i = 1,j = 2,k = 0;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d3;
-  unsigned l;
+  Uint l;
   double xc2,
          xc1, dxc1_dx,dxc1_dy,dxc1_dz,
          R1,dR1_dx,dR1_dy,dR1_dz;
@@ -6709,7 +6709,7 @@ double JT_SR_T_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_OT_T1_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T1_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -6720,12 +6720,12 @@ double JT_OT_T1_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = 1; /* sign */
-  const unsigned i = 0,j = 1,k = 2;/* permuted indices */
+  const Uint i = 0,j = 1,k = 2;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
-  unsigned l;
+  Uint l;
   double d1,L,xc1,dL_dx,dL_dy,dL_dz,R2;
   
   dA_da = get_dA_da(q2_e,q1_e);
@@ -6796,7 +6796,7 @@ double JT_OT_T1_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_OT_T1_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T1_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -6807,12 +6807,12 @@ double JT_OT_T1_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = -1; /* sign */
-  const unsigned i = 1,j = 0,k = 2;/* permuted indices */
+  const Uint i = 1,j = 0,k = 2;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
-  unsigned l;
+  Uint l;
   double d1,L,xc1,dL_dx,dL_dy,dL_dz,R2;
   
   dA_da = get_dA_da(q2_e,q1_e);
@@ -6883,7 +6883,7 @@ double JT_OT_T1_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_OT_T1_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T1_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -6894,12 +6894,12 @@ double JT_OT_T1_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = -1; /* sign */
-  const unsigned i = 0,j = 2,k = 1;/* permuted indices */
+  const Uint i = 0,j = 2,k = 1;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
-  unsigned l;
+  Uint l;
   double d1,L,xc1,dL_dx,dL_dy,dL_dz,R2;
   
   dA_da = get_dA_da(q2_e,q1_e);
@@ -6970,7 +6970,7 @@ double JT_OT_T1_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_OT_T1_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T1_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -6981,12 +6981,12 @@ double JT_OT_T1_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = 1; /* sign */
-  const unsigned i = 2,j = 0,k = 1;/* permuted indices */
+  const Uint i = 2,j = 0,k = 1;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
-  unsigned l;
+  Uint l;
   double d1,L,xc1,dL_dx,dL_dy,dL_dz,R2;
   
   dA_da = get_dA_da(q2_e,q1_e);
@@ -7057,7 +7057,7 @@ double JT_OT_T1_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_OT_T1_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T1_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -7068,12 +7068,12 @@ double JT_OT_T1_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = -1; /* sign */
-  const unsigned i = 2,j = 1,k = 0;/* permuted indices */
+  const Uint i = 2,j = 1,k = 0;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
-  unsigned l;
+  Uint l;
   double d1,L,xc1,dL_dx,dL_dy,dL_dz,R2;
   
   dA_da = get_dA_da(q2_e,q1_e);
@@ -7144,7 +7144,7 @@ double JT_OT_T1_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_OT_T1_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T1_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -7155,12 +7155,12 @@ double JT_OT_T1_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = 1; /* sign */
-  const unsigned i = 1,j = 2,k = 0;/* permuted indices */
+  const Uint i = 1,j = 2,k = 0;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
-  unsigned l;
+  Uint l;
   double d1,L,xc1,dL_dx,dL_dy,dL_dz,R2;
   
   dA_da = get_dA_da(q2_e,q1_e);
@@ -7231,7 +7231,7 @@ double JT_OT_T1_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_OT_T2_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T2_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -7242,13 +7242,13 @@ double JT_OT_T2_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = 1; /* sign */
-  const unsigned i = 0,j = 1,k = 2;/* permuted indices */
+  const Uint i = 0,j = 1,k = 2;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d2;
-  unsigned l;
+  Uint l;
   double dd_dx,dd_dy,dd_dz,
          R1,R2,dR;
   
@@ -7320,7 +7320,7 @@ double JT_OT_T2_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_OT_T2_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T2_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -7331,13 +7331,13 @@ double JT_OT_T2_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = -1; /* sign */
-  const unsigned i = 1,j = 0,k = 2;/* permuted indices */
+  const Uint i = 1,j = 0,k = 2;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d2;
-  unsigned l;
+  Uint l;
   double dd_dx,dd_dy,dd_dz,
          R1,R2,dR;
     
@@ -7409,7 +7409,7 @@ double JT_OT_T2_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_OT_T2_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T2_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -7420,13 +7420,13 @@ double JT_OT_T2_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = -1; /* sign */
-  const unsigned i = 0,j = 2,k = 1;/* permuted indices */
+  const Uint i = 0,j = 2,k = 1;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d2;
-  unsigned l;
+  Uint l;
   double dd_dx,dd_dy,dd_dz,
          R1,R2,dR;
            
@@ -7498,7 +7498,7 @@ double JT_OT_T2_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_OT_T2_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T2_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -7509,13 +7509,13 @@ double JT_OT_T2_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = 1; /* sign */
-  const unsigned i = 2,j = 0,k = 1;/* permuted indices */
+  const Uint i = 2,j = 0,k = 1;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d2;
-  unsigned l;
+  Uint l;
   double dd_dx,dd_dy,dd_dz,
          R1,R2,dR;
     
@@ -7587,7 +7587,7 @@ double JT_OT_T2_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_OT_T2_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T2_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -7598,13 +7598,13 @@ double JT_OT_T2_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = -1; /* sign */
-  const unsigned i = 2,j = 1,k = 0;/* permuted indices */
+  const Uint i = 2,j = 1,k = 0;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d2;
-  unsigned l;
+  Uint l;
   double dd_dx,dd_dy,dd_dz,
          R1,R2,dR;
     
@@ -7676,7 +7676,7 @@ double JT_OT_T2_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_OT_T2_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T2_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -7687,13 +7687,13 @@ double JT_OT_T2_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
   const double *const C = patch->c;
   const double K[2] = {0.,1.};/* delta Kronecker */
   const double S = 1; /* sign */
-  const unsigned i = 1,j = 2,k = 0;/* permuted indices */
+  const Uint i = 1,j = 2,k = 0;/* permuted indices */
   const double x[3] = {patch->node[p]->x[0]-C[0],
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
   double d1,d2;
-  unsigned l;
+  Uint l;
   double dd_dx,dd_dy,dd_dz,
          R1,R2,dR;
     
@@ -7762,7 +7762,7 @@ double JT_OT_T2_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
 }
 
 /* setting up sign and indices for cubde sphere based on side*/  
-void SignAndIndex_permutation_CubedSphere(const Flag_T side,unsigned *const a,unsigned *const b,unsigned *const c,double *const s)
+void SignAndIndex_permutation_CubedSphere(const Flag_T side,Uint *const a,Uint *const b,Uint *const c,double *const s)
 {
   switch (side)
   {
@@ -7814,7 +7814,7 @@ void SignAndIndex_permutation_CubedSphere(const Flag_T side,unsigned *const a,un
 // o. X_of_x function. */
 void test_CubedSpherical_Coordinates(Grid_T *const grid)
 {
-  unsigned p;
+  Uint p;
   Flag_T flg = NONE;
   
   printf("Testing Cubed Spherical Coordinates:\n");
@@ -7826,7 +7826,7 @@ void test_CubedSpherical_Coordinates(Grid_T *const grid)
     Field_T *const R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f,
             *const R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
     double Xp[3],xp[3],R;
-    unsigned n;
+    Uint n;
     
     for(n = 0; n < patch->nn; ++n)
     {

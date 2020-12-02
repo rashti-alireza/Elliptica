@@ -194,7 +194,7 @@ Matrix_T *CCSOpCCS(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op)
   if (Nc != ccs1->col)
     Error0("columns of the matrices are not matched.\n");
   
-  Ap = calloc((long unsigned)Nc+1,sizeof(*Ap));
+  Ap = calloc((long Uint)Nc+1,sizeof(*Ap));
   IsNull(Ap);
   res = alloc_matrix(CCS_SF,Nr,Nc);
   
@@ -208,9 +208,9 @@ Matrix_T *CCSOpCCS(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op)
         ax = read_matrix_entry_ccs(ccs2,r,c)+read_matrix_entry_ccs(ccs1,r,c);
         if (GRT(ABS(ax),DropLimit))
         {
-          Ai = realloc(Ai,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ai));
+          Ai = realloc(Ai,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ai));
           IsNull(Ai);
-          Ax = realloc(Ax,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ax));
+          Ax = realloc(Ax,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ax));
           IsNull(Ax);
           Ai[Ap[c]+NN0] = (int)r;
           Ax[Ap[c]+NN0] = ax;
@@ -232,9 +232,9 @@ Matrix_T *CCSOpCCS(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op)
         ax = read_matrix_entry_ccs(ccs2,r,c)-read_matrix_entry_ccs(ccs1,r,c);
         if (GRT(ABS(ax),DropLimit))
         {
-          Ai = realloc(Ai,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ai));
+          Ai = realloc(Ai,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ai));
           IsNull(Ai);
-          Ax = realloc(Ax,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ax));
+          Ax = realloc(Ax,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ax));
           IsNull(Ax);
           Ai[Ap[c]+NN0] = (int)r;
           Ax[Ap[c]+NN0] = ax;

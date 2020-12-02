@@ -29,7 +29,7 @@ Matrix_T *alloc_matrix(const Matrix_SF_T type_e,const long row,const long col)
   {
     case REG_SF:
       m->reg_f = 1;
-      m->reg->A = alloc_2D_double((long unsigned)row,(long unsigned)col);
+      m->reg->A = alloc_2D_double((long Uint)row,(long Uint)col);
       break;
     case TRI_SF:
       m->tri_f = 1;
@@ -65,7 +65,7 @@ void free_matrix(Matrix_T *m)
   if (m->reg_f)
   {
     if (m->reg->A)
-      free_2d_mem(m->reg->A,(long unsigned)m->row);
+      free_2d_mem(m->reg->A,(long Uint)m->row);
   }
   else if (m->tri_f)
   {

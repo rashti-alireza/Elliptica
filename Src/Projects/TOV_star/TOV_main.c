@@ -36,8 +36,8 @@ int TOV_star(void *vp)
   char file_name[STR_LEN_MAX];
   FILE *file;
   const double *p,*m,*r,*rbar;
-  const unsigned N = (unsigned)Pgeti("TOV_Star_n");
-  unsigned i;
+  const Uint N = (Uint)Pgeti("TOV_Star_n");
+  Uint i;
   
   tov->bar_m = Pgetd("TOV_star_baryonic_mass");
   tov->description = "A TOV star";

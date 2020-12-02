@@ -10,7 +10,7 @@
 void adm_add_3plus1_fields(Grid_T *const grid);
 void adm_add_3plus1_fields(Grid_T *const grid)
 {
- unsigned p;
+ Uint p;
  FOR_ALL_PATCHES(p,grid)
  {
  Patch_T *patch = grid->patch[p];

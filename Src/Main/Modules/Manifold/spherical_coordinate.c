@@ -9,13 +9,13 @@
 void make_nodes_Spherical_coord(Patch_T *const patch)
 {
   struct Collocation_s coll_s[3] = {0};
-  const unsigned U = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint U = patch->nn;
+  const Uint *const n = patch->n;
   const Field_T *const R1_field = patch->fields[Ind("R1_radius")];
   const Field_T *const R2_field = patch->fields[Ind("R2_radius")];
   double R1,R2;
   const double *const c = patch->c;/* center of origine translated */
-  unsigned i,j,k,l;
+  Uint i,j,k,l;
   
   initialize_collocation_struct(patch,&coll_s[0],0);
   initialize_collocation_struct(patch,&coll_s[1],1);
@@ -51,8 +51,8 @@ void make_nodes_Spherical_coord(Patch_T *const patch)
 /* filling patch struct for BNS_Spherical_grid */
 void fill_patches_BNS_Spherical_grid(Grid_T *const grid)
 {
-  const unsigned N_outermost_split = (unsigned) Pgeti("Number_of_Outermost_Split");
-  unsigned pn,i;
+  const Uint N_outermost_split = (Uint) Pgeti("Number_of_Outermost_Split");
+  Uint pn,i;
   
   pn = 0;
   populate_left_NS_sphere(grid,pn++);
@@ -69,7 +69,7 @@ void fill_patches_BNS_Spherical_grid(Grid_T *const grid)
 }
 
 /* populating properties of patch for left NS */
-static void populate_left_NS_sphere(Grid_T *const grid,const unsigned pn)
+static void populate_left_NS_sphere(Grid_T *const grid,const Uint pn)
 {
   Patch_T *const patch = grid->patch[pn];
   Field_T *R1 = add_field("R1_radius",0,patch,NO);
@@ -80,7 +80,7 @@ static void populate_left_NS_sphere(Grid_T *const grid,const unsigned pn)
   struct Ret_S ret;
   Collocation_T c;
   Basis_T b;
-  unsigned n,j,k;
+  Uint n,j,k;
   
   /* filling grid */
   patch->grid = grid;
@@ -96,17 +96,17 @@ static void populate_left_NS_sphere(Grid_T *const grid,const unsigned pn)
   patch->name = dup_s(name);
   
   /* filling n */
-  patch->n[0] = (unsigned)PgetiEZ("n_a");
-  patch->n[1] = (unsigned)PgetiEZ("n_b");
-  patch->n[2] = (unsigned)PgetiEZ("n_c");
+  patch->n[0] = (Uint)PgetiEZ("n_a");
+  patch->n[1] = (Uint)PgetiEZ("n_b");
+  patch->n[2] = (Uint)PgetiEZ("n_c");
   /* check for override */
   sprintf(var,"left_NS");
   make_keyword_parameter(&ret,var,"n");
-  n = (unsigned)PgetiEZ(ret.s0);
+  n = (Uint)PgetiEZ(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
-  n = (unsigned)PgetiEZ(ret.s1);
+  n = (Uint)PgetiEZ(ret.s1);
   if (n != INT_MAX)	patch->n[1] = n;
-  n = (unsigned)PgetiEZ(ret.s2);
+  n = (Uint)PgetiEZ(ret.s2);
   if (n != INT_MAX)	patch->n[2] = n;
     
   if(patch->n[0] == INT_MAX)
@@ -138,7 +138,7 @@ static void populate_left_NS_sphere(Grid_T *const grid,const unsigned pn)
   for (j = 0; j < patch->n[1]; ++j)
     for (k = 0; k < patch->n[2]; ++k)
     {
-      unsigned ijk = L(patch->n,0,j,k);
+      Uint ijk = L(patch->n,0,j,k);
       R2->v[ijk] = R2_array[ijk];
       R1->v[ijk] = R1_array[ijk];
     }
@@ -201,7 +201,7 @@ static void populate_left_NS_sphere(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of patch for right NS */
-static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
+static void populate_right_NS_sphere(Grid_T *const grid,const Uint pn)
 {
   Patch_T *const patch = grid->patch[pn];
   Field_T *R1 = add_field("R1_radius",0,patch,NO);
@@ -212,7 +212,7 @@ static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
   struct Ret_S ret;
   Collocation_T c;
   Basis_T b;
-  unsigned n,k,j;
+  Uint n,k,j;
   
   /* filling grid */
   patch->grid = grid;
@@ -228,17 +228,17 @@ static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
   patch->name = dup_s(name);
   
   /* filling n */
-  patch->n[0] = (unsigned)PgetiEZ("n_a");
-  patch->n[1] = (unsigned)PgetiEZ("n_b");
-  patch->n[2] = (unsigned)PgetiEZ("n_c");
+  patch->n[0] = (Uint)PgetiEZ("n_a");
+  patch->n[1] = (Uint)PgetiEZ("n_b");
+  patch->n[2] = (Uint)PgetiEZ("n_c");
   /* check for override */
   sprintf(var,"right_NS");
   make_keyword_parameter(&ret,var,"n");
-  n = (unsigned)PgetiEZ(ret.s0);
+  n = (Uint)PgetiEZ(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
-  n = (unsigned)PgetiEZ(ret.s1);
+  n = (Uint)PgetiEZ(ret.s1);
   if (n != INT_MAX)	patch->n[1] = n;
-  n = (unsigned)PgetiEZ(ret.s2);
+  n = (Uint)PgetiEZ(ret.s2);
   if (n != INT_MAX)	patch->n[2] = n;
     
   if(patch->n[0] == INT_MAX)
@@ -270,7 +270,7 @@ static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
   for (j = 0; j < patch->n[1]; ++j)
     for (k = 0; k < patch->n[2]; ++k)
     {
-      unsigned ijk = L(patch->n,0,j,k);
+      Uint ijk = L(patch->n,0,j,k);
       R2->v[ijk] = R2_array[ijk];
       R1->v[ijk] = R1_array[ijk];
     }
@@ -333,7 +333,7 @@ static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of patch for left NS's around */
-static void populate_left_NS_around_sphere(Grid_T *const grid,const unsigned pn)
+static void populate_left_NS_around_sphere(Grid_T *const grid,const Uint pn)
 {
   Patch_T *const patch = grid->patch[pn];
   Field_T *R1 = add_field("R1_radius",0,patch,NO);
@@ -344,7 +344,7 @@ static void populate_left_NS_around_sphere(Grid_T *const grid,const unsigned pn)
   struct Ret_S ret;
   Collocation_T c;
   Basis_T b;
-  unsigned n,k,j;
+  Uint n,k,j;
   
   /* filling grid */
   patch->grid = grid;
@@ -360,17 +360,17 @@ static void populate_left_NS_around_sphere(Grid_T *const grid,const unsigned pn)
   patch->name = dup_s(name);
   
   /* filling n */
-  patch->n[0] = (unsigned)PgetiEZ("n_a");
-  patch->n[1] = (unsigned)PgetiEZ("n_b");
-  patch->n[2] = (unsigned)PgetiEZ("n_c");
+  patch->n[0] = (Uint)PgetiEZ("n_a");
+  patch->n[1] = (Uint)PgetiEZ("n_b");
+  patch->n[2] = (Uint)PgetiEZ("n_c");
   /* check for override */
   sprintf(var,"left_NS");
   make_keyword_parameter(&ret,var,"n");
-  n = (unsigned)PgetiEZ(ret.s0);
+  n = (Uint)PgetiEZ(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
-  n = (unsigned)PgetiEZ(ret.s1);
+  n = (Uint)PgetiEZ(ret.s1);
   if (n != INT_MAX)	patch->n[1] = n;
-  n = (unsigned)PgetiEZ(ret.s2);
+  n = (Uint)PgetiEZ(ret.s2);
   if (n != INT_MAX)	patch->n[2] = n;
     
   if(patch->n[0] == INT_MAX)
@@ -402,7 +402,7 @@ static void populate_left_NS_around_sphere(Grid_T *const grid,const unsigned pn)
   for (j = 0; j < patch->n[1]; ++j)
     for (k = 0; k < patch->n[2]; ++k)
     {
-      unsigned ijk = L(patch->n,0,j,k);
+      Uint ijk = L(patch->n,0,j,k);
       R1->v[ijk] = R1_array[ijk];
       R2->v[ijk] = R2_const;
     }
@@ -465,7 +465,7 @@ static void populate_left_NS_around_sphere(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of patch for right NS's around */
-static void populate_right_NS_around_sphere(Grid_T *const grid,const unsigned pn)
+static void populate_right_NS_around_sphere(Grid_T *const grid,const Uint pn)
 {
   Patch_T *const patch = grid->patch[pn];
   Field_T *R1 = add_field("R1_radius",0,patch,NO);
@@ -476,7 +476,7 @@ static void populate_right_NS_around_sphere(Grid_T *const grid,const unsigned pn
   struct Ret_S ret;
   Collocation_T c;
   Basis_T b;
-  unsigned n,k,j;
+  Uint n,k,j;
   
   /* filling grid */
   patch->grid = grid;
@@ -492,17 +492,17 @@ static void populate_right_NS_around_sphere(Grid_T *const grid,const unsigned pn
   patch->name = dup_s(name);
   
   /* filling n */
-  patch->n[0] = (unsigned)PgetiEZ("n_a");
-  patch->n[1] = (unsigned)PgetiEZ("n_b");
-  patch->n[2] = (unsigned)PgetiEZ("n_c");
+  patch->n[0] = (Uint)PgetiEZ("n_a");
+  patch->n[1] = (Uint)PgetiEZ("n_b");
+  patch->n[2] = (Uint)PgetiEZ("n_c");
   /* check for override */
   sprintf(var,"right_NS");
   make_keyword_parameter(&ret,var,"n");
-  n = (unsigned)PgetiEZ(ret.s0);
+  n = (Uint)PgetiEZ(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
-  n = (unsigned)PgetiEZ(ret.s1);
+  n = (Uint)PgetiEZ(ret.s1);
   if (n != INT_MAX)	patch->n[1] = n;
-  n = (unsigned)PgetiEZ(ret.s2);
+  n = (Uint)PgetiEZ(ret.s2);
   if (n != INT_MAX)	patch->n[2] = n;
     
   if(patch->n[0] == INT_MAX)
@@ -534,7 +534,7 @@ static void populate_right_NS_around_sphere(Grid_T *const grid,const unsigned pn
   for (j = 0; j < patch->n[1]; ++j)
     for (k = 0; k < patch->n[2]; ++k)
     {
-      unsigned ijk = L(patch->n,0,j,k);
+      Uint ijk = L(patch->n,0,j,k);
       R1->v[ijk] = R1_array[ijk];
       R2->v[ijk] = R2_const;
     }
@@ -599,12 +599,12 @@ static void populate_right_NS_around_sphere(Grid_T *const grid,const unsigned pn
 /* memory alloc patches for BNS_Spherical type */
 void alloc_patches_BNS_Spherical_grid(Grid_T *const grid)
 {
-  unsigned Np = 4;/* number of patches without outermost's*/
-  unsigned outermost;
-  unsigned i;
+  Uint Np = 4;/* number of patches without outermost's*/
+  Uint outermost;
+  Uint i;
   
-  outermost = (unsigned) PgetiEZ("Number_of_Outermost_Split");
-  if (outermost != (unsigned)INT_MAX)
+  outermost = (Uint) PgetiEZ("Number_of_Outermost_Split");
+  if (outermost != (Uint)INT_MAX)
     Np += 2*outermost;
   
   grid->patch = calloc((Np+1),sizeof(*grid->patch));

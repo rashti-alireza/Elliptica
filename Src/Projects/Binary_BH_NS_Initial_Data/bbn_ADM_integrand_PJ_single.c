@@ -26,17 +26,17 @@ void bbn_populate_ADM_integrand_PdS_GdV_single(const Observable_T *const obs);
 void bbn_populate_ADM_integrand_PdS_GdV_single(const Observable_T *const obs)
 {
   struct items_S **adm = obs->items;
-  const unsigned N = obs->Nitems;
+  const Uint N = obs->Nitems;
   const double x_cm = Pgetd("x_CM");
   const double y_cm = Pgetd("y_CM");
   const double z_cm = 0;
-  unsigned p;
+  Uint p;
 
   for(p = 0; p < N; ++p)
   {
   Patch_T *patch = adm[p]->patch;
-  unsigned nn = patch->nn;
-  unsigned ijk;
+  Uint nn = patch->nn;
+  Uint ijk;
 
   /* declaring: */
   READ_v(_A_UiUj_U2U2)

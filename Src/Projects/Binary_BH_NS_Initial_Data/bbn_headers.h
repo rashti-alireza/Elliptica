@@ -33,9 +33,9 @@ struct Force_Balance_RootFinder_S
   double Omega_BHNS;
   const double *X;
   const double *V2CM;
-  unsigned find_y_CM: 1;
-  unsigned find_x_CM: 1;
-  unsigned find_Omega: 1;
+  Uint find_y_CM: 1;
+  Uint find_x_CM: 1;
+  Uint find_Omega: 1;
   int dir;/* direction of derivative */
 };
 
@@ -55,18 +55,18 @@ struct items_S
   double *n_U1;
   double *n_U2;
   /* integration flags */
-  unsigned surface_integration_flg: 1;/* if 1 means it measn 
+  Uint surface_integration_flg: 1;/* if 1 means it measn 
                                       // we need surface integration 
                                       // on this patch as well, 
                                       // 0 means, no need */
   /* which hypersurface the surface integral is carried out */
-  unsigned X_surface: 1;
-  unsigned Y_surface: 1;
-  unsigned Z_surface: 1;
+  Uint X_surface: 1;
+  Uint Y_surface: 1;
+  Uint Z_surface: 1;
   /* index of hypersurface for each X,Y and Z respectively */
-  unsigned I;
-  unsigned J;
-  unsigned K;
+  Uint I;
+  Uint J;
+  Uint K;
 };
 
 /* alpha and beta (gauges) for exporting of ID */
@@ -89,7 +89,7 @@ struct IDGauge_S
 
 void bbn_free_data_Gamma_patch(Patch_T *const patch);
 void bbn_study_initial_data(Grid_T *const grid);
-void bbn_print_fields(Grid_T *const grid,const unsigned iteration, const char *const folder);
+void bbn_print_fields(Grid_T *const grid,const Uint iteration, const char *const folder);
 void bbn_update_psi10A_UiUj(Patch_T *const patch);
 void bbn_populate_free_data(Grid_T *const grid);
 void bbn_free_data_gammas(Grid_T *const grid);
@@ -148,7 +148,7 @@ Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name
 int bbn_IsCheckpointFileCompleted(const char *const file_path);
 void bbn_add_fields_in_patch(Patch_T *const patch);
 void bbn_bam_set_bam_fields(Grid_T *const grid);
-void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const char *const folder,const char *const open_file_mode,const int pr_flg);
+void bbn_print_properties(Grid_T *const grid,const Uint iteration, const char *const folder,const char *const open_file_mode,const int pr_flg);
 void bbn_plan_obs_CS(Observable_T *obs);
 void bbn_free_obs_CS(Observable_T *obs);
 void bbn_measures(Grid_T *const grid);
@@ -174,7 +174,7 @@ bbn_bhfiller
   );
 
 double bbn_bhf_smoother(const double r, const double rmax,const double rmin);
-void bbn_bhf_ChebTn_extrapolate (double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill,const unsigned N);
+void bbn_bhf_ChebTn_extrapolate (double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill,const Uint N);
 void bbn_rm_1st_2nd_derivatives_Kij(Patch_T *const patch);
 void bbn_1st_2nd_derivatives_adm_Kij(Patch_T *const patch);
 void bbn_adm_Kij(Patch_T *const patch);

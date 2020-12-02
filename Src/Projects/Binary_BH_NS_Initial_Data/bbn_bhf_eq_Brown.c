@@ -11,7 +11,7 @@ void *bbn_bhf_eq_Brown(void *vp1,void *vp2);
 void *bbn_bhf_eq_Brown(void *vp1,void *vp2)
 {
   DDM_SCHUR_EQ_DECLARE
-  unsigned ijk;/* node index */
+  Uint ijk;/* node index */
   const Solving_Man_T *const sol = patch->solving_man;
   const char *const fld_name     = sol->field_name[sol->cf];
   char eq_fld_name[100] = {'\0'};

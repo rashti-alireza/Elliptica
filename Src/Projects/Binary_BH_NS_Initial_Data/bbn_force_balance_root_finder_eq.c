@@ -11,7 +11,7 @@ double force_balance_root_finder_eq(void *params,const double *const x)
 {
 const struct Force_Balance_RootFinder_S *const par = params;
 Patch_T *const patch = par->patch;
-const unsigned  nn   = patch->nn;
+const Uint  nn   = patch->nn;
 const double *const X = par->X; 
 const double dLnGamma = par->dLnGamma;
 const int dir         = par->dir;
@@ -19,7 +19,7 @@ const double Vr       = par->Vr;
 const double D        = par->D;
 const double *const V2CM = par->V2CM; 
 double Omega_BHNS = 0, y_CM = 0, x_CM = 0;
-unsigned ijk;
+Uint ijk;
 
 if(par->find_y_CM)
 {

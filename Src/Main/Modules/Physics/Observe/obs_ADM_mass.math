@@ -22,9 +22,9 @@ C_macro2 = add_and_get_field(name);
 `{`
 `  double adm_mass = 0;`
 `  struct items_S **adm = obs->items;`
-`  const unsigned N = obs->Nitems;`
+`  const Uint N = obs->Nitems;`
 `  const double CUTOFF = 1E3;`
-`  unsigned p;`
+`  Uint p;`
 ``
 `  for(p = 0; p < N; ++p)`
 `  {`
@@ -67,8 +67,8 @@ Symm[igConf(i,j)  = igConf(j,i)];
 Symm[ddpsi(i,j)    = ddpsi(j,i)];
 Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 
-`    unsigned nn = patch->nn;`
-`    unsigned ijk;`
+`    Uint nn = patch->nn;`
+`    Uint ijk;`
 ``
 # populating the integrands:
 

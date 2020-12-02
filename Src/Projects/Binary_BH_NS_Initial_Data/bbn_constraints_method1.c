@@ -10,15 +10,15 @@
 void bbn_calculate_constraints_1st(Grid_T *const grid);
 void bbn_calculate_constraints_1st(Grid_T *const grid)
 {
-  const unsigned np = grid->np;
-  unsigned p;
+  const Uint np = grid->np;
+  Uint p;
 
   OpenMP_Patch_Pragma(omp parallel for)
   for(p = 0; p < np; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned nn = patch->nn;
-    unsigned ijk;
+    Uint nn = patch->nn;
+    Uint ijk;
 
     if(IsItInsideBHPatch(patch))
        continue;

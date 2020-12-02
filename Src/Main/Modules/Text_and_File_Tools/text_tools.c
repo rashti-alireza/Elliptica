@@ -92,12 +92,12 @@ int strstr_i(const char *const s1, const char *const s2)
 */
 char *dup_s(const char *const str)
 {
-  unsigned i,n;
+  Uint i,n;
   char *r = 0;
   
   if (!str) return 0;
   
-  n = (unsigned)strlen(str)+1;
+  n = (Uint)strlen(str)+1;
   
   r = malloc(n);
   IsNull(r);
@@ -123,7 +123,7 @@ char *tok_s(char *const str,const char delimit,char **const savestr)
 {
   char *s = 0;
   char *ps = 0;
-  unsigned l,i,f;
+  Uint l,i,f;
   Flag_T flg = NONE;
 
   assert(savestr);
@@ -135,7 +135,7 @@ char *tok_s(char *const str,const char delimit,char **const savestr)
   if (!s) return 0;
   if (s[0] == '\0')  return 0;
   
-  l = (unsigned)strlen(s);
+  l = (Uint)strlen(s);
   assert(s[l] == '\0');/* make sure this string end with null char */
   
   /* if start with delimit */
@@ -205,7 +205,7 @@ int check_format_s(const char *str,const char *const format)
   char trim[MAX_STR_LEN]  = {'\0'}/* triming the format */,
        trim2[MAX_STR_LEN] = {'\0'}/* triming the str */;
   char *subs1,*subs2;/* make sure you check the first substring */
-  unsigned i,n;
+  Uint i,n;
   
   if(!str)
     return 0;
@@ -269,9 +269,9 @@ int check_format_s(const char *str,const char *const format)
 // it returns the index of the matched needle.(case sensitive)
 // ->return value: i if heystach[i] = needle, otherwise UINT_MAX.
 */
-unsigned find_index_string(char **const heystack,const unsigned N,const char *const needle)
+Uint find_index_string(char **const heystack,const Uint N,const char *const needle)
 {
-  unsigned i,j = UINT_MAX;
+  Uint i,j = UINT_MAX;
   
   for (i = 0; i < N; ++i)
     if (!strcmp(heystack[i],needle))
@@ -319,7 +319,7 @@ char *regex_find(const char *const regex_pattern,const char *const str)
 {
   regex_t regex;
   char *ret = 0;
-  const unsigned n_matches = 1;/* number of matches */
+  const Uint n_matches = 1;/* number of matches */
   regmatch_t match[n_matches];
   int status;
   int len = 0;
@@ -341,7 +341,7 @@ char *regex_find(const char *const regex_pattern,const char *const str)
   len = match[0].rm_eo/* The offset in string of the end of the substring.  */
       - match[0].rm_so/* The offset in string of the beginning of a substring. */
       ;
-  ret = calloc((unsigned long)len+1,1);
+  ret = calloc((Uint long)len+1,1);
   IsNull(ret);
   
   for (i = 0; i < len; ++i)
@@ -363,7 +363,7 @@ char **read_separated_items_in_string(const char *const string,const char delimi
     
   char *str = dup_s(string);/* str = f1,f2,... */
   char **items = 0;
-  unsigned ni  = 0;/* number of items */
+  Uint ni  = 0;/* number of items */
   char *tok,*save = 0;
 
   tok = tok_s(str,delimiter,&save);/* tok = f1 */
@@ -393,7 +393,7 @@ int regex_replace(const char *const orig/* original */,
 
   regex_t regex;
   const char *c = orig;
-  const unsigned n_matches = 1;/* number of matches */
+  const Uint n_matches = 1;/* number of matches */
   regmatch_t match[n_matches];
   int status;
     
@@ -410,7 +410,7 @@ int regex_replace(const char *const orig/* original */,
   }
   else/*  there is at least one match */
   {
-    unsigned i = 0;
+    Uint i = 0;
     while(!status)
     {
       const char *o  = c;
@@ -424,7 +424,7 @@ int regex_replace(const char *const orig/* original */,
         c++;
         i++;
       }
-      unsigned j = 0;
+      Uint j = 0;
       /* replace */
       while (repl[j] != '\0')
         save[i++] = repl[j++];
@@ -452,7 +452,7 @@ int regex_replace(const char *const orig/* original */,
   }
   else/*  there is at least one match */
   {
-    unsigned i = 0;
+    Uint i = 0;
     while(!status)
     {
       const char *o  = c;
@@ -466,7 +466,7 @@ int regex_replace(const char *const orig/* original */,
         c++;
         i++;
       }
-      unsigned j = 0;
+      Uint j = 0;
       /* replace */
       while (repl[j] != '\0')
         save[i++] = repl[j++];

@@ -22,7 +22,7 @@ void fd_extrinsic_curvature_KerrSchild(Physics_T *const phys,
   const double BHx   = Getd("center_x");
   const double BHy   = Getd("center_y");
   const double BHz   = Getd("center_z");
-  unsigned p;
+  Uint p;
   
   fd_KerrSchild_set_params(phys);
   
@@ -53,7 +53,7 @@ void fd_conformal_Ricci(Physics_T *const phys,
   FUNC_TIC
   
   Grid_T *const grid = mygrid(phys,region);
-  unsigned p;
+  Uint p;
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
@@ -76,7 +76,7 @@ void fd_compatible_Christoffel_symbol(Physics_T *const phys,
   FUNC_TIC
   
   Grid_T *const grid = mygrid(phys,region);
-  unsigned p;
+  Uint p;
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
@@ -96,7 +96,7 @@ void fd_1st_derivative_Christoffel_symbol(Physics_T *const phys,
   FUNC_TIC
   
   Grid_T *const grid = mygrid(phys,region);
-  unsigned p;
+  Uint p;
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
@@ -127,7 +127,7 @@ fd_populate_gConf_dgConf_igConf_KerrSchild
   const double BHx   = Getd("center_x");
   const double BHy   = Getd("center_y");
   const double BHz   = Getd("center_z");
-  unsigned p;
+  Uint p;
   
   fd_KerrSchild_set_params(phys);
   
@@ -180,7 +180,7 @@ fd_populate_psi_alphaPsi_beta_KerrSchild
   const double BHx   = Getd("center_x");
   const double BHy   = Getd("center_y");
   const double BHz   = Getd("center_z");
-  unsigned p;
+  Uint p;
   
   fd_KerrSchild_set_params(phys);
   

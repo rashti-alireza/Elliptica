@@ -12,8 +12,8 @@ double bbn_BH_ADM_mass(Observable_T *const obs)
 {
   double adm_mass = 0;
   struct items_S **adm = obs->items;
-  const unsigned N = obs->Nitems;
-  unsigned p;
+  const Uint N = obs->Nitems;
+  Uint p;
 
   for(p = 0; p < N; ++p)
   {
@@ -52,8 +52,8 @@ double bbn_BH_ADM_mass(Observable_T *const obs)
   READ_v_UNUSED(_gammaI_U0U0)
 
 
-    unsigned nn = patch->nn;
-    unsigned ijk;
+    Uint nn = patch->nn;
+    Uint ijk;
 
     if (adm[p]->surface_integration_flg)
     {

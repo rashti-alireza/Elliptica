@@ -21,8 +21,8 @@ C_macro2 = add_and_get_field(name);
 `void obs_populate_spin_integrands_akv(Patch_T *const patch,const double *const normal[3]);`
 `void obs_populate_spin_integrands_akv(Patch_T *const patch,const double *const normal[3])`
 `{`
-`  const unsigned nn = patch->nn;`
-`  unsigned ijk;`
+`  const Uint nn = patch->nn;`
+`  Uint ijk;`
 
 Declare = 
 {

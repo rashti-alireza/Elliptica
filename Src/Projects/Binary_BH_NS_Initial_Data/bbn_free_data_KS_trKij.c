@@ -9,8 +9,8 @@
 
 void bbn_free_data_KS_trKij(Patch_T *const patch)
 {
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
 
   /* declaring: */
   READ_v(KSgammaI_U2U2)

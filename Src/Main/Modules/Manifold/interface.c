@@ -7,7 +7,7 @@
 
 static const double   Huge_Eps    = 2;
 static const double   ScaleFactor = 1E-5;/* scale factor */
-static const unsigned NFaces      = 6;/* total number of faces */
+static const Uint NFaces      = 6;/* total number of faces */
 /* schematic names for surfaces correspond to FACE_T enum. */
 static const char *FaceName[] = {"X == 0","X == 1","Y == 0","Y == 1",
                                  "Z == 0","Z == 1",0};
@@ -52,10 +52,10 @@ static void ri_split_cubed_spherical(Grid_T *const grid)
   FUNC_TIC
   
   /* keep track of counted points; 1 means counted, 0 means not. */
-  unsigned **point_flag = calloc(grid->np,sizeof(*point_flag));
+  Uint **point_flag = calloc(grid->np,sizeof(*point_flag));
   IsNull(point_flag);
   
-  unsigned p;
+  Uint p;
 
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
@@ -113,9 +113,9 @@ static void ri_general_method(Grid_T *const grid)
 {
   FUNC_TIC
   /* keep track of counted points; 1 means counted, 0 means not. */
-  unsigned **point_flag = calloc(grid->np,sizeof(*point_flag));
+  Uint **point_flag = calloc(grid->np,sizeof(*point_flag));
   IsNull(point_flag);
-  unsigned p;
+  Uint p;
 
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
@@ -135,7 +135,7 @@ static void ri_general_method(Grid_T *const grid)
   for (p = 0; p < grid->np; ++p)
   {
     Patch_T *const patch = grid->patch[p];
-    unsigned f,nf;
+    Uint f,nf;
     
     /* populate PointSet_T  */
     nf = countf(patch->interface);
@@ -143,7 +143,7 @@ static void ri_general_method(Grid_T *const grid)
     {
       Interface_T *interface = patch->interface[f];
       PointSet_T **innerP, **edgeP;
-      unsigned i;
+      Uint i;
       
       init_Points(interface,&innerP,&edgeP);
       interface->innerP = innerP;
@@ -191,7 +191,7 @@ static void misc(Grid_T *const grid)
 {
   Interface_T **face;
   SubFace_T *subf;
-  unsigned pa,f,sf;
+  Uint pa,f,sf;
   
   /* for all patches */
   FOR_ALL(pa,grid->patch)
@@ -233,7 +233,7 @@ static void test_subfaces(const Grid_T *const grid)
   Interface_T **face;
   SubFace_T *subf, *subf2;
   Flag_T flg;
-  unsigned pa,f,sf;
+  Uint pa,f,sf;
   
   /* check if all point have been found */
   FOR_ALL(pa,grid->patch)
@@ -341,7 +341,7 @@ static void set_df_dn_and_pair(Grid_T *const grid)
   Interface_T **face;
   SubFace_T *subf;
   
-  unsigned pa,f;
+  Uint pa,f;
   
   /* one can add a function here if needs specific arrangement of df_dn */
 
@@ -364,7 +364,7 @@ static void set_df_dn_and_pair(Grid_T *const grid)
     /* set the rest of df_dn's. favor Neumann BC */
     FOR_ALL(f,face)
     {
-      unsigned sf;
+      Uint sf;
       Flag_T pristine_flg = YES;
       
       /* check if this face is pristine */
@@ -384,7 +384,7 @@ static void set_df_dn_and_pair(Grid_T *const grid)
           subf = face[f]->subface[sf];
           /* make the whole chain and determine the last ring by null pointer and so for next pointer */
           Subf_T **chain = compose_the_chain(subf);
-          unsigned nc = countf(chain);
+          Uint nc = countf(chain);
           if (nc == 1)
             Error0("There is no other subface matches to this subface.");
           set_df_dn(chain[0],1);
@@ -398,7 +398,7 @@ static void set_df_dn_and_pair(Grid_T *const grid)
           subf = face[f]->subface[sf];
           Subf_T **chain = 0, *ring = 0;
           Flag_T flg = NONE;
-          unsigned nc;
+          Uint nc;
           
           if (!subf->touch || strstr(subf->flags_str,"Dn:"))
             continue;
@@ -458,7 +458,7 @@ static void set_df_dn_and_pair(Grid_T *const grid)
     /* set the rest of df_dn's. favor Neumann BC */
     FOR_ALL(f,face)
     {
-      unsigned sf;
+      Uint sf;
       
       for (sf = 0; sf < face[f]->ns; ++sf)
       {
@@ -482,9 +482,9 @@ static void set_df_dn_and_pair(Grid_T *const grid)
 static void set_one_Dirichlet_BC(Interface_T **const face)
 { 
   Subf_T **chain = 0;
-  unsigned nc;/* number of chain */
+  Uint nc;/* number of chain */
   SubFace_T *subf;
-  unsigned sf,f; 
+  Uint sf,f; 
   Flag_T flg = NONE,IsSet=NO;
   
   FOR_ALL(f,face)
@@ -533,13 +533,13 @@ static void set_one_Dirichlet_BC(Interface_T **const face)
 /* given ring it sets df_dn flags in backward and forward direction 
 // of given ring in a chain (INCLUDING the ring itself) start with df_dn.
 // it takes df_dn as starting point. */
-static void set_df_dn(Subf_T *const ring,const unsigned df_dn)
+static void set_df_dn(Subf_T *const ring,const Uint df_dn)
 {
   Subf_T *next = 0;
   Subf_T *prev = 0;
-  const unsigned AS = strlen(",Dn:?")+1;/* size of attached */
+  const Uint AS = strlen(",Dn:?")+1;/* size of attached */
   char tail[10];
-  unsigned f,sl;
+  Uint f,sl;
   
   f = df_dn;
   for (next = ring; next; next = next->next)
@@ -563,7 +563,7 @@ static void set_df_dn(Subf_T *const ring,const unsigned df_dn)
       }
     }
     next->subf->df_dn = f%2;
-    sl = (unsigned) strlen(next->subf->flags_str)+AS;
+    sl = (Uint) strlen(next->subf->flags_str)+AS;
     next->subf->flags_str = realloc(next->subf->flags_str,sl);
     IsNull(next->subf->flags_str);
     sprintf(tail,",Dn:%u",f%2);
@@ -587,7 +587,7 @@ static void set_df_dn(Subf_T *const ring,const unsigned df_dn)
     }
     
     prev->subf->df_dn = f%2;
-    sl = (unsigned) strlen(prev->subf->flags_str)+AS;
+    sl = (Uint) strlen(prev->subf->flags_str)+AS;
     prev->subf->flags_str = realloc(prev->subf->flags_str,sl);
     IsNull(prev->subf->flags_str);
     sprintf(tail,",Dn:%u",f%2);
@@ -604,7 +604,7 @@ static Subf_T *add_ring(Subf_T ***chain_addrss)
 {
   Subf_T *ring = 0;
   Subf_T **chain = *chain_addrss;
-  unsigned nc;/* number of chain */
+  Uint nc;/* number of chain */
   
   if (chain == 0)
   {
@@ -644,7 +644,7 @@ static Subf_T **compose_the_chain(SubFace_T *const subf1)
   Subf_T *ring1, *ring2;
   SubFace_T *subf2,*next;
   Flag_T flg;
-  unsigned nc = 0,r;
+  Uint nc = 0,r;
   
   ring1 = add_ring(&chain);
   ring1->subf = subf1;
@@ -709,8 +709,8 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
   const Interface_T *const face = 
     sub->patch->grid->patch[sub->adjPatch]->interface[sub->adjFace];
   SubFace_T *sub2 = 0;
-  unsigned po;
-  unsigned s;
+  Uint po;
+  Uint s;
   Flag_T flg = NONE;
   
   if (sub->copy)
@@ -721,7 +721,7 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
       sub2 = face->subface[s];
       if (sub2->copy == 1)
       {
-        unsigned i;
+        Uint i;
         for (i = 0; i < sub2->np; ++i)
         {
           if (sub2->id[i] == po)
@@ -751,7 +751,7 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
       sub3 = face->subface[s];
       if (sub3->touch)
       {
-        unsigned i;
+        Uint i;
         
         for (i = 0; i < sub3->np; ++i)
         {
@@ -789,7 +789,7 @@ static void add_to_subface(const Point_T *const pnt,const char *const lead)
   Interface_T *const face = pnt->patch->interface[pnt->face];
   SubFace_T *subface;
   Flag_T flg;
-  unsigned sf;
+  Uint sf;
   
   /* compare lead with the previous sub-faces */
   flg = NONE;
@@ -843,7 +843,7 @@ static void add_to_subface_scs(Point_T *const pnt)
   char flags[999] = {'\0'};
   char tmp[999]   = {'\0'};
   Flag_T found;
-  unsigned sf;
+  Uint sf;
   
   /* fill flags */
   sprintf(flags,"p%uf%u",pnt->patch->pn,pnt->face);
@@ -1044,10 +1044,10 @@ static char *inspect_flags(const Point_T *const pnt)
 }
 
 /* filling the geometry of point struct */
-static void fill_geometry(Grid_T *const grid,unsigned **const point_flag)
+static void fill_geometry(Grid_T *const grid,Uint **const point_flag)
 {
   sFunc_PtoV_T **func;
-  unsigned i;
+  Uint i;
   
   init_func_PtoV(&func);/* initialize struct */
   /* adding func to struct to be called. each coord must have 
@@ -1086,7 +1086,7 @@ static void fill_geometry(Grid_T *const grid,unsigned **const point_flag)
 // use different algorithm, since edge points need be treated specially
 // ->return value-> EXIT_SUCCESS
 */
-static int realize_neighbor(Patch_T *const patch,unsigned **const point_flag)
+static int realize_neighbor(Patch_T *const patch,Uint **const point_flag)
 {
   const int nf = (int)countf(patch->interface);
   int f;
@@ -1114,9 +1114,9 @@ static int realize_neighbor(Patch_T *const patch,unsigned **const point_flag)
 /* realizing adjacency of given points
 // ->return value: EXIT_SUCCESS.
 */
-static int realize_adj(PointSet_T **const Pnt,unsigned **const point_flag)
+static int realize_adj(PointSet_T **const Pnt,Uint **const point_flag)
 {
-  unsigned p;
+  Uint p;
   char *lead;
   
   FOR_ALL(p,Pnt)
@@ -1159,7 +1159,7 @@ static int realize_adj(PointSet_T **const Pnt,unsigned **const point_flag)
 /* analyzing the adjacent point of point pnt; 
 // see which one best describe the adjacent boundary of the interface
 // and then fill the flags of Point_T. */
-static void analyze_adjPnt(PointSet_T *const Pnt,unsigned **const point_flag)
+static void analyze_adjPnt(PointSet_T *const Pnt,Uint **const point_flag)
 {
   Point_T *const p1 = Pnt->Pnt;
   Point_T *p2;
@@ -1271,7 +1271,7 @@ static void analyze_adjPnt(PointSet_T *const Pnt,unsigned **const point_flag)
   }
   else
   {
-    unsigned ind = p1->ind;
+    Uint ind = p1->ind;
     double *x = p1->patch->node[ind]->x;
     
     fprintf(stderr,"\nThis point(%f,%f,%f) at patch = '%s' "
@@ -1321,12 +1321,12 @@ static int IsMatchedOtherInnerSubface(PointSet_T *const Pnt)
   PointSet_T Pnt_copy = Pnt[0];
   Flag_T flg;
   char *lead = 0;
-  unsigned i,sf;
+  Uint i,sf;
   
   /* go thru all adjPnt */
   for (i = 0; i < Pnt->NadjPnt; i++)
   {
-    unsigned adjPatch = Pnt->adjPnt[i].p;
+    Uint adjPatch = Pnt->adjPnt[i].p;
     
     /* study a similar point but with only one adjPnt */
     Pnt_copy.NadjPnt = 1;
@@ -1436,12 +1436,12 @@ static int IsInterpolation(PointSet_T *const Pnt)
 {
   struct Interp_S
   {
-    unsigned adjid;/* adjPnt id */
-    unsigned fid;/* adjPnt face id */
+    Uint adjid;/* adjPnt id */
+    Uint fid;/* adjPnt face id */
     double dot;/* N1 dot N2 */
   }*interp = 0, *interpEq = 0;
   double tmp;
-  unsigned i,j,id,f;
+  Uint i,j,id,f;
   
   /* check if Pnt reach inside any adj patch */
   for (i = 0; i < Pnt->NadjPnt; i++)
@@ -1479,7 +1479,7 @@ static int IsInterpolation(PointSet_T *const Pnt)
   /* find the closest N1dotN2 to -1 */
   if (j > 0)
   {
-    unsigned e, id2 = UINT_MAX;
+    Uint e, id2 = UINT_MAX;
     struct Interp_S *int_S;
     Flag_T flg = NONE;
     
@@ -1568,13 +1568,13 @@ static int IsOutBndry(PointSet_T *const Pnt)
   /* slightly move along normal and see if there is any other patches */
   else if (!Pnt->Pnt->patch->innerB)
   {
-    unsigned node = Pnt->Pnt->ind;
+    Uint node = Pnt->Pnt->ind;
     Patch_T *const patch = Pnt->Pnt->patch;
     double *x = patch->node[node]->x;
     double *N1 = Pnt->Pnt->N;
     double eps = root_square(3,x,0)*ScaleFactor;
     double q[3];
-    unsigned ans;
+    Uint ans;
     
     eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
     
@@ -1638,13 +1638,13 @@ static int IsInnBndry(PointSet_T *const Pnt)
   /* slightly move along normal and see if there is any other patches */
   else if (Pnt->Pnt->patch->innerB)
   {
-    unsigned node = Pnt->Pnt->ind;
+    Uint node = Pnt->Pnt->ind;
     Patch_T *const patch = Pnt->Pnt->patch;
     double *x = patch->node[node]->x;
     double *N1 = Pnt->Pnt->N;
     double eps = root_square(3,x,0)*ScaleFactor;
     double q[3];
-    unsigned ans;
+    Uint ans;
     
     eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
     
@@ -1707,7 +1707,7 @@ static int IsInnBndry(PointSet_T *const Pnt)
 // outerbound 1, otherwise 0. */
 static int IsOrthOutBndry(PointSet_T *const Pnt)
 {
-  unsigned i,j;
+  Uint i,j;
   
   if (Pnt->Pnt->patch->innerB)/* this patch has inner boundary, it's suspicious  */
     return 0;
@@ -1738,7 +1738,7 @@ static int IsOrthOutBndry(PointSet_T *const Pnt)
 // innerbound 1, otherwise 0. */
 static int IsOrthInnBndry(PointSet_T *const Pnt)
 {
-  unsigned i,j;
+  Uint i,j;
   
   if (!Pnt->Pnt->patch->innerB)/* this patch dosen't have inner boundary, it's suspicious */
     return 0;
@@ -1761,16 +1761,16 @@ static int IsOrthInnBndry(PointSet_T *const Pnt)
 /* check if one tilts normal toward the adjPnt normal 
 // there is no other patches, which means outerboundary or inner boundary.
 // ->return value: 1 if boundary; 0 otherwise. */
-static int ReachBnd(PointSet_T *const Pnt,const unsigned p,const unsigned f)
+static int ReachBnd(PointSet_T *const Pnt,const Uint p,const Uint f)
 {
-  unsigned node = Pnt->Pnt->ind;
+  Uint node = Pnt->Pnt->ind;
   Patch_T *const patch = Pnt->Pnt->patch;
   double *x = patch->node[node]->x;
   double *N1 = Pnt->Pnt->N;
   double *N2 = Pnt->adjPnt[p].fs[f].N2;
   double eps = root_square(3,x,0)*ScaleFactor;
   double q[3];
-  unsigned ans;
+  Uint ans;
   
   eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
   q[0] = x[0]+eps*N1[0]+ScaleFactor*N2[0];
@@ -1796,12 +1796,12 @@ static int ReachBnd(PointSet_T *const Pnt,const unsigned p,const unsigned f)
 */
 static Point_T *get_p2(const PointSet_T *const Pnt)
 {
-  unsigned f = Pnt->adjPnt[Pnt->idFit].CopyFace;
-  unsigned p = Pnt->adjPnt[Pnt->idFit].p;
-  const unsigned node = Pnt->adjPnt[Pnt->idFit].node;
+  Uint f = Pnt->adjPnt[Pnt->idFit].CopyFace;
+  Uint p = Pnt->adjPnt[Pnt->idFit].p;
+  const Uint node = Pnt->adjPnt[Pnt->idFit].node;
   Patch_T *const patch = Pnt->Pnt->patch->grid->patch[p];
   Interface_T *const face = patch->interface[f];
-  unsigned i;
+  Uint i;
   
   FOR_ALL(i,face->point)
     if (face->point[i]->ind == node)
@@ -1819,7 +1819,7 @@ static Point_T *get_p2(const PointSet_T *const Pnt)
 */
 static int IsNormalFit(PointSet_T *const Pnt)
 {
-  unsigned i,f;
+  Uint i,f;
   Point_T p1 = *Pnt->Pnt;/* copying */
   char *lead;
   Flag_T flg = NONE;
@@ -1869,7 +1869,7 @@ static int IsNormalFit(PointSet_T *const Pnt)
 */
 static int IsOverlap(PointSet_T *const Pnt)
 {
-  unsigned i;
+  Uint i;
   
   for (i = 0; i < Pnt->NadjPnt; i++)
     if (Pnt->adjPnt[i].FaceFlg == 1) return 0;
@@ -1880,9 +1880,9 @@ static int IsOverlap(PointSet_T *const Pnt)
 /* finding the adjacent points of point pnt */
 static void find_adjPnt(PointSet_T *const pnt)
 {
-  unsigned ind = pnt->Pnt->ind;
-  unsigned *found;/* patches have been found */
-  unsigned nfp;/* number of found patches */
+  Uint ind = pnt->Pnt->ind;
+  Uint *found;/* patches have been found */
+  Uint nfp;/* number of found patches */
   double *x = pnt->Pnt->patch->node[ind]->x;
   Needle_T *needle = alloc_needle();
   needle->grid = pnt->Pnt->patch->grid;
@@ -1901,11 +1901,11 @@ static void find_adjPnt(PointSet_T *const pnt)
 static void init_Points(const Interface_T *const interface,PointSet_T ***const innP,PointSet_T ***const edgP)
 {
   PointSet_T **pnt_in,**pnt_ed;/* inner and edge points */
-  unsigned N_in, N_ed;/* number of inner and edge points */
-  const unsigned f = interface->fn;
-  const unsigned *const n = interface->patch->n;
-  unsigned i,j,k,im,iM,jm,jM,km,kM;/* m for min and M for max */
-  unsigned sum,ed,in;
+  Uint N_in, N_ed;/* number of inner and edge points */
+  const Uint f = interface->fn;
+  const Uint *const n = interface->patch->n;
+  Uint i,j,k,im,iM,jm,jM,km,kM;/* m for min and M for max */
+  Uint sum,ed,in;
   
   N_in = NumPoint(interface,INNER);
   N_ed = NumPoint(interface,EDGE);
@@ -1918,8 +1918,8 @@ static void init_Points(const Interface_T *const interface,PointSet_T ***const i
   pnt_ed = 0;
   FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
   {
-    unsigned l = L(n,i,j,k);
-    unsigned p = L2(n,f,i,j,k);
+    Uint l = L(n,i,j,k);
+    Uint p = L2(n,f,i,j,k);
     
     if (IsOnEdge(n,l))
     {
@@ -1944,11 +1944,11 @@ static void init_Points(const Interface_T *const interface,PointSet_T ***const i
 /* number of inner points on an interface
 // ->return value: number of points on the given interface.
 */
-static unsigned NumPoint(const Interface_T *const interface,const enum Type type)
+static Uint NumPoint(const Interface_T *const interface,const enum Type type)
 {
-  unsigned v = UINT_MAX;
-  unsigned *n = interface->patch->n;
-  unsigned f = interface->fn;
+  Uint v = UINT_MAX;
+  Uint *n = interface->patch->n;
+  Uint f = interface->fn;
   
   if (type == INNER)
   {
@@ -2012,7 +2012,7 @@ static unsigned NumPoint(const Interface_T *const interface,const enum Type type
 static void FindInnerB_Cartesian_coord(Patch_T *const patch)
 {
   Interface_T **interface = patch->interface;
-  unsigned i,f;
+  Uint i,f;
   
   FOR_ALL(f,interface)
   {
@@ -2029,7 +2029,7 @@ static void FindInnerB_Cartesian_coord(Patch_T *const patch)
 static void FindExterF_Cartesian_coord(Patch_T *const patch)
 {
   Interface_T **interface = patch->interface;
-  unsigned i,f;
+  Uint i,f;
   
   FOR_ALL(f,interface)
   {
@@ -2046,7 +2046,7 @@ static void FindExterF_Cartesian_coord(Patch_T *const patch)
 static void FindInnerB_CS_coord(Patch_T *const patch)
 {
   Interface_T **interface = patch->interface;
-  unsigned i,f;
+  Uint i,f;
   
   if (patch->grid->kind == Grid_CubedSpherical_NSNS)
   {
@@ -2131,7 +2131,7 @@ static void FindInnerB_CS_coord(Patch_T *const patch)
 static void FindExterF_CS_coord(Patch_T *const patch)
 {
   Interface_T **interface = patch->interface;
-  unsigned i,f;
+  Uint i,f;
   
   if (patch->grid->kind == Grid_CubedSpherical_NSNS)
   {
@@ -2211,7 +2211,7 @@ fill_N
   )
 {
   Interface_T **interface = patch->interface;
-  unsigned i,f;
+  Uint i,f;
   
   /* set normal vector for all face points */
   FOR_ALL(f,interface)
@@ -2226,11 +2226,11 @@ fill_N
   /* set normal vector for only center (roughly) of each face */
   FOR_ALL(f,interface)
   {
-    const unsigned *n = interface[f]->patch->n;
-    unsigned ih = (n[0]-1)/2;
-    unsigned jh = (n[1]-1)/2;
-    unsigned kh = (n[2]-1)/2;
-    unsigned ijk= UINT_MAX;
+    const Uint *n = interface[f]->patch->n;
+    Uint ih = (n[0]-1)/2;
+    Uint jh = (n[1]-1)/2;
+    Uint kh = (n[2]-1)/2;
+    Uint ijk= UINT_MAX;
     
     switch(f)
     {
@@ -2278,14 +2278,14 @@ fill_N
 */
 static void fill_basics(Patch_T *const patch)
 {
-  unsigned *n = patch->n;
-  unsigned f;
+  Uint *n = patch->n;
+  Uint f;
   
   for (f = I_0; f < TOT_FACE; f++)
   {
     Point_T **point;
-    unsigned i,j,k,l,im,iM,jm,jM,km,kM,sum;/* m for min and M for max */
-    unsigned t = 0;/* test purposes */
+    Uint i,j,k,l,im,iM,jm,jM,km,kM,sum;/* m for min and M for max */
+    Uint t = 0;/* test purposes */
     
     set_min_max_sum(n,f,&im,&iM,&jm,&jM,&km,&kM,&sum);
     patch->interface[f]->point = alloc_point(sum);
@@ -2297,7 +2297,7 @@ static void fill_basics(Patch_T *const patch)
     t = 0;
     FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
     {
-      unsigned p = L2(n,f,i,j,k);
+      Uint p = L2(n,f,i,j,k);
       point[p]->ind = l = L(n,i,j,k);
       point[p]->face = f;
       point[p]->patch = patch;
@@ -2315,9 +2315,9 @@ static void fill_basics(Patch_T *const patch)
 // are zero or supremum as follows:
 // ->return value: 2d index.
 */
-static unsigned L2(const unsigned *const n,const unsigned f, const unsigned i, const unsigned j, const unsigned k)
+static Uint L2(const Uint *const n,const Uint f, const Uint i, const Uint j, const Uint k)
 {
-  unsigned v = UINT_MAX;
+  Uint v = UINT_MAX;
   
   switch(f)
   {
@@ -2353,7 +2353,7 @@ static unsigned L2(const unsigned *const n,const unsigned f, const unsigned i, c
 // then the maximum value must be the supremum; but the slice 
 // should be at the exact value.
 */
-static void set_min_max_sum(const unsigned *const n,const unsigned f,unsigned *const im,unsigned *const iM,unsigned *const jm,unsigned *const jM,unsigned *const km,unsigned *const kM,unsigned *const sum)
+static void set_min_max_sum(const Uint *const n,const Uint f,Uint *const im,Uint *const iM,Uint *const jm,Uint *const jM,Uint *const km,Uint *const kM,Uint *const sum)
 {
   switch(f)
   {
@@ -2475,7 +2475,7 @@ void make_normal_outward(Point_T *const point)
 /* finding normal for cubed spherical coord */
 static void normal_vec_CS_coord(Point_T *const point)
 {
-  const unsigned p = point->ind;
+  const Uint p = point->ind;
   Patch_T *const patch = point->patch;
   double N;
   
@@ -2570,7 +2570,7 @@ static void normal_vec_Cartesian_coord(Point_T *const point)
 /* reallocation mem for PointSet_T strcut with one extera block
 // to put the last pointer to null.
 */
-static void alloc_PointSet(const unsigned N,PointSet_T ***const pnt)
+static void alloc_PointSet(const Uint N,PointSet_T ***const pnt)
 {
   assert(pnt);
   
@@ -2588,7 +2588,7 @@ static void free_PointSet(PointSet_T **const pnt)
 {
   if(!pnt) return;
   
-  unsigned i;
+  Uint i;
   FOR_ALL (i,pnt)
   {
     if (pnt[i]->adjPnt)
@@ -2609,9 +2609,9 @@ static void free_PointSet(PointSet_T **const pnt)
 // it is 0.
 // note: it won't add any thing if the patch is already exists.
 */
-static void add_adjPnt(PointSet_T *const pnt,const unsigned *const p, const unsigned np)
+static void add_adjPnt(PointSet_T *const pnt,const Uint *const p, const Uint np)
 {
-  unsigned i,j;
+  Uint i,j;
   for (i = 0; i < np; i++)
   {
     for(j = 0; j < pnt->NadjPnt; j++)
@@ -2640,15 +2640,15 @@ static void add_adjPnt(PointSet_T *const pnt,const unsigned *const p, const unsi
 // 3. find adjPnt normal vector and its dot product with the pnt
 // the last one gets used for realizing the geometry of neighbor of pnt
 */
-static void fill_adjPnt(PointSet_T *const pnt,const unsigned N)
+static void fill_adjPnt(PointSet_T *const pnt,const Uint N)
 {
   AdjPoint_T *const adjPnt = &pnt->adjPnt[N];
-  unsigned ind = pnt->Pnt->ind;
+  Uint ind = pnt->Pnt->ind;
   const double *const x = pnt->Pnt->patch->node[ind]->x;
-  unsigned f[TOT_FACE];
+  Uint f[TOT_FACE];
   const Grid_T *const grid = pnt->Pnt->patch->grid;
   Flag_T flg;
-  unsigned ind2;
+  Uint ind2;
   
   /* find if it is on a node (collocation) */
   ind2 = find_node(x,grid->patch[adjPnt->p],&flg);
@@ -2663,7 +2663,7 @@ static void fill_adjPnt(PointSet_T *const pnt,const unsigned N)
   {
     Point_T po;
     double *N2;
-    unsigned i;
+    Uint i;
     
     po.patch = grid->patch[adjPnt->p];
     adjPnt->FaceFlg = 1;
@@ -2705,21 +2705,21 @@ static void fill_adjPnt(PointSet_T *const pnt,const unsigned N)
 // NOTE: the given pnt must be on edge otherwise N is 0. */
 void tangent(const Point_T *const pnt,double *const N)
 {
-  const unsigned *const n = pnt->patch->n;
-  const unsigned ind = pnt->ind;
-  const unsigned f = pnt->face;
+  const Uint *const n = pnt->patch->n;
+  const Uint ind = pnt->ind;
+  const Uint f = pnt->face;
   double *x = pnt->patch->node[ind]->x;
   double *y;
   double s_ds = DBL_MAX;/* smallest distance */
-  unsigned s_in = UINT_MAX;/* index referring to point with smallest distance */
-  unsigned i,j,k,im,iM,jm,jM,km,kM,sum;/* m for min and M for max */
+  Uint s_in = UINT_MAX;/* index referring to point with smallest distance */
+  Uint i,j,k,im,iM,jm,jM,km,kM,sum;/* m for min and M for max */
   Flag_T flg = NONE;
   
   set_min_max_sum(n,f,&im,&iM,&jm,&jM,&km,&kM,&sum);
   
   FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
   {
-    unsigned l = L(n,i,j,k);
+    Uint l = L(n,i,j,k);
     double nrm;
     
     if (!IsOnEdge(n,l))
@@ -2748,7 +2748,7 @@ void tangent(const Point_T *const pnt,double *const N)
 /* getting interface, figures what is the constant coordinates
 // on this interface.
 */
-static void set_sameXYZ(Point_T *const p,const unsigned f)
+static void set_sameXYZ(Point_T *const p,const Uint f)
 {
   switch(f)
   {
@@ -2793,7 +2793,7 @@ static void set_sameXYZ(Point_T *const p,const unsigned f)
 static int IsOnSubface(const Point_T *const pnt, const char *const lead)
 {
   Interface_T *const face = pnt->patch->interface[pnt->face];
-  unsigned sf;
+  Uint sf;
   
   /* compare lead with the previous sub-faces */
   for (sf = 0; sf < face->ns; ++sf)
@@ -2808,12 +2808,12 @@ static int IsOnSubface(const Point_T *const pnt, const char *const lead)
 /* memory alloc nodes */
 void alloc_nodes(Grid_T *const grid)
 {
-  unsigned *n;
-  unsigned i;
+  Uint *n;
+  Uint i;
   
   FOR_ALL(i,grid->patch)
   {
-    unsigned j,U;
+    Uint j,U;
     Node_T **node;
     
     n = grid->patch[i]->n;
@@ -2837,7 +2837,7 @@ void alloc_nodes(Grid_T *const grid)
 /* memory allocation for interface struct */
 void alloc_interface(Patch_T *const patch)
 {
-  unsigned i;
+  Uint i;
   assert(patch);
   
   patch->interface = calloc(NFaces+1,sizeof(*patch->interface));
@@ -2855,10 +2855,10 @@ void alloc_interface(Patch_T *const patch)
 // s is the number of point which is demanded 
 // ->return value: pointer to new allocated memory
 */
-void *alloc_point(const unsigned s)
+void *alloc_point(const Uint s)
 {
   Point_T **point;
-  unsigned i;
+  Uint i;
   
   point = calloc(s+1,sizeof(*point));
   IsNull(point);
@@ -2875,12 +2875,12 @@ void *alloc_point(const unsigned s)
 /* feeing memory of Point_T inside grid */
 void free_points(Grid_T *const grid)
 {
-  unsigned pa;
+  Uint pa;
   
   FOR_ALL(pa,grid->patch)
   {
     Interface_T **face = grid->patch[pa]->interface;
-    unsigned f;
+    Uint f;
     
     FOR_ALL(f,face)
     {
@@ -2897,7 +2897,7 @@ void free_patch_interface(Patch_T *const patch)
 {
   Interface_T **face = patch->interface;
   SubFace_T **subface = 0;
-  unsigned f,i;
+  Uint f,i;
   
   if (face)
   FOR_ALL(f,face)
@@ -2933,9 +2933,9 @@ void free_patch_interface(Patch_T *const patch)
 static void check_houseK(Patch_T *const patch)
 {
   Interface_T **const interface = patch->interface;
-  const unsigned nf = countf(interface);
+  const Uint nf = countf(interface);
   Node_T *node;
-  unsigned i,f;
+  Uint i,f;
   
   for (f = 0; f < nf; f++)
     for (i = 0; i < interface[f]->np; i++)
@@ -2954,8 +2954,8 @@ static void check_houseK(Patch_T *const patch)
 static void flush_houseK(Patch_T *const patch)
 {
   Interface_T **const interface = patch->interface;
-  const unsigned nf = countf(interface);
-  unsigned i,f;
+  const Uint nf = countf(interface);
+  Uint i,f;
   
   for (f = 0; f < nf; f++)
     for (i = 0; i < interface[f]->np; i++)
@@ -2973,7 +2973,7 @@ find_adjacent_scs
   (
   Grid_T *const grid,
   Patch_T *const patch,
-  unsigned *const point_flag
+  Uint *const point_flag
   )
 {
   Interface_T **const interface = patch->interface;
@@ -2983,14 +2983,14 @@ find_adjacent_scs
   double min = DBL_MAX;
   char s[999] = {'\0'};
   int f;
-  unsigned i,p;
+  Uint i,p;
   
   for (f = (int)NFaces-1; f >= 0; --f)
   {
     /* FIRST: find the adjacent patch to the center. */
     Needle_T *needle0 = 0;
     const double *centerN, *centerx;
-    unsigned Nfound0;
+    Uint Nfound0;
     
     centerN = interface[f]->centerN;
     centerx = interface[f]->centerx;
@@ -3026,7 +3026,7 @@ find_adjacent_scs
     if (!Nfound0)
     {
       /* make sure there is really no other patches */
-      unsigned Nfound1;
+      Uint Nfound1;
         
       eps = root_square(3,centerx,0)*ScaleFactor;
       eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
@@ -3079,7 +3079,7 @@ find_adjacent_scs
     {
       Point_T **const pnt = interface[f]->point;
       const Patch_T *center_adjpatch = 0;
-      unsigned center_adjface = UINT_MAX;
+      Uint center_adjface = UINT_MAX;
       
       min = DBL_MAX;
       
@@ -3087,7 +3087,7 @@ find_adjacent_scs
       for (i = 0; i < Nfound0; ++i)
       {
         const Patch_T *adjpatch = grid->patch[needle0->ans[i]];
-        unsigned adjfn;
+        Uint adjfn;
         
         /* find the best adjface */
         for (adjfn = 0; adjfn < NFaces; ++adjfn)
@@ -3116,8 +3116,8 @@ find_adjacent_scs
       {
         if (!point_flag[pnt[p]->ind])
         {
-          unsigned ind = pnt[p]->ind;
-          unsigned adjind;
+          Uint ind = pnt[p]->ind;
+          Uint adjind;
           const double *pnt_x = patch->node[ind]->x;
           double adjX[3] = {0};
           Flag_T iscp = NONE;
@@ -3133,12 +3133,12 @@ find_adjacent_scs
             adjind = find_node(pnt_x,center_adjpatch,&iscp);
             if (iscp == FOUND)
             {
-              unsigned adjp = pnt[p]->adjPatch;
-              unsigned adjf = pnt[p]->adjFace;
-              unsigned nadjp = grid->patch[adjp]->interface[adjf]->np;
+              Uint adjp = pnt[p]->adjPatch;
+              Uint adjf = pnt[p]->adjFace;
+              Uint nadjp = grid->patch[adjp]->interface[adjf]->np;
               Point_T **adjpnt = 
                 grid->patch[adjp]->interface[adjf]->point;
-              unsigned ip;
+              Uint ip;
               
               pnt[p]->copy = 1;
               pnt[p]->adjInd = adjind;
@@ -3166,7 +3166,7 @@ find_adjacent_scs
           else
           {
             Needle_T *needle2 = 0;
-            unsigned Nfound2 = 0;
+            Uint Nfound2 = 0;
             
             eps = root_square(3,pnt_x,0)*ScaleFactor;
             eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
@@ -3233,14 +3233,14 @@ find_adjacent_scs
             
             /* first find the best adjface */
             const Patch_T *pnt_adjpatch = 0;
-            unsigned pnt_adjface = UINT_MAX;
+            Uint pnt_adjface = UINT_MAX;
             
             min = DBL_MAX;
             for (i = 0; i < Nfound2; ++i)
             {
               const Patch_T *adjpatch = grid->patch[needle2->ans[i]];
-              unsigned onface[NFaces];
-              unsigned adjfn;
+              Uint onface[NFaces];
+              Uint adjfn;
               
               /* find the best adjface if it is on face at all */
               if(IsOnFace(pnt_x,adjpatch,onface))
@@ -3278,12 +3278,12 @@ find_adjacent_scs
               adjind = find_node(pnt_x,pnt_adjpatch,&iscp);
               if (iscp == FOUND)
               {
-                unsigned adjp = pnt[p]->adjPatch;
-                unsigned adjf = pnt[p]->adjFace;
-                unsigned nadjp = grid->patch[adjp]->interface[adjf]->np;
+                Uint adjp = pnt[p]->adjPatch;
+                Uint adjf = pnt[p]->adjFace;
+                Uint nadjp = grid->patch[adjp]->interface[adjf]->np;
                 Point_T **adjpnt = 
                   grid->patch[adjp]->interface[adjf]->point;
-                unsigned ip;
+                Uint ip;
                 
                 pnt[p]->copy = 1;
                 pnt[p]->adjInd = adjind;
@@ -3349,11 +3349,11 @@ find_adjacent_scs
 static void set_subfaces_scs(Grid_T *const grid,Patch_T *const patch)
 {
   Interface_T **const interface = patch->interface;
-  unsigned f;
+  Uint f;
   
   for (f = 0; f < NFaces; ++f)
   {
-    unsigned p;
+    Uint p;
     for (p = 0; p < interface[f]->np; ++p)
     {
       Point_T **const pnt = interface[f]->point;
@@ -3363,9 +3363,9 @@ static void set_subfaces_scs(Grid_T *const grid,Patch_T *const patch)
         add_to_subface_scs(pnt[p]);
         if (pnt[p]->copy)/* copy */
         {
-          unsigned adjf = pnt[p]->adjFace;
-          unsigned adjp = pnt[p]->adjPatch;
-          unsigned adji = pnt[p]->adjIndF;
+          Uint adjf = pnt[p]->adjFace;
+          Uint adjp = pnt[p]->adjPatch;
+          Uint adji = pnt[p]->adjIndF;
           Point_T *adjpnt = 
             grid->patch[adjp]->interface[adjf]->point[adji];
           
@@ -3389,17 +3389,17 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
   /* struct for ranking of faces to more Nof the higher rank */
   struct face_rank_S
   {
-    unsigned pn;/* patch number */
-    unsigned fn;/* face number */
-    unsigned Nof;/* number of other faces */
+    Uint pn;/* patch number */
+    Uint fn;/* face number */
+    Uint Nof;/* number of other faces */
   };
   
-  const unsigned Nfrank = grid->np*NFaces;
+  const Uint Nfrank = grid->np*NFaces;
   /* face rank */
   struct face_rank_S *frank = calloc(Nfrank,sizeof(*frank));IsNull(frank);
-  unsigned nfr = 0;
+  Uint nfr = 0;
   /* if this patch has Drichlet 1 otherwise 0 */
-  unsigned *isD = calloc(grid->np,sizeof(*isD));IsNull(isD);
+  Uint *isD = calloc(grid->np,sizeof(*isD));IsNull(isD);
   /* notation: o prefix letter means other */
   Interface_T **faces;
   Interface_T *face;
@@ -3408,9 +3408,9 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
   Patch_T *opatch;
   SubFace_T *ssubf = 0;
   SubFace_T *osubf = 0;
-  unsigned bc;/* 0 = Dirichlet, 1 = Neumann */
+  Uint bc;/* 0 = Dirichlet, 1 = Neumann */
   char sflgs[999] = {'\0'};
-  unsigned p,f,sf,i,j;
+  Uint p,f,sf,i,j;
   
   /* pair all of the subfaces and count number of adjacent faces. */
   nfr = 0;
@@ -3550,11 +3550,11 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
 }
 
 /* count the number of adjacent faces the give face has */
-static unsigned counter_n_adjacent_faces(const Interface_T *const face)
+static Uint counter_n_adjacent_faces(const Interface_T *const face)
 {
-  unsigned count = 0;
-  unsigned *pn = 0,*fn = 0;/* adjacent patch and face number */
-  unsigned sf;
+  Uint count = 0;
+  Uint *pn = 0,*fn = 0;/* adjacent patch and face number */
+  Uint sf;
   
   for (sf = 0; sf < face->ns; ++sf)
   {
@@ -3565,7 +3565,7 @@ static unsigned counter_n_adjacent_faces(const Interface_T *const face)
     
     /* check repetition */
     Flag_T rep = NO;
-    unsigned r;
+    Uint r;
     for (r = 0; r < count; ++r)
     {
       if (pn[r] == subf->adjPatch && fn[r] == subf->adjFace)

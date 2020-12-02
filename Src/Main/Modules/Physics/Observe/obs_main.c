@@ -66,7 +66,7 @@ static void free_obs(Observe_T *obs)
   {  
   
   struct items_S **adm = obs->items;
-  unsigned i;
+  Uint i;
   
   for (i = 0; i < obs->Nitems; ++i)
   {

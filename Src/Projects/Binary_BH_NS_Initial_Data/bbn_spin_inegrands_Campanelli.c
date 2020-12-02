@@ -28,8 +28,8 @@ void bbn_populate_spin_integrands_Campanelli(Patch_T *const patch,const double x
   const double x_c = xc[0];
   const double y_c = xc[1];
   const double z_c = xc[2];
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
 
   /* declaring: */
   READ_v(_A_UiUj_U0U2)

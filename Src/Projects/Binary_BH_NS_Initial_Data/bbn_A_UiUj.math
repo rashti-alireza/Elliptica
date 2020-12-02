@@ -70,8 +70,8 @@ Symm[_gamma(i,j)    = _gamma(j,i)];
 Symm[_gammaI(i,j)   = _gammaI(j,i)];
 Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 
-Ccode["    unsigned nn = patch->nn;"];
-Ccode["    unsigned ijk;"];
+Ccode["    Uint nn = patch->nn;"];
+Ccode["    Uint ijk;"];
 Ccode["    for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["    {"];
 

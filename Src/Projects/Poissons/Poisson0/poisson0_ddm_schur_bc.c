@@ -12,7 +12,7 @@
 void *bc_alpha(void *vp1,void *vp2)
 {
   DDM_SCHUR_BC_DECLARE
-  unsigned ijk;/* node index */
+  Uint ijk;/* node index */
 
   /* declaring: */
   READ_v(alpha)

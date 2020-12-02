@@ -20,9 +20,9 @@ extern Parameter_T **parameters_global;
 struct checkpoint_header
 {
  Grid_T *grid;
- //unsigned npatch;
- unsigned npar;
- unsigned grid_number;
+ //Uint npatch;
+ Uint npar;
+ Uint grid_number;
  char *grid_kind;
 };
 

@@ -112,13 +112,13 @@ void add_parameter_double(const char *const lv, const double rv)
 
 /* adding left value and right value to parameter data base 
 // array format. */
-void add_parameter_array(const char *const lv, const double *const rv,const unsigned n)
+void add_parameter_array(const char *const lv, const double *const rv,const Uint n)
 {
   IsNull(lv);
   IsNull(rv);
   
   Parameter_T *par;
-  unsigned i;
+  Uint i;
   
   par = get_parameter(lv);
   if (par)
@@ -135,13 +135,13 @@ void add_parameter_array(const char *const lv, const double *const rv,const unsi
 }
 
 /* update parameter array format. */
-void update_parameter_array(const char *const lv, const double *const rv,const unsigned n)
+void update_parameter_array(const char *const lv, const double *const rv,const Uint n)
 {
   IsNull(lv);
   IsNull(rv);
   
   Parameter_T *par;
-  unsigned i;
+  Uint i;
   
   par = get_parameter(lv);
   
@@ -233,7 +233,7 @@ static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
   while (m_str)
   {
     /* reference: 1->2(x2)->5(x3)->8 */
-    unsigned len = (unsigned)strlen(m_str);/* (x2) => 4 */
+    Uint len = (Uint)strlen(m_str);/* (x2) => 4 */
     const char *l_str = strstr(str,m_str);/*    => (x2)->5(x3)->8 */
     const char *r_str = strlen(l_str) > len ? l_str+len: "\0";/* => ->5(x3)->8 */
     
@@ -244,11 +244,11 @@ static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
     if (*b_str == '>')
       b_str++;/* b_str => 2 */
     
-    unsigned n = (unsigned)(l_str-b_str+1);  
+    Uint n = (Uint)(l_str-b_str+1);  
     char *v_str = calloc(n,1);
     IsNull(v_str);
     
-    unsigned i = 0;
+    Uint i = 0;
     while (i < n-1)
     {
       v_str[i] = b_str[i];
@@ -257,14 +257,14 @@ static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
     v_str[n-1] = '\0';
     
     char *mult_str  = regex_find("[[:digit:]]+",m_str);
-    unsigned mult   = (unsigned)atoi(mult_str);
+    Uint mult   = (Uint)atoi(mult_str);
     
     if (mult == UINT_MAX)
       Error1("Wrong syntax for '%s'; negative multiplicity.\n",rv);
     if (mult == 0)
       Error1("Wrong syntax for '%s'; zero multiplicity.\n",rv);
     
-    unsigned n_mult = (mult-1)*2+mult*(n-1)+1;/* for each '->' 2 Byte,
+    Uint n_mult = (mult-1)*2+mult*(n-1)+1;/* for each '->' 2 Byte,
                                     // for each v_str n-1 */
     char *inter_str = calloc(n_mult,1); 
     IsNull(inter_str);
@@ -283,7 +283,7 @@ static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
     snprintf(i_str,strlen(str)-strlen(b_str)+1,"%s",str);
     
     char *new_str = 0;
-    unsigned n_new_str = (unsigned)(strlen(i_str)+strlen(inter_str)+strlen(r_str))+1;
+    Uint n_new_str = (Uint)(strlen(i_str)+strlen(inter_str)+strlen(r_str))+1;
     new_str = calloc(n_new_str,1);
     IsNull(new_str);
     
@@ -509,11 +509,11 @@ int make_parameters(const char *const path)
 }
 
 /* ->return value: count the total number of iterations */
-unsigned total_iterations_ip(void)
+Uint total_iterations_ip(void)
 {
-  unsigned max = (unsigned)PgetiEZ("total_iterations_ip");
+  Uint max = (Uint)PgetiEZ("total_iterations_ip");
   char *subs = 0;
-  unsigned l = 0,i;
+  Uint l = 0,i;
   
   if (max != INT_MAX)/* if "total_iterations_ip" par is set */
     return max;
@@ -548,10 +548,10 @@ unsigned total_iterations_ip(void)
 }
 
 /* ->return value: count the total number of iterative parameters */
-unsigned total_iterative_parameters_ip(void)
+Uint total_iterative_parameters_ip(void)
 {
-  unsigned i;
-  unsigned count = 0;
+  Uint i;
+  Uint count = 0;
   
   i = 0;
   while (parameters_global != 0 && parameters_global[i] != 0)
@@ -565,9 +565,9 @@ unsigned total_iterative_parameters_ip(void)
 }
 
 /* updating the iterative parameter for iteration number iter */
-void update_iterative_parameter_ip(const unsigned iter)
+void update_iterative_parameter_ip(const Uint iter)
 {
-  unsigned i;
+  Uint i;
   
   i = 0;
   while (parameters_global != 0 && parameters_global[i] != 0)
@@ -593,7 +593,7 @@ void update_iterative_parameter_ip(const unsigned iter)
 // if the n is larger than the total number of values in the string
 // it returns the last value.
 // ->return value: the n-th value in iterative parameter in string format. */
-char *get_n_value_str_ip(const Parameter_T *const par,const unsigned n)
+char *get_n_value_str_ip(const Parameter_T *const par,const Uint n)
 {
   if (!par->iterative)
     Error1("The parameter %s is not an iterative parameter",par->lv);
@@ -604,8 +604,8 @@ char *get_n_value_str_ip(const Parameter_T *const par,const unsigned n)
   char *ret = 0;
   char *subs,*subs2;
   const char *const rv_ip = par->rv_ip;
-  unsigned j = 0;
-  unsigned len = 0;
+  Uint j = 0;
+  Uint len = 0;
      
   if (par->rv)
     free(par->rv);
@@ -614,7 +614,7 @@ char *get_n_value_str_ip(const Parameter_T *const par,const unsigned n)
   subs = strstr(rv_ip,"->");
   if (n == 0)
   {
-    len = (unsigned)(subs-rv_ip+1);/* value-> */
+    len = (Uint)(subs-rv_ip+1);/* value-> */
     assert(len != UINT_MAX);
     ret = calloc(len,1);
     IsNull(ret);
@@ -637,7 +637,7 @@ char *get_n_value_str_ip(const Parameter_T *const par,const unsigned n)
       }
       else if (j == n)
       {
-        len = (unsigned)(subs2-subs+1);/* value1->value2 */
+        len = (Uint)(subs2-subs+1);/* value1->value2 */
         assert(len != UINT_MAX);
         ret = calloc(len,1);
         IsNull(ret);
@@ -657,11 +657,11 @@ char *get_n_value_str_ip(const Parameter_T *const par,const unsigned n)
 }
 
 /* ->return value: the name of n-th iterative variable, counting starts from 0 */
-char *par_name_ip(const unsigned n)
+char *par_name_ip(const Uint n)
 {
   char *ret = 0;
-  unsigned count;
-  unsigned i;
+  Uint count;
+  Uint i;
   
   i = 0;
   count = 0;
@@ -684,11 +684,11 @@ char *par_name_ip(const unsigned n)
 }
 
 /* ->return value: the value of n-th iterative variable in str format, counting starts from 0 */
-char *par_value_str_ip(const unsigned n)
+char *par_value_str_ip(const Uint n)
 {
   char *ret = 0;
-  unsigned count;
-  unsigned i;
+  Uint count;
+  Uint i;
   
   i = 0;
   count = 0;
@@ -738,7 +738,7 @@ void set_default_parameter(const char *const lhs,const char *const rhs)
 */
 void *alloc_parameter(Parameter_T ***const mem)
 {
-  unsigned i;
+  Uint i;
   
   for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
   
@@ -759,7 +759,7 @@ void *alloc_parameter(Parameter_T ***const mem)
 void free_parameter(const char *const par_name)
 {
   Parameter_T *last_par = 0;
-  unsigned np,i;
+  Uint np,i;
   
   /* count total number of parameters */
   np = 0;
@@ -811,7 +811,7 @@ void free_given_parameter(Parameter_T *par)
 /* free the whole parameter data base */
 void free_parameter_db(void)
 {
-  unsigned np;
+  Uint np;
   
   np = 0;
   while (parameters_global != 0 && parameters_global[np] != 0)
@@ -836,18 +836,18 @@ void free_parameter_db(void)
 int 
 update_iteration_params
   (
-   const unsigned main_loop_iter,
+   const Uint main_loop_iter,
    const char *const prefix/* parameter prefix */,
    const char *const dir_name_format/* eg: "BHNS_%s_%ux%ux%u" */
   )
 {
   assert(dir_name_format);
   char prepar[PAR_LEN] = {'\0'};
-  const unsigned total_iters = total_iterations_ip();
-  const unsigned total_ipars = total_iterative_parameters_ip();
-  const unsigned iter_n = (unsigned)Pgeti(PrefixIt(prefix,"iteration_number"));
-  unsigned iter;/* number of iterations have been performed for the simulation */
-  unsigned n[3];/* number of points */
+  const Uint total_iters = total_iterations_ip();
+  const Uint total_ipars = total_iterative_parameters_ip();
+  const Uint iter_n = (Uint)Pgeti(PrefixIt(prefix,"iteration_number"));
+  Uint iter;/* number of iterations have been performed for the simulation */
+  Uint n[3];/* number of points */
   const char *path_par = Pgets(PrefixIt(prefix,"output_directory_path"));
   char folder_name_next[STR_SIZE2] = {'\0'},
        folder_name_prev[STR_SIZE2] = {'\0'};
@@ -856,7 +856,7 @@ update_iteration_params
   const char *const parfile_stem = Pgets("parameter_file_name_stem");/* no prefix */
   char cp_cmd[STR_SIZE2];
   char *str;
-  unsigned i;
+  Uint i;
   
   /* if the start is from checkpoint_file do nothing */
   if (Pcmps(PrefixIt(prefix,"start_off"),"checkpoint_file"))
@@ -886,9 +886,9 @@ update_iteration_params
   } 
   
   /* find the previous folder name */
-  n[0] = (unsigned)PgetiEZ("n_a");
-  n[1] = (unsigned)PgetiEZ("n_b");
-  n[2] = (unsigned)PgetiEZ("n_c");
+  n[0] = (Uint)PgetiEZ("n_a");
+  n[1] = (Uint)PgetiEZ("n_b");
+  n[2] = (Uint)PgetiEZ("n_c");
   sprintf(folder_name_prev,dir_name_format,parfile_stem,n[0],n[1],n[2]);  
   
   /* update the parameter accoding to the iteration number */
@@ -903,9 +903,9 @@ update_iteration_params
   }
   
   /* find the name of next folder */
-  n[0] = (unsigned)PgetiEZ("n_a");
-  n[1] = (unsigned)PgetiEZ("n_b");
-  n[2] = (unsigned)PgetiEZ("n_c");
+  n[0] = (Uint)PgetiEZ("n_a");
+  n[1] = (Uint)PgetiEZ("n_b");
+  n[2] = (Uint)PgetiEZ("n_c");
   
   /* this parameter helps to use some of the previous grid data */
   Pseti(PrefixIt(prefix,"did_resolution_change?"),0);

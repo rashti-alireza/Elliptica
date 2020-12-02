@@ -39,9 +39,9 @@ void bbn_solve_elliptic_eqs(Grid_T *const grid)
   /* saving the field being solved for relaxation scheme purposes */
   save_fields(grid);
   
-  const unsigned max_iter = (unsigned)Pgeti("Solving_Max_Number_of_Iteration");
+  const Uint max_iter = (Uint)Pgeti("Solving_Max_Number_of_Iteration");
   const int max_newton_step = Pgeti("Solving_Max_Number_of_Newton_Step");
-  unsigned iter = 0;
+  Uint iter = 0;
   
   while (iter < max_iter)
   {
@@ -98,12 +98,12 @@ void bbn_solve_elliptic_eqs(Grid_T *const grid)
 // using relaxed scheme, note, we also update source fields */ 
 static void update_fields_relaxed_scheme(Grid_T *const grid)
 {
-  const unsigned npatch = grid->np;
+  const Uint npatch = grid->np;
   const char *const solving_order = Pgets("Solving_Order");
   const double W1  = Pgetd("Solving_Field_Update_Weight");
   const double W2  = 1-W1;
   char **field_name;
-  unsigned p,nf,f;
+  Uint p,nf,f;
   
   /* no need to update it W1 = 1 */
   if (EQL(W1,1))
@@ -122,8 +122,8 @@ static void update_fields_relaxed_scheme(Grid_T *const grid)
     for (p = 0; p < npatch; ++p)
     {
       Patch_T *patch = grid->patch[p];
-      unsigned nn    = patch->nn;
-      unsigned ijk;
+      Uint nn    = patch->nn;
+      Uint ijk;
       
       /* if the field is not defined in this patch */
       if (_Ind(field_new) < 0)
@@ -154,10 +154,10 @@ static void update_fields_relaxed_scheme(Grid_T *const grid)
 /* saving the field with the given name for iterative purposes. */
 static void save_fields(Grid_T *const grid)
 {
-  const unsigned npatch = grid->np;
+  const Uint npatch = grid->np;
   const char *const solving_order = Pgets("Solving_Order");  
   char **field_name;
-  unsigned p,nf,f;
+  Uint p,nf,f;
   
   field_name = get_solving_field_name(solving_order,&nf);
   
@@ -172,8 +172,8 @@ static void save_fields(Grid_T *const grid)
     for (p = 0; p < npatch; ++p)
     {
       Patch_T *patch = grid->patch[p];
-      unsigned nn    = patch->nn;
-      unsigned ijk;
+      Uint nn    = patch->nn;
+      Uint ijk;
       
       /* if no field defined in this patch */
       if (_Ind(fname0) < 0) continue;
@@ -211,8 +211,8 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
   const double res_d    = Pgetd("Solving_Residual");/* desired residual */
   const int max_step    = Pgeti("Solving_Max_Number_of_Newton_Step");
   const double res_fac  = Pgetd("Solving_Residual_Factor");
-  const unsigned npatch = grid->np;
-  unsigned p;
+  const Uint npatch = grid->np;
+  Uint p;
   
   /* if no step should be taken */
   if (max_step  == 0)
@@ -313,8 +313,8 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
 /* backtrack to restore to the last solution */
 static void bbn_backtrack(Grid_T *const grid,const char *const name)
 {
-  const unsigned npatch = grid->np;
-  unsigned p;
+  const Uint npatch = grid->np;
+  Uint p;
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npatch; ++p)
@@ -323,7 +323,7 @@ static void bbn_backtrack(Grid_T *const grid,const char *const name)
     Field_T *f      = patch->fields[Ind(name)];
     double *v = f->v;
     const double *last_sol = patch->solving_man->settings->last_sol;
-    unsigned ijk;
+    Uint ijk;
     
     free_coeffs(f);
     for(ijk = 0; ijk < patch->nn; ++ijk)
@@ -337,7 +337,7 @@ static void bbn_backtrack(Grid_T *const grid,const char *const name)
 /* updating sources after field is solved */
 void bbn_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name)
 {
-  unsigned p;
+  Uint p;
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -439,7 +439,7 @@ static void bbn_free_phi_grid(Grid_T *grid)
   if (!grid)
     return;
   
-  unsigned p;
+  Uint p;
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -457,7 +457,7 @@ static void bbn_free_phi_grid(Grid_T *grid)
 /* confining the whole grid to only NS grid for phi in cubed spherical coords. */
 static void bbn_phi_grid_CS(Grid_T *const phi_grid,Grid_T *const grid)
 {
-  unsigned p,i;
+  Uint p,i;
   
   /* NS at left composed of 6 cubed spherical + 1 Cartesian,
   // and 1 more to be Null = 8 */

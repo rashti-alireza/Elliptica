@@ -30,13 +30,13 @@ struct BHFiller_S
   Grid_T *grid;/* the grid */
   Patch_T **patches_outBH;/* patches outside the BH */
   Patch_T **patches_inBH;/* patches inside the BH */
-  unsigned npi;/* number of patches inside the BH */
-  unsigned npo;/* number of patches outside the BH */
-  unsigned lmax;/* max l in Ylm expansion */
-  unsigned Ntheta;/* number of points in theta direction */
-  unsigned Nphi;/* number of points in phi direction */
-  unsigned NCoeffs;/* number of coeffs for in extrapolant function */
-  unsigned nf;/* number of fields */
+  Uint npi;/* number of patches inside the BH */
+  Uint npo;/* number of patches outside the BH */
+  Uint lmax;/* max l in Ylm expansion */
+  Uint Ntheta;/* number of points in theta direction */
+  Uint Nphi;/* number of points in phi direction */
+  Uint NCoeffs;/* number of coeffs for in extrapolant function */
+  Uint nf;/* number of fields */
   char method[MAX_STR];/* methods: 
                        // O. TnYlm_C2 => f(r,th,ph) = R(r)*T(th,ph) 
                        // and it is asked for C2 continitui along r.
@@ -56,8 +56,8 @@ struct BHFiller_S
     double *imagYlm_coeffs[MAX_COEFFS];/* Ylm coeffs of radial imag part */
     double f_r0;/* value of the field at r = 0 */
     double (*func_r0)(void *const params);/* function as we close to r = 0 */
-    unsigned did_add_df:1;/* 1 if automatically adds required df fields  , otherwise 0. */
-    unsigned did_add_ddf:1;/* 1 if automatically adds required ddf fields, otherwise 0. */
+    Uint did_add_df:1;/* 1 if automatically adds required df fields  , otherwise 0. */
+    Uint did_add_ddf:1;/* 1 if automatically adds required ddf fields, otherwise 0. */
   }**fld;/* field info */
   int (*bhfiller)(struct BHFiller_S *const bhf);/* the method to fill the BH */
 };
@@ -104,7 +104,7 @@ int bh_fill_inside_black_hole(Physics_T *const phys);
 static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf);
 double bh_bhf_poly_smoother(const double r,const double rmax,const double rmin);
 double bh_bhf_smoother(const double r, const double rmax,const double rmin);
-static void collect_names(struct BHFiller_S *const bhf,const char **const fields_name,const unsigned nf);
+static void collect_names(struct BHFiller_S *const bhf,const char **const fields_name,const Uint nf);
 static double polynomial5(const double r, const double rmax,const double rmin);
 static double polynomial7(const double r, const double rmax,const double rmin);
 static double punc_psi(void *const params);

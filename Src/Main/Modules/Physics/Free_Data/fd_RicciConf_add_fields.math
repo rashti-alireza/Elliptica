@@ -15,7 +15,7 @@ C_macro2 = ADD_AND_ALLOC_FIELD(name);
 `void fd_add_fields_RicciConf(Grid_T *const grid)`
 `{`
 
-` unsigned p;`
+` Uint p;`
 ` FOR_ALL_PATCHES(p,grid)`
 ` {`
 ` Patch_T *patch = grid->patch[p];`

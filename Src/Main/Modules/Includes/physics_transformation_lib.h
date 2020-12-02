@@ -1,5 +1,6 @@
 #ifndef physics_transformation_LIB_H
 #define physics_transformation_LIB_H
+#include "elliptica_system_lib.h"
 
 
 /* struct for transformation boost, rotation etc. */

@@ -25,7 +25,7 @@ Ccode["void *jacobian_bc_alpha(void *vp1,void *vp2)\n{"];
 # patch, S, B, E_Trans, node, I0, Ni, Nj, K0, Nk, i,j,k.
 # THUS, DO NOT DEFINE THEM AGAIN.
 Ccode["  DDM_SCHUR_JACOBIAN_BC_DECLARE"];
-Ccode["  unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */"];
+Ccode["  Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */"];
 Ccode["  const double kd[2] = {0.,1.};/* Kronecker delta */"];
 # declare for Cpi
 Declare = 

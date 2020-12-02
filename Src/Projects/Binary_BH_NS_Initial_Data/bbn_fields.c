@@ -23,7 +23,7 @@ void bbn_add_fields(Grid_T *const grid)
     return;
   }
   
-  unsigned p;
+  Uint p;
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
@@ -415,8 +415,8 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
   pr_line_custom('=');
   printf("{ Taking partial derivatives of fields ...\n");
   
-  const unsigned np = grid->np;
-  unsigned p;
+  const Uint np = grid->np;
+  Uint p;
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < np; ++p)
@@ -476,7 +476,7 @@ void bbn_update_Beta_U0(Patch_T *const patch)
   READ_v(B0_U0)
   READ_v(B1_U0)
   
-  unsigned ijk;
+  Uint ijk;
   FOR_ALL_POINTS(ijk,patch)
   {
     Beta_U0[ijk] = B0_U0[ijk]+B1_U0[ijk];
@@ -491,7 +491,7 @@ void bbn_update_Beta_U1(Patch_T *const patch)
   READ_v(B0_U1)
   READ_v(B1_U1)
   
-  unsigned ijk;
+  Uint ijk;
   FOR_ALL_POINTS(ijk,patch)
   {
     Beta_U1[ijk] = B0_U1[ijk]+B1_U1[ijk];
@@ -506,7 +506,7 @@ void bbn_update_Beta_U2(Patch_T *const patch)
   READ_v(B0_U2)
   READ_v(B1_U2)
   
-  unsigned ijk;
+  Uint ijk;
   FOR_ALL_POINTS(ijk,patch)
   {
     Beta_U2[ijk] = B0_U2[ijk]+B1_U2[ijk];
@@ -576,8 +576,8 @@ void bbn_update_rho0(Patch_T *const patch)
     EoS_T *eos = initialize_EoS();
     READ_v(enthalpy)
     REALLOC_v_WRITE_v(rho0)
-    const unsigned nn = patch->nn;
-    unsigned ijk;
+    const Uint nn = patch->nn;
+    Uint ijk;
 
     for (ijk = 0; ijk < nn; ++ijk)
     {
@@ -866,8 +866,8 @@ void bbn_update_derivative_B1_U2(Patch_T *const patch)
   //const double D          = Pgetd("BH_NS_separation");
   //const double Vr         = Pgetd("BH_NS_infall_velocity");
   //const double Omega_BHNS = Pgetd("BH_NS_angular_velocity"); 
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
   
   REALLOC_v_WRITE_v(dB1_U2D2)
   REALLOC_v_WRITE_v(dB1_U2D1)
@@ -902,8 +902,8 @@ void bbn_update_derivative_B1_U1(Patch_T *const patch)
   const double D          = Pgetd("BH_NS_separation");
   const double Vr         = Pgetd("BH_NS_infall_velocity");
   const double Omega_BHNS = Pgetd("BH_NS_angular_velocity"); 
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
   
   REALLOC_v_WRITE_v(dB1_U1D2)
   REALLOC_v_WRITE_v(dB1_U1D1)
@@ -938,8 +938,8 @@ void bbn_update_derivative_B1_U0(Patch_T *const patch)
   const double D          = Pgetd("BH_NS_separation");
   const double Vr         = Pgetd("BH_NS_infall_velocity");
   const double Omega_BHNS = Pgetd("BH_NS_angular_velocity"); 
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
   
   REALLOC_v_WRITE_v(dB1_U0D2)
   REALLOC_v_WRITE_v(dB1_U0D1)
@@ -973,8 +973,8 @@ void bbn_update_derivative_B1_U0(Patch_T *const patch)
 // NOTE: make sure dB0,ddB0,dB1,ddB1 are already updated.*/
 void bbn_update_derivative_Beta_U0(Patch_T *const patch)
 {
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
   
   bbn_update_derivative_B0_U0(patch);
   bbn_update_derivative_B1_U0(patch);  
@@ -1028,8 +1028,8 @@ void bbn_update_derivative_Beta_U0(Patch_T *const patch)
 // NOTE: make sure dB0,ddB0,dB1,ddB1 are already updated.*/
 void bbn_update_derivative_Beta_U1(Patch_T *const patch)
 {
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
   bbn_update_derivative_B0_U1(patch);
   bbn_update_derivative_B1_U1(patch);
       
@@ -1083,8 +1083,8 @@ void bbn_update_derivative_Beta_U1(Patch_T *const patch)
 // NOTE: make sure dB0,ddB0,dB1,ddB1 are already updated.*/
 void bbn_update_derivative_Beta_U2(Patch_T *const patch)
 {
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
   
   bbn_update_derivative_B0_U2(patch);
   bbn_update_derivative_B1_U2(patch);
@@ -1143,8 +1143,8 @@ static void cleaning_enthalpy(Patch_T *const patch)
     
   WRITE_v(enthalpy)
   
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
   
   for (ijk = 0; ijk < nn; ++ijk)
   {
@@ -1157,7 +1157,7 @@ static void cleaning_enthalpy(Patch_T *const patch)
 /* updating enthalpy and its derivative */
 void bbn_update_enthalpy_and_denthalpy(Grid_T *const grid)
 {
-  unsigned p;
+  Uint p;
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -1186,13 +1186,13 @@ void bbn_update_stress_energy_tensor(Grid_T *const grid,const int flag)
   
   const double W1  = Pgetd("NS_enthalpy_update_weight");
   const double W2  = 1-W1;
-  unsigned p;
+  Uint p;
   
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned nn = patch->nn;
-    unsigned ijk;
+    Uint nn = patch->nn;
+    Uint ijk;
     
     if(!IsItNSPatch(patch))
       continue;
@@ -1275,8 +1275,8 @@ void bbn_update_B1_U012(Patch_T *const patch)
   const double D    = Pgetd("BH_NS_separation");
   const double y_CM = Pgetd("y_CM");
   const double x_CM = Pgetd("x_CM");
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
     
   /* B^1 */
   REALLOC_v_WRITE_v(B1_U0)
@@ -1301,7 +1301,7 @@ void bbn_update_Aij(Grid_T *const grid)
 {
   pr_line_custom('=');
   printf("{ Updating _A^{ij}, _dA^{ij} and _A^{ij}*A_{ij} ...\n");
-  unsigned p;
+  Uint p;
 
   FOR_ALL_PATCHES(p,grid)
   {

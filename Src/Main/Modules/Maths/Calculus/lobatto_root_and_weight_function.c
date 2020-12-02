@@ -7,12 +7,12 @@
 #define  ARRAY_SIZE_LOBATTO 35
 double Lobatto_root[ARRAY_SIZE_LOBATTO][ARRAY_SIZE_LOBATTO] = {{0}};
 
-double Lobatto_weight_function(const double x, const unsigned N);
-double Lobatto_root_function(const unsigned rootN, const unsigned N);
+double Lobatto_weight_function(const double x, const Uint N);
+double Lobatto_root_function(const Uint rootN, const Uint N);
 void init_Lobatto_root_function(void);
 
 /* weight = 2/(n*(n-1)*(P_{n-1}(x))^2), if x == +/- 1 w = 2/(n*(n-1)) */
-double Lobatto_weight_function(const double x, const unsigned n)
+double Lobatto_weight_function(const double x, const Uint n)
 {
   double fac = 2./(n*(n-1));
   if (EQL(x,1.) || EQL(x,-1.))
@@ -21,7 +21,7 @@ double Lobatto_weight_function(const double x, const unsigned n)
 }
 /* rootN is the n-th root of diff(legendere(N,x)). the following is like a table.
 // note: rootN starts from 0. */
-double Lobatto_root_function(const unsigned rootN, const unsigned N)
+double Lobatto_root_function(const Uint rootN, const Uint N)
 {
   if (N >= 35)
     Error0("N exceeds from the maximum.\n");

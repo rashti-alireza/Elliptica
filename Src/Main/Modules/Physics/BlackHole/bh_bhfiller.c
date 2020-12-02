@@ -89,13 +89,13 @@ bhf_init
   // NOTE: among the other methods this is the best. */
   if (strcmp_i(method,"ChebTn_Ylm"))
   {
-    const unsigned NCoeffs = 10;/* number of coeffs in ChebTn expansion */
-    const unsigned lmax   = (unsigned)Geti("bhfiller_Ylm_expansion_lmax");
-    const unsigned Ntheta = Ntheta_Ylm(lmax);
-    const unsigned Nphi   = Nphi_Ylm(lmax);
-    const unsigned N      = Ntotal_Ylm(lmax);
-    unsigned npi;/* number of patches inside BH */
-    unsigned npo;/* number of patches outside BH */
+    const Uint NCoeffs = 10;/* number of coeffs in ChebTn expansion */
+    const Uint lmax   = (Uint)Geti("bhfiller_Ylm_expansion_lmax");
+    const Uint Ntheta = Ntheta_Ylm(lmax);
+    const Uint Nphi   = Nphi_Ylm(lmax);
+    const Uint N      = Ntotal_Ylm(lmax);
+    Uint npi;/* number of patches inside BH */
+    Uint npo;/* number of patches outside BH */
     /* values of extrapolant function at the center of BH f(r=0) */
     const double fr0_Beta_U0     = 0;
     const double fr0_Beta_U1     = 0;
@@ -116,7 +116,7 @@ bhf_init
     const double fr0_alpha       = 0.2;
     const double fr0_psi         = 2;/* big enough */
     const double fr0_eta         = fr0_alpha*fr0_psi;
-    unsigned f,nf,i;
+    Uint f,nf,i;
     
     nf = 0;/* number of fields */
     while(fields_name[nf]) ++nf;
@@ -283,7 +283,7 @@ bhf_init
 /* free bhfiller struct */
 static void bhf_free(struct BHFiller_S *const bhf)
 {
-  unsigned i,f;
+  Uint i,f;
   
   if(!bhf)
     return;
@@ -317,23 +317,23 @@ static void bhf_free(struct BHFiller_S *const bhf)
 static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
 {
   Physics_T *const phys  = bhf->phys;
-  const unsigned NCoeffs = bhf->NCoeffs;
-  const unsigned npo     = bhf->npo;
-  const unsigned npi     = bhf->npi;
-  const unsigned nf     = bhf->nf;/* numebr of fields */
-  const unsigned lmax   = bhf->lmax;
-  const unsigned Ntheta = bhf->Ntheta;
-  const unsigned Nphi   = bhf->Nphi;
+  const Uint NCoeffs = bhf->NCoeffs;
+  const Uint npo     = bhf->npo;
+  const Uint npi     = bhf->npi;
+  const Uint nf     = bhf->nf;/* numebr of fields */
+  const Uint lmax   = bhf->lmax;
+  const Uint Ntheta = bhf->Ntheta;
+  const Uint Nphi   = bhf->Nphi;
   const double rfill = Getd("perfect_S2_radius");
   const double rfill3= pow(rfill,3);
-  unsigned p,fld;
+  Uint p,fld;
 
   /* update all coeffs to avoid race condition */
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npo; p++)
   {
     Patch_T *patch = bhf->patches_outBH[p];
-    unsigned f = 0;
+    Uint f = 0;
 
     /* make coeffs in  X and Y direction inside this patch */
     for (f = 0; f < nf; ++f)
@@ -391,7 +391,7 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
   OpenMP_1d_Pragma(omp parallel for)
   for (fld = 0; fld < nf; ++fld)
   {
-    unsigned i,j,_i,_j;
+    Uint i,j,_i,_j;
     for (i = 0; i < Ntheta; ++i)
     {
       double theta = acos(-Legendre_root_function(i,Ntheta));
@@ -405,8 +405,8 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
         double ddfddr = 0,dfdr = 0,fr1 = 0,fr0 = 0;
         double a[NCoeffs];
         double _ddfddr[3] = {0,0,0};
-        unsigned ij = IJ_Ylm(i,j,Nphi);
-        unsigned d1,d2;/* derivative */
+        Uint ij = IJ_Ylm(i,j,Nphi);
+        Uint d1,d2;/* derivative */
         double X[3],x[3],_x[3],N[3];
         
         /* find patch for the given theta and phi */
@@ -503,8 +503,8 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
   for (p = 0; p < npi; p++)
   {
     Patch_T *patch = bhf->patches_inBH[p];
-    unsigned nn    = patch->nn;
-    unsigned f,ijk;
+    Uint nn    = patch->nn;
+    Uint f,ijk;
     
     /* loop over all fields to be extrapolated */
     for (f = 0; f < nf; ++f)
@@ -514,7 +514,7 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
       u->v      = alloc_double(patch->nn);
       double *v = u->v;
       double theta,phi,t;
-      unsigned i;
+      Uint i;
       
       for (ijk = 0; ijk < nn; ++ijk)
       {
@@ -545,10 +545,10 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
 }
 
 /* collect names of the fields and their derivatives */
-static void collect_names(struct BHFiller_S *const bhf,const char **const fields_name,const unsigned nf)
+static void collect_names(struct BHFiller_S *const bhf,const char **const fields_name,const Uint nf)
 {
   const char *s = 0;
-  unsigned f,i,j;
+  Uint f,i,j;
     
   for (f = 0; f < nf; ++f)
   {

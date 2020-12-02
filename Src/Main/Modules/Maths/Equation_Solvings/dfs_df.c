@@ -17,14 +17,14 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
 {
   Js_Jacobian_eq_F *Jacobian = 0;
   Solving_Man_T *const sol_man = patch->solving_man;
-  const unsigned nn = patch->nn;
+  const Uint nn = patch->nn;
   /* default value of J if it gets larger than 10 Mb it will 
   // be written in a file unless user assigne other value. */
   double max_j_size = MAX_J_SIZE;
   Matrix_T *J = 0;
   char *jtype = 0;
   JType_E jt_e = T_UNDEF;
-  unsigned i;
+  Uint i;
   
   if (get_parameter("Maximum_Size_of_J_Kept_in_Mb"))
     max_j_size = PgetdEZ("Maximum_Size_of_J_Kept_in_Mb");
@@ -44,7 +44,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     
     /* check if this type has been already made then skip this */
     Flag_T flg = NONE;
-    unsigned c;
+    Uint c;
     for (c = 0; c < sol_man->nj; ++c)
       if (strcmp_i(sol_man->jacobian[c]->type,jtype))
       {
@@ -93,7 +93,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
 static char *interpret_type(const char *const type)
 {
  char *jtype = calloc(MAX_STR_LEN,1);
- unsigned i,len;
+ Uint i,len;
  
  IsNull(jtype);
  
@@ -106,7 +106,7 @@ static char *interpret_type(const char *const type)
  {
   char *match = regex_find("_([DU][[:digit:]])+$",type);/* e.g _U2D0 */
   sprintf(jtype,"%s","df");
-  len = (unsigned)strlen(match);
+  len = (Uint)strlen(match);
   for (i = 2; i < len; ++i)/* starting from number */
   {
    if (match[i] == '0')      strcat(jtype,"x");
@@ -137,7 +137,7 @@ void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
   Matrix_T *J = 0;
   JType_E jt_e = T_UNDEF;
   char *jtype = 0;
-  unsigned i,p,nn;
+  Uint i,p,nn;
   
   /* selecting Jacobian method for making of jacobian equation */
   if (strcmp_i(Pgets("Making_Jacobian_Eq_Method"),"spectral"))
@@ -185,7 +185,7 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
   double Err = 0;
   char *jtype = 0;
   JType_E jt_e;
-  unsigned i,p,nn,r,c;
+  Uint i,p,nn,r,c;
   enum Method_E e;
   Flag_T flg = NONE;
   
@@ -335,10 +335,10 @@ static void fill_jacobian_direct_method_1stOrder(double **const J, Patch_T *cons
 {
   Field_T *j_1st_deriv_field = 0;
   Patch_T temp_patch;
-  const unsigned nn = patch->nn;
+  const Uint nn = patch->nn;
   const double EPS = CONST/nn;
   char deriv_str[MAX_STR_LEN] ;
-  unsigned lmn;
+  Uint lmn;
   
   JType_E2str(jt_e,deriv_str);
   
@@ -352,7 +352,7 @@ static void fill_jacobian_direct_method_1stOrder(double **const J, Patch_T *cons
   {
     Field_T *Jf = j_1st_deriv_field;
     double *J_deriv = 0;
-    unsigned ijk;
+    Uint ijk;
     
     Jf->v[lmn] += EPS;   
     J_deriv = Partial_Derivative(Jf,deriv_str);
@@ -378,11 +378,11 @@ static void fill_jacobian_direct_method_1stOrder(double **const J, Patch_T *cons
 */
 static void fill_jacobian_direct_method_2ndOrder(double **const J, Patch_T *const patch,const JType_E deriv_dir)
 {
-  const unsigned nn = patch->nn;
+  const Uint nn = patch->nn;
   const double EPS = CONST/nn;
   Field_T *j;
   Patch_T temp_patch;
-  unsigned lmn;
+  Uint lmn;
   char deriv_str[MAX_STR_LEN];
   
   JType_E2str(deriv_dir,deriv_str);
@@ -397,7 +397,7 @@ static void fill_jacobian_direct_method_2ndOrder(double **const J, Patch_T *cons
   {
     Field_T *Jf = j;
     double *J_2nd = 0;
-    unsigned ijk;
+    Uint ijk;
     
     Jf->v[lmn] += EPS;   
     J_2nd = Partial_Derivative(Jf,deriv_str);
@@ -464,10 +464,10 @@ static void make_jacobian_spectral_method(double **const J,Patch_T *const patch,
 */
 void obsolete_fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *const patch,const JType_E jt_e)
 {
-  const unsigned nn = patch->nn;
-  const unsigned *const N = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const N = patch->n;
   Dd_T q_dir = UNDEFINED_DIR;
-  unsigned ijk;
+  Uint ijk;
   
   JType_E2Dd_T(jt_e,&q_dir);
   
@@ -477,8 +477,8 @@ void obsolete_fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *c
     double cj1 = dq2_dq1(patch,_N1_,q_dir,ijk);/* coordinate jacobian */
     double cj2 = dq2_dq1(patch,_N2_,q_dir,ijk);/* coordinate jacobian */
     double x,y,z;
-    unsigned lmn;
-    unsigned i,j,k;
+    Uint lmn;
+    Uint i,j,k;
     
     IJK(ijk,N,&i,&j,&k);
     x = ChebExtrema_1point(N[0],i);
@@ -488,7 +488,7 @@ void obsolete_fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *c
     for (lmn = 0; lmn < nn; ++lmn)
     {
       double j0,j1,j2;
-      unsigned l,m,n,ip,jp,kp;
+      Uint l,m,n,ip,jp,kp;
       
       IJK(lmn,N,&l,&m,&n);
       j0 = 0;
@@ -549,10 +549,10 @@ void obsolete_fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *c
 */
 static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *const patch,const JType_E jt_e)
 {
-  const unsigned nn = patch->nn;
-  const unsigned *const N = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const N = patch->n;
   Dd_T q_dir = UNDEFINED_DIR;
-  unsigned ijk;
+  Uint ijk;
   
   JType_E2Dd_T(jt_e,&q_dir);
   
@@ -562,7 +562,7 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
     double dN1_dq = dq2_dq1(patch,_N1_,q_dir,ijk);/* coordinate jacobian */
     double dN2_dq = dq2_dq1(patch,_N2_,q_dir,ijk);/* coordinate jacobian */
     double x,y,z;
-    unsigned i,j,k,l,m,n;
+    Uint i,j,k,l,m,n;
     IJK(ijk,N,&i,&j,&k);
     
     x = ChebExtrema_1point(N[0],i);
@@ -612,12 +612,12 @@ static void JType_E2Dd_T(const JType_E jt_e, Dd_T *const q_dir)
 */
 static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *const patch,const JType_E deriv_dir)
 {
-  const unsigned nn = patch->nn;
+  const Uint nn = patch->nn;
   Field_T *j_1st_deriv_field = 0;
   Patch_T temp_patch;
   JType_E deriv_1st = T_UNDEF,deriv_2nd = T_UNDEF;
   char deriv_2nd_s[MAX_STR_LEN];
-  unsigned lmn;
+  Uint lmn;
   
   read_1st_and_2nd_deriv(deriv_dir,&deriv_1st,&deriv_2nd);
   JType_E2str(deriv_2nd,deriv_2nd_s);
@@ -629,7 +629,7 @@ static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *co
   
   for (lmn = 0; lmn < nn; ++lmn)
   {
-    unsigned ijk;
+    Uint ijk;
     double *j_2nd_deriv_value = 0;
    
     for (ijk = 0; ijk < nn; ++ijk)
@@ -691,7 +691,7 @@ static void read_1st_and_2nd_deriv(const JType_E deriv_dir,JType_E *const deriv_
 /* dc/df where c is coefficients of expansion in a direction with n nodes
 // ->return value: dc(i)/df(l)
 */
-static double dc_df(const unsigned n,const unsigned i,const unsigned l)
+static double dc_df(const Uint n,const Uint i,const Uint l)
 {
   double dcdf = 0;
   const double SIGN[2] = {1.0,-1.0};
@@ -713,7 +713,7 @@ static double dc_df(const unsigned n,const unsigned i,const unsigned l)
 // it gives the Chebyshev extrema.
 // ->return value: Chebyshev extrema at p
 */
-static double ChebExtrema_1point(const unsigned n, const unsigned p)
+static double ChebExtrema_1point(const Uint n, const Uint p)
 {
   return cos(p*M_PI/(n-1));
 }
@@ -783,7 +783,7 @@ Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type)
   Solving_Man_T *const sol_man = patch->solving_man;
   Matrix_T *j = 0;
   char *jtype = interpret_type(type);
-  unsigned i;
+  Uint i;
   
   if (!sol_man)
     return 0;
@@ -839,13 +839,13 @@ double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c)
 */
 static double J_sizeMb_ccs(const Matrix_T *const m)
 {
-  long unsigned n1,n2,n3;
+  long Uint n1,n2,n3;
   double sum = 0;
   
   if (m->ccs_f)
   {
-    n1 = (long unsigned)m->col;
-    n2 = (long unsigned)m->ccs->Ap[n1];/* number of none zero entries */
+    n1 = (long Uint)m->col;
+    n2 = (long Uint)m->ccs->Ap[n1];/* number of none zero entries */
     n3 = (n1+1)*sizeof(int)/* size of Ap */ + 
          n2*sizeof(int)/* size of Ai */+
          n2*sizeof(double)/* size of aij */;
@@ -853,8 +853,8 @@ static double J_sizeMb_ccs(const Matrix_T *const m)
   }
   else if (m->ccs_l_f)
   {
-    n1 = (long unsigned)m->col;
-    n2 = (long unsigned)m->ccs_long->Ap[n1];/* number of none zero entries */
+    n1 = (long Uint)m->col;
+    n2 = (long Uint)m->ccs_long->Ap[n1];/* number of none zero entries */
     n3 =  (n1+1)*sizeof(int)/* size of Ap */ + 
           n2*sizeof(int)/* size of Ai */+
           n2*sizeof(double)/* size of aij */;
@@ -887,7 +887,7 @@ fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const
 {
   fdInterp_dfs_T *Func = 0;
   char type[_MAX_STR_] = {'\0'};
-  unsigned i;
+  Uint i;
 
   for (i = 0; i < 3; ++i)
   {
@@ -961,15 +961,15 @@ fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const
 // interpolation takes place in Y and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_x))/df */
-static double dInterp_x_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
+static double dInterp_x_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane)
 {
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
-  const unsigned X0 = plane;/* const. plane */
+  const Uint X0 = plane;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
-  unsigned a,b,c,r,l;
+  Uint a,b,c,r,l;
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1031,15 +1031,15 @@ static double dInterp_x_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
 // interpolation takes place in Y and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_y))/df */
-static double dInterp_y_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
+static double dInterp_y_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane)
 {
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
-  const unsigned X0 = plane;;/* const. plane */
+  const Uint X0 = plane;;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
-  unsigned a,b,c,r,l;
+  Uint a,b,c,r,l;
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1101,15 +1101,15 @@ static double dInterp_y_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
 // interpolation takes place in Y and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_z))/df */
-static double dInterp_z_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
+static double dInterp_z_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane)
 {
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
-  const unsigned X0 = plane;/* const. plane */
+  const Uint X0 = plane;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
-  unsigned a,b,c,r,l;
+  Uint a,b,c,r,l;
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1172,12 +1172,12 @@ static double dInterp_z_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
 // with Extrema points.
 // plane argument is not used; it can be put to any number!
 // ->return value: d(interp(f))/df */
-static double dInterp_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
+static double dInterp_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane)
 {
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   const double *point = patch->node[df]->X;
   double q[3];/* normalized coords */
-  unsigned i,j,k;
+  Uint i,j,k;
   
   IJK(df,n,&i,&j,&k);
   q[1] = General2ChebyshevExtrema(X[1],1,patch);
@@ -1198,15 +1198,15 @@ static double dInterp_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,con
 // interpolation takes place in X and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_x))/df */
-static double dInterp_x_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
+static double dInterp_x_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane)
 {
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
-  const unsigned Y0 = plane;/* const. plane */
+  const Uint Y0 = plane;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
-  unsigned a,b,c,r,l;
+  Uint a,b,c,r,l;
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1268,15 +1268,15 @@ static double dInterp_x_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
 // interpolation takes place in X and Z direction using Cheb. Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_y))/df */
-static double dInterp_y_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
+static double dInterp_y_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane)
 {
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
-  const unsigned Y0 = plane;/* const. plane */
+  const Uint Y0 = plane;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
-  unsigned a,b,c,r,l;
+  Uint a,b,c,r,l;
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1338,15 +1338,15 @@ static double dInterp_y_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
 // interpolation takes place in X and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_z))/df */
-static double dInterp_z_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
+static double dInterp_z_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane)
 {
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
-  const unsigned Y0 = plane;/* const. plane */
+  const Uint Y0 = plane;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
-  unsigned a,b,c,r,l;
+  Uint a,b,c,r,l;
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1408,12 +1408,12 @@ static double dInterp_z_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
 // with Extrema points.
 // plane argument is not used; it can be put to any number!
 // ->return value: d(interp(f))/df */
-static double dInterp_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
+static double dInterp_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane)
 {
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   const double *point = patch->node[df]->X;
   double q[3];/* normalized coords */
-  unsigned i,j,k;
+  Uint i,j,k;
   
   IJK(df,n,&i,&j,&k);
   q[0] = General2ChebyshevExtrema(X[0],0,patch);
@@ -1435,15 +1435,15 @@ static double dInterp_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,con
 // interpolation takes place in X and Y direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_x))/df */
-static double dInterp_x_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
+static double dInterp_x_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane)
 {
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
-  const unsigned Z0 = plane;/* const. plane */
+  const Uint Z0 = plane;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
-  unsigned a,b,c,r,l;
+  Uint a,b,c,r,l;
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1505,15 +1505,15 @@ static double dInterp_x_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
 // interpolation takes place in X and Y direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_y))/df */
-static double dInterp_y_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
+static double dInterp_y_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane)
 {
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
-  const unsigned Z0 = plane;/* const. plane */
+  const Uint Z0 = plane;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
-  unsigned a,b,c,r,l;
+  Uint a,b,c,r,l;
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1575,15 +1575,15 @@ static double dInterp_y_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
 // interpolation takes place in X and Y direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_z))/df */
-static double dInterp_z_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
+static double dInterp_z_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane)
 {
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
-  const unsigned Z0 = plane;/* const. plane */
+  const Uint Z0 = plane;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
-  unsigned a,b,c,r,l;
+  Uint a,b,c,r,l;
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1646,12 +1646,12 @@ static double dInterp_z_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
 // with Extrema points.
 // plane argument is not used; it can be put to any number!
 // ->return value: d(interp(f))/df */
-static double dInterp_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
+static double dInterp_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane)
 {
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   const double *point = patch->node[df]->X;
   double q[3];/* normalized coords */
-  unsigned i,j,k;
+  Uint i,j,k;
   
   IJK(df,n,&i,&j,&k);
   q[0] = General2ChebyshevExtrema(X[0],0,patch);
@@ -1674,13 +1674,13 @@ static double dInterp_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,con
 // with Extrema points.
 // plane argument is not used; it can be put to any number!
 // ->return value: d(interp(f_x))/df */
-static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
+static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane)
 {
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
-  unsigned a,b,c,r,l;
+  Uint a,b,c,r,l;
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1745,13 +1745,13 @@ static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
 // with Extrema points.
 // plane argument is not used; it can be put to any number!
 // ->return value: d(interp(f_y))/df */
-static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
+static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane)
 {
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
-  unsigned a,b,c,r,l;
+  Uint a,b,c,r,l;
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1816,13 +1816,13 @@ static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
 // with Extrema points.
 // plane argument is not used; it can be put to any number!
 // ->return value: d(interp(f_z))/df */
-static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
+static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane)
 {
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   Node_T **const node = patch->node;
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
-  unsigned a,b,c,r,l;
+  Uint a,b,c,r,l;
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1887,11 +1887,11 @@ static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
 // with Extrema points.
 // plane argument is not used; it can be put to any number!
 // ->return value: d(interp(f))/df */
-static double dInterp_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
+static double dInterp_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane)
 {
-  const unsigned *const n = patch->n;
+  const Uint *const n = patch->n;
   double q[3];/* normalized coords */
-  unsigned i,j,k;
+  Uint i,j,k;
   
   IJK(df,n,&i,&j,&k);
   q[0] = General2ChebyshevExtrema(X[0],0,patch);
@@ -1909,7 +1909,7 @@ static double dInterp_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,co
 void free_patch_SolMan_jacobian(Patch_T *const patch)
 {
   Solving_Man_T *const SolMan = patch->solving_man;
-  unsigned i;
+  Uint i;
   
   if (!SolMan)
     return;

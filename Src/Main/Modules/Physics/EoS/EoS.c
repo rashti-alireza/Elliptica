@@ -53,8 +53,8 @@ void free_EoS(EoS_T *s)
 static void populate_EoS(EoS_T *const eos)
 {
   double *K,*rho_th,*gamma;/* quantities in polytropic EoS */
-  unsigned N;/* number of pieces in case of pwp */
-  unsigned i;
+  Uint N;/* number of pieces in case of pwp */
+  Uint i;
   const char *par;
   
   /* populate eos struct */
@@ -127,7 +127,7 @@ static void populate_EoS(EoS_T *const eos)
 /* filling n using n = 1/(gamma-1) */
 static void fill_n(EoS_T *const eos)
 {
-  unsigned i;
+  Uint i;
   
   assert(eos->N);
   eos->n = alloc_double(eos->N);
@@ -145,7 +145,7 @@ static void fill_a(EoS_T *const eos)
          *const K = eos->K,
          *const gamma = eos->gamma,
          *const rho_th = eos->rho_th;
-  unsigned i;
+  Uint i;
          
   a[0] = 0;
   for (i = 1; i < eos->N; ++i)
@@ -166,7 +166,7 @@ static void fill_h_th(EoS_T *const eos)
          *const gamma = eos->gamma,
          *const rho_th = eos->rho_th,
          *const h_th = eos->h_th;
-  unsigned i;
+  Uint i;
   
   h_th[0] = 1;
   
@@ -179,7 +179,7 @@ static void fill_h_th(EoS_T *const eos)
 // and returns a pointer to the value found in the string. 
 // also if N != 0, it counts the number of pieses in EoS.
 // ->return value: value of parameter name and number of pieses in EoS. */
-static double *read_EoS_in_parameter_file(const char *const par,unsigned *const N)
+static double *read_EoS_in_parameter_file(const char *const par,Uint *const N)
 {
   /* eg. if we have a single polytropic eos, then we don't have rho_th */
   if (par == 0)
@@ -187,7 +187,7 @@ static double *read_EoS_in_parameter_file(const char *const par,unsigned *const 
     
   double *v = 0;
   char str[MAX_STR],*sub_tok,*save;
-  unsigned i = 0;
+  Uint i = 0;
   
   if (!check_format_s(par,"[?]"))
     Error0("K, rho_th and Gamma in EoS must be written in square brackets.\n"

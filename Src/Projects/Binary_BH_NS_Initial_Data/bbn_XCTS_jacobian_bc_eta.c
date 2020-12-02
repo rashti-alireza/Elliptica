@@ -12,7 +12,7 @@
 void *bbn_jacobian_bc_eta(void *vp1,void *vp2)
 {
   DDM_SCHUR_JACOBIAN_BC_DECLARE
-  unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
+  Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
   const double kd[2] = {0.,1.};/* Kronecker delta */
 
   /* declaring: */

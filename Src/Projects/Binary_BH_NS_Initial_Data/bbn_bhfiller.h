@@ -29,13 +29,13 @@ struct BHFiller_S
   Grid_T *grid;/* the grid */
   Patch_T **patches_outBH;/* patches outside the BH */
   Patch_T **patches_inBH;/* patches inside the BH */
-  unsigned npi;/* number of patches inside the BH */
-  unsigned npo;/* number of patches outside the BH */
-  unsigned lmax;/* max l in Ylm expansion */
-  unsigned Ntheta;/* number of points in theta direction */
-  unsigned Nphi;/* number of points in phi direction */
-  unsigned NCoeffs;/* number of coeffs for in extrapolant function */
-  unsigned nf;/* number of fields */
+  Uint npi;/* number of patches inside the BH */
+  Uint npo;/* number of patches outside the BH */
+  Uint lmax;/* max l in Ylm expansion */
+  Uint Ntheta;/* number of points in theta direction */
+  Uint Nphi;/* number of points in phi direction */
+  Uint NCoeffs;/* number of coeffs for in extrapolant function */
+  Uint nf;/* number of fields */
   char method[MAX_STR];/* methods: 
                        // O. TnYlm_C2 => f(r,th,ph) = R(r)*T(th,ph) 
                        // and it is asked for C2 continitui along r.
@@ -97,7 +97,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf);
 static int bhf_WTGR(struct BHFiller_S *const bhf);
 static double interpolate_from_patch_prim(const char *const field,const double *const X,Patch_T *const patch);
 void bbn_bam_error(const char *const msg,const char *const file,const int line);
-static void collect_names(struct BHFiller_S *const bhf,const unsigned nf);
+static void collect_names(struct BHFiller_S *const bhf,const Uint nf);
 static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf);
 static int bhf_ell_Brown(struct BHFiller_S *const bhf);
 void *bbn_bhf_bc_Brown(void *vp1,void *vp2);

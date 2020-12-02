@@ -26,18 +26,18 @@ struct items_S
   double *n_U1;
   double *n_U2;
   /* integration flags */
-  unsigned surface_integration_flg: 1;/* if 1 means it measn 
+  Uint surface_integration_flg: 1;/* if 1 means it measn 
                                       // we need surface integration 
                                       // on this patch as well, 
                                       // 0 means, no need */
   /* which hypersurface the surface integral is carried out */
-  unsigned X_surface: 1;
-  unsigned Y_surface: 1;
-  unsigned Z_surface: 1;
+  Uint X_surface: 1;
+  Uint Y_surface: 1;
+  Uint Z_surface: 1;
   /* index of hypersurface for each X,Y and Z respectively */
-  unsigned I;
-  unsigned J;
-  unsigned K;
+  Uint I;
+  Uint J;
+  Uint K;
 };
 
 double obs_ADM_mass(Observe_T *const obs);

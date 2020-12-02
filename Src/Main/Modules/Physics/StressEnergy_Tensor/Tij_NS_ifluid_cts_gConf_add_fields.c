@@ -9,7 +9,7 @@
 
 void Tij_NS_idealfluid_CTS_gConf_add_fields(Grid_T *const grid)
 {
- unsigned p;
+ Uint p;
  FOR_ALL_PATCHES(p,grid)
  {
  Patch_T *patch = grid->patch[p];

@@ -59,7 +59,7 @@ int Modules_Test(void *vp)
   if (strcmp_i(PgetsEZ("Test_Jacobian_Elements_Js_Consistency"),"yes"))
   {
     const char *types[] = {"dfx_df","dfy_df",0};
-    unsigned p;
+    Uint p;
     
     /* fill data base of equations */
     mt_fill_db_eqs(&field_eq,&bc_eq,&jacobian_field_eq,&jacobian_bc_eq);

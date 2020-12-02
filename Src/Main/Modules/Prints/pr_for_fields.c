@@ -69,7 +69,7 @@ Pr_Field_T *init_PrField(const Grid_T *const grid)
 void free_PrField(Pr_Field_T *pr)
 {
   struct Info_S *info = pr->group;
-  unsigned i;
+  Uint i;
   
   for (i = 0; i < pr->ng; ++i)
   {
@@ -97,7 +97,7 @@ static void parse_parameter_3d(const char *const par,Pr_Field_T *const pr)
   struct Info_S *info_s = 0,*Pinfo;
   char *tok = dup_s(par);
   char *save = 0,*sub_tok = 0;
-  unsigned Ninfo = 0;
+  Uint Ninfo = 0;
   
   save    = tok;
   sub_tok = tok_s(sub_tok,DL_C,&save);

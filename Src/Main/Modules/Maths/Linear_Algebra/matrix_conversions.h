@@ -6,7 +6,7 @@
 Matrix_T *cast_matrix_ccs(Matrix_T *const m);
 Matrix_T *cast_matrix_ccs_long(Matrix_T *const m);
 Matrix_T *cast_matrix_reg(Matrix_T *const m);
-Matrix_T *compress_stack2ccs(Matrix_T **const S,const unsigned nm,const unsigned *const nr,const unsigned Nrow,const unsigned Ncol,const Flag_T flg);
+Matrix_T *compress_stack2ccs(Matrix_T **const S,const Uint nm,const Uint *const nr,const Uint Nrow,const Uint Ncol,const Flag_T flg);
 void copy_reg2reg(const Matrix_T *const reg1,Matrix_T *const reg2);
 void copy_ccs2ccs(const Matrix_T *const ccs1,Matrix_T *const ccs2);
 void copy_ccs_long2ccs_long(const Matrix_T *const ccs_l1,Matrix_T *const ccs_l2);

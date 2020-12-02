@@ -97,8 +97,8 @@ void bbn_update_psi10A_UiUj(Patch_T *const patch)
   READ_v(_Gamma_U1D1D1)
 
 
-    unsigned nn = patch->nn;
-    unsigned ijk;
+    Uint nn = patch->nn;
+    Uint ijk;
     for(ijk = 0; ijk < nn; ++ijk)
     {
     double psi7 = 

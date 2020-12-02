@@ -79,8 +79,8 @@ Symm[bam_bssn_g(i,j)  = bam_bssn_g(j,i)];
 Symm[bam_bssn_gI(i,j) = bam_bssn_gI(j,i)];
 Symm[bam_bssn_A(i,j)  = bam_bssn_A(j,i)];
 
-` unsigned nn = patch->nn;`
-` unsigned ijk;`
+` Uint nn = patch->nn;`
+` Uint ijk;`
 ` for(ijk = 0; ijk < nn; ++ijk)`
 ` {`
 

@@ -12,7 +12,7 @@
 void *bbn_bc_psi(void *vp1,void *vp2)
 {
   DDM_SCHUR_BC_DECLARE
-  unsigned ijk;/* node index */
+  Uint ijk;/* node index */
 
   /* declaring: */
   READ_v(psi)

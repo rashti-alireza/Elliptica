@@ -20,9 +20,9 @@
 // in wich scale is 2*(n-1).
 // note: the coeffs are NORMALIZED.
 */
-void rft_1d_ChebyshevExtrema_coeffs(double *const values ,double *const coeffs,const unsigned n)
+void rft_1d_ChebyshevExtrema_coeffs(double *const values ,double *const coeffs,const Uint n)
 {
-  unsigned i,j;
+  Uint i,j;
   const double SIGN[2] = {1.0,-1.0};
   const double th0 = M_PI/(n-1);
   const double scale = 2*(n-1);
@@ -55,9 +55,9 @@ void rft_1d_ChebyshevExtrema_coeffs(double *const values ,double *const coeffs,c
 // in wich scale is 2n.
 // note: the coeffs are NORMALIZED.
 */
-void rft_1d_ChebyshevNodes_coeffs(double *const values ,double *const coeffs,const unsigned n)
+void rft_1d_ChebyshevNodes_coeffs(double *const values ,double *const coeffs,const Uint n)
 {
-  unsigned i,j;
+  Uint i,j;
   const double th0 = M_PI/n;
   const double scale = n;
   
@@ -87,19 +87,19 @@ void rft_1d_ChebyshevNodes_coeffs(double *const values ,double *const coeffs,con
 // note: it allocates memory so at some point you need to free it.
 // note: we use trapezoidal rule to carry out the intergral. 
 // ->return value: c(m) */
-void *r2cft_1d_EquiSpaced_coeffs(const double *const value,const unsigned n)
+void *r2cft_1d_EquiSpaced_coeffs(const double *const value,const Uint n)
 {
   if (n == 0)
     Error0("Fourier Transformation: No points!\n");
   
-  const unsigned l = n/2+1;/* note: if n is not even, it is rounded down */
+  const Uint l = n/2+1;/* note: if n is not even, it is rounded down */
   double complex *const coeffs = alloc_double_complex(l);
   const double complex x0 = -2.*imagI*M_PI/n;/* - included */
-  unsigned m;
+  Uint m;
   
   for (m = 0; m < l; ++m)/* note: l is excluded, otherwise one have aliasing and then error */
   {
-    unsigned i;
+    Uint i;
     
     coeffs[m] = 0;
     for (i = 0; i < n; ++i)
@@ -116,16 +116,16 @@ void *r2cft_1d_EquiSpaced_coeffs(const double *const value,const unsigned n)
 // and l = n/2+1 (if n is odd, it is rounded down) thus: we have:
 // c(m) = 1/(2*pi)*\integral_{0}^{2*pi} f(x)*exp(-imagI*m*x) dx. 
 // ->return value : f(x) */
-double *c2rft_1d_EquiSpaced_values(void *const coeffs,const unsigned N)
+double *c2rft_1d_EquiSpaced_values(void *const coeffs,const Uint N)
 {
   if (N == 0)
     Error0("Fourier Transformation: No points!\n");
   
   const double complex *const c = coeffs;
   double *f = alloc_double(N);
-  const unsigned l = N/2+1;
+  const Uint l = N/2+1;
   const double complex x0 = 2.*imagI*M_PI/N;
-  unsigned i,j;
+  Uint i,j;
   
   for (i = 0; i < N; ++i)
   {
@@ -181,8 +181,8 @@ double
 r2cft_2d_coeffs_S2
 (
   const double *const f/* field values given on theta and phi coords. */,
-  unsigned Ntheta/* number of point in theta direction */, 
-  const unsigned Nphi/* number of point in phi direction */,
+  Uint Ntheta/* number of point in theta direction */, 
+  const Uint Nphi/* number of point in phi direction */,
   double **const realC/* real part of coeffs, allocates memory */,
   double **const imagC/* imag part of coeffs, allocates memory*/,
   const int improve/* if 1, it tries to improve the expansion, otherwise no. */
@@ -197,10 +197,10 @@ r2cft_2d_coeffs_S2
   Ntheta -= 1;/* adjust Ntheta */
   const double COEFF_THRESHOLD = 1E-6;/* if coeffs error is bigger than this 
                                       // change the continuation method */
-  const unsigned TwiceNtheta = 2*Ntheta;
+  const Uint TwiceNtheta = 2*Ntheta;
   double *const F = alloc_double(TwiceNtheta*Nphi); IsNull(F);
   double ret = DBL_MAX;
-  unsigned ij,i,j,k,l;
+  Uint ij,i,j,k,l;
   
   /* f(theta,phi), theta in [0,pi] and phi in [0,2pi) */
   for (i = 0; i < Ntheta; ++i)
@@ -276,18 +276,18 @@ r2cft_2d_coeffs_S2
 static double 
 r2cft_2d_last_coeffs_max_mag_S2
 (
-  unsigned Ntheta/* number of point in theta direction */, 
-  const unsigned Nphi/* number of point in phi direction */,
+  Uint Ntheta/* number of point in theta direction */, 
+  const Uint Nphi/* number of point in phi direction */,
   const double *const realC/* real part of coeffs */,
   const double *const imagC/* imag part of coeffs,*/
 )
 {
-  const unsigned FEW  = 2;/* the last few 'FEW' coeffs */
-  const unsigned l0   = Ntheta/2+1;/* note: there are TwiceNtheta coeffs */
-  const unsigned l1   = Nphi/2+1;
-  const unsigned l0l1 = l0*l1;
+  const Uint FEW  = 2;/* the last few 'FEW' coeffs */
+  const Uint l0   = Ntheta/2+1;/* note: there are TwiceNtheta coeffs */
+  const Uint l1   = Nphi/2+1;
+  const Uint l0l1 = l0*l1;
   double max_r,max_i,abs_coeff;
-  unsigned m0,m1,m0m1;
+  Uint m0,m1,m0m1;
   
   assert(l0>=FEW);
   assert(l1>=FEW);
@@ -384,8 +384,8 @@ void
 r2cft_2d_coeffs
 (
   const double *const f/* field values */,
-  const unsigned Nphi0/* number of point in phi0 direction */, 
-  const unsigned Nphi1/* number of point in phi1 direction */,
+  const Uint Nphi0/* number of point in phi0 direction */, 
+  const Uint Nphi1/* number of point in phi1 direction */,
   double **const realC/* real part of coeffs, allocates memory */,
   double **const imagC/* imag part of coeffs, allocates memory*/
 )
@@ -393,9 +393,9 @@ r2cft_2d_coeffs
   if (!f)
     Error0("Bad argument: no value\n!");
     
-  const unsigned l0   = Nphi0/2+1;
-  const unsigned l1   = Nphi1/2+1;
-  const unsigned l0l1 = l0*l1;
+  const Uint l0   = Nphi0/2+1;
+  const Uint l1   = Nphi1/2+1;
+  const Uint l0l1 = l0*l1;
   const double complex x0 = -2.*imagI*M_PI/Nphi0;/* - included */
   const double complex x1 = -2.*imagI*M_PI/Nphi1;/* - included */
   double *const Rc = alloc_double(2*l0l1);
@@ -406,7 +406,7 @@ r2cft_2d_coeffs
   double *cii      = alloc_double(l0l1);
   double **cfr     = calloc(Nphi0,sizeof(*cfr));IsNull(cfr);
   double **cfi     = calloc(Nphi0,sizeof(*cfi));IsNull(cfi);
-  unsigned i,j,m0,m1;
+  Uint i,j,m0,m1;
   
   /* FT in 2nd index */
   for (i = 0; i < Nphi0; ++i)
@@ -434,7 +434,7 @@ r2cft_2d_coeffs
     {
       double complex m0x0 = m0*x0;
       double complex cr = 0, ci = 0;
-      unsigned m0m1 = IJ(m0,m1,l1);
+      Uint m0m1 = IJ(m0,m1,l1);
       for (i = 0; i < Nphi0; ++i)
       {
         cr += cfr[i][m1]*cexp(i*m0x0);
@@ -451,7 +451,7 @@ r2cft_2d_coeffs
   m0 = 0;
   for (m1 = 0; m1 < l1; ++m1)
   {
-    unsigned m0m1 = IJ(m0,m1,l1);
+    Uint m0m1 = IJ(m0,m1,l1);
     crr[m0m1] /= 2;
     cri[m0m1] /= 2;
     cir[m0m1] /= 2;
@@ -461,7 +461,7 @@ r2cft_2d_coeffs
   for (m1 = 0; m1 < l1; ++m1)
     for (m0 = 0; m0 < l0; ++m0)
     {
-      unsigned m0m1 = IJ(m0,m1,l1);
+      Uint m0m1 = IJ(m0,m1,l1);
       Rc[m0m1]= crr[m0m1];
       Ic[m0m1]= cri[m0m1];
     }
@@ -470,7 +470,7 @@ r2cft_2d_coeffs
   for (m1 = 0; m1 < l1; ++m1)
     for (m0 = 0; m0 < l0; ++m0)
     {
-      unsigned m0m1 = IJ(m0,m1,l1);
+      Uint m0m1 = IJ(m0,m1,l1);
       Rc[m0m1+l0l1]= cir[m0m1];
       Ic[m0m1+l0l1]= cii[m0m1];
     }
@@ -491,8 +491,8 @@ r2cft_2d_interpolation_S2
 (
   const double *const realC/* real part of coeffs */,
   const double *const imagC/* imag part of coeffs */,
-  const unsigned Ntheta/* number of point in theta direction */,
-  const unsigned Nphi/* number of point in phi direction */,
+  const Uint Ntheta/* number of point in theta direction */,
+  const Uint Nphi/* number of point in phi direction */,
   const double theta/* point of interest at theta dir */,
   const double phi/* point of interest at phi dir */
 )
@@ -508,8 +508,8 @@ r2cft_2d_interpolation
 (
   const double *const realC/* real part of coeffs */,
   const double *const imagC/* imag part of coeffs */,
-  const unsigned Nphi0/* number of point in phi0 direction */,
-  const unsigned Nphi1/* number of point in phi1 direction */,
+  const Uint Nphi0/* number of point in phi0 direction */,
+  const Uint Nphi1/* number of point in phi1 direction */,
   const double phi0/* point of interest at phi0 dir */,
   const double phi1/* point of interest at phi0 dir */
 )
@@ -517,18 +517,18 @@ r2cft_2d_interpolation
   if(!realC || !imagC)
     Error0("Bad argument: no coefficients!\n");
     
-  const unsigned l0 = Nphi0/2+1;
-  const unsigned l1 = Nphi1/2+1;
-  const unsigned l0l1 = l0*l1;
+  const Uint l0 = Nphi0/2+1;
+  const Uint l1 = Nphi1/2+1;
+  const Uint l0l1 = l0*l1;
   double complex interp = 0;
-  unsigned m0,m1;
+  Uint m0,m1;
   
   /* sum */
   for (m0 = 0; m0 < l0; ++m0)
   {
     for (m1 = 0; m1 < l1; ++m1)
     {
-      unsigned m0m1 = IJ(m0,m1,l1);
+      Uint m0m1 = IJ(m0,m1,l1);
       interp += (realC[m0m1]    - imagC[l0l1+m0m1]+
                  imagI*(imagC[m0m1] + realC[l0l1+m0m1]))*
                  cexp(imagI*((double)m0*phi0+(double)m1*phi1));
@@ -546,8 +546,8 @@ r2cft_2d_df_dtheta_S2
 (
   const double *const realC/* real part of coeffs */,
   const double *const imagC/* imag part of coeffs */,
-  const unsigned Ntheta/* number of point in theta direction */,
-  const unsigned Nphi/* number of point in phi direction */
+  const Uint Ntheta/* number of point in theta direction */,
+  const Uint Nphi/* number of point in phi direction */
 )
 {
   return r2cft_2d_df_dphi0(realC,imagC,2*(Ntheta-1),Nphi);
@@ -559,8 +559,8 @@ r2cft_2d_df_dphi_S2
 (
   const double *const realC/* real part of coeffs */,
   const double *const imagC/* imag part of coeffs */,
-  const unsigned Ntheta/* number of point in theta direction */,
-  const unsigned Nphi/* number of point in phi direction */
+  const Uint Ntheta/* number of point in theta direction */,
+  const Uint Nphi/* number of point in phi direction */
 )
 {
   return r2cft_2d_df_dphi1(realC,imagC,2*(Ntheta-1),Nphi);
@@ -572,20 +572,20 @@ r2cft_2d_df_dphi0
 (
   const double *const realC/* real part of coeffs */,
   const double *const imagC/* imag part of coeffs */,
-  const unsigned Nphi0/* number of point in phi0 direction */,
-  const unsigned Nphi1/* number of point in phi1 direction */
+  const Uint Nphi0/* number of point in phi0 direction */,
+  const Uint Nphi1/* number of point in phi1 direction */
 )
 {
   if(!realC || !imagC)
     Error0("Bad argument: no coefficients!\n");
     
-  const unsigned l0 = Nphi0/2+1;
-  const unsigned l1 = Nphi1/2+1;
-  const unsigned l0l1 = l0*l1;
+  const Uint l0 = Nphi0/2+1;
+  const Uint l1 = Nphi1/2+1;
+  const Uint l0l1 = l0*l1;
   const double x0 = 2.*M_PI/Nphi0;
   const double x1 = 2.*M_PI/Nphi1;
   double *df        = alloc_double(Nphi0*Nphi1);
-  unsigned i,j,m0,m1,ij,m0m1;
+  Uint i,j,m0,m1,ij,m0m1;
   
   for (i = 0; i < Nphi0; ++i)
   {
@@ -623,20 +623,20 @@ r2cft_2d_df_dphi1
 (
   const double *const realC/* real part of coeffs */,
   const double *const imagC/* imag part of coeffs */,
-  const unsigned Nphi0/* number of point in phi0 direction */,
-  const unsigned Nphi1/* number of point in phi1 direction */
+  const Uint Nphi0/* number of point in phi0 direction */,
+  const Uint Nphi1/* number of point in phi1 direction */
 )
 {
   if(!realC || !imagC)
     Error0("Bad argument: no coefficients!\n");
     
-  const unsigned l0 = Nphi0/2+1;
-  const unsigned l1 = Nphi1/2+1;
-  const unsigned l0l1 = l0*l1;
+  const Uint l0 = Nphi0/2+1;
+  const Uint l1 = Nphi1/2+1;
+  const Uint l0l1 = l0*l1;
   const double x0 = 2.*M_PI/Nphi0;
   const double x1 = 2.*M_PI/Nphi1;
   double *df        = alloc_double(Nphi0*Nphi1);
-  unsigned i,j,m0,m1,ij,m0m1;
+  Uint i,j,m0,m1,ij,m0m1;
   
   for (i = 0; i < Nphi0; ++i)
   {

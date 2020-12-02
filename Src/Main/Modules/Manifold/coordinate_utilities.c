@@ -17,7 +17,7 @@
 void point_finder(Needle_T *const needle)
 {
   Flag_T flg = NO;
-  unsigned i,j;
+  Uint i,j;
   
   /* look inside guess patches */
   if (needle->Ng != 0)
@@ -81,7 +81,7 @@ void point_finder(Needle_T *const needle)
 void needle_ex(Needle_T *const needle,const Patch_T *const patch)
 {
   assert(needle);
-  unsigned i;
+  Uint i;
   
   i = 0;
   while(i < needle->Nex)
@@ -102,7 +102,7 @@ void needle_ex(Needle_T *const needle,const Patch_T *const patch)
 void needle_in(Needle_T *const needle,const Patch_T *const patch)
 {
   assert(needle);
-  unsigned i;
+  Uint i;
   
   i = 0;
   while(i < needle->Nin)
@@ -123,7 +123,7 @@ void needle_in(Needle_T *const needle,const Patch_T *const patch)
 void needle_guess(Needle_T *const needle,const Patch_T *const patch)
 {
   assert(needle);
-  unsigned i;
+  Uint i;
   
   i = 0;
   while(i < needle->Ng)
@@ -144,7 +144,7 @@ void needle_guess(Needle_T *const needle,const Patch_T *const patch)
 void needle_ans(Needle_T *const needle,const Patch_T *const patch)
 {
   assert(needle);
-  unsigned i;
+  Uint i;
   
   i = 0;
   while(i < needle->Nans)
@@ -167,8 +167,8 @@ void needle_ans(Needle_T *const needle,const Patch_T *const patch)
 /* find for point in designated patches inside needle based on mode */
 static void find(Needle_T *const needle,Mode_T mode)
 {
-  unsigned *p = 0, np = UINT_MAX;
-  unsigned i;
+  Uint *p = 0, np = UINT_MAX;
+  Uint i;
   
   if (mode == GUESS)
   {
@@ -258,7 +258,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
   const Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
   const Flag_T type = patch->CoordSysInfo->CubedSphericalCoord->type;
   double S;/* sign */
-  unsigned a,b,c;/* permuted indices */
+  Uint a,b,c;/* permuted indices */
   Field_T *R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f,
           *R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
   const double xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1,
@@ -403,7 +403,7 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
                       cart[1]-C[1],
                       cart[2]-C[2]};
   double S; /* sign */
-  unsigned i,j,k;/* permuted indices */
+  Uint i,j,k;/* permuted indices */
   Field_T *R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f,
           *R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
   const double xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1,
@@ -413,7 +413,7 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
   double x1,x2,d,ratio;
   double x_test[3],X_test[3],dx;
   double eps = EPS_coord_general;
-  const unsigned *n;
+  const Uint *n;
   
   SignAndIndex_permutation_CubedSphere(side,&i,&j,&k,&S);
   
@@ -511,7 +511,7 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
   /* test the solution */
   if (check_flg)
   {
-    unsigned interval_test = 0;
+    Uint interval_test = 0;
     
     if (IsInside(X,patch->min,patch->max,eps))
        interval_test = 1;
@@ -538,11 +538,11 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
 // to that point and then return its index.
 // ->return value: found index, and put flg = FOUND, otherwise, flg = NONE.
 */
-unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg)
+Uint find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg)
 {
-  unsigned v = UINT_MAX;
+  Uint v = UINT_MAX;
   double res = EPS_collocation*root_square(3,x,0);/* resolution */
-  unsigned i;
+  Uint i;
   double *y, nrm;
 
   res = GRT(res,EPS_collocation) ? res : EPS_collocation;
@@ -564,37 +564,37 @@ unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *con
 }
 
 /* ->return value: x coord in specified patch */
-double x_coord(const unsigned i,const Patch_T *const patch)
+double x_coord(const Uint i,const Patch_T *const patch)
 {
   return patch->node[i]->x[0];
 }
 
 /* ->return value: y coord in specified patch */
-double y_coord(const unsigned i,const Patch_T *const patch)
+double y_coord(const Uint i,const Patch_T *const patch)
 {
   return patch->node[i]->x[1];
 }
 
 /* ->return value: z coord in specified patch */
-double z_coord(const unsigned i,const Patch_T *const patch)
+double z_coord(const Uint i,const Patch_T *const patch)
 {
   return patch->node[i]->x[2];
 }
 
 /* ->return value: X coord in specified patch */
-double X_coord(const unsigned i,const Patch_T *const patch)
+double X_coord(const Uint i,const Patch_T *const patch)
 {
   return patch->node[i]->X[0];
 }
 
 /* ->return value: Y coord in specified patch */
-double Y_coord(const unsigned i,const Patch_T *const patch)
+double Y_coord(const Uint i,const Patch_T *const patch)
 {
   return patch->node[i]->X[1];
 }
 
 /* ->return value: Z coord in specified patch */
-double Z_coord(const unsigned i,const Patch_T *const patch)
+double Z_coord(const Uint i,const Patch_T *const patch)
 {
   return patch->node[i]->X[2];
 }
@@ -730,12 +730,12 @@ collect_patches
   (
   Grid_T *const grid,/* the grid */
   const char *const region,/* see the list in IsItCovering function */
-  unsigned *const Np/* number of patches found */
+  Uint *const Np/* number of patches found */
   )
 {
   Patch_T **patches = 0;
   const int IsMatchAll = !strcmp(region,".*");
-  unsigned np,p;
+  Uint np,p;
   
   /* init */
   *Np = 0;
@@ -802,7 +802,7 @@ IsItCovering
   char **reg = read_separated_items_in_string(region,',');
   int ret = 0;  
   char s[999] = {'\0'};
-  unsigned i = 0;
+  Uint i = 0;
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_NSNS ||
@@ -843,7 +843,7 @@ Grid_Char_T *init_grid_char(Grid_T *const new_grid)
 /* free all entries of Grid_Char_T */
 void free_grid_char(Grid_Char_T *g)
 {
-  unsigned i;
+  Uint i;
   
   if (!g)
     return;
@@ -998,7 +998,7 @@ find_XYZ_and_patch_of_theta_phi_CS
  const double theta/* given theta */,
  const double phi/* given phi */,
  Patch_T **const patches,/* search among these patches */
- const unsigned Np/* number of patches */
+ const Uint Np/* number of patches */
  )
 {
   const double tan_phi    = tan(phi);
@@ -1006,7 +1006,7 @@ find_XYZ_and_patch_of_theta_phi_CS
   const double tan_phi2   = Pow2(tan_phi);
   const double cos_theta2 = Pow2(cos_theta);
   Flag_T found_flg = NO;
-  unsigned p;
+  Uint p;
   
   /* check all of the given patches in which (x,y,z) and 
   // (X,Y,Z) and (theta,phi) are consistent */
@@ -1124,10 +1124,10 @@ find_XYZ_and_patch_of_theta_phi_CS
 // it returns the first patch has this point.
 // Np is the number of patches. */
 Patch_T *x_in_which_patch(const double x[3],Patch_T **const patches,
-                          const unsigned Np)
+                          const Uint Np)
 {
   double X[3] = {0};
-  unsigned p;
+  Uint p;
   
   for (p = 0; p < Np; ++p)
   {
@@ -1149,10 +1149,10 @@ Patch_T *x_in_which_patch(const double x[3],Patch_T **const patches,
 // note: the collection of patch must be refine enough to
 // avoid potential wrong return since X is not uniqe. */
 Patch_T *X_in_which_patch(const double X[3],Patch_T **const patches,
-                          const unsigned Np)
+                          const Uint Np)
 {
   double x[3] = {0};
-  unsigned p;
+  Uint p;
   
   for (p = 0; p < Np; ++p)
   {
@@ -1174,11 +1174,11 @@ collect_patches_with_regex
   (
   Grid_T *const grid,/* the grid */
   const char *const regex,/* regex */
-  unsigned *const Np/* number of patches found */
+  Uint *const Np/* number of patches found */
   )
 {
   Patch_T **patches = 0;
-  unsigned np,p;
+  Uint np,p;
   
   /* init */
   *Np = 0;

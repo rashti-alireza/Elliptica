@@ -11,11 +11,11 @@ void test_EoS(Grid_T *const grid)
   const char *const path_par = Pgets("output_directory_path");
   char *path,file_name[1000];
   FILE *file = 0;
-  unsigned N = 100;
+  Uint N = 100;
   const double h_max = eos->h_th != 0 ? eos->h_th[eos->N-1]+10: 10;
   const double h_min = 1;
   double s = (h_max-h_min)/(N-1);
-  unsigned i;
+  Uint i;
   
   path = make_directory(path_par,"EoS_Tests");
   

@@ -52,8 +52,8 @@ static int fdS_spectral(Grid_T *const grid)
   Integration_T *I;
   Field_T *f;
   Patch_T *patch;
-  unsigned nn,ijk,p;
-  const unsigned *n;
+  Uint nn,ijk,p;
+  const Uint *n;
   double analytic = 0,numeric = 0;
   
   /* to test this function we use f = 1, so it means we calculate the volume */
@@ -359,7 +359,7 @@ static int fdV_spectral(Grid_T *const grid)
   Integration_T *I;
   Field_T *f;
   Patch_T *patch;
-  unsigned nn,ijk,p;
+  Uint nn,ijk,p;
   double analytic = 0,numeric = 0;
   
   /* to test this function we use f = 1, so it means we calculate the volume */
@@ -614,18 +614,18 @@ static int fdV_spectral(Grid_T *const grid)
 // ->return value: TEST_SUCCESSFUL */
 static int GQ_ChebExtrema(Grid_T *const grid)
 {
-  unsigned N = 0;
+  Uint N = 0;
   Integration_T *I = init_integration();
   const char *const par = Pgets("Test_Integration");
   double *f;
   double sf,an;/* resultant */
   double t0,x;
-  unsigned i;
+  Uint i;
   
   if (regex_search("[[:digit:]]+",par))
   {
     char *s = regex_find("[[:digit:]]+",par);
-    N = (unsigned)atoi(s);
+    N = (Uint)atoi(s);
     _free(s);
   }
   else
@@ -663,20 +663,20 @@ static int GQ_ChebExtrema(Grid_T *const grid)
 // ->return value:  TEST_SUCCESSFUL */
 static int GQ_Lobatto(Grid_T *const grid)
 {
-  unsigned N = 0;
+  Uint N = 0;
   Integration_T *I = init_integration();
   const char *const par = Pgets("Test_Integration");
   double *f;
   double sf,an;/* resultant */
   double x;
-  unsigned i;
+  Uint i;
   
   init_Lobatto_root_function();
   
   if (regex_search("[[:digit:]]+",par))
   {
     char *s = regex_find("[[:digit:]]+",par);
-    N = (unsigned)atoi(s);
+    N = (Uint)atoi(s);
     _free(s);
   }
   else
@@ -714,20 +714,20 @@ static int GQ_Lobatto(Grid_T *const grid)
 // ->return value:  TEST_SUCCESSFUL */
 static int GQ_Legendre(Grid_T *const grid)
 {
-  unsigned N = 0;
+  Uint N = 0;
   Integration_T *I = init_integration();
   const char *const par = Pgets("Test_Integration");
   double *f;
   double sf,an;/* resultant */
   double x;
-  unsigned i;
+  Uint i;
   
   init_Legendre_root_function();
   
   if (regex_search("[[:digit:]]+",par))
   {
     char *s = regex_find("[[:digit:]]+",par);
-    N = (unsigned)atoi(s);
+    N = (Uint)atoi(s);
     _free(s);
   }
   else
@@ -763,7 +763,7 @@ static int GQ_Legendre(Grid_T *const grid)
 // ->return value: if successful => TEST_SUCCESSFUL, otherwise TEST_UNSUCCESSFUL */
 static int csr_1d(Grid_T *const grid)
 {
-  unsigned N = 0;
+  Uint N = 0;
   const double a = M_PI;
   const double b = 3./2.*M_PI;
   Integration_T *I = init_integration();
@@ -772,12 +772,12 @@ static int csr_1d(Grid_T *const grid)
   double sf,an;/* resultant */
   double dx;
   double err;/* expected error from theory */
-  unsigned i;
+  Uint i;
   
   if (regex_search("[[:digit:]]+",par))
   {
     char *s = regex_find("[[:digit:]]+",par);
-    N = (unsigned)atoi(s);
+    N = (Uint)atoi(s);
     _free(s);
   }
   else

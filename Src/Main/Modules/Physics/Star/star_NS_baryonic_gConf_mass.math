@@ -13,7 +13,7 @@ C_macro  = READ_v(name);
 `double star_NS_baryonic_gConf_mass(Physics_T *const phys,const double Euler_C)`
 `{`
 `  double NS_baryonic_mass = 0;`
-`  unsigned p;`
+`  Uint p;`
 ``
 `  FOR_ALL_PATCHES(p,phys->grid)`
 `  {`
@@ -62,8 +62,8 @@ Symm[gConf(i,j)   = gConf(j,i)];
 
 `    EoS_T *eos = initialize_EoS();`
 # calculate the integrand:
-`    unsigned nn = patch->nn;`
-`    unsigned ijk;`
+`    Uint nn = patch->nn;`
+`    Uint ijk;`
 `    double rho0;`
 Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["  {"];

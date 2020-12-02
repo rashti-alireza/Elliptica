@@ -18,7 +18,7 @@ Point = ijk;
 # patch, S, F, node, N, n.
 # THUS, DO NOT DEFINE THEM AGAIN.
 `  DDM_SCHUR_EQ_DECLARE`;
-`  unsigned ijk;/* node index */`;
+`  Uint ijk;/* node index */`;
 
 ## which field it is
 `  const Solving_Man_T *const sol = patch->solving_man;`

@@ -77,7 +77,7 @@ extrap_init
       strcmp_i(method,"exp2")
      )
   {
-    unsigned nf,npo,npi;
+    Uint nf,npo,npi;
     
     nf = 0;/* number of fields */
     while(fields_name[nf]) ++nf;
@@ -144,17 +144,17 @@ static void extrap_free(struct Extrap_S *const extrap)
 // is done with them, removes them. */
 static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
 {
-  const unsigned npo = extrap->npo;
-  const unsigned npi = extrap->npi;
-  const unsigned nf  = extrap->nf;/* numebr of fields */
-  unsigned p;
+  const Uint npo = extrap->npo;
+  const Uint npi = extrap->npi;
+  const Uint nf  = extrap->nf;/* numebr of fields */
+  Uint p;
   
   /* update all coeffs to avoid race condition */
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npi; p++)
   {
     Patch_T *patch = extrap->patches_in[p];
-    unsigned f = 0;
+    Uint f = 0;
 
     /* make coeffs in  X and Y direction inside this patch */
     for (f = 0; f < nf; ++f)
@@ -211,7 +211,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
   for (p = 0; p < npo; p++)
   {
     Patch_T *patch = extrap->patches_out[p];
-    unsigned f = 0;
+    Uint f = 0;
     
     for (f = 0; f < nf; ++f)
     {
@@ -232,7 +232,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
       double ddfddr = 0,dfdr = 0,fr0 = 0;
       double _ddfddr[3] = {0,0,0};
       double rSurf,rSurf3,r;
-      unsigned d1,d2;/* derivative */
+      Uint d1,d2;/* derivative */
 
       /* find th and ph and X */
       find_theta_phi_of_XYZ_CS(&th,&ph,patch->node[ijk]->X,
@@ -337,7 +337,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
   for (p = 0; p < npi; p++)
   {
     Patch_T *patch = extrap->patches_in[p];
-    unsigned f = 0;
+    Uint f = 0;
 
     for (f = 0; f < nf; ++f)
     {
@@ -367,10 +367,10 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
 /* collect names of the fields and their derivatives */
 static void collect_names(struct Extrap_S *const extrap,
                           const char **const fields_name,
-                          const unsigned nf)
+                          const Uint nf)
 {
   const char *s = 0;
-  unsigned f,i,j;
+  Uint f,i,j;
     
   for (f = 0; f < nf; ++f)
   {
@@ -513,14 +513,14 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
   
   Grid_Char_T *grid_char = phys->grid_char;
   struct NS_surface_RootFinder_S par[1] = {0};
-  const unsigned lmax   = (unsigned)Geti("surface_Ylm_expansion_max_l");
-  const unsigned Ntheta = Ntheta_Ylm(lmax);
-  const unsigned Nphi   = Nphi_Ylm(lmax);
-  const unsigned Ntot   = Ntotal_Ylm(lmax);
+  const Uint lmax   = (Uint)Geti("surface_Ylm_expansion_max_l");
+  const Uint Ntheta = Ntheta_Ylm(lmax);
+  const Uint Nphi   = Nphi_Ylm(lmax);
+  const Uint Ntot   = Ntotal_Ylm(lmax);
   const double RESIDUAL = sqrt(Getd("RootFinder_Tolerance"));
   const double max_h_L2_res = Getd("enthalpy_allowed_residual");
-  const unsigned Nincr = 100;
-  unsigned Npn,Npa,Nps;/* number of patches below: */
+  const Uint Nincr = 100;
+  Uint Npn,Npa,Nps;/* number of patches below: */
   Patch_T **patches_NS = collect_patches(phys->grid,Ftype("NS"),&Npn);
   Patch_T **patches_Ar = collect_patches(phys->grid,Ftype("NS_around"),&Npa);
   Patch_T **patches_s  = collect_patches(phys->grid,Ftype("NS_OB"),&Nps);
@@ -533,14 +533,14 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
   double *h_res   = 0;/* residual of h */
   double X[3],x[3],N[3];
   int NS_surface_finder_work_flg = 1;/* whether surface finder worked or not */
-  unsigned i,j;
-  unsigned l,m;
+  Uint i,j;
+  Uint l,m;
   
   /* populate root finder */
   Root_Finder_T *root = init_root_finder(1);
   root->type      = "Bisect_Single";
   root->tolerance = Getd("RootFinder_Tolerance");
-  root->MaxIter   = (unsigned)Geti("RootFinder_Iteration");
+  root->MaxIter   = (Uint)Geti("RootFinder_Iteration");
   root->params    = par;
   root->f[0]      = NS_surface_enthalpy_root_finder_eq;
   if (strstr_i(Gets("RootFinder_verbose"),"yes"))
@@ -567,7 +567,7 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
       Patch_T *patch = 0;
       double y2[3] = {0};
       double h,*dr,a,b,Fa,Fb;
-      unsigned iincr;
+      Uint iincr;
       
       /* find patch and X,Y,Z at NS surface in which theta and phi take place */
       X[2] = 1.;
@@ -727,7 +727,7 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
   l = lmax;
   for (m = 0; m <= l; ++m)
   {
-    unsigned lm = lm2n(l,m);
+    Uint lm = lm2n(l,m);
     printf(Pretty0"Truncation error [Real(C[%u][%u])] = %e\n",l,m,realClm[lm]);
     printf(Pretty0"Truncation error [Imag(C[%u][%u])] = %e\n",l,m,imagClm[lm]);
   }
@@ -739,7 +739,7 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
     for (l = 0; l <= lmax; ++l)
       for (m = 0; m <= l; ++m)
       {
-        unsigned lm = lm2n(l,m);
+        Uint lm = lm2n(l,m);
         realClm[lm] /= (1+e*Pow2(l)*Pow2(l+1));
         imagClm[lm] /= (1+e*Pow2(l)*Pow2(l+1));
       }
@@ -803,7 +803,7 @@ static double NS_surface_enthalpy_root_finder_eq(void *params,const double *cons
 }
 
 /* denthalpy(r)/dr for NS surface root finder */
-static double NS_surface_denthalpy_dr_root_finder(void *params,const double *const x,const unsigned dir)
+static double NS_surface_denthalpy_dr_root_finder(void *params,const double *const x,const Uint dir)
 {
   assert(dir == 0);
   const struct NS_surface_RootFinder_S *const pars = params;
@@ -892,7 +892,7 @@ double star_NS_mass_shedding_indicator(Physics_T *const phys)
     double r,theta,phi;
     char regex[99] = {'\0'};
     const char *side = 0;
-    unsigned Np;
+    Uint Np;
     
     /* opposite */
     if      (phys->pos == LEFT)  side = "right";

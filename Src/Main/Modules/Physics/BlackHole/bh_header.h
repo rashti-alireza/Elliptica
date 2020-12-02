@@ -19,7 +19,7 @@ double bh_bhf_poly_smoother
 (const double r,const double rmax,const double rmin);
 
 void bh_bhf_ChebTn_extrapolate
-(double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill,const unsigned N);
+(double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill,const Uint N);
 
 
 void bh_tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys);

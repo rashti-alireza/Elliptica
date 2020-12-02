@@ -43,14 +43,14 @@
 void pr_hdf5_silo(Pr_Field_T *const pr)
 {
   struct Info_S *const pr_info = pr->group;
-  const unsigned npr = pr->ng;
-  unsigned pa;
+  const Uint npr = pr->ng;
+  Uint pa;
   
   FOR_ALL_PATCHES(pa,pr->grid)
   {
     Patch_T *patch = pr->grid->patch[pa];
     DBfile *dbfile_xyz = 0;/* file for cartesian  */
-    unsigned i_pr;
+    Uint i_pr;
    
     /* printing in Cartesian coords, namely in (x,y,z) values */
     dbfile_xyz = make_structured_mesh_3d_xyz(pr,patch);
@@ -81,7 +81,7 @@ void pr_hdf5_silo(Pr_Field_T *const pr)
     {
       Patch_T *patch = pr->grid->patch[pa];
       DBfile *dbfile_abc = 0;/* file for curvilinear */
-      unsigned i_pr;
+      Uint i_pr;
      
       /* printing Curvilinear coords, namely in (a,b,c) values */
       dbfile_abc = make_structured_mesh_3d_abc(pr,patch);
@@ -128,7 +128,7 @@ static void write_multi_mesh(const Pr_Field_T *const pr)
   char  grid_name[MAX_STR_LEN];
   int   patch_types[npatch];
   int DB_ret,i; 
-  unsigned pa;
+  Uint pa;
   
   FOR_ALL_PATCHES(pa,pr->grid)
   {
@@ -203,8 +203,8 @@ static void write_multi_mesh(const Pr_Field_T *const pr)
 static void write_multi_vars(const Pr_Field_T *const pr)
 {
   struct Info_S *const pr_info = pr->group;
-  const unsigned npr = pr->ng;
-  unsigned i_pr;
+  const Uint npr = pr->ng;
+  Uint i_pr;
   
   /* for all fields or variables */
   for (i_pr = 0; i_pr < npr; ++i_pr)
@@ -238,7 +238,7 @@ static void make_multi_var(const Pr_Field_T *const pr,const char *const var)
   char var_name[MAX_STR_LEN];
   int  var_types[npatch];
   int DB_ret,i;
-  unsigned pa;
+  Uint pa;
   
   FOR_ALL_PATCHES(pa,pr->grid)
   {
@@ -321,7 +321,7 @@ static void *make_structured_mesh_3d_xyz(Pr_Field_T *const pr,const Patch_T *con
 {
   DBfile *dbfile = 0;
   char file_name[MAX_STR_LEN];
-  const unsigned nn = patch->nn;
+  const Uint nn = patch->nn;
   double *x = alloc_double(nn),
          *y = alloc_double(nn),
          *z = alloc_double(nn);
@@ -381,7 +381,7 @@ static void *make_structured_mesh_3d_abc(Pr_Field_T *const pr,const Patch_T *con
 {
   DBfile *dbfile = 0;
   char file_name[MAX_STR_LEN];
-  const unsigned nn = patch->nn;
+  const Uint nn = patch->nn;
   double *x = alloc_double(nn),
          *y = alloc_double(nn),
          *z = alloc_double(nn);
@@ -441,8 +441,8 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   
   DBfile *const dbfile = pr->file; 
   const Patch_T *const patch = pr->patch;
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   struct Info_S *subg = pr->vptr;
   double *data = 0;
   int dims[] = 
@@ -451,7 +451,7 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   const int v_ind = _Ind(subg->field);
   int DB_ret;
   const char *mesh_name = strstr(pr->patch->name,"_");/* grid\d?_ */
-  unsigned ijk,i,j,k;
+  Uint ijk,i,j,k;
   
   assert(mesh_name);
   mesh_name++;
@@ -492,8 +492,8 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   
   DBfile *const dbfile = pr->file; 
   const Patch_T *const patch = pr->patch;
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   struct Info_S *subg = pr->vptr;
   double *comp[3] = {0};
   int dims[] = 
@@ -506,7 +506,7 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   char desc[MAX_STR_LEN];
   int DB_ret;
   const char *mesh_name = strstr(pr->patch->name,"_");/* grid\d?_ */
-  unsigned ijk,i,j,k;
+  Uint ijk,i,j,k;
   
   assert(mesh_name);
   mesh_name++;
@@ -583,9 +583,9 @@ static void pr_structured_mesh_3d_silo(const Pr_Field_T *const pr)
 // x[i][j][k] for each coords. */
 static void prepare_node_structured_mesh_3d_silo(const char *const type,const Patch_T *const patch,double *const x,double *const y,double *const z)
 {
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
-  unsigned ijk,i,j,k;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
+  Uint ijk,i,j,k;
   
   if (strcmp_i(type,"Cartesian"))
   {

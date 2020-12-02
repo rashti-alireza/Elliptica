@@ -20,7 +20,7 @@ Ccode["void *eq_alpha(void *vp1,void *vp2)\n{"];
 # patch, S, F, node, N, n.
 # THUS, DO NOT DEFINE THEM AGAIN.
 Ccode["  DDM_SCHUR_EQ_DECLARE"];
-Ccode["  unsigned ijk;/* node index */"];
+Ccode["  Uint ijk;/* node index */"];
 
 # declare for Cpi:
 Declare = 

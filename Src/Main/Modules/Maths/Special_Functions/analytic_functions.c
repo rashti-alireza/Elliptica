@@ -26,7 +26,7 @@
 double *c_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
       f[i] = CONST;
@@ -38,7 +38,7 @@ double *c_f(Patch_T *const patch)
 double *x_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = x_(i);
@@ -50,7 +50,7 @@ double *x_f(Patch_T *const patch)
 double *y_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = y_(i);
@@ -61,7 +61,7 @@ double *y_f(Patch_T *const patch)
 double *z_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = z_(i);
@@ -72,7 +72,7 @@ double *z_f(Patch_T *const patch)
 double *poly5_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = Power(xM,3) - Power(yM,3) - Power(xM,2)*yM*zM + xM*Power(yM,2)*Power(zM,2) + 
@@ -94,7 +94,7 @@ double poly5_f_point(const double x,const double y,const double z)
 double *r_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
       f[i] = sqrt(pow(x_(i),2)+pow(y_(i),2)+pow(z_(i),2));
@@ -105,7 +105,7 @@ double *r_f(Patch_T *const patch)
 double *inv_rP1_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
       f[i] = 1/sqrt(pow(x_(i),2)+pow(y_(i),2)+pow(z_(i),2)+1);
@@ -116,7 +116,7 @@ double *inv_rP1_f(Patch_T *const patch)
 double *cosx_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
       f[i] = cos(x_(i));
@@ -127,7 +127,7 @@ double *cosx_f(Patch_T *const patch)
 double *cosy_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = cos(y_(i));
@@ -137,7 +137,7 @@ double *cosy_f(Patch_T *const patch)
 double *cosz_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = cos(z_(i));
@@ -148,7 +148,7 @@ double *cosz_f(Patch_T *const patch)
 double *sinx_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = sin(x_(i));
@@ -159,7 +159,7 @@ double *sinx_f(Patch_T *const patch)
 double *siny_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = sin(y_(i));
@@ -170,7 +170,7 @@ double *siny_f(Patch_T *const patch)
 double *sinz_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = sin(z_(i));
@@ -181,7 +181,7 @@ double *sinz_f(Patch_T *const patch)
 double *cosxyz_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = cos(x_(i)*y_(i)*z_(i));
@@ -192,7 +192,7 @@ double *cosxyz_f(Patch_T *const patch)
 double *cos4xyz_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = pow(cos(x_(i)*y_(i)*z_(i)),4);
@@ -203,7 +203,7 @@ double *cos4xyz_f(Patch_T *const patch)
 double *cos5xyz_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = pow(cos(x_(i)*y_(i)*z_(i)),5);
@@ -214,7 +214,7 @@ double *cos5xyz_f(Patch_T *const patch)
 double *sinxyz_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = sin(x_(i)*y_(i)*z_(i));
@@ -225,7 +225,7 @@ double *sinxyz_f(Patch_T *const patch)
 double *sin3xyz_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = pow(sin(x_(i)*y_(i)*z_(i)),3);
@@ -236,7 +236,7 @@ double *sin3xyz_f(Patch_T *const patch)
 double *coshxyz_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = cosh(x_(i)*y_(i)*z_(i));
@@ -248,7 +248,7 @@ double *coshxyz_f(Patch_T *const patch)
 double *sinhxyz_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = sinh(x_(i)*y_(i)*z_(i));
@@ -260,7 +260,7 @@ double *sinhxyz_f(Patch_T *const patch)
 double *tanhxyz_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = tanh(x_(i)*y_(i)*z_(i));
@@ -271,7 +271,7 @@ double *tanhxyz_f(Patch_T *const patch)
 double *logxyz_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = log(1+pow(x_(i)*y_(i)*z_(i),2));
@@ -283,7 +283,7 @@ double *logxyz_f(Patch_T *const patch)
 double *mix1_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = pow(x_(i),2)*cos(x_(i)*pow(y_(i),3)*z_(i))+
@@ -295,7 +295,7 @@ double *mix1_f(Patch_T *const patch)
 double *mix2_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = log(1+pow(z_(i),2))*cosh(
@@ -312,7 +312,7 @@ double *mix2_f(Patch_T *const patch)
 double *c_f_x(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -323,7 +323,7 @@ double *c_f_x(Patch_T *const patch)
 double *c_f_y(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -335,7 +335,7 @@ double *c_f_y(Patch_T *const patch)
 double *c_f_z(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -347,7 +347,7 @@ double *c_f_z(Patch_T *const patch)
 double *x_f_x(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 1;
@@ -358,7 +358,7 @@ double *x_f_x(Patch_T *const patch)
 double *x_f_y(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -369,7 +369,7 @@ double *x_f_y(Patch_T *const patch)
 double *x_f_z(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -380,7 +380,7 @@ double *x_f_z(Patch_T *const patch)
 double *x_f_xx(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -391,7 +391,7 @@ double *x_f_xx(Patch_T *const patch)
 double *y_f_x(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -402,7 +402,7 @@ double *y_f_x(Patch_T *const patch)
 double *y_f_y(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 1;
@@ -413,7 +413,7 @@ double *y_f_y(Patch_T *const patch)
 double *y_f_z(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -424,7 +424,7 @@ double *y_f_z(Patch_T *const patch)
 double *y_f_yy(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -435,7 +435,7 @@ double *y_f_yy(Patch_T *const patch)
 double *z_f_x(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -446,7 +446,7 @@ double *z_f_x(Patch_T *const patch)
 double *z_f_y(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -457,7 +457,7 @@ double *z_f_y(Patch_T *const patch)
 double *z_f_z(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 1;
@@ -468,7 +468,7 @@ double *z_f_z(Patch_T *const patch)
 double *z_f_zz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -479,7 +479,7 @@ double *z_f_zz(Patch_T *const patch)
 double *inv_rP1_f_x(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = -(xM/Power(1 + Power(xM,2) + Power(yM,2) + Power(zM,2),1.5));
@@ -490,7 +490,7 @@ double *inv_rP1_f_x(Patch_T *const patch)
 double *inv_rP1_f_y(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = -(yM/Power(1 + Power(xM,2) + Power(yM,2) + Power(zM,2),1.5));
@@ -501,7 +501,7 @@ double *inv_rP1_f_y(Patch_T *const patch)
 double *inv_rP1_f_z(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = -(zM/Power(1 + Power(xM,2) + Power(yM,2) + Power(zM,2),1.5));
@@ -512,7 +512,7 @@ double *inv_rP1_f_z(Patch_T *const patch)
 double *inv_rP1_f_xx(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (-1 + 2*Power(xM,2) - Power(yM,2) - Power(zM,2))/
@@ -524,7 +524,7 @@ double *inv_rP1_f_xx(Patch_T *const patch)
 double *inv_rP1_f_yy(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (-1 - Power(xM,2) + 2*Power(yM,2) - Power(zM,2))/
@@ -536,7 +536,7 @@ double *inv_rP1_f_yy(Patch_T *const patch)
 double *inv_rP1_f_zz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (-1 - Power(xM,2) - Power(yM,2) + 2*Power(zM,2))/
@@ -548,7 +548,7 @@ double *inv_rP1_f_zz(Patch_T *const patch)
 double *inv_rP1_f_xy(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (3*xM*yM)/Power(1 + Power(xM,2) + Power(yM,2) + Power(zM,2),2.5);
@@ -559,7 +559,7 @@ double *inv_rP1_f_xy(Patch_T *const patch)
 double *inv_rP1_f_xz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (3*xM*zM)/Power(1 + Power(xM,2) + Power(yM,2) + Power(zM,2),2.5);
@@ -570,7 +570,7 @@ double *inv_rP1_f_xz(Patch_T *const patch)
 double *inv_rP1_f_yz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (3*yM*zM)/Power(1 + Power(xM,2) + Power(yM,2) + Power(zM,2),2.5);
@@ -581,7 +581,7 @@ double *inv_rP1_f_yz(Patch_T *const patch)
 double *inv_rP1_f_xyz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (-15*xM*yM*zM)/Power(1 + Power(xM,2) + Power(yM,2) + Power(zM,2),3.5);
@@ -592,7 +592,7 @@ double *inv_rP1_f_xyz(Patch_T *const patch)
 double *r_f_x(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = xM/Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2));
@@ -603,7 +603,7 @@ double *r_f_x(Patch_T *const patch)
 double *r_f_y(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = yM/Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2));
@@ -614,7 +614,7 @@ double *r_f_y(Patch_T *const patch)
 double *r_f_z(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = zM/Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2));
@@ -625,7 +625,7 @@ double *r_f_z(Patch_T *const patch)
 double *r_f_xx(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (Power(yM,2) + Power(zM,2))/
@@ -637,7 +637,7 @@ double *r_f_xx(Patch_T *const patch)
 double *r_f_yy(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (Power(xM,2) + Power(zM,2))/
@@ -649,7 +649,7 @@ double *r_f_yy(Patch_T *const patch)
 double *r_f_zz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (Power(xM,2) + Power(yM,2))/
@@ -661,7 +661,7 @@ double *r_f_zz(Patch_T *const patch)
 double *r_f_xy(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = -((xM*yM)/Power(Power(xM,2) + Power(yM,2) + Power(zM,2),1.5));
@@ -672,7 +672,7 @@ double *r_f_xy(Patch_T *const patch)
 double *r_f_xz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = -((xM*zM)/Power(Power(xM,2) + Power(yM,2) + Power(zM,2),1.5));
@@ -683,7 +683,7 @@ double *r_f_xz(Patch_T *const patch)
 double *r_f_yz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = -((yM*zM)/Power(Power(xM,2) + Power(yM,2) + Power(zM,2),1.5));
@@ -694,7 +694,7 @@ double *r_f_yz(Patch_T *const patch)
 double *r_f_xyz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (3*xM*yM*zM)/Power(Power(xM,2) + Power(yM,2) + Power(zM,2),2.5);
@@ -705,7 +705,7 @@ double *r_f_xyz(Patch_T *const patch)
 double *sinxyz_f_x(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = yM*zM*Cos(xM*yM*zM);
@@ -716,7 +716,7 @@ double *sinxyz_f_x(Patch_T *const patch)
 double *sinxyz_f_y(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = xM*zM*Cos(xM*yM*zM);
@@ -727,7 +727,7 @@ double *sinxyz_f_y(Patch_T *const patch)
 double *sinxyz_f_z(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = xM*yM*Cos(xM*yM*zM);
@@ -738,7 +738,7 @@ double *sinxyz_f_z(Patch_T *const patch)
 double *sinxyz_f_xx(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = -(Power(yM,2)*Power(zM,2)*Sin(xM*yM*zM));
@@ -749,7 +749,7 @@ double *sinxyz_f_xx(Patch_T *const patch)
 double *sinxyz_f_yy(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = -(Power(xM,2)*Power(zM,2)*Sin(xM*yM*zM));
@@ -760,7 +760,7 @@ double *sinxyz_f_yy(Patch_T *const patch)
 double *sinxyz_f_zz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = -(Power(xM,2)*Power(yM,2)*Sin(xM*yM*zM));
@@ -771,7 +771,7 @@ double *sinxyz_f_zz(Patch_T *const patch)
 double *sinxyz_f_xy(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = zM*(Cos(xM*yM*zM) - xM*yM*zM*Sin(xM*yM*zM));
@@ -782,7 +782,7 @@ double *sinxyz_f_xy(Patch_T *const patch)
 double *sinxyz_f_xz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = yM*(Cos(xM*yM*zM) - xM*yM*zM*Sin(xM*yM*zM));
@@ -793,7 +793,7 @@ double *sinxyz_f_xz(Patch_T *const patch)
 double *sinxyz_f_yz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = xM*(Cos(xM*yM*zM) - xM*yM*zM*Sin(xM*yM*zM));
@@ -804,7 +804,7 @@ double *sinxyz_f_yz(Patch_T *const patch)
 double *sinxyz_f_xyz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (1 - Power(xM,2)*Power(yM,2)*Power(zM,2))*Cos(xM*yM*zM) - 
@@ -816,7 +816,7 @@ double *sinxyz_f_xyz(Patch_T *const patch)
 double *poly5_f_x(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 3*Power(xM,2) - 2*xM*yM*zM + Power(yM,2)*Power(zM,2);
@@ -827,7 +827,7 @@ double *poly5_f_x(Patch_T *const patch)
 double *poly5_f_y(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = -3*Power(yM,2) - Power(xM,2)*zM + 2*xM*yM*Power(zM,2);
@@ -838,7 +838,7 @@ double *poly5_f_y(Patch_T *const patch)
 double *poly5_f_z(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = -(Power(xM,2)*yM) + 2*xM*Power(yM,2)*zM + 3*Power(zM,2);
@@ -849,7 +849,7 @@ double *poly5_f_z(Patch_T *const patch)
 double *poly5_f_xx(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 6*xM - 2*yM*zM;
@@ -860,7 +860,7 @@ double *poly5_f_xx(Patch_T *const patch)
 double *poly5_f_yy(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = -6*yM + 2*xM*Power(zM,2);
@@ -871,7 +871,7 @@ double *poly5_f_yy(Patch_T *const patch)
 double *poly5_f_zz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 2*xM*Power(yM,2) + 6*zM;
@@ -882,7 +882,7 @@ double *poly5_f_zz(Patch_T *const patch)
 double *poly5_f_xy(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 2*zM*(-xM + yM*zM);
@@ -893,7 +893,7 @@ double *poly5_f_xy(Patch_T *const patch)
 double *poly5_f_xz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 2*yM*(-xM + yM*zM);
@@ -904,7 +904,7 @@ double *poly5_f_xz(Patch_T *const patch)
 double *poly5_f_yz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = -(xM*(xM - 4*yM*zM));
@@ -915,7 +915,7 @@ double *poly5_f_yz(Patch_T *const patch)
 double *poly5_f_xyz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = -2*xM + 4*yM*zM;
@@ -926,7 +926,7 @@ double *poly5_f_xyz(Patch_T *const patch)
 double *mix2_f_x(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (xM/Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)) + 
@@ -940,7 +940,7 @@ double *mix2_f_x(Patch_T *const patch)
 double *mix2_f_y(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (yM/Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)) + 
@@ -955,7 +955,7 @@ double *mix2_f_y(Patch_T *const patch)
 double *mix2_f_z(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (2*zM*Cosh(Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)) + 
@@ -971,7 +971,7 @@ double *mix2_f_z(Patch_T *const patch)
 double *mix2_f_xx(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = Log(1 + Power(zM,2))*(Power(xM/
@@ -996,7 +996,7 @@ double *mix2_f_xx(Patch_T *const patch)
 double *mix2_f_yy(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = Log(1 + Power(zM,2))*(Power(yM/
@@ -1019,7 +1019,7 @@ double *mix2_f_yy(Patch_T *const patch)
 double *mix2_f_zz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (-4*Power(zM,2)*Cosh(Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)) + 
@@ -1051,7 +1051,7 @@ double *mix2_f_zz(Patch_T *const patch)
 double *mix2_f_xy(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (zM/Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)) + 
@@ -1078,7 +1078,7 @@ double *mix2_f_xy(Patch_T *const patch)
 double *mix2_f_xz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (zM/Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)) + 
@@ -1106,7 +1106,7 @@ double *mix2_f_xz(Patch_T *const patch)
 double *mix2_f_yz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (zM/Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)) + 
@@ -1132,7 +1132,7 @@ double *mix2_f_yz(Patch_T *const patch)
 double *mix2_f_xyz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = (2*zM*(yM/Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)) + 
@@ -1192,7 +1192,7 @@ double *mix2_f_xyz(Patch_T *const patch)
 double *sinx_f_x(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = cos(xM);
@@ -1203,7 +1203,7 @@ double *sinx_f_x(Patch_T *const patch)
 double *sinx_f_y(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -1214,7 +1214,7 @@ double *sinx_f_y(Patch_T *const patch)
 double *sinx_f_z(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -1225,7 +1225,7 @@ double *sinx_f_z(Patch_T *const patch)
 double *sinx_f_xx(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = -sin(xM);
@@ -1236,7 +1236,7 @@ double *sinx_f_xx(Patch_T *const patch)
 double *sinx_f_yy(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -1247,7 +1247,7 @@ double *sinx_f_yy(Patch_T *const patch)
 double *sinx_f_zz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -1258,7 +1258,7 @@ double *sinx_f_zz(Patch_T *const patch)
 double *sinx_f_xy(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -1269,7 +1269,7 @@ double *sinx_f_xy(Patch_T *const patch)
 double *sinx_f_xz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -1280,7 +1280,7 @@ double *sinx_f_xz(Patch_T *const patch)
 double *sinx_f_yz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;
@@ -1291,7 +1291,7 @@ double *sinx_f_yz(Patch_T *const patch)
 double *sinx_f_xyz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
-  unsigned i;
+  Uint i;
   
   FOR_ALL_POINTS(i,patch)
     f[i] = 0;

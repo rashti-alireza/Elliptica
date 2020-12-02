@@ -11,15 +11,15 @@ static void dK_UiUj(Grid_T *const grid);
 
 void bbn_make_K_UiUj_and_dK_UiUj(Grid_T *const grid)
 {
-  const unsigned np = grid->np;
-  unsigned p;
+  const Uint np = grid->np;
+  Uint p;
 
   OpenMP_Patch_Pragma(omp parallel for)
   for(p = 0; p < np; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned nn = patch->nn;
-    unsigned ijk;
+    Uint nn = patch->nn;
+    Uint ijk;
 
     if(IsItInsideBHPatch(patch))
        continue;
@@ -114,8 +114,8 @@ psim10;
 /* calculating the partial derivatives of K_UiUj */
 static void dK_UiUj(Grid_T *const grid)
 {
-  const unsigned np = grid->np;
-  unsigned p;
+  const Uint np = grid->np;
+  Uint p;
 
   OpenMP_Patch_Pragma(omp parallel for)
   for(p = 0; p < np; ++p)
@@ -176,8 +176,8 @@ static void dK_UiUj(Grid_T *const grid)
 /* free K_UiUj and dK_UiUj */
 void bbn_free_K_UiUj_and_dK_UiUj(Grid_T *const grid)
 {
-  const unsigned np = grid->np;
-  unsigned p;
+  const Uint np = grid->np;
+  Uint p;
 
   OpenMP_Patch_Pragma(omp parallel for)
   for(p = 0; p < np; ++p)

@@ -14,7 +14,7 @@ C_macro  = READ_v(name);
 `double bbn_NS_baryonic_mass(Grid_T *const grid,const double Euler_C)`
 `{`
 `  double NS_baryonic_mass = 0;`
-`  unsigned p;\n`
+`  Uint p;\n`
 `  FOR_ALL_PATCHES(p,grid)`
 `  {`
 `    Patch_T *patch = grid->patch[p];`
@@ -62,8 +62,8 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
 
 `    EoS_T *eos = initialize_EoS();`
 # calculate the integrand:
-`    unsigned nn = patch->nn;`
-`    unsigned ijk;`
+`    Uint nn = patch->nn;`
+`    Uint ijk;`
 `    double rho0;`
 Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["  {"];

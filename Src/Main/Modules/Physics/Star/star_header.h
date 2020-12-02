@@ -29,7 +29,7 @@ struct NC_Center_RootFinder_S
 {
   Patch_T *patch;
   Patch_T **patches;
-  unsigned Np;/* number of patches */
+  Uint Np;/* number of patches */
   Root_Finder_T *root_finder;
 };
 
@@ -46,9 +46,9 @@ struct Force_Balance_RootFinder_S
   double Omega;
   const double *X;
   const double *V2CM;
-  unsigned find_y_CM: 1;
-  unsigned find_x_CM: 1;
-  unsigned find_Omega: 1;
+  Uint find_y_CM: 1;
+  Uint find_x_CM: 1;
+  Uint find_Omega: 1;
   int dir;/* direction of derivative */
 };
 

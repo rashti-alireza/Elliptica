@@ -1,5 +1,6 @@
 #ifndef manifold_LIB_H
 #define manifold_LIB_H
+#include "elliptica_system_lib.h"
 
 /* for now only two objects */
 #define NPARAMS_GRID_CHAR (2)
@@ -91,29 +92,29 @@ typedef struct NODE_T
 /* point */
 typedef struct POINT_T
 {
-  unsigned ind;/* linear index in which node[ind] refers to this point */
+  Uint ind;/* linear index in which node[ind] refers to this point */
   double N[3];/* normal vector */
   double *x;/* points to some triplet values for coords of a point */
   struct PATCH_T *patch;/* refers to its patch */
   struct POINT_T *adjPoint;/* adjacent point */
-  unsigned face    ;/* the interface in which this point located */
-  unsigned adjFace ;/* adjacent face used in interpolation */
-  unsigned adjPatch;/* adjacent patch used in interpolation default is UINT_MAX */
-  unsigned adjInd;/* adjacent point index correspond to adjPatch node[adjInd] */
-  unsigned adjIndF;/* adjacent point index correspond to adjFace point[adjIndF] */
-  unsigned IsOnEdge:1;/* if on edge 1 otherwise 0 */
-  unsigned sameX  : 1;/* 1 if addjacent face is on X = const */
-  unsigned sameY  : 1;/* 1 if addjacent face is on Y = const */
-  unsigned sameZ  : 1;/* 1 if addjacent face is on Z = const */
-  unsigned touch  : 1;/* touch state 1, overlap state 0 */
-  unsigned copy   : 1;/* copy state 1, interpolation state 0 */
-  unsigned exterF : 1;/* external interface 1, internal 0
+  Uint face    ;/* the interface in which this point located */
+  Uint adjFace ;/* adjacent face used in interpolation */
+  Uint adjPatch;/* adjacent patch used in interpolation default is UINT_MAX */
+  Uint adjInd;/* adjacent point index correspond to adjPatch node[adjInd] */
+  Uint adjIndF;/* adjacent point index correspond to adjFace point[adjIndF] */
+  Uint IsOnEdge:1;/* if on edge 1 otherwise 0 */
+  Uint sameX  : 1;/* 1 if addjacent face is on X = const */
+  Uint sameY  : 1;/* 1 if addjacent face is on Y = const */
+  Uint sameZ  : 1;/* 1 if addjacent face is on Z = const */
+  Uint touch  : 1;/* touch state 1, overlap state 0 */
+  Uint copy   : 1;/* copy state 1, interpolation state 0 */
+  Uint exterF : 1;/* external interface 1, internal 0
                       // external means it can reach other interface */
-  unsigned outerB : 1;/* if it is outer boundary of grid 
+  Uint outerB : 1;/* if it is outer boundary of grid 
                       // and needs boundary condition */
-  unsigned innerB : 1;/* if it is inner boundary of grid 
+  Uint innerB : 1;/* if it is inner boundary of grid 
                       // and needs boundary condition */
-  unsigned houseK : 1;/* house-keeping purposes like if it is already
+  Uint houseK : 1;/* house-keeping purposes like if it is already
                       // counted 1 otherwise 0 among others */
 }Point_T;
 
@@ -122,26 +123,26 @@ typedef struct SUBFACE_T
 {
   struct PATCH_T *patch;/* refers to its patch */
   char *flags_str ;/* encodes all of flags info in string format */
-  unsigned sn     ;/* its subface number */
-  unsigned adjsn  ;/* adjacent subface number */
-  unsigned np     ;/* number of points this surface has */
-  unsigned *id    ;/* id of points this subface made of; it refers to node number*/
-  unsigned *adjid ;/* id of adjacent point of each point, their index must be matched 
+  Uint sn     ;/* its subface number */
+  Uint adjsn  ;/* adjacent subface number */
+  Uint np     ;/* number of points this surface has */
+  Uint *id    ;/* id of points this subface made of; it refers to node number*/
+  Uint *adjid ;/* id of adjacent point of each point, their index must be matched 
                    // e.g. adjacent point of id[ind1]=? is adjid[ind1]=? */
-  unsigned face    ;/* the interface in which this point located */
-  unsigned adjFace ;/* adjacent face used in interpolation or copy, for outerB or innerB they are UINT_MAX */
-  unsigned adjPatch;/* adjacent patch used in interpolation or copy for outerB or innerB they are UINT_MAX */
-  unsigned df_dn  : 1;/* 1 if d(field)/dn is set at interface, 0 otherwise */
-  unsigned sameX  : 1;/* 1 if addjacent face is on X = const */
-  unsigned sameY  : 1;/* 1 if addjacent face is on Y = const */
-  unsigned sameZ  : 1;/* 1 if addjacent face is on Z = const */
-  unsigned touch  : 1;/* touch state 1, overlap state 0 */
-  unsigned copy   : 1;/* copy state 1, interpolation state 0 */
-  unsigned exterF : 1;/* external interface 1, internal 0
+  Uint face    ;/* the interface in which this point located */
+  Uint adjFace ;/* adjacent face used in interpolation or copy, for outerB or innerB they are UINT_MAX */
+  Uint adjPatch;/* adjacent patch used in interpolation or copy for outerB or innerB they are UINT_MAX */
+  Uint df_dn  : 1;/* 1 if d(field)/dn is set at interface, 0 otherwise */
+  Uint sameX  : 1;/* 1 if addjacent face is on X = const */
+  Uint sameY  : 1;/* 1 if addjacent face is on Y = const */
+  Uint sameZ  : 1;/* 1 if addjacent face is on Z = const */
+  Uint touch  : 1;/* touch state 1, overlap state 0 */
+  Uint copy   : 1;/* copy state 1, interpolation state 0 */
+  Uint exterF : 1;/* external interface 1, internal 0
                       // external means it can reach other interfaces */
-  unsigned outerB : 1;/* if it is outer boundary of grid 
+  Uint outerB : 1;/* if it is outer boundary of grid 
                       // and needs boundary condition */
-  unsigned innerB : 1;/* if it is inner boundary of grid 
+  Uint innerB : 1;/* if it is inner boundary of grid 
                       // and needs boundary condition */
 }SubFace_T;
 
@@ -149,24 +150,24 @@ typedef struct SUBFACE_T
 typedef struct INTERFACE_T
 {
   struct PATCH_T *patch;/* refers to its patch */
-  unsigned np;/* number of points in Point_T */
-  unsigned fn;/* its interface number */
-  unsigned ns;/* number of subfaces */
+  Uint np;/* number of points in Point_T */
+  Uint fn;/* its interface number */
+  Uint ns;/* number of subfaces */
   Point_T **point;/* points on the interface */
   SubFace_T **subface;/* subset of points on this interface with same flags */
   struct POINTSET_T **innerP;/* all points on the interface but edge */
   struct POINTSET_T **edgeP;/* all edge points on the interface  */
   double centerN[3];/* unit outward normal at the center of this face. */
   double centerx[3];/* x-coords of center of this face. */
-  unsigned df_dn:1;/* Drichlet = 0, Neumann = 1 */
-  unsigned df_dn_set:1;/* if df_dn is set = 1, otherwise 0. */
+  Uint df_dn:1;/* Drichlet = 0, Neumann = 1 */
+  Uint df_dn_set:1;/* if df_dn is set = 1, otherwise 0. */
 }Interface_T;
 
 struct Collocation_s
 {
   double min;
   double max;
-  unsigned n;
+  Uint n;
   double stp;
   double a;
   double b;
@@ -176,14 +177,14 @@ struct Collocation_s
 /* Jacobian transformation between different coords  */
 typedef struct JACOBIAN_TRANS_T
 {
-  double (*j)(struct PATCH_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);/* function for transformation */
+  double (*j)(struct PATCH_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p);/* function for transformation */
   double *dX_dx[3][3];/* saving some transformation to save time for dX[0..2]/dx[0..2] */
   double *dx_dX[3][3];/* saving some transformation to save time dx[0..2]/dX[0..2] */
   /* split cubed spherical stuffs */
   struct
   {
    double sign;/* sign */
-   unsigned iper,jper,kper;/* permutation */
+   Uint iper,jper,kper;/* permutation */
   }SCS[1];
   
 }JacobianTrans_T;
@@ -221,11 +222,11 @@ typedef struct PATCH_T
                    // e.g. basis[2] = Chebyshev_FirstKind_BASIS means
                    // in c direction it uses that basis.
                    */
-  unsigned n[3];/* number of points (nodes) in each direction */
-  unsigned nn;/* number of nodes in this patch */
-  unsigned nsplit[3];/* number of splits taken place for this type */
-  unsigned pn;/* its patch number i.e. patch[pn] = patch */
-  unsigned nfld;/* number of fields */
+  Uint n[3];/* number of points (nodes) in each direction */
+  Uint nn;/* number of nodes in this patch */
+  Uint nsplit[3];/* number of splits taken place for this type */
+  Uint pn;/* its patch number i.e. patch[pn] = patch */
+  Uint nfld;/* number of fields */
   double c[3];/* center */
   double s[3];/* size like length, width and height */
   double min[3];/* minimum of each direction like x_min = min[0] */
@@ -239,11 +240,11 @@ typedef struct PATCH_T
                  // one can access to values of field on this 
                  // patch like fields[Ind("phi_f")]->v */
   struct SOLVING_MAN_T *solving_man;/* solving management */
-  unsigned innerB:1;/* if this patch has inner boundary 1 otherwise 0 */
-  unsigned outerB:1;/* if this patch has outer boundary 1 otherwise 0 */
-  unsigned is_a_closed: 1;/* if coordinate a is periodic or closed 1, otherwise 0 */
-  unsigned is_b_closed: 1;/* if coordinate b is periodic or closed 1, otherwise 0 */
-  unsigned is_c_closed: 1;/* if coordinate c is periodic or closed 1, otherwise 0 */
+  Uint innerB:1;/* if this patch has inner boundary 1 otherwise 0 */
+  Uint outerB:1;/* if this patch has outer boundary 1 otherwise 0 */
+  Uint is_a_closed: 1;/* if coordinate a is periodic or closed 1, otherwise 0 */
+  Uint is_b_closed: 1;/* if coordinate b is periodic or closed 1, otherwise 0 */
+  Uint is_c_closed: 1;/* if coordinate c is periodic or closed 1, otherwise 0 */
 }Patch_T;
 
 /* grid */
@@ -251,16 +252,16 @@ typedef struct GRID_T
 {
   Grid_Kind_T kind;/* type of grid which refers how we cover the grid */
   Patch_T **patch;/* covering patch */
-  unsigned gn;/* grid number */
-  unsigned np;/* number of patches on grid */
-  unsigned nn;/* total number of nodes on grid */
+  Uint gn;/* grid number */
+  Uint np;/* number of patches on grid */
+  Uint nn;/* total number of nodes on grid */
 }Grid_T;
 
 /* jacobian for equations */
 typedef struct JACOBIAN_EQ_T
 {
   struct FIELD_T **field;
-  unsigned nf;/* number of fields */
+  Uint nf;/* number of fields */
 }Jacobian_Eq_T;
 
 /* needle which should be found.
@@ -270,16 +271,16 @@ typedef struct NEEDLE_T
 {
   const double *x;/* Cartesian coords */
   Grid_T *grid;/* the grid which is used */
-  unsigned *guess;/* these are guess patches searched firstly */
-  unsigned *in;/* force it to look only inside these patches. */
+  Uint *guess;/* these are guess patches searched firstly */
+  Uint *in;/* force it to look only inside these patches. */
           /* notation: in[?] = patch number */
-  unsigned *ex;/* force it to not look inside these patches */
+  Uint *ex;/* force it to not look inside these patches */
            /* notation: ex[?] = patch number */
-  unsigned *ans;/* the answers found which pointing to patch number */
-  unsigned Nans;/* number of answer */
-  unsigned Nin;/* number of included patches */
-  unsigned Nex;/* number of excluded patches */
-  unsigned Ng;/* numbef of guess patches */
+  Uint *ans;/* the answers found which pointing to patch number */
+  Uint Nans;/* number of answer */
+  Uint Nin;/* number of included patches */
+  Uint Nex;/* number of excluded patches */
+  Uint Ng;/* numbef of guess patches */
 }Needle_T;
 
 /* characteristics info of grid */
@@ -294,45 +295,45 @@ typedef struct GRID_CHAR_T
   const char *dir;/* left or right (must be lower case) */
   double *relClm;/* Re(Clm) at Ylm expansion of surface function */
   double *imgClm;/* Im(Clm) at Ylm expansion of surface function */
-  unsigned lmax;/* lmax in Ylm expansion */
+  Uint lmax;/* lmax in Ylm expansion */
   double l,w,h;/* length(x), width(y) and hight(z) of the central cube */
   double r_min,r_max;/* min and max of surface function */
-  unsigned occupied:1;/* 1, if it occupied already, otherwise 0. */
+  Uint occupied:1;/* 1, if it occupied already, otherwise 0. */
  }params[NPARAMS_GRID_CHAR][1];
  
 }Grid_Char_T;
 
-double point_value(const unsigned i, const struct Collocation_s *const coll_s);
-void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const colloc,const unsigned dir);
+double point_value(const Uint i, const struct Collocation_s *const coll_s);
+void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const colloc,const Uint dir);
 int make_patches(Grid_T *const grid);
 int realize_interfaces(Grid_T *const grid);
 int make_JacobianT(Grid_T *const grid);
 int X_of_x(double *const X,const double *const x,const Patch_T *const patch);
 int x_of_X(double *const x,const double *const X,const Patch_T *const patch);
-double x_coord(const unsigned i,const Patch_T *const patch);
-double y_coord(const unsigned i,const Patch_T *const patch);
-double z_coord(const unsigned i,const Patch_T *const patch);
-double X_coord(const unsigned i,const Patch_T *const patch);
-double Y_coord(const unsigned i,const Patch_T *const patch);
-double Z_coord(const unsigned i,const Patch_T *const patch);
-double dq2_dq1(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
-double JT_Cartesian_patch(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double x_coord(const Uint i,const Patch_T *const patch);
+double y_coord(const Uint i,const Patch_T *const patch);
+double z_coord(const Uint i,const Patch_T *const patch);
+double X_coord(const Uint i,const Patch_T *const patch);
+double Y_coord(const Uint i,const Patch_T *const patch);
+double Z_coord(const Uint i,const Patch_T *const patch);
+double dq2_dq1(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p);
+double JT_Cartesian_patch(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p);
 double *normal_vec(Point_T *const point);
-double General2ChebyshevExtrema(const double X,const unsigned dir,const Patch_T *const patch);
+double General2ChebyshevExtrema(const double X,const Uint dir,const Patch_T *const patch);
 void grid_characteristics_example(Grid_T *const grid);
 double R_interpolation_CS(struct FIELD_T *const R,const double *const X);
-void SignAndIndex_permutation_CubedSphere(const Flag_T side,unsigned *const a,unsigned *const b,unsigned *const c,double *const s);
+void SignAndIndex_permutation_CubedSphere(const Flag_T side,Uint *const a,Uint *const b,Uint *const c,double *const s);
 void test_CubedSpherical_Coordinates(Grid_T *const grid);
 void test_dq_dN(Grid_T *const grid);
 void needle_ex(Needle_T *const needle,const Patch_T *const patch);
 void needle_in(Needle_T *const needle,const Patch_T *const patch);
 void point_finder(Needle_T *const needle);
-void populate_right_BH(Grid_T *const grid,const unsigned pn);
-void populate_right_BH_central_box(Grid_T *const grid,const unsigned pn);
+void populate_right_BH(Grid_T *const grid,const Uint pn);
+void populate_right_BH_central_box(Grid_T *const grid,const Uint pn);
 int make_nodes(Grid_T *const grid);
 void alloc_nodes(Grid_T *const grid);
 void alloc_interface(Patch_T *const patch);
-void *alloc_point(const unsigned s);
+void *alloc_point(const Uint s);
 void free_points(Grid_T *const grid);
 void free_patch_interface(Patch_T *const patch);
 void free_needle(Needle_T *needle);
@@ -353,7 +354,7 @@ populate_CS_patch_SplitCS
   Grid_T *const grid,
   const char *const obj0,/* NS, BH or etc. */
   const Flag_T dir0,/* LEFT or RIGHT or CENTER or NONE */
-  unsigned *const pn/* starting patch number,is increased for each add */
+  Uint *const pn/* starting patch number,is increased for each add */
   );
 
 void 
@@ -362,7 +363,7 @@ populate_box_patch_SplitCS
   Grid_T *const grid,
   const char *const obj0,/* filling_box,central_box. */
   const Flag_T dir0,/* direction */
-  unsigned *const pn,/* starting patch number,is increased for each add */
+  Uint *const pn,/* starting patch number,is increased for each add */
   const char *const region/* covering region */
   );
 
@@ -380,7 +381,7 @@ collect_patches
   (
   Grid_T *const grid,/* the grid */
   const char *const region,/* see the list in IsItCovering function */
-  unsigned *const Np/* number of patches found */
+  Uint *const Np/* number of patches found */
   );
 
 Grid_Char_T *init_grid_char(Grid_T *const new_grid);
@@ -396,13 +397,13 @@ find_XYZ_and_patch_of_theta_phi_CS
  const double theta/* given theta */,
  const double phi/* given phi */,
  Patch_T **const patches,/* search among these patches */
- const unsigned Np/* number of patches */
+ const Uint Np/* number of patches */
  );
 
 Patch_T *x_in_which_patch(const double x[3],Patch_T **const patches,
-                          const unsigned Np);
+                          const Uint Np);
 Patch_T *X_in_which_patch(const double x[3],Patch_T **const patches,
-                          const unsigned Np);
+                          const Uint Np);
 
 void find_theta_phi_of_XYZ_CS(double *const theta,double *const phi,
                               const double *const X,const Flag_T side);                          
@@ -412,7 +413,7 @@ collect_patches_with_regex
   (
   Grid_T *const grid,/* the grid */
   const char *const regex,/* regex */
-  unsigned *const Np/* number of patches found */
+  Uint *const Np/* number of patches found */
   );
 
 

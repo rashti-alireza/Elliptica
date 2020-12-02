@@ -49,8 +49,8 @@ void bbn_bam_adm_to_bssn(Patch_T *const patch)
   add_field_and_prep_field(bam_bssn_K)
 
 
- unsigned nn = patch->nn;
- unsigned ijk;
+ Uint nn = patch->nn;
+ Uint ijk;
  for(ijk = 0; ijk < nn; ++ijk)
  {
  double detgb=Matrix_Determinant_3x3_Symmetric_Field(bam_adm_g,D,ijk);

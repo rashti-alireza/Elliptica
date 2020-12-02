@@ -9,7 +9,7 @@ void bbn_set_default_parameters(void);
 void bbn_write_checkpoint(Grid_T *const grid);
 void bbn_construct_id(void);
 void bbn_elliptic_eqs_convergence_test(void);
-static void update_parameters_and_directories(const unsigned main_loop_iter);
+static void update_parameters_and_directories(const Uint main_loop_iter);
 
 
 

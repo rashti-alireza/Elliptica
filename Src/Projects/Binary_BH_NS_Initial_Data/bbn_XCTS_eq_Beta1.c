@@ -12,7 +12,7 @@
 void *bbn_eq_Beta_U1(void *vp1,void *vp2)
 {
   DDM_SCHUR_EQ_DECLARE
-  unsigned ijk;/* node index */
+  Uint ijk;/* node index */
 
   /* declaring: */
   READ_v_UNUSED(_A_UiUj_U2U2)

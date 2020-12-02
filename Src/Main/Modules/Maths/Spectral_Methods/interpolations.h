@@ -17,7 +17,7 @@ typedef fInterpolation_T *fPick_Func_T(Interpolation_T *const interp_s);
 Interpolation_T *init_interpolation(void);
 double execute_interpolation(Interpolation_T *const interp_struct);
 void plan_interpolation(Interpolation_T *const interp_s);
-static double T(const unsigned n,const unsigned i,const double x);
+static double T(const Uint n,const Uint i,const double x);
 static fInterpolation_T *interpolation_Chebyshev_Tn(Interpolation_T *const interp_s);
 static double interpolation_Neville_1d(Interpolation_T *const interp_s);
 static double interpolation_natural_cubic_spline_1d(Interpolation_T *const interp_s);

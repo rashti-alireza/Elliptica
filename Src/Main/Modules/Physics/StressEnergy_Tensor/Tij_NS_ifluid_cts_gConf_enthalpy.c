@@ -9,8 +9,8 @@
 
 void Tij_NS_IF_CTS_gConf_enthalpy(Patch_T *const patch,const double Euler_C)
 {
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
 
   /* declaring: */
   REALLOC_v_WRITE_v(enthalpy)

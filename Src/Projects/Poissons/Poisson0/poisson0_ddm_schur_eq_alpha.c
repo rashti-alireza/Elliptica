@@ -12,7 +12,7 @@
 void *eq_alpha(void *vp1,void *vp2)
 {
   DDM_SCHUR_EQ_DECLARE
-  unsigned ijk;/* node index */
+  Uint ijk;/* node index */
 
   /* declaring: */
   DECLARE_FIELD(alpha)

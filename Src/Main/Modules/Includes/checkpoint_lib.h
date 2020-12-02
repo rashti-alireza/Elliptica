@@ -1,5 +1,6 @@
 #ifndef checkpoint_LIB_H
 #define checkpoint_LIB_H
+#include "elliptica_system_lib.h"
 
 /* forward declaration */
 struct PHYSICS_T;

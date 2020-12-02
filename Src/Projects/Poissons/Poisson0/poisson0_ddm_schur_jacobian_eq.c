@@ -12,7 +12,7 @@
 void *jacobian_eq_alpha(void *vp1,void *vp2)
 {
   DDM_SCHUR_JACOBIAN_EQ_DECLARE
-  unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
+  Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
 
   /* declaring: */
   JACOBIAN_DERIVATIVE(dfxx_df)

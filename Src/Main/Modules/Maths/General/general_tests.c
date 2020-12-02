@@ -25,11 +25,11 @@ void summation_tests(void)
 // ->return value: TEST_SUCCESSFUL or TEST_UNSUCCESSFUL */
 static int various_sums_of_cos_test(void)
 {
-  const unsigned M = 60;/* number of different numbers MUST BE > 4 */
-  const unsigned N = (unsigned)floor(random_double(10,60,0));
+  const Uint M = 60;/* number of different numbers MUST BE > 4 */
+  const Uint N = (Uint)floor(random_double(10,60,0));
   double a[M],b[M],sum_cal,sum_real;
   Flag_T flg_sum_1_N_cos_ia,flg_d_dq_sum_1_N_cos_ixb_cos_ixa;
-  unsigned i,j,k;
+  Uint i,j,k;
   
   /* filling a */
   a[0] = 0;

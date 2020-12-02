@@ -8,8 +8,8 @@
 /* making coordinates of nodes */
 int make_nodes(Grid_T *const grid)
 {
-  const unsigned np = grid->np;
-  unsigned p;
+  const Uint np = grid->np;
+  Uint p;
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < np; ++p)
@@ -103,7 +103,7 @@ int make_JacobianT(Grid_T *const grid)
 //	it x MUST increase by i. it's crucial for interface realization.
 //	
 */
-void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const coll_s,const unsigned dir)
+void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const coll_s,const Uint dir)
 {
   /* some assertions */
   assert(dir < 3);
@@ -136,7 +136,7 @@ void initialize_collocation_struct(const Patch_T *const patch,struct Collocation
 /* point value based on collocation 
 // ->return value: collocation point on i-th location.
 */
-double point_value(const unsigned i, const struct Collocation_s *const coll_s)
+double point_value(const Uint i, const struct Collocation_s *const coll_s)
 {
   double x = DBL_MAX;
   
@@ -186,7 +186,7 @@ double point_value(const unsigned i, const struct Collocation_s *const coll_s)
 //
 // ->return value = dq2/dq1.
 */
-double dq2_dq1(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double dq2_dq1(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   double j = 0;
   
@@ -212,7 +212,7 @@ double dq2_dq1(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsig
 /* Jacobian transformation for dN/dX?.
 // ->return value: dN/dX?
 */
-static double dN_dX(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+static double dN_dX(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   double jN_X = 0;
   
@@ -243,7 +243,7 @@ static double dN_dX(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const 
 /* Jacobian transformation for dN/dq?.
 // ->return value: dN/dq?
 */
-static double dN_dq(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+static double dN_dq(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   double jN_X = 0;
   
@@ -285,7 +285,7 @@ static double dN_dq(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const 
 /* Jacobian transformation for dq/dN?. since we know dN/dq, 
 // we can use the inverse property of J^-1 = adj(J)/det(J) to find dq/dN.
 // ->return value: dq/dN? */
-static double dq_dN(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+static double dq_dN(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p)
 {
   double j = 0;
   
@@ -303,8 +303,8 @@ static double dq_dN(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const 
     const double det = a00 *a11 *a22  - a00 *a12 *a21  -
                        a01 *a10 *a22  + a01 *a12 *a20  +
                        a02 *a10 *a21  - a02 *a11 *a20  ;/* determinate */
-    const unsigned a = q2_e%3;
-    const unsigned b = q1_e%3;
+    const Uint a = q2_e%3;
+    const Uint b = q1_e%3;
     assert(!EQL(det,0));
     
     if (a == 0)
@@ -379,7 +379,7 @@ void test_dq_dN(Grid_T *const grid)
          c00,c01,c02,
          c10,c11,c12,
          c20,c21,c22;
-  unsigned p,ijk,nn;
+  Uint p,ijk,nn;
   
   /* testing dx/dN */
   FOR_ALL_PATCHES(p,grid)
@@ -437,7 +437,7 @@ void test_dq_dN(Grid_T *const grid)
 // note: X = 0.5*(min-max)*N +0.5*(min+max)
 // ->return value: Chebyshe Extrema point.
 */
-double General2ChebyshevExtrema(const double X,const unsigned dir,const Patch_T *const patch)
+double General2ChebyshevExtrema(const double X,const Uint dir,const Patch_T *const patch)
 {
   if (patch->basis[dir]       != Chebyshev_Tn_BASIS && 
       patch->collocation[dir] != Chebyshev_Extrema    )
@@ -614,7 +614,7 @@ static void characteristics_Cartesian_grid_eg(Grid_T *const grid)
 static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
 {
   /* calculate the characteristics of this grid */
-  const unsigned gn   = grid->gn;
+  const Uint gn   = grid->gn;
   const double C      = Pgetd("BH_NS_separation");
   const double R_NS_l = Pgetd("NS_radius"),
                bh_m   = Pgetd("BH_mass"),
@@ -622,14 +622,14 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
                R_BH_r = bh_m*(1+sqrt(1-Pow2(bh_chi)));
                
   double box_size_l;
-  const unsigned N_Outermost_Split = (unsigned)Pgeti("Number_of_Outermost_Split"); 
+  const Uint N_Outermost_Split = (Uint)Pgeti("Number_of_Outermost_Split"); 
   double *R_outermost = calloc(N_Outermost_Split,sizeof(*R_outermost));
-  unsigned nlb[3]/*left box*/,n;
+  Uint nlb[3]/*left box*/,n;
   char var[100] = {'\0'};
   char par[100] = {'\0'};
   char val[100] = {'\0'};
   const char *kind;
-  unsigned i;
+  Uint i;
   
   /* finding the kind of grid */
   kind = Pgets("grid_kind");
@@ -663,15 +663,15 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
   /* filling n */
   
   /* left box */
-  nlb[0] = (unsigned)PgetiEZ("n_a");
-  nlb[1] = (unsigned)PgetiEZ("n_b");
-  nlb[2] = (unsigned)PgetiEZ("n_c");
+  nlb[0] = (Uint)PgetiEZ("n_a");
+  nlb[1] = (Uint)PgetiEZ("n_b");
+  nlb[2] = (Uint)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)PgetiEZ("left_NS_n_a");
+  n = (Uint)PgetiEZ("left_NS_n_a");
   if (n != INT_MAX)   nlb[0] = n;
-  n = (unsigned)PgetiEZ("left_NS_n_b");
+  n = (Uint)PgetiEZ("left_NS_n_b");
   if (n != INT_MAX)   nlb[1] = n;
-  n = (unsigned)PgetiEZ("left_NS_n_c");
+  n = (Uint)PgetiEZ("left_NS_n_c");
   if (n != INT_MAX)   nlb[2] = n;
     
   if(nlb[0] == INT_MAX)
@@ -762,11 +762,11 @@ static void characteristics_SCS_eg(Grid_T *const grid)
   
   if (Pcmps("grid_kind","SplitCubedSpherical(BH+NS)"))
   {
-    const unsigned ns = 0, bh = 1;
-    const unsigned lmax   = 5;
-    const unsigned Ntheta = Ntheta_Ylm(lmax);
-    const unsigned Nphi   = Nphi_Ylm(lmax);
-    const unsigned Ntot   = Ntotal_Ylm(lmax);
+    const Uint ns = 0, bh = 1;
+    const Uint lmax   = 5;
+    const Uint Ntheta = Ntheta_Ylm(lmax);
+    const Uint Nphi   = Nphi_Ylm(lmax);
+    const Uint Ntot   = Ntotal_Ylm(lmax);
     const double C      = Pgetd("BH_NS_separation");
     const double R_NS   = Pgetd("NS_radius"),
                  bh_m   = Pgetd("BH_mass"),
@@ -779,7 +779,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     double *reClm_rbh = alloc_ClmYlm(lmax),
            *imClm_rbh = alloc_ClmYlm(lmax);
     double box_size_ns,box_size_bh;
-    unsigned ij;
+    Uint ij;
     
     /* set surface functions (required in Ylm) */
     /* initialize tables */
@@ -843,11 +843,11 @@ static void characteristics_SCS_eg(Grid_T *const grid)
   }
   else if (Pcmps("grid_kind","SplitCubedSpherical(NS+NS)"))
   {
-    const unsigned ns1 = 0, ns2 = 1;
-    const unsigned lmax   = 5;
-    const unsigned Ntheta = Ntheta_Ylm(lmax);
-    const unsigned Nphi   = Nphi_Ylm(lmax);
-    const unsigned Ntot   = Ntotal_Ylm(lmax);
+    const Uint ns1 = 0, ns2 = 1;
+    const Uint lmax   = 5;
+    const Uint Ntheta = Ntheta_Ylm(lmax);
+    const Uint Nphi   = Nphi_Ylm(lmax);
+    const Uint Ntot   = Ntotal_Ylm(lmax);
     const double C      = Pgetd("NS_NS_separation");
     const double R_NS1  = Pgetd("NS_radius1"),
                  R_NS2  = Pgetd("NS_radius2");
@@ -858,7 +858,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     double *reClm_rns2 = alloc_ClmYlm(lmax),
            *imClm_rns2 = alloc_ClmYlm(lmax);
     double box_size_ns1,box_size_ns2;
-    unsigned ij;
+    Uint ij;
     
     /* set surface functions (required in Ylm) */
     /* initialize tables */
@@ -921,11 +921,11 @@ static void characteristics_SCS_eg(Grid_T *const grid)
   }
   else if (Pcmps("grid_kind","SplitCubedSpherical(BH+BH)"))
   {
-    const unsigned bh1 = 0, bh2 = 1;
-    const unsigned lmax   = 5;
-    const unsigned Ntheta = Ntheta_Ylm(lmax);
-    const unsigned Nphi   = Nphi_Ylm(lmax);
-    const unsigned Ntot   = Ntotal_Ylm(lmax);
+    const Uint bh1 = 0, bh2 = 1;
+    const Uint lmax   = 5;
+    const Uint Ntheta = Ntheta_Ylm(lmax);
+    const Uint Nphi   = Nphi_Ylm(lmax);
+    const Uint Ntot   = Ntotal_Ylm(lmax);
     const double C       = Pgetd("BH_BH_separation");
     const double bh1_m   = Pgetd("BH_mass1"),
                  bh1_chi = Pgetd("BH_dimensionless_spin1"),
@@ -940,7 +940,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     double *reClm_rbh2 = alloc_ClmYlm(lmax),
            *imClm_rbh2 = alloc_ClmYlm(lmax);
     double box_size_bh1,box_size_bh2;
-    unsigned ij;
+    Uint ij;
     
     /* set surface functions (required in Ylm) */
     /* initialize tables */
@@ -1003,11 +1003,11 @@ static void characteristics_SCS_eg(Grid_T *const grid)
   }
   else if (Pcmps("grid_kind","SplitCubedSpherical(BH)"))
   {
-    const unsigned bh     = 0;
-    const unsigned lmax   = 5;
-    const unsigned Ntheta = Ntheta_Ylm(lmax);
-    const unsigned Nphi   = Nphi_Ylm(lmax);
-    const unsigned Ntot   = Ntotal_Ylm(lmax);
+    const Uint bh     = 0;
+    const Uint lmax   = 5;
+    const Uint Ntheta = Ntheta_Ylm(lmax);
+    const Uint Nphi   = Nphi_Ylm(lmax);
+    const Uint Ntot   = Ntotal_Ylm(lmax);
     const double C      = Pgetd("grid_around_box_length");
     const double bh_m   = Pgetd("BH_mass"),
                  bh_chi = Pgetd("BH_dimensionless_spin"),
@@ -1016,7 +1016,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     double *reClm_rbh = alloc_ClmYlm(lmax),
            *imClm_rbh = alloc_ClmYlm(lmax);
     double box_size_bh;
-    unsigned ij;
+    Uint ij;
     
     /* set surface functions (required in Ylm) */
     /* initialize tables */
@@ -1060,18 +1060,18 @@ static void characteristics_SCS_eg(Grid_T *const grid)
   }
   else if (Pcmps("grid_kind","SplitCubedSpherical(NS)"))
   {
-    const unsigned ns = 0;
-    const unsigned lmax   = 5;
-    const unsigned Ntheta = Ntheta_Ylm(lmax);
-    const unsigned Nphi   = Nphi_Ylm(lmax);
-    const unsigned Ntot   = Ntotal_Ylm(lmax);
+    const Uint ns = 0;
+    const Uint lmax   = 5;
+    const Uint Ntheta = Ntheta_Ylm(lmax);
+    const Uint Nphi   = Nphi_Ylm(lmax);
+    const Uint Ntot   = Ntotal_Ylm(lmax);
     const double C      = Pgetd("grid_around_box_length");
     const double R_NS   = Pgetd("NS_radius");
     double *rns = alloc_double(Ntot);/* surface function r = r(th,ph). */
     double *reClm_rns = alloc_ClmYlm(lmax),
            *imClm_rns = alloc_ClmYlm(lmax);
     double box_size_ns;
-    unsigned ij;
+    Uint ij;
     
     /* set surface functions (required in Ylm) */
     /* initialize tables */
@@ -1125,7 +1125,7 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
 {
   double *R;
   char par[100] = {'\0'};
-  unsigned N[3],n,i,j,k,N_total;
+  Uint N[3],n,i,j,k,N_total;
   Patch_T patch[1] = {0};
   struct Collocation_s coll_s[2] = {0};
   double X[2],r;
@@ -1155,15 +1155,15 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
   /* left NS */
   
   /* filling N */
-  N[0] = (unsigned)PgetiEZ("n_a");
-  N[1] = (unsigned)PgetiEZ("n_b");
-  N[2] = (unsigned)PgetiEZ("n_c");
+  N[0] = (Uint)PgetiEZ("n_a");
+  N[1] = (Uint)PgetiEZ("n_b");
+  N[2] = (Uint)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)PgetiEZ("left_NS_n_a");
+  n = (Uint)PgetiEZ("left_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)PgetiEZ("left_NS_n_b");
+  n = (Uint)PgetiEZ("left_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)PgetiEZ("left_NS_n_c");
+  n = (Uint)PgetiEZ("left_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -1208,16 +1208,16 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
   /* right BH */
   
   /* filling N */
-  N[0] = (unsigned)PgetiEZ("n_a");
-  N[1] = (unsigned)PgetiEZ("n_b");
-  N[2] = (unsigned)PgetiEZ("n_c");
+  N[0] = (Uint)PgetiEZ("n_a");
+  N[1] = (Uint)PgetiEZ("n_b");
+  N[2] = (Uint)PgetiEZ("n_c");
   
   /* check for override */
-  n = (unsigned)PgetiEZ("right_BH_n_a");
+  n = (Uint)PgetiEZ("right_BH_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)PgetiEZ("right_BH_n_b");
+  n = (Uint)PgetiEZ("right_BH_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)PgetiEZ("right_BH_n_c");
+  n = (Uint)PgetiEZ("right_BH_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -1336,18 +1336,18 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
 /* calculating the main characteristic of grid for BNS_CubedSpherical grid */
 static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
 {
-  const unsigned gn   = grid->gn;
+  const Uint gn   = grid->gn;
   const double C      = Pgetd("BNS_Distance");
   const double R_NS_l = Pgetd("left_NS_radius");/* assuming perfect sphere */
   const double R_NS_r = Pgetd("right_NS_radius");/* assuming perfect sphere */
   double box_size_l,box_size_r;
-  const unsigned N_Outermost_Split = (unsigned)Pgeti("Number_of_Outermost_Split"); 
+  const Uint N_Outermost_Split = (Uint)Pgeti("Number_of_Outermost_Split"); 
   double *R_outermost = calloc(N_Outermost_Split,sizeof(*R_outermost));
-  unsigned nlb[3]/*left box*/, nrb[3]/*right box*/,n;
+  Uint nlb[3]/*left box*/, nrb[3]/*right box*/,n;
   char var[100] = {'\0'};
   char par[100] = {'\0'};
   char val[100] = {'\0'};
-  unsigned i;
+  Uint i;
   
   assert(GRT(C,0));
   assert(GRT(R_NS_l,0));
@@ -1378,15 +1378,15 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
   /* filling n */
   
   /* left box */
-  nlb[0] = (unsigned)PgetiEZ("n_a");
-  nlb[1] = (unsigned)PgetiEZ("n_b");
-  nlb[2] = (unsigned)PgetiEZ("n_c");
+  nlb[0] = (Uint)PgetiEZ("n_a");
+  nlb[1] = (Uint)PgetiEZ("n_b");
+  nlb[2] = (Uint)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)PgetiEZ("left_NS_n_a");
+  n = (Uint)PgetiEZ("left_NS_n_a");
   if (n != INT_MAX)   nlb[0] = n;
-  n = (unsigned)PgetiEZ("left_NS_n_b");
+  n = (Uint)PgetiEZ("left_NS_n_b");
   if (n != INT_MAX)   nlb[1] = n;
-  n = (unsigned)PgetiEZ("left_NS_n_c");
+  n = (Uint)PgetiEZ("left_NS_n_c");
   if (n != INT_MAX)   nlb[2] = n;
     
   if(nlb[0] == INT_MAX)
@@ -1397,15 +1397,15 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
     Error0("n_c could not be set.\n");
   
   /* right box */
-  nrb[0] = (unsigned)PgetiEZ("n_a");
-  nrb[1] = (unsigned)PgetiEZ("n_b");
-  nrb[2] = (unsigned)PgetiEZ("n_c");
+  nrb[0] = (Uint)PgetiEZ("n_a");
+  nrb[1] = (Uint)PgetiEZ("n_b");
+  nrb[2] = (Uint)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)PgetiEZ("right_NS_n_a");
+  n = (Uint)PgetiEZ("right_NS_n_a");
   if (n != INT_MAX)   nrb[0] = n;
-  n = (unsigned)PgetiEZ("right_NS_n_b");
+  n = (Uint)PgetiEZ("right_NS_n_b");
   if (n != INT_MAX)   nrb[1] = n;
-  n = (unsigned)PgetiEZ("right_NS_n_c");
+  n = (Uint)PgetiEZ("right_NS_n_c");
   if (n != INT_MAX)   nrb[2] = n;
     
   if(nrb[0] == INT_MAX)
@@ -1509,11 +1509,11 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
 /* calculating the main characteristic of grid for BNS Spherical grid */
 static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
 {
-  const unsigned gn   = grid->gn;
+  const Uint gn   = grid->gn;
   const double C      = Pgetd("BNS_Distance");
   const double R_NS_l = Pgetd("left_NS_radius");/* assuming perfect sphere */
   const double R_NS_r = Pgetd("right_NS_radius");/* assuming perfect sphere */
-  const unsigned N_Outermost_Split = (unsigned)Pgeti("Number_of_Outermost_Split"); 
+  const Uint N_Outermost_Split = (Uint)Pgeti("Number_of_Outermost_Split"); 
   double O,O_l,O_r,
          R_Surr_l,R_Surr_r,
          *R_outmost_l = alloc_double(N_Outermost_Split),
@@ -1522,7 +1522,7 @@ static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
   double M,s;
   char var[100] = {'\0'};
   char par[100] = {'\0'};
-  unsigned i;
+  Uint i;
   
   assert(GRT(C,0));
   assert(GRT(R_NS_l,0));
@@ -1636,22 +1636,22 @@ static void NS_radii_BNS_Spherical_grid_eg(Grid_T *const grid,void *vp)
   const double R_NS_r = Pgetd("right_NS_radius");/* assuming perfect sphere */
   double *R1,*R2;
   char par[100] = {'\0'};
-  unsigned N[3],n,ijk,N_total;
+  Uint N[3],n,ijk,N_total;
   
   UNUSED(vp);
   
   /* left NS */
   
   /* filling N */
-  N[0] = (unsigned)PgetiEZ("n_a");
-  N[1] = (unsigned)PgetiEZ("n_b");
-  N[2] = (unsigned)PgetiEZ("n_c");
+  N[0] = (Uint)PgetiEZ("n_a");
+  N[1] = (Uint)PgetiEZ("n_b");
+  N[2] = (Uint)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)PgetiEZ("left_NS_n_a");
+  n = (Uint)PgetiEZ("left_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)PgetiEZ("left_NS_n_b");
+  n = (Uint)PgetiEZ("left_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)PgetiEZ("left_NS_n_c");
+  n = (Uint)PgetiEZ("left_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -1684,15 +1684,15 @@ static void NS_radii_BNS_Spherical_grid_eg(Grid_T *const grid,void *vp)
   /* right NS */
   
   /* filling N */
-  N[0] = (unsigned)PgetiEZ("n_a");
-  N[1] = (unsigned)PgetiEZ("n_b");
-  N[2] = (unsigned)PgetiEZ("n_c");
+  N[0] = (Uint)PgetiEZ("n_a");
+  N[1] = (Uint)PgetiEZ("n_b");
+  N[2] = (Uint)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)PgetiEZ("right_NS_n_a");
+  n = (Uint)PgetiEZ("right_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)PgetiEZ("right_NS_n_b");
+  n = (Uint)PgetiEZ("right_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)PgetiEZ("right_NS_n_c");
+  n = (Uint)PgetiEZ("right_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -1730,20 +1730,20 @@ static void NS_surface_BNS_CS_grid_eg(Grid_T *const grid)
   const double R_NS_r = Pgetd("right_NS_radius");/* assuming perfect sphere */
   double *R;
   char par[100] = {'\0'};
-  unsigned N[3],n,i,j,k,N_total;
+  Uint N[3],n,i,j,k,N_total;
   
   /* left NS */
   
   /* filling N */
-  N[0] = (unsigned)PgetiEZ("n_a");
-  N[1] = (unsigned)PgetiEZ("n_b");
-  N[2] = (unsigned)PgetiEZ("n_c");
+  N[0] = (Uint)PgetiEZ("n_a");
+  N[1] = (Uint)PgetiEZ("n_b");
+  N[2] = (Uint)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)PgetiEZ("left_NS_n_a");
+  n = (Uint)PgetiEZ("left_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)PgetiEZ("left_NS_n_b");
+  n = (Uint)PgetiEZ("left_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)PgetiEZ("left_NS_n_c");
+  n = (Uint)PgetiEZ("left_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -1780,15 +1780,15 @@ static void NS_surface_BNS_CS_grid_eg(Grid_T *const grid)
   /* right NS */
   
   /* filling N */
-  N[0] = (unsigned)PgetiEZ("n_a");
-  N[1] = (unsigned)PgetiEZ("n_b");
-  N[2] = (unsigned)PgetiEZ("n_c");
+  N[0] = (Uint)PgetiEZ("n_a");
+  N[1] = (Uint)PgetiEZ("n_b");
+  N[2] = (Uint)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)PgetiEZ("right_NS_n_a");
+  n = (Uint)PgetiEZ("right_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)PgetiEZ("right_NS_n_b");
+  n = (Uint)PgetiEZ("right_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)PgetiEZ("right_NS_n_c");
+  n = (Uint)PgetiEZ("right_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)

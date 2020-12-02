@@ -10,13 +10,13 @@
 // ->return value: EXIT_SUCCESS. */
 int poisson0_analyze_answer(const Grid_T *const grid)
 {
-  unsigned p;
+  Uint p;
   
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
     Field_T *alpha_real;
-    unsigned n;
+    Uint n;
     
     alpha_real = add_field("alpha_real",0,patch,YES);
     

@@ -9,8 +9,8 @@
 
 void Tij_NS_IF_CTS_gConf_psi6E(Patch_T *const patch)
 {
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
 
   /* declaring: */
   READ_v(enthalpy)

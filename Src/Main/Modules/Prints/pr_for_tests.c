@@ -59,8 +59,8 @@ void pr_interfaces(const Grid_T *const grid)
     TOT_ARCH/* total number of above */
   };
   struct Archive_S *arch[TOT_ARCH];
-  unsigned N[TOT_ARCH];
-  unsigned pa,fc,sf,i,j,n,save;
+  Uint N[TOT_ARCH];
+  Uint pa,fc,sf,i,j,n,save;
   Flag_T flg;
   
   /* initializing */
@@ -400,7 +400,7 @@ void pr_coords(const Grid_T *const grid)
   FILE *f;
   char dir[MAXSTR]={'\0'}, *path;
   const char *path_par;
-  unsigned i = 0;
+  Uint i = 0;
   
   if (get_parameter("Diagnostics"))
     path_par = PgetsEZ("Diagnostics");
@@ -412,8 +412,8 @@ void pr_coords(const Grid_T *const grid)
   FOR_ALL(i,grid->patch)
   {
     Patch_T *patch = grid->patch[i];
-    unsigned U = countf(patch->node);
-    unsigned l;
+    Uint U = countf(patch->node);
+    Uint l;
     
     sprintf(dir,"%s/%s.patch",path,patch->name);
     f = Fopen(dir,"w");
@@ -437,7 +437,7 @@ void pr_field_difference(const Grid_T *const grid,const char *const fld1,const c
   FILE *file1,*file2;
   char dir[MAXSTR]={'\0'}, *path;
   const char *path_par;
-  unsigned l,i,R;
+  Uint l,i,R;
   
   path_par = Pgets("output_directory_path");
   path = make_directory(path_par,"Fields");
@@ -452,7 +452,7 @@ void pr_field_difference(const Grid_T *const grid,const char *const fld1,const c
     Patch_T *patch = grid->patch[i];
     const double *f1 = patch->fields[Ind(fld1)]->v;
     const double *f2 = patch->fields[Ind(fld2)]->v;
-    unsigned U = patch->nn;
+    Uint U = patch->nn;
     
     sprintf(dir,"%s/%s-%s.%s",path,fld1,fld2,patch->name);
     file2 = Fopen(dir,"w");
@@ -476,18 +476,18 @@ void pr_field_difference(const Grid_T *const grid,const char *const fld1,const c
 // for printing name purposes. note: if one if s1 or s2 is null,
 // the none null one will be written in A[i].s1.
 */
-static void add_to_archive(struct Archive_S **const arch,SubFace_T *const s1,SubFace_T *const s2,unsigned *const n,const char *const desc)
+static void add_to_archive(struct Archive_S **const arch,SubFace_T *const s1,SubFace_T *const s2,Uint *const n,const char *const desc)
 {
   struct Archive_S *A = (*arch);
   char str[MAXSTR] = {'\0'};
-  const unsigned N = *n;
+  const Uint N = *n;
   
   if (s1 == 0 && s2 == 0) 
     return;
   
   else if (s1 && s2)
   {
-    unsigned j;
+    Uint j;
     
     /* skiping for repetitive structures */
     for (j = 0; j < N; j++)
@@ -541,9 +541,9 @@ static void add_to_archive(struct Archive_S **const arch,SubFace_T *const s1,Sub
 }
 
 /* freeing archive */
-static void free_archive(struct Archive_S *arch,const unsigned N)
+static void free_archive(struct Archive_S *arch,const Uint N)
 {
-  unsigned i;
+  Uint i;
   
   for(i = 0; i < N; ++i)
   {
@@ -563,8 +563,8 @@ double pr_derivatives_DiffByNode(const double *const numc, const double *const a
   FILE *f;
   double max = 0;/* greater difference */
   char file_name[MAXSTR];
-  unsigned nn;
-  unsigned p;
+  Uint nn;
+  Uint p;
   
   if (!numc)
     Error0("There is no numeric value.\n");
@@ -579,7 +579,7 @@ double pr_derivatives_DiffByNode(const double *const numc, const double *const a
   fprintf(f,"#Node (df/d?|N-df/d?|A) df/d?|N df/d?|A i j k x y z:\n");
   for (p = 0; p < nn; ++p)
   {
-    unsigned i1,j1,k1;
+    Uint i1,j1,k1;
     double diff = numc[p]-anac[p];
     double abs_diff = fabs(diff);
     IJK(p,patch->n,&i1,&j1,&k1);

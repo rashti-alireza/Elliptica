@@ -65,9 +65,9 @@ bhf_init
   // NOTE: among the other methods this is the best. */
   if (strcmp_i(method,"ChebTn_Ylm"))
   {
-    const unsigned NCoeffs = 10;/* number of coeffs in ChebTn expansion */
-    const unsigned npi = 7;/* number of patches inside BH */
-    const unsigned npo = 6;/* number of patches outside BH */
+    const Uint NCoeffs = 10;/* number of coeffs in ChebTn expansion */
+    const Uint npi = 7;/* number of patches inside BH */
+    const Uint npo = 6;/* number of patches outside BH */
     /* values of extrapolant function at the center of BH f(r=0) */
     const double fr0_Beta_U0     = 0;
     const double fr0_Beta_U1     = 0;
@@ -88,11 +88,11 @@ bhf_init
     const double fr0_alpha       = 0.2;
     const double fr0_psi         = 2;/* big enough */
     const double fr0_eta         = fr0_alpha*fr0_psi;
-    const unsigned lmax   = 20;/* L max in Ylm */
-    const unsigned Ntheta = 2*lmax+1;
-    const unsigned Nphi   = 2*lmax+1;
-    const unsigned N      = Ntheta*Nphi;
-    unsigned f,nf,i,j,p;
+    const Uint lmax   = 20;/* L max in Ylm */
+    const Uint Ntheta = 2*lmax+1;
+    const Uint Nphi   = 2*lmax+1;
+    const Uint N      = Ntheta*Nphi;
+    Uint f,nf,i,j,p;
     
     nf = 0;/* number of fields */
     while(fields_name[nf]) ++nf;
@@ -252,11 +252,11 @@ bhf_init
   }
   else if (strcmp_i(method,"4th_Poly_Ylm"))
   {
-    const unsigned NCoeffs = 5;
+    const Uint NCoeffs = 5;
     const double EPS   = 1;
     const double Ma    = Pgetd("BH_irreducible_mass");
-    const unsigned npi = 7;/* number of patches inside BH */
-    const unsigned npo = 6;/* number of patches outside BH */
+    const Uint npi = 7;/* number of patches inside BH */
+    const Uint npo = 6;/* number of patches outside BH */
     const double fr0_Beta_U0     = 0;
     const double fr0_Beta_U1     = 0;
     const double fr0_Beta_U2     = 0;
@@ -270,11 +270,11 @@ bhf_init
     const double fr0_alpha       = 0.1;
     const double fr0_psi = 2+Ma/(2*EPS);
     const double fr0_eta = fr0_alpha*fr0_psi;
-    const unsigned lmax   = 10;
-    const unsigned Ntheta = 2*lmax+1;
-    const unsigned Nphi   = 2*lmax+1;
-    const unsigned N      = Ntheta*Nphi;
-    unsigned f,nf,i,j,p;
+    const Uint lmax   = 10;
+    const Uint Ntheta = 2*lmax+1;
+    const Uint Nphi   = 2*lmax+1;
+    const Uint N      = Ntheta*Nphi;
+    Uint f,nf,i,j,p;
     
     nf = 0;/* number of fields */
     while(fields_name[nf]) ++nf;
@@ -387,9 +387,9 @@ bhf_init
   /* solving elliptic equations in the hole */
   else if (strcmp_i(method,"EllEq_Brown"))
   {
-    const unsigned npi = 7;/* number of patches inside BH */
-    const unsigned npo = 6;/* number of patches outside BH */
-    unsigned nf,i,j,p;
+    const Uint npi = 7;/* number of patches inside BH */
+    const Uint npo = 6;/* number of patches outside BH */
+    Uint nf,i,j,p;
     
     nf = 0;/* number of fields */
     while(fields_name[nf]) ++nf;
@@ -434,7 +434,7 @@ bhf_init
 /* free bhfiller struct */
 static void bhf_free(struct BHFiller_S *const bhf)
 {
-  unsigned i,f;
+  Uint i,f;
   
   if(!bhf)
     return;
@@ -469,20 +469,20 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
   printf("|--> BH-filler method = ChebTn_Ylm.\n");
   fflush(stdout);
   Grid_T *const grid     = bhf->grid;
-  const unsigned NCoeffs = bhf->NCoeffs;
-  const unsigned npo     = bhf->npo;
-  const unsigned npi     = bhf->npi;
-  const unsigned nf     = bhf->nf;/* numebr of fields */
-  const unsigned lmax   = bhf->lmax;
-  const unsigned Ntheta = bhf->Ntheta;
-  const unsigned Nphi   = bhf->Nphi;
+  const Uint NCoeffs = bhf->NCoeffs;
+  const Uint npo     = bhf->npo;
+  const Uint npi     = bhf->npi;
+  const Uint nf     = bhf->nf;/* numebr of fields */
+  const Uint lmax   = bhf->lmax;
+  const Uint Ntheta = bhf->Ntheta;
+  const Uint Nphi   = bhf->Nphi;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
   const double rmin  = rfill/2.;
   const double gMAX_D0  = rfill/2;
   const double gMAX_D1  = rfill/2;
   const double gMAX_D2  = rfill/2;
-  unsigned p,fld;
+  Uint p,fld;
   
   /* update all coeffs to avoid race condition */
   bbn_ks_free_data_set_params(grid);
@@ -492,7 +492,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
   for (p = 0; p < npo; p++)
   {
     Patch_T *patch = bhf->patches_outBH[p];
-    unsigned f;
+    Uint f;
 
     /* trK derivatives */
     bbn_update_derivative_K(patch);
@@ -524,7 +524,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
   OpenMP_1d_Pragma(omp parallel for)
   for (fld = 0; fld < nf; ++fld)
   {
-    unsigned i,j,_i,_j;
+    Uint i,j,_i,_j;
     for (i = 0; i < Ntheta; ++i)
     {
       double theta = acos(-Legendre_root_function(i,Ntheta));
@@ -538,8 +538,8 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
         double ddfddr = 0,dfdr = 0,fr1 = 0,fr0 = 0;
         double a[NCoeffs];
         double _ddfddr[3] = {0,0,0};
-        unsigned ij = IJ(i,j,Nphi);
-        unsigned d1,d2;/* derivative */
+        Uint ij = IJ(i,j,Nphi);
+        Uint d1,d2;/* derivative */
         double X[3],x[3],_x[3],N[3];
         /* find patch for the given theta and phi */
         find_XYZ_and_patch_of_theta_phi_BH_CS(X,&patch,theta,phi,grid);
@@ -632,8 +632,8 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
   for (p = 0; p < npi; p++)
   {
     Patch_T *patch = bhf->patches_inBH[p];
-    unsigned nn    = patch->nn;
-    unsigned f,ijk;
+    Uint nn    = patch->nn;
+    Uint f,ijk;
     
     /* add field in side the BH */
     bbn_add_fields_in_patch(patch);
@@ -742,7 +742,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
       u->v      = alloc_double(patch->nn);
       double *v = u->v;
       double theta,phi,t;
-      unsigned i;
+      Uint i;
       
       for (ijk = 0; ijk < nn; ++ijk)
       {
@@ -861,7 +861,7 @@ static void find_XYZ_and_patch_of_theta_phi_BH_CS(double *const X,Patch_T **cons
   const double tan_phi2   = Pow2(tan_phi);
   const double cos_theta2 = Pow2(cos_theta);
   Flag_T found_flg = NO;
-  unsigned p;
+  Uint p;
   
   X[2] = 0;/* since we are on BH surface from BH around side */
   
@@ -1038,9 +1038,9 @@ static int bhf_WTGR(struct BHFiller_S *const bhf)
   const double u0_K           = 0;
   const double u0_alpha       = 0.1;
   Needle_T *patch_numbers = 0;
-  const unsigned npi = 7;/* number of patches inside BH */
-  const unsigned npo = 6;/* number of patches outside BH */
-  unsigned p;
+  const Uint npi = 7;/* number of patches inside BH */
+  const Uint npo = 6;/* number of patches outside BH */
+  Uint p;
   
   /* check if it is perfect sphere */
   if (!Pcmps("BH_R_type","PerfectSphere"))
@@ -1063,7 +1063,7 @@ static int bhf_WTGR(struct BHFiller_S *const bhf)
   for (p = 0; p < npo; p++)
   {
     Patch_T *patch = grid->patch[patch_numbers->in[p]];
-    unsigned f;
+    Uint f;
     
     bbn_1st_derivatives_conformal_metric(patch);
     
@@ -1103,13 +1103,13 @@ static int bhf_WTGR(struct BHFiller_S *const bhf)
   for (p = 0; p < npi; p++)
   {
     Patch_T *patch = grid->patch[patch_numbers->in[p]];
-    unsigned nn = patch->nn;
+    Uint nn = patch->nn;
     double Y;
     double theta = 0,phi = 0,dr = 0;
     double x_on_BHsurf[3]={0},
            X_on_BHsurf[3]={0},
            N[3] = {0};
-    unsigned ijk;
+    Uint ijk;
     
     /* fill needle */
     Needle_T *needle = alloc_needle();
@@ -1300,7 +1300,7 @@ static int bhf_WTGR(struct BHFiller_S *const bhf)
   for (p = 0; p < grid->np; p++)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned f;
+    Uint f;
     for (f = 0; f < patch->nfld; ++f)
     {
       free_coeffs(patch->fields[f]);
@@ -1351,10 +1351,10 @@ static double interpolate_from_patch_prim(const char *const field,const double *
 }
 
 /* collect names of the fields and their derivatives */
-static void collect_names(struct BHFiller_S *const bhf,const unsigned nf)
+static void collect_names(struct BHFiller_S *const bhf,const Uint nf)
 {
   const char *s = 0;
-  unsigned f,i,j;
+  Uint f,i,j;
     
   for (f = 0; f < nf; ++f)
   {
@@ -1448,17 +1448,17 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
   fflush(stdout);
   Grid_T *const grid = bhf->grid;
   const double EPS   = 1E-12;
-  const unsigned NCoeffs = bhf->NCoeffs;
-  const unsigned npo = bhf->npo;
-  const unsigned npi = bhf->npi;
-  const unsigned nf  = bhf->nf;/* numebr of fields */
-  const unsigned lmax   = bhf->lmax;
-  const unsigned Ntheta = bhf->Ntheta;
-  const unsigned Nphi   = bhf->Nphi;
+  const Uint NCoeffs = bhf->NCoeffs;
+  const Uint npo = bhf->npo;
+  const Uint npi = bhf->npi;
+  const Uint nf  = bhf->nf;/* numebr of fields */
+  const Uint lmax   = bhf->lmax;
+  const Uint Ntheta = bhf->Ntheta;
+  const Uint Nphi   = bhf->Nphi;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
   const double r_2   = rfill*(1+0.01);/* a bit farther from AH */
-  unsigned p,fld;
+  Uint p,fld;
   
   /* update all coeffs to avoid race condition */
   printf("|--> Updating coefficients ...\n");
@@ -1467,7 +1467,7 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
   for (p = 0; p < npo; p++)
   {
     Patch_T *patch = bhf->patches_outBH[p];
-    unsigned f;
+    Uint f;
 
     bbn_1st_2nd_derivatives_conformal_metric(patch);
     bbn_add_and_take_2nd_derivatives_K(patch);
@@ -1494,7 +1494,7 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
   OpenMP_1d_Pragma(omp parallel for)
   for (fld = 0; fld < nf; ++fld)
   {
-    unsigned i,j,_i,_j;
+    Uint i,j,_i,_j;
     for (i = 0; i < Ntheta; ++i)
     {
       double theta = acos(-Legendre_root_function(i,Ntheta));
@@ -1503,14 +1503,14 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
         double phi = j*2*M_PI/Nphi;
         Patch_T *patch = 0;
         double KD[2]   = {0,1};
-        unsigned ij    = IJ(i,j,Nphi);
+        Uint ij    = IJ(i,j,Nphi);
         double df_dx[3]   = {0};
         double ddf_ddx[6] = {0};
         double ddfddr = 0,dfdr = 0,
                fr_0 = 0,fr_1 = 0,fr_2 = 0;
         double a[NCoeffs];
         double _ddfddr[3] = {0,0,0};
-        unsigned d1,d2;/* derivative */
+        Uint d1,d2;/* derivative */
         double X[3],x[3],_x[3],N[3],Xr_2[3];
         /* find patch for the given theta and phi */
         find_XYZ_and_patch_of_theta_phi_BH_CS(X,&patch,theta,phi,grid);
@@ -1646,10 +1646,10 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
   for (p = 0; p < npi; p++)
   {
     Patch_T *patch = bhf->patches_inBH[p];
-    unsigned nn = patch->nn;
+    Uint nn = patch->nn;
     double theta = 0,phi = 0;
-    unsigned ijk;
-    unsigned f,i;
+    Uint ijk;
+    Uint f,i;
 
     bbn_add_fields_in_patch(patch);
     
@@ -1815,9 +1815,9 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
 {
   printf("|--> BH-filler method = EllEq_Brown.\n");
   fflush(stdout);
-  const unsigned Nf  = bhf->nf;
-  const unsigned Npi = bhf->npi;
-  const unsigned Npo = bhf->npo;
+  const Uint Nf  = bhf->nf;
+  const Uint Npi = bhf->npi;
+  const Uint Npo = bhf->npo;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
   char s_solve_eq[MAX_STR_LARGE] = {'\0'};
@@ -1828,14 +1828,14 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
             **bc_eq = init_eq()/* B.C. for the field */,
             **jacobian_field_eq = init_eq()/* jacobian for field equation */,
             **jacobian_bc_eq = init_eq()/* jacobian for B.C. */;
-  unsigned f,p;
+  Uint f,p;
   
   /* updating coeffs */
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < Npo; p++)
   {
     Patch_T *patch = bhf->patches_outBH[p];
-    unsigned fn;
+    Uint fn;
 
     bbn_1st_2nd_derivatives_conformal_metric(patch);
     bbn_add_and_take_2nd_derivatives_K(patch);
@@ -1986,7 +1986,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   for (f = 0; f < Nf; ++f)
   {
     char s[MAX_STR2] = {'\0'};
-    unsigned pp;
+    Uint pp;
     
     for (pp = 0; pp < Npi; ++pp)
     {
@@ -1996,8 +1996,8 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
       if (strstr(patch->name,"right_central_box"))
         continue;
       
-      const unsigned *n = patch->n;
-      unsigned i,j,k,ijk,_i,_j;
+      const Uint *n = patch->n;
+      Uint i,j,k,ijk,_i,_j;
       
       sprintf(s,"bc_%s.0",bhf->fld[f]->f);
       double *bc0 = patch->fields[Ind(s)]->v;
@@ -2023,7 +2023,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
           double ddf_ddx[6] = {0};
           double ddfddr = 0,dfdr = 0,fr1;
           double _ddfddr[3] = {0,0,0};
-          unsigned d1,d2;/* derivative */
+          Uint d1,d2;/* derivative */
           double _x[3],N[3],r;
           
           /* finding X and patch outside BH associated to x */
@@ -2169,10 +2169,10 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   for (p = 0; p < Npi; p++)
   {
     Patch_T *patch = bhf->patches_inBH[p];
-    unsigned nn = patch->nn;
+    Uint nn = patch->nn;
     char s[MAX_STR2] = {'\0'};
-    unsigned ijk;
-    unsigned fn;
+    Uint ijk;
+    Uint fn;
     
     /* copy the solutions */
     for (fn = 0; fn < Nf; ++fn)
@@ -2330,8 +2330,8 @@ static int find_X_and_patch_outside_BH(const double *const x,const char *const h
 {
   Needle_T *needle = alloc_needle();
   const double LOW_RES_ERR = 1E-9;
-  unsigned *found;
-  unsigned p;
+  Uint *found;
+  Uint p;
   int ret = 1;
   
   needle->grid = grid;
@@ -2477,7 +2477,7 @@ bbn_bhf_ell_Brown_source_update
   char s[MAX_STR] = {'\0'};
   const char *s_last;
   int f_index;
-  unsigned p;
+  Uint p;
   
   sprintf(s,"%s",name);
   s_last  = name+strlen(name)-1;/* => 0 in psi.0 */
@@ -2494,8 +2494,8 @@ bbn_bhf_ell_Brown_source_update
   {
     Patch_T *patch = grid->patch[p];
     Field_T *src1,*src2;
-    unsigned nn = patch->nn;
-    unsigned ijk;
+    Uint nn = patch->nn;
+    Uint ijk;
     
     if (f_index == 0)
       break;

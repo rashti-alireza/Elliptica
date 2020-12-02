@@ -28,7 +28,7 @@ void add_func_PtoV(sFunc_PtoV_T ***const func,
 /* execute func based on coord and task */
 void run_func_PtoV(sFunc_PtoV_T **const func,const char *const task,Patch_T *const patch)
 {
-  unsigned i;
+  Uint i;
   Coord_T coord = patch->coordsys;
   Flag_T flg = NONE;
   
@@ -72,7 +72,7 @@ void add_func_Patch2Pdouble(sFunc_Patch2Pdouble_T ***const func,
 sFunc_Patch2Pdouble_T *get_func_Patch2Pdouble(const char *const name,
                                 sFunc_Patch2Pdouble_T **const func)
 {
-  unsigned i;
+  Uint i;
   
   if (!func) return 0;
   
@@ -92,7 +92,7 @@ sFunc_Patch2Pdouble_T *get_func_Patch2Pdouble(const char *const name,
 */
 void *alloc_sFunc_Patch2Pdouble(sFunc_Patch2Pdouble_T ***const mem)
 {
-  unsigned i;
+  Uint i;
   
   for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
   
@@ -110,7 +110,7 @@ void *alloc_sFunc_Patch2Pdouble(sFunc_Patch2Pdouble_T ***const mem)
 /* free function structure form patch to void */
 void free_func_PtoV(sFunc_PtoV_T **func)
 {
-  unsigned i;
+  Uint i;
   
   for (i = 0; func[i] != 0; ++i)
   {
@@ -128,7 +128,7 @@ void free_func_PtoV(sFunc_PtoV_T **func)
 */
 void *alloc_sFunc_PtoV(sFunc_PtoV_T ***const mem)
 {
-  unsigned i;
+  Uint i;
   
   for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
   

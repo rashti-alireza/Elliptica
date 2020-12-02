@@ -22,7 +22,7 @@ void obs_Rc_NS(Observe_T *const obs)
   const double x_CM = sysGetd("x_CM");
   const double y_CM = sysGetd("y_CM");
   const double z_CM = sysGetd("z_CM");
-  unsigned p;
+  Uint p;
 
   Rc[0] = 0;
   Rc[1] = 0;
@@ -76,8 +76,8 @@ void obs_Rc_NS(Observe_T *const obs)
   READ_v(_Gamma_U1D1D1)
 
 
-    unsigned nn  = patch->nn;
-    unsigned ijk;
+    Uint nn  = patch->nn;
+    Uint ijk;
 
     ADD_FIELD(Rc_integrandx)
     ADD_FIELD(Rc_integrandy)

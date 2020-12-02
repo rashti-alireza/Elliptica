@@ -9,8 +9,8 @@
 
 void bbn_free_data_Ricci(Grid_T *const grid)
 {
-  const unsigned np = grid->np;
-  unsigned p;
+  const Uint np = grid->np;
+  Uint p;
 
   OpenMP_Patch_Pragma(omp parallel for)
   for(p = 0; p < np; ++p)
@@ -104,8 +104,8 @@ void bbn_free_data_Ricci(Grid_T *const grid)
     REALLOC_v_WRITE_v(_Ric_D0D0)
 
 
-    unsigned nn = patch->nn;
-    unsigned ijk;
+    Uint nn = patch->nn;
+    Uint ijk;
     REALLOC_v_WRITE_v(_R)
     for(ijk = 0; ijk < nn; ++ijk)
     {

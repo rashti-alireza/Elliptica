@@ -40,9 +40,9 @@ void bbn_study_initial_data(Grid_T *const grid)
       bbn_measures(grid);
     
     /* prints */
-    bbn_print_fields(grid,(unsigned)solving_iter,folder);
-    bbn_print_residual_norms(grid,(unsigned)solving_iter,folder);
-    bbn_print_properties(grid,(unsigned)solving_iter,folder,"a",1);
+    bbn_print_fields(grid,(Uint)solving_iter,folder);
+    bbn_print_residual_norms(grid,(Uint)solving_iter,folder);
+    bbn_print_properties(grid,(Uint)solving_iter,folder,"a",1);
     Pseti("solving_iteration_number",++solving_iter);
   }
   
@@ -168,7 +168,7 @@ void bbn_measures(Grid_T *const grid)
 // folder        : output directory 
 // open_file_mode: "a" for append and "w" for newfile
 // pr_flg        : if pr_flg = 1 it also prints them at stout otherwise none. */
-void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const char *const folder,const char *const open_file_mode,const int pr_flg)
+void bbn_print_properties(Grid_T *const grid,const Uint iteration, const char *const folder,const char *const open_file_mode,const int pr_flg)
 {
   const char *const file_name = "bbn_geometry_and_physics.txt";
   FILE *file = 0;
@@ -330,13 +330,13 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
 }
 
 /* print residual norms L2, L1 and L_inf of the specified fields. */
-void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const char *const folder)
+void bbn_print_residual_norms(Grid_T *const grid,const Uint iteration, const char *const folder)
 {
   /* list of the fields to be printed out */
   char **f = 
      read_separated_items_in_string(PgetsEZ("output_2d_txt"),',');
   double largest_L2_error = 0;                   
-  unsigned i,p;
+  Uint i,p;
   
   if(f)         
   for (i = 0; f[i]; ++i)
@@ -344,7 +344,7 @@ void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const
     FOR_ALL_PATCHES(p,grid)
     {
       Patch_T *patch = grid->patch[p];
-      unsigned nn    = patch->nn;
+      Uint nn    = patch->nn;
       Field_T *field;
       int field_ind = _Ind(f[i]);
       double Linf,L2,L1;
@@ -420,7 +420,7 @@ void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const
 }
 
 /* printing fields determined in parameter file */
-void bbn_print_fields(Grid_T *const grid,const unsigned iteration, const char *const folder)
+void bbn_print_fields(Grid_T *const grid,const Uint iteration, const char *const folder)
 {
   pr_line_custom('=');
   printf("{ Printing Specified Fields for Binary BH and NS ...\n");
@@ -441,7 +441,7 @@ void bbn_print_fields(Grid_T *const grid,const unsigned iteration, const char *c
 static double NS_r_average(Grid_T *const grid)
 {
   double R = 0, area = 0;
-  unsigned p;
+  Uint p;
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -450,8 +450,8 @@ static double NS_r_average(Grid_T *const grid)
     if (!IsItNSSurroundingPatch(patch))
       continue;
       
-    unsigned ijk;
-    unsigned nn = patch->nn;
+    Uint ijk;
+    Uint nn = patch->nn;
     ADD_FIELD(NS_R_average_integrand)
     READ_v(_gamma_D2D2)
     READ_v(_gamma_D0D2)
@@ -515,7 +515,7 @@ void bbn_Rc_BH(double Rc[3],Grid_T *const grid)
   const double AH_area = Pgetd("BH_AH_area");
   const double x_CM = Pgetd("x_CM");
   const double y_CM = Pgetd("y_CM");
-  unsigned p;
+  Uint p;
 
   Rc[0] = 0;
   Rc[1] = 0;
@@ -526,8 +526,8 @@ void bbn_Rc_BH(double Rc[3],Grid_T *const grid)
     if (!IsItHorizonPatch(patch))
       continue;
       
-    unsigned ijk;
-    unsigned nn = patch->nn;
+    Uint ijk;
+    Uint nn = patch->nn;
     
     READ_v(_gamma_D2D2)
     READ_v(_gamma_D0D2)

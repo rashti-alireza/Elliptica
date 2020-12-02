@@ -25,13 +25,13 @@ void mt_fill_db_eqs(sEquation_T ***const field_eq,sEquation_T ***const bc_eq,sEq
 */
 int mt_initial_data_alpha(Grid_T *const grid)
 {
-  unsigned p;
+  Uint p;
   
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
     double *alpha = patch->fields[Ind("alpha")]->v;
-    unsigned n;
+    Uint n;
     
     FOR_ALL_POINTS(n,patch)
       alpha[n] = Pow2(x_(n))+Pow2(y_(n))+Pow2(z_(n))+0.3+sin(x_(n));
@@ -51,13 +51,13 @@ static void *eq_alpha(void *vp1,void *vp2)
   DDM_Schur_Complement_T *const S = vp2;
   Field_T *const alpha = patch->fields[Ind("alpha")];
   double *const F = S->f;
-  const unsigned *const node  = S->inv;/* inverse map to node */
+  const Uint *const node  = S->inv;/* inverse map to node */
   double *alpha_xx = Partial_Derivative(alpha,"x,x");
   double *alpha_yy = Partial_Derivative(alpha,"y,y");
   double *alpha_zz = Partial_Derivative(alpha,"z,z");
-  const unsigned N = S->Oi;/* number of inner mesh nodes */
-  unsigned ijk;/* node */
-  unsigned n;
+  const Uint N = S->Oi;/* number of inner mesh nodes */
+  Uint ijk;/* node */
+  Uint n;
   
   for (n = 0; n < N; ++n)
   {
@@ -80,12 +80,12 @@ static void *bc_alpha(void *vp1,void *vp2)
   Boundary_Condition_T *const bc = vp1;
   DDM_Schur_Complement_T *const S = vp2;
   double *const F      = S->f;
-  unsigned *const map  = S->map;
+  Uint *const map  = S->map;
   Patch_T *const patch = bc->patch;
-  const unsigned *const node = bc->node;/* nodes at boundary */
-  const unsigned N = bc->nn;/* number of nodes at boundary */
+  const Uint *const node = bc->node;/* nodes at boundary */
+  const Uint N = bc->nn;/* number of nodes at boundary */
   double *const alpha = patch->fields[Ind("alpha")]->v;
-  unsigned n,ijk;
+  Uint n,ijk;
   
   /* alpha at outer boundary */
   for (n = 0; n < N; ++n)
@@ -106,16 +106,16 @@ static void *jacobian_eq_alpha(void *vp1,void *vp2)
   DDM_Schur_Complement_T *const S = vp2;
   double **const B = S->B->reg->A;
   double **E_Trans;
-  const unsigned *const node = S->inv;
-  const unsigned Ni = S->Oi;/* number of inner mesh nodes */
-  const unsigned Nj = S->NS;/* number of inner mesh+outer-boundary nodes*/
-  const unsigned K0 = S->NS;/* number of inner mesh+outer-boundary nodes*/
-  const unsigned Nk = patch->nn;/* total number of nodes */
-  const unsigned Ref = Nj;/* for shorhand purposes */
+  const Uint *const node = S->inv;
+  const Uint Ni = S->Oi;/* number of inner mesh nodes */
+  const Uint Nj = S->NS;/* number of inner mesh+outer-boundary nodes*/
+  const Uint K0 = S->NS;/* number of inner mesh+outer-boundary nodes*/
+  const Uint Nk = patch->nn;/* total number of nodes */
+  const Uint Ref = Nj;/* for shorhand purposes */
   const char *types[] = {"dfxx_df","dfyy_df","dfzz_df",0};
   fJs_T *dfxx_df = 0,*dfyy_df = 0,*dfzz_df = 0;
   Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
-  unsigned i,j,k,ijk,lmn;
+  Uint i,j,k,ijk,lmn;
   
   prepare_Js_jacobian_eq(patch,types);
   j0      = get_j_matrix(patch,"dfxx_df");
@@ -165,9 +165,9 @@ static void *jacobian_bc_alpha(void *vp1,void *vp2)
 {
   DDM_Schur_Complement_T *const S = vp2;
   double **const B = S->B->reg->A;
-  const unsigned I0 = S->Oi;/* number of inner mesh nodes */
-  const unsigned N = S->NS;/* number of inner mesh+outer-boundary nodes*/
-  unsigned i;
+  const Uint I0 = S->Oi;/* number of inner mesh nodes */
+  const Uint N = S->NS;/* number of inner mesh+outer-boundary nodes*/
+  Uint i;
   
   /* fill up jacobian for alpha equation: */
   

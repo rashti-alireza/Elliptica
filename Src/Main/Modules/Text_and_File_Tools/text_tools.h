@@ -8,7 +8,7 @@ char *dup_s(const char *const str);
 char *tok_s(char *const str,const char delimit,char **const savestr);
 char *sub_s(char *const str,const char d1,const char d2,char **const save);
 int check_format_s(const char *str,const char *const format);
-unsigned find_index_string(char **const heystack,const unsigned N,const char *const needle);
+Uint find_index_string(char **const heystack,const Uint N,const char *const needle);
 int regex_search(const char *const regex_pattern,const char *const str);
 char *regex_find(const char *const regex_pattern,const char *const str);
 char **read_separated_items_in_string(const char *const string,const char delimiter);

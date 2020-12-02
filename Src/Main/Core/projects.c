@@ -46,7 +46,7 @@ void add_project(ProjFunc *const projfunc, const char *const name, const char *c
 /* free the whole data base of project */
 void free_project_db(void)
 {
-  unsigned np;
+  Uint np;
   
   np = 0;
   while (projects_global != 0 && projects_global[np] != 0)
@@ -84,7 +84,7 @@ Project_T *get_project(const char *const proj_name)
 */
 void *alloc_project(Project_T ***const mem)
 {
-  unsigned i;
+  Uint i;
   
   for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
   

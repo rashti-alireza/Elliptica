@@ -1,5 +1,6 @@
 #ifndef error_handling_LIB_H
 #define error_handling_LIB_H
+#include "elliptica_system_lib.h"
 
 
 void checkup_pointer_error(const void *const p, const char *const file, const int line);

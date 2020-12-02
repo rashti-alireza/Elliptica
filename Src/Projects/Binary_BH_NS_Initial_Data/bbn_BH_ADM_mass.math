@@ -16,8 +16,8 @@ C_macro  = READ_v_UNUSED(name);
 `{`
 `  double adm_mass = 0;`
 `  struct items_S **adm = obs->items;`
-`  const unsigned N = obs->Nitems;`
-`  unsigned p;`
+`  const Uint N = obs->Nitems;`
+`  Uint p;`
 ``
 `  for(p = 0; p < N; ++p)`
 `  {`
@@ -48,8 +48,8 @@ Declare =
 Symm[_gammaI(i,j)  = _gammaI(j,i)];
 Symm[_dgamma(i,j,k) = _dgamma(j,i,k)];
 
-`    unsigned nn = patch->nn;`
-`    unsigned ijk;`
+`    Uint nn = patch->nn;`
+`    Uint ijk;`
 ``
 # populating the integrands:
 

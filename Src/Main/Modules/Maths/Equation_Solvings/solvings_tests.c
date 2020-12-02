@@ -23,19 +23,19 @@ static int root_finder_SteepestDescent(Grid_T *const grid)
   double (*f0)(void *params,const double *const x) = root_finder_f0_eq;
   double (*f1)(void *params,const double *const x) = root_finder_f1_eq;
   double (*f2)(void *params,const double *const x) = root_finder_f2_eq;
-  double (*df0_dx)(void *params,const double *const x,const unsigned dir) = root_finder_df0_dx_eq;
-  double (*df1_dx)(void *params,const double *const x,const unsigned dir) = root_finder_df1_dx_eq;
-  double (*df2_dx)(void *params,const double *const x,const unsigned dir) = root_finder_df2_dx_eq;
+  double (*df0_dx)(void *params,const double *const x,const Uint dir) = root_finder_df0_dx_eq;
+  double (*df1_dx)(void *params,const double *const x,const Uint dir) = root_finder_df1_dx_eq;
+  double (*df2_dx)(void *params,const double *const x,const Uint dir) = root_finder_df2_dx_eq;
   Root_Finder_T *root;
   const double x_analytic[3] = {0.,0.1,1.};
   double *x_sol;
   const char *const par = Pgets("Test_RootFinders");
-  unsigned MaxIter = 20;
+  Uint MaxIter = 20;
   
   if (regex_search("[[:digit:]]+",par))
   {
     char *s = regex_find("[[:digit:]]+",par);
-    MaxIter = (unsigned)atoi(s);
+    MaxIter = (Uint)atoi(s);
     _free(s);
   }
   
@@ -91,7 +91,7 @@ static int root_finder_SteepestDescent(Grid_T *const grid)
 }
 
 /* ->return value: d(root_finder_f0_eq)/dx^{dir} */
-static double root_finder_df0_dx_eq(void *params,const double *const x,const unsigned dir)
+static double root_finder_df0_dx_eq(void *params,const double *const x,const Uint dir)
 {
   double df_dx = 0;
   
@@ -115,7 +115,7 @@ static double root_finder_df0_dx_eq(void *params,const double *const x,const uns
 }
 
 /* ->return value: d(root_finder_f1_eq)/dx^{dir} */
-static double root_finder_df1_dx_eq(void *params,const double *const x,const unsigned dir)
+static double root_finder_df1_dx_eq(void *params,const double *const x,const Uint dir)
 {
   double df_dx = 0;
   
@@ -139,7 +139,7 @@ static double root_finder_df1_dx_eq(void *params,const double *const x,const uns
 }
 
 /* ->return value: d(root_finder_f2_eq)/dx^{dir} */
-static double root_finder_df2_dx_eq(void *params,const double *const x,const unsigned dir)
+static double root_finder_df2_dx_eq(void *params,const double *const x,const Uint dir)
 {
   double df_dx = 0;
   
@@ -197,8 +197,8 @@ void test_dfs_df_values(Grid_T *const grid)
 /* testing various d(Interpolation)/df */
 void test_dInterp_a_df(Grid_T *const grid)
 {
-  unsigned p;
-  const unsigned Num_Tests = 3;
+  Uint p;
+  const Uint Num_Tests = 3;
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -206,7 +206,7 @@ void test_dInterp_a_df(Grid_T *const grid)
     add_field("phi_field",0,patch,YES);
     Field_T *phi_field = patch->fields[Ind("phi_field")];
     double *phi = phi_field->v;
-    unsigned i;
+    Uint i;
     
     /* initialize phi */
     FOR_ALL_POINTS(i,patch)
@@ -265,16 +265,16 @@ static void test_dInterp_x_df_YZ_Tn_Ex(Field_T *const phi_field)
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
-  unsigned a,b,plane,l;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
+  Uint a,b,plane,l;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
-  unsigned df;
+  Uint df;
 
   phi_field_x->v = Partial_Derivative(phi_field,"x");
-  l    = (unsigned)floor(random_double(0,nn-1,0));
+  l    = (Uint)floor(random_double(0,nn-1,0));
   IJK(l,n,&plane,&a,&b);
   X[0] = patch->node[l]->X[0];
   X[1] = random_double(patch->min[1],patch->max[1],1);
@@ -330,16 +330,16 @@ static void test_dInterp_y_df_YZ_Tn_Ex(Field_T *const phi_field)
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
-  unsigned a,b,plane,l;
+  Uint a,b,plane,l;
   double X[3],f1,f2,spec_cal;
-  unsigned df;
+  Uint df;
     
   phi_field_y->v = Partial_Derivative(phi_field,"y");
-  l    = (unsigned)floor(random_double(0,nn-1,0));
+  l    = (Uint)floor(random_double(0,nn-1,0));
   IJK(l,n,&plane,&a,&b);
   X[0] = patch->node[l]->X[0];
   X[1] = random_double(patch->min[1],patch->max[1],1);
@@ -395,16 +395,16 @@ static void test_dInterp_z_df_YZ_Tn_Ex(Field_T *const phi_field)
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
-  unsigned a,b,plane,l;
+  Uint a,b,plane,l;
   double X[3],f1,f2,spec_cal;
-  unsigned df;
+  Uint df;
     
   phi_field_z->v = Partial_Derivative(phi_field,"z");
-  l    = (unsigned)floor(random_double(0,nn-1,0));
+  l    = (Uint)floor(random_double(0,nn-1,0));
   IJK(l,n,&plane,&a,&b);
   X[0] = patch->node[l]->X[0];
   X[1] = random_double(patch->min[1],patch->max[1],1);
@@ -458,14 +458,14 @@ static void test_dInterp_df_YZ_Tn_Ex(Field_T *const phi_field)
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
-  unsigned df,l;
+  Uint df,l;
     
-  l    = (unsigned)floor(random_double(0,nn-1,0));
+  l    = (Uint)floor(random_double(0,nn-1,0));
   X[0] = patch->node[l]->X[0];
   X[1] = random_double(patch->min[1],patch->max[1],1);
   X[2] = random_double(patch->min[2],patch->max[2],1);
@@ -518,16 +518,16 @@ static void test_dInterp_x_df_XZ_Tn_Ex(Field_T *const phi_field)
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
-  unsigned a,b,plane,l;
-  unsigned df;
+  Uint a,b,plane,l;
+  Uint df;
 
   phi_field_x->v = Partial_Derivative(phi_field,"x");
-  l    = (unsigned)floor(random_double(0,nn-1,0));
+  l    = (Uint)floor(random_double(0,nn-1,0));
   IJK(l,n,&a,&plane,&b);
   X[1] = patch->node[l]->X[1];
   X[0] = random_double(patch->min[0],patch->max[0],1);
@@ -583,16 +583,16 @@ static void test_dInterp_y_df_XZ_Tn_Ex(Field_T *const phi_field)
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
-  unsigned a,b,plane,l;
-  unsigned df;
+  Uint a,b,plane,l;
+  Uint df;
     
   phi_field_y->v = Partial_Derivative(phi_field,"y");
-  l    = (unsigned)floor(random_double(0,nn-1,0));
+  l    = (Uint)floor(random_double(0,nn-1,0));
   IJK(l,n,&a,&plane,&b);
   X[1] = patch->node[l]->X[1];
   X[0] = random_double(patch->min[0],patch->max[0],1);
@@ -648,16 +648,16 @@ static void test_dInterp_z_df_XZ_Tn_Ex(Field_T *const phi_field)
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
-  unsigned a,b,plane,l;
-  unsigned df;
+  Uint a,b,plane,l;
+  Uint df;
     
   phi_field_z->v = Partial_Derivative(phi_field,"z");
-  l    = (unsigned)floor(random_double(0,nn-1,0));
+  l    = (Uint)floor(random_double(0,nn-1,0));
   IJK(l,n,&a,&plane,&b);
   X[1] = patch->node[l]->X[1];
   X[0] = random_double(patch->min[0],patch->max[0],1);
@@ -711,14 +711,14 @@ static void test_dInterp_df_XZ_Tn_Ex(Field_T *const phi_field)
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
-  unsigned df,l;
+  Uint df,l;
   
-  l    = (unsigned)floor(random_double(0,nn-1,0));
+  l    = (Uint)floor(random_double(0,nn-1,0));
   X[1] = patch->node[l]->X[1];
   X[0] = random_double(patch->min[0],patch->max[0],1);
   X[2] = random_double(patch->min[2],patch->max[2],1);
@@ -771,16 +771,16 @@ static void test_dInterp_x_df_XY_Tn_Ex(Field_T *const phi_field)
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
-  unsigned a,b,plane,l;
-  unsigned df;
+  Uint a,b,plane,l;
+  Uint df;
 
   phi_field_x->v = Partial_Derivative(phi_field,"x");
-  l    = (unsigned)floor(random_double(0,nn-1,0));
+  l    = (Uint)floor(random_double(0,nn-1,0));
   IJK(l,n,&a,&b,&plane);
   X[2] = patch->node[l]->X[2];
   X[1] = random_double(patch->min[1],patch->max[1],1);
@@ -836,16 +836,16 @@ static void test_dInterp_y_df_XY_Tn_Ex(Field_T *const phi_field)
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
-  unsigned a,b,plane,l;
-  unsigned df;
+  Uint a,b,plane,l;
+  Uint df;
     
   phi_field_y->v = Partial_Derivative(phi_field,"y");
-  l    = (unsigned)floor(random_double(0,nn-1,0));
+  l    = (Uint)floor(random_double(0,nn-1,0));
   IJK(l,n,&a,&b,&plane);
   X[2] = patch->node[l]->X[2];
   X[1] = random_double(patch->min[1],patch->max[1],1);
@@ -901,16 +901,16 @@ static void test_dInterp_z_df_XY_Tn_Ex(Field_T *const phi_field)
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
-  unsigned a,b,plane,l;
-  unsigned df;
+  Uint a,b,plane,l;
+  Uint df;
     
   phi_field_z->v = Partial_Derivative(phi_field,"z");
-  l    = (unsigned)floor(random_double(0,nn-1,0));
+  l    = (Uint)floor(random_double(0,nn-1,0));
   IJK(l,n,&a,&b,&plane);
   X[2] = patch->node[l]->X[2];
   X[1] = random_double(patch->min[1],patch->max[1],1);
@@ -964,14 +964,14 @@ static void test_dInterp_df_XY_Tn_Ex(Field_T *const phi_field)
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
-  unsigned df;
+  Uint df;
     
-  X[2] = patch->node[(unsigned)floor(random_double(0,nn-1,0))]->X[2];
+  X[2] = patch->node[(Uint)floor(random_double(0,nn-1,0))]->X[2];
   X[1] = random_double(patch->min[1],patch->max[1],1);
   X[0] = random_double(patch->min[0],patch->max[0],1);
   interp_s->field = phi_field;
@@ -1022,12 +1022,12 @@ static void test_dInterp_x_df_XYZ_Tn_Ex(Field_T *const phi_field)
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
-  unsigned df;
+  Uint df;
 
   phi_field_x->v = Partial_Derivative(phi_field,"x");
   X[0] = random_double(patch->min[0],patch->max[0],0);
@@ -1084,12 +1084,12 @@ static void test_dInterp_y_df_XYZ_Tn_Ex(Field_T *const phi_field)
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
-  unsigned df;
+  Uint df;
     
   phi_field_y->v = Partial_Derivative(phi_field,"y");
   X[0] = random_double(patch->min[0],patch->max[0],0);
@@ -1146,12 +1146,12 @@ static void test_dInterp_z_df_XYZ_Tn_Ex(Field_T *const phi_field)
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
-  unsigned df;
+  Uint df;
     
   phi_field_z->v = Partial_Derivative(phi_field,"z");
   X[0] = random_double(patch->min[0],patch->max[0],0);
@@ -1206,12 +1206,12 @@ static void test_dInterp_df_XYZ_Tn_Ex(Field_T *const phi_field)
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
-  unsigned df;
+  Uint df;
     
   X[0] = random_double(patch->min[0],patch->max[0],0);
   X[1] = random_double(patch->min[1],patch->max[1],1);

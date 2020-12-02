@@ -2,10 +2,10 @@
 #include "bbn_headers.h"
 
 void bbn_bhf_ChebTn_extrapolate
-(double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill,const unsigned N)
+(double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill,const Uint N)
 ;
 void bbn_bhf_ChebTn_extrapolate
-(double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill,const unsigned N)
+(double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill,const Uint N)
 {
 assert(N==10);
 a[0] = 

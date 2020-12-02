@@ -31,7 +31,7 @@ void adm_compute_constraints(Physics_T *const phys,
     fflush(stdout);
     
     Grid_T *const grid = mygrid(phys,region);
-    unsigned p;
+    Uint p;
     
     OpenMP_Patch_Pragma(omp parallel for)
     for (p = 0; p < grid->np; ++p)
@@ -45,7 +45,7 @@ void adm_compute_constraints(Physics_T *const phys,
   else if (strcmp_i(method,"from_scratch"))
   {
     Grid_T *const grid = mygrid(phys,region);
-    unsigned p;
+    Uint p;
     
     printf(Pretty0"method: from_scratch.\n");
     fflush(stdout);
@@ -68,7 +68,7 @@ void adm_compute_constraints(Physics_T *const phys,
 void adm_update_AConfIJ(Physics_T *const phys,const char *const region)
 {
   Grid_T *const grid = mygrid(phys,region);
-  unsigned p;
+  Uint p;
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
@@ -84,7 +84,7 @@ void adm_update_AConfIJ(Physics_T *const phys,const char *const region)
 void adm_update_adm_KIJ(Physics_T *const phys,const char *const region)
 {
   Grid_T *const grid = mygrid(phys,region);
-  unsigned p;
+  Uint p;
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
@@ -100,7 +100,7 @@ void adm_update_adm_KIJ(Physics_T *const phys,const char *const region)
 void adm_update_adm_Kij(Physics_T *const phys,const char *const region)
 {
   Grid_T *const grid = mygrid(phys,region);
-  unsigned p;
+  Uint p;
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
@@ -116,7 +116,7 @@ void adm_update_adm_Kij(Physics_T *const phys,const char *const region)
 void adm_update_adm_gij(Physics_T *const phys,const char *const region)
 {
   Grid_T *const grid = mygrid(phys,region);
-  unsigned p;
+  Uint p;
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
@@ -155,7 +155,7 @@ void adm_update_adm_gij(Physics_T *const phys,const char *const region)
 void adm_update_beta(Physics_T *const phys,const char *const region)
 {
   Grid_T *const grid = mygrid(phys,region);
-  unsigned p;
+  Uint p;
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
@@ -247,7 +247,7 @@ void adm_update_beta(Physics_T *const phys,const char *const region)
 void adm_update_adm_B1I(Physics_T *const phys,const char *const region)
 {
   Grid_T *const grid = mygrid(phys,region);
-  unsigned p;
+  Uint p;
   
   if(Pcmps(P_"B1I_form","inspiral"))
   {

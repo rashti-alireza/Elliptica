@@ -24,7 +24,7 @@ Ccode["void *jacobian_eq_alpha(void *vp1,void *vp2)\n{"];
 # patch, S, B, E_Trans, node, Ni, Nj, K0, Nk, i,j,k
 # THUS, DO NOT DEFINE THEM AGAIN.
 Ccode["  DDM_SCHUR_JACOBIAN_EQ_DECLARE"];
-Ccode["  unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */"];
+Ccode["  Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */"];
 
 # declare for cpi
 Declare = 

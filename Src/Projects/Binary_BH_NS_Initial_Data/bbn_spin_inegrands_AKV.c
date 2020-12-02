@@ -16,8 +16,8 @@
 void bbn_populate_spin_integrands_akv(Patch_T *const patch,const double *const normal[3]);
 void bbn_populate_spin_integrands_akv(Patch_T *const patch,const double *const normal[3])
 {
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
 
   /* declaring: */
   READ_v(_A_UiUj_U1U1)

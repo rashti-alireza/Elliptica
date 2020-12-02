@@ -27,17 +27,17 @@ void obs_populate_ADM_integrand_PdS_GdV_single(const Observe_T *const obs)
 {
   Physics_T *const phys = obs->phys;
   struct items_S **adm = obs->items;
-  const unsigned N = obs->Nitems;
+  const Uint N = obs->Nitems;
   const double x_cm = Getd("x_CM");
   const double y_cm = Getd("y_CM");
   const double z_cm = Getd("z_CM");
-  unsigned p;
+  Uint p;
 
   for(p = 0; p < N; ++p)
   {
   Patch_T *patch = adm[p]->patch;
-  unsigned nn = patch->nn;
-  unsigned ijk;
+  Uint nn = patch->nn;
+  Uint ijk;
 
   /* declaring: */
   READ_v(_A_UiUj_U2U2)

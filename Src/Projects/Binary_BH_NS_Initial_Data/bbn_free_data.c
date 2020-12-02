@@ -53,8 +53,8 @@ void bbn_populate_free_data(Grid_T *const grid)
 void bbn_free_data_dGamma(Grid_T *const grid)
 {
   const int analytic = 1;
-  const unsigned np = grid->np;
-  unsigned p;
+  const Uint np = grid->np;
+  Uint p;
   
   if (analytic)
   {
@@ -338,8 +338,8 @@ void bbn_rm_1st_derivatives_conformal_metric(Patch_T *const patch)
 void bbn_free_data_gammas(Grid_T *const grid)
 {
   const int analytic = 1;
-  const unsigned np = grid->np;
-  unsigned p;
+  const Uint np = grid->np;
+  Uint p;
     
   /* analytic calculation of conformal metric */
   if (analytic)
@@ -370,7 +370,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned nn,ijk;
+    Uint nn,ijk;
     nn = patch->nn;
     
     REALLOC_v_WRITE_v(_gamma_D2D2)
@@ -481,14 +481,14 @@ void bbn_free_data_tr_KSKij(Grid_T *const grid)
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
-  const unsigned np = grid->np;
-  unsigned p;
+  const Uint np = grid->np;
+  Uint p;
 
   OpenMP_Patch_Pragma(omp parallel for)
   for(p = 0; p < np; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned nn,ijk;
+    Uint nn,ijk;
     nn = patch->nn;
     
     /* populating Kerr Schild gammas, lapse and shift: */
@@ -699,8 +699,8 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
-  const unsigned nn        = patch->nn;
-  unsigned ijk;
+  const Uint nn        = patch->nn;
+  Uint ijk;
   
   /* populate tB tR */
   Transformation_T *tB = initialize_transformation();
@@ -838,8 +838,8 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
 /* populating Kerr Schild Chirstoffer symbols */
 static void populating_KSGamma(Patch_T *const patch)
 {
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
   
   ADD_FIELD(dKSgamma_D0D0D1)
   ADD_FIELD(dKSgamma_D0D0D0)

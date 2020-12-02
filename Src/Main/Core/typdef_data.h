@@ -1,3 +1,5 @@
+#ifndef typedef_data_LIB_H
+#define typedef_data_LIB_H
 /*
 // Alireza Rashti
 // May 2018
@@ -61,9 +63,9 @@ typedef struct PARAMETER_T
   char *rv_ip;/* right value for iterative parameter */
   double rv_double;/* right value double */
   double *rv_array;/* right value array */
-  unsigned rv_n;/* right value unsigned or size of the rv_array */
-  unsigned iterative;/* if this is an iterative par 1, otherwise 0. */
-  unsigned double_flg;/* if this is double 1, otherwise 0 */
+  Uint rv_n;/* right value Uint or size of the rv_array */
+  Uint iterative;/* if this is an iterative par 1, otherwise 0. */
+  Uint double_flg;/* if this is double 1, otherwise 0 */
 }Parameter_T;
 
 /* *******************************************
@@ -82,5 +84,6 @@ typedef struct PROJECT_T
   ProjFunc *func;/* project function */
 }Project_T;
 
+#endif
 
 

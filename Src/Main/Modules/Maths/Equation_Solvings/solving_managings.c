@@ -25,7 +25,7 @@ void *init_eq(void)
 void add_eq(sEquation_T ***const data_base, fEquation_T *const eq,const char *const name)
 {
   sEquation_T **db = *data_base;
-  unsigned ndb = 0;
+  Uint ndb = 0;
   
   /* count number of data base */
   if (db != 0)
@@ -51,9 +51,9 @@ void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEqu
   const char *par_f = Pgets("Solving_Order");
   char *par;
   char **field_name = 0;
-  unsigned nf = 0;
+  Uint nf = 0;
   char *tok,*save = 0;
-  unsigned p,i;
+  Uint p,i;
   
   /* finding fields's name */
   par = dup_s(par_f);/* par = f1,f2,... */
@@ -128,7 +128,7 @@ void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEqu
 fEquation_T *get_field_eq(const char *const name, sEquation_T **const db)
 {
   fEquation_T *eq = 0;
-  unsigned i;
+  Uint i;
   
   if (!db)
     return 0;
@@ -171,7 +171,7 @@ fEquation_Solver_T *get_solver_method(const char *const solver)
 /* freeing Equation_T data base */
 void free_db_eqs(sEquation_T **db)
 {
-  unsigned ndb;
+  Uint ndb;
   
   if (!db) return;
   

@@ -15,7 +15,7 @@ void Tij_NS_idealfluid_CTS_gConf_update(Physics_T *const phys)
   const double W  = Getd("enthalpy_update_weight");
   const int  neat = Geti("enthalpy_neat");
   const double Euler_const = Getd("Euler_equation_constant");
-  unsigned p;
+  Uint p;
   
   printf(Pretty0"weight update  = %e\n"
          Pretty0"neat it?       = %d\n"
@@ -53,8 +53,8 @@ void Tij_NS_eos_update_rho0(Patch_T *const patch)
   EoS_T *eos = initialize_EoS();
   READ_v(enthalpy)
   REALLOC_v_WRITE_v(rho0)
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
 
   for (ijk = 0; ijk < nn; ++ijk)
   {
@@ -78,8 +78,8 @@ void Tij_NS_neat_enthalpy(Patch_T *const patch)
 {
   WRITE_v(enthalpy)
   
-  const unsigned nn = patch->nn;
-  unsigned ijk;
+  const Uint nn = patch->nn;
+  Uint ijk;
   
   for (ijk = 0; ijk < nn; ++ijk)
   {

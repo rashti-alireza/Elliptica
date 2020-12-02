@@ -15,11 +15,11 @@ void partial_derivative_with_regex(Patch_T *const patch,
                                    const char *const regex_list)
 {
   char **regex = read_separated_items_in_string(regex_list,',');
-  unsigned i = 0;
+  Uint i = 0;
   
   while (regex[i])
   {
-    unsigned f;
+    Uint f;
     for (f = 0; f < patch->nfld; ++f)
     {
       if (regex_search(regex[i],patch->fields[f]->name))
@@ -55,13 +55,13 @@ double *partial_derivative(struct FIELD_T *const dfield)
   Field_T *field = 0;
   int deriv_type = -1;/* d/dx = 0, d/dy = 1, d/dz = 2 */
   char *D, *stem;
-  unsigned slen;
+  Uint slen;
   
   sprintf(dfield_name,"%s",dfield->name);
   
   /* parse the dfield_name: */
   /* deriv_type: */
-  slen = (unsigned) strlen(dfield_name);
+  slen = (Uint) strlen(dfield_name);
   assert(slen>3);
   D    = &dfield_name[slen-1];
   if      (D[0] == '0') deriv_type = 0;
@@ -182,7 +182,7 @@ double *Partial_Derivative(Field_T *const f,const char *task)
 
   double *r = 0;
   const char *der_par = PgetsEZ("Derivative_Method");
-  unsigned Ndir;
+  Uint Ndir;
   Method_T method_e = derivative_method(der_par,task);
   Dd_T  *dir_e = derivative_direction(task,&Ndir);
   
@@ -199,14 +199,14 @@ double *Partial_Derivative(Field_T *const f,const char *task)
 // based on direction of derivative.
 // ->return value: values of the resultant.
 */
-static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_e,const unsigned Ndir)
+static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_e,const Uint Ndir)
 {
   double *deriv = 0;
   Field_T *ff[2];
-  unsigned bck,frd;
+  Uint bck,frd;
   Patch_T p_tmp1 = make_temp_patch(f->patch);
   Patch_T p_tmp2 = make_temp_patch(f->patch);
-  unsigned i;
+  Uint i;
   
   assert(Ndir);
   
@@ -257,13 +257,13 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
 // this derivative.
 // ->return value: 1 if applicable , 0 otherwise.
 */
-static unsigned IsSecondOrderFormula(Field_T *const f,const Dd_T *const dir_e,const unsigned Ndir)
+static Uint IsSecondOrderFormula(Field_T *const f,const Dd_T *const dir_e,const Uint Ndir)
 {
-  unsigned r = 0;
+  Uint r = 0;
   SpecDerivative_Func_T *df[3];
   Dd_T dp[3];
   int c;
-  unsigned d;
+  Uint d;
   
   if (Ndir != 2)/* if it doesn't have 2 derivatives */
     return 0;
@@ -302,9 +302,9 @@ static unsigned IsSecondOrderFormula(Field_T *const f,const Dd_T *const dir_e,co
 // is not like that, Jacobian format is not matched.
 // ->return value: 1 if matches, 0 otherwise.
 */
-static unsigned JacobianFormat_2ndOrder(const Patch_T *const patch,const Dd_T dir,Dd_T dp)
+static Uint JacobianFormat_2ndOrder(const Patch_T *const patch,const Dd_T dir,Dd_T dp)
 {
-  unsigned r = 0;
+  Uint r = 0;
   
   if (patch->coordsys == Cartesian)
   {
@@ -322,7 +322,7 @@ static unsigned JacobianFormat_2ndOrder(const Patch_T *const patch,const Dd_T di
 */
 static void get_SpecDerivative_func_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **func)
 {
-  unsigned i;
+  Uint i;
   
   for (i = 0; i < 3; ++i)
   {
@@ -349,8 +349,8 @@ static void get_SpecDerivative_func_2ndOrder(const Patch_T *const patch,SpecDeri
 */
 static int get_dp_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **func,const Dd_T dir,Dd_T *dp)
 {
-  unsigned depend[3];
-  unsigned i;
+  Uint depend[3];
+  Uint i;
   int cnt;
   
   get_dependency(patch,dir,depend);
@@ -401,8 +401,8 @@ static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e)
   SpecDerivative_Func_T *df[3];/* spectral derivative function in each direction */
   Dd_T dp[3];/* see above explanation */
   double *df_dp[3];
-  unsigned nn = patch->nn;
-  unsigned i ,c;
+  Uint nn = patch->nn;
+  Uint i ,c;
   Dd_T d;
   Flag_T flg[3];
   
@@ -466,7 +466,7 @@ static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e)
 // note: this function allocate memory.
 // ->return value: array of Dd_T and number of this arrays
 */
-static Dd_T *derivative_direction(const char *const task,unsigned *const n)
+static Dd_T *derivative_direction(const char *const task,Uint *const n)
 {
   Dd_T *e = 0;
   char *savestr,*str = dup_s(task);
@@ -576,8 +576,8 @@ static double *spectral_derivative_1stOrder(Field_T *const f,const Dd_T dir_e)
   SpecDerivative_Func_T *df[3];/* spectral derivative function in each direction */
   Dd_T dp[3];/* see above explanation */
   double *df_dp[3];
-  unsigned nn = patch->nn;
-  unsigned i;
+  Uint nn = patch->nn;
+  Uint i;
   Dd_T d;
   Flag_T flg[3];
   
@@ -655,27 +655,27 @@ static double *derivative_ChebyshevExtrema_Tn_1stOrder(Field_T *const f,const Dd
   make_coeffs_1d(f,dir);
   
   Patch_T *const patch = f->patch;
-  const unsigned *const n = patch->n;
-  const unsigned nn = total_nodes_patch(patch);
-  const unsigned B = n[dir]-1;
+  const Uint *const n = patch->n;
+  const Uint nn = total_nodes_patch(patch);
+  const Uint B = n[dir]-1;
   double *der = alloc_double(nn);
   double *x = make_1Dcollocation_ChebExtrema(n[dir]);
   const double *const coeffs = f->v2;
-  unsigned l;
+  Uint l;
   
   if (dir == 0)
   {
     /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
-      unsigned i,j,k;
-      unsigned c;
+      Uint i,j,k;
+      Uint c;
       
       IJK(l,n,&i,&j,&k);
       
       for (c = 1; c < B; ++c)
       {
-        unsigned C = L(n,c,j,k);//coeff_ind(i,j,k,c,n,dir);
+        Uint C = L(n,c,j,k);//coeff_ind(i,j,k,c,n,dir);
         der[l] += c*coeffs[C]*Cheb_Un((int)c-1,x[i]);
       }
       der[l] *= 2;
@@ -687,14 +687,14 @@ static double *derivative_ChebyshevExtrema_Tn_1stOrder(Field_T *const f,const Dd
     /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
-      unsigned i,j,k;
-      unsigned c;
+      Uint i,j,k;
+      Uint c;
       
       IJK(l,n,&i,&j,&k);
       
       for (c = 1; c < B; ++c)
       {
-        unsigned C = L(n,i,c,k);//coeff_ind(i,j,k,c,n,dir);
+        Uint C = L(n,i,c,k);//coeff_ind(i,j,k,c,n,dir);
         der[l] += c*coeffs[C]*Cheb_Un((int)c-1,x[j]);
       }
       der[l] *= 2;
@@ -706,14 +706,14 @@ static double *derivative_ChebyshevExtrema_Tn_1stOrder(Field_T *const f,const Dd
     /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
-      unsigned i,j,k;
-      unsigned c;
+      Uint i,j,k;
+      Uint c;
       
       IJK(l,n,&i,&j,&k);
       
       for (c = 1; c < B; ++c)
       {
-        unsigned C = L(n,i,j,c);//coeff_ind(i,j,k,c,n,dir);
+        Uint C = L(n,i,j,c);//coeff_ind(i,j,k,c,n,dir);
         der[l] += c*coeffs[C]*Cheb_Un((int)c-1,x[k]);
       }
       der[l] *= 2;
@@ -736,27 +736,27 @@ static double *derivative_ChebyshevNodes_Tn_1stOrder(Field_T *const f,const Dd_T
   make_coeffs_1d(f,dir);
   
   Patch_T *const patch = f->patch;
-  const unsigned *const n = patch->n;
-  const unsigned nn = patch->nn;
-  const unsigned B = n[dir];
+  const Uint *const n = patch->n;
+  const Uint nn = patch->nn;
+  const Uint B = n[dir];
   double *der = alloc_double(nn);
   double *x = make_1Dcollocation_ChebNodes(n[dir]);
   const double *const coeffs = f->v2;
-  unsigned l;
+  Uint l;
   
   if (dir == 0)
   {
     /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
-      unsigned i,j,k;
-      unsigned c;
+      Uint i,j,k;
+      Uint c;
       
       IJK(l,n,&i,&j,&k);
       
       for (c = 1; c < B; ++c)
       {
-        unsigned C = L(n,c,j,k);//coeff_ind(i,j,k,c,n,dir);
+        Uint C = L(n,c,j,k);//coeff_ind(i,j,k,c,n,dir);
         der[l] += c*coeffs[C]*Cheb_Un((int)c-1,x[i]);
       }
       der[l] *= 2;
@@ -767,14 +767,14 @@ static double *derivative_ChebyshevNodes_Tn_1stOrder(Field_T *const f,const Dd_T
     /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
-      unsigned i,j,k;
-      unsigned c;
+      Uint i,j,k;
+      Uint c;
       
       IJK(l,n,&i,&j,&k);
       
       for (c = 1; c < B; ++c)
       {
-        unsigned C = L(n,i,c,k);//coeff_ind(i,j,k,c,n,dir);
+        Uint C = L(n,i,c,k);//coeff_ind(i,j,k,c,n,dir);
         der[l] += c*coeffs[C]*Cheb_Un((int)c-1,x[j]);
       }
       der[l] *= 2;
@@ -785,14 +785,14 @@ static double *derivative_ChebyshevNodes_Tn_1stOrder(Field_T *const f,const Dd_T
     /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
-      unsigned i,j,k;
-      unsigned c;
+      Uint i,j,k;
+      Uint c;
       
       IJK(l,n,&i,&j,&k);
       
       for (c = 1; c < B; ++c)
       {
-        unsigned C = L(n,i,j,c);//coeff_ind(i,j,k,c,n,dir);
+        Uint C = L(n,i,j,c);//coeff_ind(i,j,k,c,n,dir);
         der[l] += c*coeffs[C]*Cheb_Un((int)c-1,x[k]);
       }
       der[l] *= 2;
@@ -814,27 +814,27 @@ static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd
   make_coeffs_1d(f,dir);
   
   Patch_T *const patch = f->patch;
-  const unsigned *const n = patch->n;
-  const unsigned nn = total_nodes_patch(patch);
-  const unsigned B = n[dir]-1;
+  const Uint *const n = patch->n;
+  const Uint nn = total_nodes_patch(patch);
+  const Uint B = n[dir]-1;
   double *der = alloc_double(nn);
   double *x = make_1Dcollocation_ChebExtrema(n[dir]);
   const double *const coeffs = f->v2;
-  unsigned l;
+  Uint l;
   
   if (dir == 0)
   {
     /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
-      unsigned i,j,k;
-      unsigned c;
+      Uint i,j,k;
+      Uint c;
       
       IJK(l,n,&i,&j,&k);
       
       for (c = 2; c < B; ++c)
       {
-        unsigned C = L(n,c,j,k);
+        Uint C = L(n,c,j,k);
         der[l] += coeffs[C]*d2T_dx2((int)c,x[i]);
       }
       der[l] *= 2;
@@ -846,14 +846,14 @@ static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd
     /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
-      unsigned i,j,k;
-      unsigned c;
+      Uint i,j,k;
+      Uint c;
       
       IJK(l,n,&i,&j,&k);
       
       for (c = 2; c < B; ++c)
       {
-        unsigned C = L(n,i,c,k);
+        Uint C = L(n,i,c,k);
         der[l] += coeffs[C]*d2T_dx2((int)c,x[j]);
       }
       der[l] *= 2;
@@ -865,14 +865,14 @@ static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd
     /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
-      unsigned i,j,k;
-      unsigned c;
+      Uint i,j,k;
+      Uint c;
       
       IJK(l,n,&i,&j,&k);
       
       for (c = 2; c < B; ++c)
       {
-        unsigned C = L(n,i,j,c);
+        Uint C = L(n,i,j,c);
         der[l] += coeffs[C]*d2T_dx2((int)c,x[k]);
       }
       der[l] *= 2;
@@ -895,27 +895,27 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
   make_coeffs_1d(f,dir);
   
   Patch_T *const patch = f->patch;
-  const unsigned *const n = patch->n;
-  const unsigned nn = total_nodes_patch(patch);
-  const unsigned B = n[dir];
+  const Uint *const n = patch->n;
+  const Uint nn = total_nodes_patch(patch);
+  const Uint B = n[dir];
   double *der = alloc_double(nn);
   double *x = make_1Dcollocation_ChebNodes(n[dir]);
   const double *const coeffs = f->v2;
-  unsigned l;
+  Uint l;
   
   if (dir == 0)
   {
     /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
-      unsigned i,j,k;
-      unsigned c;
+      Uint i,j,k;
+      Uint c;
       
       IJK(l,n,&i,&j,&k);
       
       for (c = 2; c < B; ++c)
       {
-        unsigned C = L(n,c,j,k);
+        Uint C = L(n,c,j,k);
         der[l] += coeffs[C]*d2T_dx2((int)c,x[i]);
       }
       der[l] *= 2;
@@ -926,14 +926,14 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
     /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
-      unsigned i,j,k;
-      unsigned c;
+      Uint i,j,k;
+      Uint c;
       
       IJK(l,n,&i,&j,&k);
       
       for (c = 2; c < B; ++c)
       {
-        unsigned C = L(n,i,c,k);
+        Uint C = L(n,i,c,k);
         der[l] += coeffs[C]*d2T_dx2((int)c,x[j]);
       }
       der[l] *= 2;
@@ -944,14 +944,14 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
     /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
-      unsigned i,j,k;
-      unsigned c;
+      Uint i,j,k;
+      Uint c;
       
       IJK(l,n,&i,&j,&k);
       
       for (c = 2; c < B; ++c)
       {
-        unsigned C = L(n,i,j,c);
+        Uint C = L(n,i,j,c);
         der[l] += coeffs[C]*d2T_dx2((int)c,x[k]);
       }
       der[l] *= 2;
@@ -968,7 +968,7 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
 */
 static void get_SpecDerivative_func_1stOrder(const Patch_T *const patch,SpecDerivative_Func_T **func)
 {
-  unsigned i;
+  Uint i;
   
   for (i = 0; i < 3; ++i)
   {
@@ -999,9 +999,9 @@ static void get_SpecDerivative_func_1stOrder(const Patch_T *const patch,SpecDeri
 // Notation: dep[?] = 1 means dir depends on ?. 
 // and if dep[?] = 0 it means it is not depended.
 */
-static void get_dependency(const Patch_T *const patch,const Dd_T dir, unsigned *dep)
+static void get_dependency(const Patch_T *const patch,const Dd_T dir, Uint *dep)
 {
-  unsigned i;
+  Uint i;
   
   for (i = 0; i < 3; i++)
   {
@@ -1028,8 +1028,8 @@ static void get_dependency(const Patch_T *const patch,const Dd_T dir, unsigned *
 */
 static void get_dp_1stOrder(const Patch_T *const patch,SpecDerivative_Func_T **func,const Dd_T dir,Dd_T *dp)
 {
-  unsigned depend[3];
-  unsigned i;
+  Uint depend[3];
+  Uint i;
   
   get_dependency(patch,dir,depend);
   
@@ -1053,11 +1053,11 @@ static void get_dp_1stOrder(const Patch_T *const patch,SpecDerivative_Func_T **f
 // Note: it allocates memory.
 //-> return value: Chebyshev Extrema points
 */
-static double *make_1Dcollocation_ChebExtrema(const unsigned N)
+static double *make_1Dcollocation_ChebExtrema(const Uint N)
 {
     const double t0 = M_PI/(N-1);
     double *x = alloc_double(N);
-    unsigned i;
+    Uint i;
     
     for (i = 0; i < N; i++)
       x[i] = cos(i*t0);
@@ -1069,11 +1069,11 @@ static double *make_1Dcollocation_ChebExtrema(const unsigned N)
 // Note: it allocates memory.
 //-> return value: Chebyshev Nodes points
 */
-static double *make_1Dcollocation_ChebNodes(const unsigned N)
+static double *make_1Dcollocation_ChebNodes(const Uint N)
 {
     const double t0 = M_PI/N;
     double *x = alloc_double(N);
-    unsigned i;
+    Uint i;
     
     for (i = 0; i < N; i++)
       x[i] = cos((i+0.5)*t0);

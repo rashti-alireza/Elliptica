@@ -11,8 +11,8 @@ void bbn_free_data_Gamma(Grid_T *const grid);
 void bbn_free_data_Gamma_patch(Patch_T *const patch);
 void bbn_free_data_Gamma(Grid_T *const grid)
 {
-  const unsigned np = grid->np;
-  unsigned p;
+  const Uint np = grid->np;
+  Uint p;
 
   FREE_DATA_OpenMP(omp parallel for)
   for(p = 0; p < np; ++p)
@@ -72,8 +72,8 @@ void bbn_free_data_Gamma_patch(Patch_T *const patch)
   REALLOC_v_WRITE_v(_Gamma_U2D0D0)
 
 
-    const unsigned nn = patch->nn;
-    unsigned ijk;
+    const Uint nn = patch->nn;
+    Uint ijk;
     for(ijk = 0; ijk < nn; ++ijk)
     {
     double GAMMA_U1D2D2 = 

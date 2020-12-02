@@ -21,8 +21,8 @@ void bbn_bam_set_gauges(struct IDGauge_S *const gauge)
  double (*psi_punc0) 
     (const double r, const double Mb,const double r_CutOff) =
     gauge->psi_punc0;
- const unsigned np = grid->np;
- unsigned p;
+ const Uint np = grid->np;
+ Uint p;
 
  OpenMP_Patch_Pragma(omp parallel for)
  for (p = 0; p < np; ++p)
@@ -42,11 +42,11 @@ void bbn_bam_set_gauges(struct IDGauge_S *const gauge)
  WRITE_v(bam_alpha)
 
 
- unsigned nn = patch->nn;
- unsigned ijk;
+ Uint nn = patch->nn;
+ Uint ijk;
  if (strcmp_i(lapse_type,"puncture1"))
  {
- unsigned modify = IsItInsideBHPatch(patch);
+ Uint modify = IsItInsideBHPatch(patch);
  for(ijk = 0; ijk < nn; ++ijk)
  {
  double detg;
@@ -115,7 +115,7 @@ pow(detg, 0.16666666666666666);
  }
  else if (strcmp_i(lapse_type,"puncture2"))
  {
- unsigned modify = IsItInsideBHPatch(patch);
+ Uint modify = IsItInsideBHPatch(patch);
  for(ijk = 0; ijk < nn; ++ijk)
  {
  double detg;

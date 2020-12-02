@@ -10,7 +10,7 @@
 void fd_add_fields_trK_dtrK(Grid_T *const grid);
 void fd_add_fields_trK_dtrK(Grid_T *const grid)
 {
- unsigned p;
+ Uint p;
  FOR_ALL_PATCHES(p,grid)
  {
  Patch_T *patch = grid->patch[p];

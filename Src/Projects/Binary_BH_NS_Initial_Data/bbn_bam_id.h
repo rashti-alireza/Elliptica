@@ -29,8 +29,8 @@
   IsNull(fields_name);\
   fields_name[nf+1] = 0;\
   char fname_[STR_LEN_MAX] = {'\0'};\
-  unsigned index_ = 0;\
-  unsigned len_ = (unsigned)strlen(bam_fields[nf]);assert(len_);\
+  Uint index_ = 0;\
+  Uint len_ = (Uint)strlen(bam_fields[nf]);assert(len_);\
   const char *aux_ = &bam_fields[nf][len_-1];/* Fx => aux->x */\
   str2index(aux_,index_);\
   sprintf(fname_,"%s_%s%u",stem,UD,index_);\
@@ -42,8 +42,8 @@
   IsNull(fields_name);\
   fields_name[nf+1] = 0;\
   char fname_[STR_LEN_MAX] = {'\0'};\
-  unsigned index0_ = 0,index1_ = 0;\
-  unsigned len_    = (unsigned)strlen(bam_fields[nf]);assert(len_>1);\
+  Uint index0_ = 0,index1_ = 0;\
+  Uint len_    = (Uint)strlen(bam_fields[nf]);assert(len_>1);\
   const char *aux_ = &bam_fields[nf][len_-2];/* Fxy => aux->x */\
   str2index(aux_,index0_);\
   aux_++;\
@@ -56,8 +56,8 @@ struct interpolation_points
 {
   double *x,*y,*z;/* (x,y,z) coords */
   double *X,*Y,*Z;/* (X,Y,Z) coords */
-  unsigned *patchn;/* patch number for each coord */
-  unsigned npoints;/* number of coords */
+  Uint *patchn;/* patch number for each coord */
+  Uint npoints;/* number of coords */
   int **f_index;/* field index for each patch and for each field
                 // ex: f_index[p][f] = for patch p and field f. */
 };

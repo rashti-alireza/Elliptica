@@ -62,8 +62,8 @@ void bbn_adm_Kij(Patch_T *const patch)
   READ_v(_Gamma_U1D0D0)
 
 
-    unsigned nn = patch->nn;
-    unsigned ijk;
+    Uint nn = patch->nn;
+    Uint ijk;
     for(ijk = 0; ijk < nn; ++ijk)
     {
     double psi4 = 
