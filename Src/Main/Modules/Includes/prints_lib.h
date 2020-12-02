@@ -76,7 +76,7 @@ double pr_derivatives_DiffByNode(const double *const numc, const double *const a
 void pr_matrix(const struct MATRIX_T *const M,const char *const name);
 void pr_field_difference(const struct GRID_T *const grid,const char *const fld1,const char *const fld2);
 void pr_hdf5_silo(Pr_Field_T *const pr);
-
+int print_fields_3D(const struct GRID_T *const grid,const int iteration,const char *const dir);
 
 #endif
 

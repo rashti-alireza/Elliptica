@@ -12,7 +12,7 @@
 // usage examples:
 // ===============
 // # parameter that is determined in input file is like:
-// output_3d_hdf5 = (V_U0,V_U1,V_U2),psi,eta,(a_U0,a_U1,a_U2)
+// output_3d_silo = (V_U0,V_U1,V_U2),psi,eta,(a_U0,a_U1,a_U2)
 // # as one can see the vector quantities determined by parenthesis 
 //
 // Pr_Field_T *pr  = init_PrField(grid);
@@ -47,9 +47,9 @@ void pr_fields(Pr_Field_T *const pr)
     return;
   
   /* using silo */  
-  if (PgetsEZ("output_3d_hdf5"))
+  if (PgetsEZ("output_3d_silo"))
   {
-    parse_parameter_3d(Pgets("output_3d_hdf5"),pr);
+    parse_parameter_3d(Pgets("output_3d_silo"),pr);
     pr_hdf5_silo(pr);
   }
   
@@ -149,5 +149,22 @@ static void parse_parameter_3d(const char *const par,Pr_Field_T *const pr)
   pr->ng = Ninfo;
   
   free(tok);
+}
+
+/* a quick print of given grid and all of the fields determined
+// in the parameter file.*/
+int print_fields_3D(const Grid_T *const grid,const int iteration,const char *const dir)
+{
+  FUNC_TIC
+  printf(Pretty0"iteration = %d\n",iteration);
+  
+  Pr_Field_T *pr  = init_PrField(grid);
+  pr->folder      = dir;
+  pr->cycle       = iteration;
+  pr_fields(pr);
+  free_PrField(pr);
+
+  FUNC_TOC
+  return EXIT_SUCCESS;
 }
 
