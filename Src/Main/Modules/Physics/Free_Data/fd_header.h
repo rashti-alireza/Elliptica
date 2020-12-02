@@ -95,7 +95,7 @@ void fd_extrinsic_curvature_KerrSchild(Physics_T *const phys,
 void fd_add_fields_MConfIJ(Grid_T *const grid);
 
 
-void fd_KerrSchild_psi_alpha_beta(Patch_T *const patch,
+void fd_psi_alpha_beta_KerrSchild_patch(Patch_T *const patch,
  const double BH_center_x,const double BH_center_y,
  const double BH_center_z,const char *const ig,
  const char *const Psi,const char *const Alpha,

@@ -34,14 +34,14 @@
   farg->dZ_D2 = fd_ks_dZ_D2 KS_func_pass_args_sed;
 
 
-void fd_KerrSchild_psi_alpha_beta(Patch_T *const patch,
+void fd_psi_alpha_beta_KerrSchild_patch(Patch_T *const patch,
  const double BH_center_x,const double BH_center_y,
  const double BH_center_z,const char *const ig,
  const char *const Psi,const char *const Alpha,
  const char *const Beta);
 
 
-void fd_KerrSchild_psi_alpha_beta(Patch_T *const patch,
+void fd_psi_alpha_beta_KerrSchild_patch(Patch_T *const patch,
  const double BH_center_x,const double BH_center_y,
  const double BH_center_z,const char *const ig,
  const char *const Psi,const char *const Alpha,
