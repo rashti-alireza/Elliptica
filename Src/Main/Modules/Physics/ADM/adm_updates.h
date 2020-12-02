@@ -21,7 +21,5 @@ void adm_update_adm_gij(Physics_T *const phys,const char *const region);
 void adm_update_adm_B1I(Physics_T *const phys,const char *const region);
 void adm_update_B1I_inspiral(Patch_T *const patch,void *params);
 void adm_update_B1I_zero(Patch_T *const patch,void *params);
-
-
-
+void adm_update_beta(Physics_T *const phys,const char *const region);
 

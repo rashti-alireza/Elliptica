@@ -128,6 +128,121 @@ void adm_update_adm_gij(Physics_T *const phys,const char *const region)
   }
 }
 
+/* handy macro for beta update */
+#define UPDATE_beta(x)       \
+    beta_U##x[ijk]       = B0_U##x[ijk]+B1_U##x[ijk];
+    
+#define UPDATE_dbeta(x,y)    \
+   dbeta_U##x##D##y[ijk] = dB0_U##x##D##y[ijk]+dB1_U##x##D##y[ijk];
+
+#define UPDATE_ddbeta(x,y,z) \
+   ddbeta_U##x##D##y##D##z[ijk] = ddB0_U##x##D##y##D##z[ijk]+ddB1_U##x##D##y##D##z[ijk];
+
+#define PREP_beta(x)       \
+  REALLOC_v_WRITE_v(beta_U##x);READ_v(B0_U##x);READ_v(B1_U##x);
+    
+#define PREP_dbeta(x,y)    \
+  REALLOC_v_WRITE_v(dbeta_U##x##D##y); READ_v(dB0_U##x##D##y);READ_v(dB1_U##x##D##y);
+  
+#define PREP_ddbeta(x,y,z) \
+  REALLOC_v_WRITE_v(ddbeta_U##x##D##y##D##z); READ_v(ddB0_U##x##D##y##D##z);READ_v(ddB1_U##x##D##y##D##z);
+
+/* update beta and its derivatives.
+// note: it assumes B0 and B1 are already updated.
+// note: the reasion we have a dedicated function for beta update
+// is B1 part, since this might not get resolved well in outermost patches,
+// thus, we should calculated it analytically. */
+void adm_update_beta(Physics_T *const phys,const char *const region)
+{
+  Grid_T *const grid = mygrid(phys,region);
+  unsigned p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *const patch = grid->patch[p];
+    
+    PREP_beta(0);
+    PREP_dbeta(0,0);
+    PREP_dbeta(0,1);
+    PREP_dbeta(0,2);
+    PREP_ddbeta(0,0,0);
+    PREP_ddbeta(0,0,1);
+    PREP_ddbeta(0,0,2);
+    PREP_ddbeta(0,1,1);
+    PREP_ddbeta(0,1,2);
+    PREP_ddbeta(0,2,2);
+
+    PREP_beta(1);
+    PREP_dbeta(1,0);
+    PREP_dbeta(1,1);
+    PREP_dbeta(1,2);
+    PREP_ddbeta(1,0,0);
+    PREP_ddbeta(1,0,1);
+    PREP_ddbeta(1,0,2);
+    PREP_ddbeta(1,1,1);
+    PREP_ddbeta(1,1,2);
+    PREP_ddbeta(1,2,2);
+
+    PREP_beta(2);
+    PREP_dbeta(2,0);
+    PREP_dbeta(2,1);
+    PREP_dbeta(2,2);
+    PREP_ddbeta(2,0,0);
+    PREP_ddbeta(2,0,1);
+    PREP_ddbeta(2,0,2);
+    PREP_ddbeta(2,1,1);
+    PREP_ddbeta(2,1,2);
+    PREP_ddbeta(2,2,2);
+  
+    FOR_ALL_ijk
+    {
+      UPDATE_beta(0);
+      UPDATE_dbeta(0,0);
+      UPDATE_dbeta(0,1);
+      UPDATE_dbeta(0,2);
+      UPDATE_ddbeta(0,0,0);
+      UPDATE_ddbeta(0,0,1);
+      UPDATE_ddbeta(0,0,2);
+      UPDATE_ddbeta(0,1,1);
+      UPDATE_ddbeta(0,1,2);
+      UPDATE_ddbeta(0,2,2);
+      
+      
+      UPDATE_beta(1);
+      UPDATE_dbeta(1,0);
+      UPDATE_dbeta(1,1);
+      UPDATE_dbeta(1,2);
+      UPDATE_ddbeta(1,0,0);
+      UPDATE_ddbeta(1,0,1);
+      UPDATE_ddbeta(1,0,2);
+      UPDATE_ddbeta(1,1,1);
+      UPDATE_ddbeta(1,1,2);
+      UPDATE_ddbeta(1,2,2);
+      
+      
+      UPDATE_beta(2);
+      UPDATE_dbeta(2,0);
+      UPDATE_dbeta(2,1);
+      UPDATE_dbeta(2,2);
+      UPDATE_ddbeta(2,0,0);
+      UPDATE_ddbeta(2,0,1);
+      UPDATE_ddbeta(2,0,2);
+      UPDATE_ddbeta(2,1,1);
+      UPDATE_ddbeta(2,1,2);
+      UPDATE_ddbeta(2,2,2);
+    }
+
+  }
+}
+
+#undef UPDATE_beta
+#undef UPDATE_dbeta
+#undef UPDATE_ddbeta
+#undef PREP_beta
+#undef PREP_dbeta
+#undef PREP_ddbeta
+
 /* update B1^i and its derivatives */
 void adm_update_adm_B1I(Physics_T *const phys,const char *const region)
 {

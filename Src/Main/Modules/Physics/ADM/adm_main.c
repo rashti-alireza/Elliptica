@@ -47,6 +47,10 @@ int adm_main(Physics_T *const phys)
       ret = compute_B1I(phys);
     break;
     
+    case ADM_UPDATE_beta:
+      ret = compute_beta(phys);
+    break;
+    
     default:
       Error0(NO_OPTION);
   }
@@ -213,6 +217,17 @@ static int compute_B1I(Physics_T *const phys)
   FUNC_TIC
   
   adm_update_adm_B1I(phys,".*");
+  
+  FUNC_TOC
+  return EXIT_SUCCESS; 
+}
+
+/* compute shifts, beta = B0+B1 */
+static int compute_beta(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  adm_update_beta(phys,".*");
   
   FUNC_TOC
   return EXIT_SUCCESS; 
