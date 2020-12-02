@@ -52,7 +52,14 @@ void fd_KerrSchild_set_params(Physics_T *const phys)
   Bz = Getd("boost_Vz");
   B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
 
-  if(EQL(B2,0.)) B2 = DBL_EPSILON;
+ /* avoid division by zero */
+  if(EQL(B2,0.)) 
+  {
+    Bx = 0.0;
+    By = 0.0;
+    Bz = 0.0;
+    B2 = 10.0*DBL_EPSILON;
+  }
   
   /* rotation */
   if (!EQL(chi,0.))/* otherwise R is 0 */
