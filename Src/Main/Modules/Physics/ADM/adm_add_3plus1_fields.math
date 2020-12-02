@@ -81,7 +81,7 @@ Declare =
  (obj = Field,name = ddB1, rank = UDD, C_macro);
 
  # alpha: lapse
- #(obj = Field,name = alpha, rank = 0, C_macro);
+ (obj = Field,name = alpha, rank = 0, C_macro);
 
  # dalpha
  #(obj = Field,name = dalpha, rank = D, C_macro);
