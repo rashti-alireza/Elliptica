@@ -91,7 +91,8 @@ void free_PrField(Pr_Field_T *pr)
 // given parameter it finds the name of all of the fields to be printed 
 // and the coordinates which these field evaluated on.
 // coords can be Cartesian x,y,z or Curvilinear a,b,c.
-// NOTE: fields are supposed to be written like {(field1)vs(a,b,c)|coord}. */
+// NOTE: fields are supposed to be written like {(field1)vs(a,b,c)|coord}. 
+// NOTE: it supports regular expression for scalar, ex: ^dpsi_D.+ */
 static void parse_parameter_3d(const char *const par,Pr_Field_T *const pr)
 {
   struct Info_S *info_s = 0,*Pinfo;
