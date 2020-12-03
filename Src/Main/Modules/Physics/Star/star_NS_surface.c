@@ -174,8 +174,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
         }
         else
         {
-         printf(Pretty0"could not find %s in %s "
-                       "=> calculate it numerically ...\n",
+         printf(Pretty0"compute %s in %s\n",
                        extrap->fld[f]->df[ii],patch->name);
          extrap->fld[f]->did_add_df = 1;
          Field_T *df = add_field(extrap->fld[f]->df[ii],0,patch,NO);
@@ -193,8 +192,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
         }
         else
         {
-         printf(Pretty0"could not find %s in %s "
-                       "=> calculate it numerically ...\n",
+         printf(Pretty0"compute %s in %s\n",
                        extrap->fld[f]->ddf[ii],patch->name);
          extrap->fld[f]->did_add_ddf = 1;
          Field_T *ddf = add_field(extrap->fld[f]->ddf[ii],0,patch,NO);
