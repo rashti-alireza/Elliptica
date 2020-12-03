@@ -827,7 +827,7 @@ IsItCovering
   {
     Error0(NO_OPTION);
   }
-  
+  free_2d(reg);
   return ret;
 }
 
