@@ -190,9 +190,10 @@ populate_box_patch_SplitCS
   )
 
 {
+  UNUSED(pn);
   const Uint Nsd[3] = {(Uint)Pgeti("SplitCS_Nsplit_a"),
-                           (Uint)Pgeti("SplitCS_Nsplit_b"),
-                           (Uint)Pgeti("SplitCS_Nsplit_c")};
+                       (Uint)Pgeti("SplitCS_Nsplit_b"),
+                       (Uint)Pgeti("SplitCS_Nsplit_c")};
   char par[STR_SIZE3]  = {'\0'};
   char obj[STR_SIZE1]  = {'\0'};
   char name[STR_SIZE3] = {'\0'};
@@ -209,7 +210,15 @@ populate_box_patch_SplitCS
     {
       for (d2 = 0; d2 <  Nsd[2]; d2++)
       {
-        Patch_T *const patch = grid->patch[p];
+        Patch_T *const patch = calloc(1,sizeof(*patch));
+        IsNull(patch);
+        grid->patch    = 
+          realloc(grid->patch,(grid->np+2)*sizeof(*grid->patch));
+        IsNull(grid->patch);
+        grid->patch[grid->np]   = patch;
+        grid->patch[grid->np+1] = 0;
+        grid->np += 1;
+          
         Flag_T side = dir0;
         
         assert(StrSide[side]);

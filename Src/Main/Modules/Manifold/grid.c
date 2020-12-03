@@ -13,10 +13,10 @@ int make_patches(Grid_T *const grid)
   Uint p;
   
   /* allocate patches  */
-  alloc_patches(grid);
+  //alloc_patches(grid);
   
   /* number of patches */
-  grid->np = countf(grid->patch);
+  //grid->np = countf(grid->patch);
   
   /* filling patches parameter */
   fill_patches(grid);

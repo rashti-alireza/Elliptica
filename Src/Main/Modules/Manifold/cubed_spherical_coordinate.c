@@ -392,7 +392,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     Error0(NO_OPTION);
   }
   
-  assert(pn == (Uint)Pgeti("SplitCS_Npatches"));
+  //assert(pn == (Uint)Pgeti("SplitCS_Npatches"));
   
 }
 
@@ -407,9 +407,10 @@ populate_CS_patch_SplitCS
   Uint *const pn/* starting patch number,is increased for each add */
   )
 {
+  const Uint NUMBER_OF_SIDES = 6;
   const Uint Nsd[3] = {(Uint)Pgeti("SplitCS_Nsplit_a"),
-                           (Uint)Pgeti("SplitCS_Nsplit_b"),
-                           (Uint)Pgeti("SplitCS_Nsplit_c")};
+                       (Uint)Pgeti("SplitCS_Nsplit_b"),
+                       (Uint)Pgeti("SplitCS_Nsplit_c")};
   char parU[STR_SIZE3] = {'\0'};
   char parD[STR_SIZE3] = {'\0'};
   char par[STR_SIZE3]  = {'\0'};
@@ -443,10 +444,18 @@ populate_CS_patch_SplitCS
     {
       for (d2 = 0; d2 <  Nsd[2]; d2++)
       {
-        for (p = *pn; p < *pn+6; ++p)
+        for (p = 0; p < NUMBER_OF_SIDES; ++p)
         {
-          Patch_T *const patch = grid->patch[p];
-          Flag_T side = (Flag_T)(p-(*pn));
+          Patch_T *const patch = calloc(1,sizeof(*patch));
+          IsNull(patch);
+          grid->patch    = 
+            realloc(grid->patch,(grid->np+2)*sizeof(*grid->patch));
+          IsNull(grid->patch);
+          grid->patch[grid->np]   = patch;
+          grid->patch[grid->np+1] = 0;
+          grid->np += 1;
+          
+          Flag_T side = (Flag_T)(p);
           Field_T *R1 = add_field(SigmaD,0,patch,NO);
           Field_T *R2 = add_field(SigmaU,0,patch,NO);
           double *rU = 0, *rD = 0;
@@ -571,10 +580,12 @@ populate_CS_patch_SplitCS
           patch->basis[1] = Chebyshev_Tn_BASIS;
           patch->basis[2] = Chebyshev_Tn_BASIS;
         }/* for (p = *pn; p < *pn+6; ++p) */
-        *pn += 6;
+        //*pn += 6;
       }
     }
   }
+  
+  UNUSED(pn);
 }
 
 /* making value of coords. it is a general function for cubed spherical type */
