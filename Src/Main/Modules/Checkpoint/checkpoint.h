@@ -33,17 +33,17 @@ struct checkpoint_header
 };
 
 
-void write_checkpoint(Physics_T *const phys);
+void write_checkpoint(Physics_T *const phys,const char *const out_dir);
 Grid_T *load_checkpoint_file(void);
 int can_we_use_checkpoint(void);
 void read_fields_from_checkpoint(Grid_T *const grid,FILE *const file);
 Grid_T *init_from_checkpoint(FILE *const file);
 Parameter_T *parameter_query_from_checkpoint(const char *const par_name,FILE *const file);
 int is_checkpoint_sound(const char *const file_path);
-static void move_checkpoint_file(void);
-static void write_parameters(const Grid_T *const grid);
-static void write_fields(const Grid_T *const grid);
-static void write_header(const Grid_T *const grid);
+static void move_checkpoint_file(const char *const folder);
+static void write_parameters(const Grid_T *const grid,const char *const folder);
+static void write_fields(const Grid_T *const grid,const char *const folder);
+static void write_header(const Grid_T *const grid,const char *const folder);
 static void read_parameters(struct checkpoint_header *const alloc_info,FILE *const file);
 static void read_header(struct checkpoint_header *const alloc_info,FILE *const file);
 static void alloc_db(struct checkpoint_header *const alloc_info);

@@ -13,39 +13,35 @@
 // modify_checkpoint_par: n_a = 4(x6)
 // modify_checkpoint_par: Solving_Max_Number_of_Iteration = 0 
 // 
-// if you wanna change the output directories, change the following
+// if you wanna change the output directories after loading from
+// a checkpoint file change the following in parameter files
 // and note that the folders must be made already:
-// modify_checkpoint_par:iteration_output      = path1
-// modify_checkpoint_par:output_directory_path = path2
-// modify_checkpoint_par:Diagnostics           = path3
+// modify_checkpoint_par:`P_`iteration_output      = path1
+// modify_checkpoint_par:`P_`output_directory_path = path2
+// modify_checkpoint_par:`P_`Diagnostics           = path3
 // 
-*/
+// where `P_` is the prefix of the project. */
 static Uint n_modified_checkpoint_par;/* number of modify_checkpoint_par */
 static Parameter_T **modified_checkpoint_par;/* modified pars in par file
                                            // to be used after loading of
                                            // the checkpoint file. */
 
-/* write checkpoint for the given grid 
+/* write checkpoint for the given phys->grid.
 // NOTE: the order of writing and reading is crucial */
-void write_checkpoint(Physics_T *const phys)
+void write_checkpoint(Physics_T *const phys,const char *const out_dir)
 {
-  Grid_T *const grid = phys->grid;
+  FUNC_TIC
   
-  /* print some descriptions */
-  pr_line_custom('=');
-  printf("{ Writing checkpoint file ...\n");
+  Grid_T *const grid = phys->grid;
   
   if (!grid)
   {
-    printf("~> The given grid is empty.\n");
-    printf("} Writing checkpoint ==> Done.\n");
-    pr_clock();
-    pr_line_custom('=');
+    printf(Pretty0"The given grid is empty.\n");
+    FUNC_TOC
     return;
   }
   
   FILE *file = 0;
-  const char *const out_dir = Pgets("iteration_output");
   char file_path[MAX_ARR];
   char msg[MAX_ARR];
   char *const p_msg = msg;/* to avoid GCC warning for FWriteP_bin */
@@ -56,10 +52,8 @@ void write_checkpoint(Physics_T *const phys)
   
   if (dt+last_checkpoint_was > now)
   {
-    printf("~> It's early for writing checkpoint.\n");
-    printf("} Writing checkpoint ==> Done.\n");
-    pr_clock();
-    pr_line_custom('=');
+    printf(Pretty0"It's early to write checkpoint.\n");
+    FUNC_TOC
     return;
   }
   
@@ -68,13 +62,13 @@ void write_checkpoint(Physics_T *const phys)
   /* NOTE: the order of writing is super crucial for reading */
   
   /* write header */
-  write_header(grid);
+  write_header(grid,out_dir);
   
   /* write all parameters in the checkpoint file */
-  write_parameters(grid);
+  write_parameters(grid,out_dir);
   
   /* write all fields value in the checkpoint file */
-  write_fields(grid);
+  write_fields(grid,out_dir);
   
   /* successful message at the end of the checkpoint file */
   sprintf(file_path,"%s/%s_temp",out_dir,CHECKPOINT_FILE_NAME);
@@ -84,11 +78,9 @@ void write_checkpoint(Physics_T *const phys)
   fclose(file);
   
   /* replace checkpoint file with the previous */
-  move_checkpoint_file();
+  move_checkpoint_file(out_dir);
   
-  printf("} Writing checkpoint file ==> Done.\n");
-  pr_clock();
-  pr_line_custom('=');
+  FUNC_TOC
 }
 
 /* ->return value: if the chekpoint is completed 1, otherwise 0. */
@@ -115,10 +107,9 @@ int is_checkpoint_sound(const char *const file_path)
 }
 
 /* write header of checkpoint file */
-static void write_header(const Grid_T *const grid)
+static void write_header(const Grid_T *const grid,const char *const folder)
 {
   FILE *file = 0;
-  const char *const folder = Pgets("iteration_output");
   char file_path[MAX_ARR];
   Uint np;
 
@@ -144,9 +135,8 @@ static void write_header(const Grid_T *const grid)
 }
 
 /* replace checkpoint file with the previous one */
-static void move_checkpoint_file(void)
+static void move_checkpoint_file(const char *const folder)
 {
-  const char *const folder = Pgets("iteration_output");
   char command[2*MAX_ARR];
   
   sprintf(command,"mv %s/%s_temp %s/%s",
@@ -158,13 +148,12 @@ static void move_checkpoint_file(void)
 }
 
 /* write all of the pertinent parameters in the checkpoint file */
-static void write_parameters(const Grid_T *const grid)
+static void write_parameters(const Grid_T *const grid,const char *const folder)
 {
   printf ("~> Writing parameters in checkpoint file ...\n");
   fflush(stdout);
   
   FILE *file = 0;
-  const char *const folder = Pgets("iteration_output");
   char file_path[MAX_ARR];
   char title_line[MAX_ARR] = {'\0'};
   char *const p_title_line = title_line;/* to avoid GCC warning for FWriteP_bin */
@@ -204,13 +193,12 @@ static void write_parameters(const Grid_T *const grid)
 }
 
 /* write all of the fields in the checkpoint file */
-static void write_fields(const Grid_T *const grid)
+static void write_fields(const Grid_T *const grid,const char *const folder)
 {
   printf("~> Writing fields in checkpoint file ...\n");
   fflush(stdout);
   
   FILE *file = 0;
-  const char *const folder = Pgets("iteration_output");
   const char *const list   = Pgets("checkpoint_save");
   char file_path[MAX_ARR];
   char title_line[MAX_ARR] = {'\0'};
