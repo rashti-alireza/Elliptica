@@ -404,9 +404,9 @@ populate_CS_patch_SplitCS
   )
 {
   const Uint NUMBER_OF_SIDES = 6;
-  const Uint Nsd[3] = {(Uint)Pgeti("SplitCS_Nsplit_a"),
-                       (Uint)Pgeti("SplitCS_Nsplit_b"),
-                       (Uint)Pgeti("SplitCS_Nsplit_c")};
+  const Uint Nsd[3] = {(Uint)Pgeti(P_"SplitCS_Nsplit_a"),
+                       (Uint)Pgeti(P_"SplitCS_Nsplit_b"),
+                       (Uint)Pgeti(P_"SplitCS_Nsplit_c")};
   char parU[STR_SIZE3] = {'\0'};
   char parD[STR_SIZE3] = {'\0'};
   char par[STR_SIZE3]  = {'\0'};
@@ -508,9 +508,9 @@ populate_CS_patch_SplitCS
           patch->CoordSysInfo->CubedSphericalCoord->type = type;
           
           /* filling n */
-          patch->n[0] = (Uint)Pgeti("SplitCS_n_a");
-          patch->n[1] = (Uint)Pgeti("SplitCS_n_b");
-          patch->n[2] = (Uint)Pgeti("SplitCS_n_c");
+          patch->n[0] = (Uint)Pgeti(P_"SplitCS_n_a");
+          patch->n[1] = (Uint)Pgeti(P_"SplitCS_n_b");
+          patch->n[2] = (Uint)Pgeti(P_"SplitCS_n_c");
           
           /* filling nn */
           patch->nn = total_nodes_patch(patch);
@@ -3124,13 +3124,13 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     Nns[i]  = n[i];
   }
   /* adjust parameters */
-  Pseti("SplitCS_n_a",(int)Nns[0]);
-  Pseti("SplitCS_n_b",(int)Nns[1]);
-  Pseti("SplitCS_n_c",(int)Nns[2]);
+  Pseti(P_"SplitCS_n_a",(int)Nns[0]);
+  Pseti(P_"SplitCS_n_b",(int)Nns[1]);
+  Pseti(P_"SplitCS_n_c",(int)Nns[2]);
   /* number of splits in each direction */
-  Pseti("SplitCS_Nsplit_a",(int)Nsd[0]);
-  Pseti("SplitCS_Nsplit_b",(int)Nsd[1]);
-  Pseti("SplitCS_Nsplit_c",(int)Nsd[2]);
+  Pseti(P_"SplitCS_Nsplit_a",(int)Nsd[0]);
+  Pseti(P_"SplitCS_Nsplit_b",(int)Nsd[1]);
+  Pseti(P_"SplitCS_Nsplit_c",(int)Nsd[2]);
   
   /* test */
   if (1)
@@ -5124,7 +5124,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
 // this function is deprecated. */
 void alloc_patches_Split_CubedSpherical_grid(Grid_T *const grid)
 {
-  const Uint Np = (Uint)Pgeti("SplitCS_Npatches");
+  const Uint Np = (Uint)Pgeti(P_"SplitCS_Npatches");
   Uint i;
   
   grid->patch = calloc((Np+1),sizeof(*grid->patch));

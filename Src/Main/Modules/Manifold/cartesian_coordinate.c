@@ -189,9 +189,9 @@ populate_box_patch_SplitCS
   )
 
 {
-  const Uint Nsd[3] = {(Uint)Pgeti("SplitCS_Nsplit_a"),
-                       (Uint)Pgeti("SplitCS_Nsplit_b"),
-                       (Uint)Pgeti("SplitCS_Nsplit_c")};
+  const Uint Nsd[3] = {(Uint)Pgeti(P_"SplitCS_Nsplit_a"),
+                       (Uint)Pgeti(P_"SplitCS_Nsplit_b"),
+                       (Uint)Pgeti(P_"SplitCS_Nsplit_c")};
   char par[STR_SIZE3]  = {'\0'};
   char obj[STR_SIZE1]  = {'\0'};
   char name[STR_SIZE3] = {'\0'};
@@ -254,9 +254,9 @@ populate_box_patch_SplitCS
         
         
         /* filling n */
-        patch->n[0] = (Uint)Pgeti("SplitCS_n_a");
-        patch->n[1] = (Uint)Pgeti("SplitCS_n_b");
-        patch->n[2] = (Uint)Pgeti("SplitCS_n_c");
+        patch->n[0] = (Uint)Pgeti(P_"SplitCS_n_a");
+        patch->n[1] = (Uint)Pgeti(P_"SplitCS_n_b");
+        patch->n[2] = (Uint)Pgeti(P_"SplitCS_n_c");
         
         /* filling nn */
         patch->nn = total_nodes_patch(patch);

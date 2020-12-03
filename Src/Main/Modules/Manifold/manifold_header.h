@@ -11,6 +11,9 @@
 #include "maths_special_functions_lib.h"
 #include "maths_calculus_lib.h"
 
+/* internal parameter prefix */
+#define P_ "mnfld_"
+
 /* array size */
 #define STR_SIZE1 (100)
 #define STR_SIZE2 (200)
