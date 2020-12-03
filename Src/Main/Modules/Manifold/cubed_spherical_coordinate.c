@@ -469,7 +469,13 @@ populate_CS_patch_SplitCS
               strcmp_i(obj,"outermost")
              )
           {
-            if (d2 == Nsd[2]-1)/* if on Outer Boundary */
+            
+            /* if only one split => on both Outer and Inner Boundary */
+            if (Nsd[2] == 1)
+              sprintf(patch->CoordSysInfo->region,
+                "(%s)(%s_OB)(%s_IB)",obj,obj,obj);
+                
+            else if (d2 == Nsd[2]-1)/* if on Outer Boundary */
               sprintf(patch->CoordSysInfo->region,
                 "(%s)(%s_OB)",obj,obj);
             
