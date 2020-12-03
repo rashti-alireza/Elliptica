@@ -390,7 +390,7 @@ Grid_T *mygrid(Physics_T *const phys,const char *const region)
   phys->gridtemp[ng]->kind  = phys->grid->kind;
   phys->gridtemp[ng]->patch = patches;
   phys->gridtemp[ng]->np    = Np;
-  
+  phys->gridtemp[ng]->gn    = phys->grid->gn;
   
   return phys->gridtemp[ng];
 }
