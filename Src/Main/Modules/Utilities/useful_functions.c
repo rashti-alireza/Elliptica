@@ -244,11 +244,11 @@ SubFace_T *get_paired_subface(const SubFace_T *const sub)
 /* ->return value: total number of nodes on the given grid */
 Uint total_nodes_grid(const Grid_T *const grid)
 {
-  Uint pa;
+  Uint p;
   Uint sum = 0;
   
-  FOR_ALL(pa,grid->patch)
-    sum += total_nodes_patch(grid->patch[pa]);
+  FOR_ALL_PATCHES(p,grid)
+    sum += total_nodes_patch(grid->patch[p]);
   
   return sum;
 }
