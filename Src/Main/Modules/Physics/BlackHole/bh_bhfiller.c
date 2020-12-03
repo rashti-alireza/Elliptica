@@ -134,20 +134,28 @@ bhf_init
     bhf->nf = nf;
     bhf->fld= calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
     
-    if (grid->kind == Grid_SplitCubedSpherical_NSNS ||
-        grid->kind == Grid_SplitCubedSpherical_BHBH ||
+    if (grid->kind == Grid_SplitCubedSpherical_BHBH ||
         grid->kind == Grid_SplitCubedSpherical_BHNS ||
         grid->kind == Grid_SplitCubedSpherical_SBH  ||
-        grid->kind == Grid_SplitCubedSpherical_SNS  ||
-        grid->kind == Grid_CubedSpherical_BHNS      ||
-        grid->kind == Grid_CubedSpherical_NSNS
+        grid->kind == Grid_CubedSpherical_BHNS
        )
     {
      /* set the method function */
      IF_sval("surface_type","perfect_s2")
-      bhf->bhfiller = bhf_ChebTn_Ylm_pefect_S2_CS;
+       bhf->bhfiller = bhf_ChebTn_Ylm_pefect_S2_CS;
      else
-      Error0(NO_OPTION);
+       Error0(NO_OPTION);
+     
+     /* patches outside the BH */
+     bhf->patches_outBH = 
+      collect_patches(phys->grid,Ftype("BH_around_IB"),&npo);
+     IsNull(bhf->patches_outBH);
+     bhf->npo = npo;
+     /* patches inside the BH */
+     bhf->patches_inBH = 
+      collect_patches(phys->grid,Ftype("BH"),&npi);
+     IsNull(bhf->patches_inBH);
+     bhf->npi = npi;
     }
     else
      Error0(NO_OPTION);
@@ -270,17 +278,6 @@ bhf_init
         Error0(NO_OPTION);
       
     }/* for (f = 0; f < nf ++f) */
-    
-    /* patches outside the BH */
-    bhf->patches_outBH = 
-     collect_patches(phys->grid,Ftype("BH_around_IB"),&npo);
-    IsNull(bhf->patches_outBH);
-    bhf->npo = npo;
-    /* patches inside the BH */
-    bhf->patches_inBH = 
-     collect_patches(phys->grid,Ftype("BH"),&npi);
-    IsNull(bhf->patches_inBH);
-    bhf->npi = npi;
     
   }/* if (strcmp_i(method,"ChebTn_Ylm")) */
   else
@@ -906,6 +903,252 @@ int bh_add_patch_inside_black_hole(Physics_T *const phys,
   make_nodes(mygrid(phys,region));
   
   return 1;
+}
+
+
+/* printing the specified quantities along a line for quality check */
+void 
+bh_interpolating_fields_on_a_line
+  (
+  Physics_T *const phys/* physics of interest */,
+  const char *const sfields_name/* comma separated fields */,
+  const char *const dir/* output directory */,
+  const int test_det_adm_g/* if 1, it tests det(adm_g) > 0 */
+  )
+{
+  FUNC_TIC
+  
+  const double SmallDet = 1E-2;
+  Grid_T *const grid = mygrid(phys,".*");
+  char **const fields_name = 
+    read_separated_items_in_string(sfields_name,','); 
+  /* strcut for point where interpolate taken place */
+  struct interpolation_points
+  {
+    double *x,*y,*z;/* (x,y,z) coords */
+    double *X,*Y,*Z;/* (X,Y,Z) coords */
+    Uint *patchn;/* patch number for each coord */
+    Uint npoints;/* number of coords */
+    int **f_index;/* field index for each patch and for each field
+                  // ex: f_index[p][f] = for patch p and field f. */
+  }pnt[1] = {0};
+  /* the line eq.:
+  // x = x_0 + t*mx
+  // y = y_0 + t*my
+  // z = z_0 + t*mz. */
+  const double mx    = Getd("filler_test_print_1d_slop_x");
+  const double my    = Getd("filler_test_print_1d_slop_y");
+  const double mz    = Getd("filler_test_print_1d_slop_z");
+  const double x_0   = Getd("filler_test_print_1d_init_x");
+  const double y_0   = Getd("filler_test_print_1d_init_y");
+  const double z_0   = Getd("filler_test_print_1d_init_z");
+  const double Len   = Getd("filler_test_print_1d_length");
+  const Uint npoints = (Uint)Geti("filler_test_print_1d_points");
+  const double t     = Len/npoints;
+  char fname[1000] = {'\0'};
+  double *interp_v = 0;
+  FILE *file;
+  Uint count_f;
+  Uint i,p,f;
+  
+  /* populate points along y-axis since the objects are there */
+  pnt->npoints = npoints;
+  pnt->x       = alloc_double(npoints);
+  pnt->y       = alloc_double(npoints);
+  pnt->z       = alloc_double(npoints);
+  pnt->X       = alloc_double(npoints);
+  pnt->Y       = alloc_double(npoints);
+  pnt->Z       = alloc_double(npoints);
+  pnt->patchn  = calloc(npoints,sizeof(*pnt->patchn));
+  IsNull(pnt->patchn);
+  
+  /* fill coords along the line. */
+  for (i = 0; i < npoints; ++i)
+  {
+    pnt->x[i] = x_0+i*t*mx;
+    pnt->y[i] = y_0+i*t*my;
+    pnt->z[i] = z_0+i*t*mz;
+  }
+  
+  /* to avoid race condition between threads write all coeffs */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    Uint fn = 0;
+    
+    while (fields_name[fn])
+    {
+      make_coeffs_3d(patch->fields[Ind(fields_name[fn])]);
+      fn++;
+    }
+  }
+  
+  /* find the corresponding X and patch */
+  OpenMP_1d_Pragma(omp parallel for)
+  for (p = 0; p < npoints; ++p)
+  {
+    Patch_T *patch = 0;
+    double x[3],X[3];
+    
+    x[0] = pnt->x[p];
+    x[1] = pnt->y[p];
+    x[2] = pnt->z[p];
+    
+    patch = x_in_which_patch(x,grid->patch,grid->np);
+    if(!patch || !X_of_x(X,x,patch))
+      Error0("It could not find X(x,y,z) in any patch!\n");
+
+    pnt->X[p] = X[0];
+    pnt->Y[p] = X[1];
+    pnt->Z[p] = X[2];
+  }
+  
+  /* set f_index, note: it must be set right before interpolation
+  // to make sure all fields are added already. */
+  pnt->f_index = calloc(grid->np,sizeof(*pnt->f_index)); 
+  IsNull(pnt->f_index);
+  /* count f */
+  count_f = 0;
+  while(fields_name[count_f])
+    ++count_f;
+  
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch  = grid->patch[p];
+    assert(patch->pn == p);
+    
+    pnt->f_index[p] = calloc(count_f,sizeof(*pnt->f_index[p]));
+    IsNull(pnt->f_index[p]);
+    
+    f = 0;
+    while(fields_name[f])
+    {
+      pnt->f_index[p][f] = Ind(fields_name[f]);
+      ++f;
+    }
+  }
+  
+  interp_v = alloc_double(npoints);
+  f = 0;
+  while(fields_name[f])
+  {
+    /* interpolating each fields at the all given points */
+    OpenMP_1d_Pragma(omp parallel for)
+    for (p = 0; p < npoints; ++p)
+    {
+      Patch_T *patch  = grid->patch[pnt->patchn[p]];
+      Interpolation_T *interp_s = init_interpolation();
+      interp_s->field = patch->fields[pnt->f_index[patch->pn][f]];
+      interp_s->XYZ_dir_flag = 1;
+      interp_s->X = pnt->X[p];
+      interp_s->Y = pnt->Y[p];
+      interp_s->Z = pnt->Z[p];
+      plan_interpolation(interp_s);
+      interp_v[p] = execute_interpolation(interp_s);
+      free_interpolation(interp_s);
+    }
+    
+    /* write */
+    sprintf(fname,"%s/%s_on_line_%0.1f_%0.1f_%0.1f.txt",dir,fields_name[f],mx,my,mz);
+    file = Fopen(fname,"w");
+    fprintf(file,"# fields value along the line:\n"
+                 "# {\n"
+                 "#   x = %g + t*%g,\n"
+                 "#   y = %g + t*%g,\n"
+                 "#   z = %g + t*%g.\n"
+                 "# }\n"
+                 "#\n"
+                 "# x-coord y-coord z-coord %s\n",
+                 x_0,mx,
+                 y_0,my,
+                 z_0,mz,
+                 fields_name[f]);
+    for (p = 0; p < npoints; ++p)
+    {
+      /* doc test */
+      if (!isfinite(interp_v[p]))
+      {
+        printf("%s[%s](%g,%g,%g)|x(%g,%g,%g)|X = %g\n",
+                fields_name[f],
+                grid->patch[pnt->patchn[p]]->name,
+                pnt->x[p],pnt->y[p],pnt->z[p],
+                pnt->X[p],pnt->Y[p],pnt->Z[p],interp_v[p]);
+      }
+      fprintf(file,"%f %f %f %f\n",
+                   pnt->x[p],pnt->y[p],pnt->z[p],interp_v[p]);
+    }
+    fclose(file);
+    f++;
+  }/* while(fields_name[f]) */
+  free_2d_mem(pnt->f_index,grid->np);
+  pnt->f_index = 0;
+  Free(interp_v);
+  
+  if (test_det_adm_g)/* check det(adm metric) if fields_name contain adm_g */
+  {
+    /* interpolating each fields at the all given points */
+    OpenMP_1d_Pragma(omp parallel for)
+    for (p = 0; p < npoints; ++p)
+    {
+      Patch_T *patch  = grid->patch[pnt->patchn[p]];
+      double gxx,gyy,gzz,gxy,gxz,gyz,detg;
+      
+      Interpolation_T *interp_s = init_interpolation();
+      interp_s->XYZ_dir_flag = 1;
+      interp_s->X = pnt->X[p];
+      interp_s->Y = pnt->Y[p];
+      interp_s->Z = pnt->Z[p];
+      
+      interp_s->field = patch->fields[Ind("adm_g_D0D0")];
+      plan_interpolation(interp_s);
+      gxx = execute_interpolation(interp_s);
+      
+      interp_s->field = patch->fields[Ind("adm_g_D0D1")];
+      plan_interpolation(interp_s);
+      gxy = execute_interpolation(interp_s);
+      
+      interp_s->field = patch->fields[Ind("adm_g_D0D2")];
+      plan_interpolation(interp_s);
+      gxz = execute_interpolation(interp_s);
+      
+      interp_s->field = patch->fields[Ind("adm_g_D1D1")];
+      plan_interpolation(interp_s);
+      gyy = execute_interpolation(interp_s);
+      
+      interp_s->field = patch->fields[Ind("adm_g_D1D2")];
+      plan_interpolation(interp_s);
+      gyz = execute_interpolation(interp_s);
+      
+      interp_s->field = patch->fields[Ind("adm_g_D2D2")];
+      plan_interpolation(interp_s);
+      gzz = execute_interpolation(interp_s);
+      
+      detg=(2.*gxy*gxz*gyz + gxx*gyy*gzz -
+              gzz*gxy*gxy  - gyy*gxz*gxz -
+              gxx*gyz*gyz);
+
+      if(detg <= SmallDet)
+      {
+        printf("det(adm_g_ij(%g,%g,%g))=%g\n",
+             pnt->x[p], pnt->y[p], pnt->z[p],detg);
+      }
+      free_interpolation(interp_s);
+    }
+  }/* if(?) */
+  
+  free_2d(fields_name);
+  Free(pnt->x);
+  Free(pnt->y);
+  Free(pnt->z);
+  Free(pnt->X);
+  Free(pnt->Y);
+  Free(pnt->Z);
+  Free(pnt->patchn);
+  free_2d_mem(pnt->f_index,grid->np);
+  pnt->f_index = 0;
+  
+  FUNC_TOC
 }
 
 

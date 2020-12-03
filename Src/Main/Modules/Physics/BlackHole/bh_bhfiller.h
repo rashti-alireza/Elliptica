@@ -97,6 +97,15 @@ bh_bhfiller
   const char *const method/* the method to be used for extrapolating */
   );
   
+
+void 
+bh_interpolating_fields_on_a_line
+  (
+  Physics_T *const phys/* physics of interest */,
+  const char *const sfields_name/* comma separated fields */,
+  const char *const dir/* output directory */,
+  const int test_det_adm_g/* if 1, it tests det(adm_g) > 0 */
+  );
   
 int bh_fill_inside_black_hole(Physics_T *const phys);  
 static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf);

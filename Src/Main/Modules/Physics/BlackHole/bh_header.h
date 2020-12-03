@@ -27,7 +27,14 @@ void bh_find_bh_surface_perfect_s2(Physics_T *const phys);
 void bh_start_off_KerrSchild_perfect_s2(Physics_T *const phys);
 int bh_add_patch_inside_black_hole(Physics_T *const phys,const char *const region);
 
-
+void 
+bh_interpolating_fields_on_a_line
+  (
+  Physics_T *const phys/* physics of interest */,
+  const char *const sfields_name/* comma separated fields */,
+  const char *const dir/* output directory */,
+  const int test_det_adm_g/* if 1, it tests det(adm_g) > 0 */
+  );
 
 #endif
 
