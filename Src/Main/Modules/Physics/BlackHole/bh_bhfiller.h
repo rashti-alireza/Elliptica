@@ -5,6 +5,9 @@
 #include "maths_equation_solvings_lib.h"
 #include "maths_linear_algebra_lib.h"
 
+/* verbose print */
+#define VERBOSE (1)
+
 /* constants */
 #define MAX_STR  (100)
 #define MAX_STR2 (200)
