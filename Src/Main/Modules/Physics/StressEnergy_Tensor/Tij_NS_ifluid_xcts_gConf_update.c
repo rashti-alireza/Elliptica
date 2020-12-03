@@ -3,11 +3,11 @@
 // August 2019
 */
 
-#include "Tij_NS_ifluid_cts_gConf_update.h"
+#include "Tij_NS_ifluid_xcts_gConf_update.h"
 
 
 /* updating all matter related and their derivatives. */
-void Tij_NS_idealfluid_CTS_gConf_update(Physics_T *const phys)
+void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
 {
   FUNC_TIC
   
@@ -29,19 +29,19 @@ void Tij_NS_idealfluid_CTS_gConf_update(Physics_T *const phys)
     
     IF_not_cover(patch,phys)  continue;
     
-    RELAX_UPDATE_FUNC(Tij_NS_IF_CTS_gConf_enthalpy(patch,Euler_const),
+    RELAX_UPDATE_FUNC(Tij_NS_IF_XCTS_gConf_enthalpy(patch,Euler_const),
                       patch,enthalpy,W);
     
     if (neat)
       Tij_NS_neat_enthalpy(patch);
     
     Tij_NS_eos_update_rho0(patch);
-    Tij_NS_IF_CTS_gConf_u0(patch);
-    Tij_NS_IF_CTS_gConf_derives(patch);
+    Tij_NS_IF_XCTS_gConf_u0(patch);
+    Tij_NS_IF_XCTS_gConf_derives(patch);
     /* sources */
-    Tij_NS_IF_CTS_gConf_psi6J_Ui(patch);
-    Tij_NS_IF_CTS_gConf_psi6E(patch);
-    Tij_NS_IF_CTS_gConf_psi6S(patch);
+    Tij_NS_IF_XCTS_gConf_psi6J_Ui(patch);
+    Tij_NS_IF_XCTS_gConf_psi6E(patch);
+    Tij_NS_IF_XCTS_gConf_psi6S(patch);
   }
   
   FUNC_TOC

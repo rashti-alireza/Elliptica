@@ -7,7 +7,7 @@
 #include "Tij_header.h"
 
 
-void Tij_NS_IF_CTS_gConf_psi6S(Patch_T *const patch)
+void Tij_NS_IF_XCTS_gConf_u0(Patch_T *const patch)
 {
   const Uint nn = patch->nn;
   Uint ijk;
@@ -32,26 +32,23 @@ void Tij_NS_IF_CTS_gConf_psi6S(Patch_T *const patch)
   READ_v(dphi_D2)
   READ_v(dphi_D1)
   READ_v(dphi_D0)
+  READ_v(alphaPsi)
   READ_v(psi)
-  READ_v(rho0)
-  REALLOC_v_WRITE_v(SConf)
+  REALLOC_v_WRITE_v(u0)
 
 
-  EoS_T *eos = initialize_EoS();
   for(ijk = 0; ijk < nn; ++ijk)
   {
-    eos->h   = enthalpy[ijk];
-    double p = eos->pressure(eos);
-    double psim4 = 
+  double alpha = 
+alphaPsi[ijk]/psi[ijk];
+
+  double psim4 = 
 pow(psi[ijk], -4);
 
-    double psi4 = 
+  double psi4 = 
 pow(psi[ijk], 4);
 
-    double psi6 = 
-pow(psi[ijk], 6);
-
-    double P2 = 
+  double P2 = 
 2.0*W_U0[ijk]*dphi_D0[ijk] + 2.0*W_U1[ijk]*dphi_D1[ijk] + 2.0*
 W_U2[ijk]*dphi_D2[ijk] + psi4*(pow(W_U0[ijk], 2)*gConf_D0D0[ijk] + 2.0*
 W_U0[ijk]*W_U1[ijk]*gConf_D0D1[ijk] + 2.0*W_U0[ijk]*W_U2[ijk]*
@@ -62,10 +59,9 @@ igConf_U0U1[ijk] + 2.0*dphi_D0[ijk]*dphi_D2[ijk]*igConf_U0U2[ijk] +
 pow(dphi_D1[ijk], 2)*igConf_U1U1[ijk] + 2.0*dphi_D1[ijk]*dphi_D2[ijk]*
 igConf_U1U2[ijk] + pow(dphi_D2[ijk], 2)*igConf_U2U2[ijk]);
 
-    double Sbar = 
-psi6*(P2*rho0[ijk]/enthalpy[ijk] + 3*p);
+  double u_mu0 = 
+sqrt(P2 + pow(enthalpy[ijk], 2))/(alpha*enthalpy[ijk]);
 
-  SConf[ijk] = Sbar;
+  u0[ijk] = u_mu0;
   }
-  free_EoS(eos);
 }

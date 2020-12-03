@@ -1,11 +1,9 @@
 # Note: Tij stands for Stress Energy tensor.
-# IF stands for ideal fluid, CTS for conformal thin sandwich method;
-# thus, Tij_NS_IF_CTS means stress enerfy of ideal fluid in CTS method. 
-# given all of the fields needed for 
-# S = T(mu,nu)*gamma(i,j)*gamma(-i,-mu)*gamma(-j,-nu)
-# it builds "total momentum density * psi^6", 
-# where psi is conformal factor, and puts it to SConf. 
-# note: it depends on u0, so first to call Tij_NS_IF_CTS_gConf_u0 function.
+# IF stands for ideal fluid, XCTS for conformal thin sandwich method;
+# thus, Tij_NS_IF_XCTS means stress enerfy of ideal fluid in XCTS method. 
+# given all of the fields needed it builds 
+# the first component of fluid four velocity, i.e. 
+# u_mu = (u_U0,u_U1,u_U2,u_U3).
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -13,12 +11,11 @@ Dimension = 3;
 # point on manifold shown by:
 Point = ijk;
 
-C_macro = READ_v(name);
+C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
 Ccode["#include "Tij_header.h"\n\n"];
-Ccode["void Tij_NS_IF_CTS_gConf_psi6S(Patch_T *const patch)"];
+Ccode["void Tij_NS_IF_XCTS_gConf_u0(Patch_T *const patch)"];
 Ccode["{"];
-
 Ccode["  const Uint nn = patch->nn;"];
 Ccode["  Uint ijk;"];
 
@@ -40,18 +37,14 @@ Declare =
  # d(phi)/d? for irrotional part of fluid
  (obj = Field,name = dphi, rank = D, C_macro);
 
+ # alphaPsi
+ (obj = Field,name = alphaPsi, rank = 0, C_macro);
+
  # conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
 
- # rho0
- (obj = Field,name = rho0, rank = 0, C_macro);
-
- # pressure
- (obj = Variable,name = p, rank = 0, None);
-
- # SConf
- (obj = Field,name = SConf, rank = 0, C_macro2);
-
+ # u0
+ (obj = Field,name = u0, rank = 0, C_macro2);
 
 }
 
@@ -59,19 +52,15 @@ Declare =
 Symm[igConf(i,j)  = igConf(j,i)];
 Symm[gConf(i,j)   = gConf(j,i)];
 
-# calculate SConf:
-Ccode["  EoS_T *eos = initialize_EoS();"];
+# calculate u0:
 Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["  {"];
-Ccode["    eos->h   = enthalpy[ijk];"];
-Ccode["    double p = eos->pressure(eos);"];
+     alpha = alphaPsi/psi;
      psim4 = psi**(-4);
      psi4  = psi**(4);
-     psi6  = psi**(6);
      P2    = psim4*igConf(i,j)*dphi(-i)*dphi(-j)+2*dphi(-i)*W(i)+psi4*gConf(-i,-j)*W(i)*W(j);
-     Sbar = psi6*(rho0*P2/enthalpy+3*p);
-     Ccode["  SConf[ijk] = Sbar;"];
+     u_mu0 = (enthalpy**2+P2)**(0.5)/(enthalpy*alpha);
+     Ccode["  u0[ijk] = u_mu0;"];
 Ccode["  }"];
-Ccode["  free_EoS(eos);"];
 
 Ccode["}"];

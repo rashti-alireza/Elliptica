@@ -49,8 +49,8 @@ static int add_stress_energy_parameters(Physics_T *const phys)
   {
     /* decomposition type:
     // options:
-    // CTS (conformal thin sandwich): like: Phys. Rev. D 100, 124046  */
-    Pset_default(P_"NS_decomposition","CTS");
+    // XCTS (conformal thin sandwich): like: Phys. Rev. D 100, 124046  */
+    Pset_default(P_"NS_decomposition","XCTS");
     
     /* conformal metric type: 
     // options:
@@ -74,10 +74,10 @@ static int add_stress_energy_tensor_fields(Physics_T *const phys)
   
   assert(phys->grid);
   
-  if (Pcmps(P_"NS_decomposition","CTS") &&
+  if (Pcmps(P_"NS_decomposition","XCTS") &&
       Pcmps(P_"NS_gConf","general"))
   {
-    Tij_NS_idealfluid_CTS_gConf_add_fields(phys->grid);
+    Tij_NS_idealfluid_XCTS_gConf_add_fields(phys->grid);
   }
   else
     Error0(NO_OPTION);
@@ -92,10 +92,10 @@ static int update_stress_energy_tensor(Physics_T *const phys)
   FUNC_TIC
   if (Pcmps(P_"fluid","NS_ideal_fluid"))
   {
-    if(Pcmps(P_"NS_decomposition","CTS") &&
+    if(Pcmps(P_"NS_decomposition","XCTS") &&
        Pcmps(P_"NS_gConf","general"))
     {
-      Tij_NS_idealfluid_CTS_gConf_update(phys);
+      Tij_NS_idealfluid_XCTS_gConf_update(phys);
     }
     else
       Error0(NO_OPTION);
