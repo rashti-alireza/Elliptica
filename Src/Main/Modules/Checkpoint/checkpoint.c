@@ -281,7 +281,7 @@ Grid_T *init_from_checkpoint(FILE *const file)
 /* reading the header for allocations */
 static void read_header(struct checkpoint_header *const alloc_info,FILE *const file)
 {  
-  printf("~> Reading checkpoint file header ...\n");
+  printf(Pretty0"Reading checkpoint file header ...\n");
   fflush(stdout);
   
   char line[MAX_ARR] = {'\0'};
@@ -375,11 +375,11 @@ static void find_and_save_modified_checkpoint_pars(void)
 /* alloc parameters and grid */
 static void alloc_db(struct checkpoint_header *const alloc_info)
 {
-  printf("~> Allocating parameters and patches ...\n");
+  printf(Pretty0"Allocating parameters and patches ...\n");
   fflush(stdout);
   
   const Uint grid_number = alloc_info->grid_number,
-                 npar        = alloc_info->npar;
+                 npar    = alloc_info->npar;
   Grid_T *grid = 0;
   Uint i;
   
@@ -493,7 +493,7 @@ Parameter_T *parameter_query_from_checkpoint(const char *const par_name,FILE *co
 static void read_parameters(struct checkpoint_header *const alloc_info,FILE *const file)
 {
   /* read parameter contents */
-  printf("~> Reading parameters from checkpoint file ...\n");
+  printf(Pretty0"Reading parameters from checkpoint file ...\n");
   fflush(stdout);
   
   const Uint npar = alloc_info->npar;
@@ -594,7 +594,7 @@ static void incorporate_modified_checkpoint_par(void)
       {
         if (strcmp_i(parameters_global[np]->lv,modified_checkpoint_par[i]->lv))
         {
-          printf("-> Modified parameter from checkpoint = %s\n",parameters_global[np]->lv);
+          printf(Pretty0"Modified parameter from checkpoint = %s\n",parameters_global[np]->lv);
           
           /* we must not have array type */
           assert(!parameters_global[np]->rv_array);
@@ -627,7 +627,7 @@ static void incorporate_modified_checkpoint_par(void)
     /* if does not exist */
     if (!get_parameter(modified_checkpoint_par[i]->lv))
     {
-      printf("-> Adding new parameter               = %s\n",modified_checkpoint_par[i]->lv);
+      printf(Pretty0"Adding new parameter               = %s\n",modified_checkpoint_par[i]->lv);
           
       add_parameter(modified_checkpoint_par[i]->lv,modified_checkpoint_par[i]->rv);
     }
@@ -640,7 +640,7 @@ static void incorporate_modified_checkpoint_par(void)
 /* read fields from the checkpoint file */
 void read_fields_from_checkpoint(Grid_T *const grid,FILE *const file)
 {  
-  printf("~> Reading fields from checkpoint file ...\n");
+  printf(Pretty0"Reading fields from checkpoint file ...\n");
   fflush(stdout);
   
   char *match_str;
@@ -693,9 +693,7 @@ void read_fields_from_checkpoint(Grid_T *const grid,FILE *const file)
 // the path of checkpoint file is saved in "checkpoint_file_path". */
 Grid_T *load_checkpoint_file(void)
 {
-  /* print some descriptions */
-  pr_line_custom('=');
-  printf("{ Initializing from checkpoint file ...\n");
+  FUNC_TIC
   
   Grid_T *grid = 0;
   FILE *file   = 0;
@@ -710,18 +708,17 @@ Grid_T *load_checkpoint_file(void)
   grid = init_from_checkpoint(file);
   
   fclose(file);
-  
-  printf("} Initializing from checkpoint file ==> Done.\n");
-  pr_clock();
-  pr_line_custom('=');
-  
+
+  FUNC_TOC
   return grid;
 }
 
 /* check if there is a consistence checkpoint file to be used 
-// for initialization.
-// -> return value : 1 if exists, 0 otherwise. */
-int can_we_use_checkpoint(void)
+// for initialization. it uses leading number of cur_out_dir
+// to find out if in previus numbers there is a sound checkpoint file.
+// -> return value : 1 if exists, 0 otherwise.
+// also it sets par "checkpoint_file_path" to be used for loading. */
+int can_we_use_checkpoint(const char *const cur_out_dir)
 {
   int ret = 0;
   const int FOLDER_TYPE   = 4;
@@ -729,7 +726,6 @@ int can_we_use_checkpoint(void)
   DIR *prev_dir;
   struct dirent *ent;
   struct stat st = {0};/* status of files */
-  const char *const cur_out_dir = Pgets("output_directory_path");
   const char *const cur_folder_name  = strrchr(cur_out_dir,'/')+1;
   const char *const cur_folder_affix = strrchr(cur_folder_name,'_')+1;
   int cur_folder_index = atoi(cur_folder_affix);
@@ -821,7 +817,7 @@ int can_we_use_checkpoint(void)
   {
     Psets("checkpoint_file_path",prev_data_file_path);
     
-    printf("~> checkpoint file found at:\n%s\n",prev_data_file_path);
+    printf(Pretty0"checkpoint file found at:\n%s\n",prev_data_file_path);
     
     /* remove the current directory */
     sprintf(str,"rm -rf %s",cur_out_dir);

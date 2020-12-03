@@ -35,7 +35,7 @@ struct checkpoint_header
 
 void write_checkpoint(Physics_T *const phys,const char *const out_dir);
 Grid_T *load_checkpoint_file(void);
-int can_we_use_checkpoint(void);
+int can_we_use_checkpoint(const char *const cur_out_dir);
 void read_fields_from_checkpoint(Grid_T *const grid,FILE *const file);
 Grid_T *init_from_checkpoint(FILE *const file);
 Parameter_T *parameter_query_from_checkpoint(const char *const par_name,FILE *const file);
