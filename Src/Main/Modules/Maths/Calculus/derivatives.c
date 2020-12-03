@@ -11,7 +11,12 @@
 /* taking partial derivatives using a regex comma separated list.
 // using the regex, it finds the field->name match and take derivative
 // according to the name. please read notes about partial_derivative.
-// NOTE: no space is accepted. */
+// NOTE: no space is accepted.
+// NOTE: try do use a narrow pattern, otherwise some derivatives might
+// taken more than 1 time, for instance, dpsi_D.+ matches ddpsi_D.+
+// which one might not wanted to take second order derivative or
+// maybe the second order derivative matches earlier than
+// first one which causes problem, thus the correct regex is ^dpsi_D.+ */
 void partial_derivative_with_regex(Patch_T *const patch,
                                    const char *const regex_list)
 {
