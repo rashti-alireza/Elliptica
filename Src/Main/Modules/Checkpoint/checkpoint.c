@@ -46,7 +46,7 @@ void write_checkpoint(Physics_T *const phys,const char *const out_dir)
   char msg[MAX_ARR];
   char *const p_msg = msg;/* to avoid GCC warning for FWriteP_bin */
   const double dt  = Pgetd("checkpoint_every");/* unit is hour */
-  const double now = get_time_sec()/(3600);
+  const double now = get_time_sec()/(3600.);
   static double last_checkpoint_was = 0;/* the time where the last 
                                         // checkpoint happened in hours */
   
@@ -143,14 +143,15 @@ static void move_checkpoint_file(const char *const folder)
           folder,CHECKPOINT_FILE_NAME,folder,CHECKPOINT_FILE_NAME);
   shell_command(command);
   
-  printf("checkpoint file path:\n%s/%s\n",folder,CHECKPOINT_FILE_NAME);
+  printf(Pretty0"checkpoint file path:\n%s/%s\n",
+                 folder,CHECKPOINT_FILE_NAME);
   fflush(stdout);
 }
 
 /* write all of the pertinent parameters in the checkpoint file */
 static void write_parameters(const Grid_T *const grid,const char *const folder)
 {
-  printf ("~> Writing parameters in checkpoint file ...\n");
+  printf (Pretty0"Writing parameters in checkpoint file ...\n");
   fflush(stdout);
   
   FILE *file = 0;
@@ -195,13 +196,14 @@ static void write_parameters(const Grid_T *const grid,const char *const folder)
 /* write all of the fields in the checkpoint file */
 static void write_fields(const Grid_T *const grid,const char *const folder)
 {
-  printf("~> Writing fields in checkpoint file ...\n");
+  printf(Pretty0"Writing fields in checkpoint file ...\n");
   fflush(stdout);
   
   FILE *file = 0;
   const char *const list   = Pgets("checkpoint_save");
   char file_path[MAX_ARR];
   char title_line[MAX_ARR] = {'\0'};
+  char regex[MAX_ARR]      = {'\0'};
   char *const p_title_line = title_line;/* to avoid GCC warning for FWriteP_bin */
   Uint p;
   
@@ -224,7 +226,9 @@ static void write_fields(const Grid_T *const grid,const char *const folder)
     for (f = 0; f < patch->nfld; ++f)
     {
       Field_T *field = patch->fields[f];
-      if (strstr_i(list,field->name))
+      
+      sprintf(regex,"\\b%s\\b",field->name);
+      if (patch->fields[f]->v && regex_search(regex,list))
         count_nfld++;
     }
     FWriteV_bin(count_nfld,1);
@@ -232,12 +236,15 @@ static void write_fields(const Grid_T *const grid,const char *const folder)
     for (f = 0; f < patch->nfld; ++f)
     {
       Field_T *field = patch->fields[f];
-      if (strstr_i(list,field->name))
+      
+      sprintf(regex,"\\b%s\\b",field->name);
+      if (patch->fields[f]->v && regex_search(regex,list))
       {
         FWriteP_bin(field->name,strlen(field->name)+1);
         FWriteP_bin(field->v,nn);
       }
     }
+    
   }
   
   sprintf(title_line,"%s",FIELD_FOOTER);
