@@ -3091,11 +3091,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   /* { */
   /* resolution in each dir. */
   const Uint givenN[3] = {(Uint)Pgeti("n_a"),
-                              (Uint)Pgeti("n_b"),
-                              (Uint)Pgeti("n_c")};
+                          (Uint)Pgeti("n_b"),
+                          (Uint)Pgeti("n_c")};
   const Uint maxN[3] = {(Uint)Pgeti("grid_SplitCS_max_n_a"),
-                            (Uint)Pgeti("grid_SplitCS_max_n_b"),
-                            (Uint)Pgeti("grid_SplitCS_max_n_c")};
+                        (Uint)Pgeti("grid_SplitCS_max_n_b"),
+                        (Uint)Pgeti("grid_SplitCS_max_n_c")};
   Uint newN[3] = {0};/* new number of nodes in each direction */
   Uint Nsd[3]  = {0};/* number of splits in each dir. */
   Uint Nns[3]  = {0};/* number of nodes in each split patch */
