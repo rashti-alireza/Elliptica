@@ -14,12 +14,15 @@ int bh_fill_inside_black_hole(Physics_T *const phys)
   
   int ret = EXIT_SUCCESS;
   
+  /* first add patches */
+  bh_add_patch_inside_black_hole(phys,Ftype("BH"));
+  
   IF_sval("filler_method","ChebTn_Ylm")
   {
     /* these fields to be extrapolated  */
     char **fields_name = 
      read_separated_items_in_string(Gets("filler_fields"),',');
-     
+
     ret = bh_bhfiller(phys,fields_name,"ChebTn_Ylm");
     
     free_2d(fields_name);
@@ -857,5 +860,36 @@ static double polynomial7(const double r, const double rmax,const double rmin)
   return ret;
 }
 
+/* ->: 1 if adds any patches inside the black hole, 0 otherwise.
+// if the black hole excised from grid, this function add relevant
+// patches to cover the inside and if already covered, it does nothing. */
+int bh_add_patch_inside_black_hole(Physics_T *const phys,
+                                   const char *const region)
+{
+  Grid_T *const grid = phys->grid;
+  assert(grid);
+  
+  /* check if there is already patches covering inside */
+  for (Uint p = 0; p < grid->np; ++p) 
+  {
+    if (IsItCovering(grid->patch[p],region))
+    {
+      return 0;
+    }
+  }
+  
+  if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_BHBH ||
+      grid->kind == Grid_SplitCubedSpherical_SBH
+     )
+  {
+    populate_CS_patch_SplitCS(grid,region,phys->pos);
+    populate_box_patch_SplitCS(grid,"central_box",phys->pos,region);
+  }
+  else
+    Error0(NO_OPTION);
+  
+  return 1;
+}
 
 

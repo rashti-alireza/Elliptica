@@ -71,6 +71,9 @@ struct Param_S
   double eps;/* cut off */
 };
 
+
+int bh_add_patch_inside_black_hole(Physics_T *const phys,const char *const region);
+
 /* initialize the bhfiller struct */
 static struct BHFiller_S* 
 bhf_init
