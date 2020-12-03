@@ -2758,7 +2758,7 @@ static int Jwritten_vs_Jequation(Solve_Equations_T *const SolveEqs)
 // ->return value: TEST_UNSUCCESSFUL or TEST_SUCCESSFUL */
 static int compare_Js(Grid_T *const grid,const Matrix_T *const J_Reg,const Matrix_T *const J_Schur)
 {
-  const Uint dim = grid->nn;
+  const Uint dim = total_nodes_grid(grid);
   const double ERR = 1e-9;
   double **const J_s = J_Schur->reg->A;
   double **const J_r = J_Reg->reg->A;
@@ -2805,7 +2805,8 @@ static void free_schur_f_g(Grid_T *const grid)
 static Matrix_T *making_J_Old_Fashion(Solve_Equations_T *const SolveEqs)
 {
   Grid_T *const grid = get_grid_solve_equations(SolveEqs);
-  Matrix_T *J_Reg = alloc_matrix(REG_SF,grid->nn,grid->nn);
+  const Uint dim = total_nodes_grid(grid);
+  Matrix_T *J_Reg = alloc_matrix(REG_SF,dim,dim);
   double **const J = J_Reg->reg->A;
   const double CONST = 1.;
   const Uint npatch = grid->np;
@@ -2856,7 +2857,7 @@ static Matrix_T *making_J_Old_Fashion(Solve_Equations_T *const SolveEqs)
       f->v[df] -= EPS;
       free_coeffs(f);
       
-      for (ijk = 0; ijk < grid->nn; ++ijk)
+      for (ijk = 0; ijk < dim; ++ijk)
         J[ijk][df+R] = (F2[ijk]-F1[ijk])/EPS;
       
       free(F2);
@@ -2872,7 +2873,8 @@ static Matrix_T *making_J_Old_Fashion(Solve_Equations_T *const SolveEqs)
 // ->return value: F */
 static double *make_col_F(Grid_T *const grid)
 {
-  double *F = alloc_double(grid->nn);
+  const Uint dim = total_nodes_grid(grid);
+  double *F = alloc_double(dim);
   DDM_Schur_Complement_T *Schur;
   double *f,*g;
   Uint R;/* reference */
@@ -2911,7 +2913,8 @@ static double *make_col_F(Grid_T *const grid)
 static Matrix_T *making_J_Schur_Method(Solve_Equations_T *const SolveEqs)
 {
   Grid_T *const grid = get_grid_solve_equations(SolveEqs);
-  Matrix_T *J_Schur = alloc_matrix(REG_SF,grid->nn,grid->nn);
+  const Uint dim = total_nodes_grid(grid);
+  Matrix_T *J_Schur = alloc_matrix(REG_SF,dim,dim);
   double **const J = J_Schur->reg->A; 
   DDM_Schur_Complement_T *Schur;
   Matrix_T *B,*Et,**F,**C;

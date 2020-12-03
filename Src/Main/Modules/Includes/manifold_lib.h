@@ -254,7 +254,6 @@ typedef struct GRID_T
   Patch_T **patch;/* covering patch */
   Uint gn;/* grid number */
   Uint np;/* number of patches on grid */
-  Uint nn;/* total number of nodes on grid */
 }Grid_T;
 
 /* jacobian for equations */

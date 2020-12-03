@@ -28,9 +28,6 @@ int make_patches(Grid_T *const grid)
   /* allocating and making Jacobian coordinate transformation */
   make_JacobianT(grid);
   
-  /* total number of nodes on all patches */
-  grid->nn = total_nodes_grid(grid);
-  
   /* test printing coords */
   if (test_print(PRINT_COORDS))
   {
