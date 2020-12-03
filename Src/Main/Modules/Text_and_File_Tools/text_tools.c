@@ -443,48 +443,6 @@ int regex_replace(const char *const orig/* original */,
     regfree(&regex);
   }
   
-  status = regexec(&regex,c,n_matches,match,0);
-  
-  if (status)/* if no match is found write orig to save. */
-  {
-    regfree(&regex);
-    return (sprintf(save,"%s",orig));
-  }
-  else/*  there is at least one match */
-  {
-    Uint i = 0;
-    while(!status)
-    {
-      const char *o  = c;
-      int len = match[0].rm_eo/* The offset in string of the end of the substring.  */
-               -match[0].rm_so;/* The offset in string of the beginning of a substring. */
-      
-      /* write the leading */
-      while (c != &o[match[0].rm_so])
-      {
-        save[i] = *c;
-        c++;
-        i++;
-      }
-      Uint j = 0;
-      /* replace */
-      while (repl[j] != '\0')
-        save[i++] = repl[j++];
-      
-      c += len;/* skip match */
-      status = regexec(&regex,c,n_matches,match,0);
-    }
-    /* write the leading */
-    while (*c != '\0')
-    {
-      save[i] = *c;
-      i++;
-      c++;
-    }
-    save[i] = '\0';
-    regfree(&regex);
-  }
-  
   return EXIT_SUCCESS;
 }
 
