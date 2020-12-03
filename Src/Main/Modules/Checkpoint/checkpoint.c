@@ -253,8 +253,10 @@ static void write_fields(const Grid_T *const grid,const char *const folder)
   fclose(file);  
 }
 
-/* read checkpoint file and creat grid and parameters accordingly */
-Grid_T *init_from_checkpoint(FILE *const file)
+/* read checkpoint file and creat grid and parameters accordingly
+// no fields at this stage, fields must be added first by
+// the project. */
+static Grid_T *read_grid_and_params(FILE *const file)
 {
   Grid_T *grid = 0;
   struct checkpoint_header alloc_info[1] = {0};
@@ -274,6 +276,9 @@ Grid_T *init_from_checkpoint(FILE *const file)
   make_patches(grid);
   /* realizing the geometry */
   realize_interfaces(grid);
+  
+  /* free */
+  Free(alloc_info->grid_kind);
   
   return grid;
 }
@@ -548,9 +553,6 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
   
   /* set the following parameters to default value */
   Pseti("did_resolution_change?",1);
-  Pseti("did_NS_surface_change?",1);
-  Pseti("did_AH_surface_change?",1);
-  Pseti("use_previous_data",0);
 }
 
 /* free modified_checkpoint_par */
@@ -638,11 +640,11 @@ static void incorporate_modified_checkpoint_par(void)
 }
  
 /* read fields from the checkpoint file */
-void read_fields_from_checkpoint(Grid_T *const grid,FILE *const file)
-{  
-  printf(Pretty0"Reading fields from checkpoint file ...\n");
-  fflush(stdout);
+void read_fields_from_checkpoint_file(Physics_T *const phys,FILE *const file)
+{
+  FUNC_TIC
   
+  Grid_T *const grid = phys->grid;
   char *match_str;
   Uint p;
   
@@ -658,7 +660,11 @@ void read_fields_from_checkpoint(Grid_T *const grid,FILE *const file)
     Uint f,count_nfld;
     
     FReadV_bin(count_nfld);
-    assert(count_nfld);
+    
+    if(!count_nfld)
+    {
+      printf(Pretty0"No field has been found to read!\n");
+    }
     
     for (f = 0; f < count_nfld; ++f)
     {
@@ -682,20 +688,22 @@ void read_fields_from_checkpoint(Grid_T *const grid,FILE *const file)
   if (strcmp(match_str,FIELD_FOOTER))
     Error0("It could not find the field footer.\n");
   Free(match_str);
+
+  FUNC_TOC
 }
 
 
-/* loading the grid and parameters from checkpoint file.
+/* ->: checkpoint file whose position ready for fields to be read.
+// loading the grid and parameters from checkpoint file.
 // No check at this stage, we assume every thing is consistence.
 // NOTE: this only load the grid and parameter without fields.
 // fields must be added separately and then be read by function:
-// read_fields_from_checkpoint. 
+// read_fields_from_checkpoint_file using the returned file.
 // the path of checkpoint file is saved in "checkpoint_file_path". */
-Grid_T *load_checkpoint_file(void)
+void *open_checkpoint_file_then_read_grid_and_params(Physics_T *const phys)
 {
   FUNC_TIC
   
-  Grid_T *grid = 0;
   FILE *file   = 0;
   const char *const checkpoint_file_path = Pgets("checkpoint_file_path");
   
@@ -705,12 +713,10 @@ Grid_T *load_checkpoint_file(void)
   file = Fopen(checkpoint_file_path,"r");
   IsNull(file);
   
-  grid = init_from_checkpoint(file);
+  phys->grid = read_grid_and_params(file);
   
-  fclose(file);
-
   FUNC_TOC
-  return grid;
+  return file;
 }
 
 /* check if there is a consistence checkpoint file to be used 
