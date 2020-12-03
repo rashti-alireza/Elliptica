@@ -304,7 +304,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   FWriteP_bin(p_title_line,strlen(title_line)+1);
   sprintf(msg,"%s",END_MSG);
   FWriteP_bin(p_msg,strlen(msg)+1);
-  fclose(file);
+  Fclose(file);
   
   Free(interp_v);
   free_2d(fields_name);
@@ -325,7 +325,7 @@ static Grid_T *load_grid_from_checkpoint_file(void)
   /* open checkpoint file */
   file = Fopen(checkpoint_path,"r");
   grid = bbn_init_from_checkpoint(file);
-  fclose(file);
+  Fclose(file);
   
   /* extrapolate metric fields inside the BH */
   Pseti("STOP",0);
@@ -391,7 +391,7 @@ static void load_coords_from_coords_file(struct interpolation_points *const pnt)
     bbn_bam_error("It could not find the footer.\n",__FILE__,__LINE__);
   Free(match_str);
   
-  fclose(file);
+  Fclose(file);
 }
 
 /* translating fields name from BAM to Elliptica */
@@ -730,7 +730,7 @@ bam_output_doctest
       }
       fprintf(file,"%f  %f\n",pnt->y[p],interp_v[p]);
     }
-    fclose(file);
+    Fclose(file);
     f++;
   }/* while(fields_name[f]) */
   free_2d_mem(pnt->f_index,grid->np);
@@ -743,7 +743,7 @@ bam_output_doctest
   fprintf(file,"# y-coord_of_horizon dummy_value\n");
   fprintf(file,"%f  %f\n",Pgetd("BH_center_y")-rfill,1.);
   fprintf(file,"%f  %f\n",Pgetd("BH_center_y")+rfill,1.);
-  fclose(file);
+  Fclose(file);
   
   if (!Puncture)/* check det(ADM metric), for puncture 
                 // fileds cannot be expanded */
@@ -933,7 +933,7 @@ bam_output_doctest
       }
       fprintf(file,"%f  %f\n",pnt->y[p],interp_v[p]);
     }
-    fclose(file);
+    Fclose(file);
     f++;
   }/* while(bssn_fields_name[f]) */
   Free(interp_v);

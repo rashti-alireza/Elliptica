@@ -31,7 +31,7 @@ void read_input_file(const char *const path)
   populate_parameters(buff);
   
   /* clean up */
-  fclose(input);
+  Fclose(input);
   free(buff);
 
 }

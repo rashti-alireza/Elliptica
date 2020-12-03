@@ -30,7 +30,7 @@ static void find_inputfile_name(const char *const path)
   FILE *f_par = Fopen(path,"r");
   if (!f_par)
     Error0("The parameter file does not exist.\n");
-  fclose(f_par);
+  Fclose(f_par);
   
   last = strrchr(path,'.');
   if (!last)

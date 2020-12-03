@@ -317,7 +317,7 @@ void bbn_print_properties(Grid_T *const grid,const Uint iteration, const char *c
   /* } physics */
   
   fprintf(file,"%s\n",LINE_STR);
-  fclose(file);
+  Fclose(file);
   
   if (pr_flg)
   {
@@ -409,9 +409,9 @@ void bbn_print_residual_norms(Grid_T *const grid,const Uint iteration, const cha
       if (!IsItInsideBHPatch(patch))
         largest_L2_error = L2 > largest_L2_error ? L2 : largest_L2_error;
       
-      fclose(file_Linf);
-      fclose(file_L1);
-      fclose(file_L2);
+      Fclose(file_Linf);
+      Fclose(file_L1);
+      Fclose(file_L2);
     }
   }
   free_2d(f);

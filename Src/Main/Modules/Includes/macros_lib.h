@@ -20,7 +20,8 @@
 /* some useful functions and commands */
 #define UNUSED(x) (void)(x);
 #define IsNull(x)   checkup_pointer_error(x,__FILE__,__LINE__)
-#define Fopen(x,y)     fopen_and_check(x,y,__FILE__,__LINE__)
+#define Fopen(x,y) fopen_and_check(x,y,__FILE__,__LINE__)
+#define Fclose(x)  if(x){fclose(x); x = NULL;}
 #define bad_inputEr()  bad_input_error(__FILE__,__LINE__)
 #define null_pathEr(x) null_path_error(x,__FILE__,__LINE__)
 #define Error0(x)     abort_error(x,__FILE__,__LINE__)

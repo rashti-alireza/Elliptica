@@ -1078,7 +1078,7 @@ bh_interpolating_fields_on_a_line
       fprintf(file,"%f %f %f %f\n",
                    pnt->x[p],pnt->y[p],pnt->z[p],interp_v[p]);
     }
-    fclose(file);
+    Fclose(file);
     f++;
   }/* while(fields_name[f]) */
   free_2d_mem(pnt->f_index,grid->np);

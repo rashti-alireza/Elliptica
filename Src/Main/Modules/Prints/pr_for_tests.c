@@ -303,7 +303,7 @@ void pr_interfaces(const Grid_T *const grid)
   if (flg == NONE)
     fprintf(f,"Nothing.\n");
   
-  fclose(f); 
+  Fclose(f); 
   
   /* printing interfacess */
   for (n = 0; n < TOT_ARCH; ++n)
@@ -324,7 +324,7 @@ void pr_interfaces(const Grid_T *const grid)
           double *x = node[arch[n][i].s1->id[j]]->x;
           fprintf(f,"%f %f %f\n",x[0],x[1],x[2]);
         }
-        fclose(f);
+        Fclose(f);
         
         str[0] = '\0';
         sprintf(str,"%s/%s.paired",path,arch[n][i].n2);
@@ -338,7 +338,7 @@ void pr_interfaces(const Grid_T *const grid)
           double *x = node[arch[n][i].s2->id[j]]->x;
           fprintf(f,"%f %f %f\n",x[0],x[1],x[2]);
         }
-        fclose(f);
+        Fclose(f);
       }/* if (arch[n][i].s1 && arch[n][i].s2) */
       else
       {
@@ -354,7 +354,7 @@ void pr_interfaces(const Grid_T *const grid)
           double *x = node[arch[n][i].s1->id[j]]->x;
           fprintf(f,"%f %f %f\n",x[0],x[1],x[2]);
         }
-        fclose(f);
+        Fclose(f);
       
       }
     }/* end of for (i = 0; i < N[n]; ++i) */
@@ -391,7 +391,7 @@ void pr_parameters(void)
     i++;
   }
   
-  fclose(f);
+  Fclose(f);
 }
 
 /* print coords */
@@ -424,7 +424,7 @@ void pr_coords(const Grid_T *const grid)
           patch->node[l]->x[1],
             patch->node[l]->x[2]);
     
-    fclose(f);
+    Fclose(f);
   }
   free(path);
 }
@@ -464,10 +464,10 @@ void pr_field_difference(const Grid_T *const grid,const char *const fld1,const c
     }
       
     R += U;
-    fclose(file2);
+    Fclose(file2);
   }
   
-  fclose(file1);
+  Fclose(file1);
   free(path);
 }
 
@@ -588,7 +588,7 @@ double pr_derivatives_DiffByNode(const double *const numc, const double *const a
     if (GRT(abs_diff,max))
       max = abs_diff;
   }
-  fclose(f);
+  Fclose(f);
   
   return max;
 }
@@ -608,7 +608,9 @@ void pr_matrix(const Matrix_T *const M,const char *const name)
   fprintf(file,"#row = %ld ,#column = %ld\n",M->row,M->col);
   
   if (!M->row || !M->col)
-    fclose(file);
+  {
+    Fclose(file);
+  }
   else if (M->reg_f)
   {
     double **const m = M->reg->A;
@@ -647,6 +649,6 @@ void pr_matrix(const Matrix_T *const M,const char *const name)
   else
     Error0("No matrix format is defined for this given matrix.\n");
 
-  fclose(file);
+  Fclose(file);
   free(folder);
 }

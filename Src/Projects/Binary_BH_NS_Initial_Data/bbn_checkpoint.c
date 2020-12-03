@@ -80,7 +80,7 @@ void bbn_write_checkpoint(Grid_T *const grid)
   file = Fopen(file_path,"a");
   sprintf(msg,"%s",END_MSG);
   FWriteP_bin(p_msg,strlen(msg)+1);
-  fclose(file);
+  Fclose(file);
   
   /* replace checkpoint file with the previous */
   move_checkpoint_file();
@@ -111,7 +111,7 @@ int bbn_IsCheckpointFileCompleted(const char *const file_path)
   else
     ret = 0;
       
-  fclose(file);
+  Fclose(file);
   
   return ret;
 }
@@ -142,7 +142,7 @@ static void write_header(const Grid_T *const grid)
   fprintf(file,"grid_number=%u\n",grid->gn);
   fprintf(file,"grid_kind=%s\n",grid->kind);
   fprintf(file,"%s\n",ALLOC_FOOTER);
-  fclose(file);
+  Fclose(file);
 }
 
 /* replace checkpoint file with the previous one */
@@ -200,7 +200,7 @@ static void write_parameters(const Grid_T *const grid)
   sprintf(title_line,"%s",PARAM_FOOTER);
   FWriteP_bin(p_title_line,strlen(title_line)+1);
   
-  fclose(file);
+  Fclose(file);
   
   UNUSED(grid);
 }
@@ -259,7 +259,7 @@ static void write_fields(const Grid_T *const grid)
   sprintf(title_line,"%s",FIELD_FOOTER);
   FWriteP_bin(p_title_line,strlen(title_line)+1);
   
-  fclose(file);  
+  Fclose(file);  
 }
 
 /* ->return value: if field->name matches 1, otherwise 0 */

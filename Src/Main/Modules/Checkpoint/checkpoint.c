@@ -75,7 +75,7 @@ void write_checkpoint(Physics_T *const phys,const char *const out_dir)
   file = Fopen(file_path,"a");
   sprintf(msg,"%s",END_MSG);
   FWriteP_bin(p_msg,strlen(msg)+1);
-  fclose(file);
+  Fclose(file);
   
   /* replace checkpoint file with the previous */
   move_checkpoint_file(out_dir);
@@ -101,7 +101,7 @@ int is_checkpoint_sound(const char *const file_path)
   else
     ret = 0;
       
-  fclose(file);
+  Fclose(file);
   
   return ret;
 }
@@ -131,7 +131,7 @@ static void write_header(const Grid_T *const grid,const char *const folder)
   fprintf(file,"grid_number=%u\n",grid->gn);
   fprintf(file,"grid_kind=%s\n",Pgets("grid_kind"));
   fprintf(file,"%s\n",ALLOC_FOOTER);
-  fclose(file);
+  Fclose(file);
 }
 
 /* replace checkpoint file with the previous one */
@@ -188,7 +188,7 @@ static void write_parameters(const Grid_T *const grid,const char *const folder)
   sprintf(title_line,"%s",PARAM_FOOTER);
   FWriteP_bin(p_title_line,strlen(title_line)+1);
   
-  fclose(file);
+  Fclose(file);
   
   UNUSED(grid);
 }
@@ -250,7 +250,7 @@ static void write_fields(const Grid_T *const grid,const char *const folder)
   sprintf(title_line,"%s",FIELD_FOOTER);
   FWriteP_bin(p_title_line,strlen(title_line)+1);
   
-  fclose(file);  
+  Fclose(file);  
 }
 
 /* read checkpoint file and creat grid and parameters accordingly

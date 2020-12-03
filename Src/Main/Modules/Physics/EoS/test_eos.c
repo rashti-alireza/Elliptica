@@ -30,7 +30,7 @@ void test_EoS(Grid_T *const grid)
     fprintf(file,"piece  Kappa         rho           gamma         a             h-1\n");
     for (i = 0; i < eos->N; ++i)  
       fprintf(file,"%u      %e  %e  %e  %e  %e\n",i,eos->K[i],eos->rho_th[i],eos->gamma[i],eos->a[i],eos->h_th[i]-1);
-    fclose(file);
+    Fclose(file);
   }
     
   /* continuity */
@@ -42,7 +42,7 @@ void test_EoS(Grid_T *const grid)
     eos->h = 1+s*i;
     fprintf(file,"  %-7g    %-7g\n",eos->h,eos->pressure(eos));
   }
-  fclose(file);
+  Fclose(file);
   
   sprintf(file_name,"%s/%s",path,"rest_mass_density");
   file = Fopen(file_name,"w+");
@@ -52,7 +52,7 @@ void test_EoS(Grid_T *const grid)
     eos->h = 1+s*i;
     fprintf(file,"  %-7g    %-7g\n",eos->h,eos->rest_mass_density(eos));
   }
-  fclose(file);
+  Fclose(file);
   
   sprintf(file_name,"%s/%s",path,"energy_density");
   file = Fopen(file_name,"w+");
@@ -62,7 +62,7 @@ void test_EoS(Grid_T *const grid)
     eos->h = 1+s*i;
     fprintf(file,"  %-7g    %-7g\n",eos->h,eos->energy_density(eos));
   }
-  fclose(file);
+  Fclose(file);
   
   sprintf(file_name,"%s/%s",path,"drho_dh");
   file = Fopen(file_name,"w+");
@@ -72,7 +72,7 @@ void test_EoS(Grid_T *const grid)
     eos->h = 1+s*i;
     fprintf(file,"  %-7g    %-7g\n",eos->h,eos->drho_dh(eos));
   }
-  fclose(file);
+  Fclose(file);
   
   sprintf(file_name,"%s/%s",path,"de_dh");
   file = Fopen(file_name,"w+");
@@ -82,7 +82,7 @@ void test_EoS(Grid_T *const grid)
     eos->h = 1+s*i;
     fprintf(file,"  %-7g    %-7g\n",eos->h,eos->de_dh(eos));
   }
-  fclose(file);
+  Fclose(file);
   
   
   free_EoS(eos);

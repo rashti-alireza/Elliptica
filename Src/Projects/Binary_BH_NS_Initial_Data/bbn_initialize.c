@@ -56,7 +56,7 @@ static Grid_T *load_checkpoint_file(void)
   
   grid = bbn_init_from_checkpoint(file);
   
-  fclose(file);
+  Fclose(file);
   
   printf("} Initializing from checkpoint file ==> Done.\n");
   pr_clock();
@@ -196,7 +196,7 @@ static int IsThereAnyUsefulCheckpointFile(void)
       free_given_parameter(par);
       i++;
     }
-    fclose(checkpoint_file);
+    Fclose(checkpoint_file);
   }
   
   /* set the path of checkpoint file and some preparation */

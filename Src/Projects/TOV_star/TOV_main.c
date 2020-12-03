@@ -53,7 +53,7 @@ int TOV_star(void *vp)
   for (i = 0; i < N; ++i)
     fprintf(file,"%-15e  %e\n",r[i],p[i]);
   
-  fclose(file);
+  Fclose(file);
   
   /* print mass */
   m = tov->m;
@@ -64,7 +64,7 @@ int TOV_star(void *vp)
   for (i = 0; i < N; ++i)
     fprintf(file,"%-15e  %e\n",r[i],m[i]);
     
-  fclose(file);
+  Fclose(file);
   
   /* print isotropic r */
   rbar = tov->rbar;
@@ -75,7 +75,7 @@ int TOV_star(void *vp)
   for (i = 0; i < N; ++i)
     fprintf(file,"%-15e  %e\n",r[i],rbar[i]);
     
-  fclose(file);
+  Fclose(file);
   
   TOV_free(tov);
   free(path);

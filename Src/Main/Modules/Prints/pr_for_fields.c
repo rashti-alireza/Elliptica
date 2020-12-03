@@ -272,9 +272,9 @@ double print_fields_1D(const Grid_T *const grid,const int iteration,
         
         largest_L2_error = L2 > largest_L2_error ? L2 : largest_L2_error;
         
-        fclose(file_Linf);
-        fclose(file_L1);
-        fclose(file_L2);
+        Fclose(file_Linf);
+        Fclose(file_L1);
+        Fclose(file_L2);
       }
       /* only if it is a regex found free it. */
       if (field_ind < 0)

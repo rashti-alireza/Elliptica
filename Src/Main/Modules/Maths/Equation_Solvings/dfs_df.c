@@ -225,7 +225,7 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
               r,c,cmp[Spectral_e][r][c],cmp[Direct_e][r][c]);
         }
       }
-      fclose(file);
+      Fclose(file);
       
       for (e = Spectral_e; e < N_Method_E; ++e)
       {
