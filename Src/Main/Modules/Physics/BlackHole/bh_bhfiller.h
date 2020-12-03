@@ -76,7 +76,7 @@ static struct BHFiller_S*
 bhf_init
   (
   Physics_T *const phys/* physics of interest */,
-  const char **fields_name/* ends determined by 0 */,
+  char **const fields_name/* ends determined by 0 */,
   const char *const method/* the method to be used for extrapolating */
   );
 
@@ -84,18 +84,10 @@ bhf_init
 static void bhf_free(struct BHFiller_S *const bhf);
 
 int 
-bh_black_hole_filler
-  (
-  Physics_T *const phys/* physics of interest */,
-  const char **fields_name/* ends determined by 0 */,
-  const char *const method/* the method to be used for extrapolating */
-  );
-  
-int 
 bh_bhfiller
   (
   Physics_T *const phys/* physics of interest */,
-  const char **fields_name/* ends determined by 0 */,
+  char **const fields_name/* ends determined by 0 */,
   const char *const method/* the method to be used for extrapolating */
   );
   
@@ -104,7 +96,7 @@ int bh_fill_inside_black_hole(Physics_T *const phys);
 static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf);
 double bh_bhf_poly_smoother(const double r,const double rmax,const double rmin);
 double bh_bhf_smoother(const double r, const double rmax,const double rmin);
-static void collect_names(struct BHFiller_S *const bhf,const char **const fields_name,const Uint nf);
+static void collect_names(struct BHFiller_S *const bhf,char **const fields_name,const Uint nf);
 static double polynomial5(const double r, const double rmax,const double rmin);
 static double polynomial7(const double r, const double rmax,const double rmin);
 static double punc_psi(void *const params);

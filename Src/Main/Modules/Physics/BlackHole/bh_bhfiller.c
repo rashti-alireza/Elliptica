@@ -38,7 +38,7 @@ int
 bh_bhfiller
   (
   Physics_T *const phys/* physics of interest */,
-  const char **fields_name/* ends determined by 0 */,
+  char **const fields_name/* ends determined by 0 */,
   const char *const method/* the method to be used for extrapolating */
   )
 {
@@ -67,7 +67,7 @@ static struct BHFiller_S*
 bhf_init
   (
   Physics_T *const phys/* physics of interest */,
-  const char **fields_name/* ends determined by 0 */,
+  char **const fields_name/* ends determined by 0 */,
   const char *const method/* the method to be used for extrapolating */
   )
 {
@@ -541,7 +541,7 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
 }
 
 /* collect names of the fields and their derivatives */
-static void collect_names(struct BHFiller_S *const bhf,const char **const fields_name,const Uint nf)
+static void collect_names(struct BHFiller_S *const bhf,char **const fields_name,const Uint nf)
 {
   const char *s = 0;
   Uint f,i,j;
