@@ -53,8 +53,20 @@ static int add_black_hole_params(Physics_T *const phys)
 {
   FUNC_TIC
   
-  UNUSED(phys);
+  /* how to fill inside the BH:
+  // options:
+  // ChebTn_Ylm: C2 continues across AH, uses ChebTn for radial 
+  //             and Ylm for angular directions and extrapolate inside. */
+  Pset_default("BH_filler_method","ChebTn_Ylm");
   
+  /* l max for Ylm expansion: */
+  Pset_default("BH_filler_Ylm_expansion_lmax","15");
+  
+  /* which fields be filled inside the BH.
+  // should be specified in parameter file or somewhere else. */
+  Pset_default("BH_filler_fields","SPECIFY_IN_PAR_FILE");
+  
+  UNUSED(phys);
   FUNC_TOC
   return EXIT_SUCCESS;
 }
