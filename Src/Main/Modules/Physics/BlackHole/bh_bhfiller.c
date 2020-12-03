@@ -362,8 +362,7 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
         }
         else
         {
-        printf(Pretty0"could not find %s in %s "
-                       "=> calculate it numerically ...\n",
+        printf(Pretty0"compute %s in %s\n",
                        bhf->fld[f]->df[ii],patch->name);
          bhf->fld[f]->did_add_df = 1;
          Field_T *df = add_field(bhf->fld[f]->df[ii],0,patch,NO);
@@ -381,8 +380,7 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
         }
         else
         {
-         printf(Pretty0"could not find %s in %s "
-                       "=> calculate it numerically ...\n",
+         printf(Pretty0"compute %s in %s\n",
                        bhf->fld[f]->ddf[ii],patch->name);
          bhf->fld[f]->did_add_ddf = 1;
          Field_T *ddf = add_field(bhf->fld[f]->ddf[ii],0,patch,NO);
@@ -872,7 +870,8 @@ static double polynomial7(const double r, const double rmax,const double rmin)
 
 /* ->: 1 if adds any patches inside the black hole, 0 otherwise.
 // if the black hole excised from grid, this function add relevant
-// patches to cover the inside and if already covered, it does nothing. */
+// patches to cover the inside and if already covered, it does nothing. 
+// note: is also allocates and adds nodes. */
 int bh_add_patch_inside_black_hole(Physics_T *const phys,
                                    const char *const region)
 {
@@ -898,6 +897,9 @@ int bh_add_patch_inside_black_hole(Physics_T *const phys,
   }
   else
     Error0(NO_OPTION);
+  
+  alloc_nodes(mygrid(phys,region));
+  make_nodes(mygrid(phys,region));
   
   return 1;
 }
