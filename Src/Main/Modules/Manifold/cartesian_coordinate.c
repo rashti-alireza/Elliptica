@@ -185,12 +185,10 @@ populate_box_patch_SplitCS
   Grid_T *const grid,
   const char *const obj0,/* filling_box,central_box. */
   const Flag_T dir0,/* direction */
-  Uint *const pn,/* starting patch number,is increased for each add */
   const char *const region/* covering region */
   )
 
 {
-  UNUSED(pn);
   const Uint Nsd[3] = {(Uint)Pgeti("SplitCS_Nsplit_a"),
                        (Uint)Pgeti("SplitCS_Nsplit_b"),
                        (Uint)Pgeti("SplitCS_Nsplit_c")};
@@ -199,7 +197,6 @@ populate_box_patch_SplitCS
   char name[STR_SIZE3] = {'\0'};
   const char *const dir = StrSide[dir0];
   Uint d0,d1,d2;
-  Uint p = *pn;/* patch number */
   
   /* object name */
   set_object_name_split_CS(obj,obj0);
@@ -212,11 +209,19 @@ populate_box_patch_SplitCS
       {
         Patch_T *const patch = calloc(1,sizeof(*patch));
         IsNull(patch);
-        grid->patch    = 
+        grid->patch = 
           realloc(grid->patch,(grid->np+2)*sizeof(*grid->patch));
         IsNull(grid->patch);
         grid->patch[grid->np]   = patch;
         grid->patch[grid->np+1] = 0;
+        
+        /* filling grid */
+        patch->grid = grid;
+        
+        /* filling patch number */
+        patch->pn = grid->np;
+        
+        /* increase number patch */
         grid->np += 1;
           
         Flag_T side = dir0;
@@ -247,11 +252,6 @@ populate_box_patch_SplitCS
         else
           Error0(NO_OPTION);
         
-        /* filling grid */
-        patch->grid = grid;
-        
-        /* filling patch number */
-        patch->pn = p;
         
         /* filling n */
         patch->n[0] = (Uint)Pgeti("SplitCS_n_a");
@@ -308,11 +308,9 @@ populate_box_patch_SplitCS
         patch->basis[0] = Chebyshev_Tn_BASIS;
         patch->basis[1] = Chebyshev_Tn_BASIS;
         patch->basis[2] = Chebyshev_Tn_BASIS;
-        ++p;
       }
     }
   }
-  *pn = p;
 }
 
 /* populating properties of the box at the middle of left NS */

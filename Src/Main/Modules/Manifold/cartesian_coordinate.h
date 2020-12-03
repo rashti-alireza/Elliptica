@@ -19,7 +19,6 @@ populate_box_patch_SplitCS
   Grid_T *const grid,
   const char *const obj0,/* filling_box,central_box. */
   const Flag_T dir0,/* direction */
-  Uint *const pn,/* starting patch number,is increased for each add */
   const char *const region/* covering region */
   );
   

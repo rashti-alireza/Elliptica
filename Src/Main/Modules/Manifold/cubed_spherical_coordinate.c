@@ -132,7 +132,6 @@ void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
 void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
 {
   const double r_outermost = Pgetd("grid_outermost_radius");
-  Uint pn = 0; /* patch number */
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS)
   {
@@ -163,25 +162,25 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     }
     
     /* boxes */ 
-    populate_box_patch_SplitCS(grid,"central_box",ns_side,&pn ,"NS");
-    populate_box_patch_SplitCS(grid,"filling_box",UP,&pn   ,"filling_box");
-    populate_box_patch_SplitCS(grid,"filling_box",DOWN,&pn ,"filling_box");
-    populate_box_patch_SplitCS(grid,"filling_box",BACK,&pn ,"filling_box");
-    populate_box_patch_SplitCS(grid,"filling_box",FRONT,&pn,"filling_box");
+    populate_box_patch_SplitCS(grid,"central_box",ns_side,"NS");
+    populate_box_patch_SplitCS(grid,"filling_box",UP,"filling_box");
+    populate_box_patch_SplitCS(grid,"filling_box",DOWN,"filling_box");
+    populate_box_patch_SplitCS(grid,"filling_box",BACK,"filling_box");
+    populate_box_patch_SplitCS(grid,"filling_box",FRONT,"filling_box");
     
     /* cubed sphericals */
-    populate_CS_patch_SplitCS(grid,"NS",ns_side,&pn);
-    populate_CS_patch_SplitCS(grid,"NS_around",ns_side,&pn);
-    populate_CS_patch_SplitCS(grid,"BH_around",bh_side,&pn);
+    populate_CS_patch_SplitCS(grid,"NS",ns_side);
+    populate_CS_patch_SplitCS(grid,"NS_around",ns_side);
+    populate_CS_patch_SplitCS(grid,"BH_around",bh_side);
     
     if (!EQL(r_outermost,0))
-      populate_CS_patch_SplitCS(grid,"outermost",NONE,&pn);
+      populate_CS_patch_SplitCS(grid,"outermost",NONE);
     
     /* NOTE: order matters */
     if (bh_filled == YES)
     {
-      populate_CS_patch_SplitCS(grid,"BH",bh_side,&pn);
-      populate_box_patch_SplitCS(grid,"central_box",bh_side,&pn ,"BH");
+      populate_CS_patch_SplitCS(grid,"BH",bh_side);
+      populate_box_patch_SplitCS(grid,"central_box",bh_side ,"BH");
     }
     else
     {
@@ -216,22 +215,22 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     }
     
     /* boxes */ 
-    populate_box_patch_SplitCS(grid,"central_box",ns_side1,&pn ,"NS1");
-    populate_box_patch_SplitCS(grid,"central_box",ns_side2,&pn ,"NS2");
+    populate_box_patch_SplitCS(grid,"central_box",ns_side1 ,"NS1");
+    populate_box_patch_SplitCS(grid,"central_box",ns_side2 ,"NS2");
     
-    populate_box_patch_SplitCS(grid,"filling_box",UP,&pn   ,"filling_box");
-    populate_box_patch_SplitCS(grid,"filling_box",DOWN,&pn ,"filling_box");
-    populate_box_patch_SplitCS(grid,"filling_box",BACK,&pn ,"filling_box");
-    populate_box_patch_SplitCS(grid,"filling_box",FRONT,&pn,"filling_box");
+    populate_box_patch_SplitCS(grid,"filling_box",UP   ,"filling_box");
+    populate_box_patch_SplitCS(grid,"filling_box",DOWN ,"filling_box");
+    populate_box_patch_SplitCS(grid,"filling_box",BACK ,"filling_box");
+    populate_box_patch_SplitCS(grid,"filling_box",FRONT,"filling_box");
     
     /* cubed sphericals */
-    populate_CS_patch_SplitCS(grid,"NS1",ns_side1,&pn);
-    populate_CS_patch_SplitCS(grid,"NS1_around",ns_side1,&pn);
-    populate_CS_patch_SplitCS(grid,"NS2",ns_side2,&pn);
-    populate_CS_patch_SplitCS(grid,"NS2_around",ns_side2,&pn);
+    populate_CS_patch_SplitCS(grid,"NS1",ns_side1);
+    populate_CS_patch_SplitCS(grid,"NS1_around",ns_side1);
+    populate_CS_patch_SplitCS(grid,"NS2",ns_side2);
+    populate_CS_patch_SplitCS(grid,"NS2_around",ns_side2);
     
     if (!EQL(r_outermost,0))
-      populate_CS_patch_SplitCS(grid,"outermost",NONE,&pn);
+      populate_CS_patch_SplitCS(grid,"outermost",NONE);
  
   }
   else if (grid->kind == Grid_SplitCubedSpherical_BHBH)
@@ -265,25 +264,25 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     }
     
     /* boxes */ 
-    populate_box_patch_SplitCS(grid,"filling_box",UP,&pn   ,"filling_box");
-    populate_box_patch_SplitCS(grid,"filling_box",DOWN,&pn ,"filling_box");
-    populate_box_patch_SplitCS(grid,"filling_box",BACK,&pn ,"filling_box");
-    populate_box_patch_SplitCS(grid,"filling_box",FRONT,&pn,"filling_box");
+    populate_box_patch_SplitCS(grid,"filling_box",UP   ,"filling_box");
+    populate_box_patch_SplitCS(grid,"filling_box",DOWN ,"filling_box");
+    populate_box_patch_SplitCS(grid,"filling_box",BACK ,"filling_box");
+    populate_box_patch_SplitCS(grid,"filling_box",FRONT,"filling_box");
     
     /* cubed sphericals */
-    populate_CS_patch_SplitCS(grid,"BH1_around",bh_side1,&pn);
-    populate_CS_patch_SplitCS(grid,"BH2_around",bh_side2,&pn);
+    populate_CS_patch_SplitCS(grid,"BH1_around",bh_side1);
+    populate_CS_patch_SplitCS(grid,"BH2_around",bh_side2);
     
     if (!EQL(r_outermost,0))
-      populate_CS_patch_SplitCS(grid,"outermost",NONE,&pn);
+      populate_CS_patch_SplitCS(grid,"outermost",NONE);
     
     /* NOTE: order matters */
     if (bh_filled == YES)
     {
-      populate_CS_patch_SplitCS(grid,"BH1",bh_side1,&pn);
-      populate_box_patch_SplitCS(grid,"central_box",bh_side1,&pn ,"BH1");
-      populate_CS_patch_SplitCS(grid,"BH2",bh_side2,&pn);
-      populate_box_patch_SplitCS(grid,"central_box",bh_side2,&pn ,"BH2");
+      populate_CS_patch_SplitCS(grid,"BH1",bh_side1);
+      populate_box_patch_SplitCS(grid,"central_box",bh_side1 ,"BH1");
+      populate_CS_patch_SplitCS(grid,"BH2",bh_side2);
+      populate_box_patch_SplitCS(grid,"central_box",bh_side2 ,"BH2");
     }
     else
     {
@@ -337,16 +336,16 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     }
     
     /* cubed sphericals */
-    populate_CS_patch_SplitCS(grid,"BH_around",bh_side,&pn);
+    populate_CS_patch_SplitCS(grid,"BH_around",bh_side);
     
     if (!EQL(r_outermost,0))
-      populate_CS_patch_SplitCS(grid,"outermost",NONE,&pn);
+      populate_CS_patch_SplitCS(grid,"outermost",NONE);
     
     /* NOTE: order matters */
     if (bh_filled == YES)
     {
-      populate_CS_patch_SplitCS(grid,"BH",bh_side,&pn);
-      populate_box_patch_SplitCS(grid,"central_box",bh_side,&pn ,"BH");
+      populate_CS_patch_SplitCS(grid,"BH",bh_side);
+      populate_box_patch_SplitCS(grid,"central_box",bh_side ,"BH");
     }
     else
     {
@@ -379,13 +378,13 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     }
     
     /* cubed sphericals */
-    populate_CS_patch_SplitCS(grid,"NS_around",ns_side,&pn);
-    populate_CS_patch_SplitCS(grid,"NS",ns_side,&pn);
+    populate_CS_patch_SplitCS(grid,"NS_around",ns_side);
+    populate_CS_patch_SplitCS(grid,"NS",ns_side);
     /* box */
-    populate_box_patch_SplitCS(grid,"central_box",ns_side,&pn ,"NS");
+    populate_box_patch_SplitCS(grid,"central_box",ns_side ,"NS");
     
     if (!EQL(r_outermost,0))
-      populate_CS_patch_SplitCS(grid,"outermost",NONE,&pn);
+      populate_CS_patch_SplitCS(grid,"outermost",NONE);
   }
   else
   {
@@ -403,8 +402,7 @@ populate_CS_patch_SplitCS
   (
   Grid_T *const grid,
   const char *const obj0,/* NS, BH or etc. */
-  const Flag_T dir0,/* LEFT or RIGHT or CENTER or NONE */
-  Uint *const pn/* starting patch number,is increased for each add */
+  const Flag_T dir0/* LEFT or RIGHT or CENTER or NONE */
   )
 {
   const Uint NUMBER_OF_SIDES = 6;
@@ -418,8 +416,7 @@ populate_CS_patch_SplitCS
   char name[STR_SIZE3] = {'\0'};
   const char *dir      = 0;
   Flag_T type = UNDEFINED;
-  Uint d0,d1,d2,ijk;
-  Uint p;/* patch number */
+  Uint p,d0,d1,d2,ijk;
   
   /* object name */
   set_object_name_split_CS(obj,obj0);
@@ -448,11 +445,18 @@ populate_CS_patch_SplitCS
         {
           Patch_T *const patch = calloc(1,sizeof(*patch));
           IsNull(patch);
-          grid->patch    = 
+          grid->patch = 
             realloc(grid->patch,(grid->np+2)*sizeof(*grid->patch));
           IsNull(grid->patch);
           grid->patch[grid->np]   = patch;
           grid->patch[grid->np+1] = 0;
+          
+          /* filling grid */
+          patch->grid = grid;
+        
+          /* filling patch number */
+          patch->pn = grid->np;
+        
           grid->np += 1;
           
           Flag_T side = (Flag_T)(p);
@@ -504,12 +508,6 @@ populate_CS_patch_SplitCS
           /* filling flags */
           patch->CoordSysInfo->CubedSphericalCoord->side = side;
           patch->CoordSysInfo->CubedSphericalCoord->type = type;
-          
-          /* filling grid */
-          patch->grid = grid;
-          
-          /* filling patch number */
-          patch->pn = p;
           
           /* filling n */
           patch->n[0] = (Uint)Pgeti("SplitCS_n_a");
@@ -579,13 +577,10 @@ populate_CS_patch_SplitCS
           patch->basis[0] = Chebyshev_Tn_BASIS;
           patch->basis[1] = Chebyshev_Tn_BASIS;
           patch->basis[2] = Chebyshev_Tn_BASIS;
-        }/* for (p = *pn; p < *pn+6; ++p) */
-        //*pn += 6;
+        }/* for (p = 0; p < NUMBER_OF_SIDES; ++p) */
       }
     }
   }
-  
-  UNUSED(pn);
 }
 
 /* making value of coords. it is a general function for cubed spherical type */
@@ -3110,90 +3105,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   Uint newN[3] = {0};/* new number of nodes in each direction */
   Uint Nsd[3]  = {0};/* number of splits in each dir. */
   Uint Nns[3]  = {0};/* number of nodes in each split patch */
-  Uint Np      = 0;/* total number of main patches */
   const double r_outermost = Pgetd("grid_outermost_radius");
   
   assert(maxN[0]>2 && maxN[1]>2 && maxN[2]>2);
-  
-  if (Pcmps("grid_kind","SplitCubedSpherical(BH+NS)"))
-  {
-    if (strstr_i(Pgets("grid_set_BH"),"excised"))
-    {
-      Np = 23;/* total number of main patches
-              // 3 sets of cubed sphere = 3*6
-              // 4 filling boxes
-              // 1 central box */
-    }
-    else if (strstr_i(Pgets("grid_set_BH"),"filled"))
-    {
-      Np = 30;/* total number of main patches
-              // 4 sets of cubed sphere = 4*6
-              // 4 filling boxes
-              // 2 central box */
-    }
-    else
-    {
-      Error0(NO_OPTION);
-    }
-  }
-  else if (Pcmps("grid_kind","SplitCubedSpherical(NS+NS)"))
-  {
-      Np = 30;/* total number of main patches
-              // 4 sets of cubed sphere = 4*6
-              // 4 filling boxes
-              // 2 central box */
-  }
-  else if (Pcmps("grid_kind","SplitCubedSpherical(BH+BH)"))
-  {
-    if (strstr_i(Pgets("grid_set_BH1"),"excised") && 
-        strstr_i(Pgets("grid_set_BH2"),"excised"))
-    {
-      Np = 16;/* total number of main patches
-              // 2 sets of cubed sphere = 2*6
-              // 4 filling boxes
-              // 0 central box */
-    }
-    else if (strstr_i(Pgets("grid_set_BH1"),"filled") && 
-             strstr_i(Pgets("grid_set_BH2"),"filled"))
-    {
-      Np = 30;/* total number of main patches
-              // 4 sets of cubed sphere = 4*6
-              // 4 filling boxes
-              // 2 central box */
-    }
-    else
-    {
-      Error0(NO_OPTION);
-    }
-  }
-  else if (Pcmps("grid_kind","SplitCubedSpherical(NS)"))
-  {
-    Np = 13;/* total number of main patches
-            // 2 sets of cubed sphere = 2*6
-            // 1 central box */
-  }
-  else if (Pcmps("grid_kind","SplitCubedSpherical(BH)"))
-  {
-    if (strstr_i(Pgets("grid_set_BH"),"excised"))
-    {
-      Np = 6;/* total number of main patches
-             // 1 sets of cubed sphere = 1*6 */
-    }
-    else if (strstr_i(Pgets("grid_set_BH"),"filled"))
-    {
-      Np = 13;/* total number of main patches
-              // 2 sets of cubed sphere = 2*6
-              // 1 central box */
-    }
-    else
-    {
-      Error0(NO_OPTION);
-    }
-  }
-  else
-  {
-    Error0(NO_OPTION);
-  }
   
   /* for each direction divide until the max resolution */
   for (i = 0; i < 3; ++i)
@@ -3220,30 +3134,18 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   Pseti("SplitCS_Nsplit_b",(int)Nsd[1]);
   Pseti("SplitCS_Nsplit_c",(int)Nsd[2]);
   
-  if (!EQL(r_outermost,0))
-    Np += 6;
-  
-  /* now each patch split in Nsd */
-  Np *= (Nsd[0]*Nsd[1]*Nsd[2]);
-  
-  /* set total number of paches: */
-  assert(Np);
-  Pseti("SplitCS_Npatches",(int)Np);
-  
   /* test */
   if (1)
   printf("par n   = (%u,%u,%u)\n"
          "new n   = (%u,%u,%u)\n"
          "max_n   = (%u,%u,%u)\n"
          "n_abc   = (%u,%u,%u)\n"
-         "split   = (%u,%u,%u)\n"
-         "Npatch  = %u \n",
+         "split   = (%u,%u,%u)\n",
          givenN[0],givenN[1],givenN[2],
          newN[0],newN[1],newN[2],
          maxN[0],maxN[1],maxN[2],
          Nns[0],Nns[1],Nns[2],
-         Nsd[0],Nsd[1],Nsd[2],
-         Np);
+         Nsd[0],Nsd[1],Nsd[2]);
   /* } */
   
   /* set parameters for all patches for Binary system */
