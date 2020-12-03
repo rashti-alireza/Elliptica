@@ -12,11 +12,12 @@ int make_patches(Grid_T *const grid)
   
   Uint p;
   
-  /* allocate patches  */
-  //alloc_patches(grid);
-  
-  /* number of patches */
-  //grid->np = countf(grid->patch);
+  /* allocate patches.
+  // since split cubed spherical this is deprecated.
+  // now, allocation of patches must be happened as they are filled.
+  // also if you want to use previous grid kind, you must modify
+  // their functions to meet this condition. */
+  if(0) alloc_patches(grid);
   
   /* filling patches parameter */
   fill_patches(grid);
@@ -127,7 +128,7 @@ static char *collocation_str(const Patch_T *const patch,char *const str)
   return str;  
 }
 
-/* filling patch struct */
+/* allocating and filling patch struct for grid->patch */
 static void fill_patches(Grid_T *const grid)
 {
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||

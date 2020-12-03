@@ -128,7 +128,8 @@ void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
 
 }
 
-/* filling split cubed spherical coordinate patches */
+/* allocating and filling grid->patch for split cubed spherical.
+// when one patch allocated, grid->np also added by 1. */
 void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
 {
   const double r_outermost = Pgetd("grid_outermost_radius");
@@ -390,9 +391,6 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
   {
     Error0(NO_OPTION);
   }
-  
-  //assert(pn == (Uint)Pgeti("SplitCS_Npatches"));
-  
 }
 
 /* populating properties of a patch for a split cubed spherical object,
@@ -5122,7 +5120,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   
 } 
 
-/* memory alloc patches for BBN_Split_CubedSpherical type */
+/* memory alloc patches for BBN_Split_CubedSpherical type 
+// this function is deprecated. */
 void alloc_patches_Split_CubedSpherical_grid(Grid_T *const grid)
 {
   const Uint Np = (Uint)Pgeti("SplitCS_Npatches");
