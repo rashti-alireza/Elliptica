@@ -1,5 +1,5 @@
-#ifndef physics_StressEnergyTensor_LIB_H
-#define physics_StressEnergyTensor_LIB_H
+#ifndef physics_Stress_Energy_LIB_H
+#define physics_Stress_Energy_LIB_H
 #include "elliptica_system_lib.h"
 
 /* forward declaration */

@@ -11,7 +11,7 @@
 #include "maths_spectral_methods_lib.h"
 #include "maths_calculus_lib.h"
 #include "physics_EoS_lib.h"
-#include "physics_StressEnergyTensor_lib.h"
+#include "physics_stress_energy_lib.h"
 #include "physics_transformation_lib.h"
 #include "fields_lib.h"
 #include "physics_observables_lib.h"
