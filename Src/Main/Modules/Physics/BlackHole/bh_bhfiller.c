@@ -13,27 +13,37 @@ int bh_fill_inside_black_hole(Physics_T *const phys)
   FUNC_TIC
   
   int ret = EXIT_SUCCESS;
-  
+  /* these fields to be extrapolated  */
+  char **fields_name = 
+         read_separated_items_in_string(Gets("filler_fields"),',');
+  Grid_T *grid;
+  Uint f,p;
+    
   /* first add patches */
   bh_add_patch_inside_black_hole(phys,Ftype("BH"));
   
-  IF_sval("filler_method","ChebTn_Ylm")
+  /* add fields if they not exists */
+  grid = mygrid(phys,Ftype("BH"));
+  f = 0;
+  while (fields_name[f])
   {
-    /* these fields to be extrapolated  */
-    char **fields_name = 
-     read_separated_items_in_string(Gets("filler_fields"),',');
-
-    ret = bh_bhfiller(phys,fields_name,"ChebTn_Ylm");
-    
-    free_2d(fields_name);
+    FOR_ALL_PATCHES(p,grid)
+    {
+     Patch_T *patch = grid->patch[p];
+     
+     /* if not there */
+     if (_Ind(fields_name[f]) < 0)
+      add_field(fields_name[f],0,patch,NO);
+    }
+    ++f;
   }
-  else
-  {
-    Error0(NO_OPTION);
-  }
-
-  FUNC_TOC;
   
+  /* now fill */
+  ret = bh_bhfiller(phys,fields_name,Gets("filler_method"));
+
+  free_2d(fields_name);
+  
+  FUNC_TOC;
   return ret;
 }
 
