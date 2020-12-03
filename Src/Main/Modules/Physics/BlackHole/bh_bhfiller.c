@@ -12,21 +12,17 @@ int bh_fill_inside_black_hole(Physics_T *const phys)
 {
   FUNC_TIC
   
-  int ret = -1;
+  int ret = EXIT_SUCCESS;
   
-  IF_sval("BHfiller_method","ChebTn_Ylm")
+  IF_sval("filler_method","ChebTn_Ylm")
   {
     /* these fields to be extrapolated  */
-    const char *fields_name[] = 
-    {
-      "psi","eta","K",
-      "Beta_U0","Beta_U1","Beta_U2",
-      "K_DiDj_D0D0","K_DiDj_D0D1",
-      "K_DiDj_D0D2","K_DiDj_D1D1",
-      "K_DiDj_D1D2","K_DiDj_D2D2",
-      0/* end */
-    };
+    char **fields_name = 
+     read_separated_items_in_string(Gets("filler_fields"),',');
+     
     ret = bh_bhfiller(phys,fields_name,"ChebTn_Ylm");
+    
+    free_2d(fields_name);
   }
   else
   {
@@ -90,32 +86,32 @@ bhf_init
   if (strcmp_i(method,"ChebTn_Ylm"))
   {
     const Uint NCoeffs = 10;/* number of coeffs in ChebTn expansion */
-    const Uint lmax   = (Uint)Geti("bhfiller_Ylm_expansion_lmax");
+    const Uint lmax   = (Uint)Geti("filler_Ylm_expansion_lmax");
     const Uint Ntheta = Ntheta_Ylm(lmax);
     const Uint Nphi   = Nphi_Ylm(lmax);
     const Uint N      = Ntotal_Ylm(lmax);
     Uint npi;/* number of patches inside BH */
     Uint npo;/* number of patches outside BH */
     /* values of extrapolant function at the center of BH f(r=0) */
-    const double fr0_Beta_U0     = 0;
-    const double fr0_Beta_U1     = 0;
-    const double fr0_Beta_U2     = 0;
-    const double fr0_gConf_D0D0  = 1;
-    const double fr0_gConf_D0D1  = 0;
-    const double fr0_gConf_D0D2  = 0;
-    const double fr0_gConf_D1D1  = 1;
-    const double fr0_gConf_D1D2  = 0;
-    const double fr0_gConf_D2D2  = 1;
-    const double fr0_K_DiDj_D0D0 = 0;
-    const double fr0_K_DiDj_D0D1 = 0;
-    const double fr0_K_DiDj_D0D2 = 0;
-    const double fr0_K_DiDj_D1D1 = 0;
-    const double fr0_K_DiDj_D1D2 = 0;
-    const double fr0_K_DiDj_D2D2 = 0;
-    const double fr0_K           = 0;
-    const double fr0_alpha       = 0.2;
-    const double fr0_psi         = 2;/* big enough */
-    const double fr0_eta         = fr0_alpha*fr0_psi;
+    const double fr0_beta_U0      = 0;
+    const double fr0_beta_U1      = 0;
+    const double fr0_beta_U2      = 0;
+    const double fr0_gConf_D0D0   = 1;
+    const double fr0_gConf_D0D1   = 0;
+    const double fr0_gConf_D0D2   = 0;
+    const double fr0_gConf_D1D1   = 1;
+    const double fr0_gConf_D1D2   = 0;
+    const double fr0_gConf_D2D2   = 1;
+    const double fr0_adm_Kij_D0D0 = 0;
+    const double fr0_adm_Kij_D0D1 = 0;
+    const double fr0_adm_Kij_D0D2 = 0;
+    const double fr0_adm_Kij_D1D1 = 0;
+    const double fr0_adm_Kij_D1D2 = 0;
+    const double fr0_adm_Kij_D2D2 = 0;
+    const double fr0_trK          = 0;
+    const double fr0_alpha        = 0.2;
+    const double fr0_psi          = 2;/* big enough */
+    const double fr0_alphaPsi     = fr0_alpha*fr0_psi;
     Uint f,nf,i;
     
     nf = 0;/* number of fields */
@@ -172,30 +168,30 @@ bhf_init
         bhf->fld[f]->f_r0    = fr0_psi;
         bhf->fld[f]->func_r0 = punc_psi;
       }
-      else if (strcmp_i(fields_name[f],"eta"))
+      else if (strcmp_i(fields_name[f],"alphaPsi"))
       {
-        bhf->fld[f]->f_r0    = fr0_eta;
-        bhf->fld[f]->func_r0 = punc_eta;
+        bhf->fld[f]->f_r0    = fr0_alphaPsi;
+        bhf->fld[f]->func_r0 = punc_alphaPsi;
       }
-      else if (strcmp_i(fields_name[f],"K"))
+      else if (strcmp_i(fields_name[f],"trK"))
       {
-        bhf->fld[f]->f_r0    = fr0_K;
-        bhf->fld[f]->func_r0 = punc_K;
+        bhf->fld[f]->f_r0    = fr0_trK;
+        bhf->fld[f]->func_r0 = punc_trK;
       }
-      else if (strcmp_i(fields_name[f],"Beta_U0"))
+      else if (strcmp_i(fields_name[f],"beta_U0"))
       {
-        bhf->fld[f]->f_r0    = fr0_Beta_U0;
-        bhf->fld[f]->func_r0 = punc_Beta_U0;
+        bhf->fld[f]->f_r0    = fr0_beta_U0;
+        bhf->fld[f]->func_r0 = punc_beta_U0;
       }
-      else if (strcmp_i(fields_name[f],"Beta_U1"))
+      else if (strcmp_i(fields_name[f],"beta_U1"))
       {
-        bhf->fld[f]->f_r0    = fr0_Beta_U1;
-        bhf->fld[f]->func_r0 = punc_Beta_U1;
+        bhf->fld[f]->f_r0    = fr0_beta_U1;
+        bhf->fld[f]->func_r0 = punc_beta_U1;
       }
-      else if (strcmp_i(fields_name[f],"Beta_U2"))
+      else if (strcmp_i(fields_name[f],"beta_U2"))
       {
-        bhf->fld[f]->f_r0    = fr0_Beta_U2;
-        bhf->fld[f]->func_r0 = punc_Beta_U2;
+        bhf->fld[f]->f_r0    = fr0_beta_U2;
+        bhf->fld[f]->func_r0 = punc_beta_U2;
       }
       else if (strcmp_i(fields_name[f],"gConf_D2D2"))
       {
@@ -227,34 +223,34 @@ bhf_init
         bhf->fld[f]->f_r0    = fr0_gConf_D1D1;
         bhf->fld[f]->func_r0 = punc_gConf_D1D1;
       }
-      else if (strcmp_i(fields_name[f],"K_DiDj_D2D2"))
+      else if (strcmp_i(fields_name[f],"adm_Kij_D2D2"))
       {
-        bhf->fld[f]->f_r0    = fr0_K_DiDj_D2D2;
+        bhf->fld[f]->f_r0    = fr0_adm_Kij_D2D2;
         bhf->fld[f]->func_r0 = 0;
       }
-      else if (strcmp_i(fields_name[f],"K_DiDj_D0D2"))
+      else if (strcmp_i(fields_name[f],"adm_Kij_D0D2"))
       {
-        bhf->fld[f]->f_r0    = fr0_K_DiDj_D0D2;
+        bhf->fld[f]->f_r0    = fr0_adm_Kij_D0D2;
         bhf->fld[f]->func_r0 = 0;
       }
-      else if (strcmp_i(fields_name[f],"K_DiDj_D0D0"))
+      else if (strcmp_i(fields_name[f],"adm_Kij_D0D0"))
       {
-        bhf->fld[f]->f_r0    = fr0_K_DiDj_D0D0;
+        bhf->fld[f]->f_r0    = fr0_adm_Kij_D0D0;
         bhf->fld[f]->func_r0 = 0;
       }
-      else if (strcmp_i(fields_name[f],"K_DiDj_D0D1"))
+      else if (strcmp_i(fields_name[f],"adm_Kij_D0D1"))
       {
-        bhf->fld[f]->f_r0    = fr0_K_DiDj_D0D1;
+        bhf->fld[f]->f_r0    = fr0_adm_Kij_D0D1;
         bhf->fld[f]->func_r0 = 0;
       }
-      else if (strcmp_i(fields_name[f],"K_DiDj_D1D2"))
+      else if (strcmp_i(fields_name[f],"adm_Kij_D1D2"))
       {
-        bhf->fld[f]->f_r0    = fr0_K_DiDj_D1D2;
+        bhf->fld[f]->f_r0    = fr0_adm_Kij_D1D2;
         bhf->fld[f]->func_r0 = 0;
       }
-      else if (strcmp_i(fields_name[f],"K_DiDj_D1D1"))
+      else if (strcmp_i(fields_name[f],"adm_Kij_D1D1"))
       {
-        bhf->fld[f]->f_r0    = fr0_K_DiDj_D1D1;
+        bhf->fld[f]->f_r0    = fr0_adm_Kij_D1D1;
         bhf->fld[f]->func_r0 = 0;
       }
       else
@@ -642,7 +638,7 @@ static double punc_psi(void *const params)
 }
 
 /* puncture behavior function */
-static double punc_eta(void *const params)
+static double punc_alphaPsi(void *const params)
 {
   //struct Param_S *const par = params;
   //double r     = par->r;
@@ -654,7 +650,7 @@ static double punc_eta(void *const params)
 }
 
 /* puncture behavior function */
-static double punc_K(void *const params)
+static double punc_trK(void *const params)
 {
   //struct Param_S *const par = params;
   //double r     = par->r;
@@ -666,7 +662,7 @@ static double punc_K(void *const params)
 }
 
 /* puncture behavior function */
-static double punc_Beta_U0(void *const params)
+static double punc_beta_U0(void *const params)
 {
   //struct Param_S *const par = params;
   //double r     = par->r;
@@ -678,7 +674,7 @@ static double punc_Beta_U0(void *const params)
 }
 
 /* puncture behavior function */
-static double punc_Beta_U1(void *const params)
+static double punc_beta_U1(void *const params)
 {
   //struct Param_S *const par = params;
   //double r     = par->r;
@@ -690,7 +686,7 @@ static double punc_Beta_U1(void *const params)
 }
 
 /* puncture behavior function */
-static double punc_Beta_U2(void *const params)
+static double punc_beta_U2(void *const params)
 {
   //struct Param_S *const par = params;
   //double r     = par->r;

@@ -108,11 +108,11 @@ static void collect_names(struct BHFiller_S *const bhf,const char **const fields
 static double polynomial5(const double r, const double rmax,const double rmin);
 static double polynomial7(const double r, const double rmax,const double rmin);
 static double punc_psi(void *const params);
-static double punc_eta(void *const params);
-static double punc_K(void *const params);
-static double punc_Beta_U0(void *const params);
-static double punc_Beta_U1(void *const params);
-static double punc_Beta_U2(void *const params);
+static double punc_alphaPsi(void *const params);
+static double punc_trK(void *const params);
+static double punc_beta_U0(void *const params);
+static double punc_beta_U1(void *const params);
+static double punc_beta_U2(void *const params);
 static double punc_gConf_D0D0(void *const params);
 static double punc_gConf_D0D1(void *const params);
 static double punc_gConf_D0D2(void *const params);
