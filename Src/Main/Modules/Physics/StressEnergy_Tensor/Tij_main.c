@@ -49,7 +49,8 @@ static int add_stress_energy_parameters(Physics_T *const phys)
   {
     /* decomposition type:
     // options:
-    // XCTS (conformal thin sandwich): like: Phys. Rev. D 100, 124046  */
+    // XCTS: extended conformal thin sandwich(Phys. Rev. D 100, 124046)
+    //       mostly because we need lapse in enthalpy calculations.  */
     Pset_default(P_"NS_decomposition","XCTS");
     
     /* conformal metric type: 
