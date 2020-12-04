@@ -13,6 +13,9 @@
 #include "maths_equation_solvings_lib.h"
 #include "maths_spectral_methods_lib.h"
 
+/* prefix internal parameters of this project, 
+// PLEASE keep it capitalized. */
+#define P_ "BH_"
 
 int bh_fill_inside_black_hole(Physics_T *const phys);
 double bh_bhf_poly_smoother

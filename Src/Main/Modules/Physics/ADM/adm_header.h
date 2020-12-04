@@ -10,8 +10,9 @@
 #include "utilities_lib.h"
 #include "physics_lib.h"
 
-/* parameter prefix */
-#define P_ "adm_"
+/* parameter prefix
+// PLEASE keep it capitalized. */
+#define P_ "ADM_"
 
 /* general struct for argument pass */
 struct General_Arg_S

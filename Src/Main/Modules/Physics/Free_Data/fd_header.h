@@ -10,8 +10,9 @@
 #include "utilities_lib.h"
 #include "physics_lib.h"
 
-/* parameter prefix */
-#define P_ "free_data_"
+/* parameter prefix 
+// PLEASE keep it capitalized. */
+#define P_ "FREE_DATA_"
 
 
 /* struct for various functions args. */

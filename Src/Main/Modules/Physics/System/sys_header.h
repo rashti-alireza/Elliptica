@@ -14,8 +14,9 @@
 #include "maths_equation_solvings_lib.h"
 #include "maths_spectral_methods_lib.h"
 
-/* parameter prefix */
-#define P_ "sys_"
+/* parameter prefix.
+// PLEASE keep it capitalized. */
+#define P_ "SYS_"
 
 int sys_tune_ADM_momenta(Physics_T *const phys);
 

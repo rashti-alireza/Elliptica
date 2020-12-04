@@ -11,8 +11,9 @@
 #include "maths_special_functions_lib.h"
 #include "maths_calculus_lib.h"
 
-/* internal parameter prefix */
-#define P_ "mnfld_"
+/* internal parameter prefix 
+// PLEASE keep it capitalized. */
+#define P_ "MNFLD_"
 
 /* array size */
 #define STR_SIZE1 (100)
