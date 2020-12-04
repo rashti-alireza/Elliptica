@@ -124,7 +124,8 @@
 
 /* rest assure the criterion is met for physics type
 // usage ex: AssureType(phys->ctype == NS). */
-#define AssureType(x) {if (!(x)) Error1("Wrong physics passed to %s\n",__func__);}
+#define AssureType(x) \
+ {if (!(x)) Error1("Wrong physics passed to function '%s'\n",__func__);}
 
 /* commands, DON'T change the numeration. */
 typedef enum CMD_T
