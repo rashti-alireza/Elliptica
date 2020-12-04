@@ -14,8 +14,10 @@
 #include "maths_spectral_methods_lib.h"
 
 /* prefix internal parameters of this project, 
-// PLEASE keep it capitalized. */
-#define P_ "BH_"
+// PLEASE keep it capitalized.
+// NOTE: it must be different with "BH" to distinguish 
+// between SBH or BHNS systems. */
+#define P_ "BlackHole_"
 
 int bh_fill_inside_black_hole(Physics_T *const phys);
 double bh_bhf_poly_smoother
