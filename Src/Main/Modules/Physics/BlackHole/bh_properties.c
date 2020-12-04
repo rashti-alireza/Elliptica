@@ -9,6 +9,13 @@
 #include "bh_properties.h"
 
 
+/* print black-hole properties.
+// Note: the physics ctype must be of BH type
+// arguments:
+// ==========
+// file: pointer to where writing properties
+// pr_screen: if 1, it ALSO prints in standard output, 
+//            otherwise only in file. */
 void 
 bh_print_properties
   (Physics_T *const phys,
@@ -17,7 +24,9 @@ bh_print_properties
 {
   if (!phys || !file)
     return;
-    
+   
+  AssureType (phys->ctype == BH);
+  
   fprintf(file,"\n");
   
   PR_PROPERTY_IN_FILE_d("center_x", file, pr_screen)

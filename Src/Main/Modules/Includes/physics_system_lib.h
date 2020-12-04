@@ -7,6 +7,11 @@ struct PHYSICS_T;
 
 int sys_main(struct PHYSICS_T *const phys);
 
+void 
+sys_print_properties
+  (Physics_T *const phys,
+  FILE *const file,
+  const int pr_screen);
 
 #endif
 

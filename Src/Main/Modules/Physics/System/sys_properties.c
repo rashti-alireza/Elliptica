@@ -8,7 +8,13 @@
 
 #include "sys_properties.h"
 
-
+/* print system properties.
+// Note: the physics ctype must be of system type
+// arguments:
+// ==========
+// file: pointer to where writing properties
+// pr_screen: if 1, it ALSO prints in standard output, 
+//            otherwise only in file. */
 void 
 sys_print_properties
   (Physics_T *const phys,
@@ -17,7 +23,13 @@ sys_print_properties
 {
   if (!phys || !file)
     return;
-    
+  
+  AssureType (phys->ctype == BHNS ||
+              phys->ctype == BHBH ||
+              phys->ctype == SBH  ||
+              phys->ctype == NSNS ||
+              phys->ctype == SNS);
+  
   fprintf(file,"\n");
   
   PR_PROPERTY_IN_FILE_d("x_CM", file, pr_screen)
