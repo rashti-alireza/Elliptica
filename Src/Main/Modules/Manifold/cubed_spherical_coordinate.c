@@ -3251,17 +3251,17 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
           {
             Flag_T side = (Flag_T)(p);
             SCS_par_min(par,0);
-            Psetd(par,min[0]);
+            Psetd_0print(par,min[0]);
             SCS_par_min(par,1);
-            Psetd(par,min[1]);
+            Psetd_0print(par,min[1]);
             SCS_par_min(par,2);
-            Psetd(par,min[2]);
+            Psetd_0print(par,min[2]);
             SCS_par_max(par,0);
-            Psetd(par,max[0]);
+            Psetd_0print(par,max[0]);
             SCS_par_max(par,1);
-            Psetd(par,max[1]);
+            Psetd_0print(par,max[1]);
             SCS_par_max(par,2);
-            Psetd(par,max[2]);
+            Psetd_0print(par,max[2]);
           }
           
           /* filling min */
@@ -3439,18 +3439,18 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     {
       Flag_T side = (Flag_T)(p);
       SCS_par_CS_center(par,"a");
-      Psetd(par,0.0);
+      Psetd_0print(par,0.0);
     
       SCS_par_CS_center(par,"b");
       if (!strcmp(dir,"left"))
-        Psetd(par,-S/2.);
+        Psetd_0print(par,-S/2.);
       else if (!strcmp(dir,"right"))
-        Psetd(par,S/2.);
+        Psetd_0print(par,S/2.);
       else
         Error0(NO_OPTION);
       
       SCS_par_CS_center(par,"c");
-      Psetd(par,0.0);
+      Psetd_0print(par,0.0);
     }
     
     /* set parameter for centeral box */
@@ -3476,11 +3476,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
           {
             /* assuming objects are on y-axis */
             SCS_par_box_center(par,"a");
-            Psetd(par,cen[0]);
+            Psetd_0print(par,cen[0]);
             SCS_par_box_center(par,"b");
-            Psetd(par,cen[1]);
+            Psetd_0print(par,cen[1]);
             SCS_par_box_center(par,"c");
-            Psetd(par,cen[2]);
+            Psetd_0print(par,cen[2]);
             
             cen[2] += step[2];
           }
@@ -3505,11 +3505,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
           {
             /* assuming objects are on y-axis */
             SCS_par_box_center(par,"a");
-            Psetd(par,cen[0]);
+            Psetd_0print(par,cen[0]);
             SCS_par_box_center(par,"b");
-            Psetd(par,cen[1]);
+            Psetd_0print(par,cen[1]);
             SCS_par_box_center(par,"c");
-            Psetd(par,cen[2]);
+            Psetd_0print(par,cen[2]);
             
             cen[2] += step[2];
           }
@@ -3529,13 +3529,13 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
         for (d2 = 0; d2 <  Nsd[2]; d2++)
         {
           SCS_par_box_length(par,"l");
-          Psetd(par,step[0]);
+          Psetd_0print(par,step[0]);
          
           SCS_par_box_length(par,"w");
-          Psetd(par,step[1]);
+          Psetd_0print(par,step[1]);
          
           SCS_par_box_length(par,"h");
-          Psetd(par,step[2]);
+          Psetd_0print(par,step[2]);
         }/* for (d2 = 0; d2 <  Nsd[2]; d2++) */
       }/* for (d1 = 0; d1 <  Nsd[1]; d1++) */
     }/* for (d0 = 0; d0 < Nsd[0]; d0++) */
@@ -3611,17 +3611,17 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
           {
             Flag_T side = (Flag_T)(p);
             SCS_par_min(par,0);
-            Psetd(par,min[0]);
+            Psetd_0print(par,min[0]);
             SCS_par_min(par,1);
-            Psetd(par,min[1]);
+            Psetd_0print(par,min[1]);
             SCS_par_min(par,2);
-            Psetd(par,min[2]);
+            Psetd_0print(par,min[2]);
             SCS_par_max(par,0);
-            Psetd(par,max[0]);
+            Psetd_0print(par,max[0]);
             SCS_par_max(par,1);
-            Psetd(par,max[1]);
+            Psetd_0print(par,max[1]);
             SCS_par_max(par,2);
-            Psetd(par,max[2]);
+            Psetd_0print(par,max[2]);
           }
           
           /* filling min */
@@ -3799,18 +3799,18 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
       /* set center of patch */
       /* assuming objects are on y-axis */
       SCS_par_CS_center(par,"a");
-      Psetd(par,0.0);
+      Psetd_0print(par,0.0);
     
       SCS_par_CS_center(par,"b");
       if (!strcmp(dir,"left"))
-        Psetd(par,-S/2.);
+        Psetd_0print(par,-S/2.);
       else if (!strcmp(dir,"right"))
-        Psetd(par,S/2.);
+        Psetd_0print(par,S/2.);
       else
         Error0(NO_OPTION);
       
       SCS_par_CS_center(par,"c");
-      Psetd(par,0.0);
+      Psetd_0print(par,0.0);
     }
   }
   
@@ -3877,17 +3877,17 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
           {
             Flag_T side = (Flag_T)(p);
             SCS_par_min(par,0);
-            Psetd(par,min[0]);
+            Psetd_0print(par,min[0]);
             SCS_par_min(par,1);
-            Psetd(par,min[1]);
+            Psetd_0print(par,min[1]);
             SCS_par_min(par,2);
-            Psetd(par,min[2]);
+            Psetd_0print(par,min[2]);
             SCS_par_max(par,0);
-            Psetd(par,max[0]);
+            Psetd_0print(par,max[0]);
             SCS_par_max(par,1);
-            Psetd(par,max[1]);
+            Psetd_0print(par,max[1]);
             SCS_par_max(par,2);
-            Psetd(par,max[2]);
+            Psetd_0print(par,max[2]);
           }
             
           
@@ -4059,13 +4059,13 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
       /* set center of patch */
       /* assuming objects are on y-axis */
       SCS_par_CS_center(par,"a");
-      Psetd(par,0.0);
+      Psetd_0print(par,0.0);
     
       SCS_par_CS_center(par,"b");
-      Psetd(par,0.0);
+      Psetd_0print(par,0.0);
       
       SCS_par_CS_center(par,"c");
-      Psetd(par,0.0);
+      Psetd_0print(par,0.0);
     }
   }
   
@@ -4108,11 +4108,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
             {
               /* assuming objects are on y-axis */
               SCS_par_box_center(par,"a");
-              Psetd(par,cen[0]);
+              Psetd_0print(par,cen[0]);
               SCS_par_box_center(par,"b");
-              Psetd(par,cen[1]);
+              Psetd_0print(par,cen[1]);
               SCS_par_box_center(par,"c");
-              Psetd(par,cen[2]);
+              Psetd_0print(par,cen[2]);
               
               cen[2] += step[2];
             }
@@ -4141,11 +4141,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
             {
               /* assuming objects are on y-axis */
               SCS_par_box_center(par,"a");
-              Psetd(par,cen[0]);
+              Psetd_0print(par,cen[0]);
               SCS_par_box_center(par,"b");
-              Psetd(par,cen[1]);
+              Psetd_0print(par,cen[1]);
               SCS_par_box_center(par,"c");
-              Psetd(par,cen[2]);
+              Psetd_0print(par,cen[2]);
               
               cen[2] += step[2];
             }
@@ -4174,11 +4174,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
             {
               /* assuming objects are on y-axis */
               SCS_par_box_center(par,"a");
-              Psetd(par,cen[0]);
+              Psetd_0print(par,cen[0]);
               SCS_par_box_center(par,"b");
-              Psetd(par,cen[1]);
+              Psetd_0print(par,cen[1]);
               SCS_par_box_center(par,"c");
-              Psetd(par,cen[2]);
+              Psetd_0print(par,cen[2]);
               
               cen[2] += step[2];
             }
@@ -4207,11 +4207,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
             {
               /* assuming objects are on y-axis */
               SCS_par_box_center(par,"a");
-              Psetd(par,cen[0]);
+              Psetd_0print(par,cen[0]);
               SCS_par_box_center(par,"b");
-              Psetd(par,cen[1]);
+              Psetd_0print(par,cen[1]);
               SCS_par_box_center(par,"c");
-              Psetd(par,cen[2]);
+              Psetd_0print(par,cen[2]);
               
               cen[2] += step[2];
             }
@@ -4237,13 +4237,13 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
         for (d2 = 0; d2 <  Nsd[2]; d2++)
         {
            SCS_par_box_length(par,"l");
-           Psetd(par,step[0]);
+           Psetd_0print(par,step[0]);
            
            SCS_par_box_length(par,"w");
-           Psetd(par,step[1]);
+           Psetd_0print(par,step[1]);
            
            SCS_par_box_length(par,"h");
-           Psetd(par,step[2]);
+           Psetd_0print(par,step[2]);
         }/* for (d2 = 0; d2 <  Nsd[2]; d2++) */
       }/* for (d1 = 0; d1 <  Nsd[1]; d1++) */
     }/* for (d0 = 0; d0 < Nsd[0]; d0++) */
@@ -4336,17 +4336,17 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
           {
             Flag_T side = (Flag_T)(p);
             SCS_par_min(par,0);
-            Psetd(par,min[0]);
+            Psetd_0print(par,min[0]);
             SCS_par_min(par,1);
-            Psetd(par,min[1]);
+            Psetd_0print(par,min[1]);
             SCS_par_min(par,2);
-            Psetd(par,min[2]);
+            Psetd_0print(par,min[2]);
             SCS_par_max(par,0);
-            Psetd(par,max[0]);
+            Psetd_0print(par,max[0]);
             SCS_par_max(par,1);
-            Psetd(par,max[1]);
+            Psetd_0print(par,max[1]);
             SCS_par_max(par,2);
-            Psetd(par,max[2]);
+            Psetd_0print(par,max[2]);
           }
           
           /* filling min */
@@ -4524,13 +4524,13 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     {
       Flag_T side = (Flag_T)(p);
       SCS_par_CS_center(par,"a");
-      Psetd(par,0.0);
+      Psetd_0print(par,0.0);
     
       SCS_par_CS_center(par,"b");
-      Psetd(par,0.0);
+      Psetd_0print(par,0.0);
       
       SCS_par_CS_center(par,"c");
-      Psetd(par,0.0);
+      Psetd_0print(par,0.0);
     }
     
     /* set parameter for centeral box */
@@ -4556,11 +4556,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
           {
             /* assuming objects are on y-axis */
             SCS_par_box_center(par,"a");
-            Psetd(par,cen[0]);
+            Psetd_0print(par,cen[0]);
             SCS_par_box_center(par,"b");
-            Psetd(par,cen[1]);
+            Psetd_0print(par,cen[1]);
             SCS_par_box_center(par,"c");
-            Psetd(par,cen[2]);
+            Psetd_0print(par,cen[2]);
             
             cen[2] += step[2];
           }
@@ -4580,13 +4580,13 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
         for (d2 = 0; d2 <  Nsd[2]; d2++)
         {
           SCS_par_box_length(par,"l");
-          Psetd(par,step[0]);
+          Psetd_0print(par,step[0]);
          
           SCS_par_box_length(par,"w");
-          Psetd(par,step[1]);
+          Psetd_0print(par,step[1]);
          
           SCS_par_box_length(par,"h");
-          Psetd(par,step[2]);
+          Psetd_0print(par,step[2]);
         }/* for (d2 = 0; d2 <  Nsd[2]; d2++) */
       }/* for (d1 = 0; d1 <  Nsd[1]; d1++) */
     }/* for (d0 = 0; d0 < Nsd[0]; d0++) */
@@ -4660,17 +4660,17 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
           {
             Flag_T side = (Flag_T)(p);
             SCS_par_min(par,0);
-            Psetd(par,min[0]);
+            Psetd_0print(par,min[0]);
             SCS_par_min(par,1);
-            Psetd(par,min[1]);
+            Psetd_0print(par,min[1]);
             SCS_par_min(par,2);
-            Psetd(par,min[2]);
+            Psetd_0print(par,min[2]);
             SCS_par_max(par,0);
-            Psetd(par,max[0]);
+            Psetd_0print(par,max[0]);
             SCS_par_max(par,1);
-            Psetd(par,max[1]);
+            Psetd_0print(par,max[1]);
             SCS_par_max(par,2);
-            Psetd(par,max[2]);
+            Psetd_0print(par,max[2]);
           }
           
           /* filling min */
@@ -4848,13 +4848,13 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
       /* set center of patch */
       /* assuming objects are on y-axis */
       SCS_par_CS_center(par,"a");
-      Psetd(par,0.0);
+      Psetd_0print(par,0.0);
     
       SCS_par_CS_center(par,"b");
-      Psetd(par,0.0);
+      Psetd_0print(par,0.0);
       
       SCS_par_CS_center(par,"c");
-      Psetd(par,0.0);
+      Psetd_0print(par,0.0);
     }
   }
   
@@ -4921,17 +4921,17 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
           {
             Flag_T side = (Flag_T)(p);
             SCS_par_min(par,0);
-            Psetd(par,min[0]);
+            Psetd_0print(par,min[0]);
             SCS_par_min(par,1);
-            Psetd(par,min[1]);
+            Psetd_0print(par,min[1]);
             SCS_par_min(par,2);
-            Psetd(par,min[2]);
+            Psetd_0print(par,min[2]);
             SCS_par_max(par,0);
-            Psetd(par,max[0]);
+            Psetd_0print(par,max[0]);
             SCS_par_max(par,1);
-            Psetd(par,max[1]);
+            Psetd_0print(par,max[1]);
             SCS_par_max(par,2);
-            Psetd(par,max[2]);
+            Psetd_0print(par,max[2]);
           }
             
           
@@ -5103,13 +5103,13 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
       /* set center of patch */
       /* assuming objects are on y-axis */
       SCS_par_CS_center(par,"a");
-      Psetd(par,0.0);
+      Psetd_0print(par,0.0);
     
       SCS_par_CS_center(par,"b");
-      Psetd(par,0.0);
+      Psetd_0print(par,0.0);
       
       SCS_par_CS_center(par,"c");
-      Psetd(par,0.0);
+      Psetd_0print(par,0.0);
     }
   }
   }
