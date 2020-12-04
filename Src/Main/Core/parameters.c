@@ -921,7 +921,7 @@ update_iteration_params
     Pseti(PrefixIt(prefix,"solving_iteration_number"),0);
     sprintf(folder_name_next,dir_name_format,parfile_stem,n[0],n[1],n[2]);
     folder_path = make_directory(path_par,folder_name_next);
-    Psets(PrefixIt(prefix,"iteration_output"),folder_path);
+    Psets(PrefixIt(prefix,"my_directory"),folder_path);
     folder_path2 = make_directory(folder_path,"Diagnostics");
     Psets(PrefixIt(prefix,"Diagnostics"),folder_path2);
     

@@ -224,7 +224,7 @@ static void update_parameters_and_directories(const Uint main_loop_iter)
     Pseti("solving_iteration_number",0);
     sprintf(folder_name_next,FOLDER_NANE_FORMAT,parfile_stem,n[0],n[1],n[2]);
     folder_path = make_directory(path_par,folder_name_next);
-    Psets("iteration_output",folder_path);
+    Psets("my_directory",folder_path);
     folder_path2 = make_directory(folder_path,"Diagnostics");
     Psets("Diagnostics",folder_path2);
     

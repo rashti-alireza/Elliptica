@@ -15,7 +15,7 @@
 // 
 // if you wanna change the output directories, change the following
 // and note that the folders must be made already:
-// modify_checkpoint_par:iteration_output      = path1
+// modify_checkpoint_par:my_directory      = path1
 // modify_checkpoint_par:output_directory_path = path2
 // modify_checkpoint_par:Diagnostics           = path3
 // 
@@ -43,7 +43,7 @@ void bbn_write_checkpoint(Grid_T *const grid)
   }
   
   FILE *file = 0;
-  const char *const out_dir = Pgets("iteration_output");
+  const char *const out_dir = Pgets("my_directory");
   const Uint sol_it_n = (Uint)PgetiEZ("solving_iteration_number");
   char file_path[MAX_ARR];
   char msg[MAX_ARR];
@@ -120,7 +120,7 @@ int bbn_IsCheckpointFileCompleted(const char *const file_path)
 static void write_header(const Grid_T *const grid)
 {
   FILE *file = 0;
-  const char *const folder = Pgets("iteration_output");
+  const char *const folder = Pgets("my_directory");
   char file_path[MAX_ARR];
   Uint np;
 
@@ -148,7 +148,7 @@ static void write_header(const Grid_T *const grid)
 /* replace checkpoint file with the previous one */
 static void move_checkpoint_file(void)
 {
-  const char *const folder = Pgets("iteration_output");
+  const char *const folder = Pgets("my_directory");
   char command[2*MAX_ARR];
   
   sprintf(command,"mv %s/%s_temp %s/%s",
@@ -166,7 +166,7 @@ static void write_parameters(const Grid_T *const grid)
   fflush(stdout);
   
   FILE *file = 0;
-  const char *const folder = Pgets("iteration_output");
+  const char *const folder = Pgets("my_directory");
   char file_path[MAX_ARR];
   char title_line[MAX_ARR] = {'\0'};
   char *const p_title_line = title_line;/* to avoid GCC warning for FWriteP_bin */
@@ -212,7 +212,7 @@ static void write_fields(const Grid_T *const grid)
   fflush(stdout);
   
   FILE *file = 0;
-  const char *const folder = Pgets("iteration_output");
+  const char *const folder = Pgets("my_directory");
   char file_path[MAX_ARR];
   char title_line[MAX_ARR] = {'\0'};
   char *const p_title_line = title_line;/* to avoid GCC warning for FWriteP_bin */

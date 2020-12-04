@@ -16,7 +16,7 @@
 // if you wanna change the output directories after loading from
 // a checkpoint file change the following in parameter files
 // and note that the folders must be made already:
-// modify_checkpoint_par:`P_`iteration_output      = path1
+// modify_checkpoint_par:`P_`my_directory      = path1
 // modify_checkpoint_par:`P_`output_directory_path = path2
 // modify_checkpoint_par:`P_`Diagnostics           = path3
 // 
