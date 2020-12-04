@@ -107,19 +107,19 @@
 
 /* property print double */
 #define PR_PROPERTY_IN_FILE_d(x,file,pr_screen) \
-        { \
-          const double par___temp = Getd(x); \
-          fprintf(file,"%-30s = %+0.15f\n",x,par___temp);\
-          if (pr_screen) printf("%-30s = %+0.15f\n",x,par___temp); \
-        }
+  { \
+    const double par___temp = Getd(x); \
+    fprintf(file,"%-30s = %+0.15f\n",phys->par,par___temp);\
+    if (pr_screen) printf("%-30s = %+0.15f\n",phys->par,par___temp); \
+  }
 
 /* property print string */
 #define PR_PROPERTY_IN_FILE_s(x,file,pr_screen) \
-        {\
-          const char *par___temp = Gets(x); \
-          fprintf(file,"%-30s = %s\n",x,par___temp);\
-          if (pr_screen) printf("%-30s = %s\n",x,par___temp); \
-        }
+   {\
+     const char *par___temp = Gets(x); \
+     fprintf(file,"%-30s = %s\n",phys->par,par___temp);\
+     if (pr_screen) printf("%-30s = %s\n",phys->par,par___temp); \
+   }
 
 
 
