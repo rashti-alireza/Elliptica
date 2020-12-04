@@ -27,8 +27,6 @@ bh_print_properties
    
   AssureType (phys->ctype == BH);
   
-  fprintf(file,"\n");
-  
   PR_PROPERTY_IN_FILE_d("center_x", file, pr_screen)
   PR_PROPERTY_IN_FILE_d("center_y", file, pr_screen)
   PR_PROPERTY_IN_FILE_d("center_z", file, pr_screen)
@@ -66,5 +64,6 @@ bh_print_properties
   PR_PROPERTY_IN_FILE_d("Jy_ADM", file, pr_screen)
   PR_PROPERTY_IN_FILE_d("Jz_ADM", file, pr_screen)*/
  
+  fprintf(file,"\n");
 }
 

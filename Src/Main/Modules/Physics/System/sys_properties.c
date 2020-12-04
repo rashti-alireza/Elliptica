@@ -30,10 +30,11 @@ sys_print_properties
               phys->ctype == NSNS ||
               phys->ctype == SNS);
   
-  fprintf(file,"\n");
   
   PR_PROPERTY_IN_FILE_d("x_CM", file, pr_screen)
   PR_PROPERTY_IN_FILE_d("y_CM", file, pr_screen)
   PR_PROPERTY_IN_FILE_d("z_CM", file, pr_screen)
+  
+  fprintf(file,"\n");
 }
 
