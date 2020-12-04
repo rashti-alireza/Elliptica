@@ -3,6 +3,11 @@
 #include "maths_spectral_methods_lib.h"
 #include "fields_lib.h"
 
+/* handy for verbose or not to set double parameter
+// Note: it assumes Verbose is defined. */
+#define cs_Psetd(x,y) update_parameter_double_format(x,(y),Verbose)
+
+
 #define Power3(a) ((a)*Pow2(a))
 
 void populate_central_NS_central_box(Grid_T *const grid,const Uint pn);

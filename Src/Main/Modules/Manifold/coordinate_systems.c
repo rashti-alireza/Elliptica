@@ -699,53 +699,53 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
   
   /* size a,b,c */
   sprintf(par,"grid%u_left_central_box_size_a",gn);
-  add_parameter_double(par,box_size_l);
+  Psetd(par,box_size_l);
   
   sprintf(par,"grid%u_left_central_box_size_b",gn);
-  add_parameter_double(par,box_size_l);
+  Psetd(par,box_size_l);
   
   sprintf(par,"grid%u_left_central_box_size_c",gn);
-  add_parameter_double(par,box_size_l);
+  Psetd(par,box_size_l);
   
   /* around box length */
   sprintf(par,"grid%u_around_box_length",gn);
-  add_parameter_double(par,C);
+  Psetd(par,C);
   
   /* R1 and R2 outermost */
   sprintf(par,"grid%u_outermost%u_R2",gn,0);
-  add_parameter_double(par,R_outermost[0]);
+  Psetd(par,R_outermost[0]);
     
   for (i = 1; i < N_Outermost_Split; i++)
   {
     /* R1: */
     sprintf(par,"grid%u_outermost%u_R1",gn,i);
-    add_parameter_double(par,R_outermost[i-1]);
+    Psetd(par,R_outermost[i-1]);
     
     /* R2: */
     sprintf(par,"grid%u_outermost%u_R2",gn,i);
-    add_parameter_double(par,R_outermost[i]);
+    Psetd(par,R_outermost[i]);
     
   }
   
   /* assuming the center of left NS at (0,-C/2,0) */
   sprintf(par,"grid%u_left_NS_center_a",gn);
-  add_parameter_double(par,0.0);
+  Psetd(par,0.0);
   
   sprintf(par,"grid%u_left_NS_center_b",gn);
-  add_parameter_double(par,-C/2);
+  Psetd(par,-C/2);
   
   sprintf(par,"grid%u_left_NS_center_c",gn);
-  add_parameter_double(par,0.0);
+  Psetd(par,0.0);
   
   /* assuming the center of right BH at (0,C/2,0) */
   sprintf(par,"grid%u_right_BH_center_a",gn);
-  add_parameter_double(par,0.0);
+  Psetd(par,0.0);
   
   sprintf(par,"grid%u_right_BH_center_b",gn);
-  add_parameter_double(par,C/2);
+  Psetd(par,C/2);
   
   sprintf(par,"grid%u_right_BH_center_c",gn);
-  add_parameter_double(par,0.0);
+  Psetd(par,0.0);
   
   free(R_outermost);
 }
@@ -1446,62 +1446,62 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
   
   /* size a,b,c */
   sprintf(par,"grid%u_left_central_box_size_a",gn);
-  add_parameter_double(par,box_size_l);
+  Psetd(par,box_size_l);
   
   sprintf(par,"grid%u_left_central_box_size_b",gn);
-  add_parameter_double(par,box_size_l);
+  Psetd(par,box_size_l);
   
   sprintf(par,"grid%u_left_central_box_size_c",gn);
-  add_parameter_double(par,box_size_l);
+  Psetd(par,box_size_l);
   
   sprintf(par,"grid%u_right_central_box_size_a",gn);
-  add_parameter_double(par,box_size_r);
+  Psetd(par,box_size_r);
   
   sprintf(par,"grid%u_right_central_box_size_b",gn);
-  add_parameter_double(par,box_size_r);
+  Psetd(par,box_size_r);
   
   sprintf(par,"grid%u_right_central_box_size_c",gn);
-  add_parameter_double(par,box_size_r);
+  Psetd(par,box_size_r);
   
   /* around box length */
   sprintf(par,"grid%u_around_box_length",gn);
-  add_parameter_double(par,C);
+  Psetd(par,C);
   
   /* R1 and R2 outermost */
   sprintf(par,"grid%u_outermost%u_R2",gn,0);
-  add_parameter_double(par,R_outermost[0]);
+  Psetd(par,R_outermost[0]);
     
   for (i = 1; i < N_Outermost_Split; i++)
   {
     /* R1: */
     sprintf(par,"grid%u_outermost%u_R1",gn,i);
-    add_parameter_double(par,R_outermost[i-1]);
+    Psetd(par,R_outermost[i-1]);
     
     /* R2: */
     sprintf(par,"grid%u_outermost%u_R2",gn,i);
-    add_parameter_double(par,R_outermost[i]);
+    Psetd(par,R_outermost[i]);
     
   }
   
   /* assuming the center of left NS at (0,-C/2,0) */
   sprintf(par,"grid%u_left_NS_center_a",gn);
-  add_parameter_double(par,0.0);
+  Psetd(par,0.0);
   
   sprintf(par,"grid%u_left_NS_center_b",gn);
-  add_parameter_double(par,-C/2);
+  Psetd(par,-C/2);
   
   sprintf(par,"grid%u_left_NS_center_c",gn);
-  add_parameter_double(par,0.0);
+  Psetd(par,0.0);
   
   /* assuming the center of right NS at (0,C/2,0) */
   sprintf(par,"grid%u_right_NS_center_a",gn);
-  add_parameter_double(par,0.0);
+  Psetd(par,0.0);
   
   sprintf(par,"grid%u_right_NS_center_b",gn);
-  add_parameter_double(par,C/2);
+  Psetd(par,C/2);
   
   sprintf(par,"grid%u_right_NS_center_c",gn);
-  add_parameter_double(par,0.0);
+  Psetd(par,0.0);
   
   free(R_outermost);
 }
@@ -1569,10 +1569,10 @@ static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
   
   /* R2 arounds */
   sprintf(par,"grid%u_left_NS_Surrounding_R2",gn);
-  add_parameter_double(par,R_Surr_l);
+  Psetd(par,R_Surr_l);
   
   sprintf(par,"grid%u_right_NS_Surrounding_R2",gn);
-  add_parameter_double(par,R_Surr_r);
+  Psetd(par,R_Surr_r);
   
   /* R1 and R2 outermost */
   for (i = 0; i < N_Outermost_Split; i++)
@@ -1581,47 +1581,47 @@ static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
     if (i == 0)
     {
       sprintf(par,"grid%u_left_outermost%u_R1",gn,i);
-      add_parameter_double(par,R_Surr_l);
+      Psetd(par,R_Surr_l);
       
       sprintf(par,"grid%u_right_outermost%u_R1",gn,i);
-      add_parameter_double(par,R_Surr_r);
+      Psetd(par,R_Surr_r);
     }
     else
     {
       sprintf(par,"grid%u_left_outermost%u_R1",gn,i);
-      add_parameter_double(par,R_outmost_l[i-1]);
+      Psetd(par,R_outmost_l[i-1]);
       
       sprintf(par,"grid%u_right_outermost%u_R1",gn,i);
-      add_parameter_double(par,R_outmost_r[i-1]);
+      Psetd(par,R_outmost_r[i-1]);
     }
     
     /* R2: */
     sprintf(par,"grid%u_left_outermost%u_R2",gn,i);
-    add_parameter_double(par,R_outmost_l[i]);
+    Psetd(par,R_outmost_l[i]);
     
     sprintf(par,"grid%u_right_outermost%u_R2",gn,i);
-    add_parameter_double(par,R_outmost_r[i]);
+    Psetd(par,R_outmost_r[i]);
   }
   
   /* assuming the center of left NS at (0,-O_l,0) */
   sprintf(par,"grid%u_left_NS_center_a",gn);
-  add_parameter_double(par,0.0);
+  Psetd(par,0.0);
   
   sprintf(par,"grid%u_left_NS_center_b",gn);
-  add_parameter_double(par,-O_l);
+  Psetd(par,-O_l);
   
   sprintf(par,"grid%u_left_NS_center_c",gn);
-  add_parameter_double(par,0.0);
+  Psetd(par,0.0);
   
   /* assuming the center of right NS at (0,O_r,0) */
   sprintf(par,"grid%u_right_NS_center_a",gn);
-  add_parameter_double(par,0.0);
+  Psetd(par,0.0);
   
   sprintf(par,"grid%u_right_NS_center_b",gn);
-  add_parameter_double(par,O_r);
+  Psetd(par,O_r);
   
   sprintf(par,"grid%u_right_NS_center_c",gn);
-  add_parameter_double(par,0.0);
+  Psetd(par,0.0);
   
   free(R0);
   free(R_outmost_r);

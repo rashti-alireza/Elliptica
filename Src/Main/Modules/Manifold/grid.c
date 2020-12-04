@@ -41,6 +41,7 @@ int make_patches(Grid_T *const grid)
   }
  
   /* print some info */
+  if(Pcmps("grid_verbose","yes"))
   for (p = 0; p < grid->np; ++p)
   {
     const Patch_T *patch = grid->patch[p];
@@ -51,7 +52,6 @@ int make_patches(Grid_T *const grid)
     printf("     Coord. Sys. = %s\n",coord_sys_str(patch,str));
     printf("     Collocation = %s\n",collocation_str(patch,str));
     printf("     Bases       = %s\n",bases_str(patch,str));
-    
   }
   
   FUNC_TOC
