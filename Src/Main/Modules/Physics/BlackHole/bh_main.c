@@ -13,23 +13,25 @@ int bh_main(Physics_T *const phys)
 {
   int ret = EXIT_SUCCESS;
   
-  assert(phys->ctype == BH);
-  
   switch (phys->cmd)
   {
     case BH_TUNE_RADIUS:
+      AssureType(phys->ctype == BH);
       ret = tune_black_hole_radius(phys);
     break;
     
     case BH_FIND_SURFACE:
+      AssureType(phys->ctype == BH);
       ret = find_black_hole_surface(phys);
     break;
     
     case BH_FILL:
+      AssureType(phys->ctype == BH);
       ret = bh_fill_inside_black_hole(phys);
     break;
     
     case BH_START:
+      AssureType(phys->ctype == BH);
       ret = start_off_black_hole(phys);
     break;
     
