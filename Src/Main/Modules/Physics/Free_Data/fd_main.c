@@ -107,7 +107,7 @@ static int populate_free_data(Physics_T *const phys)
       Pcmps(P_"MConfIJ"                     ,"zero"      )
      )
   {
-    AssureType(phys->ctype == BH);
+    AssureType(phys->ctype == SBH);
     /* important to have dedicated BH physics to read correct parameters */
     Physics_T *const bh = init_physics(phys,BH);
     
