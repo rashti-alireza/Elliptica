@@ -18,7 +18,7 @@ int Poisson0(void *vp)
   char *outdir = 0;
   sprintf(folder,"%s",Pgets("parameter_file_name_stem"));
   outdir = make_directory(Pgets("relative_root_path"),folder);
-  add_parameter("output_directory_path",outdir);
+  add_parameter("top_directory",outdir);
   free(outdir);
 
   
@@ -30,7 +30,7 @@ int Poisson0(void *vp)
   
   /* print */
   Pr_Field_T *pr  = init_PrField(grid);
-  outdir     = make_directory(Pgets("output_directory_path"),"output_3d");
+  outdir     = make_directory(Pgets("top_directory"),"output_3d");
   pr->folder = outdir;
   pr_fields(pr);
   free_PrField(pr);

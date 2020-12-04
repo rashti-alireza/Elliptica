@@ -15,9 +15,9 @@
 // 
 // if you wanna change the output directories, change the following
 // and note that the folders must be made already:
-// modify_checkpoint_par:my_directory      = path1
-// modify_checkpoint_par:output_directory_path = path2
-// modify_checkpoint_par:Diagnostics           = path3
+// modify_checkpoint_par:my_directory  = path1
+// modify_checkpoint_par:top_directory = path2
+// modify_checkpoint_par:Diagnostics   = path3
 // 
 */
 static Uint n_modified_checkpoint_par;/* number of modify_checkpoint_par */

@@ -20,7 +20,7 @@ int TOV_star(void *vp)
   char *outdir = 0;
   sprintf(folder,"%s",Pgets("parameter_file_name_stem"));
   outdir = make_directory(Pgets("relative_root_path"),folder);
-  add_parameter("output_directory_path",outdir);
+  add_parameter("top_directory",outdir);
   free(outdir);
 
   /* set some default parameters: */
@@ -31,7 +31,7 @@ int TOV_star(void *vp)
   Pset_default("TOV_Star_n","91");
   
   TOV_T *tov = TOV_init();
-  const char *const path_par = Pgets("output_directory_path");
+  const char *const path_par = Pgets("top_directory");
   char *path =  make_directory(path_par,"TOV_Star");
   char file_name[STR_LEN_MAX];
   FILE *file;

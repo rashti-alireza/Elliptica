@@ -1312,7 +1312,7 @@ int derivative_tests(Grid_T *const grid)
   Uint fi;
   Flag_T flg;
   
-  path_par = Pgets("output_directory_path");
+  path_par = Pgets("top_directory");
   path = make_directory(path_par,"Derivative_Tests");
 
   

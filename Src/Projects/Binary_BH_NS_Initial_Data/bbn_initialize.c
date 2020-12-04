@@ -78,7 +78,7 @@ static int IsThereAnyUsefulCheckpointFile(void)
   struct stat st = {0};/* status of files */
   FILE *checkpoint_file = 0;
   Parameter_T *par;
-  const char *const cur_out_dir = Pgets("output_directory_path");
+  const char *const cur_out_dir = Pgets("top_directory");
   const char *const cur_folder_name  = strrchr(cur_out_dir,'/')+1;
   const char *const cur_folder_affix = strrchr(cur_folder_name,'_')+1;
   int cur_folder_index = atoi(cur_folder_affix);

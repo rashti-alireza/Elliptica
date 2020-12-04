@@ -851,7 +851,7 @@ update_iteration_params
   const Uint iter_n = (Uint)Pgeti(PrefixIt(prefix,"iteration_number"));
   Uint iter;/* number of iterations have been performed for the simulation */
   Uint n[3];/* number of points */
-  const char *path_par = Pgets(PrefixIt(prefix,"output_directory_path"));
+  const char *path_par = Pgets(PrefixIt(prefix,"top_directory"));
   char folder_name_next[STR_SIZE2] = {'\0'},
        folder_name_prev[STR_SIZE2] = {'\0'};
   char *folder_path,*folder_path2;

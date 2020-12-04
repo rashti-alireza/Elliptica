@@ -20,12 +20,12 @@ void bbn_construct_id(void)
     char *outdir = 0;
     sprintf(folder,"%s",Pgets("parameter_file_name_stem"));
     outdir = make_directory(Pgets("relative_root_path"),folder);
-    add_parameter("output_directory_path",outdir);
+    add_parameter("top_directory",outdir);
     free(outdir);
   }
   else
   {
-    add_parameter("output_directory_path","NOT_SPECIFIED_YET");
+    add_parameter("top_directory","NOT_SPECIFIED_YET");
   }
 
   /* setting the default parameters */
@@ -94,7 +94,7 @@ void bbn_elliptic_eqs_convergence_test(void)
   char *outdir = 0;
   sprintf(folder,"%s",Pgets("parameter_file_name_stem"));
   outdir = make_directory(Pgets("relative_root_path"),folder);
-  add_parameter("output_directory_path",outdir);
+  add_parameter("top_directory",outdir);
   free(outdir);
 
   /* setting the default parameters */
@@ -154,7 +154,7 @@ static void update_parameters_and_directories(const Uint main_loop_iter)
   const Uint iter_n = (Uint)Pgeti("iteration_number");
   Uint iter;/* number of iterations have been performed for the simulation */
   Uint n[3];/* number of points */
-  const char *path_par = Pgets("output_directory_path");
+  const char *path_par = Pgets("top_directory");
   char folder_name_next[1000] = {'\0'},
        folder_name_prev[1000] = {'\0'};
   char *folder_path,*folder_path2;

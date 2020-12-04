@@ -177,7 +177,7 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
       {make_jacobian_spectral_method,make_jacobian_direct_method};
   double **cmp[N_Method_E];
   Matrix_T *J = 0;
-  const char *path_par = Pgets("output_directory_path");
+  const char *path_par = Pgets("top_directory");
   char *path = make_directory(path_par,"Test_Jacobian_Eq");
   char file_name[MAX_STR_LEN];
   char line[MAX_STR_LEN]={'\0'};

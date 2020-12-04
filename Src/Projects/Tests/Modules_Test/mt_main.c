@@ -16,7 +16,7 @@ int Modules_Test(void *vp)
   char *outdir = 0;
   sprintf(folder,"%s",Pgets("parameter_file_name_stem"));
   outdir = make_directory(Pgets("relative_root_path"),folder);
-  add_parameter("output_directory_path",outdir);
+  add_parameter("top_directory",outdir);
   free(outdir);
   
   Grid_T *grid = mt_make_grid();/* making grid */

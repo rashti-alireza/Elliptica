@@ -74,7 +74,7 @@ void pr_interfaces(const Grid_T *const grid)
   if (get_parameter("Diagnostics"))
     path_par = PgetsEZ("Diagnostics");
   else
-    path_par = PgetsEZ("output_directory_path");
+    path_par = PgetsEZ("top_directory");
   
   path = make_directory(path_par,"InterfaceInfo");
   
@@ -378,7 +378,7 @@ void pr_parameters(void)
   if (get_parameter("Diagnostics"))
     path = PgetsEZ("Diagnostics");
   else
-    path = PgetsEZ("output_directory_path");
+    path = PgetsEZ("top_directory");
   
   sprintf(dir,"%s/parameters.out",path);
   f = Fopen(dir,"w");
@@ -405,7 +405,7 @@ void pr_coords(const Grid_T *const grid)
   if (get_parameter("Diagnostics"))
     path_par = PgetsEZ("Diagnostics");
   else
-    path_par = PgetsEZ("output_directory_path");
+    path_par = PgetsEZ("top_directory");
     
   path = make_directory(path_par,"Patches");
   
@@ -439,7 +439,7 @@ void pr_field_difference(const Grid_T *const grid,const char *const fld1,const c
   const char *path_par;
   Uint l,i,R;
   
-  path_par = Pgets("output_directory_path");
+  path_par = Pgets("top_directory");
   path = make_directory(path_par,"Fields");
   
   sprintf(dir,"%s/%s-%s.grid",path,fld1,fld2);

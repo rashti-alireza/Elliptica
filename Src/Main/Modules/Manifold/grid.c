@@ -34,7 +34,7 @@ int make_patches(Grid_T *const grid)
   {
     pr_coords(grid);
     Pr_Field_T *pr  = init_PrField(grid);
-    pr->folder = Pgets("output_directory_path");
+    pr->folder = Pgets("top_directory");
     pr->cycle  = 0;
     pr_fields(pr);
     free_PrField(pr);

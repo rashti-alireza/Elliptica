@@ -32,7 +32,7 @@ char *make_directory(const char *const path,const char *const name)
   return folder;
 }
 
-/* making folder in "output_directory_path". 
+/* making folder in "top_directory". 
 // note: allocate memory for path.
 // ->return value: made folder directory
 */
@@ -40,7 +40,7 @@ char *make_folder(const char *const folder)
 {
   const char *path_par;
   char *path;
-  path_par = Pgets("output_directory_path");
+  path_par = Pgets("top_directory");
   path = make_directory(path_par,folder);
   
   return path;
@@ -52,7 +52,7 @@ char *make_folder(const char *const folder)
 char *open_folder(const char *const folder)
 {
   struct stat st = {0};/* status of files */
-  const char *path_par = Pgets("output_directory_path");
+  const char *path_par = Pgets("top_directory");
   char dir[MAX_ARR];
   char *ret = 0;
   int i;
