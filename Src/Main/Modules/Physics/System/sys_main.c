@@ -49,12 +49,16 @@ static int initialize_fields(Physics_T *const phys)
 {
   FUNC_TIC
   
-  if(Pcmps(P_"initialize","one_exact_KerrSchild"))
+  if(phys->sys == SBH                            &&
+     Pcmps(P_"initialize","one_exact_KerrSchild")
+    )
   {
     if(Pcmps(P_"initialize_fields","XCTS"))
     {
-      fd_populate_psi_alphaPsi_beta_KerrSchild(phys,".*",
+      Physics_T *const bh = init_physics(phys,BH);
+      fd_populate_psi_alphaPsi_beta_KerrSchild(bh,".*",
                                             "psi","alphaPsi","beta",0);
+      free_physics(bh);
     }
     else
       Error0(NO_OPTION);
