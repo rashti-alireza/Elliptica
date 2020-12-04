@@ -13,27 +13,30 @@ int star_main(Physics_T *const phys)
 {
   int ret = EXIT_SUCCESS;
   
-  assert(phys->ctype == NS);
-  
   switch (phys->cmd)
   {
     case STAR_TUNE_EULER_CONST:
+      AssureType(phys->ctype == NS);
       ret = tune_star_Euler_constant(phys);
     break;
     
     case STAR_EXTRAPOLATE_MATTERS:
+      AssureType(phys->ctype == NS);
       ret = extrapolate_matter(phys);
     break;
     
     case STAR_FIND_SURFACE:
+      AssureType(phys->ctype == NS);
       ret = find_star_surface(phys);
     break;
     
     case STAR_TUNE_FORCE_BALANCE:
+      AssureType(phys->ctype == NS);
       ret = tune_star_force_balance_equation(phys);
     break;
     
     case STAR_TUNE_CENTER:
+      AssureType(phys->ctype == NS);
       ret = tune_star_center(phys);
     break;
     
