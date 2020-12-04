@@ -7,11 +7,11 @@
 
 /* some useful messages and prints*/
 #define INCOMPLETE_FUNC "Other options have not been developed yet for this part!\n"
-#define NO_JOB "No job has been defined for this case."
-#define NO_OPTION "No such option has been defined."
+#define NO_JOB    "No job has been defined for this case."
+#define NO_OPTION "No such option has been defined. Implement me!"
 #define ERROR_MASSAGE  ":(\n\nERROR and EXIT:\n"
-#define Pretty0         "|--> "
-#define Pretty1         "~> "
+#define Pretty0        "|--> "
+#define Pretty1        "~> "
 
 /* some general macros */
 #define FOLDER_AFFIX "_%02d"/* that's how folders are named */
