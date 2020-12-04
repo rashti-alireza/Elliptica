@@ -107,18 +107,23 @@ static int populate_free_data(Physics_T *const phys)
       Pcmps(P_"MConfIJ"                     ,"zero"      )
      )
   {
-    fd_populate_gConf_dgConf_igConf_KerrSchild(phys,".*","gConf",
+    AssureType(phys->ctype == BH);
+    /* important to have dedicated BH physics to read correct parameters */
+    Physics_T *const bh = init_physics(phys,BH);
+    
+    fd_populate_gConf_dgConf_igConf_KerrSchild(bh,".*","gConf",
                                                 "igConf","dgConf");
     
-    fd_compatible_Christoffel_symbol(phys,".*","igConf","dgConf","ChrisConf");
+    fd_compatible_Christoffel_symbol(bh,".*","igConf","dgConf","ChrisConf");
     
-    fd_1st_derivative_Christoffel_symbol(phys,".*","dChrisConf");
+    fd_1st_derivative_Christoffel_symbol(bh,".*","dChrisConf");
     
-    fd_conformal_Ricci(phys,".*","igConf","ChrisConf","dChrisConf",
+    fd_conformal_Ricci(bh,".*","igConf","ChrisConf","dChrisConf",
                          "RicciConf","trRicciConf");
     
-    fd_extrinsic_curvature_KerrSchild(phys,".*","igConf","ChrisConf",
+    fd_extrinsic_curvature_KerrSchild(bh,".*","igConf","ChrisConf",
                                         "adm_Kij","trK","dtrK");
+    free_physics(bh);
   }
   else
     Error0(NO_OPTION);
