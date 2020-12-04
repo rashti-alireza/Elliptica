@@ -267,8 +267,8 @@ init_physics
       
     break;
     case SBH:
-      phys->ctype = BH;
-      phys->stype = "BH";
+      phys->ctype = SBH;
+      phys->stype = "SBH";
       spos = Pgets("grid_set_BH");
       if (strstr_i(spos,"center"))
       {
