@@ -55,6 +55,7 @@ static int initialize_fields(Physics_T *const phys)
   {
     if(Pcmps(P_"initialize_fields","XCTS"))
     {
+      /* important to have dedicated BH physics to read correct parameters */
       Physics_T *const bh = init_physics(phys,BH);
       fd_populate_psi_alphaPsi_beta_KerrSchild(bh,".*",
                                             "psi","alphaPsi","beta",0);
