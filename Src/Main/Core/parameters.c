@@ -900,7 +900,7 @@ update_iteration_params
   /* print the iterative parameters */
   if (total_ipars && main_loop_iter)
   {
-    printf("Iterative parameters:\n");
+    printf("Next iterative parameter(s) are:\n");
     for (i = 0; i < total_ipars; ++i)
       printf(Pretty0"%-30s = %-15s\n",par_name_ip(i),par_value_str_ip(i));
   }
