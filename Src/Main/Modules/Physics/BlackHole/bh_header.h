@@ -35,6 +35,12 @@ bh_interpolating_fields_on_a_line
   const char *const dir/* output directory */,
   const int test_det_adm_g/* if 1, it tests det(adm_g) > 0 */
   );
+  
+void 
+bh_print_properties
+  (Physics_T *const phys,
+  FILE *const file,
+  const int pr_screen);
 
 #endif
 
