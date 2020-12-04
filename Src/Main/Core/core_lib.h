@@ -38,7 +38,7 @@ void update_parameter_string(const char *const lv, const char *const rv);
 void update_parameter_array(const char *const lv, const double *const rv,const Uint n);
 void add_parameter(const char *const lv, const char *const rv);
 void add_parameter_string(const char *const lv, const char *const rv);
-void add_parameter_double(const char *const lv, const double rv);
+void add_parameter_double(const char *const lv, const double rv,const int print_flg);
 void add_parameter_array(const char *const lv, const double *const rv,const Uint n);
 int get_parameter_value_I(const char *const par_name,const char *const file, const int line,const Flag_T flg);
 double get_parameter_value_D(const char *const par_name,const char *const file, const int line,const Flag_T flg);

@@ -80,14 +80,14 @@ void update_parameter_double_format(const char *const lv, const double rv,const 
   }
   else/* since it does not exist */
   {
-    add_parameter_double(lv,rv);
+    add_parameter_double(lv,rv,print_flg);
   }
   
 }
 
 /* adding left value and right value to parameter data base 
 // double format. */
-void add_parameter_double(const char *const lv, const double rv)
+void add_parameter_double(const char *const lv, const double rv,const int print_flg)
 {
   IsNull(lv);
   
@@ -105,9 +105,12 @@ void add_parameter_double(const char *const lv, const double rv)
   par->rv_double  = rv;
   par->double_flg = 1;
   
-  printf("Adding Parameter:\n");
-  printf("       |--> parameter = %s\n",lv);
-  printf("       |--> value     = %+e\n",rv);
+  if (print_flg)
+  {
+    printf("Adding Parameter:\n");
+    printf("       |--> parameter = %s\n",lv);
+    printf("       |--> value     = %+e\n",rv);
+  }
 }
 
 /* adding left value and right value to parameter data base 
