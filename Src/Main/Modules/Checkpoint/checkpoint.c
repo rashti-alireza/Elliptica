@@ -254,8 +254,8 @@ static void write_fields(const Grid_T *const grid,const char *const folder)
 }
 
 /* read checkpoint file and creat grid and parameters accordingly
-// no fields at this stage, fields must be added first by
-// the project. */
+// no patch andfields at this stage, patch and fields must be 
+// added first by the project. */
 static Grid_T *read_grid_and_params(FILE *const file)
 {
   Grid_T *grid = 0;
@@ -271,11 +271,6 @@ static Grid_T *read_grid_and_params(FILE *const file)
   read_parameters(alloc_info,file);
   
   grid = alloc_info->grid;
-  
-  /* make the patches */
-  make_patches(grid);
-  /* realizing the geometry */
-  realize_interfaces(grid);
   
   /* free */
   Free(alloc_info->grid_kind);
@@ -696,8 +691,8 @@ void read_fields_from_checkpoint_file(Physics_T *const phys,FILE *const file)
 /* ->: checkpoint file whose position ready for fields to be read.
 // loading the grid and parameters from checkpoint file.
 // No check at this stage, we assume every thing is consistence.
-// NOTE: this only load the grid and parameter without fields.
-// fields must be added separately and then be read by function:
+// NOTE: this only load the grid and parameter without patches and fields.
+// patches and fields must be added separately and then be read by function:
 // read_fields_from_checkpoint_file using the returned file.
 // the path of checkpoint file is saved in "checkpoint_file_path". */
 void *open_checkpoint_file_then_read_grid_and_params(Physics_T *const phys)
