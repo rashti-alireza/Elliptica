@@ -411,11 +411,11 @@ int regex_replace(const char *const orig/* original */,
   else/*  there is at least one match */
   {
     Uint i = 0;
+    int len = match[0].rm_eo/* The offset in string of the end of the substring.  */
+             -match[0].rm_so;/* The offset in string of the beginning of a substring. */
     while(!status)
     {
       const char *o  = c;
-      int len = match[0].rm_eo/* The offset in string of the end of the substring.  */
-               -match[0].rm_so;/* The offset in string of the beginning of a substring. */
       
       /* write the leading */
       while (c != &o[match[0].rm_so])
@@ -431,6 +431,11 @@ int regex_replace(const char *const orig/* original */,
       
       c += len;/* skip match */
       status = regexec(&regex,c,n_matches,match,0);
+      
+      len = match[0].rm_eo-match[0].rm_so;
+      /* if regex is "^" */
+      if (len == 0) 
+        status = 1;/* => breaks the loop */
     }
     /* write the leading */
     while (*c != '\0')
