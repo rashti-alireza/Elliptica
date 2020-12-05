@@ -7,7 +7,7 @@
 #include "maths_spectral_methods_lib.h"
 
 
-#define STR_LEN_MAX (1000)
+#define STR_LEN_MAX (999)
 /* NOTE: HEADER and FOOTER and END_MSG must be consistent
 // while a file is read. */
 #define HEADER "#{data#"

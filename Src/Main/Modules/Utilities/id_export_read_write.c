@@ -9,7 +9,7 @@
 
 
 /* given file path, it reads cartesian coordinate from the file
-// then populates pnt struct and allocs memory for X coords too. */
+// then populates pnt struct and finds also X coords. */
 void 
   idexp_load_Cartesian_coordinates_from_file
     (const char *const coords_file_path,ID_Export_T *const pnt)
@@ -17,10 +17,15 @@ void
   FUNC_TIC
   
   FILE *file = 0;
-  Uint npoints = 0;
-  char *match_str  = 0;
+  Grid_T *const grid = pnt->grid;
+  Uint npoints    = 0;
+  char *match_str = 0;
   char str[STR_LEN_MAX] = {'\0'};
-  Uint i = 0;
+  Uint i,p;
+  
+  /* some checks */
+  if (!grid)
+    Error2("Grid is empty!");
   
   /* open and read coords file */
   file = Fopen(coords_file_path,"r");
@@ -67,40 +72,6 @@ void
   
   Fclose(file);
   
-  FUNC_TOC
-}
-
-
-/* interpolate the given fields_name at the points and 
-// write into fields_file. this file will be reading by an evolution code 
-// as the initilization its fields. 
-// NOTE: the order of fields_name_str and evo_fields_name_str MUST
-// be the same.*/
-void 
-  idexp_interpolate_fields_and_write_to_file
-    (FILE *const file,ID_Export_T *const pnt,
-     const char *const fields_name_str/* comma separated */,
-     const char *const evo_fields_name_str/* comma separated */)
-{
-  FUNC_TIC
-  
-  Grid_T *const grid = pnt->grid;
-  const Uint npoints = pnt->npoints;
-  char **fields_name = 
-    read_separated_items_in_string(fields_name_str,',');
-  char **evo_fields   = 
-    read_separated_items_in_string(evo_fields_name_str,',');
-  double *interp_v = 0;
-  Uint count_f;
-  Uint p,f;
-  
-  /* some checks */
-  if (!fields_name)
-    Error2("No fields given!");
-    
-  if (!evo_fields)
-    Error2("No fields given!");
-  
   /* populating pnt->(X,Y,Z) and pnt->patchn */
   printf(Pretty0"Preparing points for the interpolation ...\n");
   fflush(stdout);
@@ -125,6 +96,41 @@ void
       Error2("It could not find X(x,y,z)!\n");
     }
   }
+
+  FUNC_TOC
+}
+
+
+/* interpolate the given fields_name at the points and 
+// write into fields_file. this file will be reading by an evolution code 
+// as the initilization its fields. 
+// NOTE: the order of fields_name_str and evo_fields_name_str MUST
+// be the same.*/
+void 
+  idexp_interpolate_fields_and_write_to_file
+    (FILE *const file,ID_Export_T *const pnt,
+     const char *const fields_name_str/* comma separated */,
+     const char *const evo_fields_name_str/* comma separated */)
+{
+  Grid_T *const grid = pnt->grid;
+  const Uint npoints = pnt->npoints;
+  char **fields_name = 
+    read_separated_items_in_string(fields_name_str,',');
+  char **evo_fields   = 
+    read_separated_items_in_string(evo_fields_name_str,',');
+  double *interp_v = 0;
+  Uint count_f;
+  Uint p,f;
+  
+  /* some checks */
+  if (!grid)
+    Error2("Grid is empty!");
+  
+  if (!fields_name)
+    Error2("No fields given!");
+    
+  if (!evo_fields)
+    Error2("No fields given!");
   
   /* to avoid race condition between threads write all coeffs */
   OpenMP_Patch_Pragma(omp parallel for)
@@ -193,7 +199,7 @@ void
     for (p = 0; p < npoints; ++p)
     {
       /* doc test */
-      if (0)//!isfinite(interp_v[p]))
+      if (!isfinite(interp_v[p]))
       {
         fprintf(stdout,"%s[%s](%g,%g,%g)|x(%g,%g,%g)|X = %g\n",
                 fields_name[f],
@@ -220,7 +226,6 @@ void
   free_2d(evo_fields);
   free_2d_mem(pnt->f_index,grid->np);
   pnt->f_index = 0;
-  FUNC_TOC
 }
 
 /* -> binary file to write
