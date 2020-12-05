@@ -32,6 +32,17 @@ typedef struct sFUNC_PATCH2PDOUBLE_T
   Uint flg: 1;/* used for different purposes */
 }sFunc_Patch2Pdouble_T;
 
+/* strcut for initial data exporting  */
+typedef struct ID_EXPORT_T
+{
+  double *x,*y,*z;/* (x,y,z) coords */
+  double *X,*Y,*Z;/* (X,Y,Z) coords */
+  Uint *patchn;/* patch number for each coord */
+  Uint npoints;/* number of coords */
+  int **f_index;/* field index for each patch and for each field
+                // ex: f_index[p][f] = for patch p and field f. */
+}ID_Export_T;
+
 void test_start(const char *const file,const int line);
 Uint countf(void *const p);
 void init_func_PtoV(sFunc_PtoV_T ***const func);
