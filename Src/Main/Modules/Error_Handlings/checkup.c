@@ -48,9 +48,14 @@ void null_path_error(const void *const path,const char *const file, const int li
   }
 }
 
-/* general purpose error */
-void abort_error(const char *const massage,const char *const file, const int line)
+/* general purpose error, if pr_strdout == 1 it ALSO prints in standard output */
+void abort_error(const char *const massage,const char *const file, const int line,const int pr_stdout)
 {
+  if (pr_stdout)
+  {
+    printf(ERROR_MASSAGE"%s\nFile: %s\nLine: %d\n\n",massage,file,line);
+    fflush(stdout);
+  }
   pr_line_stderr('x');
   fprintf(stderr,ERROR_MASSAGE"%s\nFile: %s\nLine: %d\n",massage,file,line);
   pr_line_stderr('x');
