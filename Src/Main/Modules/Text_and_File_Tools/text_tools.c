@@ -381,7 +381,7 @@ char **read_separated_items_in_string(const char *const string,const char delimi
   return items;
 }
 
-/* ->: EXIT_SUCCESS or sprinf or error.
+/* ->: 1 if found match and replace, 0 otherwise.
 // replace the matches match of given string orig by repl
 // and write into save.
 // NOTE: save must have enough memory.  */
@@ -390,9 +390,9 @@ int regex_replace(const char *const orig/* original */,
                   const char *const repl/* replace by this piece */,
                   char *const save/* write the result in save  */)
 {
-
   regex_t regex;
-  const char *c = orig;
+  char *original = dup_s(orig);
+  const char *c  = original;
   const Uint n_matches = 1;/* number of matches */
   regmatch_t match[n_matches];
   int status;
@@ -403,10 +403,12 @@ int regex_replace(const char *const orig/* original */,
 
   status = regexec(&regex,c,n_matches,match,0);
   
-  if (status)/* if no match is found write orig to save. */
+  if (status)/* if no match is found write original to save. */
   {
     regfree(&regex);
-    return (sprintf(save,"%s",orig));
+    sprintf(save,"%s",original);
+    Free(original);
+    return 0;
   }
   else/*  there is at least one match */
   {
@@ -448,7 +450,8 @@ int regex_replace(const char *const orig/* original */,
     regfree(&regex);
   }
   
-  return EXIT_SUCCESS;
+  Free(original);
+  return 1;
 }
 
 
