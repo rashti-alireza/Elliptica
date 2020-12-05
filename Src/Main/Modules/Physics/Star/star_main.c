@@ -40,7 +40,7 @@ int star_main(Physics_T *const phys)
       ret = tune_star_center(phys);
     break;
     
-    case STAR_ADD_PARAMS:
+    case STAR_SET_PARAMS:
       ret = star_add_parameters(phys);
     break;
     

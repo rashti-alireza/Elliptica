@@ -138,13 +138,13 @@ typedef enum CMD_T
  STAR_TUNE_CENTER,/* avoid star drifting */
  STAR_EXTRAPOLATE_MATTERS,/* extrapolate outside star */
  STAR_START,/* initiation before first grid */
- STAR_ADD_PARAMS,/* add params */
+ STAR_SET_PARAMS,/* set params */
  STAR_ADD_FIELDS,/* add fields */
  STAR_FIND_SURFACE,/* find new star surface */
  
  /* stress energy related */
  STRESS_ENERGY_UPDATE,/* update whole matter related fields */
- STRESS_ENERGY_ADD_PARAMS,/* add params */
+ STRESS_ENERGY_SET_PARAMS,/* set params */
  STRESS_ENERGY_ADD_FIELDS,/* add fields */
  
  /* BH related */
@@ -153,11 +153,11 @@ typedef enum CMD_T
  BH_FILL,/* BH-filler */
  BH_FIND_SURFACE,/* find surface of BH to create grid */
  BH_START,/* initiation before first grid */
- BH_ADD_PARAMS,/* add params */
+ BH_SET_PARAMS,/* set params */
  BH_ADD_FIELDS,/* add fields */
  
  /* free data related */
- FREE_DATA_ADD_PARAMS,/* add params */
+ FREE_DATA_SET_PARAMS,/* set params */
  FREE_DATA_ADD_FIELDS,/* add fields */
  FREE_DATA_POPULATE,/* populate free data */
  
@@ -166,7 +166,7 @@ typedef enum CMD_T
  SYS_INITIALIZE_FIELDS,/* start off with these fields */
  
  /* adm related */
- ADM_ADD_PARAMS,/* add params */
+ ADM_SET_PARAMS,/* set params */
  ADM_ADD_FIELDS,/* add fields */
  ADM_UPDATE_Kij,/* adm_K_{ij} */
  ADM_UPDATE_KIJ,/* adm_K^{ij} */

@@ -34,13 +34,13 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
     case STAR_FIND_SURFACE:
     case STAR_START:
     case STAR_ADD_FIELDS:
-    case STAR_ADD_PARAMS:
+    case STAR_SET_PARAMS:
     case STAR_EXTRAPOLATE_MATTERS:
       ret = star_main(phys);
     break;
     
     case STRESS_ENERGY_UPDATE:
-    case STRESS_ENERGY_ADD_PARAMS:
+    case STRESS_ENERGY_SET_PARAMS:
     case STRESS_ENERGY_ADD_FIELDS:
       ret = Tij_main(phys);
     break;
@@ -49,12 +49,12 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
     case BH_TUNE_RADIUS:
     case BH_FILL:
     case BH_START:
-    case BH_ADD_PARAMS:
+    case BH_SET_PARAMS:
     case BH_ADD_FIELDS:
       ret = bh_main(phys);
     break;
     
-    case FREE_DATA_ADD_PARAMS:
+    case FREE_DATA_SET_PARAMS:
     case FREE_DATA_ADD_FIELDS:
     case FREE_DATA_POPULATE:
     
@@ -66,7 +66,7 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
       ret = sys_main(phys);
     break;
     
-    case ADM_ADD_PARAMS:
+    case ADM_SET_PARAMS:
     case ADM_ADD_FIELDS:
     case ADM_UPDATE_Kij:
     case ADM_UPDATE_KIJ:

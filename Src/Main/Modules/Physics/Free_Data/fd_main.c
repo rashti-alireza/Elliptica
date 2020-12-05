@@ -15,7 +15,7 @@ int fd_main(Physics_T *const phys)
   
   switch (phys->cmd)
   {
-    case FREE_DATA_ADD_PARAMS:
+    case FREE_DATA_SET_PARAMS:
       ret = add_free_data_params(phys);
     break;
     

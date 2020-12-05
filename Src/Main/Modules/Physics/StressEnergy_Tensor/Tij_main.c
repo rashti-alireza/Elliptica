@@ -19,7 +19,7 @@ int Tij_main(Physics_T *const phys)
       ret = update_stress_energy_tensor(phys);
     break;
     
-    case STRESS_ENERGY_ADD_PARAMS:
+    case STRESS_ENERGY_SET_PARAMS:
       ret = add_stress_energy_parameters(phys);
     break;
     

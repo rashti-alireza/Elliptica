@@ -35,7 +35,7 @@ int bh_main(Physics_T *const phys)
       ret = start_off_black_hole(phys);
     break;
     
-    case BH_ADD_PARAMS:
+    case BH_SET_PARAMS:
       ret = add_black_hole_params(phys);
     break;
     

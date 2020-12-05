@@ -15,7 +15,7 @@ int adm_main(Physics_T *const phys)
   
   switch (phys->cmd)
   {
-    case ADM_ADD_PARAMS:
+    case ADM_SET_PARAMS:
       ret = add_adm_params(phys);
     break;
     
