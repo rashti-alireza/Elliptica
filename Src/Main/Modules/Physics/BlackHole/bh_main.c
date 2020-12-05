@@ -36,7 +36,7 @@ int bh_main(Physics_T *const phys)
     break;
     
     case BH_SET_PARAMS:
-      ret = add_black_hole_params(phys);
+      ret = set_black_hole_params(phys);
     break;
     
     case BH_ADD_FIELDS:
@@ -50,8 +50,8 @@ int bh_main(Physics_T *const phys)
   return ret;
 }
 
-/* adding default parameters. */
-static int add_black_hole_params(Physics_T *const phys)
+/* set default parameters. */
+static int set_black_hole_params(Physics_T *const phys)
 {
   FUNC_TIC
 

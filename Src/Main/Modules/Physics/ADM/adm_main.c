@@ -16,7 +16,7 @@ int adm_main(Physics_T *const phys)
   switch (phys->cmd)
   {
     case ADM_SET_PARAMS:
-      ret = add_adm_params(phys);
+      ret = set_adm_params(phys);
     break;
     
     case ADM_ADD_FIELDS:
@@ -59,8 +59,8 @@ int adm_main(Physics_T *const phys)
 }
 
 
-/* add default parameters */
-static int add_adm_params(Physics_T *const phys)
+/* set defualt paramters */
+static int set_adm_params(Physics_T *const phys)
 {
   FUNC_TIC
   

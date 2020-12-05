@@ -20,7 +20,7 @@ int Tij_main(Physics_T *const phys)
     break;
     
     case STRESS_ENERGY_SET_PARAMS:
-      ret = add_stress_energy_parameters(phys);
+      ret = set_stress_energy_params(phys);
     break;
     
     case STRESS_ENERGY_ADD_FIELDS:
@@ -35,8 +35,8 @@ int Tij_main(Physics_T *const phys)
 }
 
 
-/* add default parameters */
-static int add_stress_energy_parameters(Physics_T *const phys)
+/* set defualt paramters */
+static int set_stress_energy_params(Physics_T *const phys)
 {
   FUNC_TIC
   

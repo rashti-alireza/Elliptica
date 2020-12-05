@@ -41,7 +41,7 @@ int star_main(Physics_T *const phys)
     break;
     
     case STAR_SET_PARAMS:
-      ret = star_add_parameters(phys);
+      ret = set_star_params(phys);
     break;
     
     case STAR_ADD_FIELDS:
@@ -205,8 +205,8 @@ static int star_add_fields(Physics_T *const phys)
   return ret;
 }
 
-/* add default parameters */
-static int star_add_parameters(Physics_T *const phys)
+/* set defualt paramters */
+static int set_star_params(Physics_T *const phys)
 {
   FUNC_TIC
   

@@ -16,7 +16,7 @@ int fd_main(Physics_T *const phys)
   switch (phys->cmd)
   {
     case FREE_DATA_SET_PARAMS:
-      ret = add_free_data_params(phys);
+      ret = set_free_data_params(phys);
     break;
     
     case FREE_DATA_ADD_FIELDS:
@@ -35,8 +35,8 @@ int fd_main(Physics_T *const phys)
 }
 
 
-/* add default parameters */
-static int add_free_data_params(Physics_T *const phys)
+/* set defualt paramters */
+static int set_free_data_params(Physics_T *const phys)
 {
   FUNC_TIC
   
