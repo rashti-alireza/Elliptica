@@ -35,6 +35,7 @@ typedef struct sFUNC_PATCH2PDOUBLE_T
 /* strcut for initial data exporting  */
 typedef struct ID_EXPORT_T
 {
+  Grid_T *grid;
   double *x,*y,*z;/* (x,y,z) coords */
   double *X,*Y,*Z;/* (X,Y,Z) coords */
   Uint *patchn;/* patch number for each coord */
@@ -94,6 +95,27 @@ void footer_and_clock(const char *const msg);
 double f_of_X(const char *const field,
               const double *const X/* patch coords */,
               Patch_T *const patch);
+
+void 
+  idexp_load_Cartesian_coordinates_from_file
+    (const char *const coords_file_path,ID_Export_T *const pnt);
+    
+void *
+  idexp_new_binary_file_to_write
+    (const char *const file_path,const char *const fields_name);
+
+
+void idexp_close_file(FILE *file);
+
+void
+  idexp_interpolate_fields_and_write_to_file
+    (FILE *const file,ID_Export_T *const pnt,
+     const char *const fields_name_str/* comma separated */,
+     const char *const evo_fields_name_str/* comma separated */);
+
+
+void idexp_free(ID_Export_T *pnt);
+ID_Export_T *idexp_init(void);
 
 
 #endif
