@@ -224,8 +224,9 @@ void
 }
 
 /* -> binary file to write
-// open new binary file and add appropriate header for 
-// ID export purposes. */
+// open new binary file and add appropriate header for export purposes.
+// fields_name will be the header of this file, for instance,
+// this argument can be evaluation's fields name */
 void *
   idexp_new_binary_file_to_write
     (const char *const file_path,const char *const fields_name)
