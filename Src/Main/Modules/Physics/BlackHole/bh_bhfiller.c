@@ -916,6 +916,8 @@ bh_interpolating_fields_on_a_line
 {
   FUNC_TIC
   
+  AssureType(phys->ctype == BH);
+  
   const double SmallDet = 1E-2;
   Grid_T *const grid = mygrid(phys,".*");
   char **const fields_name = 
