@@ -386,8 +386,6 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
          partial_derivative(ddf);
         }
       }
-      
-      ++f;
     }
   }
 

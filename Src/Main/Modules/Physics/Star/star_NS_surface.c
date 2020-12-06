@@ -199,8 +199,6 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
          partial_derivative(ddf);
         }
       }
-      
-      ++f;
     }
   }
   
