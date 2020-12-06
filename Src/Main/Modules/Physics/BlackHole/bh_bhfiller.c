@@ -970,20 +970,6 @@ bh_interpolating_fields_on_a_line
     pnt->z[i] = z_0+i*t*mz;
   }
   
-  /* to avoid race condition between threads write all coeffs */
-  OpenMP_Patch_Pragma(omp parallel for)
-  for (p = 0; p < grid->np; ++p)
-  {
-    Patch_T *patch = grid->patch[p];
-    Uint fn = 0;
-    
-    while (fields_name[fn])
-    {
-      make_coeffs_3d(patch->fields[Ind(fields_name[fn])]);
-      fn++;
-    }
-  }
-  
   /* find the corresponding X and patch */
   OpenMP_1d_Pragma(omp parallel for)
   for (p = 0; p < npoints; ++p)
@@ -1002,6 +988,20 @@ bh_interpolating_fields_on_a_line
     pnt->X[p] = X[0];
     pnt->Y[p] = X[1];
     pnt->Z[p] = X[2];
+  }
+  
+  /* to avoid race condition between threads write all coeffs */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    Uint fn = 0;
+    
+    while (fields_name[fn])
+    {
+      make_coeffs_3d(patch->fields[Ind(fields_name[fn])]);
+      fn++;
+    }
   }
   
   /* set f_index, note: it must be set right before interpolation
