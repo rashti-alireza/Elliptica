@@ -438,7 +438,7 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
         interp_s->X = X[0];
         interp_s->Y = X[1];
         interp_s->K = 0;
-        /* f value at r = r0 and r = 0*/
+        /* f value at r = r1 and r = 0 */
         interp_s->field = patch->fields[Ind(bhf->fld[fld]->f)];
         plan_interpolation(interp_s);
         fr1 = execute_interpolation(interp_s);
