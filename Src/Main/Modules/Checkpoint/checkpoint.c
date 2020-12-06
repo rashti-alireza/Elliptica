@@ -32,6 +32,14 @@ void write_checkpoint(Physics_T *const phys,const char *const out_dir)
 {
   FUNC_TIC
   
+  /* if no checkpoint at all requested */
+  if (Pcmps("checkpoint_every","never"))
+  {
+    printf(Pretty0"No checkpoint requested.\n");
+    FUNC_TOC
+    return;
+  }
+  
   Grid_T *const grid = phys->grid;
   
   if (!grid)
