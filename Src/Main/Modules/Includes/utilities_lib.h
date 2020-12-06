@@ -32,18 +32,6 @@ typedef struct sFUNC_PATCH2PDOUBLE_T
   Uint flg: 1;/* used for different purposes */
 }sFunc_Patch2Pdouble_T;
 
-/* strcut for initial data exporting  */
-typedef struct ID_EXPORT_T
-{
-  Grid_T *grid;
-  double *x,*y,*z;/* (x,y,z) coords */
-  double *X,*Y,*Z;/* (X,Y,Z) coords */
-  Uint *patchn;/* patch number for each coord */
-  Uint npoints;/* number of coords */
-  int **f_index;/* field index for each patch and for each field
-                // ex: f_index[p][f] = for patch p and field f. */
-}ID_Export_T;
-
 void test_start(const char *const file,const int line);
 Uint countf(void *const p);
 void init_func_PtoV(sFunc_PtoV_T ***const func);
@@ -95,27 +83,6 @@ void footer_and_clock(const char *const msg);
 double f_of_X(const char *const field,
               const double *const X/* patch coords */,
               Patch_T *const patch);
-
-void 
-  idexp_load_Cartesian_coordinates_from_file
-    (const char *const coords_file_path,ID_Export_T *const pnt);
-    
-void *
-  idexp_new_binary_file_to_write
-    (const char *const file_path,const char *const fields_name);
-
-
-void idexp_close_file(FILE *file);
-
-void
-  idexp_interpolate_fields_and_write_to_file
-    (FILE *const file,ID_Export_T *const pnt,
-     const char *const fields_name_str/* comma separated */,
-     const char *const evo_fields_name_str/* comma separated */);
-
-
-void idexp_free(ID_Export_T *pnt);
-ID_Export_T *idexp_init(void);
 
 
 #endif
