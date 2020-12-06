@@ -9,9 +9,9 @@
 #define VERBOSE (1)
 
 /* constants */
-#define MAX_STR  (100)
-#define MAX_STR2 (200)
-#define MAX_STR_LARGE (1000)
+#define MAX_STR  (99)
+#define MAX_STR2 (199)
+#define MAX_STR_LARGE (999)
 #define MAX_COEFFS (20)
 
 /* 2 indices */

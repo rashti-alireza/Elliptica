@@ -947,7 +947,7 @@ bh_interpolating_fields_on_a_line
   const double Len   = Getd("filler_test_print_1d_length");
   const Uint npoints = (Uint)Geti("filler_test_print_1d_points");
   const double t     = Len/npoints;
-  char fname[1000] = {'\0'};
+  char fname[MAX_STR_LARGE] = {'\0'};
   double *interp_v = 0;
   FILE *file;
   Uint count_f;
