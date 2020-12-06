@@ -951,7 +951,7 @@ bh_interpolating_fields_on_a_line
   double *interp_v = 0;
   FILE *file;
   Uint count_f;
-  Uint i,p,f;
+  Uint p,f;
   
   /* populate points along y-axis since the objects are there */
   pnt->npoints = npoints;
@@ -965,11 +965,11 @@ bh_interpolating_fields_on_a_line
   IsNull(pnt->patchn);
   
   /* fill coords along the line. */
-  for (i = 0; i < npoints; ++i)
+  for (p = 0; p < npoints; ++p)
   {
-    pnt->x[i] = x_0+i*t*mx;
-    pnt->y[i] = y_0+i*t*my;
-    pnt->z[i] = z_0+i*t*mz;
+    pnt->x[p] = x_0+p*t*mx;
+    pnt->y[p] = y_0+p*t*my;
+    pnt->z[p] = z_0+p*t*mz;
   }
   
   /* find the corresponding X and patch */
@@ -1071,7 +1071,7 @@ bh_interpolating_fields_on_a_line
       /* doc test */
       if (!isfinite(interp_v[p]))
       {
-        printf("%s[%s](%g,%g,%g)|x(%g,%g,%g)|X = %g\n",
+        printf("%s[%s]{x=(%g,%g,%g)&X=(%g,%g,%g)} = %g\n",
                 fields_name[f],
                 grid->patch[pnt->patchn[p]]->name,
                 pnt->x[p],pnt->y[p],pnt->z[p],
