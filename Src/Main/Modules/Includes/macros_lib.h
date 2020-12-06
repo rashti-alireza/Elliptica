@@ -93,7 +93,7 @@
 // note: stem is a pointer to char. */
 #define REALLOC_v_WRITE_v_STEM(xNAME,stem) \
  char field__name__##xNAME[MACRO__STR__LEN1] = {'\0'};\
- const char *const field__index__##xNAME   = strrchr(#xNAME,'_');\
+ const char *field__index__##xNAME = strrchr(#xNAME,'_');\
  if (field__index__##xNAME) {sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);}\
  else                       {sprintf(field__name__##xNAME,"%s"  ,stem);}\
  const int _field_index_of_##xNAME = Ind(field__name__##xNAME);\
