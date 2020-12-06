@@ -18,7 +18,9 @@ int bh_fill_inside_black_hole(Physics_T *const phys)
          read_separated_items_in_string(Gets("filler_fields"),',');
   Grid_T *grid;
   Uint f,p;
-    
+   
+  printf(Pretty0"fields = %s\n",Gets("filler_fields"));
+   
   /* first add patches */
   bh_add_patch_inside_black_hole(phys,Ftype("BH"));
   
