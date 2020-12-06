@@ -101,7 +101,7 @@ double *partial_derivative(struct FIELD_T *const dfield)
   field = patch->fields[Ind(stem)];
   if(!field->v)
   {
-    Error1("No field values for '%s'",field->name);
+    Errors("No field values for '%s'",field->name);
   }
   empty_field(dfield);
     
@@ -481,7 +481,7 @@ static Dd_T *derivative_direction(const char *const task,Uint *const n)
   char *tok = tok_s(str,DELIMIT,&savestr);
   
   if (!tok)
-    Error1("There is No direction in %s.\n",task);
+    Errors("There is No direction in %s.\n",task);
   
   *n = 0;
   tok = tok_s(tok,COMMA,&savestr);  
@@ -562,7 +562,7 @@ static Dd_T str2enum_direction(const char *const str)
   else if (strcmp_i(str,"c"))
     return _c_;
   else
-    Error1("There is no such %s derivative defined!\n",str);
+    Errors("There is no such %s derivative defined!\n",str);
   
   return UNDEFINED_DIR;
 }

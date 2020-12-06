@@ -1502,7 +1502,7 @@ static Flag_T read_F(sFunc_Patch2Pdouble_T **const F,sFunc_Patch2Pdouble_T **con
   F[FUNC] = get_func_Patch2Pdouble(fname,DataBase_func);
   
   if (!F[FUNC])
-    Error1("There is no function %s .\n",fname);
+    Errors("There is no function %s .\n",fname);
   else
     F[FUNC]->flg = 1;
     

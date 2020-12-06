@@ -498,7 +498,7 @@ void make_keyword_parameter(struct Ret_S *const ret,const char *const box,const 
   }
   else
   {
-    Error1("There is no such %s.\n",needle);
+    Errors("There is no such %s.\n",needle);
   }
 }
 
@@ -599,7 +599,7 @@ void grid_characteristics_example(Grid_T *const grid)
     characteristics_SCS_eg(grid); 
     
   else
-    Error1("There is no such %s grid kind.\n",kind);
+    Errors("There is no such %s grid kind.\n",kind);
   
 }
 

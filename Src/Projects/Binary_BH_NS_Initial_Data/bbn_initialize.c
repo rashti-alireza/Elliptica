@@ -49,7 +49,7 @@ static Grid_T *load_checkpoint_file(void)
   const char *const checkpoint_file_path = Pgets("checkpoint_file_path");
   
   if (access(checkpoint_file_path,F_OK))/* if file does not exist */
-    Error1("Checkpoint file does not exist at\n%s\n",checkpoint_file_path);
+    Errors("Checkpoint file does not exist at\n%s\n",checkpoint_file_path);
     
   file = Fopen(checkpoint_file_path,"r");
   IsNull(file);
@@ -597,7 +597,7 @@ fAdjustment_t *get_func_force_balance_adjustment(const char *const adjust)
 static void parse_adjust_parameter(const char *const par,char *adjust[3])
 {
   if (!strstr_i(par,"adjust(") && !strstr_i(par,"none"))
-    Error1("Syntax error for '%s'.\n",par);
+    Errors("Syntax error for '%s'.\n",par);
   
   /* if it is none */  
   if (strcmp_i(par,"none"))

@@ -906,7 +906,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
     free(patches);
   }
   else
-    Error1("There is no such '%s' plan.\n",obs->quantity);
+    Errors("There is no such '%s' plan.\n",obs->quantity);
   
 }
 

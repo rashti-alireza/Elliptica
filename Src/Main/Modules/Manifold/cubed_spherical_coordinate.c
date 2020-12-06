@@ -3224,9 +3224,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     assert(!strcmp(dir,"left") || !strcmp(dir,"right"));
     
     if(rmax < 0)
-      Error1("%s object must have positive radius.\n",dir);
+      Errors("%s object must have positive radius.\n",dir);
     if(2*rmax > S)
-      Error1("%s object radius is too big.\n",dir);
+      Errors("%s object radius is too big.\n",dir);
 
     for (d0 = 0; d0 < Nsd[0]; d0++)
     {
@@ -4309,9 +4309,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     assert(l > 0 && w > 0 && h > 0);
     
     if(rmax < 0)
-      Error1("%s object must have positive radius.\n",dir);
+      Errors("%s object must have positive radius.\n",dir);
     if(2*rmax > S)
-      Error1("%s object radius is too big.\n",dir);
+      Errors("%s object radius is too big.\n",dir);
 
     for (d0 = 0; d0 < Nsd[0]; d0++)
     {

@@ -33,7 +33,7 @@ void add_project(ProjFunc *const projfunc, const char *const name, const char *c
 
   proj = get_project(name);
   if (proj)
-    Error1("This project \"%s\" has already been added!",name);
+    Errors("This project \"%s\" has already been added!",name);
   
   proj = alloc_project(&projects_global);
   

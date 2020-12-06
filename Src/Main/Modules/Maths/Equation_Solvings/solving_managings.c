@@ -143,7 +143,7 @@ fEquation_T *get_field_eq(const char *const name, sEquation_T **const db)
   }
   
   if (!eq)
-    Error1("No such equation for \"%s\" exists.\n"
+    Errors("No such equation for \"%s\" exists.\n"
     "Note: if it is a Jacobian E.Q. and supposed to be for couple of fields, \n"
     "the naming convenstion is jacobian_f1_f2_... \n"
     "i.e. every related field must be mentioned in the name of function.\n",name);
@@ -163,7 +163,7 @@ fEquation_Solver_T *get_solver_method(const char *const solver)
   else if (strcmp_i(solver,"UMFPACK_long"))
     solver_eq = direct_solver_umfpack_dl;
   else
-    Error1("There is no such solver defined.\n",solver);
+    Errors("There is no such solver defined.\n",solver);
     
   return solver_eq;
 }

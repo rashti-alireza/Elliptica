@@ -161,7 +161,7 @@ static void fill_patches(Grid_T *const grid)
     fill_patches_SBH_CubedSpherical_grid(grid); */
     
   else
-    Error1("There is no such '%s' grid kind.\n",Pgets("grid_kind"));
+    Errors("There is no such '%s' grid kind.\n",Pgets("grid_kind"));
 }
 
 /* making a temporary patch for thread safety purposes */
@@ -261,7 +261,7 @@ void alloc_patches(Grid_T *const grid)
   else if (strcmp_i(grid->kind,"SBH_CubedSpherical_grid"))
     alloc_patches_SBH_CubedSpherical_grid(grid);*/
   else
-    Error1("No such %s kind for grid.\n",Pgets("grid_kind"));
+    Errors("No such %s kind for grid.\n",Pgets("grid_kind"));
 }
 
 /* free the given grid completely */

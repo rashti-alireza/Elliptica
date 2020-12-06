@@ -756,7 +756,7 @@ collect_patches
   
   /* check if there is no such region */
   if (np == 0)
-    Error1("No such '%s'!",region);
+    Errors("No such '%s'!",region);
   
   *Np = np;
   return patches;
@@ -888,7 +888,7 @@ Grid_Kind_T set_grid_kind(const char *const grid_kind)
    ret = Grid_Box; 
    
   else
-    Error1("There is no such %s grid kind.\n",grid_kind);
+    Errors("There is no such %s grid kind.\n",grid_kind);
   
   return ret;
 }
@@ -1198,7 +1198,7 @@ collect_patches_with_regex
   }
   /* check */
   if (np == 0)
-    Error1("No name was matched for '%s'!",regex);
+    Errors("No name was matched for '%s'!",regex);
   
   *Np = np;
   return patches;

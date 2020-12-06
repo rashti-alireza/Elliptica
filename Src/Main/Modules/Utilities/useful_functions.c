@@ -81,7 +81,7 @@ Collocation_T get_collocation(const char *const coll)
   else if (strcmp_i(coll,"Chebyshev_Extrema")) c = Chebyshev_Extrema;
   else if (strcmp_i(coll,"Chebyshev_Nodes")) c = Chebyshev_Nodes;
   else
-    Error1("There is no such %s collocation.\n",coll);
+    Errors("There is no such %s collocation.\n",coll);
     
   return c;
 }
@@ -99,7 +99,7 @@ Basis_T get_basis(const char *const basis)
   else if (strcmp_i(basis,"No_Basis")) 
     b = No_BASIS;
   else
-    Error1("There is no such %s basis.\n",basis);
+    Errors("There is no such %s basis.\n",basis);
     
   return b;
 }
@@ -269,7 +269,7 @@ Coord_T find_coord(const char *const coordsys)
   if(strcmp_i(coordsys,"Cartesian"))
     coord = Cartesian;
   else
-    Error1("There is no such %s coordinates.\n",coordsys);  
+    Errors("There is no such %s coordinates.\n",coordsys);  
     
   return coord;
 }
@@ -528,7 +528,7 @@ Patch_T *GetPatch(const char *const stem,const Grid_T *const grid)
   }
   
   if(!retPatch)
-    Error1("It could not find patch %s.\n",name);
+    Errors("It could not find patch %s.\n",name);
     
   return retPatch;
 }

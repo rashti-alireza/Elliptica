@@ -617,7 +617,7 @@ static fAdjustment_t *get_func_force_balance_adjustment(const char *const adjust
 static void parse_adjust_parameter(const char *const par,char *adjust[3])
 {
   if (!strstr_i(par,"adjust(") && !strstr_i(par,"none"))
-    Error1("Syntax error for '%s'.\n",par);
+    Errors("Syntax error for '%s'.\n",par);
   
   /* if it is none */  
   if (strcmp_i(par,"none"))

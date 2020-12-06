@@ -703,7 +703,7 @@ void *open_checkpoint_file_then_read_grid_and_params(Physics_T *const phys)
   const char *const checkpoint_file_path = Pgets("checkpoint_file_path");
   
   if (access(checkpoint_file_path,F_OK))/* if file does not exist */
-    Error1("Checkpoint file does not exist at\n%s\n",checkpoint_file_path);
+    Errors("Checkpoint file does not exist at\n%s\n",checkpoint_file_path);
     
   file = Fopen(checkpoint_file_path,"r");
   IsNull(file);

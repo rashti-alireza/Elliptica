@@ -199,7 +199,7 @@ static double *read_EoS_in_parameter_file(const char *const par,Uint *const N)
   sub_tok = sub_s(str,'[',']',&save);/* => v1,v2,v3,... */
   sub_tok = tok_s(sub_tok,',',&save);/* sub_tok = v1 and save = v2,v3,... */
   if (sub_tok == 0)
-    Error1("There is no value in %s.\n",par);
+    Errors("There is no value in %s.\n",par);
   
   v = realloc(v,(i+1)*sizeof(*v));
   IsNull(v);

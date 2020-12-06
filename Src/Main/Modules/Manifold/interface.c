@@ -554,7 +554,7 @@ static void set_df_dn(Subf_T *const ring,const Uint df_dn)
         next->prev->subf->patch->name,FaceName[next->prev->subf->face],
         next->subf->patch->name,FaceName[next->subf->face],
         next->prev->subf->flags_str,next->subf->flags_str);
-        Error1("Wrong df_dn flags was found!\n%s\n",msg);
+        Errors("Wrong df_dn flags was found!\n%s\n",msg);
       }
       else
       {
@@ -777,7 +777,7 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
     sprintf(msg,"(%s,%s) <- patch\n(%s,%s) <- adjacent\n%s <- flags.",
     sub->patch->name,FaceName[sub->face],
     face->patch->name,FaceName[face->fn],sub->flags_str);
-    Error1("The related subface could not be found!\n%s\n",msg);
+    Errors("The related subface could not be found!\n%s\n",msg);
   }
     
   return sub2;
@@ -3072,7 +3072,7 @@ find_adjacent_scs
       else
       {
         err_spr(s,centerx);
-        Error1(" Unexpected gap between patches!\n %s\n",s);
+        Errors(" Unexpected gap between patches!\n %s\n",s);
       }
     }/* if (!Nfound0) */
     else/* find adjacent subfaces for this interface */
@@ -3228,7 +3228,7 @@ find_adjacent_scs
               tt_ret,tt_X[0],tt_X[1],tt_X[2]);
               fflush(stdout);
               err_spr_adj(s,pnt_x,center_adjpatch,center_adjface);
-              Error1(" Point not found!\n %s\n",s);
+              Errors(" Point not found!\n %s\n",s);
             }
             
             /* first find the best adjface */
@@ -3321,7 +3321,7 @@ find_adjacent_scs
               tt_ret,tt_X[0],tt_X[1],tt_X[2]);
               fflush(stdout);
               err_spr_adj(s,pnt_x,center_adjpatch,center_adjface);
-              Error1(" Point not found!\n %s\n",s);
+              Errors(" Point not found!\n %s\n",s);
             }
             free_needle(needle2);
         

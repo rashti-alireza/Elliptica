@@ -650,7 +650,7 @@ static void prepare_node_structured_mesh_3d_silo(const char *const type,const Pa
     }
   }
   else
-    Error1("There is no such type of coordinates"
+    Errors("There is no such type of coordinates"
       " \"%s\"for printing.\n",type);
   
 }

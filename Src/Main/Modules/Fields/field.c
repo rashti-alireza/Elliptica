@@ -29,7 +29,7 @@ Field_T *add_field(const char *const name,const char *attribute,Patch_T *const p
     Error0("Wrong Flag was used. Flag for allocation is either YES or NO.\n");
   
   if (LookUpField(name,patch) >= 0)
-    Error1("There is already a field with the same name \"%s\".\n",name);
+    Errors("There is already a field with the same name \"%s\".\n",name);
   else
   {  
     
@@ -102,7 +102,7 @@ void add_attribute(Field_T *const fld,const char *const attribute)
   if (!attribute)
     return;
   if(!strchr(attribute,'(') || !strchr(attribute,')'))
-    Error1("Each attribute must be written in parentheses.\n"
+    Errors("Each attribute must be written in parentheses.\n"
     "This attribute %s doesn't have.\n",attribute);
     
   /* if the attribute already exists, return */
@@ -235,7 +235,7 @@ double *make_coeffs_2d(Field_T *const f,const Uint dir1,const Uint dir2)
   assert(strstr(f->attr,"(3dim)"));
   
   if (dir1 == dir2)
-    Error1("What does it mean to have twice transformation "
+    Errors("What does it mean to have twice transformation "
         "in the same direction for the field \"%s\"!\n",f->name);
     
   const Uint N = f->patch->nn;

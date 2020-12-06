@@ -25,8 +25,8 @@
 #define bad_inputEr()  bad_input_error(__FILE__,__LINE__)
 #define null_pathEr(x) null_path_error(x,__FILE__,__LINE__)
 #define Error0(x)    abort_error(x,__FILE__,__LINE__,0)
-#define Error1(x,y)  abort_error_string(x,y,__FILE__,__LINE__)
-#define Error2(x)    abort_error(x,__FILE__,__LINE__,1)
+#define Error1(x)    abort_error(x,__FILE__,__LINE__,1)
+#define Errors(x,y)  abort_error_string(x,y,__FILE__,__LINE__)
 #define Ind(x)  LookUpField_E(x,patch)/* gives error if field is not found */
 #define _Ind(x) LookUpField(x,patch)/* gives minus if field is not found */
 #define FOR_ALL_PATCHES(n,grid) for ((n) = 0; (n) < (grid)->np; ++(n))/* loop over all patches of the given grid */

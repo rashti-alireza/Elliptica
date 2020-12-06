@@ -25,7 +25,7 @@ void
   
   /* some checks */
   if (!grid)
-    Error2("Grid is empty!");
+    Error1("Grid is empty!");
   
   /* open and read coords file */
   file = Fopen(coords_file_path,"r");
@@ -34,7 +34,7 @@ void
   fgets(str,STR_LEN_MAX,file);
   FReadP_bin(match_str)
   if (strcmp(match_str,HEADER))
-    Error2("It could not find the header");
+    Error1("It could not find the header");
   Free(match_str);
   
   /* allocating */
@@ -55,19 +55,19 @@ void
   {
     FReadV_bin(pnt->x[i]);
     if(!isfinite(pnt->x[i]))
-      Error2("bad coordinate.");
+      Error1("bad coordinate.");
     
     FReadV_bin(pnt->y[i]);
     if(!isfinite(pnt->y[i]))
-      Error2("bad coordinate.");
+      Error1("bad coordinate.");
     
     FReadV_bin(pnt->z[i])
     if (!isfinite(pnt->z[i]))
-     Error2("bad coordinate.");
+     Error1("bad coordinate.");
   }
   FReadP_bin(match_str)
   if (strcmp(match_str,FOOTER))
-    Error2("It could not find the footer.\n");
+    Error1("It could not find the footer.\n");
   Free(match_str);
   
   Fclose(file);
@@ -93,7 +93,7 @@ void
     }
     else
     {
-      Error2("It could not find X(x,y,z)!\n");
+      Error1("It could not find X(x,y,z)!\n");
     }
   }
 
@@ -124,13 +124,13 @@ void
   
   /* some checks */
   if (!grid)
-    Error2("Grid is empty!");
+    Error1("Grid is empty!");
   
   if (!fields_name)
-    Error2("No fields given!");
+    Error1("No fields given!");
     
   if (!evo_fields)
-    Error2("No fields given!");
+    Error1("No fields given!");
   
   /* to avoid race condition between threads write all coeffs */
   OpenMP_Patch_Pragma(omp parallel for)
@@ -213,7 +213,7 @@ void
                 pnt->x[p],pnt->y[p],pnt->z[p],
                 pnt->X[p],pnt->Y[p],pnt->Z[p],interp_v[p]);
         fflush(stderr);
-        Error2("Doctest failed!\n");
+        Error1("Doctest failed!\n");
       }
       /* write it into the fields_file */
       FWriteV_bin(interp_v[p],1);

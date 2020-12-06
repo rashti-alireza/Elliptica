@@ -96,7 +96,7 @@ void add_parameter_double(const char *const lv, const double rv,const int print_
   
   par = get_parameter(lv);
   if (par)
-    Error1("This parameter \"%s\" has already been added!\n",lv);
+    Errors("This parameter \"%s\" has already been added!\n",lv);
     
   sprintf(str_rv,"%15.18f",rv);
   par = alloc_parameter(&parameters_global);
@@ -125,7 +125,7 @@ void add_parameter_array(const char *const lv, const double *const rv,const Uint
   
   par = get_parameter(lv);
   if (par)
-    Error1("This parameter '%s' has already been added!\n",lv);
+    Errors("This parameter '%s' has already been added!\n",lv);
     
   par = alloc_parameter(&parameters_global);
   par->lv = dup_s(lv);
@@ -151,7 +151,7 @@ void update_parameter_array(const char *const lv, const double *const rv,const U
   if (par)
   {
     if (par->iterative)
-      Error1("Wrong update: parameter '%s' is iterative.\n",lv);
+      Errors("Wrong update: parameter '%s' is iterative.\n",lv);
     
     par->double_flg = 0;
       
@@ -186,7 +186,7 @@ void add_parameter(const char *const lv, const char *const rv)
   
   par = get_parameter(lv);
   if (par)
-    Error1("This parameter \"%s\" has already been added!\n",lv);
+    Errors("This parameter \"%s\" has already been added!\n",lv);
     
   par = alloc_parameter(&parameters_global);
   par->lv = dup_s(lv);
@@ -208,7 +208,7 @@ void add_parameter(const char *const lv, const char *const rv)
         
       par->rv = get_n_value_str_ip(par,0);/* setting the first value of the iterative parameter */
       if (par->rv[0] == 0)
-        Error1("No value for parameter '%s' .\n",par->lv);
+        Errors("No value for parameter '%s' .\n",par->lv);
 
     }
     else
@@ -227,7 +227,7 @@ void add_parameter(const char *const lv, const char *const rv)
 static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
 {
   if (regex_search("->$",rv))
-    Error1("Wrong syntax for '%s'; '->' at the end of the line.",rv);
+    Errors("Wrong syntax for '%s'; '->' at the end of the line.",rv);
     
   char *ret_str = 0;
   char *str = dup_s(rv);
@@ -263,9 +263,9 @@ static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
     Uint mult   = (Uint)atoi(mult_str);
     
     if (mult == UINT_MAX)
-      Error1("Wrong syntax for '%s'; negative multiplicity.\n",rv);
+      Errors("Wrong syntax for '%s'; negative multiplicity.\n",rv);
     if (mult == 0)
-      Error1("Wrong syntax for '%s'; zero multiplicity.\n",rv);
+      Errors("Wrong syntax for '%s'; zero multiplicity.\n",rv);
     
     Uint n_mult = (mult-1)*2+mult*(n-1)+1;/* for each '->' 2 Byte,
                                     // for each v_str n-1 */
@@ -345,7 +345,7 @@ double get_parameter_double_format(const char *const par_name,const char *const 
     if (strcmp_i(parameters_global[i]->lv,par_name))
     {
       if (!parameters_global[i]->double_flg)
-        Error1("Flag of parameter '%s' has not been set correctly.\n"
+        Errors("Flag of parameter '%s' has not been set correctly.\n"
                   ,par_name);
         
       v = parameters_global[i]->rv_double;
@@ -534,7 +534,7 @@ Uint total_iterations_ip(void)
       {
         subs += 2;/* move forward */
         if (subs[0]=='\0')/* if after -> is empty */
-          Error1("No value is specified after '->' in parameter %s.\n",parameters_global[i]->lv);
+          Errors("No value is specified after '->' in parameter %s.\n",parameters_global[i]->lv);
         subs = strstr(subs,"->");
         if (subs)
           l++;
@@ -599,10 +599,10 @@ void update_iterative_parameter_ip(const Uint iter)
 char *get_n_value_str_ip(const Parameter_T *const par,const Uint n)
 {
   if (!par->iterative)
-    Error1("The parameter %s is not an iterative parameter",par->lv);
+    Errors("The parameter %s is not an iterative parameter",par->lv);
  
   if (!par->rv_ip)
-    Error1("The parameter %s doesn't have an iterative value",par->lv);
+    Errors("The parameter %s doesn't have an iterative value",par->lv);
     
   char *ret = 0;
   char *subs,*subs2;

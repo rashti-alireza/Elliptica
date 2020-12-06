@@ -346,14 +346,14 @@ const char *phys_autoindex_stype(Physics_T *const phys,
   /* some checks: */
   /* if there is no NS or BH */
   if (!strstr(stype,"NS") && !strstr(stype,"BH"))
-      Error1("Argument '%s' is not supported!",stype);
+      Errors("Argument '%s' is not supported!",stype);
   /* if two different object asked, right now this is not supported! */
   if (strstr(stype,"NS") && strstr(stype,"BH"))
-      Error1("Two different objects (%s) are not supported!",stype);
+      Errors("Two different objects (%s) are not supported!",stype);
   if (strstr(stype,"BH1") && strstr(stype,"BH2"))
-      Error1("Two different objects (%s) are not supported!",stype);
+      Errors("Two different objects (%s) are not supported!",stype);
   if (strstr(stype,"NS1") && strstr(stype,"NS2"))
-      Error1("Two different objects (%s) are not supported!",stype);
+      Errors("Two different objects (%s) are not supported!",stype);
   
   /* if indices 1 or 2 is already taken into account 
   // or the object doesn't have any index, don't change anything. */

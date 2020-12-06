@@ -750,7 +750,7 @@ void obs_calculate(Observe_T *const obs)
     obs_BH_irreducible_mass_CS(obs);
   }
   else
-    Error1("There is no such '%s' plan.\n",obs->quantity);
+    Errors("There is no such '%s' plan.\n",obs->quantity);
     
   }/* if (grid->kind == Grid_SplitCubedSpherical_BHNS) */
   else

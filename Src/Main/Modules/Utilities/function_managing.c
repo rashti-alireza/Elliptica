@@ -42,7 +42,7 @@ void run_func_PtoV(sFunc_PtoV_T **const func,const char *const task,Patch_T *con
     }
   
   if (flg != FOUND)
-    Error1("There is not %s task.\n",task);
+    Errors("There is not %s task.\n",task);
 }
 
 /* initiatin a sFunc_Grid2Pdouble_T struct */

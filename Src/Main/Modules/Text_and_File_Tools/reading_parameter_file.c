@@ -75,7 +75,7 @@ static void populate_parameters(const char *const buff)
     if (par_l)
     {
       if (!par_r)
-        Error1("No value for parameter '%s'\n",par_l);
+        Errors("No value for parameter '%s'\n",par_l);
       add_parameter(par_l,par_r);
     }
     

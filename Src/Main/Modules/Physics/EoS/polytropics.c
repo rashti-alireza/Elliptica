@@ -175,7 +175,7 @@ static Uint find_threshold_number_h(const EoS_T *const eos)
   if (flg == NONE)
   {
     sprintf(str,"%e",eos->h);
-    Error1("Threshold number could not be found for enthalpy = %s.\n",str);
+    Errors("Threshold number could not be found for enthalpy = %s.\n",str);
   }
   
   return i;

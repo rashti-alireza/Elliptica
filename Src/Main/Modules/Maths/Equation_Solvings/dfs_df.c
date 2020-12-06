@@ -113,7 +113,7 @@ static char *interpret_type(const char *const type)
    else if (match[i] == '1') strcat(jtype,"y");
    else if (match[i] == '2') strcat(jtype,"z");
    else if (match[i] == 'U' || match[i] == 'D') continue;
-   else Error1("This type '%s' has not been defined.\n",type);
+   else Errors("This type '%s' has not been defined.\n",type);
   }
   
   strcat(jtype,"_df");
@@ -121,7 +121,7 @@ static char *interpret_type(const char *const type)
   free(match);
  }
  else
-  Error1("The type '%s' cannot be realized!\n",type);
+  Errors("The type '%s' cannot be realized!\n",type);
  
   return jtype;
 }
