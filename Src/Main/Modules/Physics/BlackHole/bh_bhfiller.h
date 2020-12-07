@@ -5,9 +5,6 @@
 #include "maths_equation_solvings_lib.h"
 #include "maths_linear_algebra_lib.h"
 
-/* verbose print */
-#define VERBOSE (1)
-
 /* constants */
 #define MAX_STR0  (50)
 #define MAX_STR   (99)
@@ -26,6 +23,9 @@
 /* math */
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
+
+/* global variable for this file */
+static int Verbose = 0;
 
 /* all needed items for bhfiller function */
 struct BHFiller_S

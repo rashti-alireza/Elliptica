@@ -12,6 +12,8 @@ int bh_fill_inside_black_hole(Physics_T *const phys)
 {
   FUNC_TIC
   
+  Verbose = Geti("filler_verbose");
+  
   int ret = EXIT_SUCCESS;
   /* these fields to be extrapolated  */
   char **fields_name = 
@@ -306,7 +308,7 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
         }
         else
         {
-         if(VERBOSE)
+         if(Verbose)
            printf(Pretty0"compute %s in %s\n",
                        bhf->fld[f]->df[ii],patch->name),fflush(stdout);
          bhf->fld[f]->did_add_df = 1;
@@ -325,7 +327,7 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
         }
         else
         {
-         if(VERBOSE)
+         if(Verbose)
            printf(Pretty0"compute %s in %s\n",
                        bhf->fld[f]->ddf[ii],patch->name),fflush(stdout);
          bhf->fld[f]->did_add_ddf = 1;
@@ -456,7 +458,7 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
     Patch_T *patch = bhf->patches_inBH[p];
     Uint nn    = patch->nn;
     Uint f,ijk;
-    if(VERBOSE)
+    if(Verbose)
       printf(Pretty0"%s\n",patch->name),fflush(stdout);
     
     /* loop over all fields to be extrapolated */
@@ -545,7 +547,7 @@ static int bhf_ChebTn_general_S2_CS(struct BHFiller_S *const bhf)
         }
         else
         {
-         if(VERBOSE)
+         if(Verbose)
            printf(Pretty0"compute %s in %s\n",
                        bhf->fld[f]->df[ii],patch->name),fflush(stdout);
          bhf->fld[f]->did_add_df = 1;
@@ -564,7 +566,7 @@ static int bhf_ChebTn_general_S2_CS(struct BHFiller_S *const bhf)
         }
         else
         {
-         if(VERBOSE)
+         if(Verbose)
            printf(Pretty0"compute %s in %s\n",
                        bhf->fld[f]->ddf[ii],patch->name),fflush(stdout);
          bhf->fld[f]->did_add_ddf = 1;
