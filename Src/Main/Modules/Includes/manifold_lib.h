@@ -391,6 +391,7 @@ find_XYZ_and_patch_of_theta_phi_CS
  double *const X/* found X,Y,Z Note: X[2] must be filled 
                 // to determine the surface */,
  Patch_T **const ppatch,/* found patch */
+ const double *const center/* center of S2 in general is not patch->c */,
  const double theta/* given theta */,
  const double phi/* given phi */,
  Patch_T **const patches,/* search among these patches */

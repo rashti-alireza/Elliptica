@@ -936,7 +936,7 @@ void find_theta_phi_of_XYZ_CS(double *const theta,double *const phi,
   /* more test */
   if(1)
   {
-    printf("doing test:\n");
+    printf("Test:\n");
     fflush(stdout);
     
     double th = *theta;
@@ -995,6 +995,7 @@ find_XYZ_and_patch_of_theta_phi_CS
  double *const X/* found X,Y,Z Note: X[2] must be filled 
                 // to determine the surface */,
  Patch_T **const ppatch,/* found patch */
+ const double *const center/* center of S2 in general is not patch->c */,
  const double theta/* given theta */,
  const double phi/* given phi */,
  Patch_T **const patches,/* search among these patches */
@@ -1015,21 +1016,10 @@ find_XYZ_and_patch_of_theta_phi_CS
     Patch_T *patch = patches[p];
     
     Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
-    const double *c = patch->c;
     double a = 0, b = 0;
     double a_sign = 0,b_sign = 0,c_sign = 0;
     double x[3],phi2,theta2,r;
     int IsInside;
-    
-    /* we know that theta = 0 or Pi occures only at UP or DOWN patches
-    // so don't bother to follow algorithm all the way down.
-    // furthermore, this prevent 0 in denominator of unrelated patches. */
-    if (EQL(theta,0) || EQL(theta,M_PI))
-    {
-      if (side == LEFT || side == RIGHT || 
-          side == BACK || side == FRONT   )
-        continue;
-    }
     
     /* first calculate the magnetitude of a and b 
     // which are related to X[0] and X[1] with a sign */
@@ -1102,9 +1092,9 @@ find_XYZ_and_patch_of_theta_phi_CS
     
     /* check if x of X really gives you the correct angles */
     IsInside = x_of_X(x,X,patch);
-    x[0] -= c[0];
-    x[1] -= c[1];
-    x[2] -= c[2];
+    x[0] -= center[0];
+    x[1] -= center[1];
+    x[2] -= center[2];
     r = root_square(3,x,0);
     theta2 = acos(x[2]/r);
     phi2   = arctan(x[1],x[0]);
