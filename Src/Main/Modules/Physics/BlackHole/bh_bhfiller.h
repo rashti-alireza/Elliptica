@@ -24,6 +24,11 @@
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
 
+/* prefix the given string str with the given prefix pre and 
+// return string name. */
+#define PrefixIt(name,pre,str) (sprintf(name,"%s_%s",pre,str) ? name : 0)
+
+
 /* global variable for this file */
 static int Verbose = 0;
 
@@ -105,7 +110,7 @@ bh_interpolating_fields_on_a_line
   Physics_T *const phys/* physics of interest */,
   const char *const sfields_name/* comma separated fields */,
   const char *const dir/* output directory */,
-  const int test_det_adm_g/* if 1, it tests det(adm_g) > 0 */
+  const char *const stem_g/* if stem of a metric given => test det(g) > 0 */
   );
   
 int bh_fill_inside_black_hole(Physics_T *const phys);  

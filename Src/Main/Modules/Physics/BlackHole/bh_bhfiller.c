@@ -926,7 +926,7 @@ bh_interpolating_fields_on_a_line
   Physics_T *const phys/* physics of interest */,
   const char *const sfields_name/* comma separated fields */,
   const char *const dir/* output directory */,
-  const int test_det_adm_g/* if 1, it tests det(adm_g) > 0 */
+  const char *const stem_g/* if stem of a metric given => test det(g) > 0 */
   )
 {
   FUNC_TIC
@@ -1104,13 +1104,29 @@ bh_interpolating_fields_on_a_line
   pnt->f_index = 0;
   Free(interp_v);
   
-  if (test_det_adm_g)/* check det(adm metric) if fields_name contain adm_g */
+  if (stem_g)/* check det(adm metric) if fields_name contain adm_g */
   {
+    /* to avoid race condition between threads write all coeffs */
+    OpenMP_Patch_Pragma(omp parallel for)
+    for (p = 0; p < grid->np; ++p)
+    {
+      Patch_T *patch = grid->patch[p];
+      char gname[MAX_STR];
+      make_coeffs_3d(patch->fields[Ind(PrefixIt(gname,stem_g,"D0D0"))]);
+      make_coeffs_3d(patch->fields[Ind(PrefixIt(gname,stem_g,"D0D1"))]);
+      make_coeffs_3d(patch->fields[Ind(PrefixIt(gname,stem_g,"D0D2"))]);
+      make_coeffs_3d(patch->fields[Ind(PrefixIt(gname,stem_g,"D1D1"))]);
+      make_coeffs_3d(patch->fields[Ind(PrefixIt(gname,stem_g,"D1D2"))]);
+      make_coeffs_3d(patch->fields[Ind(PrefixIt(gname,stem_g,"D2D2"))]);
+      
+    }
+  
     /* interpolating each fields at the all given points */
     OpenMP_1d_Pragma(omp parallel for)
     for (p = 0; p < npoints; ++p)
     {
       Patch_T *patch  = grid->patch[pnt->patchn[p]];
+      char gname[MAX_STR];
       double gxx,gyy,gzz,gxy,gxz,gyz,detg;
       
       Interpolation_T *interp_s = init_interpolation();
@@ -1119,27 +1135,27 @@ bh_interpolating_fields_on_a_line
       interp_s->Y = pnt->Y[p];
       interp_s->Z = pnt->Z[p];
       
-      interp_s->field = patch->fields[Ind("adm_g_D0D0")];
+      interp_s->field = patch->fields[Ind(PrefixIt(gname,stem_g,"D0D0"))];
       plan_interpolation(interp_s);
       gxx = execute_interpolation(interp_s);
       
-      interp_s->field = patch->fields[Ind("adm_g_D0D1")];
+      interp_s->field = patch->fields[Ind(PrefixIt(gname,stem_g,"D0D1"))];
       plan_interpolation(interp_s);
       gxy = execute_interpolation(interp_s);
       
-      interp_s->field = patch->fields[Ind("adm_g_D0D2")];
+      interp_s->field = patch->fields[Ind(PrefixIt(gname,stem_g,"D0D2"))];
       plan_interpolation(interp_s);
       gxz = execute_interpolation(interp_s);
       
-      interp_s->field = patch->fields[Ind("adm_g_D1D1")];
+      interp_s->field = patch->fields[Ind(PrefixIt(gname,stem_g,"D1D1"))];
       plan_interpolation(interp_s);
       gyy = execute_interpolation(interp_s);
       
-      interp_s->field = patch->fields[Ind("adm_g_D1D2")];
+      interp_s->field = patch->fields[Ind(PrefixIt(gname,stem_g,"D1D2"))];
       plan_interpolation(interp_s);
       gyz = execute_interpolation(interp_s);
       
-      interp_s->field = patch->fields[Ind("adm_g_D2D2")];
+      interp_s->field = patch->fields[Ind(PrefixIt(gname,stem_g,"D2D2"))];
       plan_interpolation(interp_s);
       gzz = execute_interpolation(interp_s);
       
@@ -1149,8 +1165,8 @@ bh_interpolating_fields_on_a_line
 
       if(detg <= SmallDet)
       {
-        printf("det(adm_g_ij(%g,%g,%g))=%g\n",
-             pnt->x[p], pnt->y[p], pnt->z[p],detg);
+        printf("det(%s_ij(%g,%g,%g)) = %g\n",
+             stem_g,pnt->x[p], pnt->y[p], pnt->z[p],detg);
       }
       free_interpolation(interp_s);
     }

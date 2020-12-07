@@ -38,7 +38,7 @@ bh_interpolating_fields_on_a_line
   Physics_T *const phys/* physics of interest */,
   const char *const sfields_name/* comma separated fields */,
   const char *const dir/* output directory */,
-  const int test_det_adm_g/* if 1, it tests det(adm_g) > 0 */
+  const char *const stem_g/* if stem of a metric given => test det(g) > 0 */
   );
   
 void 
