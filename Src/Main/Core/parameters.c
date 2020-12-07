@@ -851,7 +851,6 @@ update_iteration_params
   const Uint iter_n = (Uint)Pgeti(PrefixIt(prefix,"iteration_number"));
   Uint iter;/* number of iterations have been performed for the simulation */
   Uint n[3];/* number of points */
-  const char *path_par = Pgets(PrefixIt(prefix,"top_directory"));
   char folder_name_next[STR_SIZE2] = {'\0'},
        folder_name_prev[STR_SIZE2] = {'\0'};
   char *folder_path,*folder_path2;
@@ -863,7 +862,18 @@ update_iteration_params
   
   /* if the start is from checkpoint_file do nothing */
   if (Pcmps(PrefixIt(prefix,"start_off"),"checkpoint_file"))
+  {
+    Pset_default("top_directory","NOT_SPECIFIED_YET");
     return 0;
+  }
+  
+  /* if top directory is not set */
+  if (!PgetsEZ("top_directory"))
+  {
+    folder_path = make_directory(Pgets("relative_root_path"),parfile_stem);
+    Pset_default("top_directory",folder_path);
+    Free(folder_path);
+  }
   
   /* when starting from checkpoint, iter_n > main_loop_iter 
   // so to avoid redo the simulations we set iter to the largest. */
@@ -920,7 +930,7 @@ update_iteration_params
     /* iteration number used in solving, reset this for each resolution */
     Pseti(PrefixIt(prefix,"solving_iteration_number"),0);
     sprintf(folder_name_next,dir_name_format,parfile_stem,n[0],n[1],n[2]);
-    folder_path = make_directory(path_par,folder_name_next);
+    folder_path = make_directory(Pgets("top_directory"),folder_name_next);
     Psets(PrefixIt(prefix,"my_directory"),folder_path);
     folder_path2 = make_directory(folder_path,"Diagnostics");
     Psets(PrefixIt(prefix,"Diagnostics"),folder_path2);
