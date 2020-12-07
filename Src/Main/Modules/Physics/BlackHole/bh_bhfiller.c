@@ -987,9 +987,10 @@ bh_interpolating_fields_on_a_line
     if(!patch || !X_of_x(X,x,patch))
       Error0("It could not find X(x,y,z) in any patch!\n");
 
-    pnt->X[p] = X[0];
-    pnt->Y[p] = X[1];
-    pnt->Z[p] = X[2];
+    pnt->X[p]      = X[0];
+    pnt->Y[p]      = X[1];
+    pnt->Z[p]      = X[2];
+    pnt->patchn[p] = patch->pn;
   }
   
   /* to avoid race condition between threads write all coeffs */
