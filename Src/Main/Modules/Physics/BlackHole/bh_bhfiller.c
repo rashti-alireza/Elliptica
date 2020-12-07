@@ -582,20 +582,19 @@ static int bhf_ChebTn_general_S2_CS(struct BHFiller_S *const bhf)
   for (fld = 0; fld < nf; ++fld)
   {
     const double KD[2] = {0,1};
-    for (Uint pa = 0; pa < npi; pa++)
+    for (Uint ip = 0; ip < npi; ip++)
     {
       /* i for inside patch */
-      Patch_T *ipatch = bhf->patches_inBH[pa];
+      Patch_T *ipatch = bhf->patches_inBH[ip];
       Field_T *u = ipatch->fields[LookUpField_E(bhf->fld[fld]->f,ipatch)];
       empty_field(u);
       u->v      = alloc_double(ipatch->nn);
       double *v = u->v;
-      Uint ijk;
       
-      for(ijk = 0; ijk < ipatch->nn; ++ijk)
+      for(Uint ijk = 0; ijk < ipatch->nn; ++ijk)
       {
         /* o prefix stands for outside */
-        Patch_T *patch = 0;/* this is the outside patch */
+        Patch_T *patch = 0;/* this is the outside of BH patch */
         double theta,phi;
         double t,rSurf,rSurf3;
         double df_dx[3]   = {0};
@@ -613,7 +612,7 @@ static int bhf_ChebTn_general_S2_CS(struct BHFiller_S *const bhf)
         double z=ipatch->node[ijk]->x[2]-BH_center[2];
         double r=sqrt(Pow2(x)+Pow2(y)+Pow2(z));
         
-        /* if we don't want r smallet than Rmin */
+        /* if we don't want r smaller than Rmin */
         if (r < Rmin) continue;
         
         /* find outside patch for the given theta and phi */
