@@ -108,25 +108,7 @@ bhf_init
     Uint npi;/* number of patches inside BH */
     Uint npo;/* number of patches outside BH */
     /* values of extrapolant function at the center of BH f(r=0) */
-    const double fr0_beta_U0      = 0;
-    const double fr0_beta_U1      = 0;
-    const double fr0_beta_U2      = 0;
-    const double fr0_gConf_D0D0   = 1;
-    const double fr0_gConf_D0D1   = 0;
-    const double fr0_gConf_D0D2   = 0;
-    const double fr0_gConf_D1D1   = 1;
-    const double fr0_gConf_D1D2   = 0;
-    const double fr0_gConf_D2D2   = 1;
-    const double fr0_adm_Kij_D0D0 = 0;
-    const double fr0_adm_Kij_D0D1 = 0;
-    const double fr0_adm_Kij_D0D2 = 0;
-    const double fr0_adm_Kij_D1D1 = 0;
-    const double fr0_adm_Kij_D1D2 = 0;
-    const double fr0_adm_Kij_D2D2 = 0;
-    const double fr0_trK          = 0;
-    const double fr0_alpha        = 0.2;
-    const double fr0_psi          = 2;/* big enough */
-    const double fr0_alphaPsi     = fr0_alpha*fr0_psi;
+    char par[MAX_STR0];
     Uint f,nf,i;
     
     nf = 0;/* number of fields */
@@ -186,99 +168,8 @@ bhf_init
     /* set values of field at r=0 */
     for (f = 0; f < nf; ++f)
     {
-      if (strcmp_i(fields_name[f],"psi"))
-      {
-        bhf->fld[f]->f_r0    = fr0_psi;
-        bhf->fld[f]->func_r0 = punc_psi;
-      }
-      else if (strcmp_i(fields_name[f],"alphaPsi"))
-      {
-        bhf->fld[f]->f_r0    = fr0_alphaPsi;
-        bhf->fld[f]->func_r0 = punc_alphaPsi;
-      }
-      else if (strcmp_i(fields_name[f],"trK"))
-      {
-        bhf->fld[f]->f_r0    = fr0_trK;
-        bhf->fld[f]->func_r0 = punc_trK;
-      }
-      else if (strcmp_i(fields_name[f],"beta_U0"))
-      {
-        bhf->fld[f]->f_r0    = fr0_beta_U0;
-        bhf->fld[f]->func_r0 = punc_beta_U0;
-      }
-      else if (strcmp_i(fields_name[f],"beta_U1"))
-      {
-        bhf->fld[f]->f_r0    = fr0_beta_U1;
-        bhf->fld[f]->func_r0 = punc_beta_U1;
-      }
-      else if (strcmp_i(fields_name[f],"beta_U2"))
-      {
-        bhf->fld[f]->f_r0    = fr0_beta_U2;
-        bhf->fld[f]->func_r0 = punc_beta_U2;
-      }
-      else if (strcmp_i(fields_name[f],"gConf_D2D2"))
-      {
-        bhf->fld[f]->f_r0    = fr0_gConf_D2D2;
-        bhf->fld[f]->func_r0 = punc_gConf_D2D2;
-      }
-      else if (strcmp_i(fields_name[f],"gConf_D0D2"))
-      {
-        bhf->fld[f]->f_r0    = fr0_gConf_D0D2;
-        bhf->fld[f]->func_r0 = punc_gConf_D0D2;
-      }
-      else if (strcmp_i(fields_name[f],"gConf_D0D0"))
-      {
-        bhf->fld[f]->f_r0    = fr0_gConf_D0D0;
-        bhf->fld[f]->func_r0 = punc_gConf_D0D0;
-      }
-      else if (strcmp_i(fields_name[f],"gConf_D0D1"))
-      {
-        bhf->fld[f]->f_r0    = fr0_gConf_D0D1;
-        bhf->fld[f]->func_r0 = punc_gConf_D0D1;
-      }
-      else if (strcmp_i(fields_name[f],"gConf_D1D2"))
-      {
-        bhf->fld[f]->f_r0    = fr0_gConf_D1D2;
-        bhf->fld[f]->func_r0 = punc_gConf_D1D2;
-      }
-      else if (strcmp_i(fields_name[f],"gConf_D1D1"))
-      {
-        bhf->fld[f]->f_r0    = fr0_gConf_D1D1;
-        bhf->fld[f]->func_r0 = punc_gConf_D1D1;
-      }
-      else if (strcmp_i(fields_name[f],"adm_Kij_D2D2"))
-      {
-        bhf->fld[f]->f_r0    = fr0_adm_Kij_D2D2;
-        bhf->fld[f]->func_r0 = 0;
-      }
-      else if (strcmp_i(fields_name[f],"adm_Kij_D0D2"))
-      {
-        bhf->fld[f]->f_r0    = fr0_adm_Kij_D0D2;
-        bhf->fld[f]->func_r0 = 0;
-      }
-      else if (strcmp_i(fields_name[f],"adm_Kij_D0D0"))
-      {
-        bhf->fld[f]->f_r0    = fr0_adm_Kij_D0D0;
-        bhf->fld[f]->func_r0 = 0;
-      }
-      else if (strcmp_i(fields_name[f],"adm_Kij_D0D1"))
-      {
-        bhf->fld[f]->f_r0    = fr0_adm_Kij_D0D1;
-        bhf->fld[f]->func_r0 = 0;
-      }
-      else if (strcmp_i(fields_name[f],"adm_Kij_D1D2"))
-      {
-        bhf->fld[f]->f_r0    = fr0_adm_Kij_D1D2;
-        bhf->fld[f]->func_r0 = 0;
-      }
-      else if (strcmp_i(fields_name[f],"adm_Kij_D1D1"))
-      {
-        bhf->fld[f]->f_r0    = fr0_adm_Kij_D1D1;
-        bhf->fld[f]->func_r0 = 0;
-      }
-      else
-        Error0(NO_OPTION);
-      
+      sprintf(par,"filler_r0_%s",fields_name[f]);
+      bhf->fld[f]->f_r0 = Getd(par);
     }/* for (f = 0; f < nf ++f) */
     
   }/* if (strcmp_i(method,"ChebTn_Ylm")) */
@@ -634,152 +525,6 @@ static void collect_names(struct BHFiller_S *const bhf,char **const fields_name,
   }
 }
 
-/* puncture behavior function */
-static double punc_psi(void *const params)
-{
-  struct Param_S *const par = params;
-  double r     = par->r;
-  //double rfill = par->rfill;
-  double M     = par->M;
-  double eps   = par->eps;
-  
-  if (r < eps)
-    r = eps;
-  
-  return 2+M/(2*r);
-}
-
-/* puncture behavior function */
-static double punc_alphaPsi(void *const params)
-{
-  //struct Param_S *const par = params;
-  //double r     = par->r;
-  //double rfill = par->rfill;
-  //double M     = par->M;
-  //double eps   = par->eps;
-  
-  return 0.1*punc_psi(params);
-}
-
-/* puncture behavior function */
-static double punc_trK(void *const params)
-{
-  //struct Param_S *const par = params;
-  //double r     = par->r;
-  //double rfill = par->rfill;
-  //double M     = par->M;
-  //double eps   = par->eps;
-  UNUSED(params);
-  return 0;
-}
-
-/* puncture behavior function */
-static double punc_beta_U0(void *const params)
-{
-  //struct Param_S *const par = params;
-  //double r     = par->r;
-  //double rfill = par->rfill;
-  //double M     = par->M;
-  //double eps   = par->eps;
-  UNUSED(params);
-  return 0;
-}
-
-/* puncture behavior function */
-static double punc_beta_U1(void *const params)
-{
-  //struct Param_S *const par = params;
-  //double r     = par->r;
-  //double rfill = par->rfill;
-  //double M     = par->M;
-  //const double eps   = par->eps;
-  UNUSED(params);
-  return 0;
-}
-
-/* puncture behavior function */
-static double punc_beta_U2(void *const params)
-{
-  //struct Param_S *const par = params;
-  //double r     = par->r;
-  //double rfill = par->rfill;
-  //double M     = par->M;
-  //double eps   = par->eps;
-  UNUSED(params);
-  return 0;
-}
-
-/* puncture behavior function */
-static double punc_gConf_D0D0(void *const params)
-{
-  //struct Param_S *const par = params;
-  //double r     = par->r;
-  //double rfill = par->rfill;
-  //double M     = par->M;
-  //double eps   = par->eps;
-  UNUSED(params);
-  return 1;
-}
-
-/* puncture behavior function */
-static double punc_gConf_D0D1(void *const params)
-{
-  //struct Param_S *const par = params;
-  //double r     = par->r;
-  //double rfill = par->rfill;
-  //double M     = par->M;
-  //double eps   = par->eps;
-  UNUSED(params);
-  return 0;
-}
-
-/* puncture behavior function */
-static double punc_gConf_D0D2(void *const params)
-{
-  //struct Param_S *const par = params;
-  //double r     = par->r;
-  //double rfill = par->rfill;
-  //double M     = par->M;
-  //double eps   = par->eps;
-  UNUSED(params);
-  return 0;
-}
-
-/* puncture behavior function */
-static double punc_gConf_D1D1(void *const params)
-{
-  //struct Param_S *const par = params;
-  //double r     = par->r;
-  //double rfill = par->rfill;
-  //double M     = par->M;
-  //double eps   = par->eps;
-  UNUSED(params);
-  return 1;
-}
-
-/* puncture behavior function */
-static double punc_gConf_D1D2(void *const params)
-{	
-  //struct Param_S *const par = params;
-  //double r     = par->r;
-  //double rfill = par->rfill;
-  //double M     = par->M;
-  //double eps   = par->eps;
-  UNUSED(params);
-  return 0;
-}
-
-/* puncture behavior function */
-static double punc_gConf_D2D2(void *const params)
-{
-  //struct Param_S *const par = params;
-  //double r     = par->r;
-  //double rfill = par->rfill;
-  //double M     = par->M;
-  //double eps   = par->eps;
-  UNUSED(params);
-  return 1;
-}
 
 /* smoothing function for inside of the BH */
 double bh_bhf_smoother(const double r, const double rmax,const double rmin)
@@ -953,6 +698,9 @@ bh_interpolating_fields_on_a_line
   Uint count_f;
   Uint p,f;
   
+  if (npoints == 0)
+    Error0("Bad parameter: number of points are zero.\n");
+    
   /* populate points along y-axis since the objects are there */
   pnt->npoints = npoints;
   pnt->x       = alloc_double(npoints);

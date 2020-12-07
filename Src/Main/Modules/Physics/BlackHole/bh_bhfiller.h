@@ -9,8 +9,9 @@
 #define VERBOSE (1)
 
 /* constants */
-#define MAX_STR  (99)
-#define MAX_STR2 (199)
+#define MAX_STR0  (50)
+#define MAX_STR   (99)
+#define MAX_STR2  (199)
 #define MAX_STR_LARGE (999)
 #define MAX_COEFFS (20)
 
@@ -114,18 +115,7 @@ double bh_bhf_smoother(const double r, const double rmax,const double rmin);
 static void collect_names(struct BHFiller_S *const bhf,char **const fields_name,const Uint nf);
 static double polynomial5(const double r, const double rmax,const double rmin);
 static double polynomial7(const double r, const double rmax,const double rmin);
-static double punc_psi(void *const params);
-static double punc_alphaPsi(void *const params);
-static double punc_trK(void *const params);
-static double punc_beta_U0(void *const params);
-static double punc_beta_U1(void *const params);
-static double punc_beta_U2(void *const params);
-static double punc_gConf_D0D0(void *const params);
-static double punc_gConf_D0D1(void *const params);
-static double punc_gConf_D0D2(void *const params);
-static double punc_gConf_D1D1(void *const params);
-static double punc_gConf_D1D2(void *const params);
-static double punc_gConf_D2D2(void *const params);
+
 
 
 
