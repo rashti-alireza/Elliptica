@@ -110,6 +110,7 @@ bh_interpolating_fields_on_a_line
   
 int bh_fill_inside_black_hole(Physics_T *const phys);  
 static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf);
+static int bhf_ChebTn_general_S2_CS(struct BHFiller_S *const bhf);
 double bh_bhf_poly_smoother(const double r,const double rmax,const double rmin);
 double bh_bhf_smoother(const double r, const double rmax,const double rmin);
 static void collect_names(struct BHFiller_S *const bhf,char **const fields_name,const Uint nf);

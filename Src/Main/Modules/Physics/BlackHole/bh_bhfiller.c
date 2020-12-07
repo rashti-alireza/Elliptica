@@ -96,11 +96,10 @@ bhf_init
   sprintf(bhf->method,"%s",method);
   
   /* using Cheb_Tn and Ylm as the bases 
-  // and extrapolate demanding C2 continuity.
-  // NOTE: among the other methods this is the best. */
-  if (strcmp_i(method,"ChebTn_Ylm"))
+  // and extrapolate demanding C2 continuity. */
+  if (strcmp_i(method,"ChebTn_Ylm_perfect_s2"))
   {
-    const Uint NCoeffs = 10;/* number of coeffs in ChebTn expansion */
+    const Uint NCoeffs = 6;/* number of coeffs in ChebTn expansion */
     const Uint lmax   = (Uint)Geti("filler_Ylm_expansion_lmax");
     const Uint Ntheta = Ntheta_Ylm(lmax);
     const Uint Nphi   = Nphi_Ylm(lmax);
@@ -172,7 +171,58 @@ bhf_init
       bhf->fld[f]->f_r0 = Getd(par);
     }/* for (f = 0; f < nf ++f) */
     
-  }/* if (strcmp_i(method,"ChebTn_Ylm")) */
+  }/* if (strcmp_i(method,"ChebTn_Ylm_perfect_s2")) */
+  else if (strcmp_i(method,"ChebTn_general_s2"))
+  {
+    const Uint NCoeffs = 6;/* number of coeffs in ChebTn expansion */
+    Uint npi;/* number of patches inside BH */
+    Uint npo;/* number of patches outside BH */
+    /* values of extrapolant function at the center of BH f(r=0) */
+    char par[MAX_STR0];
+    Uint f,nf;
+    
+    nf = 0;/* number of fields */
+    while(fields_name[nf]) ++nf;
+    
+    bhf->NCoeffs = NCoeffs;
+    /* alloc */
+    bhf->nf = nf;
+    bhf->fld= calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
+    
+    if (grid->kind == Grid_SplitCubedSpherical_BHBH ||
+        grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_SBH  ||
+        grid->kind == Grid_CubedSpherical_BHNS
+       )
+    {
+     /* set the method function */
+     bhf->bhfiller = bhf_ChebTn_general_S2_CS;
+     
+     /* patches outside the BH */
+     bhf->patches_outBH = 
+      collect_patches(phys->grid,Ftype("BH_around_IB"),&npo);
+     IsNull(bhf->patches_outBH);
+     bhf->npo = npo;
+     /* patches inside the BH */
+     bhf->patches_inBH = 
+      collect_patches(phys->grid,Ftype("BH"),&npi);
+     IsNull(bhf->patches_inBH);
+     bhf->npi = npi;
+    }
+    else
+     Error0(NO_OPTION);
+    
+    /* collect names */
+    collect_names(bhf,fields_name,nf);
+    
+    /* set values of field at r=0 */
+    for (f = 0; f < nf; ++f)
+    {
+      sprintf(par,"filler_r0_%s",fields_name[f]);
+      bhf->fld[f]->f_r0 = Getd(par);
+    }/* for (f = 0; f < nf ++f) */
+    
+  }/* else if (strcmp_i(method,"ChebTn_general_s2")) */
   else
     Error0(NO_OPTION);
   
@@ -203,7 +253,7 @@ static void bhf_free(struct BHFiller_S *const bhf)
 }
 
 /* ->: EXIT_SUCESS if succeeds, otherwise an error code.
-// method to fill BH is ChebTn_Ylm with the following extrapolant:
+// method to fill BH is ChebTn_Ylm_perfect_s2 with the following extrapolant:
 // ===============================================================
 //
 // f(r(t),th,ph) = C_{ilm}*ChebT_i(t)*Y_{lm}(th,ph)
@@ -440,6 +490,212 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
     }/* for (f = 0; f < nf ++f) */
   }
     
+  return EXIT_SUCCESS;
+}
+
+/* ->: EXIT_SUCESS if succeeds, otherwise an error code.
+// method to fill BH is ChebTn_general_s2 with the following extrapolant:
+// ===============================================================
+//
+// f(r(t),th,ph) = C_{i}*ChebT_i(t)
+//              
+// where, t = 2*r/rfill-1.
+// the coeffs a's are determinded by demaning the C2 continuity
+// across the AH and the value of the function at r = 0.
+// note: it has some assumptions which are only true in cubed spherical */
+static int bhf_ChebTn_general_S2_CS(struct BHFiller_S *const bhf)
+{
+  Physics_T *const phys  = bhf->phys;
+  const Uint NCoeffs = bhf->NCoeffs;
+  const Uint npo     = bhf->npo;
+  const Uint npi     = bhf->npi;
+  const Uint nf      = bhf->nf;/* numebr of fields */
+  const double Rmin  = Getd("filler_Rmin_cutoff");
+  const double BH_center_x = Getd("center_x");
+  const double BH_center_y = Getd("center_y");
+  const double BH_center_z = Getd("center_z");
+  Uint p,fld;
+
+  /* update all coeffs to avoid race condition */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < npo; p++)
+  {
+    Patch_T *patch = bhf->patches_outBH[p];
+    Uint f = 0;
+
+    /* make coeffs in  X and Y direction inside this patch */
+    for (f = 0; f < nf; ++f)
+    {
+      int ii;
+      
+      /* must have the field */
+      make_coeffs_2d(patch->fields[Ind(bhf->fld[f]->f)],0,1);
+      
+      /* must have dfield */
+      for (ii = 0; ii < 3; ++ii)
+      {
+        int indxf = _Ind(bhf->fld[f]->df[ii]);
+        if (indxf >= 0)
+        {
+         make_coeffs_2d(patch->fields[indxf],0,1);
+        }
+        else
+        {
+         if(VERBOSE)
+           printf(Pretty0"compute %s in %s\n",
+                       bhf->fld[f]->df[ii],patch->name),fflush(stdout);
+         bhf->fld[f]->did_add_df = 1;
+         Field_T *df = add_field(bhf->fld[f]->df[ii],0,patch,NO);
+         partial_derivative(df);
+        }
+      }
+      
+      /* must have ddfield */
+      for (ii = 0; ii < 6; ++ii)
+      {
+        int indxf = _Ind(bhf->fld[f]->ddf[ii]);
+        if (indxf >= 0)
+        {
+          make_coeffs_2d(patch->fields[indxf],0,1);
+        }
+        else
+        {
+         if(VERBOSE)
+           printf(Pretty0"compute %s in %s\n",
+                       bhf->fld[f]->ddf[ii],patch->name),fflush(stdout);
+         bhf->fld[f]->did_add_ddf = 1;
+         Field_T *ddf = add_field(bhf->fld[f]->ddf[ii],0,patch,NO);
+         partial_derivative(ddf);
+        }
+      }
+    }
+  }
+
+  /* fill */
+  printf(Pretty0"Fill the hole ...\n");
+  fflush(stdout);
+  OpenMP_1d_Pragma(omp parallel for)
+  for (fld = 0; fld < nf; ++fld)
+  {
+    const double KD[2] = {0,1};
+    for (Uint pa = 0; pa < npi; pa++)
+    {
+      /* i for inside patch */
+      Patch_T *ipatch = bhf->patches_inBH[pa];
+      Field_T *u = ipatch->fields[LookUpField_E(bhf->fld[fld]->f,ipatch)];
+      empty_field(u);
+      u->v      = alloc_double(ipatch->nn);
+      double *v = u->v;
+      Uint ijk;
+      
+      for(ijk = 0; ijk < ipatch->nn; ++ijk)
+      {
+        /* o prefix stands for outside */
+        Patch_T *patch = 0;/* this is the outside patch */
+        double theta,phi;
+        double t,rSurf,rSurf3;
+        double df_dx[3]   = {0};
+        double ddf_ddx[6] = {0};
+        double ddfddr = 0,dfdr = 0,fr1 = 0,fr0 = 0;
+        double a[NCoeffs];
+        double _ddfddr[3] = {0,0,0};
+        double oX[3],ox[3],N[3];
+        Uint d1,d2;/* derivative */
+        Uint _i,_j;
+        
+        /* inside */
+        double x=ipatch->node[ijk]->x[0]-BH_center_x;
+        double y=ipatch->node[ijk]->x[1]-BH_center_y;
+        double z=ipatch->node[ijk]->x[2]-BH_center_z;
+        double r=sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+        
+        /* if we don't want r smallet than Rmin */
+        if (r < Rmin) continue;
+        
+        /* find outside patch for the given theta and phi */
+        theta = acos(z/r);
+        phi = arctan(y,x);
+        oX[2] = 0.;
+        find_XYZ_and_patch_of_theta_phi_CS
+         (oX,&patch,theta,phi,bhf->patches_outBH,bhf->npo);
+        
+        /* find r surface */
+        assert(x_of_X(ox,oX,patch));
+        ox[0] -= BH_center_x;
+        ox[1] -= BH_center_y;
+        ox[2] -= BH_center_z;
+        rSurf  = sqrt(Pow2(ox[0])+Pow2(ox[1])+Pow2(ox[2]));
+        rSurf3 = rSurf*Pow2(rSurf);
+        
+        /* r = rSurf(sin(theta)cos(phi)x^+sin(theta)sin(phi)y^+cos(theta)z^) */
+        ox[0] = rSurf*sin(theta)*cos(phi);
+        ox[1] = rSurf*sin(theta)*sin(phi);
+        ox[2] = rSurf*cos(theta);
+        
+        /* normal vector */
+        N[0]  = sin(theta)*cos(phi);
+        N[1]  = sin(theta)*sin(phi);
+        N[2]  = cos(theta);
+        
+        /* 2d interpolate on the surface */
+        Interpolation_T *interp_s = init_interpolation();
+        interp_s->XY_dir_flag = 1;
+        interp_s->X = oX[0];
+        interp_s->Y = oX[1];
+        interp_s->K = 0;
+        /* f value at r = r1 and r = 0 */
+        interp_s->field = patch->fields[Ind(bhf->fld[fld]->f)];
+        plan_interpolation(interp_s);
+        fr1 = execute_interpolation(interp_s);
+        fr0 = bhf->fld[fld]->f_r0;
+        
+        /* df/dx value */
+        for (d1 = 0; d1 < 3; d1++)
+        {
+          interp_s->field = patch->fields[Ind(bhf->fld[fld]->df[d1])];
+          plan_interpolation(interp_s);
+          df_dx[d1] = execute_interpolation(interp_s);
+        }
+        /* d^2f/dx^2 value */
+        for (d1 = 0; d1 < 3; d1++)
+        {
+          for (d2 = d1; d2 < 3; d2++)
+          {
+            interp_s->field = 
+              patch->fields[Ind(bhf->fld[fld]->ddf[IJsymm3(d1,d2)])];
+            plan_interpolation(interp_s);
+            ddf_ddx[IJsymm3(d1,d2)] = execute_interpolation(interp_s);
+          }
+        }
+        free_interpolation(interp_s);
+        
+        /* df/dr */
+        dfdr = (N[0]*df_dx[0]+N[1]*df_dx[1]+N[2]*df_dx[2]);
+        
+        ddfddr = 0;
+        _ddfddr[0] = _ddfddr[1] = _ddfddr[2] = 0;
+        /* d^2f/dr^2 */
+        for (_i = 0; _i < 3; ++_i)
+        {
+          for (_j = 0; _j < 3; ++_j)
+          {
+            _ddfddr[_i] += (KD[_i==_j]/rSurf - ox[_i]*ox[_j]/rSurf3)*df_dx[_j];
+            _ddfddr[_i] += N[_j]*ddf_ddx[IJsymm3(_i,_j)];
+          }
+          ddfddr += _ddfddr[_i]*N[_i]; \
+        }
+        
+        /* find and set the coeffs */
+        bh_bhf_ChebTn_extrapolate
+        (a,fr0,fr1,dfdr,ddfddr,rSurf,NCoeffs);
+        
+        t = 2*r/rSurf-1;
+        for (_i = 0; _i < NCoeffs; _i++)
+          v[ijk] += a[_i]*Cheb_Tn((int)_i,t);
+      }
+    }
+  }/* for (fld = 0; fld < nf ++fld) */
+  
   return EXIT_SUCCESS;
 }
 
