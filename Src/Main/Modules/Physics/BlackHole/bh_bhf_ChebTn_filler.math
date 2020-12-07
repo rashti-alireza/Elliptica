@@ -32,7 +32,7 @@ point     = x;
 `import os`
 
 ### polynomial order
-`POLY_ORDER = 10`
+`POLY_ORDER = 6`
 
 `if (POLY_ORDER < 4):`
 `  raise Exception('Too small order.')`
