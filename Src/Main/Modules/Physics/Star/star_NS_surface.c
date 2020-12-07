@@ -70,6 +70,7 @@ extrap_init
   struct Extrap_S *const extrap = calloc(1,sizeof(*extrap));IsNull(extrap);
   Grid_T *const grid = phys->grid;
   
+  extrap->phys = phys;
   extrap->grid = grid;
   sprintf(extrap->method,"%s",method);
   
@@ -144,9 +145,13 @@ static void extrap_free(struct Extrap_S *const extrap)
 // is done with them, removes them. */
 static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
 {
+  Physics_T *const phys = extrap->phys;
   const Uint npo = extrap->npo;
   const Uint npi = extrap->npi;
   const Uint nf  = extrap->nf;/* numebr of fields */
+  const double NS_center[3] = {Getd("center_x"),
+                               Getd("center_y"),
+                               Getd("center_z")};
   Uint p;
   
   /* update all coeffs to avoid race condition */
@@ -235,14 +240,14 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
            patch->CoordSysInfo->CubedSphericalCoord->side);
       /* find xp in patch_in */
       X[2] = 1.;
-      find_XYZ_and_patch_of_theta_phi_CS(X,&patchp,th,ph,
+      find_XYZ_and_patch_of_theta_phi_CS(X,&patchp,NS_center,th,ph,
                                         extrap->patches_in,npi);
     
       /* find r */
       assert(x_of_X(x,X,patch));
-      x[0] -= patchp->c[0];
-      x[1] -= patchp->c[1];
-      x[2] -= patchp->c[2];
+      x[0] -= NS_center[0];
+      x[1] -= NS_center[1];
+      x[2] -= NS_center[2];
       r     = sqrt(Pow2(x[0])+Pow2(x[1])+Pow2(x[2]));
       
       /* normal vector */
@@ -252,9 +257,9 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
       
       /* find rSurf */
       assert(x_of_X(x,X,patchp));
-      x[0] -= patchp->c[0];
-      x[1] -= patchp->c[1];
-      x[2] -= patchp->c[2];
+      x[0] -= NS_center[0];
+      x[1] -= NS_center[1];
+      x[2] -= NS_center[2];
       rSurf  = sqrt(Pow2(x[0])+Pow2(x[1])+Pow2(x[2]));
       rSurf3 = rSurf*Pow2(rSurf);
       
@@ -515,12 +520,14 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
   const Uint Ntot   = Ntotal_Ylm(lmax);
   const double RESIDUAL = sqrt(Getd("RootFinder_Tolerance"));
   const double max_h_L2_res = Getd("enthalpy_allowed_residual");
+  const double NS_center[3] = {Getd("center_x"),
+                               Getd("center_y"),
+                               Getd("center_z")};
   const Uint Nincr = 100;
   Uint Npn,Npa,Nps;/* number of patches below: */
   Patch_T **patches_NS = collect_patches(phys->grid,Ftype("NS"),&Npn);
   Patch_T **patches_Ar = collect_patches(phys->grid,Ftype("NS_around"),&Npa);
   Patch_T **patches_s  = collect_patches(phys->grid,Ftype("NS_OB"),&Nps);
-  
   double h_L2_res = 0;
   double theta,phi;
   double *Rnew_NS = 0;/* new R for NS */
@@ -567,7 +574,8 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
       
       /* find patch and X,Y,Z at NS surface in which theta and phi take place */
       X[2] = 1.;
-      find_XYZ_and_patch_of_theta_phi_CS(X,&patch,theta,phi,patches_s,Nps);
+      find_XYZ_and_patch_of_theta_phi_CS(X,&patch,NS_center,
+                                         theta,phi,patches_s,Nps);
       
       /* find enthalpy at the (X,Y,Z) */
       Interpolation_T *interp_h = init_interpolation();
@@ -592,9 +600,9 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
       N[0]  = sin(theta)*cos(phi);
       N[1]  = sin(theta)*sin(phi);
       N[2]  = cos(theta);
-      y2[0] = x[0]-patch->c[0];
-      y2[1] = x[1]-patch->c[1];
-      y2[2] = x[2]-patch->c[2];  
+      y2[0] = x[0]-NS_center[0];
+      y2[1] = x[1]-NS_center[1];
+      y2[2] = x[2]-NS_center[2];  
       
       if(LSSEQL(h,1))/* if it takes place at NS patch */
       {
@@ -878,6 +886,10 @@ double star_NS_mass_shedding_indicator(Physics_T *const phys)
       phys->grid->kind == Grid_SplitCubedSpherical_BHNS
      )
   {
+  
+    const double NS_center[3] = {Getd("center_x"),
+                                 Getd("center_y"),
+                                 Getd("center_z")};
     Patch_T *patch    = 0;
     Patch_T **patches = 0;
     Interpolation_T *interp_s = init_interpolation();
@@ -904,9 +916,9 @@ double star_NS_mass_shedding_indicator(Physics_T *const phys)
     patch = X_in_which_patch(X,patches,Np);
     Free(patches);
     assert(patch);
-    x[0] -= patch->c[0];
-    x[1] -= patch->c[1];
-    x[2] -= patch->c[2];
+    x[0] -= NS_center[0];
+    x[1] -= NS_center[1];
+    x[2] -= NS_center[2];
     r     = root_square(3,x,0);
     theta = acos(x[2]/r);
     phi   = arctan(x[1],x[0]);
@@ -948,9 +960,9 @@ double star_NS_mass_shedding_indicator(Physics_T *const phys)
     Free(patches);
     assert(patch);
     x_of_X(x,X,patch);
-    x[0] -= patch->c[0];
-    x[1] -= patch->c[1];
-    x[2] -= patch->c[2];
+    x[0] -= NS_center[0];
+    x[1] -= NS_center[1];
+    x[2] -= NS_center[2];
     r     = root_square(3,x,0);
     theta = acos(x[2]/r);
     phi   = arctan(x[1],x[0]);

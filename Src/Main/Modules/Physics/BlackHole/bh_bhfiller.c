@@ -275,6 +275,10 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
   const Uint Nphi   = bhf->Nphi;
   const double rfill = Getd("perfect_S2_radius");
   const double rfill3= pow(rfill,3);
+  const double BH_center[3] = {Getd("center_x"),
+                               Getd("center_y"),
+                               Getd("center_z")};
+
   Uint p,fld;
 
   /* update all coeffs to avoid race condition */
@@ -359,15 +363,15 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
         /* find patch for the given theta and phi */
         X[2] = 0.;
         find_XYZ_and_patch_of_theta_phi_CS
-         (X,&patch,theta,phi,bhf->patches_outBH,bhf->npo);
+         (X,&patch,BH_center,theta,phi,bhf->patches_outBH,bhf->npo);
          
         /* r = rfill(sin(theta)cos(phi)x^+sin(theta)sin(phi)y^+cos(theta)z^) */
         _x[0] = rfill*sin(theta)*cos(phi);
         _x[1] = rfill*sin(theta)*sin(phi);
         _x[2] = rfill*cos(theta);
-        x[0]  = _x[0] + patch->c[0];
-        x[1]  = _x[1] + patch->c[1];
-        x[2]  = _x[2] + patch->c[2];
+        x[0]  = _x[0] + BH_center[0];
+        x[1]  = _x[1] + BH_center[1];
+        x[2]  = _x[2] + BH_center[2];
         assert(X_of_x(X,x,patch));
         
         /* normal vector */
@@ -511,9 +515,9 @@ static int bhf_ChebTn_general_S2_CS(struct BHFiller_S *const bhf)
   const Uint npi     = bhf->npi;
   const Uint nf      = bhf->nf;/* numebr of fields */
   const double Rmin  = Getd("filler_Rmin_cutoff");
-  const double BH_center_x = Getd("center_x");
-  const double BH_center_y = Getd("center_y");
-  const double BH_center_z = Getd("center_z");
+  const double BH_center[3] = {Getd("center_x"),
+                               Getd("center_y"),
+                               Getd("center_z")};
   Uint p,fld;
 
   /* update all coeffs to avoid race condition */
@@ -604,9 +608,9 @@ static int bhf_ChebTn_general_S2_CS(struct BHFiller_S *const bhf)
         Uint _i,_j;
         
         /* inside */
-        double x=ipatch->node[ijk]->x[0]-BH_center_x;
-        double y=ipatch->node[ijk]->x[1]-BH_center_y;
-        double z=ipatch->node[ijk]->x[2]-BH_center_z;
+        double x=ipatch->node[ijk]->x[0]-BH_center[0];
+        double y=ipatch->node[ijk]->x[1]-BH_center[1];
+        double z=ipatch->node[ijk]->x[2]-BH_center[2];
         double r=sqrt(Pow2(x)+Pow2(y)+Pow2(z));
         
         /* if we don't want r smallet than Rmin */
@@ -617,13 +621,13 @@ static int bhf_ChebTn_general_S2_CS(struct BHFiller_S *const bhf)
         phi = arctan(y,x);
         oX[2] = 0.;
         find_XYZ_and_patch_of_theta_phi_CS
-         (oX,&patch,theta,phi,bhf->patches_outBH,bhf->npo);
+         (oX,&patch,BH_center,theta,phi,bhf->patches_outBH,bhf->npo);
         
         /* find r surface */
         assert(x_of_X(ox,oX,patch));
-        ox[0] -= BH_center_x;
-        ox[1] -= BH_center_y;
-        ox[2] -= BH_center_z;
+        ox[0] -= BH_center[0];
+        ox[1] -= BH_center[1];
+        ox[2] -= BH_center[2];
         rSurf  = sqrt(Pow2(ox[0])+Pow2(ox[1])+Pow2(ox[2]));
         rSurf3 = rSurf*Pow2(rSurf);
         
