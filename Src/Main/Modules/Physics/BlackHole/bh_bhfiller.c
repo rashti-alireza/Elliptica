@@ -12,6 +12,13 @@ int bh_fill_inside_black_hole(Physics_T *const phys)
 {
   FUNC_TIC
   
+  IF_sval("filler_method","none")
+  {
+    printf(Pretty0"No black hole filling requested.\n");
+    FUNC_TOC
+    return EXIT_SUCCESS;
+  }
+  
   Verbose = Geti("filler_verbose");
   
   int ret = EXIT_SUCCESS;
@@ -254,7 +261,7 @@ static void bhf_free(struct BHFiller_S *const bhf)
   free(bhf);
 }
 
-/* ->: EXIT_SUCESS if succeeds, otherwise an error code.
+/* ->: EXIT_SUCCESS if succeeds, otherwise an error code.
 // method to fill BH is ChebTn_Ylm_perfect_s2 with the following extrapolant:
 // ===============================================================
 //
@@ -499,7 +506,7 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
   return EXIT_SUCCESS;
 }
 
-/* ->: EXIT_SUCESS if succeeds, otherwise an error code.
+/* ->: EXIT_SUCCESS if succeeds, otherwise an error code.
 // method to fill BH is ChebTn_general_s2 with the following extrapolant:
 // ===============================================================
 //
