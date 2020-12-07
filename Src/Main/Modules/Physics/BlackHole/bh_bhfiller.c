@@ -1104,7 +1104,8 @@ bh_interpolating_fields_on_a_line
   pnt->f_index = 0;
   Free(interp_v);
   
-  if (stem_g)/* check det(adm metric) if fields_name contain adm_g */
+  /* if check det(metric) requested and if fields_name contain stem_g */
+  if (stem_g && strstr(sfields_name,stem_g))
   {
     /* to avoid race condition between threads write all coeffs */
     OpenMP_Patch_Pragma(omp parallel for)
@@ -1112,13 +1113,13 @@ bh_interpolating_fields_on_a_line
     {
       Patch_T *patch = grid->patch[p];
       char gname[MAX_STR];
+      
       make_coeffs_3d(patch->fields[Ind(PrefixIt(gname,stem_g,"D0D0"))]);
       make_coeffs_3d(patch->fields[Ind(PrefixIt(gname,stem_g,"D0D1"))]);
       make_coeffs_3d(patch->fields[Ind(PrefixIt(gname,stem_g,"D0D2"))]);
       make_coeffs_3d(patch->fields[Ind(PrefixIt(gname,stem_g,"D1D1"))]);
       make_coeffs_3d(patch->fields[Ind(PrefixIt(gname,stem_g,"D1D2"))]);
       make_coeffs_3d(patch->fields[Ind(PrefixIt(gname,stem_g,"D2D2"))]);
-      
     }
   
     /* interpolating each fields at the all given points */
