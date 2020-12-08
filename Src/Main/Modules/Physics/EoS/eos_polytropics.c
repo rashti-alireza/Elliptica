@@ -3,7 +3,7 @@
 // June 2019
 */
 
-#include "polytropics.h"
+#include "eos_polytropics.h"
 
 /* calculate pressure in terms of h for pwp
 // ->return value: p(h) */

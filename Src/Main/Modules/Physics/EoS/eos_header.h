@@ -1,0 +1,13 @@
+#ifndef EOS_LIB_H
+#define EOS_LIB_H
+
+#include "core_lib.h"
+#include "physics_lib.h"
+#include "physics_EoS_lib.h"
+
+
+EoS_T *initialize_EoS(Physics_T *const phys);
+void free_EoS(EoS_T *eos);
+
+#endif
+

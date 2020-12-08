@@ -3,32 +3,33 @@
 // June 2019
 */
 
-#include "EoS.h"
+#include "eos_main.h"
 
 
 /* tutorial:
 // this is how we can calculate thermodynamic quantities
 // like pressure, rest mass and energy density:
 //
-// EoS_T *eos = initialize_EoS();// create and populate an EoS struct based on parameter file
+// EoS_T *eos = initialize_EoS(phys);// create and populate an EoS struct based on parameter file and physics
 // double pressure, rest_mass_density, energy_density;
 //
-// eos->h = 10;// the enthalpy that we are interested to find the thermodynamics quantities at
+// eos->h = 1.5;// the enthalpy that we are interested to find the thermodynamics quantities at
 // pressure          = eos->pressure(eos);// calculate pressure 
 // energy_density    = eos->energy_density(eos);// calculate energy_density
 // rest_mass_density = eos->rest_mass_density(eos);// calculate rest_mass_density
-// free_EoS(&eos);
+// free_EoS(eos);
 */
 
 
 /* allocating memory and initializing EoS structure according
 // to the parameter file.
 // ->return value: initialize EoS structure. */
-EoS_T *initialize_EoS(void)
+EoS_T *initialize_EoS(Physics_T *const phys)
 {
   EoS_T *eos = calloc(1,sizeof(*eos));
   IsNull(eos);
   
+  eos->phys  = phys;
   populate_EoS(eos);/* populating EoS based on parameter file */
   
   return eos;

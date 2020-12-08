@@ -3,11 +3,12 @@
 // June 2019
 */
 
-#include "test_eos.h"
+#include "eos_test.h"
 
-void test_EoS(Grid_T *const grid)
+void test_EoS(Physics_T *const phys)
 {
-  EoS_T *eos = initialize_EoS();
+  Grid_T *const grid = phys->grid;
+  EoS_T *eos = initialize_EoS(phys);
   const char *const path_par = Pgets("top_directory");
   char *path,file_name[1000];
   FILE *file = 0;

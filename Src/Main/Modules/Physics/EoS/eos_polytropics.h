@@ -1,5 +1,4 @@
-#include "core_lib.h"
-#include "physics_EoS_lib.h"
+#include "eos_header.h"
 
 static Uint find_threshold_number_h(const EoS_T *const eos);
 double EoS_rho_h_pwp(EoS_T *const eos);

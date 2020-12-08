@@ -5,11 +5,12 @@
 #define EOS_MAX_STR (400)
 
 /* forward declaration */
-struct GRID_T;
+struct PHYSICS_T;
 
 /* struct for equation of states */
 typedef struct EquationOfState_T
 {
+ struct PHYSICS_T *phys;
  char description[EOS_MAX_STR];
  char type[EOS_MAX_STR];
  char unit[EOS_MAX_STR];
@@ -31,11 +32,11 @@ typedef struct EquationOfState_T
  double (*de_dh)(struct EquationOfState_T *const eos);/* d(energy_density)/dh */
  double (*drho_dh)(struct EquationOfState_T *const eos);/* d(rest_mass_density)/dh */
 }EoS_T;
+#undef EOS_MAX_STR
 
-
-EoS_T *initialize_EoS(void);
+EoS_T *initialize_EoS(struct PHYSICS_T *const phys);
 void free_EoS(EoS_T *eos);
-void test_EoS(struct GRID_T *const grid);
+void test_EoS(struct PHYSICS_T *const phys);
 
 
 #endif
