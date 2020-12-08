@@ -914,6 +914,7 @@ int bh_add_patch_inside_black_hole(Physics_T *const phys,
   
   alloc_nodes(mygrid(phys,region));
   make_nodes(mygrid(phys,region));
+  make_JacobianT(mygrid(phys,region));
   
   return 1;
 }
