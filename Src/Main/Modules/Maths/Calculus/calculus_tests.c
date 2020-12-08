@@ -156,6 +156,193 @@ static int fdS_spectral(Grid_T *const grid)
             numeric,analytic,numeric-analytic);
     
   }
+  else if (grid->kind == Grid_SplitCubedSpherical_BHNS)
+  {
+    double r;
+    printf("BHNS_SplitCubedSpherical_grid:\n");
+    
+    // testing NS sphere surface:
+    printf("\n--> Integral{f(x)dS}|at NS surface section:\n");
+    
+    r = Pgetd("NS_radius");
+    analytic = 4*M_PI*pow(r,2);
+    numeric  = 0;
+    // go over all patches
+    FOR_ALL_PATCHES(p,grid)
+    {
+      patch   = grid->patch[p];
+      if (!IsItCovering(patch,"NS_OB"))
+        continue;
+
+      I  = init_integration();
+      I->type = "Integral{f(x)dS},Spectral";
+      f  = add_field("int f",0,patch,YES);
+      n  = patch->n;
+      nn = patch->nn;
+      
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+
+      for (ijk = 0; ijk < nn; ++ijk)
+      { 
+        g00[ijk] = g11[ijk] = g22[ijk] = 1.;
+        f->v[ijk] = 1.;
+      }
+        
+      I->Spectral->f = f;
+      I->g00 = g00;
+      I->g01 = g01;
+      I->g02 = g02;
+      I->g11 = g11;
+      I->g12 = g12;
+      I->g22 = g22;
+
+      // for Z = const
+      I->Spectral->Z_surface = 1;
+      I->Spectral->K         = n[2]-1; 
+      plan_integration(I);
+      
+      double s0 = execute_integration(I);
+      printf("... Integral{f(x)dS}|%s: %e\n",patch->name,s0);
+      numeric += s0;
+      
+      remove_field(f);
+      free_integration(I);
+      free(g00);
+      free(g01);
+      free(g02);
+      free(g11);
+      free(g12);
+      free(g22);
+    }
+    printf("=> numeric = %e, analytic = %e, diff. = %e\n",
+           numeric,analytic,numeric-analytic);
+           
+    // testing outermost0 sphere surface:
+    printf(Pretty0"Integral{f(x)dS}|at sphere surface of outermost0 section:\n");
+    
+    r = Pgetd("grid_outermost_radius");
+    analytic = 4*M_PI*pow(r,2);
+    numeric  = 0;
+    // go over all patches
+    FOR_ALL_PATCHES(p,grid)
+    {
+      patch   = grid->patch[p];
+      if (!IsItCovering(patch,"outermost_OB"))
+      
+      I  = init_integration();
+      I->type = "Integral{f(x)dS},Spectral";
+      f  = add_field("int f",0,patch,YES);
+      n  = patch->n;
+      nn = patch->nn;
+      
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+
+      for (ijk = 0; ijk < nn; ++ijk)
+      { 
+        g00[ijk] = g11[ijk] = g22[ijk] = 1.;
+        f->v[ijk] = 1.;
+      }
+        
+      I->Spectral->f = f;
+      I->g00 = g00;
+      I->g01 = g01;
+      I->g02 = g02;
+      I->g11 = g11;
+      I->g12 = g12;
+      I->g22 = g22;
+
+      // for Z = const
+      I->Spectral->Z_surface = 1;
+      I->Spectral->K         = n[2]-1; 
+      plan_integration(I);
+      
+      double s0 = execute_integration(I);
+      printf("... Integral{f(x)dS}|%s: %e\n",patch->name,s0);
+      numeric += s0;
+      
+      remove_field(f);
+      free_integration(I);
+      free(g00);
+      free(g01);
+      free(g02);
+      free(g11);
+      free(g12);
+      free(g22);
+    }
+    printf("=> numeric = %e, analytic = %e, diff. = %e\n",
+           numeric,analytic,numeric-analytic);
+           
+    // testing outermost0 cube surface:
+    printf(Pretty0"Integral{f(x)dS}|at plane surface of outermost0 section:\n");
+    
+    r = 2*Pgetd("BHNS_separation");
+    analytic = 6*Pow2(r);
+    numeric  = 0;
+    // go over all patches
+    FOR_ALL_PATCHES(p,grid)
+    {
+      patch   = grid->patch[p];
+      if (!IsItCovering(patch,"outermost_IB"))
+        continue;
+      
+      I  = init_integration();
+      I->type = "Integral{f(x)dS},Spectral";
+      f  = add_field("int f",0,patch,YES);
+      n  = patch->n;
+      nn = patch->nn;
+      
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+
+      for (ijk = 0; ijk < nn; ++ijk)
+      { 
+        g00[ijk] = g11[ijk] = g22[ijk] = 1.;
+        f->v[ijk] = 1.;
+      }
+        
+      I->Spectral->f = f;
+      I->g00 = g00;
+      I->g01 = g01;
+      I->g02 = g02;
+      I->g11 = g11;
+      I->g12 = g12;
+      I->g22 = g22;
+
+      // for Z = const
+      I->Spectral->Z_surface = 1;
+      I->Spectral->K         = 0; 
+      plan_integration(I);
+      
+      double s0 = execute_integration(I);
+      printf("... Integral{f(x)dS}|%s: %e\n",patch->name,s0);
+      numeric += s0;
+      
+      remove_field(f);
+      free_integration(I);
+      free(g00);
+      free(g01);
+      free(g02);
+      free(g11);
+      free(g12);
+      free(g22);
+    }
+    printf("=> numeric = %e, analytic = %e, diff. = %e\n",
+           numeric,analytic,numeric-analytic);
+  }
   else if (grid->kind == Grid_CubedSpherical_BHNS)
   {
     double r;
@@ -288,7 +475,7 @@ static int fdS_spectral(Grid_T *const grid)
     // testing outermost0 cube surface:
     printf("\n--> Integral{f(x)dS}|at plane surface of outermost0 section:\n");
     
-    r = 2*Pgetd("BH_NS_separation");
+    r = 2*Pgetd("BHNS_separation");
     analytic = 6*Pow2(r);
     numeric  = 0;
     // go over all patches
@@ -423,6 +610,188 @@ static int fdV_spectral(Grid_T *const grid)
     printf("=> numeric = %e, analytic = %e, diff. = %e\n",
             numeric,analytic,numeric-analytic);
   }
+  else if (grid->kind == Grid_SplitCubedSpherical_BHNS)
+  {
+    double r;
+
+    printf("BHNS_SplitCubedSpherical_grid:\n");
+    
+    // testing outermost0: 
+    printf(Pretty0"Integral{f(x)dV}|at outermost0 section:\n");
+    
+    r = Pgetd("grid_outermost_radius");
+    analytic = 4./3.*M_PI*pow(r,3)-pow(2*Pgetd("BHNS_separation"),3);
+    numeric  = 0;
+    
+    // go over all patches 
+    FOR_ALL_PATCHES(p,grid)
+    {
+      patch   = grid->patch[p];
+      
+      if (!IsItCovering(patch,"outermost"))
+        continue;
+      
+      I  = init_integration();
+      I->type = "Integral{f(x)dV},Spectral";
+      f  = add_field("int f",0,patch,YES);
+      nn = patch->nn;
+      
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+
+      for (ijk = 0; ijk < nn; ++ijk)
+      { 
+        g00[ijk] = g11[ijk] = g22[ijk] = 1.;
+        f->v[ijk] = 1.;
+      }
+        
+      I->Spectral->f = f;
+      I->g00 = g00;
+      I->g01 = g01;
+      I->g02 = g02;
+      I->g11 = g11;
+      I->g12 = g12;
+      I->g22 = g22;
+
+      plan_integration(I);
+      
+      double s0 = execute_integration(I);
+      printf("... Integral{f(x)dS}|%s: %e\n",patch->name,s0);
+      numeric += s0;
+      
+      remove_field(f);
+      free_integration(I);
+      free(g00);
+      free(g01);
+      free(g02);
+      free(g11);
+      free(g12);
+      free(g22);
+    }
+    printf("=> numeric = %e, analytic = %e, diff. = %e\n",
+           numeric,analytic,numeric-analytic);
+           
+    // testing NS: 
+    printf(Pretty0"Integral{f(x)dV}|at NS section:\n");
+    
+    r = Pgetd("NS_radius");
+    analytic = 4./3.*M_PI*pow(r,3);
+    numeric  = 0;
+    
+    // go over all patches 
+    FOR_ALL_PATCHES(p,grid)
+    {
+      patch   = grid->patch[p];
+      if (!IsItCovering(patch,"NS"))
+        continue;
+      
+      I  = init_integration();
+      I->type = "Integral{f(x)dV},Spectral";
+      f  = add_field("int f",0,patch,YES);
+      nn = patch->nn;
+      
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+
+      for (ijk = 0; ijk < nn; ++ijk)
+      { 
+        g00[ijk] = g11[ijk] = g22[ijk] = 1.;
+        f->v[ijk] = 1.;
+      }
+        
+      I->Spectral->f = f;
+      I->g00 = g00;
+      I->g01 = g01;
+      I->g02 = g02;
+      I->g11 = g11;
+      I->g12 = g12;
+      I->g22 = g22;
+
+      plan_integration(I);
+      
+      double s0 = execute_integration(I);
+      printf("... Integral{f(x)dS}|%s: %e\n",patch->name,s0);
+      numeric += s0;
+      
+      remove_field(f);
+      free_integration(I);
+      free(g00);
+      free(g01);
+      free(g02);
+      free(g11);
+      free(g12);
+      free(g22);
+    }
+    printf("=> numeric = %e, analytic = %e, diff. = %e\n",
+           numeric,analytic,numeric-analytic);
+           
+    // testing NS around: 
+    printf(Pretty0"Integral{f(x)dV}|at NS around section:\n");
+    
+    r = Pgetd("NS_radius");
+    analytic = pow(Pgetd("BHNS_separation"),3)-4./3.*M_PI*pow(r,3);
+    numeric  = 0;
+    
+    // go over all patches 
+    FOR_ALL_PATCHES(p,grid)
+    {
+      patch   = grid->patch[p];
+      if (!IsItCovering(patch,"NS_around"))
+        continue;
+      
+      I  = init_integration();
+      I->type = "Integral{f(x)dV},Spectral";
+      f  = add_field("int f",0,patch,YES);
+      nn = patch->nn;
+      
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+
+      for (ijk = 0; ijk < nn; ++ijk)
+      { 
+        g00[ijk] = g11[ijk] = g22[ijk] = 1.;
+        f->v[ijk] = 1.;
+      }
+        
+      I->Spectral->f = f;
+      I->g00 = g00;
+      I->g01 = g01;
+      I->g02 = g02;
+      I->g11 = g11;
+      I->g12 = g12;
+      I->g22 = g22;
+
+      plan_integration(I);
+      
+      double s0 = execute_integration(I);
+      printf("... Integral{f(x)dS}|%s: %e\n",patch->name,s0);
+      numeric += s0;
+      
+      remove_field(f);
+      free_integration(I);
+      free(g00);
+      free(g01);
+      free(g02);
+      free(g11);
+      free(g12);
+      free(g22);
+    }
+    printf("=> numeric = %e, analytic = %e, diff. = %e\n",
+           numeric,analytic,numeric-analytic);
+           
+  }
   else if (grid->kind == Grid_CubedSpherical_BHNS)
   {
     double r;
@@ -433,7 +802,7 @@ static int fdV_spectral(Grid_T *const grid)
     printf("\n--> Integral{f(x)dV}|at outermost0 section:\n");
     
     r = Pgetd("Outermost0_radius");
-    analytic = 4./3.*M_PI*pow(r,3)-pow(2*Pgetd("BH_NS_separation"),3);
+    analytic = 4./3.*M_PI*pow(r,3)-pow(2*Pgetd("BHNS_separation"),3);
     numeric  = 0;
     
     // go over all patches 
@@ -549,7 +918,7 @@ static int fdV_spectral(Grid_T *const grid)
     printf("\n--> Integral{f(x)dV}|at NS around section:\n");
     
     r = Pgetd("NS_radius");
-    analytic = pow(Pgetd("BH_NS_separation"),3)-4./3.*M_PI*pow(r,3);
+    analytic = pow(Pgetd("BHNS_separation"),3)-4./3.*M_PI*pow(r,3);
     numeric  = 0;
     
     // go over all patches 
@@ -649,7 +1018,8 @@ static int GQ_ChebExtrema(Grid_T *const grid)
   I->GQ_ChebyshevExtrema->f = f;
   sf = execute_integration(I);
   
-  printf("Max expected error for N = %u is %e\n",N,I->err);
+  if (isfinite(I->err))
+    printf("Max expected error for N = %u is %e\n",N,I->err);
   printf("Numeric = %e, Analytic = %e, diff = %e\n",sf,an,fabs(sf-an));
 
   free(f);
