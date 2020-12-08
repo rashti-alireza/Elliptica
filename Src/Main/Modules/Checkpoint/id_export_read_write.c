@@ -48,7 +48,7 @@ void
   pnt->Z       = alloc_double(npoints);
   pnt->patchn  = calloc(npoints,sizeof(*pnt->patchn));
   IsNull(pnt->patchn);
-  printf("~> number of points to interpolate = %u\n",npoints);
+  printf(Pretty0"number of points to interpolate = %u\n",npoints);
   
   /* reading (x,y,z) */
   for (i = 0; i < npoints; ++i)
