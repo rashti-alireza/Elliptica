@@ -87,9 +87,10 @@ void
     patch = x_in_which_patch(x,grid->patch,grid->np);
     if (patch && X_of_x(X,x,patch))
     {
-      pnt->X[p] = X[0];
-      pnt->Y[p] = X[1];
-      pnt->Z[p] = X[2];
+      pnt->X[p]      = X[0];
+      pnt->Y[p]      = X[1];
+      pnt->Z[p]      = X[2];
+      pnt->patchn[p] = patch->pn;
     }
     else
     {
