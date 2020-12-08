@@ -9,7 +9,9 @@
 #define INCOMPLETE_FUNC "Other options have not been developed yet for this part!\n"
 #define NO_JOB    "No job has been defined for this case."
 #define NO_OPTION "No such option has been defined. Implement me!"
-#define ERROR_MASSAGE  ":(\n\nERROR and EXIT:\n"
+#define ERROR_MASSAGE    ":(\n\nERROR and EXIT:\n"
+#define WARNING_MASSAGE  "WARNING! WARNING! WARNING!\n\n"
+
 #define Pretty0        "|--> "
 #define Pretty1        "~> "
 
@@ -24,6 +26,7 @@
 #define Fclose(x)  (x ? fclose(x),(x) = NULL : NULL)
 #define bad_inputEr()  bad_input_error(__FILE__,__LINE__)
 #define null_pathEr(x) null_path_error(x,__FILE__,__LINE__)
+#define Warning(x)   printf(WARNING_MASSAGE"%s\nFile = %s\nLine = %d\n",x,__FILE__,__LINE__)
 #define Error0(x)    abort_error(x,__FILE__,__LINE__,0)
 #define Error1(x)    abort_error(x,__FILE__,__LINE__,1)
 #define Errors(x,y)  abort_error_string(x,y,__FILE__,__LINE__)
