@@ -26,7 +26,6 @@ int Modules_Test(void *vp)
   if (strstr_i(PgetsEZ("Test_EoS"),"yes"))
   {
     Physics_T *ns = init_physics(0,NS);
-    ns->grid = grid;
     test_EoS(ns);
     free_physics(ns);
   }
