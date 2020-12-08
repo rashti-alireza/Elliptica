@@ -3157,7 +3157,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   const double S  = grid_char->S;/* separation */
   Uint obj_n;/* BH or NS */
   
-  /* two different directions */
+  /* two different directions and lowercase */
   if (strstr_i(grid_char->params[0]->dir,"left"))
     grid_char->params[0]->dir = "left";
   else if (strstr_i(grid_char->params[0]->dir,"right"))
@@ -3166,7 +3166,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     Error0("Bad argument.");
     
   if (strstr_i(grid_char->params[1]->dir,"left"))
-    grid_char->params[0]->dir = "left";
+    grid_char->params[1]->dir = "left";
   else if (strstr_i(grid_char->params[1]->dir,"right"))
     grid_char->params[1]->dir = "right";
   else
