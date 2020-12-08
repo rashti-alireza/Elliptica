@@ -233,7 +233,8 @@ static int fdS_spectral(Grid_T *const grid)
     {
       patch   = grid->patch[p];
       if (!IsItCovering(patch,"outermost_OB"))
-      
+        continue;
+        
       I  = init_integration();
       I->type = "Integral{f(x)dS},Spectral";
       f  = add_field("int f",0,patch,YES);
