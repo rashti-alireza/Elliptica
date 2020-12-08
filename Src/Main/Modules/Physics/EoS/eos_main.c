@@ -30,6 +30,7 @@ EoS_T *initialize_EoS(Physics_T *const phys)
   IsNull(eos);
   
   eos->phys  = phys;
+  assert(phys);
   populate_EoS(eos);/* populating EoS based on parameter file */
   
   return eos;
@@ -53,22 +54,26 @@ void free_EoS(EoS_T *s)
 /* populating EoS struct based on parameter file */
 static void populate_EoS(EoS_T *const eos)
 {
+  Physics_T *const phys = eos->phys;
   double *K,*rho_th,*gamma;/* quantities in polytropic EoS */
   Uint N;/* number of pieces in case of pwp */
   Uint i;
-  const char *par;
   
   /* populate eos struct */
-  par = PgetsEZ("EoS_description");
-  if (par)
-    strcpy(eos->description,par);
-  strcpy(eos->type,Pgets("EoS_type")); 
-  strcpy(eos->unit,Pgets("EoS_unit"));
+  sprintf(eos->description,"%s",Gets(P_"description"));
+  sprintf(eos->type,"%s",       Gets(P_"type")); 
+  sprintf(eos->unit,"%s",       Gets(P_"unit"));
   
-  K      = read_EoS_in_parameter_file(Pgets("EoS_K"),&N);
-  rho_th = read_EoS_in_parameter_file(PgetsEZ("EoS_rho_th"),0);
-  gamma  = read_EoS_in_parameter_file(Pgets("EoS_Gamma"),0);
-
+  K      = read_EoS_in_parameter_file(Gets(P_"K"),&N);
+  gamma  = read_EoS_in_parameter_file(Gets(P_"Gamma"),0);
+  
+  /* if we have a single polytropic eos, then we don't have rho_th  */
+  if (!strcmp_i(eos->type,"polytropic") &&
+      !strcmp_i(eos->type,"polytrop"))
+    rho_th = read_EoS_in_parameter_file(Gets(P_"rho_th"),0);   
+  else
+    rho_th = 0;
+    
   /* if the units are geometrised units */
   if (strcmp_i(eos->unit,"geo"))
   {
@@ -99,8 +104,7 @@ static void populate_EoS(EoS_T *const eos)
       eos->drho_dh	     = EoS_drho_dh_h_pwp;
     }
     else if (strcmp_i(eos->type,"polytropic") ||
-             strcmp_i(eos->type,"polytrop")   ||
-             strcmp_i(eos->type,"p"))
+             strcmp_i(eos->type,"polytrop"))
     {
       if (N != 1)
         Error0("This EoS is not polytropic, there is more than one piece.\n");
@@ -182,9 +186,11 @@ static void fill_h_th(EoS_T *const eos)
 // ->return value: value of parameter name and number of pieses in EoS. */
 static double *read_EoS_in_parameter_file(const char *const par,Uint *const N)
 {
-  /* eg. if we have a single polytropic eos, then we don't have rho_th */
   if (par == 0)
+  {
+    *N = 0;
     return 0;
+  }
     
   double *v = 0;
   char str[MAX_STR],*sub_tok,*save;

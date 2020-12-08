@@ -5,6 +5,9 @@
 #include "physics_lib.h"
 #include "physics_EoS_lib.h"
 
+/* prefix for this module */
+#define P_ "EOS_"
+
 
 EoS_T *initialize_EoS(Physics_T *const phys);
 void free_EoS(EoS_T *eos);
