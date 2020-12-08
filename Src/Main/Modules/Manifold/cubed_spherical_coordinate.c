@@ -3221,7 +3221,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     assert(l > 0 && w > 0 && h > 0);
     
     /* must be lower case letters */
-    assert(!strcmp(dir,"left") || !strcmp(dir,"right"));
+    if(strcmp(dir,"left") && strcmp(dir,"right"))
+      Error0("Direction must be lower case!");
     
     if(rmax < 0)
       Errors("%s object must have positive radius.\n",dir);
@@ -3584,7 +3585,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     /* some checks */
     assert(l > 0 && w > 0 && h > 0);
     /* must be lower case letters */
-    assert(!strcmp(dir,"left") || !strcmp(dir,"right"));
+    if(strcmp(dir,"left") && strcmp(dir,"right"))
+      Error0("Direction must be lower case!");
     assert(rstep > 0);
     
     for (d0 = 0; d0 < Nsd[0]; d0++)
