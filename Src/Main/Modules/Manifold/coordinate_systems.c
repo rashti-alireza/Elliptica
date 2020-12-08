@@ -615,7 +615,7 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
 {
   /* calculate the characteristics of this grid */
   const Uint gn   = grid->gn;
-  const double C      = Pgetd("BH_NS_separation");
+  const double C      = Pgetd("BHNS_separation");
   const double R_NS_l = Pgetd("NS_radius"),
                bh_m   = Pgetd("BH_mass"),
                bh_chi = Pgetd("BH_dimensionless_spin"),
@@ -767,7 +767,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     const Uint Ntheta = Ntheta_Ylm(lmax);
     const Uint Nphi   = Nphi_Ylm(lmax);
     const Uint Ntot   = Ntotal_Ylm(lmax);
-    const double C      = Pgetd("BH_NS_separation");
+    const double C      = Pgetd("BHNS_separation");
     const double R_NS   = Pgetd("NS_radius"),
                  bh_m   = Pgetd("BH_mass"),
                  bh_chi = Pgetd("BH_dimensionless_spin"),
