@@ -143,6 +143,11 @@ init_physics
     phys->sys  = SNS;
     phys->ssys = "SNS";/* important to have different name for system */
   }
+  else if (Pcmps("project","Modules_Test"))
+  {
+    phys->sys  = OBJ_UNDEFINED;
+    phys->ssys = "OBJ_UNDEFINED";/* important to have different name for system */
+  }
   else
     Error0(NO_OPTION);
   
