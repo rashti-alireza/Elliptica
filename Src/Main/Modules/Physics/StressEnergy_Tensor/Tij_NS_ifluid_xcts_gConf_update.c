@@ -29,28 +29,33 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
     
     IF_not_cover(patch,phys)  continue;
     
+    Physics_T *ns  = init_physics(phys,NS);
+    EoS_T *eos     = initialize_EoS(ns);
+    
     RELAX_UPDATE_FUNC(Tij_NS_IF_XCTS_gConf_enthalpy(patch,Euler_const),
                       patch,enthalpy,W);
     
     if (neat)
       Tij_NS_neat_enthalpy(patch);
     
-    Tij_NS_eos_update_rho0(patch);
+    Tij_NS_eos_update_rho0(patch,eos);
     Tij_NS_IF_XCTS_gConf_u0(patch);
     Tij_NS_IF_XCTS_gConf_derives(patch);
     /* sources */
     Tij_NS_IF_XCTS_gConf_psi6J_Ui(patch);
-    Tij_NS_IF_XCTS_gConf_psi6E(patch);
-    Tij_NS_IF_XCTS_gConf_psi6S(patch);
+    Tij_NS_IF_XCTS_gConf_psi6E(patch,eos);
+    Tij_NS_IF_XCTS_gConf_psi6S(patch,eos);
+    
+    free_physics(ns);
+    free_EoS(eos);
   }
   
   FUNC_TOC
 }
 
 /* updating rho0 using eos */
-void Tij_NS_eos_update_rho0(Patch_T *const patch)
+void Tij_NS_eos_update_rho0(Patch_T *const patch,EoS_T *const eos)
 {
-  EoS_T *eos = initialize_EoS();
   READ_v(enthalpy)
   REALLOC_v_WRITE_v(rho0)
   const Uint nn = patch->nn;
@@ -69,7 +74,6 @@ void Tij_NS_eos_update_rho0(Patch_T *const patch)
       rho0[ijk] = 0;
     }
   }
-  free_EoS(eos);
 }
 
 /* after finding new NS surface, root finder might find h ~ 1

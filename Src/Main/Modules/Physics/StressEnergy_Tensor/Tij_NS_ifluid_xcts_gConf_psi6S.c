@@ -7,7 +7,7 @@
 #include "Tij_header.h"
 
 
-void Tij_NS_IF_XCTS_gConf_psi6S(Patch_T *const patch)
+void Tij_NS_IF_XCTS_gConf_psi6S(Patch_T *const patch,EoS_T *const eos)
 {
   const Uint nn = patch->nn;
   Uint ijk;
@@ -37,7 +37,6 @@ void Tij_NS_IF_XCTS_gConf_psi6S(Patch_T *const patch)
   REALLOC_v_WRITE_v(SConf)
 
 
-  EoS_T *eos = initialize_EoS();
   for(ijk = 0; ijk < nn; ++ijk)
   {
     eos->h   = enthalpy[ijk];
@@ -67,5 +66,4 @@ psi6*(P2*rho0[ijk]/enthalpy[ijk] + 3*p);
 
   SConf[ijk] = Sbar;
   }
-  free_EoS(eos);
 }

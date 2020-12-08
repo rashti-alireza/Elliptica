@@ -15,7 +15,7 @@ Point = ijk;
 C_macro = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
 Ccode["#include "Tij_header.h"\n\n"];
-Ccode["void Tij_NS_IF_XCTS_gConf_psi6E(Patch_T *const patch)"];
+Ccode["void Tij_NS_IF_XCTS_gConf_psi6E(Patch_T *const patch,EoS_T *const eos)"];
 Ccode["{"];
 
 Ccode["  const Uint nn = patch->nn;"];
@@ -48,7 +48,6 @@ Declare =
 }
 
 # calculate EConf:
-Ccode["  EoS_T *eos = initialize_EoS();"];
 Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["  {"];
 Ccode["    eos->h   = enthalpy[ijk];"];
@@ -58,6 +57,5 @@ Ccode["    double p = eos->pressure(eos);"];
      Ebar  = psi6*(rho0*enthalpy*(u0*alpha)**2 - p);
      Ccode["  EConf[ijk] = Ebar;"];
 Ccode["  }"];
-Ccode["  free_EoS(eos);"];
 
 Ccode["}"];
