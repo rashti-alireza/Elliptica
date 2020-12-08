@@ -30,7 +30,10 @@ EoS_T *initialize_EoS(Physics_T *const phys)
   IsNull(eos);
   
   eos->phys  = phys;
+  
   assert(phys);
+  AssureType(phys->ctype == NS);
+  
   populate_EoS(eos);/* populating EoS based on parameter file */
   
   return eos;
