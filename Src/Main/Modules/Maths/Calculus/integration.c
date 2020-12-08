@@ -232,15 +232,15 @@ static double GaussQuadrature_ChebyshevExtrema(Integration_T *const I)
 {
   double i0 = 0;
   const double *const f = I->GQ_ChebyshevExtrema->f;
-  const Uint n      = I->GQ_ChebyshevExtrema->n;
-  const double   w      = M_PI/(n-1);
+  const Uint n    = I->GQ_ChebyshevExtrema->n;
+  const double  w = M_PI/(n-1);
   double err = M_PI;
   Uint i;
   
   err /= Factorial(2*(int)n);
   err *= L_inf(n,f);/* approximately */
   err /= pow(2,2*n-1);
-  I-> err = err;/* note: this error is valid only for polynomial */
+  I->err = err;/* note: this error is valid only for polynomial */
   
   for (i = 1; i <= n-2; ++i)
     i0 += f[i];
