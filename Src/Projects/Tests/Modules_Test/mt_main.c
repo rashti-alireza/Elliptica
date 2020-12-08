@@ -25,7 +25,10 @@ int Modules_Test(void *vp)
   
   if (strstr_i(PgetsEZ("Test_EoS"),"yes"))
   {
-    test_EoS(grid);
+    Physics_T *ns = init_physics(0,NS);
+    ns->grid = grid;
+    test_EoS(ns);
+    free_physics(ns);
   }
   
   if (strcmp_i(PgetsEZ("Test_Jacobian_Elements_Js_Values"),"yes"))
