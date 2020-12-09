@@ -3,7 +3,7 @@
 // August 2018
 */
 
-#include "solving_managings.h"
+#include "solve_manager.h"
 /* DeLimits */
 #define DL_OC '{'
 #define DL_CC '}'
