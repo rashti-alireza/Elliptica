@@ -101,7 +101,7 @@ double *r_f(Patch_T *const patch)
   return f;
 }
 
-/* f: patch -> 1/sqrt(1+r) */
+/* f: patch -> 1/sqrt(1+r^2) */
 double *inv_rP1_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
