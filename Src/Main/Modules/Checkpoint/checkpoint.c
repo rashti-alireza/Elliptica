@@ -39,9 +39,14 @@ void write_checkpoint(Physics_T *const phys,const char *const out_dir)
     FUNC_TOC
     return;
   }
+  if (!phys)
+  {
+    printf(Pretty0"The given physics is empty.\n");
+    FUNC_TOC
+    return;
+  }
   
   Grid_T *const grid = phys->grid;
-  
   if (!grid)
   {
     printf(Pretty0"The given grid is empty.\n");
