@@ -12,7 +12,7 @@ void test_EoS(Physics_T *const phys)
   const char *const path_par = Pgets("top_directory");
   char *path,file_name[1000];
   FILE *file = 0;
-  Uint N = 100;
+  Uint N = 1000;
   const double h_max = eos->h_th != 0 ? eos->h_th[eos->N-1]+10: 10;
   const double h_min = 1;
   double s = (h_max-h_min)/(N-1);
