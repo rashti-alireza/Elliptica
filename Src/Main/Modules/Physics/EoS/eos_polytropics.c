@@ -3,6 +3,14 @@
 // June 2019
 */
 
+/* used article:
+//  @inproceedings
+//  {Smith2013TolmanOppenheimerVolkoffS,
+//  title={Tolman–Oppenheimer–Volkoff (TOV) Stars},
+//  author={A. Smith},
+//  year={2013}
+//  } */
+
 #include "eos_polytropics.h"
 
 /* calculate pressure in terms of h for pwp
