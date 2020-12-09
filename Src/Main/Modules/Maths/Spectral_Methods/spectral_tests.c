@@ -623,10 +623,16 @@ static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid)
 */
 int interpolation_tests(Grid_T *const grid)
 {
+  FUNC_TIC
+  
   Uint p;
   double *X,*Y,*Z;
   Field_T *field;
   int status;
+  
+  printf("Note: to test spectral interpolation, a fifth order \n"
+         "      polynomial is used, which might not get well resolved in \n"
+         "      outermost patches which use compactification.\n\n");
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -663,25 +669,25 @@ int interpolation_tests(Grid_T *const grid)
       status = interpolation_tests_Z(field,Z,n[2]);
       check_test_result(status);
     }
-    if (0)
+    if (DO)
     {
       printf("Interpolation test: X & Y directions, patch %10s:\n",patch->name);
       status = interpolation_tests_XY(field,X,Y,n[0],n[1]);
       check_test_result(status);
     }
-    if (0)
+    if (DO)
     {
       printf("Interpolation test: X & Z directions, patch %10s:\n",patch->name);
       status = interpolation_tests_XZ(field,X,Z,n[0],n[2]);
       check_test_result(status);
     } 
-    if (0)
+    if (DO)
     {
       printf("Interpolation test: Y & Z directions, patch %10s:\n",patch->name);
       status = interpolation_tests_YZ(field,Y,Z,n[1],n[2]);
       check_test_result(status);
     }
-    if (0)
+    if (DO)
     {
       printf("Interpolation test:              3-D, patch %10s:\n",patch->name);
       status = interpolation_tests_XYZ(field,X,Y,Z,n[0],n[1],n[2]);
@@ -696,19 +702,20 @@ int interpolation_tests(Grid_T *const grid)
     remove_field(field);
   }
   
-  if (0)
+  if (DO)
   {
       printf("Interpolation test:            Neville Iterative Method =>");
       status = interpolation_tests_Neville_1d();
       check_test_result(status);
   }
-  if (0)
+  if (DO)
   {
       printf("Interpolation test:            Natural Cubic Spline Method =>");
       status = interpolation_tests_N_cubic_spline_1d();
       check_test_result(status);
   }
   
+  FUNC_TOC
   return EXIT_SUCCESS;
 }
 
