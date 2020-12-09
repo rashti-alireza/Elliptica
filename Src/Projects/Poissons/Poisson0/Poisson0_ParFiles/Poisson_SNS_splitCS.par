@@ -7,11 +7,10 @@ Project = Poisson0
 #-----------------------------------------------------------------------#
 # Grid and Geometry:                                                    #
 #-----------------------------------------------------------------------#
-grid_kind                    = SplitCubedSpherical(BH+BH)
-grid_set_BH1                 = left,excised
-grid_set_BH2                 = right,excised
-grid_box_length_ratio_BH1    = 0.5
-grid_box_length_ratio_BH2    = 0.3
+grid_kind                    = SplitCubedSpherical(NS)
+grid_set_NS                  = center
+grid_box_length_ratio_NS     = 0.5
+grid_around_box_length       = 10
 grid_outermost_radius        = 400
 grid_verbose                 = yes
 #### resolutions:
@@ -22,16 +21,8 @@ n_a                          = 16
 n_b                          = 16
 n_c                          = 16
 
-#### BH1:
-BH_mass1 	       = 3
-BH_dimensionless_spin1 = 1
-
-#### BH2:
-BH_mass2 	       = 2
-BH_dimensionless_spin2 = 0
-
-#### Orbits:
-BHBH_separation        = 10
+#### NS:
+NS_radius = 2
 
 #-----------------------------------------------------------------------#
 # Solving_Settings and Methods:                                         #
