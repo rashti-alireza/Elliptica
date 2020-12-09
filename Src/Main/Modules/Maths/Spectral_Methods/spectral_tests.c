@@ -646,44 +646,44 @@ int interpolation_tests(Grid_T *const grid)
     
     if (DO)
     {
-      printf("Interpolation test:      X direction, patch %10s =>",patch->name);
+      printf("Interpolation test:      X direction, patch %10s:\n",patch->name);
       status = interpolation_tests_X(field,X,n[0]);
       check_test_result(status);
     }
     
     if (DO)
     {
-      printf("Interpolation test:      Y direction, patch %10s =>",patch->name);
+      printf("Interpolation test:      Y direction, patch %10s:\n",patch->name);
       status = interpolation_tests_Y(field,Y,n[1]);
       check_test_result(status);
     }
     if (DO)
     {
-      printf("Interpolation test:      Z direction, patch %10s =>",patch->name);
+      printf("Interpolation test:      Z direction, patch %10s:\n",patch->name);
       status = interpolation_tests_Z(field,Z,n[2]);
       check_test_result(status);
     }
-    if (DO)
+    if (0)
     {
-      printf("Interpolation test: X & Y directions, patch %10s =>",patch->name);
+      printf("Interpolation test: X & Y directions, patch %10s:\n",patch->name);
       status = interpolation_tests_XY(field,X,Y,n[0],n[1]);
       check_test_result(status);
     }
-    if (DO)
+    if (0)
     {
-      printf("Interpolation test: X & Z directions, patch %10s =>",patch->name);
+      printf("Interpolation test: X & Z directions, patch %10s:\n",patch->name);
       status = interpolation_tests_XZ(field,X,Z,n[0],n[2]);
       check_test_result(status);
     } 
-    if (DO)
+    if (0)
     {
-      printf("Interpolation test: Y & Z directions, patch %10s =>",patch->name);
+      printf("Interpolation test: Y & Z directions, patch %10s:\n",patch->name);
       status = interpolation_tests_YZ(field,Y,Z,n[1],n[2]);
       check_test_result(status);
     }
-    if (DO)
+    if (0)
     {
-      printf("Interpolation test:              3-D, patch %10s =>",patch->name);
+      printf("Interpolation test:              3-D, patch %10s:\n",patch->name);
       status = interpolation_tests_XYZ(field,X,Y,Z,n[0],n[1],n[2]);
       check_test_result(status);
     }
@@ -696,13 +696,13 @@ int interpolation_tests(Grid_T *const grid)
     remove_field(field);
   }
   
-  if (DO)
+  if (0)
   {
       printf("Interpolation test:            Neville Iterative Method =>");
       status = interpolation_tests_Neville_1d();
       check_test_result(status);
   }
-  if (DO)
+  if (0)
   {
       printf("Interpolation test:            Natural Cubic Spline Method =>");
       status = interpolation_tests_N_cubic_spline_1d();
@@ -869,6 +869,7 @@ static int interpolation_tests_X(Field_T *const field,const double *const X,cons
   double Y,Z;
   double xc[3];/* Cartesian coord */
   double Xc[3];/* Curvilinear coord */
+  double max = 0;
   Flag_T flg;
   Uint i,j;
   
@@ -897,19 +898,15 @@ static int interpolation_tests_X(Field_T *const field,const double *const X,cons
       diff = poly5_f_point(xc[0],xc[1],xc[2])-execute_interpolation(interp_s);
       if (GRT(fabs(diff),tol))
       {
-        flg = FOUND;
-        break;
+        flg = FOUND; max = (max<fabs(diff)?fabs(diff):max);
       }
     }
-    
-    if (flg == FOUND)
-      break;
   }
   
   free_interpolation(interp_s);
   
   if (flg == FOUND)
-    return TEST_UNSUCCESSFUL;
+  {printf(Pretty0"Max difference = %e\n",max); return TEST_UNSUCCESSFUL;}
   
   return TEST_SUCCESSFUL;
 }
@@ -930,6 +927,7 @@ static int interpolation_tests_Y(Field_T *const field,const double *const Y,cons
   double X,Z;
   double xc[3];/* Cartesian coord */
   double Xc[3];/* Curvilinear coord */
+  double max = 0;
   Flag_T flg;
   Uint i,j;
   
@@ -958,19 +956,16 @@ static int interpolation_tests_Y(Field_T *const field,const double *const Y,cons
       
       if (GRT(fabs(diff),tol))
       {
-        flg = FOUND;
-        break;
+        flg = FOUND; max = (max<fabs(diff)?fabs(diff):max);
       }
     }
     
-    if (flg == FOUND)
-      break;
   }
   
   free_interpolation(interp_s);
   
   if (flg == FOUND)
-    return TEST_UNSUCCESSFUL;
+  {printf(Pretty0"Max difference = %e\n",max); return TEST_UNSUCCESSFUL;}
   
   return TEST_SUCCESSFUL;
 }
@@ -991,6 +986,7 @@ static int interpolation_tests_Z(Field_T *const field,const double *const Z,cons
   double Y,X;
   double xc[3];/* Cartesian coord */
   double Xc[3];/* Curvilinear coord */
+  double max = 0;
   Flag_T flg;
   Uint i,j;
   
@@ -1019,19 +1015,15 @@ static int interpolation_tests_Z(Field_T *const field,const double *const Z,cons
       
       if (GRT(fabs(diff),tol))
       {
-        flg = FOUND;
-        break;
+        flg = FOUND; max = (max<fabs(diff)?fabs(diff):max);
       }
     }
-    
-    if (flg == FOUND)
-      break;
   }
   
   free_interpolation(interp_s);
   
   if (flg == FOUND)
-    return TEST_UNSUCCESSFUL;
+  {printf(Pretty0"Max difference = %e\n",max); return TEST_UNSUCCESSFUL;}
   
   return TEST_SUCCESSFUL;
 }
@@ -1052,6 +1044,7 @@ static int interpolation_tests_XY(Field_T *const field,const double *const X,con
   double Z;
   double xc[3];/* Cartesian coord */
   double Xc[3];/* Curvilinear coord */
+  double max = 0;
   Flag_T flg;
   Uint a,b,c;
   
@@ -1080,22 +1073,17 @@ static int interpolation_tests_XY(Field_T *const field,const double *const X,con
         diff = poly5_f_point(xc[0],xc[1],xc[2])-execute_interpolation(interp_s);
         if (GRT(fabs(diff),tol))
         {
-          flg = FOUND;
-          break;
+          flg = FOUND; max = (max<fabs(diff)?fabs(diff):max);
         }
       }
     
-      if (flg == FOUND)
-        break;
     }
-    if (flg == FOUND)
-        break;
   }
   
   free_interpolation(interp_s);
   
   if (flg == FOUND)
-    return TEST_UNSUCCESSFUL;
+  {printf(Pretty0"Max difference = %e\n",max); return TEST_UNSUCCESSFUL;}
   
   return TEST_SUCCESSFUL;
 }
@@ -1116,6 +1104,7 @@ static int interpolation_tests_XZ(Field_T *const field,const double *const X,con
   double Y;
   double xc[3];/* Cartesian coord */
   double Xc[3];/* Curvilinear coord */
+  double max = 0;
   Flag_T flg;
   Uint a,b,c;
   
@@ -1145,22 +1134,17 @@ static int interpolation_tests_XZ(Field_T *const field,const double *const X,con
         
         if (GRT(fabs(diff),tol))
         {
-          flg = FOUND;
-          break;
+          flg = FOUND; max = (max<fabs(diff)?fabs(diff):max);
         }
       }
     
-      if (flg == FOUND)
-        break;
     }
-    if (flg == FOUND)
-        break;
   }
   
   free_interpolation(interp_s);
   
   if (flg == FOUND)
-    return TEST_UNSUCCESSFUL;
+  {printf(Pretty0"Max difference = %e\n",max); return TEST_UNSUCCESSFUL;}
   
   return TEST_SUCCESSFUL;
 }
@@ -1181,6 +1165,7 @@ static int interpolation_tests_YZ(Field_T *const field,const double *const Y,con
   double X;
   double xc[3];/* Cartesian coord */
   double Xc[3];/* Curvilinear coord */
+  double max = 0;
   Flag_T flg;
   Uint a,b,c;
   
@@ -1210,22 +1195,17 @@ static int interpolation_tests_YZ(Field_T *const field,const double *const Y,con
         diff = poly5_f_point(xc[0],xc[1],xc[2])-execute_interpolation(interp_s);
         if (GRT(fabs(diff),tol))
         {
-          flg = FOUND;
-          break;
+          flg = FOUND; max = (max<fabs(diff)?fabs(diff):max);
         }
       }
     
-      if (flg == FOUND)
-        break;
     }
-    if (flg == FOUND)
-        break;
   }
   
   free_interpolation(interp_s);
   
   if (flg == FOUND)
-    return TEST_UNSUCCESSFUL;
+  {printf(Pretty0"Max difference = %e\n",max); return TEST_UNSUCCESSFUL;}
   
   return TEST_SUCCESSFUL;
 }
@@ -1244,6 +1224,7 @@ static int interpolation_tests_XYZ(Field_T *const field,const double *const X,co
   const double tol = n[0]*n[0]*n[1]*n[1]*n[2]*n[2]*1e-14*(max_f > 1 ? max_f : 1.);
   double xc[3];/* Cartesian coord */
   double Xc[3];/* Curvilinear coord */
+  double max = 0;
   Flag_T flg;
   Uint a,b,c;
   
@@ -1271,22 +1252,17 @@ static int interpolation_tests_XYZ(Field_T *const field,const double *const X,co
         
         if (GRT(fabs(diff),tol))
         {
-          flg = FOUND;
-          break;
+          flg = FOUND; max = (max<fabs(diff)?fabs(diff):max);
         }
       }
     
-      if (flg == FOUND)
-        break;
     }
-    if (flg == FOUND)
-        break;
   }
   
   free_interpolation(interp_s);
   
   if (flg == FOUND)
-    return TEST_UNSUCCESSFUL;
+  {printf(Pretty0"Max difference = %e\n",max); return TEST_UNSUCCESSFUL;}
   
   return TEST_SUCCESSFUL;
 }
