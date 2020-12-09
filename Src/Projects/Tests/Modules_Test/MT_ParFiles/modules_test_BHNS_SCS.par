@@ -63,7 +63,7 @@ BHNS_separation  = 25
 # Solving_Settings and Methods:                                         #
 #-----------------------------------------------------------------------#
 
-Solving_Order                   = alpha
+Solve_Order                     = alpha
 Derivative_Method               = Spectral
 Interpolation_Method            = Spectral
 Fourier_Transformation_Method   = RFT 

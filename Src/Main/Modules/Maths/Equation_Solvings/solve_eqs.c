@@ -13,11 +13,11 @@ int solve_eqs(Solve_Equations_T *const SolveEqs)
   fSolve_T *fsolve = 0;
   
   /* choosing solving method */
-  if (strcmp_i(Pgets("Solving_Method"),"DDM_Schur_Complement"))
+  if (strcmp_i(Pgets("solve_Method"),"DDM_Schur_Complement"))
     fsolve = ddm_schur_complement;
   else
     Errors("No such method \"%s\" defined for this function.\n",
-      PgetsEZ("Solving_Method"));
+      PgetsEZ("solve_Method"));
   
   /* call the specific solving method */
   fsolve(SolveEqs);
@@ -32,8 +32,8 @@ int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const n
   int stop_max = 1;
   int stop_res = 0;
   int stop_abnormal = 1;
-  const double res_d    = Pgetd("Solving_Residual");/* desired residual */
-  const int max_step    = Pgeti("Solving_Max_Number_of_Newton_Step");
+  const double res_d    = Pgetd("solve_Residual");/* desired residual */
+  const int max_step    = Pgeti("solve_Max_Number_of_Newton_Step");
   const Uint npatch = grid->np;
   Uint p;
 
@@ -101,7 +101,7 @@ int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const n
 double get_relaxation_factor_solve_equations(Solve_Equations_T *const solve)
 {
   const char *f_name = solve->field_name;
-  double factor = PgetdEZ("Solving_Newton_Update_Weight");/* relaxation factor */
+  double factor = PgetdEZ("solve_Newton_Update_Weight");/* relaxation factor */
   char par[400] = {'\0'};
   
   if (factor == DBL_MAX)/* if no such parameter defined */
@@ -109,7 +109,7 @@ double get_relaxation_factor_solve_equations(Solve_Equations_T *const solve)
   
   if (f_name)
   {
-    sprintf(par,"Solving_Newton_Update_Weight_%s",f_name);
+    sprintf(par,"solve_Newton_Update_Weight_%s",f_name);
     double factor2 = PgetdEZ(par);
     if (factor2 != DBL_MAX)
       factor = factor2;

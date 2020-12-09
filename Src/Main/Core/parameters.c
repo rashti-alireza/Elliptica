@@ -928,7 +928,7 @@ update_iteration_params
   if (strcmp(folder_name_next,folder_name_prev) || iter == 0)/* if n is updated */
   {
     /* iteration number used in solving, reset this for each resolution */
-    Pseti(PrefixIt(prefix,"solving_iteration_number"),0);
+    Pseti(PrefixIt(prefix,"solve_iteration_number"),0);
     sprintf(folder_name_next,dir_name_format,parfile_stem,n[0],n[1],n[2]);
     folder_path = make_directory(Pgets("top_directory"),folder_name_next);
     Psets(PrefixIt(prefix,"my_directory"),folder_path);
