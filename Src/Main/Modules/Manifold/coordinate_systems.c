@@ -834,7 +834,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     
     /* set number of splits, points in each directions,
     // surface functions etc. */
-    set_params_split_CS(grid_char);
+    set_params_of_split_cubed_spherical_grid(grid_char);
     
     /* free */
     Free(rns);
@@ -912,7 +912,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
 
     /* set number of splits, points in each directions,
     // surface functions etc. */
-    set_params_split_CS(grid_char);
+    set_params_of_split_cubed_spherical_grid(grid_char);
     
     /* free */
     Free(rns1);
@@ -994,7 +994,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
 
     /* set number of splits, points in each directions,
     // surface functions etc. */
-    set_params_split_CS(grid_char);
+    set_params_of_split_cubed_spherical_grid(grid_char);
     
     /* free */
     Free(rbh1);
@@ -1052,7 +1052,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
 
     /* set number of splits, points in each directions,
     // surface functions etc. */
-    set_params_split_CS(grid_char);
+    set_params_of_split_cubed_spherical_grid(grid_char);
     
     /* free */
     Free(rbh);
@@ -1107,7 +1107,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
 
     /* set number of splits, points in each directions,
     // surface functions etc. */
-    set_params_split_CS(grid_char);
+    set_params_of_split_cubed_spherical_grid(grid_char);
     
     /* free */
     Free(rns);

@@ -3080,7 +3080,7 @@ void set_object_name_split_CS(char *const obj,const char *const type)
 // cover those regions for instance in BH filler. 
 // NOTE: separate parts of this function have written in braces 
 // thus in future one can use this components for similar purposes. */
-void set_params_split_CS(Grid_Char_T *const grid_char)
+void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
 {
   FUNC_TIC
   

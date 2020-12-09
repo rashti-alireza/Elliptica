@@ -344,7 +344,7 @@ void alloc_patches(Grid_T *const grid);
 void free_grid(Grid_T *grid);
 void free_patch(Patch_T *patch);
 void free_grid_db(void);
-void set_params_split_CS(Grid_Char_T *const grid_char);
+void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char);
 void theta_phi_of_XY_CS(double *const theta,double *const phi,const double *const X,const Flag_T side);
 
 void 
