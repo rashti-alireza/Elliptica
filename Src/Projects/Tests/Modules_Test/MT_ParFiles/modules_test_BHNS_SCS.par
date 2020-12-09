@@ -20,13 +20,6 @@ Test_FourierTransformation            = yes
 #-----------------------------------------------------------------------#
 # Grid and Geometry:                                                    #
 #-----------------------------------------------------------------------#
-#### resolution(s):
-n_a                          = 28
-n_b                          = 28
-n_c                          = 28
-grid_SplitCS_max_n_a         = 14
-grid_SplitCS_max_n_b         = 14
-grid_SplitCS_max_n_c         = 14
 grid_kind                    = SplitCubedSpherical(BH+NS)
 grid_set_NS                  = left
 grid_set_BH                  = right,excised
@@ -34,6 +27,13 @@ grid_box_length_ratio_NS     = 0.5
 grid_box_length_ratio_BH     = 0.5
 grid_outermost_radius        = 400
 grid_verbose                 = yes
+#### resolutions:
+grid_SplitCS_max_n_a         = 14
+grid_SplitCS_max_n_b         = 14
+grid_SplitCS_max_n_c         = 14
+n_a                          = 28
+n_b                          = 28
+n_c                          = 28
 
 #### NS:
 NS_radius           = 6
