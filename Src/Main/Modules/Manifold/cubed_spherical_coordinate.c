@@ -428,7 +428,7 @@ populate_CS_patch_SplitCS
   else
   {
     dir = StrSide[dir0];
-    type = OJ_T_SCS;
+    type = OB_T_SCS;
   }
   
   assert(dir0 == LEFT || dir0 == RIGHT || dir0 == CENTER || dir0 == NONE);
@@ -711,7 +711,7 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         x[c]+= C[c];
       }
     break;
-    case OJ_T_SCS:
+    case OB_T_SCS:
       for (l = 0; l < nn; l++)
       {
         double *X = alloc_double(3);
@@ -883,7 +883,7 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
         Error0(NO_JOB);
     }/* end of switch */
   }/* end of else if (type == OT_T2_CS) */
-  else if (type == OJ_T_SCS)
+  else if (type == OB_T_SCS)
   {
     /* transformation function */
     patch->JacobianT->j  = JT_OJ_T_SCS;
@@ -902,7 +902,7 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
     make_coeffs_2d(patch->CoordSysInfo->CubedSphericalCoord->R1_f,0,1);
     make_coeffs_2d(patch->CoordSysInfo->CubedSphericalCoord->R2_f,0,1);
     
-  }/* end of if (type == OJ_T_SCS) */
+  }/* end of if (type == OB_T_SCS) */
   else if (type == OT_T_SCS)
   {
     /* transformation function */
@@ -5216,7 +5216,7 @@ void alloc_patches_SBH_CubedSpherical_grid(Grid_T *const grid)
   
 }
 
-/* Jacobian transformation for split cubed spherical patch.type: OJ_T_SCS
+/* Jacobian transformation for split cubed spherical patch.type: OB_T_SCS
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
@@ -7776,7 +7776,7 @@ void test_CubedSpherical_Coordinates(Grid_T *const grid)
       /* test Radius related */
       switch (type)
       {
-        case OJ_T_SCS:
+        case OB_T_SCS:
         case OT_T_SCS:
           R = R_interpolation_CS(R2_f,X);
           if (!EQL(root_square(1,&R,&R2_f->v[n]),0))

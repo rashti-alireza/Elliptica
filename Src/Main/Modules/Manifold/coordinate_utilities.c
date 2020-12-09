@@ -273,7 +273,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
 
   switch (type)
   {
-    case OJ_T_SCS:
+    case OB_T_SCS:
       d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = S*R_interpolation_CS(R1_f,X)/d;
       x2 = S*R_interpolation_CS(R2_f,X)/d;
@@ -422,7 +422,7 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
   
   switch (type)
   {
-    case OJ_T_SCS:
+    case OB_T_SCS:
       d    = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1   = S*R_interpolation_CS(R1_f,X)/d;
       x2   = S*R_interpolation_CS(R2_f,X)/d;
