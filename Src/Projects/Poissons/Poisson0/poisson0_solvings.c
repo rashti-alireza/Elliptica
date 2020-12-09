@@ -24,9 +24,9 @@ int poisson0_solve_eq(Grid_T *const grid)
   enable_fields(grid);/* allocating required fields in patch->fields */
   poisson0_initial_data_alpha(grid);/* initial data for field alpha */
   
-  SolveEqs->solving_order = Pgets("Solving_Order");
-  SolveEqs->umfpack_refine= PgetdEZ("Solving_UMFPACK_refinement_step");
-  SolveEqs->umfpack_size  = PgetiEZ("Solving_UMFPACK_size");
+  SolveEqs->solving_order = Pgets("solve_Order");
+  SolveEqs->umfpack_refine= PgetdEZ("solve_UMFPACK_refinement_step");
+  SolveEqs->umfpack_size  = PgetiEZ("solve_UMFPACK_size");
   solve_eqs(SolveEqs);/* solving equation(s) */
   
   /* freeing */
