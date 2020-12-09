@@ -12,7 +12,6 @@ Test_Jacobian_Elements_Js_Consistency = yes
 Test_Matrix_Consistency               = yes
 Test_Solver_Consistency               = yes
 Test_Math_General                     = yes
-Test_Schur_Complement                 = yes
 Test_EoS                              = yes
 Test_Integration                      = yes
 Test_Ylm_Transformation               = yes
@@ -21,67 +20,54 @@ Test_FourierTransformation            = yes
 #-----------------------------------------------------------------------#
 # Grid and Geometry:                                                    #
 #-----------------------------------------------------------------------#
-
-### EoS for test:
-EoS_description  = K123
-EoS_type         = polytropic
-EoS_unit         = geo
-EoS_K            = [123.6489]
-EoS_Gamma        = [2]
-
-### grid:
-Grid_kind                     = BBN_CubedSpherical_grid
-Number_of_Outermost_Split     = 2
-Outermost0_radius             = 50
-Outermost1_radius             = 100
-left_central_box_length_ratio = 0.5
+#### resolution(s):
+n_a                          = 28
+n_b                          = 28
+n_c                          = 28
+grid_SplitCS_max_n_a         = 14
+grid_SplitCS_max_n_b         = 14
+grid_SplitCS_max_n_c         = 14
+grid_kind                    = SplitCubedSpherical(BH+NS)
+grid_set_NS                  = left
+grid_set_BH                  = right,excised
+grid_box_length_ratio_NS     = 0.5
+grid_box_length_ratio_BH     = 0.5
+grid_outermost_radius        = 400
+grid_verbose                 = yes
 
 #### NS:
-NS_radius             = 6
+NS_radius           = 6
+
+#NS_EoS_description  = SLy
+#NS_EoS_type         = piecewise_polytropic
+#NS_EoS_unit         = geo
+#NS_EoS_K            = [8.9493e-02, 8.4581e+04, 7.4943e+04, 3.1074e+04]
+#NS_EoS_rho_th       = [0, 2.3674e-04, 8.1147e-04, 1.6191e-03]
+#NS_EoS_Gamma        = [1.3569e+00, 3.0050e+00, 2.9880e+00, 2.8510e+00]
+
+NS_EoS_description  = K123
+NS_EoS_type         = polytropic
+NS_EoS_unit         = geo
+NS_EoS_K            = [123.6489]
+NS_EoS_Gamma        = [2]
 
 #### BH:
 BH_mass 	      = 6 
-BH_dimensionless_spin = 1
+BH_dimensionless_spin = 0.5
 
-#### Orbits:
-BH_NS_separation      = 25
+#### system:
+BHNS_separation  = 25
 
-#### resolution(s):
-n_a = 10
-n_b = 10
-n_c = 10
-
-#### overriding the resolutions:
-#left_NS_n_a    = 6
-#left_NS_n_b    = 6
-#left_NS_n_c    = 6
-
-#right_BH_n_a   = 7
-#right_BH_n_b   = 7
-#right_BH_n_c   = 7
-
-#Outermost0_n_a = 9
-#Outermost0_n_b = 9
-#Outermost0_n_c = 9
-
-#Outermost1_n_a = 7
-#Outermost1_n_b = 7
-#Outermost1_n_c = 7
 
 #-----------------------------------------------------------------------#
 # Solving_Settings and Methods:                                         #
 #-----------------------------------------------------------------------#
 
-Solving_Order                         = alpha
-Solving_Newton_Update_Weight          = 1.0
-Solving_Residual                      = 1E-10
-Solving_Max_Number_of_Iteration       = 1
-Solving_Max_Number_of_Newton_Step     = 10
-Solving_Method                        = DDM_Schur_Complement
-Derivative_Method                     = Spectral
-Interpolation_Method                  = Spectral
-Fourier_Transformation_Method         = RFT 
-dF/du_for_Newton_Method               = Spectral 
+Solving_Order                   = alpha
+Derivative_Method               = Spectral
+Interpolation_Method            = Spectral
+Fourier_Transformation_Method   = RFT 
+dF/du_for_Newton_Method         = Spectral 
 
 #-----------------------------------------------------------------------#
 # Print:                                                                #
