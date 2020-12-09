@@ -33,7 +33,7 @@ NS_radius 	       = 2
 BHNS_separation        = 10
 
 #-----------------------------------------------------------------------#
-# Solving_Settings and Methods:                                         #
+# Solve Settings and Methods:                                         #
 #-----------------------------------------------------------------------#
 solve_Order                         = alpha
 solve_Newton_Update_Weight          = 1.0

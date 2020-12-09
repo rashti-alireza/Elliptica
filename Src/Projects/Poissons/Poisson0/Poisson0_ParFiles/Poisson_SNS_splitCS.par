@@ -25,7 +25,7 @@ n_c                          = 16
 NS_radius = 2
 
 #-----------------------------------------------------------------------#
-# Solving_Settings and Methods:                                         #
+# Solve Settings and Methods:                                         #
 #-----------------------------------------------------------------------#
 solve_Order                         = alpha
 solve_Newton_Update_Weight          = 1.0
