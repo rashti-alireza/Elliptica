@@ -926,7 +926,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     const Uint Ntheta = Ntheta_Ylm(lmax);
     const Uint Nphi   = Nphi_Ylm(lmax);
     const Uint Ntot   = Ntotal_Ylm(lmax);
-    const double C       = Pgetd("BH_BH_separation");
+    const double C       = Pgetd("BHBH_separation");
     const double bh1_m   = Pgetd("BH_mass1"),
                  bh1_chi = Pgetd("BH_dimensionless_spin1"),
                  R_BH1   = bh1_m*(1+sqrt(1-Pow2(bh1_chi))),
