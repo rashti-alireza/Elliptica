@@ -49,7 +49,7 @@ void bh_start_off_KerrSchild_perfect_s2(Physics_T *const phys)
 void bh_find_bh_surface_perfect_s2(Physics_T *const phys)
 {
   Grid_Char_T *grid_char = phys->grid_char;
-  const Uint lmax   = (Uint)Geti("surface_Ylm_expansion_max_l");
+  const Uint lmax   = (Uint)Geti("surface_Ylm_max_l");
   const Uint Ntheta = Ntheta_Ylm(lmax);
   const Uint Nphi   = Nphi_Ylm(lmax);
   const Uint Ntot   = Ntotal_Ylm(lmax);

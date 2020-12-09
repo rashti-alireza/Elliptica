@@ -514,7 +514,7 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
   
   Grid_Char_T *grid_char = phys->grid_char;
   struct NS_surface_RootFinder_S par[1] = {0};
-  const Uint lmax   = (Uint)Geti("surface_Ylm_expansion_max_l");
+  const Uint lmax   = (Uint)Geti("surface_Ylm_max_l");
   const Uint Ntheta = Ntheta_Ylm(lmax);
   const Uint Nphi   = Nphi_Ylm(lmax);
   const Uint Ntot   = Ntotal_Ylm(lmax);
