@@ -4,8 +4,8 @@
 */
 
 #include "dfs_df.h"
-#define MAX_STR_LEN 400
-#define MAX_J_SIZE 10000 /* 10Gb */
+#define MAX_STR_LEN (400)
+#define MAX_J_SIZE (10000) /* 10Gb */
 
 static const double CONST = 1.0;
 
