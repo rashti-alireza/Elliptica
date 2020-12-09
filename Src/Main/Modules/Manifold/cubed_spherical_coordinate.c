@@ -3082,6 +3082,8 @@ void set_object_name_split_CS(char *const obj,const char *const type)
 // thus in future one can use this components for similar purposes. */
 void set_params_split_CS(Grid_Char_T *const grid_char)
 {
+  FUNC_TIC
+  
   Grid_T *const grid = grid_char->grid;/* this is the new grid */
   const int Verbose  = Pcmps("grid_verbose","yes");
   Uint n[3] = {0};
@@ -5121,6 +5123,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     Error0(NO_OPTION);
   }
   
+  FUNC_TOC  
 } 
 
 /* memory alloc patches for BBN_Split_CubedSpherical type 
@@ -7738,7 +7741,7 @@ void test_CubedSpherical_Coordinates(Grid_T *const grid)
   Uint p;
   Flag_T flg = NONE;
   
-  printf("Testing Cubed Spherical Coordinates:\n");
+  printf(Pretty0"Testing Cubed Spherical Coordinates:\n");
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -7758,49 +7761,60 @@ void test_CubedSpherical_Coordinates(Grid_T *const grid)
       x_of_X(xp,X,patch);
       if (!EQL(root_square(3,xp,x),0))
       {
-        printf("x_of_X failed.\n");
+        printf("x_of_X failed! difference = %e\n",root_square(3,xp,x));
         flg = FOUND;
-        break;
       }
       
       /* test X_of_x */
       X_of_x(Xp,x,patch);
       if (!EQL(root_square(3,Xp,X),0))
       {
-        printf("X_of_x failed.\n");
+        printf("X_of_x failed! difference = %e\n",root_square(3,Xp,X));
         flg = FOUND;
-        break;
       }
       
       /* test Radius related */
       switch (type)
       {
+        case OJ_T_SCS:
+        case OT_T_SCS:
+          R = R_interpolation_CS(R2_f,X);
+          if (!EQL(root_square(1,&R,&R2_f->v[n]),0))
+          {
+            printf("R2 interpolation failed! difference = %e\n",root_square(1,&R,&R2_f->v[n]));
+            flg = FOUND;
+          }
+          R = R_interpolation_CS(R1_f,X);
+          if (!EQL(root_square(1,&R,&R1_f->v[n]),0))
+          {
+            printf("R1 interpolation failed! difference = %e\n",root_square(1,&R,&R1_f->v[n]));
+            flg = FOUND;
+          }
+        break;
+        
         case NS_T_CS:
           R = R_interpolation_CS(R2_f,X);
           if (!EQL(root_square(1,&R,&R2_f->v[n]),0))
           {
-            printf("R interpolation failed.\n");
+            printf("R2 interpolation failed! difference = %e\n",root_square(1,&R,&R2_f->v[n]));
             flg = FOUND;
-            break;
           }
-          
         break;
+        
         case SR_T_CS:
           R = R_interpolation_CS(R1_f,X);
           if (!EQL(root_square(1,&R,&R1_f->v[n]),0))
           {
-            printf("R interpolation failed.\n");
+            printf("R1 interpolation failed! difference = %e\n",root_square(1,&R,&R1_f->v[n]));
             flg = FOUND;
-            break;
           }
         break;
+        
         default:
         break;
       }
   
     }/* end of for(n = 0; n < patch->nn; ++n) */
-    if (flg == FOUND)
-      break;
   }/* end of FOR_ALL_PATCHES(p,grid) */
   
   if (flg != FOUND)
