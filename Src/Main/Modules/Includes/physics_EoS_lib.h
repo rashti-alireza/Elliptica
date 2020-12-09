@@ -34,7 +34,7 @@ typedef struct EquationOfState_T
 }EoS_T;
 #undef EOS_MAX_STR
 
-EoS_T *initialize_EoS(struct PHYSICS_T *const phys);
+EoS_T *init_EoS(struct PHYSICS_T *const phys);
 void free_EoS(EoS_T *eos);
 void test_EoS(struct PHYSICS_T *const phys);
 

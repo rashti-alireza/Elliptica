@@ -45,7 +45,7 @@ double star_NS_baryonic_gConf_mass(Physics_T *const phys,const double Euler_C)
     READ_v(psi)
 
 
-    EoS_T *eos = initialize_EoS(phys);
+    EoS_T *eos = init_EoS(phys);
     Uint nn = patch->nn;
     Uint ijk;
     double rho0;

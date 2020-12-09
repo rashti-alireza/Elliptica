@@ -8,7 +8,7 @@
 void test_EoS(Physics_T *const phys)
 {
   Grid_T *const grid = phys->grid;
-  EoS_T *eos = initialize_EoS(phys);
+  EoS_T *eos = init_EoS(phys);
   const char *const path_par = Pgets("top_directory");
   char *path,file_name[1000];
   FILE *file = 0;

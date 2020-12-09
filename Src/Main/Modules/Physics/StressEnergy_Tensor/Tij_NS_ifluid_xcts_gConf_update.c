@@ -30,7 +30,7 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
     IF_not_cover(patch,phys)  continue;
     
     Physics_T *ns  = init_physics(phys,NS);
-    EoS_T *eos     = initialize_EoS(ns);
+    EoS_T *eos     = init_EoS(ns);
     
     RELAX_UPDATE_FUNC(Tij_NS_IF_XCTS_gConf_enthalpy(patch,Euler_const),
                       patch,enthalpy,W);

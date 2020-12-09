@@ -114,7 +114,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   calculate_ADM_and_Komar_mass(TOV);/* perform some tests */
   
   /* having known every thing, now populate pressure */
-  eos = initialize_EoS();
+  eos = init_EoS();
   for (i = 0; i < TOV->N; ++i)
   {
     eos->h = TOV->h[i];
@@ -342,7 +342,7 @@ static double *Komar_mass_integrand(const TOV_T *const TOV)
                *const m = TOV->m,
                *const h = TOV->h,
                *const phi = TOV->phi;
-  EoS_T *eos = initialize_EoS();
+  EoS_T *eos = init_EoS();
   Uint i;
   
   f[0] = 0;
@@ -366,7 +366,7 @@ static double *ADM_mass_integrand(const TOV_T *const TOV)
   const double *const r = TOV->r,
                *const m = TOV->m,
                *const h = TOV->h;
-  EoS_T *eos = initialize_EoS();
+  EoS_T *eos = init_EoS();
   Uint i;
   
   f[0] = 0;
@@ -412,7 +412,7 @@ static double *baryonic_mass_integrand(const TOV_T *const TOV)
   const double *const r = TOV->r,
                *const m = TOV->m,
                *const h = TOV->h;
-  EoS_T *eos = initialize_EoS();
+  EoS_T *eos = init_EoS();
   double s;
   Uint i;
   
@@ -497,7 +497,7 @@ static void solve_ODE_enthalpy_approach(TOV_T *const TOV)
 /* ->return value: approximate r near center of star */
 static double r_approx(const double h,const double h_c/* central enthalpy */)
 {
-  EoS_T *eos = initialize_EoS();
+  EoS_T *eos = init_EoS();
   double r = 0;
   double e,p,de_dh;
   
@@ -516,7 +516,7 @@ static double r_approx(const double h,const double h_c/* central enthalpy */)
 /* ->return value: approximate m near center of star */
 static double m_approx(const double h,const double h_c/* central enthalpy */)
 {
-  EoS_T *eos = initialize_EoS();
+  EoS_T *eos = init_EoS();
   double m = 0;
   double e,de_dh;
   
@@ -550,7 +550,7 @@ static double drbar_dh(const double h,const double rbar,const double r, const do
 // \frac {dr}{dh}=-\frac {r\left( r-2m\right) }{\left( m+4\pi r^{3}p\right) h}\\ . */
 static double dr_dh(const double h,const double r, const double m)
 {
-  EoS_T *eos = initialize_EoS();
+  EoS_T *eos = init_EoS();
   double f;
   double p;/* pressure */
   const double r3 = r*r*r;
@@ -567,7 +567,7 @@ static double dr_dh(const double h,const double r, const double m)
 // \frac {dm}{dh}=4\pi r^{2}e\frac {dr}{dh}\\ . */
 static double dm_dh(const double h,const double r, const double m)
 {
-  EoS_T *eos = initialize_EoS();
+  EoS_T *eos = init_EoS();
   double f;
   double e;/* energy density */
   const double r2 = r*r;

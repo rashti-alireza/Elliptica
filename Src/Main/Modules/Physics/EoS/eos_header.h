@@ -9,7 +9,7 @@
 #define P_ "EOS_"
 
 
-EoS_T *initialize_EoS(Physics_T *const phys);
+EoS_T *init_EoS(Physics_T *const phys);
 void free_EoS(EoS_T *eos);
 
 #endif
