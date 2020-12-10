@@ -51,6 +51,10 @@ int adm_main(Physics_T *const phys)
       ret = compute_beta(phys);
     break;
     
+    case ADM_DOCTEST:
+      ret = preform_adm_doctest(phys);
+    break;
+
     default:
       Error0(NO_OPTION);
   }
@@ -96,6 +100,11 @@ static int set_adm_params(Physics_T *const phys)
   // zero:     => B1^i = 0
   // inspiral: => B1^i = omega*(r-r_CM) + v/D*(r-r_CM) */
   Pset_default(P_"B1I_form","inspiral");
+  
+  /* doctest for AConf^{ij} using adm_K{ij}:
+  // options:
+  // KerrSchild: compare computed adm_K_{ij} with analytic Kerr-Schild */
+  Pset_default(P_"doctest_AConfIJ_compare","KerrSchild");
   
   if(Pcmps(P_"B1I_form","inspiral"))
   {
@@ -234,4 +243,16 @@ static int compute_beta(Physics_T *const phys)
 }
 
 
-
+/* performing some internal tests to make sure 
+// things implemented correctly. */
+static int preform_adm_doctest(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  /* test AConf^{ij} */
+  if (DO) adm_doctest_AConfIJ(phys);
+  
+  
+  FUNC_TOC
+  return EXIT_SUCCESS;
+}

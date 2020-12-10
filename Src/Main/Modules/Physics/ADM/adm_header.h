@@ -58,6 +58,7 @@ void adm_update_AConfIJ(Physics_T *const phys,const char *const region);
 void adm_update_adm_g_patch(Patch_T *const patch);
 void adm_update_adm_gij(Physics_T *const phys,const char *const region);
 void adm_update_beta(Physics_T *const phys,const char *const region);
+void adm_doctest_AConfIJ(Physics_T *const phys);
 
 
 #endif
