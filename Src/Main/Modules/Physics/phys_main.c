@@ -75,6 +75,7 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
     case ADM_UPDATE_beta:
     case ADM_UPDATE_AConfIJ:
     case ADM_COMPUTE_CONSTRAINTS:
+    case ADM_DOCTEST:
       ret = adm_main(phys);
     break;
     
