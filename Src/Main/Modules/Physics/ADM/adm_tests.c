@@ -20,9 +20,10 @@ void adm_doctest_AConfIJ(Physics_T *const phys)
   {
     /* important to have dedicated BH physics to read correct parameters */
     Physics_T *const bh = init_physics(phys,BH);
+    Grid_T *const grid  = mygrid(phys,".*");
     
     /* calculate analytic adm_K_{ij} name test_adm_Kij */
-    add_3x3_symmetric_field(mygrid(phys,".*"),"test_adm_Kij","down");
+    add_3x3_symmetric_field(grid,"test_adm_Kij","down");
     
     fd_populate_gConf_dgConf_igConf_KerrSchild(bh,".*","gConf",
                                                 "igConf","dgConf");
@@ -37,6 +38,17 @@ void adm_doctest_AConfIJ(Physics_T *const phys)
     
     /* compute adm_K_{ij} using AConf^{ij} */
     physics(phys,ADM_UPDATE_Kij);
+    
+    /* compare */
+    diff_3x3_symmetric_fields
+      (grid,"test_adm_Kij","adm_Kij","down",1);
+    
+    /* remove test_adm_Kij */
+    FOR_ALL_p(grid->np)
+    {
+      Patch_T *patch = grid->patch[p];
+      remove_field_with_regex(patch,"^test_adm_Kij_D.*");
+    }
     
     free_physics(bh);
   }
