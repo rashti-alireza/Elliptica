@@ -62,7 +62,7 @@ Declare =
   (obj = Field,name = symfU, rank = UU, C_macro1);
 
   ## symmetric field down indices
-  (obj = Field,name = symfU, rank = DD, C_macro2);
+  (obj = Field,name = symfD, rank = DD, C_macro2);
 
 }
 # symmetries:

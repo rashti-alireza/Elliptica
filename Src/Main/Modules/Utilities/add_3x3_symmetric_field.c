@@ -56,12 +56,12 @@ void add_3x3_symmetric_field(Grid_T *const grid,const char *const stem,const cha
   add_field_with_stemU(symfU_U0U2,stem)
   add_field_with_stemU(symfU_U0U1,stem)
   add_field_with_stemU(symfU_U0U0,stem)
-  add_field_with_stemD(symfU_D0D2,stem)
-  add_field_with_stemD(symfU_D0D1,stem)
-  add_field_with_stemD(symfU_D0D0,stem)
-  add_field_with_stemD(symfU_D1D2,stem)
-  add_field_with_stemD(symfU_D1D1,stem)
-  add_field_with_stemD(symfU_D2D2,stem)
+  add_field_with_stemD(symfD_D0D0,stem)
+  add_field_with_stemD(symfD_D0D1,stem)
+  add_field_with_stemD(symfD_D0D2,stem)
+  add_field_with_stemD(symfD_D2D2,stem)
+  add_field_with_stemD(symfD_D1D1,stem)
+  add_field_with_stemD(symfD_D1D2,stem)
 
 
   }
