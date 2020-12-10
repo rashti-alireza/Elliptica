@@ -10,7 +10,8 @@
 
 /* test Aconf^{ij}.
 // NOTE: it overwrites many fields thus fields are not supposed to be 
-// used again and one must exit from project or reset fields. */
+// used again and one must exit from project or reset fields.
+// NOTE: It assumes AConf^{ij} are already populated. */
 void adm_doctest_AConfIJ(Physics_T *const phys)
 {
   FUNC_TIC
