@@ -35,7 +35,7 @@ int Tij_main(Physics_T *const phys)
 }
 
 
-/* set defualt paramters */
+/* set default paramters */
 static int set_stress_energy_params(Physics_T *const phys)
 {
   FUNC_TIC

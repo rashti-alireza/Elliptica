@@ -35,7 +35,7 @@ int fd_main(Physics_T *const phys)
 }
 
 
-/* set defualt paramters */
+/* set default paramters */
 static int set_free_data_params(Physics_T *const phys)
 {
   FUNC_TIC

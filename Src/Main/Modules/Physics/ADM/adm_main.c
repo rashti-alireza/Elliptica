@@ -59,7 +59,7 @@ int adm_main(Physics_T *const phys)
 }
 
 
-/* set defualt paramters */
+/* set default paramters */
 static int set_adm_params(Physics_T *const phys)
 {
   FUNC_TIC

@@ -205,7 +205,7 @@ static int star_add_fields(Physics_T *const phys)
   return ret;
 }
 
-/* set defualt paramters */
+/* set default paramters */
 static int set_star_params(Physics_T *const phys)
 {
   FUNC_TIC
