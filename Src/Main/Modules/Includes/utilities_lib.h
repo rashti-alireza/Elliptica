@@ -84,6 +84,7 @@ double f_of_X(const char *const field,
               const double *const X/* patch coords */,
               Patch_T *const patch);
 
+void add_3x3_symmetric_field(Grid_T *const grid,const char *const stem,const char *rank);
 
 #endif
 

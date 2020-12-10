@@ -1,0 +1,75 @@
+## add a symmetric 3x3 fields like g_{ij}
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro1 = add_field_with_stemU(name,stem);
+C_macro2 = add_field_with_stemD(name,stem);
+
+
+`#include "core_lib.h"`
+`#include "manifold_lib.h"`
+`#include "utilities_lib.h"`
+`#include "fields_lib.h"`
+
+``
+``
+``
+`#define add_field_with_stemU(xNAME,stem)\`
+` if (IsUp)\`
+` {\`
+` char field__name__##xNAME[999] = {'\0'};\`
+` const char *const field__index__##xNAME  = strrchr(#xNAME,'_');\`
+` assert(field__index__##xNAME);\`
+` sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);\`
+` add_field(field__name__##xNAME,0,patch,NO);\`
+` }`
+``
+`#define add_field_with_stemD(xNAME,stem)\`
+` if (IsDown)\`
+` {\`
+` char field__name__##xNAME[999] = {'\0'};\`
+` const char *const field__index__##xNAME  = strrchr(#xNAME,'_');\`
+` assert(field__index__##xNAME);\`
+` sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);\`
+` add_field(field__name__##xNAME,0,patch,NO);\`
+` }`
+``
+``
+`void add_3x3_symmetric_field(Grid_T *const grid,const char *const stem,const char *rank);`
+``
+``
+`void add_3x3_symmetric_field(Grid_T *const grid,const char *const stem,const char *rank)`
+`{`
+`  const int IsUp   = strcmp_i(rank,"up");`
+`  const int IsDown = strcmp_i(rank,"down");`
+`  Uint p;`
+``
+`  if (!IsUp && !IsDown)`
+`    Errors("No such rank '%s' is defined.",rank);`
+``
+``
+`  FOR_ALL_PATCHES(p,grid)`
+`  {`
+`  Patch_T *patch = grid->patch[p];`
+
+Declare = 
+{
+  ## symmetric field up indices
+  (obj = Field,name = symfU, rank = UU, C_macro1);
+
+  ## symmetric field down indices
+  (obj = Field,name = symfU, rank = DD, C_macro2);
+
+}
+# symmetries:
+Symm[symfU(i,j) = symfU(j,i)];
+Symm[symfD(i,j) = symfD(j,i)];
+
+`  }`
+``
+`}`
+
