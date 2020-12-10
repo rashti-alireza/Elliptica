@@ -2,7 +2,7 @@
 #
 # NOTE:
 #######
-# DON'T use realloc befor populate Chris fields.
+# DON'T use realloc before populate Chris fields.
 # this causes problem for other functions.
 
 # Manifold or grid Dimension
