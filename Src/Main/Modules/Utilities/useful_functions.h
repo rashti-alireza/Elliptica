@@ -1,5 +1,4 @@
 #include "core_lib.h"
-#include "error_handling_lib.h"
 #include "manifold_lib.h"
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
@@ -8,9 +7,9 @@
 
 #include <sys/resource.h>
 
-#define EPS 1E-11
+#define EPS (1E-11)
 #define UF_OpenMP(x) _Pragma(#x)
-#define MAX_STR_LEN 1000
+#define MAX_STR_LEN (1000)
 
 void test_start(const char *const file,const int line);
 Uint countf(void *const p);
