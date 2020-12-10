@@ -86,6 +86,11 @@ double f_of_X(const char *const field,
 
 void add_3x3_symmetric_field(Grid_T *const grid,const char *const stem,const char *rank);
 
+double diff_3x3_symmetric_fields(Grid_T *const grid,
+                               const char *const stem1/* field1 */,
+                               const char *const stem2/* field2 */,
+                               const char *const rank/* [up/down] */,
+                               const int pr_points/* print all points */);
 #endif
 
 

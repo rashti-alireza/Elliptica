@@ -11,6 +11,24 @@
 #define UF_OpenMP(x) _Pragma(#x)
 #define MAX_STR_LEN (1000)
 
+/* calculate difference between two fields with given index
+// NOTE: it is used in function diff_3x3_symmetric_fields. */
+#define CalcDiff(index) \
+  {\
+    double diffval = fabs(diff1_##index[ijk]-diff2_##index[ijk]);\
+    max = (max < diffval ? diffval : max);\
+    if (pr_points && GRT(diffval,0.))\
+    {\
+      printf(Pretty0"%s:(%0.2f,%0.2f,%0.2f) = %0.2e\n",\
+             patch->name,\
+             patch->node[ijk]->x[0],\
+             patch->node[ijk]->x[1],\
+             patch->node[ijk]->x[2],\
+             diffval\
+             );\
+    }\
+  }
+
 void test_start(const char *const file,const int line);
 Uint countf(void *const p);
 Uint L(const Uint *const n, const Uint i, const Uint j, const Uint k);
@@ -58,8 +76,9 @@ double f_of_X(const char *const field,
               const double *const X/* patch coords */,
               Patch_T *const patch);
 
-
-
-
-
+double diff_3x3_symmetric_fields(Grid_T *const grid,
+                               const char *const stem1/* field1 */,
+                               const char *const stem2/* field2 */,
+                               const char *const rank/* [up/down] */,
+                               const int pr_points/* print all points */);
 

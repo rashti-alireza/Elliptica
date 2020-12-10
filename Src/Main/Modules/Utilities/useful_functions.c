@@ -704,3 +704,86 @@ double f_of_X(const char *const field_name,
   return interp;
 }
 
+/* ->: max difference.
+// calculate absolute difference between fields with stem1 and stem2. */
+double diff_3x3_symmetric_fields(Grid_T *const grid,
+                               const char *const stem1/* field1 */,
+                               const char *const stem2/* field2 */,
+                               const char *const rank/* [up/down] */,
+                               const int pr_points/* print all points */)
+{
+  double max       = 0.;
+  const int IsUp   = strcmp_i(rank,"up");
+  const int IsDown = strcmp_i(rank,"down");
+  Uint p;
+
+  if (!IsUp && !IsDown)
+    Errors("No such rank '%s' is defined.",rank);
+
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+
+    if (IsUp)
+    {
+      READ_v_STEM(diff1_U2U2,stem1)
+      READ_v_STEM(diff1_U1U2,stem1)
+      READ_v_STEM(diff1_U1U1,stem1)
+      READ_v_STEM(diff1_U0U2,stem1)
+      READ_v_STEM(diff1_U0U1,stem1)
+      READ_v_STEM(diff1_U0U0,stem1)
+      
+      READ_v_STEM(diff2_U2U2,stem2)
+      READ_v_STEM(diff2_U1U2,stem2)
+      READ_v_STEM(diff2_U1U1,stem2)
+      READ_v_STEM(diff2_U0U2,stem2)
+      READ_v_STEM(diff2_U0U1,stem2)
+      READ_v_STEM(diff2_U0U0,stem2)
+    
+      FOR_ALL_ijk
+      {
+        CalcDiff(U2U2)
+        CalcDiff(U1U2)
+        CalcDiff(U1U1)
+        CalcDiff(U0U2)
+        CalcDiff(U0U1)
+        CalcDiff(U0U0)
+      }
+    }
+    else
+    {
+      READ_v_STEM(diff1_D2D2,stem1)
+      READ_v_STEM(diff1_D1D2,stem1)
+      READ_v_STEM(diff1_D1D1,stem1)
+      READ_v_STEM(diff1_D0D2,stem1)
+      READ_v_STEM(diff1_D0D1,stem1)
+      READ_v_STEM(diff1_D0D0,stem1)
+      
+      READ_v_STEM(diff2_D2D2,stem2)
+      READ_v_STEM(diff2_D1D2,stem2)
+      READ_v_STEM(diff2_D1D1,stem2)
+      READ_v_STEM(diff2_D0D2,stem2)
+      READ_v_STEM(diff2_D0D1,stem2)
+      READ_v_STEM(diff2_D0D0,stem2)
+    
+      FOR_ALL_ijk
+      {
+        CalcDiff(D2D2)
+        CalcDiff(D1D2)
+        CalcDiff(D1D1)
+        CalcDiff(D0D2)
+        CalcDiff(D0D1)
+        CalcDiff(D0D0)
+      }
+    }
+  }
+  
+  if (pr_points) 
+  {
+    printf(Pretty0"Linf{%s-%s} = %0.1e\n",stem1,stem2,max);
+    fflush(stdout);
+  }
+  
+  return max;
+}
+
