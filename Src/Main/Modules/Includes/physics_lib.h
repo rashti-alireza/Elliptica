@@ -175,6 +175,7 @@ typedef enum CMD_T
  ADM_UPDATE_beta,/* shift */
  ADM_UPDATE_B1I,/* beta = B0+B1 in which B1 can be inspiral piece */
  ADM_COMPUTE_CONSTRAINTS,/* ham and mom constrains */
+ ADM_DOCTEST,/* some internal tests */
  
  CMD_END
 }cmd_T;
