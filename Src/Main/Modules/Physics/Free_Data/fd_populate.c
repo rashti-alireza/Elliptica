@@ -356,3 +356,61 @@ fd_populate_psi_alphaPsi_beta_KerrSchild
   
   FUNC_TOC
 }
+
+/* populate psi, alpha and beta Schwarzchild in isotropic coords value. */
+void 
+fd_populate_psi_alphaPsi_beta_IsoSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Psi,
+ const char *const AlphaPsi,
+ const char *const Beta,
+ const char *const ig/*(inverse metric) if ig is null, it makes them */
+ )
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,region);
+  const double   M   = Getd("irreducible_mass");
+  const double BHx   = Getd("center_x");
+  const double BHy   = Getd("center_y");
+  const double BHz   = Getd("center_z");
+  Uint p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    REALLOC_v_WRITE_v_STEM(psi,Psi)
+    REALLOC_v_WRITE_v_STEM(alphaPsi,AlphaPsi)
+    
+    /* beta identically zero */
+    REALLOC_v_WRITE_v_STEM(beta_U0,Beta)
+    REALLOC_v_WRITE_v_STEM(beta_U1,Beta)
+    REALLOC_v_WRITE_v_STEM(beta_U2,Beta)
+    
+    FOR_ALL_ijk
+    {
+      double x,y,z,r;
+      
+      x = patch->node[ijk]->x[0]-BHx;
+      y = patch->node[ijk]->x[1]-BHy;
+      z = patch->node[ijk]->x[2]-BHz;
+      r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+      
+      double alpha = (1-M/(2*r))/(1+M/(2*r));
+      psi[ijk]     = (1+M/(2*r));
+      alphaPsi[ijk]= alpha*psi[ijk];
+      
+    }
+    UNUSED(beta_U0);
+    UNUSED(beta_U1);
+    UNUSED(beta_U2);
+  }
+  
+  UNUSED(ig);
+  FUNC_TOC
+  
+}
