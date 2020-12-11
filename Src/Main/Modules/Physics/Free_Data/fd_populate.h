@@ -42,4 +42,30 @@ fd_populate_psi_alphaPsi_beta_KerrSchild
  const char *const ig/*(inverse metric) if ig is null, it makes them */
  );
  
+void 
+fd_populate_gConf_dgConf_igConf_IsoSchild
+ (
+ Physics_T *const phys,
+ const char *const region/* where computations take place */,
+ const char *const gConf/* metric stem */,
+ const char *const igConf/* inverse of metric stem */,
+ const char *const dgConf/* derivative of metric stem */
+ );
  
+void fd_extrinsic_curvature_Minkowski(Physics_T *const phys,
+                                      const char *const region,
+                                      const char *const Kij,
+                                      const char *const trK,
+                                      const char *const dtrK);
+ 
+ 
+void fd_extrinsic_curvature_IsoSchild(Physics_T *const phys,
+                                      const char *const region,
+                                      const char *const ig,
+                                      const char *const Chris,
+                                      const char *const Kij,
+                                      const char *const trK,
+                                      const char *const dtrK);
+                                      
+
+                                      

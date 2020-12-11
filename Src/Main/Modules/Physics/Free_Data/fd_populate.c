@@ -7,7 +7,8 @@
 
 #include "fd_populate.h"
 
-/* compute trK = ig^{ij} K_{ij} and its partial derivatives dtrK */
+/* compute trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
+// for KerrSchild. */
 void fd_extrinsic_curvature_KerrSchild(Physics_T *const phys,
                                          const char *const region,
                                          const char *const ig,
@@ -36,6 +37,61 @@ void fd_extrinsic_curvature_KerrSchild(Physics_T *const phys,
     dField_di_STEM(dtrK_D1,dtrK);
     dField_di_STEM(dtrK_D2,dtrK);
     
+  }
+  
+  FUNC_TOC
+}
+
+/* compute trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
+// for Schwarzchild in isotropic coords. */
+void fd_extrinsic_curvature_IsoSchild(Physics_T *const phys,
+                                      const char *const region,
+                                      const char *const ig,
+                                      const char *const Chris,
+                                      const char *const Kij,
+                                      const char *const trK,
+                                      const char *const dtrK)
+{
+  FUNC_TIC
+  
+  fd_extrinsic_curvature_Minkowski(phys,region,Kij,trK,dtrK);
+  
+  UNUSED(ig);
+  UNUSED(Chris);
+  
+  FUNC_TOC
+}
+
+/* compute trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
+// for Minkowski */
+void fd_extrinsic_curvature_Minkowski(Physics_T *const phys,
+                                      const char *const region,
+                                      const char *const Kij,
+                                      const char *const trK,
+                                      const char *const dtrK)
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,region);
+  Uint p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    /* they all are zero */
+    REALLOC_v_WRITE_v_STEM(K_D2D2,Kij)
+    REALLOC_v_WRITE_v_STEM(K_D0D2,Kij)
+    REALLOC_v_WRITE_v_STEM(K_D0D0,Kij)
+    REALLOC_v_WRITE_v_STEM(K_D0D1,Kij)
+    REALLOC_v_WRITE_v_STEM(K_D1D2,Kij)
+    REALLOC_v_WRITE_v_STEM(K_D1D1,Kij)
+    
+    REALLOC_v_WRITE_v_STEM(tr,trK)
+    REALLOC_v_WRITE_v_STEM(dtr_D0,dtrK)
+    REALLOC_v_WRITE_v_STEM(dtr_D1,dtrK)
+    REALLOC_v_WRITE_v_STEM(dtr_D2,dtrK)
   }
   
   FUNC_TOC
@@ -109,7 +165,7 @@ void fd_1st_derivative_Christoffel_symbol(Physics_T *const phys,
 }
 
 /* populate confromal metric, inverse of confromal metric 
-// and first order derivative of confromal metric.
+// and first order derivative of confromal metric for KerrSchild.
 // the nomenclature of fields determined by the passed stems */
 void 
 fd_populate_gConf_dgConf_igConf_KerrSchild
@@ -146,6 +202,65 @@ fd_populate_gConf_dgConf_igConf_KerrSchild
     READ_v_STEM(gConf_D1D2,gConf)
     READ_v_STEM(gConf_D1D1,gConf)
     
+    REALLOC_v_WRITE_v_STEM(igConf_U2U2,igConf)
+    REALLOC_v_WRITE_v_STEM(igConf_U0U2,igConf)
+    REALLOC_v_WRITE_v_STEM(igConf_U0U0,igConf)
+    REALLOC_v_WRITE_v_STEM(igConf_U0U1,igConf)
+    REALLOC_v_WRITE_v_STEM(igConf_U1U2,igConf)
+    REALLOC_v_WRITE_v_STEM(igConf_U1U1,igConf)
+    
+    FOR_ALL_ijk
+    {
+      Matrix_Inverse_3x3_Symmetric_Field(gConf,D,igConf,U,ijk);
+    }
+  }
+  
+  FUNC_TOC
+}
+
+/* populate confromal metric, inverse of confromal metric 
+// and first order derivative of confromal metric for Schwarzchild in
+// isotropic coords.
+// the nomenclature of fields determined by the passed stems */
+void 
+fd_populate_gConf_dgConf_igConf_IsoSchild
+ (
+ Physics_T *const phys,
+ const char *const region/* where computations take place */,
+ const char *const gConf/* metric stem */,
+ const char *const igConf/* inverse of metric stem */,
+ const char *const dgConf/* derivative of metric stem */
+ )
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,region);
+  Uint p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    char regex[99] = {'\0'};
+    
+    REALLOC_v_WRITE_v_STEM(gConf_D2D2,gConf)
+    REALLOC_v_WRITE_v_STEM(gConf_D0D2,gConf)
+    REALLOC_v_WRITE_v_STEM(gConf_D0D0,gConf)
+    REALLOC_v_WRITE_v_STEM(gConf_D0D1,gConf)
+    REALLOC_v_WRITE_v_STEM(gConf_D1D2,gConf)
+    REALLOC_v_WRITE_v_STEM(gConf_D1D1,gConf)
+    
+    FOR_ALL_ijk
+    {
+      gConf_D0D0[ijk] = 1.;
+      gConf_D1D1[ijk] = 1.;
+      gConf_D2D2[ijk] = 1.;
+    }
+    /* since gConf is constant dgConf is machine precision exact */
+    sprintf(regex,"^%s_D.D.D.$",dgConf);
+    partial_derivative_with_regex(patch,regex);
+    
+    /* calculate the inverse of gConf */
     REALLOC_v_WRITE_v_STEM(igConf_U2U2,igConf)
     REALLOC_v_WRITE_v_STEM(igConf_U0U2,igConf)
     REALLOC_v_WRITE_v_STEM(igConf_U0U0,igConf)

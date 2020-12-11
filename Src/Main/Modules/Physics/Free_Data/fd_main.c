@@ -43,25 +43,29 @@ static int set_free_data_params(Physics_T *const phys)
   /* how to set confromal metic:
   // options:
   // flat:       gConf = delta_{ij}
-  // KerrSchild: gConf = Kerr-Schild black hole */
+  // KerrSchild: gConf = Kerr-Schild black hole
+  // IsoSchild:  gConf = delta_{ij} for Schwarzchild in isotropic coords. */
   Pset_default(P_"conformal_metric","KerrSchild");
   
   /* how to set Christoffel symbol:
   // options:
-  // flat:       GhrisConf = 0
-  // KerrSchild: GhrisConf made of gConf of Kerr-Schild black hole */
+  // flat:       ChrisConf = 0
+  // KerrSchild: ChrisConf made of gConf of Kerr-Schild black hole
+  // IsoSchild:  ChrisConf = 0  for Schwarzchild in isotropic coords. */
   Pset_default(P_"conformal_Christoffel_symbol","KerrSchild");
   
   /* how to set trK = Tr(K_{ij})
   // options:
   // maximal:    trK = 0.
-  // KerrSchild: trK = trK of Kerr-Schild black hole K_{ij} */
+  // KerrSchild: trK = trK of Kerr-Schild black hole K_{ij} 
+  // IsoSchild:  trK = 0 for Schwarzchild in isotropic coordinates. */
   Pset_default(P_"trK","KerrSchild");
   
   /* how to set conformal Ricci tensor
   // options:
   // flat:       RicciConf_{ij} = 0
-  // KerrSchild: RicciConf = made out of Kerr-Schild black hole metric */
+  // KerrSchild: use Kerr-Schild black hole metric 
+  // IsoSchild:  use Schwarzchild in isotropic coordinates. */
   Pset_default(P_"conformal_Ricci","KerrSchild");
   
  
@@ -109,19 +113,41 @@ static int populate_free_data(Physics_T *const phys)
   {
     /* important to have dedicated BH physics to read correct parameters */
     Physics_T *const bh = init_physics(phys,BH);
-    
+
     fd_populate_gConf_dgConf_igConf_KerrSchild(bh,".*","gConf",
-                                                "igConf","dgConf");
-    
-    fd_compatible_Christoffel_symbol(bh,".*","igConf","dgConf","ChrisConf");
-    
+                                              "igConf","dgConf");
+    fd_compatible_Christoffel_symbol(bh,".*","igConf",
+                                     "dgConf","ChrisConf");
     fd_1st_derivative_Christoffel_symbol(bh,".*","dChrisConf");
-    
+
     fd_conformal_Ricci(bh,".*","igConf","ChrisConf","dChrisConf",
-                         "RicciConf","trRicciConf");
-    
+                       "RicciConf","trRicciConf");
     fd_extrinsic_curvature_KerrSchild(bh,".*","igConf","ChrisConf",
-                                        "adm_Kij","trK","dtrK");
+                                      "adm_Kij","trK","dtrK");
+    free_physics(bh);
+  }
+  else if 
+    (phys->sys                             == SBH        && 
+     Pcmps(P_"conformal_metric"            ,"IsoSchild") &&
+     Pcmps(P_"conformal_Christoffel_symbol","IsoSchild") &&
+     Pcmps(P_"conformal_Ricci"             ,"IsoSchild") &&
+     Pcmps(P_"trK"                         ,"IsoSchild") &&
+     Pcmps(P_"MConfIJ"                     ,"zero"     )
+    )
+  {
+    /* important to have dedicated BH physics to read correct parameters */
+    Physics_T *const bh = init_physics(phys,BH);
+
+    fd_populate_gConf_dgConf_igConf_KerrSchild(bh,".*","gConf",
+                                              "igConf","dgConf");
+    fd_compatible_Christoffel_symbol(bh,".*","igConf",
+                                    "dgConf","ChrisConf");
+    fd_1st_derivative_Christoffel_symbol(bh,".*","dChrisConf");
+
+    fd_conformal_Ricci(bh,".*","igConf","ChrisConf","dChrisConf",
+                       "RicciConf","trRicciConf");
+    fd_extrinsic_curvature_IsoSchild(bh,".*","igConf","ChrisConf",
+                                     "adm_Kij","trK","dtrK");
     free_physics(bh);
   }
   else
