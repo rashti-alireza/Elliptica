@@ -138,7 +138,7 @@ static int populate_free_data(Physics_T *const phys)
     /* important to have dedicated BH physics to read correct parameters */
     Physics_T *const bh = init_physics(phys,BH);
 
-    fd_populate_gConf_dgConf_igConf_KerrSchild(bh,".*","gConf",
+    fd_populate_gConf_dgConf_igConf_IsoSchild(bh,".*","gConf",
                                               "igConf","dgConf");
     fd_compatible_Christoffel_symbol(bh,".*","igConf",
                                     "dgConf","ChrisConf");
