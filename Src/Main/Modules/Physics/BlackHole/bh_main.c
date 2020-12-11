@@ -122,6 +122,13 @@ static int start_off_black_hole(Physics_T *const phys)
     else
       Error0(NO_OPTION);
   }
+  else IF_sval("start_off","IsoSchild")
+  {
+    IF_sval("surface_type","perfect_s2")
+      bh_start_off_IsoSchild_perfect_s2(phys);
+    else
+      Error0(NO_OPTION);
+  }
   else
     Error0(NO_OPTION);
   

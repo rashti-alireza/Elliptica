@@ -44,6 +44,41 @@ void bh_start_off_KerrSchild_perfect_s2(Physics_T *const phys)
   FUNC_TOC
 }
 
+/* use Schwarzchild in isotropic coords (pefect S2) to start off 
+// black hole paramters and domain shape etc.
+// NOTE: this is perfect sphere, so chi = 0. and spin = 0. */
+void bh_start_off_IsoSchild_perfect_s2(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  const double bh_chi_x    = 0.;
+  const double bh_chi_y    = 0.;
+  const double bh_chi_z    = 0.;
+  const double bh_irr_mass = Getd("irreducible_mass");
+  const double bh_R        = 0.5*bh_irr_mass;/* approximate initial radius */
+  const double bh_chi      = 0.;
+  const double bh_a        = 0.;
+  
+  /* check size of bh_chi */
+  if (GRT(bh_chi,1.))
+    Error0("BH spin is too large!\n");
+  
+  /* set initial grid parameters */
+  Setd("perfect_S2_radius",bh_R);
+  Setd("min_radius",bh_R);
+  Setd("max_radius",bh_R);
+  
+  printf("%s properties:\n",phys->stype);
+  printf(Pretty0"%s radius (isotropic Coords.)   = %+e\n",phys->stype,bh_R);
+  printf(Pretty0"%s irreducible mass             = %+e\n",phys->stype,bh_irr_mass);
+  printf(Pretty0"%s dimensionless spin (x comp.) = %+e\n",phys->stype,bh_chi_x);
+  printf(Pretty0"%s dimensionless spin (y comp.) = %+e\n",phys->stype,bh_chi_y);
+  printf(Pretty0"%s dimensionless spin (z comp.) = %+e\n",phys->stype,bh_chi_z);
+  printf(Pretty0"%s approximate net spin         = %+e\n",phys->stype,bh_a);
+  
+  FUNC_TOC
+}
+
 
 /* find BH surface and then set grid characteristic */
 void bh_find_bh_surface_perfect_s2(Physics_T *const phys)
