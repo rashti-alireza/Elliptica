@@ -250,28 +250,31 @@ fd_populate_gConf_dgConf_igConf_IsoSchild
     REALLOC_v_WRITE_v_STEM(gConf_D1D2,gConf)
     REALLOC_v_WRITE_v_STEM(gConf_D1D1,gConf)
     
+    REALLOC_v_WRITE_v_STEM(igConf_U2U2,igConf)
+    REALLOC_v_WRITE_v_STEM(igConf_U0U2,igConf) 
+    REALLOC_v_WRITE_v_STEM(igConf_U0U0,igConf)
+    REALLOC_v_WRITE_v_STEM(igConf_U0U1,igConf) 
+    REALLOC_v_WRITE_v_STEM(igConf_U1U2,igConf) 
+    REALLOC_v_WRITE_v_STEM(igConf_U1U1,igConf)
+    
     FOR_ALL_ijk
     {
       gConf_D0D0[ijk] = 1.;
       gConf_D1D1[ijk] = 1.;
       gConf_D2D2[ijk] = 1.;
+      
+      igConf_U0U0[ijk] = 1.;
+      igConf_U1U1[ijk] = 1.;
+      igConf_U2U2[ijk] = 1.;
+      
     }
+    UNUSED(igConf_U0U2);
+    UNUSED(igConf_U0U1);
+    UNUSED(igConf_U1U2);
+    
     /* since gConf is constant dgConf is machine precision exact */
     sprintf(regex,"^%s_D.D.D.$",dgConf);
     partial_derivative_with_regex(patch,regex);
-    
-    /* calculate the inverse of gConf */
-    REALLOC_v_WRITE_v_STEM(igConf_U2U2,igConf)
-    REALLOC_v_WRITE_v_STEM(igConf_U0U2,igConf)
-    REALLOC_v_WRITE_v_STEM(igConf_U0U0,igConf)
-    REALLOC_v_WRITE_v_STEM(igConf_U0U1,igConf)
-    REALLOC_v_WRITE_v_STEM(igConf_U1U2,igConf)
-    REALLOC_v_WRITE_v_STEM(igConf_U1U1,igConf)
-    
-    FOR_ALL_ijk
-    {
-      Matrix_Inverse_3x3_Symmetric_Field(gConf,D,igConf,U,ijk);
-    }
   }
   
   FUNC_TOC
