@@ -7,7 +7,7 @@
 
 #include "fd_populate.h"
 
-/* compute trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
+/* compute K_{ij}, trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
 // for KerrSchild. */
 void fd_extrinsic_curvature_KerrSchild(Physics_T *const phys,
                                          const char *const region,
@@ -42,7 +42,7 @@ void fd_extrinsic_curvature_KerrSchild(Physics_T *const phys,
   FUNC_TOC
 }
 
-/* compute trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
+/* compute K_{ij}, trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
 // for Schwarzchild in isotropic coords. */
 void fd_extrinsic_curvature_IsoSchild(Physics_T *const phys,
                                       const char *const region,
@@ -62,8 +62,8 @@ void fd_extrinsic_curvature_IsoSchild(Physics_T *const phys,
   FUNC_TOC
 }
 
-/* compute trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
-// for Minkowski */
+/* compute K_{ij}, trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
+// for Minkowski, they are all zero. */
 void fd_extrinsic_curvature_Minkowski(Physics_T *const phys,
                                       const char *const region,
                                       const char *const Kij,
