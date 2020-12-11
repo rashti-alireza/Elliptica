@@ -43,8 +43,7 @@ void obs_BH_irreducible_mass_CS(Observe_T *const obs)
     REALLOC_v_WRITE_v(A_AH_integrand)
     for(ijk = 0; ijk < nn; ++ijk)
     {
-    double psi4 = 
-pow(psi[ijk], 4);
+    double psi4 = pow(psi[ijk], 4);
 
       A_AH_integrand[ijk] = 1;
       /* metric */
