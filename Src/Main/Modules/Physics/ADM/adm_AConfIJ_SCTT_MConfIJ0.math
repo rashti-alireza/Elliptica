@@ -1,0 +1,97 @@
+## computing AConf^{ij} = 1./(sigma)*(LConf(W)^{ij}) + MConf^{ij}:
+## SCTT_MConfIJ0: => sigma = 1, W = beta and MConf^{ij} = 0. */
+## SCTT = standard CTT decomposition
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
+C_macro3 = add_field_and_get_v(name);
+C_macro4 = add_dfield_read_v(name);
+
+`#include "adm_header.h"`
+
+``
+``
+`void adm_update_AConfIJ_SCTT_MConfIJ0(Patch_T *const patch);`
+``
+`void adm_update_AConfIJ_SCTT_MConfIJ0(Patch_T *const patch)`
+`{`
+``
+Declare = 
+{
+ # AConf^{ij}
+ (obj = Field,name = AConfIJ, rank = UU, C_macro2);
+
+ # partial derivative of AConf^{ij}
+ #(obj = Field,name = dAConfIJ, rank = UUD, C_macro2);
+
+ # AConf^{ij}*AConf_{ij}
+ (obj = Field,name = AConfIJ2, rank = 0, C_macro2);
+
+ # shift
+ (obj = Field,name = beta, rank = U, C_macro);
+
+ # d(shift)/d?
+ (obj = Field,name = dbeta, rank = UD, C_macro);
+
+ # conformal metric 
+ (obj = Field,name = gConf, rank = DD, C_macro);
+
+ # Christoffer symbol value
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro);
+
+ # conformal metric inverse
+ (obj = Field,name = igConf, rank = UU, C_macro);
+
+}
+
+# symmetries:
+Symm[AConfIJ(i,j)      = AConfIJ(j,i)];
+Symm[dAConfIJ(i,j,l)   = dAConfIJ(j,i,l)];
+Symm[gConf(i,j)        = gConf(j,i)];
+Symm[igConf(i,j)       = igConf(j,i)];
+Symm[ChrisConf(i,j,k)  = ChrisConf(i,k,j)];
+
+`FOR_ALL_ijk`
+`{`
+
+# _A^{ij} calculation (NOTE Mconf^{ij} ASSUEMD 0) :
+  _DB_UU(i,j)  = igConf(i,-l)*(dbeta(j,l)+ChrisConf(j,l,m)*beta(-m));# _D^i(B^j)
+  _A_UUij(i,j) = _DB_UU(i,j)+_DB_UU(j,i)-2/3*igConf(i,j)*gConf(-l,-m)*_DB_UU(l,m);
+  Symm[_A_UUij(i,j) = _A_UUij(j,i)];
+
+  _AijAij = _A_UUij(i,j)*_A_UUij(l,m)*gConf(-i,-l)*gConf(-j,-m);
+  
+  Cpopulate[AConfIJ   = _A_UUij];
+  `AConfIJ2[ijk] = _AijAij;`
+
+`}`
+
+
+# taking the derivatives:
+`  dField_di(dAConfIJ_U2U2D2);`
+`  dField_di(dAConfIJ_U2U2D0);`
+`  dField_di(dAConfIJ_U2U2D1);`
+`  dField_di(dAConfIJ_U1U1D2);`
+`  dField_di(dAConfIJ_U1U1D0);`
+`  dField_di(dAConfIJ_U1U1D1);`
+`  dField_di(dAConfIJ_U0U0D2);`
+`  dField_di(dAConfIJ_U0U0D0);`
+`  dField_di(dAConfIJ_U0U0D1);`
+`  dField_di(dAConfIJ_U0U1D2);`
+`  dField_di(dAConfIJ_U0U1D1);`
+`  dField_di(dAConfIJ_U0U1D0);`
+`  dField_di(dAConfIJ_U1U2D1);`
+`  dField_di(dAConfIJ_U1U2D0);`
+`  dField_di(dAConfIJ_U1U2D2);`
+`  dField_di(dAConfIJ_U0U2D0);`
+`  dField_di(dAConfIJ_U0U2D1);`
+`  dField_di(dAConfIJ_U0U2D2);`
+
+`}`
+

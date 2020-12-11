@@ -81,7 +81,8 @@ static int set_adm_params(Physics_T *const phys)
   
   /* computing AConf^{ij} = 1./(sigma)*(LConf(W)^{ij}) + MConf^{ij}:
   // options:
-  // XCTS_MConfIJ0: => sigma = alpha*psi^-6, W = beta and MConf^{ij} = 0. */
+  // XCTS_MConfIJ0: => \bar{sigma} = alpha*psi^-6, W = beta and MConf^{ij} = 0.
+  // SCTT_MConfIJ0: => \bar{sigma} = 1, W = beta and MConf^{ij} = 0. */
   Pset_default(P_"compute_AConfIJ","XCTS_MConfIJ0");
   
   /* computing K_{ij}:
@@ -121,6 +122,10 @@ static int set_adm_params(Physics_T *const phys)
   if(Pcmps(P_"compute_AConfIJ","XCTS_MConfIJ0"))
   {
     adm_update_AConfIJ_patch = adm_update_AConfIJ_XCTS_MConfIJ0;
+  }
+  else if(Pcmps(P_"compute_AConfIJ","SCTT_MConfIJ0"))
+  {
+    adm_update_AConfIJ_patch = adm_update_AConfIJ_SCTT_MConfIJ0;
   }
   else
     Error0(NO_OPTION);
