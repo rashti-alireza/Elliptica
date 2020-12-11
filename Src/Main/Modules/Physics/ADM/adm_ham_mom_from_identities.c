@@ -14,12 +14,18 @@
 #define add_dfield_and_get_v(name) ADD_FIELD(name); dField_di(name); READ_v_UNUSED(name);
 
 
+
+extern fFunc_adm_update_AConfIJ_T (*adm_update_AConfIJ_patch);
+
+
 void adm_ham_and_mom_from_identities(Patch_T *const patch,
         const char *const Ham,const char *const Mom);
 
 void adm_ham_and_mom_from_identities(Patch_T *const patch,
         const char *const Ham,const char *const Mom)
 {
+  adm_update_AConfIJ_patch(patch);
+
 
   /* declaring: */
   REALLOC_v_WRITE_v_STEM(ham,Ham)
