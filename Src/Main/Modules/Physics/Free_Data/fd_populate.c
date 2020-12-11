@@ -234,6 +234,27 @@ fd_populate_gConf_dgConf_igConf_IsoSchild
 {
   FUNC_TIC
   
+  fd_populate_gConf_dgConf_igConf_flat
+   (phys,region,gConf,igConf,dgConf);
+  
+  FUNC_TOC
+}
+
+/* populate confromal metric, inverse of confromal metric 
+// and first order derivative of confromal metric for flat space .
+// the nomenclature of fields determined by the passed stems */
+void 
+fd_populate_gConf_dgConf_igConf_flat
+ (
+ Physics_T *const phys,
+ const char *const region/* where computations take place */,
+ const char *const gConf/* metric stem */,
+ const char *const igConf/* inverse of metric stem */,
+ const char *const dgConf/* derivative of metric stem */
+ )
+{
+  FUNC_TIC
+  
   Grid_T *const grid = mygrid(phys,region);
   Uint p;
   
@@ -279,6 +300,7 @@ fd_populate_gConf_dgConf_igConf_IsoSchild
   
   FUNC_TOC
 }
+
 
 /* populate psi, alpha and beta KerrSchild value. */
 void 
