@@ -167,8 +167,8 @@ R        = adm_ig(a,b)*Ric(-a,-b);
 KijKij   = adm_KIJ(i,j)*adm_KIJ(l,m)*adm_g(-i,-l)*adm_g(-j,-m);
 
 DjKij(i) = dadm_KIJ(i,j,l)*KD(-j,-l)+\
-Gamma(i,j,l)*adm_KIJ(-l,-j)+\
-Gamma(j,jp,l)*adm_KIJ(i,-l)*KD(-j,-jp);
+	   Gamma(i,j,l)*adm_KIJ(-l,-j)+\
+	   Gamma(j,jp,l)*adm_KIJ(i,-l)*KD(-j,-jp);
 
 
 #### Hamiltonian:
