@@ -58,9 +58,21 @@ fd_populate_psi_alphaPsi_beta_IsoSchild
  const char *const Psi,
  const char *const AlphaPsi,
  const char *const Beta,
- const char *const ig/*(inverse metric) if ig is null, it makes them */
+ const char *const ig
  );
  
+void 
+fd_populate_psi_alphaPsi_beta_PGSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Psi,
+ const char *const AlphaPsi,
+ const char *const Beta,
+ const char *const ig
+ );
+
+
  
 #endif
 

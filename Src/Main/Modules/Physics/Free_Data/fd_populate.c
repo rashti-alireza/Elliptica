@@ -63,6 +63,89 @@ void fd_extrinsic_curvature_IsoSchild(Physics_T *const phys,
 }
 
 /* compute K_{ij}, trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
+// for Schwarzchild in Painleve-Gullstrand coords. */
+void fd_extrinsic_curvature_PGSchild(Physics_T *const phys,
+                                      const char *const region,
+                                      const char *const ig,
+                                      const char *const Chris,
+                                      const char *const Kij,
+                                      const char *const trK,
+                                      const char *const dtrK)
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,region);
+  const double M     = Getd("irreducible_mass");
+  const double BHx   = Getd("center_x");
+  const double BHy   = Getd("center_y");
+  const double BHz   = Getd("center_z");
+  Uint p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    /* add beta field */
+    double *b = (add_field("gp__beta_U0",0,patch,YES))->v;
+    FOR_ALL_ijk
+    {
+      double x,y,z,r;
+      x = patch->node[ijk]->x[0]-BHx;
+      y = patch->node[ijk]->x[1]-BHy;
+      z = patch->node[ijk]->x[2]-BHz;
+      r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+      
+      b[ijk] = sqrt(2*M/r);
+    }
+    
+    /* add dbeta/dx? */
+    add_field("dgp__beta_U0D0",0,patch,NO);
+    add_field("dgp__beta_U0D1",0,patch,NO);
+    add_field("dgp__beta_U0D2",0,patch,NO);
+    double *dbx = dField_di(dgp__beta_U0D0);
+    double *dby = dField_di(dgp__beta_U0D1);
+    double *dbz = dField_di(dgp__beta_U0D2);
+    /* lapse */
+    double a = 1.;
+    
+    /* K_{ij} = K^{ij} since psi = 1 and gConf = Kronecker delta
+    // we use formula Kij = (D_j beta_i+D_i beta_j)/(2*lapse) */
+    REALLOC_v_WRITE_v_STEM(Kij_D2D2,Kij)
+    REALLOC_v_WRITE_v_STEM(Kij_D0D1,Kij)
+    REALLOC_v_WRITE_v_STEM(Kij_D0D0,Kij)
+    REALLOC_v_WRITE_v_STEM(Kij_D0D2,Kij)
+    REALLOC_v_WRITE_v_STEM(Kij_D1D1,Kij)
+    REALLOC_v_WRITE_v_STEM(Kij_D1D2,Kij)    
+    REALLOC_v_WRITE_v_STEM(trKij,trK);
+    FOR_ALL_ijk
+    {
+      Kij_D0D0[ijk] = dbx[ijk]/a;
+      Kij_D0D1[ijk] = 0.5*dby[ijk]/a;
+      Kij_D0D2[ijk] = 0.5*dbz[ijk]/a;
+      Kij_D1D2[ijk] = 0.;
+      Kij_D1D1[ijk] = 0.;
+      Kij_D2D2[ijk] = 0.;
+      trKij[ijk]    = Kij_D0D0[ijk];
+    }
+    
+    dField_di_STEM(dtrK_D0,dtrK);
+    dField_di_STEM(dtrK_D1,dtrK);
+    dField_di_STEM(dtrK_D2,dtrK);
+    
+    /* clean up */
+    remove_field_with_regex(patch,"^gp__beta_U0$");
+    remove_field_with_regex(patch,"^dgp__beta_U0D.$");
+    
+  }
+  
+  UNUSED(ig);
+  UNUSED(Chris);
+  
+  FUNC_TOC
+}
+
+/* compute K_{ij}, trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
 // for Minkowski, they are all zero. */
 void fd_extrinsic_curvature_Minkowski(Physics_T *const phys,
                                       const char *const region,
@@ -97,7 +180,7 @@ void fd_extrinsic_curvature_Minkowski(Physics_T *const phys,
   FUNC_TOC
 }
 
-/* compute confromal Ricci_{ij} and its trace */
+/* compute conformal Ricci_{ij} and its trace */
 void fd_conformal_Ricci(Physics_T *const phys,
                           const char *const region,
                           const char *const ig,
@@ -164,8 +247,8 @@ void fd_1st_derivative_Christoffel_symbol(Physics_T *const phys,
   FUNC_TOC
 }
 
-/* populate confromal metric, inverse of confromal metric 
-// and first order derivative of confromal metric for KerrSchild.
+/* populate conformal metric, inverse of conformal metric 
+// and first order derivative of conformal metric for KerrSchild.
 // the nomenclature of fields determined by the passed stems */
 void 
 fd_populate_gConf_dgConf_igConf_KerrSchild
@@ -218,8 +301,8 @@ fd_populate_gConf_dgConf_igConf_KerrSchild
   FUNC_TOC
 }
 
-/* populate confromal metric, inverse of confromal metric 
-// and first order derivative of confromal metric for Schwarzchild in
+/* populate conformal metric, inverse of conformal metric 
+// and first order derivative of conformal metric for Schwarzchild in
 // isotropic coords.
 // the nomenclature of fields determined by the passed stems */
 void 
@@ -240,8 +323,30 @@ fd_populate_gConf_dgConf_igConf_IsoSchild
   FUNC_TOC
 }
 
-/* populate confromal metric, inverse of confromal metric 
-// and first order derivative of confromal metric for flat space .
+/* populate conformal metric, inverse of conformal metric 
+// and first order derivative of conformal metric for Schwarzchild in
+// Painleve-Gullstrand coords.
+// the nomenclature of fields determined by the passed stems */
+void 
+fd_populate_gConf_dgConf_igConf_PGSchild
+ (
+ Physics_T *const phys,
+ const char *const region/* where computations take place */,
+ const char *const gConf/* metric stem */,
+ const char *const igConf/* inverse of metric stem */,
+ const char *const dgConf/* derivative of metric stem */
+ )
+{
+  FUNC_TIC
+  
+  fd_populate_gConf_dgConf_igConf_flat
+   (phys,region,gConf,igConf,dgConf);
+  
+  FUNC_TOC
+}
+
+/* populate conformal metric, inverse of conformal metric 
+// and first order derivative of conformal metric for flat space .
 // the nomenclature of fields determined by the passed stems */
 void 
 fd_populate_gConf_dgConf_igConf_flat
@@ -391,7 +496,7 @@ fd_populate_psi_alphaPsi_beta_IsoSchild
  const char *const Psi,
  const char *const AlphaPsi,
  const char *const Beta,
- const char *const ig/*(inverse metric) if ig is null, it makes them */
+ const char *const ig
  )
 {
   FUNC_TIC
@@ -431,6 +536,64 @@ fd_populate_psi_alphaPsi_beta_IsoSchild
       
     }
     UNUSED(beta_U0);
+    UNUSED(beta_U1);
+    UNUSED(beta_U2);
+  }
+  
+  UNUSED(ig);
+  FUNC_TOC
+  
+}
+
+/* populate psi, alpha and beta Schwarzchild in Painleve-Gullstrand 
+// coords value. */
+void 
+fd_populate_psi_alphaPsi_beta_PGSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Psi,
+ const char *const AlphaPsi,
+ const char *const Beta,
+ const char *const ig
+ )
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,region);
+  const double   M   = Getd("irreducible_mass");
+  const double BHx   = Getd("center_x");
+  const double BHy   = Getd("center_y");
+  const double BHz   = Getd("center_z");
+  Uint p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    REALLOC_v_WRITE_v_STEM(psi,Psi)
+    REALLOC_v_WRITE_v_STEM(alphaPsi,AlphaPsi)
+    
+    /* shift */
+    REALLOC_v_WRITE_v_STEM(beta_U0,Beta)
+    REALLOC_v_WRITE_v_STEM(beta_U1,Beta)
+    REALLOC_v_WRITE_v_STEM(beta_U2,Beta)
+    
+    FOR_ALL_ijk
+    {
+      double x,y,z,r;
+      
+      x = patch->node[ijk]->x[0]-BHx;
+      y = patch->node[ijk]->x[1]-BHy;
+      z = patch->node[ijk]->x[2]-BHz;
+      r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+      
+      psi[ijk]     = 1.;
+      alphaPsi[ijk]= 1.;
+      beta_U0[ijk] = sqrt(2*M/r);
+      
+    }
     UNUSED(beta_U1);
     UNUSED(beta_U2);
   }

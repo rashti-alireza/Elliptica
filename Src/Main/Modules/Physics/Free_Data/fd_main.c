@@ -44,28 +44,32 @@ static int set_free_data_params(Physics_T *const phys)
   // options:
   // flat:       gConf = delta_{ij}
   // KerrSchild: gConf = Kerr-Schild black hole
-  // IsoSchild:  gConf = delta_{ij} for Schwarzchild in isotropic coords. */
+  // IsoSchild:  gConf = delta_{ij} for Schwarzchild in isotropic coords.
+  // PGSchild:   gConf = delta_{ij} for Schwarzchild in Painleve-Gullstrand coords */
   Pset_default(P_"conformal_metric","KerrSchild");
   
   /* how to set Christoffel symbol:
   // options:
   // flat:       ChrisConf = 0
   // KerrSchild: ChrisConf made of gConf of Kerr-Schild black hole
-  // IsoSchild:  ChrisConf = 0  for Schwarzchild in isotropic coords. */
+  // IsoSchild:  ChrisConf = 0 for Schwarzchild in isotropic coords.
+  // PGSchild:   ChrisConf = 0 for Schwarzchild in Painleve-Gullstrand coords */
   Pset_default(P_"conformal_Christoffel_symbol","KerrSchild");
   
   /* how to set trK = Tr(K_{ij})
   // options:
   // maximal:    trK = 0.
   // KerrSchild: trK = trK of Kerr-Schild black hole K_{ij} 
-  // IsoSchild:  trK = 0 for Schwarzchild in isotropic coordinates. */
+  // IsoSchild:  trK = 0 for Schwarzchild in isotropic coordinates.
+  // PGSchild:   trK for Schwarzchild in Painleve-Gullstrand coords */
   Pset_default(P_"trK","KerrSchild");
   
   /* how to set conformal Ricci tensor
   // options:
   // flat:       RicciConf_{ij} = 0
   // KerrSchild: use Kerr-Schild black hole metric 
-  // IsoSchild:  use Schwarzchild in isotropic coordinates. */
+  // IsoSchild:  use Schwarzchild in isotropic coordinates.
+  // PGSchild:   RicciConf_{ij} = 0 for Schwarzchild in Painleve-Gullstrand coords */
   Pset_default(P_"conformal_Ricci","KerrSchild");
   
  
@@ -148,6 +152,30 @@ static int populate_free_data(Physics_T *const phys)
                        "RicciConf","trRicciConf");
     fd_extrinsic_curvature_IsoSchild(bh,".*","igConf","ChrisConf",
                                      "adm_Kij","trK","dtrK");
+    free_physics(bh);
+  }
+  else if 
+    (phys->sys                             == SBH       && 
+     Pcmps(P_"conformal_metric"            ,"PGSchild") &&
+     Pcmps(P_"conformal_Christoffel_symbol","PGSchild") &&
+     Pcmps(P_"conformal_Ricci"             ,"PGSchild") &&
+     Pcmps(P_"trK"                         ,"PGSchild") &&
+     Pcmps(P_"MConfIJ"                     ,"zero"    )
+    )
+  {
+    /* important to have dedicated BH physics to read correct parameters */
+    Physics_T *const bh = init_physics(phys,BH);
+
+    fd_populate_gConf_dgConf_igConf_PGSchild(bh,".*","gConf",
+                                             "igConf","dgConf");
+    fd_compatible_Christoffel_symbol(bh,".*","igConf",
+                                    "dgConf","ChrisConf");
+    fd_1st_derivative_Christoffel_symbol(bh,".*","dChrisConf");
+
+    fd_conformal_Ricci(bh,".*","igConf","ChrisConf","dChrisConf",
+                       "RicciConf","trRicciConf");
+    fd_extrinsic_curvature_PGSchild(bh,".*","igConf","ChrisConf",
+                                    "adm_Kij","trK","dtrK");
     free_physics(bh);
   }
   else

@@ -75,7 +75,7 @@ fd_populate_psi_alphaPsi_beta_IsoSchild
  const char *const Psi,
  const char *const AlphaPsi,
  const char *const Beta,
- const char *const ig/*(inverse metric) if ig is null, it makes them */
+ const char *const ig
  );
  
 void 
@@ -87,4 +87,36 @@ fd_populate_gConf_dgConf_igConf_flat
  const char *const igConf/* inverse of metric stem */,
  const char *const dgConf/* derivative of metric stem */
  );
+
+void 
+fd_populate_gConf_dgConf_igConf_PGSchild
+ (
+ Physics_T *const phys,
+ const char *const region/* where computations take place */,
+ const char *const gConf/* metric stem */,
+ const char *const igConf/* inverse of metric stem */,
+ const char *const dgConf/* derivative of metric stem */
+ );
+
+void fd_extrinsic_curvature_PGSchild(Physics_T *const phys,
+                                      const char *const region,
+                                      const char *const ig,
+                                      const char *const Chris,
+                                      const char *const Kij,
+                                      const char *const trK,
+                                      const char *const dtrK);
+void 
+fd_populate_psi_alphaPsi_beta_PGSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Psi,
+ const char *const AlphaPsi,
+ const char *const Beta,
+ const char *const ig
+ );
+
+
+
+
 
