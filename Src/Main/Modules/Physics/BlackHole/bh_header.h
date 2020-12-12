@@ -48,6 +48,7 @@ bh_print_properties
   const int pr_screen);
   
 void bh_start_off_IsoSchild_perfect_s2(Physics_T *const phys);
+void bh_start_off_PGSchild_perfect_s2(Physics_T *const phys);
 
 #endif
 

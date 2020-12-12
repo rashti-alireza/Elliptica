@@ -55,7 +55,25 @@ static int set_black_hole_params(Physics_T *const phys)
 {
   FUNC_TIC
 
-  /* nothing special yet! */
+  /* these parameters have a prefix BH.?_ and 
+  // they are supposed to be added in parameter file:
+  //
+  // params:
+  // =======
+  //
+  // surface_type:
+  // 	o. perfect_s2: perfect sphere
+  //
+  //
+  // tune_BH_radius_criteria:
+  // 	o. fix_irreducible_mass: keep irreducible mass constant
+  //
+  //
+  // start_off:
+  //	o. KerrSchild: a kerr-schild black hole
+  //    o. IsoSchild : a Schwarzchild in isotropic coords.
+  //    o. PGSchild  : a Schwarzchild in Painleve-Gullstrand coords. */
+  
   
   UNUSED(phys);
   FUNC_TOC
@@ -126,6 +144,13 @@ static int start_off_black_hole(Physics_T *const phys)
   {
     IF_sval("surface_type","perfect_s2")
       bh_start_off_IsoSchild_perfect_s2(phys);
+    else
+      Error0(NO_OPTION);
+  }
+  else IF_sval("start_off","PGSchild")
+  {
+    IF_sval("surface_type","perfect_s2")
+      bh_start_off_PGSchild_perfect_s2(phys);
     else
       Error0(NO_OPTION);
   }
