@@ -16,7 +16,7 @@ int sys_main(Physics_T *const phys)
   
   switch (phys->cmd)
   {
-    case SYS_ADD_PARAMS:
+    case SYS_SET_PARAMS:
       ret = set_system_params(phys);
     break;
     
