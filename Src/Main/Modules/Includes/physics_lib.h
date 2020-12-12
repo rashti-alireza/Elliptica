@@ -162,6 +162,7 @@ typedef enum CMD_T
  FREE_DATA_POPULATE,/* populate free data */
  
  /* system related */
+ SYS_SET_PARAMS,/* set params */
  SYS_TUNE_P_ADM,/* adjust P_adm of the system */
  SYS_INITIALIZE_FIELDS,/* start off with these fields */
  

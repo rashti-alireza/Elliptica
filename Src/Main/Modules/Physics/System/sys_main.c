@@ -16,9 +16,14 @@ int sys_main(Physics_T *const phys)
   
   switch (phys->cmd)
   {
+    case SYS_ADD_PARAMS:
+      ret = set_system_params(phys);
+    break;
+    
     case SYS_TUNE_P_ADM:
       ret = tune_system_ADM_momenta(phys);
     break;
+    
     case SYS_INITIALIZE_FIELDS:
       ret = initialize_fields(phys);
     break;
@@ -95,6 +100,30 @@ static int initialize_fields(Physics_T *const phys)
   else
     Error0(NO_OPTION);
   
+  FUNC_TOC
+  return EXIT_SUCCESS;
+}
+
+/* set default parameters. */
+static int set_system_params(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  /* which fields to initialize:
+  // options:
+  // XCTS: psi, alphaPsi and beta.
+  */
+  Pset_default(P_"initialize_fields","XCTS");
+  
+  /* how to initialize fields
+  // options:
+  // one_exact_KerrSchild: use analytic values of KerrSchild BH
+  // one_exact_IsoSchild : use analytic values of Schawrzchild in isotropic coords.
+  // one_exact_PGSchild  : use analytic values of Schawrzchild in Painleve-Gullstrand coords.
+  */
+  Pset_default(P_"initialize","one_exact_KerrSchild");
+
+  UNUSED(phys);
   FUNC_TOC
   return EXIT_SUCCESS;
 }
