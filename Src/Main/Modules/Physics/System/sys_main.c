@@ -78,6 +78,20 @@ static int initialize_fields(Physics_T *const phys)
     else
       Error0(NO_OPTION);
   }
+  else if(phys->sys == SBH                          &&
+          Pcmps(P_"initialize","one_exact_PGSchild"))
+  {
+    if(Pcmps(P_"initialize_fields","XCTS"))
+    {
+      /* important to have dedicated BH physics to read correct parameters */
+      Physics_T *const bh = init_physics(phys,BH);
+      fd_populate_psi_alphaPsi_beta_PGSchild(bh,".*","psi",
+                                              "alphaPsi","beta",0);
+      free_physics(bh);
+    }
+    else
+      Error0(NO_OPTION);
+  }
   else
     Error0(NO_OPTION);
   
