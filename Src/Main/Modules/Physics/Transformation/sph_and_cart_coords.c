@@ -12,12 +12,12 @@
 
 /* performing coords transformation spherical to Cartesian and vice versa
 // the given vector at each point is 'in' and its transformed is 'out'. */
-void sphNcar_transformation(Transformation_T *const t,const double *const in,double *const out);
-void sphNcar_transformation(Transformation_T *const t,const double *const in,double *const out)
+void spheNcart_transformation(Transformation_T *const t,const double *const in,double *const out);
+void spheNcart_transformation(Transformation_T *const t,const double *const in,double *const out)
 {
-  const double r  = t->sphNcar->r;
-  const double th = t->sphNcar->th;
-  const double ph = t->sphNcar->ph;
+  const double r  = t->spheNcart->r;
+  const double th = t->spheNcart->th;
+  const double ph = t->spheNcart->ph;
   const double v_U0 = in[0];
   const double v_U1 = in[1];
   const double v_U2 = in[2];
@@ -35,7 +35,7 @@ const double dc_ds_D1D2 = r*sin(th)*cos(ph);
 const double dc_ds_D2D0 = cos(th);
 const double dc_ds_D2D1 = -r*sin(th);
 const double dc_ds_D2D2 = 0.;
-if (!t->sphNcar->active)
+if (t->spheNcart->c2s)
 {
 
 double ds_dc_U0U0 = 0.;
@@ -63,7 +63,7 @@ out[0] = u1_U0;
 out[1] = u1_U1;
 out[2] = u1_U2;
 }
-else
+else if (t->spheNcart->s2c)
 {
 
   double u2_U2 = 
@@ -79,4 +79,7 @@ out[0] = u2_U0;
 out[1] = u2_U1;
 out[2] = u2_U2;
 }
+else
+  Error0(NO_OPTION);
+
 }

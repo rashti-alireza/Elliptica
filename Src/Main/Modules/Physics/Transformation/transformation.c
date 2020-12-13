@@ -9,7 +9,7 @@
 // =========
 // 
 // ** initializing **
-// Transformation_T *t = initialize_transformation();
+// Transformation_T *t = init_transformation();
 //
 // ** B O O S T  **
 // ** populating **
@@ -39,13 +39,12 @@
 // rotation_transformation(t,u1,u2);
 //
 // ** spherical to Cartesian coords (for vectors not covectors) **
-// t->sphNcar->active = 1;
-// t->sphNcar->r      = r;
-// t->sphNcar->th     = th;
-// t->sphNcar->ph     = ph;
-// if active     ==> u2 = d(x,y,z)/d(r,th,ph) u1
-// if not active ==> u2 = d(r,th,ph)/d(x,y,z) u1
-// sphNcart_transformation(t,u1,u2);
+// t->spheNcart->r      = r;
+// t->spheNcart->th     = th;
+// t->spheNcart->ph     = ph;
+// t->spheNcart->s2c = 1; ==> u2 = d(x,y,z)/d(r,th,ph) u1
+// t->spheNcart->c2s = 1; ==> u2 = d(r,th,ph)/d(x,y,z) u1
+// spheNcart_transformation(t,u1,u2);
 //
 // ** freeing **
 // free_transformation(t);
@@ -53,7 +52,7 @@
 
 /* allocating memory and initializing Transformation_T structure
 // ->return value: initialized structure. */
-Transformation_T *initialize_transformation(void)
+Transformation_T *init_transformation(void)
 {
   Transformation_T *t = calloc(1,sizeof(*t));
   IsNull(t);
