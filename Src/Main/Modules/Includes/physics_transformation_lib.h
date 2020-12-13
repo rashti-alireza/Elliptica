@@ -26,10 +26,21 @@ typedef struct TRANSFORMATION_T
     int active;/* if 1 means active transformation, otherwise means
                // passive transformation */
   }rotation[1];
+  
+  /* spherical to Cartesian coords and reverse */
+  struct
+  {
+    double r;/* r = (x^2+y^2+z^2)^0.5 */
+    double th;/* theta */
+    double ph;/* phi */
+    int active;/* 1 means spherical to cartesian,0 the other way around */
+  }sphNcar[1];
+  
 }Transformation_T;
 
 void rotation_transformation(Transformation_T *const t,const double *const in,double *const out);
 void boost_transformation(Transformation_T *const t,const double *const in,double *const out);
+void sphNcar_transformation(Transformation_T *const t,const double *const in,double *const out);
 Transformation_T *initialize_transformation(void);
 void free_transformation(Transformation_T *t);
 

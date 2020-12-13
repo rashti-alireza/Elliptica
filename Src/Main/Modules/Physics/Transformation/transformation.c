@@ -38,6 +38,15 @@
 // ** note: the oreder is Rz(phi2)*Ry(phi1)*Rx(phi0) **
 // rotation_transformation(t,u1,u2);
 //
+// ** spherical to Cartesian coords (for vectors not covectors) **
+// t->sphNcar->active = 1;
+// t->sphNcar->r      = r;
+// t->sphNcar->th     = th;
+// t->sphNcar->ph     = ph;
+// if active     ==> u2 = d(x,y,z)/d(r,th,ph) u1
+// if not active ==> u2 = d(r,th,ph)/d(x,y,z) u1
+// sphNcart_transformation(t,u1,u2);
+//
 // ** freeing **
 // free_transformation(t);
 */
