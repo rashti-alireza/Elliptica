@@ -1,5 +1,5 @@
 ## computing extrinsic curvature K_{ij}, trK = ig^{ij}*K_{ij}
-## and dtrK for KerrSchild.
+## for KerrSchild BH.
 
 # Manifold or grid Dimension
 Dimension = 3;
