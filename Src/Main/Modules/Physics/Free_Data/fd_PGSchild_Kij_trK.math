@@ -1,0 +1,59 @@
+## computing extrinsic curvature K_{ij}, trK = ig^{ij}*K_{ij}
+## for Schwarzchild BH in Painleve-Gullstrand coords
+## note: metric is flat.
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro1  = READ_v_STEM(name,dbeta);
+C_macro2  = REALLOC_v_WRITE_v_STEM(name,Kij);
+C_macro3  = REALLOC_v_WRITE_v_STEM(name,trK);
+
+
+`#include "fd_header.h"`
+``
+``
+
+`void fd_Kij_trK_PGSchild(Patch_T *const patch,`
+` const char *const dbeta,const char *const Kij,`
+` const char *const trK);`
+``
+
+`void fd_Kij_trK_PGSchild(Patch_T *const patch,`
+` const char *const dbeta,const char *const Kij,`
+` const char *const trK)`
+`{`
+`  const double alpha = 1.;`
+``
+Declare =
+{
+  # dbeta
+  (obj = Field,name = dBeta, rank = UD, C_macro1);
+
+  # Kij
+  (obj = Field,name = Kij, rank = DD, C_macro2);
+
+  # trK
+  (obj = Field,name = trKij, rank = 0, C_macro3);
+
+  # alpha
+  (obj = variable,name = alpha, none);
+}
+
+Symm[Kij(i,j)     = Kij(j,i)];
+
+## covariant derivatives
+`FOR_ALL_ijk`
+`{`
+     pgKij(-i,-j)    = (dBeta(i,j)+dBeta(j,i))/(2*alpha);
+     Symm[pgKij(i,j) = pgKij(j,i)];
+     trk             = KD(i,j)*pgKij(-i,-j);
+
+     Cpopulate[Kij = pgKij];
+     `trKij[ijk] = trk;`
+`}`
+
+`}`

@@ -62,15 +62,13 @@ void fd_extrinsic_curvature_IsoSchild(Physics_T *const phys,
   FUNC_TOC
 }
 
-/* compute K_{ij}, trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
-// for Schwarzchild in Painleve-Gullstrand coords. */
-void fd_extrinsic_curvature_PGSchild(Physics_T *const phys,
-                                      const char *const region,
-                                      const char *const ig,
-                                      const char *const Chris,
-                                      const char *const Kij,
-                                      const char *const trK,
-                                      const char *const dtrK)
+
+/* compute beta and dbeta for Schwarzchild in Painleve-Gullstrand coords. 
+// note: if dbeta is null, it won't compute derivatives. */
+void fd_beta_and_dbeta_PGSchild(Physics_T *const phys,
+                                const char *const region,
+                                const char *const beta,
+                                const char *const dbeta)
 {
   FUNC_TIC
   
@@ -85,60 +83,121 @@ void fd_extrinsic_curvature_PGSchild(Physics_T *const phys,
   for (p = 0; p < grid->np; ++p)
   {
     Patch_T *patch = grid->patch[p];
+    Transformation_T *t = init_transformation();
     
-    /* add beta field */
-    double *b = (add_field("gp__beta_U0",0,patch,YES))->v;
+    t->spheNcart->s2c = 1;/* spherical to Cartesian */
+    
+    REALLOC_v_WRITE_v_STEM(b_U0,beta)
+    REALLOC_v_WRITE_v_STEM(b_U1,beta)
+    REALLOC_v_WRITE_v_STEM(b_U2,beta)
+    
     FOR_ALL_ijk
     {
       double x,y,z,r;
+      double b_cart[3] = {0};
+      double b_sphe[3] = {0};
+      
       x = patch->node[ijk]->x[0]-BHx;
       y = patch->node[ijk]->x[1]-BHy;
       z = patch->node[ijk]->x[2]-BHz;
       r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
       
-      b[ijk] = sqrt(2*M/r);
+      t->spheNcart->r  = r;
+      t->spheNcart->th = acos(z/r);
+      t->spheNcart->ph = arctan(y,x);
+      
+      /* beta in spherical coords */
+      b_sphe[0] = sqrt(2*M/r);
+      b_sphe[1] = 0.;
+      b_sphe[2] = 0.;
+      
+      spheNcart_transformation(t,b_sphe,b_cart);
+      
+      /* beta in Cartesian coords */
+      b_U0[ijk] = b_cart[0];
+      b_U1[ijk] = b_cart[1];
+      b_U2[ijk] = b_cart[2];
     }
+    free_transformation(t);
+    
+    if (dbeta)
+    {
+      dField_di_STEM(dbeta_U0D0,dbeta);
+      dField_di_STEM(dbeta_U0D1,dbeta);
+      dField_di_STEM(dbeta_U0D2,dbeta);
+      
+      dField_di_STEM(dbeta_U1D0,dbeta);
+      dField_di_STEM(dbeta_U1D1,dbeta);
+      dField_di_STEM(dbeta_U1D2,dbeta);
+      
+      dField_di_STEM(dbeta_U2D0,dbeta);
+      dField_di_STEM(dbeta_U2D1,dbeta);
+      dField_di_STEM(dbeta_U2D2,dbeta);
+    }
+  }
+
+  FUNC_TOC
+}                                
+
+/* compute K_{ij}, trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
+// for Schwarzchild in Painleve-Gullstrand coords. */
+void fd_extrinsic_curvature_PGSchild(Physics_T *const phys,
+                                      const char *const region,
+                                      const char *const ig,
+                                      const char *const Chris,
+                                      const char *const Kij,
+                                      const char *const trK,
+                                      const char *const dtrK)
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,region);
+  Uint p;
+  
+  /* add fields */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    /* beta */
+    add_field("pg__beta_U0",0,patch,NO);
+    add_field("pg__beta_U1",0,patch,NO);
+    add_field("pg__beta_U2",0,patch,NO);
+    
     
     /* add dbeta/dx? */
-    add_field("dgp__beta_U0D0",0,patch,NO);
-    add_field("dgp__beta_U0D1",0,patch,NO);
-    add_field("dgp__beta_U0D2",0,patch,NO);
-    double *dbx = dField_di(dgp__beta_U0D0);
-    double *dby = dField_di(dgp__beta_U0D1);
-    double *dbz = dField_di(dgp__beta_U0D2);
-    /* lapse */
-    double a = 1.;
+    add_field("dpg__beta_U0D0",0,patch,NO);
+    add_field("dpg__beta_U0D1",0,patch,NO);
+    add_field("dpg__beta_U0D2",0,patch,NO);
     
-    /* K_{ij} = K^{ij} since psi = 1 and gConf = Kronecker delta
-    // we use formula Kij = (D_j beta_i+D_i beta_j)/(2*lapse) */
-    REALLOC_v_WRITE_v_STEM(Kij_D2D2,Kij)
-    REALLOC_v_WRITE_v_STEM(Kij_D0D1,Kij)
-    REALLOC_v_WRITE_v_STEM(Kij_D0D0,Kij)
-    REALLOC_v_WRITE_v_STEM(Kij_D0D2,Kij)
-    REALLOC_v_WRITE_v_STEM(Kij_D1D1,Kij)
-    REALLOC_v_WRITE_v_STEM(Kij_D1D2,Kij)    
-    REALLOC_v_WRITE_v_STEM(trKij,trK);
-    FOR_ALL_ijk
-    {
-      Kij_D0D0[ijk] = dbx[ijk]/a;
-      Kij_D0D1[ijk] = 0.5*dby[ijk]/a;
-      Kij_D0D2[ijk] = 0.5*dbz[ijk]/a;
-      Kij_D1D2[ijk] = 0.;
-      Kij_D1D1[ijk] = 0.;
-      Kij_D2D2[ijk] = 0.;
-      trKij[ijk]    = Kij_D0D0[ijk];
-    }
+    add_field("dpg__beta_U1D0",0,patch,NO);
+    add_field("dpg__beta_U1D1",0,patch,NO);
+    add_field("dpg__beta_U1D2",0,patch,NO);
     
+    add_field("dpg__beta_U2D0",0,patch,NO);
+    add_field("dpg__beta_U2D1",0,patch,NO);
+    add_field("dpg__beta_U2D2",0,patch,NO);
+  }
+  
+  /* populate beta and dbeta for PG */
+  fd_beta_and_dbeta_PGSchild(phys,region,"pg__beta","dpg__beta");
+  
+  /* populate Kij, trK and dtrK and clean up */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    fd_Kij_trK_PGSchild(patch,"dpg__beta",Kij,trK);
     dField_di_STEM(dtrK_D0,dtrK);
     dField_di_STEM(dtrK_D1,dtrK);
     dField_di_STEM(dtrK_D2,dtrK);
     
     /* clean up */
-    remove_field_with_regex(patch,"^gp__beta_U0$");
-    remove_field_with_regex(patch,"^dgp__beta_U0D.$");
-    
+    remove_field_with_regex(patch,"^pg__beta_U.$");
+    remove_field_with_regex(patch,"^dpg__beta_U.D.$");
   }
-  
+    
   UNUSED(ig);
   UNUSED(Chris);
   
@@ -561,12 +620,12 @@ fd_populate_psi_alphaPsi_beta_PGSchild
   FUNC_TIC
   
   Grid_T *const grid = mygrid(phys,region);
-  const double   M   = Getd("irreducible_mass");
-  const double BHx   = Getd("center_x");
-  const double BHy   = Getd("center_y");
-  const double BHz   = Getd("center_z");
   Uint p;
   
+  /* beta */
+  fd_beta_and_dbeta_PGSchild(phys,region,Beta,0);
+  
+  /* psi and alphaPsi */
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
   {
@@ -575,27 +634,11 @@ fd_populate_psi_alphaPsi_beta_PGSchild
     REALLOC_v_WRITE_v_STEM(psi,Psi)
     REALLOC_v_WRITE_v_STEM(alphaPsi,AlphaPsi)
     
-    /* shift */
-    REALLOC_v_WRITE_v_STEM(beta_U0,Beta)
-    REALLOC_v_WRITE_v_STEM(beta_U1,Beta)
-    REALLOC_v_WRITE_v_STEM(beta_U2,Beta)
-    
     FOR_ALL_ijk
     {
-      double x,y,z,r;
-      
-      x = patch->node[ijk]->x[0]-BHx;
-      y = patch->node[ijk]->x[1]-BHy;
-      z = patch->node[ijk]->x[2]-BHz;
-      r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
-      
       psi[ijk]     = 1.;
       alphaPsi[ijk]= 1.;
-      beta_U0[ijk] = sqrt(2*M/r);
-      
     }
-    UNUSED(beta_U1);
-    UNUSED(beta_U2);
   }
   
   UNUSED(ig);

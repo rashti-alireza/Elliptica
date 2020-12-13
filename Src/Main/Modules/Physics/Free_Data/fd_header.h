@@ -188,6 +188,16 @@ fd_populate_psi_alphaPsi_beta_PGSchild
  const char *const Beta,
  const char *const ig/*(inverse metric) if ig is null, it makes them */
  );
+
+void fd_Kij_trK_PGSchild(Patch_T *const patch,
+ const char *const dbeta,const char *const Kij,
+ const char *const trK);
+
+void fd_beta_and_dbeta_PGSchild(Physics_T *const phys,
+                                const char *const region,
+                                const char *const beta,
+                                const char *const dbeta);
   
+
 #endif
 

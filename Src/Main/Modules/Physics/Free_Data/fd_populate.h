@@ -1,5 +1,6 @@
 #include "fd_header.h"
 #include "maths_linear_algebra_lib.h"
+#include "physics_transformation_lib.h"
 
 void 
 fd_populate_gConf_dgConf_igConf_KerrSchild
@@ -117,6 +118,9 @@ fd_populate_psi_alphaPsi_beta_PGSchild
  );
 
 
-
+void fd_beta_and_dbeta_PGSchild(Physics_T *const phys,
+                                const char *const region,
+                                const char *const beta,
+                                const char *const dbeta);
 
 
