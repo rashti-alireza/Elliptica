@@ -21,6 +21,21 @@
   MLA_CONC(mI,tI,2,2)[ijk] = a00*(a00*a11 - a01*a10)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
   }
 
+/* compute inverse of a 3x3 general matrix (back-end) for field
+// more info at Matrix_Inverse_3x3_General_Field. */
+#define MLA_COMPUTE_INVERSE_3x3_GENERAL_FIELD(mI,tI,ijk,a00,a01,a02,a10,a11,a12,a20,a21,a22) \
+  { \
+  MLA_CONC(mI,tI,0,0)[ijk] = (a11*a22 - a12*a21)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
+  MLA_CONC(mI,tI,0,1)[ijk] = (-a01*a22 + a02*a21)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
+  MLA_CONC(mI,tI,0,2)[ijk] = (a01*a12 - a02*a11)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
+  MLA_CONC(mI,tI,1,0)[ijk] = (-a10*a22 + a12*a20)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20);\
+  MLA_CONC(mI,tI,1,1)[ijk] = a00*(a00*a22 - a02*a20)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
+  MLA_CONC(mI,tI,1,2)[ijk] =-a00*(a00*a12 - a02*a10)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
+  MLA_CONC(mI,tI,2,0)[ijk] = (a10*a21 - a11*a20)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20);\
+  MLA_CONC(mI,tI,2,1)[ijk] =-a00*(a00*a21 - a01*a20)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20));\
+  MLA_CONC(mI,tI,2,2)[ijk] = a00*(a00*a11 - a01*a10)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
+  }
+
 /* compute inverse of a 3x3 symmetric matrix (back-end) for variable (no ijk given)
 // more info at Matrix_Inverse_3x3_Symmetric_Var. */
 #define MLA_COMPUTE_INVERSE_3x3_SYMMETRIC_VAR(mI,tI,a00,a01,a02,a10,a11,a12,a20,a21,a22) \
@@ -32,6 +47,22 @@
   MLA_CONC(mI,tI,1,2) =-a00*(a00*a12 - a02*a10)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
   MLA_CONC(mI,tI,2,2) = a00*(a00*a11 - a01*a10)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
   }
+
+/* compute inverse of a 3x3 general matrix (back-end) for variable (no ijk given)
+// more info at Matrix_Inverse_3x3_General_Var. */
+#define MLA_COMPUTE_INVERSE_3x3_GENERAL_VAR(mI,tI,a00,a01,a02,a10,a11,a12,a20,a21,a22) \
+  { \
+  MLA_CONC(mI,tI,0,0) = (a11*a22 - a12*a21)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
+  MLA_CONC(mI,tI,0,1) = (-a01*a22 + a02*a21)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
+  MLA_CONC(mI,tI,0,2) = (a01*a12 - a02*a11)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
+  MLA_CONC(mI,tI,1,0) = (-a10*a22 + a12*a20)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20);\
+  MLA_CONC(mI,tI,1,1) = a00*(a00*a22 - a02*a20)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
+  MLA_CONC(mI,tI,1,2) =-a00*(a00*a12 - a02*a10)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
+  MLA_CONC(mI,tI,2,0) = (a10*a21 - a11*a20)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20);\
+  MLA_CONC(mI,tI,2,1) =-a00*(a00*a21 - a01*a20)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20));\
+  MLA_CONC(mI,tI,2,2) = a00*(a00*a11 - a01*a10)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
+  }
+
 
 /* inverse of a 3x3 symmetric matrix, 
 // it populates mI for field on each ijk point.
@@ -46,6 +77,19 @@
     MLA_CONC(m,t,0,1)[ijk],MLA_CONC(m,t,1,1)[ijk],MLA_CONC(m,t,1,2)[ijk],\
     MLA_CONC(m,t,0,2)[ijk],MLA_CONC(m,t,1,2)[ijk],MLA_CONC(m,t,2,2)[ijk])
 
+/* inverse of a 3x3 general matrix, 
+// it populates mI for field on each ijk point.
+// ijk: the point on the patch
+// m: matrix name stem, t: matrix index.
+// ex: m = g and t = D, => MLA_CONC(m,t,1,2) = g_D1D2.
+// mI: matrix inverse name stem, tI: matrix inverse index.
+// ex: mI = gI and tI = U => MLA_CONC(mI,tI,0,0) = gI_U0U0. */
+#define Matrix_Inverse_3x3_General_Field(m,t,mI,tI,ijk) \
+   MLA_COMPUTE_INVERSE_3x3_GENERAL_FIELD(mI,tI,ijk,\
+    MLA_CONC(m,t,0,0)[ijk],MLA_CONC(m,t,0,1)[ijk],MLA_CONC(m,t,0,2)[ijk],\
+    MLA_CONC(m,t,1,0)[ijk],MLA_CONC(m,t,1,1)[ijk],MLA_CONC(m,t,1,2)[ijk],\
+    MLA_CONC(m,t,2,0)[ijk],MLA_CONC(m,t,2,1)[ijk],MLA_CONC(m,t,2,2)[ijk])
+
 /* inverse of a 3x3 symmetric matrix, it populates mI variable
 // m: matrix name stem, t: matrix index.
 // ex: m = g and t = D, => MLA_CONC(m,t,1,2) = g_D1D2.
@@ -57,9 +101,19 @@
     MLA_CONC(m,t,0,1),MLA_CONC(m,t,1,1),MLA_CONC(m,t,1,2),\
     MLA_CONC(m,t,0,2),MLA_CONC(m,t,1,2),MLA_CONC(m,t,2,2))
 
+/* inverse of a 3x3 general matrix, it populates mI variable
+// m: matrix name stem, t: matrix index.
+// ex: m = g and t = D, => MLA_CONC(m,t,1,2) = g_D1D2.
+// mI: matrix inverse name stem, tI: matrix inverse index.
+// ex: mI = gI and tI = U => MLA_CONC(mI,tI,0,0) = gI_U0U0. */
+#define Matrix_Inverse_3x3_General_Var(m,t,mI,tI) \
+   MLA_COMPUTE_INVERSE_3x3_GENERAL_VAR(mI,tI,\
+    MLA_CONC(m,t,0,0),MLA_CONC(m,t,0,1),MLA_CONC(m,t,0,2),\
+    MLA_CONC(m,t,1,0),MLA_CONC(m,t,1,1),MLA_CONC(m,t,1,2),\
+    MLA_CONC(m,t,2,0),MLA_CONC(m,t,2,1),MLA_CONC(m,t,2,2))
+
 
 /* determinant of a 3x3 symmetric matrix for field.
-// the answer is put in det.
 // ijk: the point on the patch
 // m: matrix name stem, t: matrix index.
 // ex: m = g and t = D, => MLA_CONC(m,t,1,2) = g_D1D2. */
@@ -69,8 +123,7 @@
    MLA_CONC(m,t,0,1)[ijk],MLA_CONC(m,t,1,1)[ijk],MLA_CONC(m,t,1,2)[ijk],\
    MLA_CONC(m,t,0,2)[ijk],MLA_CONC(m,t,1,2)[ijk],MLA_CONC(m,t,2,2)[ijk]))
 
-/* determinant of a 3x3 symmetric matrix for variable
-// answer is put in det.
+/* determinant of a 3x3 symmetric matrix for variable.
 // m: matrix name stem, t: matrix index.
 // ex: m = g and t = D, => MLA_CONC(m,t,1,2) = g_D1D2. */
 #define Matrix_Determinant_3x3_Symmetric_Var(m,t) \
@@ -78,6 +131,25 @@
    MLA_CONC(m,t,0,0),MLA_CONC(m,t,0,1),MLA_CONC(m,t,0,2),\
    MLA_CONC(m,t,0,1),MLA_CONC(m,t,1,1),MLA_CONC(m,t,1,2),\
    MLA_CONC(m,t,0,2),MLA_CONC(m,t,1,2),MLA_CONC(m,t,2,2)))
+
+/* determinant of a 3x3 general matrix for field.
+// ijk: the point on the patch
+// m: matrix name stem, t: matrix index.
+// ex: m = g and t = D, => MLA_CONC(m,t,1,2) = g_D1D2. */
+#define Matrix_Determinant_3x3_General_Field(m,t,ijk) \
+ (Matrix_Determinant_3x3(\
+   MLA_CONC(m,t,0,0)[ijk],MLA_CONC(m,t,0,1)[ijk],MLA_CONC(m,t,0,2)[ijk],\
+   MLA_CONC(m,t,1,0)[ijk],MLA_CONC(m,t,1,1)[ijk],MLA_CONC(m,t,1,2)[ijk],\
+   MLA_CONC(m,t,2,0)[ijk],MLA_CONC(m,t,2,1)[ijk],MLA_CONC(m,t,2,2)[ijk]))
+
+/* determinant of a 3x3 general matrix for variable.
+// m: matrix name stem, t: matrix index.
+// ex: m = g and t = D, => MLA_CONC(m,t,1,2) = g_D1D2. */
+#define Matrix_Determinant_3x3_General_Var(m,t) \
+ (Matrix_Determinant_3x3(\
+   MLA_CONC(m,t,0,0),MLA_CONC(m,t,0,1),MLA_CONC(m,t,0,2),\
+   MLA_CONC(m,t,1,0),MLA_CONC(m,t,1,1),MLA_CONC(m,t,1,2),\
+   MLA_CONC(m,t,2,0),MLA_CONC(m,t,2,1),MLA_CONC(m,t,2,2)))
 
 /* determinant of a general 3x3 matrix with component a?? */
 #define Matrix_Determinant_3x3(a00,a01,a02,a10,a11,a12,a20,a21,a22) \
