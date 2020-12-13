@@ -54,6 +54,150 @@ static int matrices_arithmetic_test(void)
   Flag_T flg_mv,flg_regxreg_ab,flg_ccsxccs_ab,flg_ccsxccs_aTransB;/* flags for various tests */
   long i,j;
   
+  /* test inverse macros */
+  /* for fields */
+  double g_D0D0[1] = {3.};
+  double g_D0D1[1] = {0.3};
+  double g_D0D2[1] = {-0.3};
+  double g_D1D0[1] = {2.1};
+  double g_D1D1[1] = {3.};
+  double g_D1D2[1] = {-1.3};
+  double g_D2D0[1] = {0.1};
+  double g_D2D1[1] = {-0.67};
+  double g_D2D2[1] = {3.};
+  double ig_U0U0[1];
+  double ig_U0U1[1];
+  double ig_U0U2[1];
+  double ig_U1U0[1];
+  double ig_U1U1[1];
+  double ig_U1U2[1];
+  double ig_U2U0[1];
+  double ig_U2U1[1];
+  double ig_U2U2[1];
+  /* for variables */
+  double gv_D0D0 = 3.;
+  double gv_D0D1 = 0.3;
+  double gv_D0D2 = -0.3;
+  double gv_D1D0 = 2.1;
+  double gv_D1D1 = 3.;
+  double gv_D1D2 = -1.3;
+  double gv_D2D0 = 0.1;
+  double gv_D2D1 = -0.67;
+  double gv_D2D2 = 3.;
+  double igv_U0U0;
+  double igv_U0U1;
+  double igv_U0U2;
+  double igv_U1U0;
+  double igv_U1U1;
+  double igv_U1U2;
+  double igv_U2U0;
+  double igv_U2U1;
+  double igv_U2U2;
+  
+  /* test general fields */
+  Matrix_Inverse_3x3_General_Field(g,D,ig,U,0);
+  /* quick test check ig * g = delta */
+  if (1)
+  {
+      double delta_U0D0 = 
+    g_D0D0[0]*ig_U0U0[0] + g_D1D0[0]*ig_U0U1[0] + g_D2D0[0]*
+    ig_U0U2[0];
+
+      double delta_U0D1 = 
+    g_D0D1[0]*ig_U0U0[0] + g_D1D1[0]*ig_U0U1[0] + g_D2D1[0]*
+    ig_U0U2[0];
+
+      double delta_U0D2 = 
+    g_D0D2[0]*ig_U0U0[0] + g_D1D2[0]*ig_U0U1[0] + g_D2D2[0]*
+    ig_U0U2[0];
+
+      double delta_U1D2 = 
+    g_D0D2[0]*ig_U1U0[0] + g_D1D2[0]*ig_U1U1[0] + g_D2D2[0]*
+    ig_U1U2[0];
+
+      double delta_U1D0 = 
+    g_D0D0[0]*ig_U1U0[0] + g_D1D0[0]*ig_U1U1[0] + g_D2D0[0]*
+    ig_U1U2[0];
+
+      double delta_U1D1 = 
+    g_D0D1[0]*ig_U1U0[0] + g_D1D1[0]*ig_U1U1[0] + g_D2D1[0]*
+    ig_U1U2[0];
+
+      double delta_U2D2 = 
+    g_D0D2[0]*ig_U2U0[0] + g_D1D2[0]*ig_U2U1[0] + g_D2D2[0]*
+    ig_U2U2[0];
+
+      double delta_U2D0 = 
+    g_D0D0[0]*ig_U2U0[0] + g_D1D0[0]*ig_U2U1[0] + g_D2D0[0]*
+    ig_U2U2[0];
+
+      double delta_U2D1 = 
+    g_D0D1[0]*ig_U2U0[0] + g_D1D1[0]*ig_U2U1[0] + g_D2D1[0]*
+    ig_U2U2[0];
+
+    if(!EQL(delta_U1D1,1)||!isfinite(delta_U1D1))  Error0("inverse is not correct!\n");
+    if(!EQL(delta_U0D1,0)||!isfinite(delta_U0D1))  Error0("inverse is not correct!\n");
+    if(!EQL(delta_U0D2,0)||!isfinite(delta_U0D2))  Error0("inverse is not correct!\n");
+    if(!EQL(delta_U1D2,0)||!isfinite(delta_U1D2))  Error0("inverse is not correct!\n");
+    if(!EQL(delta_U0D0,1)||!isfinite(delta_U0D0))  Error0("inverse is not correct!\n");
+    if(!EQL(delta_U2D1,0)||!isfinite(delta_U2D1))  Error0("inverse is not correct!\n");
+    if(!EQL(delta_U2D2,1)||!isfinite(delta_U2D2))  Error0("inverse is not correct!\n");
+    if(!EQL(delta_U2D0,0)||!isfinite(delta_U2D0))  Error0("inverse is not correct!\n");
+    if(!EQL(delta_U1D0,0)||!isfinite(delta_U1D0))  Error0("inverse is not correct!\n");
+  }
+  
+  /* test general variables */
+  Matrix_Inverse_3x3_General_Var(gv,D,igv,U);
+  /* quick test check igv * gv = delta */
+  if (1)
+  {
+      double delta_U0D0 = 
+    gv_D0D0*igv_U0U0 + gv_D1D0*igv_U0U1 + gv_D2D0*
+    igv_U0U2;
+
+      double delta_U0D1 = 
+    gv_D0D1*igv_U0U0 + gv_D1D1*igv_U0U1 + gv_D2D1*
+    igv_U0U2;
+
+      double delta_U0D2 = 
+    gv_D0D2*igv_U0U0 + gv_D1D2*igv_U0U1 + gv_D2D2*
+    igv_U0U2;
+
+      double delta_U1D2 = 
+    gv_D0D2*igv_U1U0 + gv_D1D2*igv_U1U1 + gv_D2D2*
+    igv_U1U2;
+
+      double delta_U1D0 = 
+    gv_D0D0*igv_U1U0 + gv_D1D0*igv_U1U1 + gv_D2D0*
+    igv_U1U2;
+
+      double delta_U1D1 = 
+    gv_D0D1*igv_U1U0 + gv_D1D1*igv_U1U1 + gv_D2D1*
+    igv_U1U2;
+
+      double delta_U2D2 = 
+    gv_D0D2*igv_U2U0 + gv_D1D2*igv_U2U1 + gv_D2D2*
+    igv_U2U2;
+
+      double delta_U2D0 = 
+    gv_D0D0*igv_U2U0 + gv_D1D0*igv_U2U1 + gv_D2D0*
+    igv_U2U2;
+
+      double delta_U2D1 = 
+    gv_D0D1*igv_U2U0 + gv_D1D1*igv_U2U1 + gv_D2D1*
+    igv_U2U2;
+
+    if(!EQL(delta_U1D1,1)||!isfinite(delta_U1D1))  Error0("inverse is not correct!\n");
+    if(!EQL(delta_U0D1,0)||!isfinite(delta_U0D1))  Error0("inverse is not correct!\n");
+    if(!EQL(delta_U0D2,0)||!isfinite(delta_U0D2))  Error0("inverse is not correct!\n");
+    if(!EQL(delta_U1D2,0)||!isfinite(delta_U1D2))  Error0("inverse is not correct!\n");
+    if(!EQL(delta_U0D0,1)||!isfinite(delta_U0D0))  Error0("inverse is not correct!\n");
+    if(!EQL(delta_U2D1,0)||!isfinite(delta_U2D1))  Error0("inverse is not correct!\n");
+    if(!EQL(delta_U2D2,1)||!isfinite(delta_U2D2))  Error0("inverse is not correct!\n");
+    if(!EQL(delta_U2D0,0)||!isfinite(delta_U2D0))  Error0("inverse is not correct!\n");
+    if(!EQL(delta_U1D0,0)||!isfinite(delta_U1D0))  Error0("inverse is not correct!\n");
+  }
+  
   /* fill up some arbitrary matrices */
   m1[0][0] = 1.1;
   m1[0][1] = -1;
