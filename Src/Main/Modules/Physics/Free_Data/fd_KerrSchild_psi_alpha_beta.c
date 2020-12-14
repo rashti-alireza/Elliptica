@@ -85,7 +85,7 @@ ig_U0U2[ijk];
 betaD_D0*ig_U0U2[ijk] + betaD_D1*ig_U1U2[ijk] + betaD_D2*
 ig_U2U2[ijk];
 
-  alphaPsi[ijk] = 1./sqrt(1+fd_ks_c(x,y,z)*fd_ks_k0(x, y, z)*fd_ks_k0(x, y, z));
+  alphaPsi[ijk] = 1./sqrt(1+fd_ks_c(x,y,z)*fd_ks_kt(x, y, z)*fd_ks_kt(x, y, z));
   psi[ijk]      = 1.;
 
   /* populating: */

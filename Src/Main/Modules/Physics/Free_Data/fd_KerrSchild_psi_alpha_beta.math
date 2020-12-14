@@ -93,7 +93,7 @@ Symm[ig(i,j)      = ig(j,i)];
 `  double betaD_D2 = fd_ks_c(x,y,z)*fd_ks_kt(x, y, z)*fd_ks_k2(x, y, z);`
 
    betaU(i)      = ig(i,j)*betaD(-j);
-`  alphaPsi[ijk] = 1./sqrt(1+fd_ks_c(x,y,z)*fd_ks_k0(x, y, z)*fd_ks_k0(x, y, z));`
+`  alphaPsi[ijk] = 1./sqrt(1+fd_ks_c(x,y,z)*fd_ks_kt(x, y, z)*fd_ks_kt(x, y, z));`
 `  psi[ijk]      = 1.;`
 
 Cpopulate[beta = betaU];
