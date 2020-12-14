@@ -546,8 +546,7 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
   root->MaxIter   = (Uint)Geti("RootFinder_Iteration");
   root->params    = par;
   root->f[0]      = NS_surface_enthalpy_root_finder_eq;
-  if (strstr_i(Gets("RootFinder_verbose"),"yes"))
-    root->verbose = 1;
+  root->verbose   = strstr_i(Gets("RootFinder_verbose"),"yes");
     
   plan_root_finder(root);
   
@@ -643,7 +642,6 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
       /* if NS surface finder interrupted */
       if (root->interrupt)
       {
-        free(dr);
         break;
       }
       /* if root finder is not OK for some reason */
@@ -660,7 +658,6 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
       y2[1] += N[1]*dr[0];
       y2[2] += N[2]*dr[0];
       Rnew_NS[IJ_Ylm(i,j,Nphi)] = root_square(3,y2,0);
-      free(dr);
       
       /* find the max NS radius */
       if (Rnew_NS[IJ_Ylm(i,j,Nphi)] > Max_R_NS)

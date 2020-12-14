@@ -264,7 +264,6 @@ int star_NS_idealfluid_gConf_find_Euler_const(Physics_T *const phys)
     Euler_const[0] = W1*Euler_const[0]+W2*guess[0];
   
   Setd("Euler_equation_constant",Euler_const[0]);
-  free(Euler_const);
   free_root_finder(root);
   
   FUNC_TOC
@@ -551,7 +550,6 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   // ??Physics(phys,UPDATE_SHIFT_GAUGE);
   
   free_root_finder(root);
-  free(new_par);
 }
 
 /* getting adjustment str, returns the relevant function. */
@@ -777,7 +775,6 @@ void star_NS_find_where_denthalpy_is_0(Physics_T *const phys,double xdh0[3])
     Error0("NS center could not be found.\n");
   }
   
-  free(NS_center);
   free_root_finder(root);
   
   FUNC_TOC
