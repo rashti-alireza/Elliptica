@@ -1,8 +1,8 @@
 ### analytic Kerr-Schild free data :kt,k0,k1,k2,c and their derivatives
 ###
 ### note: k0,k1,k2 and c are used in:
-### _gamma_D?D? =
-### _gamma_D?D?(k0(x,y,z),k1(x,y,z),k2(x,y,z),
+### gConf_D?D? =
+### gConf_D?D?(k0(x,y,z),k1(x,y,z),k2(x,y,z),
 ###             c(x,y,z),H(x,y,z))
 ###
 ### and kt is used in lapse.

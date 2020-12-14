@@ -1,4 +1,4 @@
-### Kerr-Schild free data _gamma,_gammaI and their derivatives.
+### Kerr-Schild free data gConf,igConf and their derivatives.
 ### NOTE: there is a sign difference for rotation matrices between
 ### here and 'rotation_transformation' function in Transformation module
 ### which accounts for active and passive transformation.
@@ -166,7 +166,7 @@ Declare =
 
 }
 
-# don't apply symmetry, since in _gamma only symmetry is applied
+# don't apply symmetry, since in gConf only symmetry is applied
 # in first two indices, later you might imporve it.
 # symmetries:
 #Symm[_ddg00(i,j)    = _ddg00(j,i)];
