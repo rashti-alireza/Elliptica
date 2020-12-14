@@ -41,8 +41,8 @@ void fd_KerrSchild_set_params(Physics_T *const phys)
   const double chi_z   = Getd("chi_z");
   const double chi     = sqrt(Pow2(chi_x)+Pow2(chi_y)+Pow2(chi_z));
   
-  M_BH = Getd("irreducible_mass");
-  a_BH = Getd("net_spin");
+  M_BH = Getd("Christodoulou_mass");
+  a_BH = Getd("spin_a");
   Lambda = 1.;
 
   assert(LSSEQL(chi,1));
