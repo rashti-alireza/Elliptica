@@ -111,7 +111,7 @@ FOR_ALL_ijk
   KS__beta_D0[ijk] = fd_ks_c(x,y,z)*fd_ks_kt(x, y, z)*fd_ks_k0(x, y, z);
   KS__beta_D1[ijk] = fd_ks_c(x,y,z)*fd_ks_kt(x, y, z)*fd_ks_k1(x, y, z);
   KS__beta_D2[ijk] = fd_ks_c(x,y,z)*fd_ks_kt(x, y, z)*fd_ks_k2(x, y, z);
-  KS__alpha[ijk]   = 1./sqrt(1+fd_ks_c(x,y,z)*fd_ks_k0(x, y, z)*fd_ks_k0(x, y, z));
+  KS__alpha[ijk]   = 1./sqrt(1+fd_ks_c(x,y,z)*fd_ks_kt(x, y, z)*fd_ks_kt(x, y, z));
 }
 dfield_and_get_v(dKS__beta_D0D0);
 dfield_and_get_v(dKS__beta_D0D1);
