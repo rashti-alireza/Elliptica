@@ -34,7 +34,8 @@
 // root->FD_Right = 1; # right side f.d. method
 // # or
 // root->FD_Left  = 1; # left side f.d. method
-// double *x_sol     = execute_root_finder(root);
+// execute_root_finder(root);
+// double *x_sol  = root->x_sol;
 // # some checks:
 // * to check the exit status of root finder do: *
 // print_root_finder_exit_status(root);
@@ -42,8 +43,8 @@
 // printf("%e",root->residual);
 // * note one can interrupt the root finder by setting 
 //   root->interupt = 1 inside the params of equation. *
+// root->x_sol = 0; ** if you DON'T want to free the solution
 // free_root_finder(root); # free struct root
-// free(x_sol);
 //
 //
 // "Bisect_Single":
@@ -59,6 +60,8 @@
 // root->f[0]        = f0; # f0 = 0 equation
 // root->a_bisect    = a; # f(x) must change sign for x in [a,b]
 // root->b_bisect    = b; # f(x) must change sign for x in [a,b]
+// execute_root_finder(root);
+// double *x_sol = root->x_sol;
 // # some checks:
 // * to check the exit status of root finder do: *
 // print_root_finder_exit_status(root);
@@ -66,8 +69,8 @@
 // printf("%e",root->residual);
 // * note one can interrupt the root finder by setting 
 //   root->interupt = 1 inside the params of equation. *
+// root->x_sol = 0; ** if you DON'T want to free the solution
 // free_root_finder(root); # free struct root
-// free(x_sol);
 */
 
 /* initializing a Root_Finder_T struct with calloc.
@@ -77,6 +80,9 @@ Root_Finder_T *init_root_finder(const Uint n)
 {
   Root_Finder_T *root = calloc(1,sizeof(*root));
   IsNull(root);
+  
+  root->x_sol = calloc(n,sizeof(*root->f));
+  IsNull(root->x_sol);
   
   root->f = calloc(n+1,sizeof(*root->f));
   IsNull(root->f);
@@ -121,13 +127,11 @@ void free_root_finder(Root_Finder_T *root)
 {
   if (!root)
     return;
-    
-  if (root->f)
-   free(root->f);
-   
-  if (root->df_dx)
-   free(root->df_dx);
-   
+  
+  Free(root->x_sol);
+  Free(root->f);
+  Free(root->df_dx);
+  
   free(root);
 }
 
@@ -264,14 +268,14 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
   const double tic = get_time_sec();
   const Uint MaxIter = root->MaxIter;
   const Uint n = root->n;
-  void *params     = root->params;
+  void *params = root->params;
   const double *const x_gss = root->x_gss;
   const double TOL = root->tolerance;
   double (**f)(void *params,const double *const x) = root->f;
   double (**df_dx)(void *params,const double *const x,const Uint dir) = root->df_dx;
   double (*dg_dx)(void *params,double *const x,const Uint dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const Uint dir),Root_Finder_T *const root) = 0;
   const char *const desc = root->description;
-  double *const x = alloc_double(n);
+  double *const x = root->x_sol;
   double z[n],y[n];
   double g0,g1,g2,g3,g,h1,h2,h3,alpha0,alpha,alpha2,alpha3,z0;
   double res;

@@ -63,7 +63,6 @@ static int root_finder_SteepestDescent(Grid_T *const grid)
          fabs(x_sol[0]-x_analytic[0]),fabs(x_sol[1]-x_analytic[1]),fabs(x_sol[2]-x_analytic[2]));
   printf("Residual = %e\n\n",root->residual);
   free_root_finder(root);
-  free(x_sol);
   
   /* testing without the derivatives are given: */
   root = init_root_finder(3);
@@ -84,7 +83,6 @@ static int root_finder_SteepestDescent(Grid_T *const grid)
          fabs(x_sol[0]-x_analytic[0]),fabs(x_sol[1]-x_analytic[1]),fabs(x_sol[2]-x_analytic[2]));
   printf("Residual = %e\n\n",root->residual);
   free_root_finder(root);
-  free(x_sol);
   
   return EXIT_SUCCESS;
   UNUSED(grid);
