@@ -63,6 +63,7 @@ static int set_black_hole_params(Physics_T *const phys)
   //
   // surface_type:
   // 	o. perfect_s2: perfect sphere
+  //    o. KerrSchild_s2: Kerr-Schild with arbitrary spin and boost
   //
   //
   // tune_BH_radius_criteria:
@@ -120,6 +121,10 @@ static int find_black_hole_surface(Physics_T *const phys)
   {
     bh_find_bh_surface_perfect_s2(phys);
   }
+  else IF_sval("surface_type","KerrSchild_s2")
+  {
+    bh_find_bh_surface_KerrSchild_s2(phys);
+  }
   else
     Error0(NO_OPTION);
   
@@ -137,6 +142,8 @@ static int start_off_black_hole(Physics_T *const phys)
   {
     IF_sval("surface_type","perfect_s2")
       bh_start_off_KerrSchild_perfect_s2(phys);
+    else IF_sval("surface_type","KerrSchild_s2")
+      bh_start_off_KerrSchild_general_s2(phys);
     else
       Error0(NO_OPTION);
   }

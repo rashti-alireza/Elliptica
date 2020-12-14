@@ -21,95 +21,103 @@ void bh_start_off_KerrSchild_perfect_s2(Physics_T *const phys)
   const double bh_chi_z    = 0.;
   const double bh_irr_mass = Getd("irreducible_mass");
   const double bh_R        = 2.0*bh_irr_mass;/* approximate initial radius */
-  const double bh_chi      = 0.;
   const double bh_a        = 0.;
-  
-  /* check size of bh_chi */
-  if (GRT(bh_chi,1.))
-    Error0("BH spin is too large!\n");
   
   /* set initial grid parameters */
   Setd("perfect_S2_radius",bh_R);
   Setd("min_radius",bh_R);
   Setd("max_radius",bh_R);
   
-  printf("%s properties:\n",phys->stype);
+  printf(Pretty0"%s properties:\n",phys->stype);
   printf(Pretty0"%s radius (Kerr-Schild Coords.) = %+e\n",phys->stype,bh_R);
   printf(Pretty0"%s irreducible mass             = %+e\n",phys->stype,bh_irr_mass);
   printf(Pretty0"%s dimensionless spin (x comp.) = %+e\n",phys->stype,bh_chi_x);
   printf(Pretty0"%s dimensionless spin (y comp.) = %+e\n",phys->stype,bh_chi_y);
   printf(Pretty0"%s dimensionless spin (z comp.) = %+e\n",phys->stype,bh_chi_z);
-  printf(Pretty0"%s approximate net spin         = %+e\n",phys->stype,bh_a);
+  printf(Pretty0"%s spin/M(= a)                  = %+e\n",phys->stype,bh_a);
+  
+  FUNC_TOC
+}
+
+/* use a general KerrSchild to start off black hole
+// print properties.
+// NOTE: this is NOT assuming perfect sphere. */
+void bh_start_off_KerrSchild_general_s2(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  const double bh_chi_x    = Getd("chi_x");
+  const double bh_chi_y    = Getd("chi_y");
+  const double bh_chi_z    = Getd("chi_z");
+  const double bh_irr_mass = Getd("irreducible_mass");
+  const double bh_chi = sqrt(Pow2(bh_chi_x)+Pow2(bh_chi_y)+Pow2(bh_chi_z));
+  const double bh_chr_mass = bh_irr_mass*sqrt(2./(1.+sqrt(1-Pow2(bh_chi))));
+  const double bh_R = bh_chr_mass*(1+sqrt(1-Pow2(bh_chi)));/* approximate initial radius */
+  const double bh_a = bh_chi*bh_chr_mass;
+  
+  /* check size of bh_chi */
+  if (GRT(bh_chi,1.))
+    Errors("%s spin is too large!\n",phys->stype);
+  
+  printf(Pretty0"%s properties:\n",phys->stype);
+  printf(Pretty0"%s irreducible mass             = %+e\n",phys->stype,bh_irr_mass);
+  printf(Pretty0"%s Christodoulou_mass           = %+e\n",phys->stype,bh_chr_mass);
+  printf(Pretty0"%s dimensionless spin (x comp.) = %+e\n",phys->stype,bh_chi_x);
+  printf(Pretty0"%s dimensionless spin (y comp.) = %+e\n",phys->stype,bh_chi_y);
+  printf(Pretty0"%s dimensionless spin (z comp.) = %+e\n",phys->stype,bh_chi_z);
+  printf(Pretty0"%s net dimensionless spin       = %+e\n",phys->stype,bh_chi);
+  printf(Pretty0"%s Spin/M (= a)                 = %+e\n",phys->stype,bh_a);
+  printf(Pretty0"%s approximate radius           ~ %+e\n",phys->stype,bh_R);
   
   FUNC_TOC
 }
 
 /* use Schwarzchild in isotropic coords (pefect S2) to start off 
 // black hole paramters and domain shape etc.
-// NOTE: this is perfect sphere, so chi = 0. and spin = 0. */
+// NOTE: chi = 0. and spin = 0. */
 void bh_start_off_IsoSchild_perfect_s2(Physics_T *const phys)
 {
   FUNC_TIC
   
-  const double bh_chi_x    = 0.;
-  const double bh_chi_y    = 0.;
-  const double bh_chi_z    = 0.;
   const double bh_irr_mass = Getd("irreducible_mass");
   const double bh_R        = 0.5*bh_irr_mass;/* approximate initial radius */
-  const double bh_chi      = 0.;
-  const double bh_a        = 0.;
-  
-  /* check size of bh_chi */
-  if (GRT(bh_chi,1.))
-    Error0("BH spin is too large!\n");
   
   /* set initial grid parameters */
   Setd("perfect_S2_radius",bh_R);
   Setd("min_radius",bh_R);
   Setd("max_radius",bh_R);
   
-  printf("%s properties:\n",phys->stype);
+  printf(Pretty0"%s properties:\n",phys->stype);
   printf(Pretty0"%s radius (isotropic Coords.)   = %+e\n",phys->stype,bh_R);
   printf(Pretty0"%s irreducible mass             = %+e\n",phys->stype,bh_irr_mass);
-  printf(Pretty0"%s dimensionless spin (x comp.) = %+e\n",phys->stype,bh_chi_x);
-  printf(Pretty0"%s dimensionless spin (y comp.) = %+e\n",phys->stype,bh_chi_y);
-  printf(Pretty0"%s dimensionless spin (z comp.) = %+e\n",phys->stype,bh_chi_z);
-  printf(Pretty0"%s approximate net spin         = %+e\n",phys->stype,bh_a);
+  printf(Pretty0"%s dimensionless spin (x comp.) = %+e\n",phys->stype,0.);
+  printf(Pretty0"%s dimensionless spin (y comp.) = %+e\n",phys->stype,0.);
+  printf(Pretty0"%s dimensionless spin (z comp.) = %+e\n",phys->stype,0.);
   
   FUNC_TOC
 }
 
 /* use Schwarzchild in Painleve-Gullstrand coords (pefect S2) to start off 
 // black hole paramters and domain shape etc.
-// NOTE: this is perfect sphere, so chi = 0. and spin = 0. */
+// NOTE: this is perfect sphere, and chi = 0. and spin = 0. */
 void bh_start_off_PGSchild_perfect_s2(Physics_T *const phys)
 {
   FUNC_TIC
   
-  const double bh_chi_x    = 0.;
-  const double bh_chi_y    = 0.;
-  const double bh_chi_z    = 0.;
   const double bh_irr_mass = Getd("irreducible_mass");
   const double bh_R        = 2*bh_irr_mass;/* approximate initial radius */
-  const double bh_chi      = 0.;
-  const double bh_a        = 0.;
-  
-  /* check size of bh_chi */
-  if (GRT(bh_chi,1.))
-    Error0("BH spin is too large!\n");
   
   /* set initial grid parameters */
   Setd("perfect_S2_radius",bh_R);
   Setd("min_radius",bh_R);
   Setd("max_radius",bh_R);
   
-  printf("%s properties:\n",phys->stype);
-  printf(Pretty0"%s radius (isotropic Coords.)   = %+e\n",phys->stype,bh_R);
+  printf(Pretty0"%s properties:\n",phys->stype);
+  printf(Pretty0"%s radius (Painleve-Gullstrand) = %+e\n",phys->stype,bh_R);
   printf(Pretty0"%s irreducible mass             = %+e\n",phys->stype,bh_irr_mass);
-  printf(Pretty0"%s dimensionless spin (x comp.) = %+e\n",phys->stype,bh_chi_x);
-  printf(Pretty0"%s dimensionless spin (y comp.) = %+e\n",phys->stype,bh_chi_y);
-  printf(Pretty0"%s dimensionless spin (z comp.) = %+e\n",phys->stype,bh_chi_z);
-  printf(Pretty0"%s approximate net spin         = %+e\n",phys->stype,bh_a);
+  printf(Pretty0"%s dimensionless spin (x comp.) = %+e\n",phys->stype,0.);
+  printf(Pretty0"%s dimensionless spin (y comp.) = %+e\n",phys->stype,0.);
+  printf(Pretty0"%s dimensionless spin (z comp.) = %+e\n",phys->stype,0.);
   
   FUNC_TOC
 }
@@ -144,6 +152,45 @@ void bh_find_bh_surface_perfect_s2(Physics_T *const phys)
   grid_char->params[phys->igc]->imgClm = imClm_rbh;
   grid_char->params[phys->igc]->r_min  = Getd("min_radius");
   grid_char->params[phys->igc]->r_max  = Getd("max_radius");
+  grid_char->params[phys->igc]->lmax   = lmax;
+  grid_char->params[phys->igc]->occupied = 1;
+  
+  Free(rbh);
+}
+
+/* set BH surface for a general Kerr-Schild BH with arbitrary 
+// spin and boost and then set grid characteristic */
+void bh_find_bh_surface_KerrSchild_s2(Physics_T *const phys)
+{
+  Grid_Char_T *grid_char = phys->grid_char;
+  const Uint lmax   = (Uint)Geti("surface_Ylm_max_l");
+  const Uint Ntheta = Ntheta_Ylm(lmax);
+  const Uint Nphi   = Nphi_Ylm(lmax);
+  const Uint Ntot   = Ntotal_Ylm(lmax);
+  double *rbh       = fd_find_KerrSchild_BH_surface(phys);
+  double rmin = DBL_MAX,rmax = 0.;
+  double *reClm_rbh = alloc_ClmYlm(lmax),
+         *imClm_rbh = alloc_ClmYlm(lmax);
+
+  for (Uint ij = 0; ij < Ntot; ++ij)
+  {
+    rmin = (rbh[ij] < rmin ? rbh[ij]: rmin);
+    rmax = (rbh[ij] > rmax ? rbh[ij]: rmax);
+  }
+  
+  Setd("min_radius",rmin);
+  Setd("max_radius",rmax);
+  
+  /* calculating coeffs */
+  get_Ylm_coeffs(reClm_rbh,imClm_rbh,rbh,Ntheta,Nphi,lmax);
+  
+  assert(!grid_char->params[phys->igc]->occupied);
+  grid_char->params[phys->igc]->obj    = phys->stype;
+  grid_char->params[phys->igc]->dir    = phys->spos;
+  grid_char->params[phys->igc]->relClm = reClm_rbh;
+  grid_char->params[phys->igc]->imgClm = imClm_rbh;
+  grid_char->params[phys->igc]->r_min  = rmin;
+  grid_char->params[phys->igc]->r_max  = rmax;
   grid_char->params[phys->igc]->lmax   = lmax;
   grid_char->params[phys->igc]->occupied = 1;
   
