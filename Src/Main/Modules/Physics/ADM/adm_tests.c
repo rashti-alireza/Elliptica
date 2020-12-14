@@ -82,9 +82,9 @@ static void KerrSchild_analytic_adm_Kij_comparison(Physics_T *const phys)
   const double BHx = Getd("center_x");
   const double BHy = Getd("center_y");
   const double BHz = Getd("center_z");
-  const double Cx  = Getd("chi_U0");
-  const double Cy  = Getd("chi_U1");
-  const double Cz  = Getd("chi_U2");
+  const double Cx  = Getd("chi_x");
+  const double Cy  = Getd("chi_y");
+  const double Cz  = Getd("chi_z");
   const double Bx  = Getd("boost_Vx");
   const double By  = Getd("boost_Vy");
   const double Bz  = Getd("boost_Vz");

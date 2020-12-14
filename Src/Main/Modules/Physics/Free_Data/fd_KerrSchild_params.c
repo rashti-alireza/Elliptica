@@ -35,10 +35,11 @@ double Lambda;/* flat data => 0, kerr-schild => 1 */
 void fd_KerrSchild_set_params(Physics_T *const phys);
 void fd_KerrSchild_set_params(Physics_T *const phys)
 {
-  const double chi_U0      = Getd("chi_U0");
-  const double chi_U1      = Getd("chi_U1");
-  const double chi_U2      = Getd("chi_U2");
-  const double chi         = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));
+  const double Epsilon = 1E-14;
+  const double chi_x   = Getd("chi_x");
+  const double chi_y   = Getd("chi_y");
+  const double chi_z   = Getd("chi_z");
+  const double chi     = sqrt(Pow2(chi_x)+Pow2(chi_y)+Pow2(chi_z));
   
   M_BH = Getd("irreducible_mass");
   a_BH = Getd("net_spin");
@@ -58,14 +59,14 @@ void fd_KerrSchild_set_params(Physics_T *const phys)
     Bx = 0.0;
     By = 0.0;
     Bz = 0.0;
-    B2 = 10.0*DBL_EPSILON;
+    B2 = Epsilon;
   }
   
   /* rotation */
   if (!EQL(chi,0.))/* otherwise R is 0 */
   {
-    phiz = arctan(chi_U1,chi_U0);
-    phiy = acos(chi_U2/chi);
+    phiz = arctan(chi_y,chi_x);
+    phiy = acos(chi_z/chi);
     assert(isfinite(phiy));
   }
   else
