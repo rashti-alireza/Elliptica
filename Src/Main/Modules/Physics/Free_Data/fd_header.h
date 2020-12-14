@@ -199,5 +199,6 @@ void fd_beta_and_dbeta_PGSchild(Physics_T *const phys,
                                 const char *const dbeta);
   
 
+double *fd_find_KerrSchild_BH_surface(Physics_T *const phys);
 #endif
 
