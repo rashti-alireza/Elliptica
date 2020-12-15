@@ -43,6 +43,15 @@ int bh_main(Physics_T *const phys)
       ret = add_black_hole_fields(phys);
     break;
     
+    case BH_UPDATE_sConf:
+      AssureType(phys->ctype == BH);
+      ret = update_conformal_normal_vector_on_AH(phys);
+    break;
+
+    //case BH_AH_EXPANSION:
+      //ret = calculate_expansion_on_AH(phys);
+    //break;
+    
     default:
       Error0(NO_OPTION);
   }
@@ -168,3 +177,14 @@ static int start_off_black_hole(Physics_T *const phys)
   return EXIT_SUCCESS;
 }
 
+/* updating conformal normal and its derivatives on apparent horizon 
+// note: we need gConf ready for this function. */
+static int update_conformal_normal_vector_on_AH(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  bh_update_sConf_dsConf(phys);
+  
+  FUNC_TOC
+  return EXIT_SUCCESS;
+}

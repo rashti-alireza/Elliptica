@@ -260,3 +260,70 @@ void bh_tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
   
 }
 
+
+/* updating conformal normal vector and its derivatives on 
+// apparent horizon */
+void bh_update_sConf_dsConf(Physics_T *const phys)
+{
+  Grid_T *const grid = mygrid(phys,"BH_around_IB");
+  const double BH_center_x = Getd("center_x");
+  const double BH_center_y = Getd("center_y");
+  const double BH_center_z = Getd("center_z");
+  
+  FOR_ALL_p(grid->np)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    READ_v(gConf_D2D2)
+    READ_v(gConf_D0D2)
+    READ_v(gConf_D0D0)
+    READ_v(gConf_D0D1)
+    READ_v(gConf_D1D2)
+    READ_v(gConf_D1D1)
+    
+    /* normal vector on horizon */
+    REALLOC_v_WRITE_v(sConf_U0);
+    REALLOC_v_WRITE_v(sConf_U1);
+    REALLOC_v_WRITE_v(sConf_U2);
+    
+    FOR_ALL_ijk
+    {
+      double x = patch->node[ijk]->x[0]-BH_center_x;
+      double y = patch->node[ijk]->x[1]-BH_center_y; 
+      double z = patch->node[ijk]->x[2]-BH_center_z;
+      double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+      
+      sConf_U0[ijk] = dq2_dq1(patch,_c_,_x_,ijk);
+      sConf_U1[ijk] = dq2_dq1(patch,_c_,_y_,ijk);
+      sConf_U2[ijk] = dq2_dq1(patch,_c_,_z_,ijk);
+      
+      /* N^2    = gConf_{ij} sConf^i * sConf^j */
+      double N2 = 
+pow(sConf_U0[ijk], 2)*gConf_D0D0[ijk] + 2.0*sConf_U0[ijk]*sConf_U1[ijk]*
+gConf_D0D1[ijk] + 2.0*sConf_U0[ijk]*sConf_U2[ijk]*gConf_D0D2[ijk] +
+pow(sConf_U1[ijk], 2)*gConf_D1D1[ijk] + 2.0*sConf_U1[ijk]*sConf_U2[ijk]*
+gConf_D1D2[ijk] + pow(sConf_U2[ijk], 2)*gConf_D2D2[ijk];
+        
+      double N = sqrt(N2);
+      
+      /* normalizing */
+      sConf_U0[ijk] /= N;
+      sConf_U1[ijk] /= N;
+      sConf_U2[ijk] /= N;
+    }
+    
+    dField_di(dsConf_U0D0);
+    dField_di(dsConf_U0D1);
+    dField_di(dsConf_U0D2);
+    
+    dField_di(dsConf_U1D0);
+    dField_di(dsConf_U1D1);
+    dField_di(dsConf_U1D2);
+    
+    dField_di(dsConf_U2D0);
+    dField_di(dsConf_U2D1);
+    dField_di(dsConf_U2D2);
+  }
+  
+}
+
