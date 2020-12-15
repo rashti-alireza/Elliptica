@@ -62,9 +62,6 @@ static void free_obs(Observe_T *obs)
   if (!obs)
     return;
     
-  if (obs->grid->kind == Grid_SplitCubedSpherical_BHNS)
-  {  
-  
   struct items_S **adm = obs->items;
   Uint i;
   
@@ -150,8 +147,5 @@ static void free_obs(Observe_T *obs)
   }
   Free(adm);
   
-  }
-  else
-    Error0(NO_OPTION);
 }
 

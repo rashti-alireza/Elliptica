@@ -984,6 +984,10 @@ static void calc_ADM_PJ(Observe_T *const obs)
     {
       region = "BH_around_IB";
     }
+    else IFsc("ADM(P,J)|SBH")
+    {
+      region = "BH_around_IB";
+    }
     else
     {
       Error0(NO_OPTION);
@@ -1077,6 +1081,14 @@ static void calc_ADM_PJ(Observe_T *const obs)
         adm[n]->K = 0;
         n_physical_metric_around(adm[n],_c_);
       }
+      else IFsc("ADM(P,J)|SBH")
+      {
+        /* surface integral */
+        adm[n]->surface_integration_flg = 1;
+        adm[n]->Z_surface = 1;
+        adm[n]->K = 0;
+        n_physical_metric_around(adm[n],_c_);
+      }
       else
       {
         Error0(NO_OPTION);
@@ -1120,6 +1132,14 @@ static void calc_Kommar_mass(Observe_T *const obs)
       region = "NS_OB";
     }
     else IFsc("Kommar(M)|BH")
+    {
+      region = "BH_around_IB";
+    }
+    else IFsc("Kommar(M)|BH")
+    {
+      region = "BH_around_IB";
+    }
+    else IFsc("Kommar(M)|SBH")
     {
       region = "BH_around_IB";
     }
@@ -1212,6 +1232,14 @@ static void calc_Kommar_mass(Observe_T *const obs)
         kommar[n]->K = 0;
         n_physical_metric_around(kommar[n],_c_);
       }
+      else IFsc("Kommar(M)|SBH")
+      {
+        /* surface integral */
+        kommar[n]->surface_integration_flg = 1;
+        kommar[n]->Z_surface = 1;
+        kommar[n]->K = 0;
+        n_physical_metric_around(kommar[n],_c_);
+      }
       else
       {
         Error0(NO_OPTION);
@@ -1258,6 +1286,11 @@ static void calc_ADM_mass(Observe_T *const obs)
       patches1 = collect_patches(grid,region,&N1);
     }
     else IFsc("ADM(M)|BH")
+    {
+      region   = "BH_around_IB";
+      patches2 = collect_patches(grid,region,&N2);
+    }
+    else IFsc("ADM(M)|SBH")
     {
       region   = "BH_around_IB";
       patches2 = collect_patches(grid,region,&N2);

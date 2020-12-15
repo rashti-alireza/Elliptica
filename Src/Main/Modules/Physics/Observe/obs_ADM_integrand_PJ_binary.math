@@ -36,10 +36,10 @@ C_macro3 = declare_and_alloc_xi(name);
 `  Physics_T *const phys = obs->phys;`
 `  struct items_S **adm = obs->items;`
 `  const Uint N = obs->Nitems;`
-`  const double x_cm = Getd("x_CM");`
-`  const double y_cm = Getd("y_CM");`
-`  const double z_cm = Getd("z_CM");`
-`  const double CUTOFF = 1E3;`
+`  const double x_cm = sysGetd("x_CM");`
+`  const double y_cm = sysGetd("y_CM");`
+`  const double z_cm = sysGetd("z_CM");`
+`  const double CUTOFF = 1E8;`
 `  Uint p;`
 ``
 `  for(p = 0; p < N; ++p)`
@@ -50,8 +50,8 @@ C_macro3 = declare_and_alloc_xi(name);
 
 Declare = 
 {
-  # _A^{ij}
- (obj = Field,name = _A_UiUj, rank = UU, C_macro);
+  # AConf^{ij}
+ (obj = Field,name = AConfIJ, rank = UU, C_macro);
 
  # conformal metric 
  (obj = Field,name = gConf, rank = DD, C_macro);
@@ -66,10 +66,10 @@ Declare =
  (obj = Field,name = dpsi, rank = D, C_macro);
 
  # Christoffer symbol value
- (obj = Field,name = _Gamma, rank = UDD, C_macro);
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro);
 
  # trKij
- (obj = Field,name = K, rank = 0, C_macro);
+ (obj = Field,name = trK, rank = 0, C_macro);
 
  # normal vector components
  (obj = Field,name = n, rank = U, none);
@@ -93,10 +93,10 @@ Declare =
  (obj = variable,name = att, none);
 }
 # symmetries:
-Symm[_A_UiUj(i,j)  = _A_UiUj(j,i)];
+Symm[AConfIJ(i,j)  = AConfIJ(j,i)];
 Symm[igConf(i,j)  = igConf(j,i)];
 Symm[gConf(i,j)   = gConf(j,i)];
-Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
+Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 
 ``
 `   for(ijk = 0; ijk < nn; ++ijk)`
@@ -120,7 +120,7 @@ Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 `      {`
        psi4   = psi**4;
        psi6   = psi**6;
-       P(i,j) = _A_UiUj(i,j)-(2/3)*K*psi6*igConf(i,j);
+       P(i,j) = AConfIJ(i,j)-(2/3)*trK*psi6*igConf(i,j);
        Symm[P(i,j)  = P(j,i)];
 
        Pn(i)  = P(i,j)*n(k)*gConf(-j,-k)*psi4;
@@ -142,10 +142,10 @@ Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 `      DEF_RELATIVE_r`
 `      double att = r > CUTOFF ? 0:1;`
        psi6_   = psi**(6);
-       P_(i,j) = _A_UiUj(i,j)-(2/3)*K*psi6_*igConf(i,j);
+       P_(i,j) = AConfIJ(i,j)-(2/3)*trK*psi6_*igConf(i,j);
        Symm[P_(i,j)  = P_(j,i)];
 
-       G1(i) = _Gamma(i,j,k)*P_(-j,-k) + _Gamma(j,jp,k)*KD(-j,-jp)*P_(i,-k);
+       G1(i) = ChrisConf(i,j,k)*P_(-j,-k) + ChrisConf(j,jp,k)*KD(-j,-jp)*P_(i,-k);
        G2(i) = -2*gConf(-j,-k)*P_(j,k)*igConf(i,l)*dpsi(-l)/psi;
        G(i)  = att*(G1(i)+G2(i));
 
