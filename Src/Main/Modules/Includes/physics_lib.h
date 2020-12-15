@@ -155,6 +155,8 @@ typedef enum CMD_T
  BH_START,/* initiation before first grid */
  BH_SET_PARAMS,/* set params */
  BH_ADD_FIELDS,/* add fields */
+ BH_UPDATE_sConf,/* update sConf^i and dsConf^i_j conformal normal on AH */
+ BH_AH_EXPANSION,/* calculate expansion on AH */
  
  /* free data related */
  FREE_DATA_SET_PARAMS,/* set params */
