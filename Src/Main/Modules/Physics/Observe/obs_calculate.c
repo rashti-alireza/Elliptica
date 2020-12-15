@@ -44,7 +44,7 @@ void obs_calculate(Observe_T *const obs)
   {
     define_spin_JRP(obs);
   }
-  else IFss ("Spin|Campanelli|")
+  else IFss("Spin|Campanelli|")
   {
     define_spin_campanelli(obs);
   }
