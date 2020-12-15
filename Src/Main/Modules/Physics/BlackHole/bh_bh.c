@@ -262,7 +262,8 @@ void bh_tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
 
 
 /* updating conformal normal vector and its derivatives on 
-// apparent horizon */
+// apparent horizon. 
+// NOTE: bh_sConf^i = psi^2 bh_s^i and bh_sConf_i = psi^-2 bh_s_i*/
 void bh_update_sConf_dsConf(Physics_T *const phys)
 {
   Grid_T *const grid = mygrid(phys,"BH_around_IB");
@@ -282,9 +283,9 @@ void bh_update_sConf_dsConf(Physics_T *const phys)
     READ_v(gConf_D1D1)
     
     /* normal vector on horizon */
-    REALLOC_v_WRITE_v(sConf_U0);
-    REALLOC_v_WRITE_v(sConf_U1);
-    REALLOC_v_WRITE_v(sConf_U2);
+    REALLOC_v_WRITE_v(bh_sConf_U0);
+    REALLOC_v_WRITE_v(bh_sConf_U1);
+    REALLOC_v_WRITE_v(bh_sConf_U2);
     
     FOR_ALL_ijk
     {
@@ -293,36 +294,36 @@ void bh_update_sConf_dsConf(Physics_T *const phys)
       double z = patch->node[ijk]->x[2]-BH_center_z;
       double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
       
-      sConf_U0[ijk] = dq2_dq1(patch,_c_,_x_,ijk);
-      sConf_U1[ijk] = dq2_dq1(patch,_c_,_y_,ijk);
-      sConf_U2[ijk] = dq2_dq1(patch,_c_,_z_,ijk);
+      bh_sConf_U0[ijk] = dq2_dq1(patch,_c_,_x_,ijk);
+      bh_sConf_U1[ijk] = dq2_dq1(patch,_c_,_y_,ijk);
+      bh_sConf_U2[ijk] = dq2_dq1(patch,_c_,_z_,ijk);
       
-      /* N^2    = gConf_{ij} sConf^i * sConf^j */
+      /* N^2    = gConf_{ij} bh_sConf^i * bh_sConf^j */
       double N2 = 
-pow(sConf_U0[ijk], 2)*gConf_D0D0[ijk] + 2.0*sConf_U0[ijk]*sConf_U1[ijk]*
-gConf_D0D1[ijk] + 2.0*sConf_U0[ijk]*sConf_U2[ijk]*gConf_D0D2[ijk] +
-pow(sConf_U1[ijk], 2)*gConf_D1D1[ijk] + 2.0*sConf_U1[ijk]*sConf_U2[ijk]*
-gConf_D1D2[ijk] + pow(sConf_U2[ijk], 2)*gConf_D2D2[ijk];
+pow(bh_sConf_U0[ijk], 2)*gConf_D0D0[ijk] + 2.0*bh_sConf_U0[ijk]*bh_sConf_U1[ijk]*
+gConf_D0D1[ijk] + 2.0*bh_sConf_U0[ijk]*bh_sConf_U2[ijk]*gConf_D0D2[ijk] +
+pow(bh_sConf_U1[ijk], 2)*gConf_D1D1[ijk] + 2.0*bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*
+gConf_D1D2[ijk] + pow(bh_sConf_U2[ijk], 2)*gConf_D2D2[ijk];
         
       double N = sqrt(N2);
       
       /* normalizing */
-      sConf_U0[ijk] /= N;
-      sConf_U1[ijk] /= N;
-      sConf_U2[ijk] /= N;
+      bh_sConf_U0[ijk] /= N;
+      bh_sConf_U1[ijk] /= N;
+      bh_sConf_U2[ijk] /= N;
     }
     
-    dField_di(dsConf_U0D0);
-    dField_di(dsConf_U0D1);
-    dField_di(dsConf_U0D2);
+    dField_di(dbh_sConf_U0D0);
+    dField_di(dbh_sConf_U0D1);
+    dField_di(dbh_sConf_U0D2);
     
-    dField_di(dsConf_U1D0);
-    dField_di(dsConf_U1D1);
-    dField_di(dsConf_U1D2);
+    dField_di(dbh_sConf_U1D0);
+    dField_di(dbh_sConf_U1D1);
+    dField_di(dbh_sConf_U1D2);
     
-    dField_di(dsConf_U2D0);
-    dField_di(dsConf_U2D1);
-    dField_di(dsConf_U2D2);
+    dField_di(dbh_sConf_U2D0);
+    dField_di(dbh_sConf_U2D1);
+    dField_di(dbh_sConf_U2D2);
   }
   
 }

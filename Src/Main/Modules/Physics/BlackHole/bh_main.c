@@ -47,10 +47,6 @@ int bh_main(Physics_T *const phys)
       AssureType(phys->ctype == BH);
       ret = update_conformal_normal_vector_on_AH(phys);
     break;
-
-    //case BH_AH_EXPANSION:
-      //ret = calculate_expansion_on_AH(phys);
-    //break;
     
     default:
       Error0(NO_OPTION);
