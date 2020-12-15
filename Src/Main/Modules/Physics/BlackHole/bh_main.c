@@ -86,7 +86,7 @@ static int add_black_hole_fields(Physics_T *const phys)
 {
   FUNC_TIC
   
-  assert(phys->grid);
+  bh_add_fields(phys->grid);
   
   FUNC_TOC
   return EXIT_SUCCESS;
