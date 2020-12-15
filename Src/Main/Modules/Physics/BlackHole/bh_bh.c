@@ -62,7 +62,7 @@ void bh_start_off_KerrSchild_general_s2(Physics_T *const phys)
     Errors("%s spin is too large!\n",phys->stype);
   
   /* set initial params */
-  Setd("Christodoulou_mass",bh_irr_mass);
+  Setd("Christodoulou_mass",bh_chr_mass);
   Setd("spin_a",bh_a);
   
   printf(Pretty0"%s properties:\n",phys->stype);
