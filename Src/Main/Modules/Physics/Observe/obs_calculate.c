@@ -16,8 +16,7 @@
 // 3. set flags for surface or volume integral.
 // 4. populate normal vectors for surface integrals.
 // 5. populate the integrands
-// 6. assign the pertinent functions for the calculation.
-// */
+// 6. call the pertinent functions for the calculation. */
 void obs_calculate(Observe_T *const obs)
 {
   
@@ -33,32 +32,27 @@ void obs_calculate(Observe_T *const obs)
   {
     calc_ADM_mass(obs);
   }
-  else
-  {
-    Error0(NO_OPTION);
-  }
-  
-  if (strcmp_i(obs->quantity,"CM|BH"))
+  else IFsc("CM|BH")
   {
     Rc_BH(obs);
   }
-  else if (strcmp_i(obs->quantity,"CM|NS"))
+  else IFsc("CM|NS")
   {
     obs_Rc_NS(obs);
   }
-  else if (strstr_i(obs->quantity,"Spin|JRP|"))
+  else IFss("Spin|JRP|")
   {
     define_spin_JRP(obs);
   }
-  else if (strstr_i(obs->quantity,"Spin|Campanelli|"))
+  else IFss ("Spin|Campanelli|")
   {
     define_spin_campanelli(obs);
   }
-  else if (strstr_i(obs->quantity,"Spin|AKV|"))
+  else IFss("Spin|AKV|")
   {
     define_spin_akv(obs);
   }
-  else if (strcmp_i(obs->quantity,"Irreducible(M)|BH"))
+  else IFsc ("Irreducible(M)|BH")
   {
     obs_BH_irreducible_mass_CS(obs);
   }
@@ -865,7 +859,7 @@ static void define_spin_JRP(Observe_T *const obs)
 static void Rc_BH(Observe_T *const obs)
 {
   Physics_T *const phys = obs->phys;
-  Grid_T *const grid    = phys->grid;
+  Grid_T *const grid    = mygrid(phys,"BH_around_IB");
   const double AH_area  = Getd("AH_area");
   const double x_CM = sysGetd("x_CM");
   const double y_CM = sysGetd("y_CM");
@@ -879,10 +873,6 @@ static void Rc_BH(Observe_T *const obs)
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    
-    if (!IsItCovering(patch,"BH_around_IB"))
-      continue;
-      
     Uint ijk;
     Uint nn = patch->nn;
     
@@ -999,6 +989,10 @@ static void calc_ADM_PJ(Observe_T *const obs)
       Error0(NO_OPTION);
     }
   }
+  else
+  {
+    Error0(NO_OPTION);
+  }
   
   /* first collect all of the patches required */
   patches = collect_patches(grid,region,&N);
@@ -1088,6 +1082,10 @@ static void calc_ADM_PJ(Observe_T *const obs)
         Error0(NO_OPTION);
       }
     }
+    else
+    {
+      Error0(NO_OPTION);
+    }
   }
   
   obs_populate_ADM_integrand_PdS_GdV_binary(obs);
@@ -1107,7 +1105,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
   Patch_T **patches = 0;
   Patch_T *patch    = 0;
   struct items_S **kommar = 0;
-  const char *region = "BH_around_IB";
+  const char *region = 0;
   Uint n,N,ijk,nn;
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
@@ -1129,6 +1127,10 @@ static void calc_Kommar_mass(Observe_T *const obs)
     {
       Error0(NO_OPTION);
     }
+  }
+  else
+  {
+    Error0(NO_OPTION);
   }
   
   /* first collect all of the patches required */
@@ -1215,6 +1217,10 @@ static void calc_Kommar_mass(Observe_T *const obs)
         Error0(NO_OPTION);
       }
     }
+    else
+    {
+      Error0(NO_OPTION);
+    }
   }
   obs->ret[0] = obs_Kommar_mass(obs);
   
@@ -1229,7 +1235,7 @@ static void calc_ADM_mass(Observe_T *const obs)
   Patch_T **patches2 = 0;/* for surface integrals */
   Patch_T *patch     = 0;
   struct items_S **adm = 0;
-  const char *region;
+  const char *region   = 0;
   Uint N1 = 0;
   Uint N2 = 0;
   Uint n,ijk,nn;
@@ -1261,7 +1267,11 @@ static void calc_ADM_mass(Observe_T *const obs)
       Error0(NO_OPTION);
     }
   }
-  
+  else
+  {
+    Error0(NO_OPTION);
+  }
+
   /* alloc memory for all patches */
   adm = calloc((N1+N2),sizeof(*adm));
   IsNull(adm);
