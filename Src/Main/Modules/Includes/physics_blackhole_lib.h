@@ -21,6 +21,8 @@ bh_print_properties
   FILE *const file,
   const int pr_screen);
 
+double bh_calculate_expansion_on_AH(Physics_T *const phys);
+
 #endif
 
 

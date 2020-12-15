@@ -1,0 +1,72 @@
+## calcuating expansion of apparent horizon and returning 
+## the maximum expansion (Linf)
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro = READ_v(name);
+
+`#include "bh_header.h"`
+``
+`double bh_calculate_expansion_on_AH(Physics_T *const phys);`
+``
+`double bh_calculate_expansion_on_AH(Physics_T *const phys)`
+`{`
+` FUNC_TIC`
+` Grid_T *const grid = mygrid(phys,"BH_around_IB");`
+` double max = 0.;`
+``
+` FOR_ALL_p(grid->np)`
+` {`
+` Patch_T *patch = grid->patch[p];`
+``
+Declare = 
+{
+ # AConf^{ij}
+ (obj = Field,name = AConfIJ, rank = UU, C_macro);
+
+ # psi
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # dpsi
+ (obj = Field,name = dpsi, rank = D, C_macro);
+
+ # trK
+ (obj = Field,name = trK, rank = 0, C_macro);
+
+ # bh_sConf
+ (obj = Field,name = bh_sConf, rank = U, C_macro);
+
+ # dbh_sConf
+ (obj = Field,name = dbh_sConf, rank = UD, C_macro);
+ 
+ # gConf
+ (obj = Field,name = gConf, rank = DD, C_macro);
+
+ # Christoffer symbol
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro);
+
+}
+
+Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
+Symm[AConfIJ(i,j)     = AConfIJ(j,i)];
+Symm[gConf(i,j)       = gConf(j,i)];
+
+` FOR_ALL_ijk`
+` {`
+
+DisConfI = (dbh_sConf(j,i) + ChrisConf(j,i,l)*bh_sConf(-l))*KD(-j,-i);
+
+Theta    = bh_sConf(i)*dpsi(-i) + \
+           psi*DisConfI/4 - trK*(psi**3)/6 +\
+           (psi**-3)*AConfIJ(i,j)*gConf(-i,-l)*gConf(-j,-m)*bh_sConf(l)*bh_sConf(m)/4;
+
+`  max = (max < Theta ? Theta: max);`
+` }`
+` }`
+` FUNC_TOC`
+` return max;`
+`}`
