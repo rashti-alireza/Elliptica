@@ -10,7 +10,7 @@
 void bh_add_fields(Grid_T *const grid);
 void bh_add_fields(Grid_T *const grid)
 {
- FOR_ALL_p(grid->gn)
+ FOR_ALL_p(grid->np)
  {
  Patch_T *patch = grid->patch[p];
 
