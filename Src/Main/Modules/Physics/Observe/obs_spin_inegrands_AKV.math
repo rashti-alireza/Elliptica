@@ -33,7 +33,7 @@ Declare =
  (obj = Field,name = gConf, rank = DD, C_macro);
 
  # trKij
- #(obj = Field,name = K, rank = 0, C_macro);
+ #(obj = Field,name = trK, rank = 0, C_macro);
 
  # psi
  (obj = Field,name = psi, rank = 0, C_macro);

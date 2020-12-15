@@ -70,7 +70,7 @@ Declare =
  #(obj = Field,name = ChrisConf, rank = UDD, C_macro);
 
  # trKij
- (obj = Field,name = K, rank = 0, C_macro);
+ (obj = Field,name = trK, rank = 0, C_macro);
 
  # normal vector components
  (obj = Field,name = n, rank = U, none);
@@ -111,9 +111,9 @@ Symm[gConf(i,j)   = gConf(j,i)];
        psi4 = psi**4;
        psi6 = psi**6;
 
-       # P^{ij} = psi^(-10) \bar A^{ij} -2/3 K psi^{-4} \bar\gamma^{ij}
+       # P^{ij} = psi^(-10) \bar A^{ij} -2/3 trK psi^{-4} \bar\gamma^{ij}
        # P^{ij}*n^{k}*\gamma_{jk} => cancels psi^(-4) so don't write it:
-       P(i,j) = AConfIJ(i,j)/psi6-(2/3)*K*igConf(i,j);
+       P(i,j) = AConfIJ(i,j)/psi6-(2/3)*trK*igConf(i,j);
        Symm[P(i,j)  = P(j,i)];
 
 # lower the index for better result:

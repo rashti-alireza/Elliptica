@@ -49,7 +49,7 @@ Declare =
  (obj = Field,name = beta, rank = U, C_macro);
 
  # trKij
- (obj = Field,name = K, rank = 0, C_macro);
+ (obj = Field,name = trK, rank = 0, C_macro);
 
  # Killing vector xi^i, assumed 0
  #(obj = Field,name = xi, rank = U, C_macro);
@@ -83,7 +83,7 @@ Symm[gConf(i,j)   = gConf(j,i)];
        psi4  = psi**4;
        dalpha(i) = dalphaPsi(i)/psi-alphaPsi*dpsi(i)/psi2;
        K_DD(-i,-j) = psim2*AConfIJ(ip,jp)*gConf(i,-ip)*gConf(j,-jp)+\
-		    1/3*K*psi4*gConf(i,j);
+		    1/3*trK*psi4*gConf(i,j);
        Symm[K_DD(i,j) = K_DD(j,i)];
        integrand = n(-i)*(dalpha(i)-K_DD(i,j)*beta(-j));
 ``
