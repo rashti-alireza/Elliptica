@@ -19,6 +19,9 @@ import os
 import argparse
 from argparse import RawTextHelpFormatter
 
+## data file suffix
+FILE_SUFFIX = "silo"
+
 ## quick options:
 # turn on random mesh coloring
 opt_random_mesh_color = 1
@@ -521,7 +524,7 @@ def collect_files(regex,data_path):
   files_name = []
   
   for f in allfiles:
-    if re.search(r'{}'.format(regex),f):
+    if re.search(r'{}\.{}'.format(regex,FILE_SUFFIX),f):
       files_name.append(f)
   
   if len(files_name) == 0:
