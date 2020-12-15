@@ -33,12 +33,12 @@ double obs_Kommar_mass(Observe_T *const obs)
   READ_v(gConf_D1D2)
   READ_v(gConf_D1D1)
   READ_v(gConf_D2D2)
-  READ_v(_A_UiUj_U2U2)
-  READ_v(_A_UiUj_U1U2)
-  READ_v(_A_UiUj_U1U1)
-  READ_v(_A_UiUj_U0U2)
-  READ_v(_A_UiUj_U0U1)
-  READ_v(_A_UiUj_U0U0)
+  READ_v(AConfIJ_U0U1)
+  READ_v(AConfIJ_U0U0)
+  READ_v(AConfIJ_U0U2)
+  READ_v(AConfIJ_U2U2)
+  READ_v(AConfIJ_U1U1)
+  READ_v(AConfIJ_U1U2)
   READ_v(eta)
   READ_v(deta_D0)
   READ_v(deta_D1)
@@ -77,58 +77,58 @@ deta_D2[ijk]/psi[ijk] - dpsi_D2[ijk]*eta[ijk]/psi2;
 
     double K_DD_D1D1 = 
 0.33333333333333331*K[ijk]*gConf_D1D1[ijk]*psi4 + psim2*
-(_A_UiUj_U0U0[ijk]*pow(gConf_D0D1[ijk], 2) + 2.0*_A_UiUj_U0U1[ijk]*
-gConf_D0D1[ijk]*gConf_D1D1[ijk] + 2.0*_A_UiUj_U0U2[ijk]*
-gConf_D0D1[ijk]*gConf_D1D2[ijk] + _A_UiUj_U1U1[ijk]*
-pow(gConf_D1D1[ijk], 2) + 2.0*_A_UiUj_U1U2[ijk]*gConf_D1D1[ijk]*
-gConf_D1D2[ijk] + _A_UiUj_U2U2[ijk]*pow(gConf_D1D2[ijk], 2));
+(AConfIJ_U0U0[ijk]*pow(gConf_D0D1[ijk], 2) + 2.0*AConfIJ_U0U1[ijk]*
+gConf_D0D1[ijk]*gConf_D1D1[ijk] + 2.0*AConfIJ_U0U2[ijk]*
+gConf_D0D1[ijk]*gConf_D1D2[ijk] + AConfIJ_U1U1[ijk]*
+pow(gConf_D1D1[ijk], 2) + 2.0*AConfIJ_U1U2[ijk]*gConf_D1D1[ijk]*
+gConf_D1D2[ijk] + AConfIJ_U2U2[ijk]*pow(gConf_D1D2[ijk], 2));
 
     double K_DD_D1D2 = 
 0.33333333333333331*K[ijk]*gConf_D1D2[ijk]*psi4 + psim2*
-(_A_UiUj_U0U0[ijk]*gConf_D0D1[ijk]*gConf_D0D2[ijk] + _A_UiUj_U0U1[ijk]*
-gConf_D0D1[ijk]*gConf_D1D2[ijk] + _A_UiUj_U0U1[ijk]*gConf_D0D2[ijk]*
-gConf_D1D1[ijk] + _A_UiUj_U0U2[ijk]*gConf_D0D1[ijk]*gConf_D2D2[ijk] + 
-_A_UiUj_U0U2[ijk]*gConf_D0D2[ijk]*gConf_D1D2[ijk] + _A_UiUj_U1U1[ijk]*
-gConf_D1D1[ijk]*gConf_D1D2[ijk] + _A_UiUj_U1U2[ijk]*gConf_D1D1[ijk]*
-gConf_D2D2[ijk] + _A_UiUj_U1U2[ijk]*pow(gConf_D1D2[ijk], 2) + 
-_A_UiUj_U2U2[ijk]*gConf_D1D2[ijk]*gConf_D2D2[ijk]);
+(AConfIJ_U0U0[ijk]*gConf_D0D1[ijk]*gConf_D0D2[ijk] + AConfIJ_U0U1[ijk]*
+gConf_D0D1[ijk]*gConf_D1D2[ijk] + AConfIJ_U0U1[ijk]*gConf_D0D2[ijk]*
+gConf_D1D1[ijk] + AConfIJ_U0U2[ijk]*gConf_D0D1[ijk]*gConf_D2D2[ijk] + 
+AConfIJ_U0U2[ijk]*gConf_D0D2[ijk]*gConf_D1D2[ijk] + AConfIJ_U1U1[ijk]*
+gConf_D1D1[ijk]*gConf_D1D2[ijk] + AConfIJ_U1U2[ijk]*gConf_D1D1[ijk]*
+gConf_D2D2[ijk] + AConfIJ_U1U2[ijk]*pow(gConf_D1D2[ijk], 2) + 
+AConfIJ_U2U2[ijk]*gConf_D1D2[ijk]*gConf_D2D2[ijk]);
 
     double K_DD_D2D2 = 
 0.33333333333333331*K[ijk]*gConf_D2D2[ijk]*psi4 + psim2*
-(_A_UiUj_U0U0[ijk]*pow(gConf_D0D2[ijk], 2) + 2.0*_A_UiUj_U0U1[ijk]*
-gConf_D0D2[ijk]*gConf_D1D2[ijk] + 2.0*_A_UiUj_U0U2[ijk]*
-gConf_D0D2[ijk]*gConf_D2D2[ijk] + _A_UiUj_U1U1[ijk]*
-pow(gConf_D1D2[ijk], 2) + 2.0*_A_UiUj_U1U2[ijk]*gConf_D1D2[ijk]*
-gConf_D2D2[ijk] + _A_UiUj_U2U2[ijk]*pow(gConf_D2D2[ijk], 2));
+(AConfIJ_U0U0[ijk]*pow(gConf_D0D2[ijk], 2) + 2.0*AConfIJ_U0U1[ijk]*
+gConf_D0D2[ijk]*gConf_D1D2[ijk] + 2.0*AConfIJ_U0U2[ijk]*
+gConf_D0D2[ijk]*gConf_D2D2[ijk] + AConfIJ_U1U1[ijk]*
+pow(gConf_D1D2[ijk], 2) + 2.0*AConfIJ_U1U2[ijk]*gConf_D1D2[ijk]*
+gConf_D2D2[ijk] + AConfIJ_U2U2[ijk]*pow(gConf_D2D2[ijk], 2));
 
     double K_DD_D0D0 = 
 0.33333333333333331*K[ijk]*gConf_D0D0[ijk]*psi4 + psim2*
-(_A_UiUj_U0U0[ijk]*pow(gConf_D0D0[ijk], 2) + 2.0*_A_UiUj_U0U1[ijk]*
-gConf_D0D0[ijk]*gConf_D0D1[ijk] + 2.0*_A_UiUj_U0U2[ijk]*
-gConf_D0D0[ijk]*gConf_D0D2[ijk] + _A_UiUj_U1U1[ijk]*
-pow(gConf_D0D1[ijk], 2) + 2.0*_A_UiUj_U1U2[ijk]*gConf_D0D1[ijk]*
-gConf_D0D2[ijk] + _A_UiUj_U2U2[ijk]*pow(gConf_D0D2[ijk], 2));
+(AConfIJ_U0U0[ijk]*pow(gConf_D0D0[ijk], 2) + 2.0*AConfIJ_U0U1[ijk]*
+gConf_D0D0[ijk]*gConf_D0D1[ijk] + 2.0*AConfIJ_U0U2[ijk]*
+gConf_D0D0[ijk]*gConf_D0D2[ijk] + AConfIJ_U1U1[ijk]*
+pow(gConf_D0D1[ijk], 2) + 2.0*AConfIJ_U1U2[ijk]*gConf_D0D1[ijk]*
+gConf_D0D2[ijk] + AConfIJ_U2U2[ijk]*pow(gConf_D0D2[ijk], 2));
 
     double K_DD_D0D1 = 
 0.33333333333333331*K[ijk]*gConf_D0D1[ijk]*psi4 + psim2*
-(_A_UiUj_U0U0[ijk]*gConf_D0D0[ijk]*gConf_D0D1[ijk] + _A_UiUj_U0U1[ijk]*
-gConf_D0D0[ijk]*gConf_D1D1[ijk] + _A_UiUj_U0U1[ijk]*
-pow(gConf_D0D1[ijk], 2) + _A_UiUj_U0U2[ijk]*gConf_D0D0[ijk]*
-gConf_D1D2[ijk] + _A_UiUj_U0U2[ijk]*gConf_D0D1[ijk]*gConf_D0D2[ijk] + 
-_A_UiUj_U1U1[ijk]*gConf_D0D1[ijk]*gConf_D1D1[ijk] + _A_UiUj_U1U2[ijk]*
-gConf_D0D1[ijk]*gConf_D1D2[ijk] + _A_UiUj_U1U2[ijk]*gConf_D0D2[ijk]*
-gConf_D1D1[ijk] + _A_UiUj_U2U2[ijk]*gConf_D0D2[ijk]*
+(AConfIJ_U0U0[ijk]*gConf_D0D0[ijk]*gConf_D0D1[ijk] + AConfIJ_U0U1[ijk]*
+gConf_D0D0[ijk]*gConf_D1D1[ijk] + AConfIJ_U0U1[ijk]*
+pow(gConf_D0D1[ijk], 2) + AConfIJ_U0U2[ijk]*gConf_D0D0[ijk]*
+gConf_D1D2[ijk] + AConfIJ_U0U2[ijk]*gConf_D0D1[ijk]*gConf_D0D2[ijk] + 
+AConfIJ_U1U1[ijk]*gConf_D0D1[ijk]*gConf_D1D1[ijk] + AConfIJ_U1U2[ijk]*
+gConf_D0D1[ijk]*gConf_D1D2[ijk] + AConfIJ_U1U2[ijk]*gConf_D0D2[ijk]*
+gConf_D1D1[ijk] + AConfIJ_U2U2[ijk]*gConf_D0D2[ijk]*
 gConf_D1D2[ijk]);
 
     double K_DD_D0D2 = 
 0.33333333333333331*K[ijk]*gConf_D0D2[ijk]*psi4 + psim2*
-(_A_UiUj_U0U0[ijk]*gConf_D0D0[ijk]*gConf_D0D2[ijk] + _A_UiUj_U0U1[ijk]*
-gConf_D0D0[ijk]*gConf_D1D2[ijk] + _A_UiUj_U0U1[ijk]*gConf_D0D1[ijk]*
-gConf_D0D2[ijk] + _A_UiUj_U0U2[ijk]*gConf_D0D0[ijk]*gConf_D2D2[ijk] + 
-_A_UiUj_U0U2[ijk]*pow(gConf_D0D2[ijk], 2) + _A_UiUj_U1U1[ijk]*
-gConf_D0D1[ijk]*gConf_D1D2[ijk] + _A_UiUj_U1U2[ijk]*gConf_D0D1[ijk]*
-gConf_D2D2[ijk] + _A_UiUj_U1U2[ijk]*gConf_D0D2[ijk]*gConf_D1D2[ijk] + 
-_A_UiUj_U2U2[ijk]*gConf_D0D2[ijk]*gConf_D2D2[ijk]);
+(AConfIJ_U0U0[ijk]*gConf_D0D0[ijk]*gConf_D0D2[ijk] + AConfIJ_U0U1[ijk]*
+gConf_D0D0[ijk]*gConf_D1D2[ijk] + AConfIJ_U0U1[ijk]*gConf_D0D1[ijk]*
+gConf_D0D2[ijk] + AConfIJ_U0U2[ijk]*gConf_D0D0[ijk]*gConf_D2D2[ijk] + 
+AConfIJ_U0U2[ijk]*pow(gConf_D0D2[ijk], 2) + AConfIJ_U1U1[ijk]*
+gConf_D0D1[ijk]*gConf_D1D2[ijk] + AConfIJ_U1U2[ijk]*gConf_D0D1[ijk]*
+gConf_D2D2[ijk] + AConfIJ_U1U2[ijk]*gConf_D0D2[ijk]*gConf_D1D2[ijk] + 
+AConfIJ_U2U2[ijk]*gConf_D0D2[ijk]*gConf_D2D2[ijk]);
 
     double integrand = 
 -n_U0[ijk]*(Beta_U0[ijk]*K_DD_D0D0 + Beta_U1[ijk]*K_DD_D0D1 +

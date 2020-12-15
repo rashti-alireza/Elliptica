@@ -52,7 +52,7 @@ C_macro3 = declare_and_alloc_xi(name);
 Declare = 
 {
   # _A^{ij}
- (obj = Field,name = _A_UiUj, rank = UU, C_macro);
+ (obj = Field,name = AConfIJ, rank = UU, C_macro);
 
  # conformal metric 
  (obj = Field,name = gConf, rank = DD, C_macro);
@@ -67,7 +67,7 @@ Declare =
  #(obj = Field,name = dpsi, rank = D, C_macro);
 
  # Christoffer symbol value
- #(obj = Field,name = _Gamma, rank = UDD, C_macro);
+ #(obj = Field,name = ChrisConf, rank = UDD, C_macro);
 
  # trKij
  (obj = Field,name = K, rank = 0, C_macro);
@@ -85,10 +85,10 @@ Declare =
  (obj = Field,name = xi, rank = U, C_macro3);
 }
 # symmetries:
-Symm[_A_UiUj(i,j)  = _A_UiUj(j,i)];
+Symm[AConfIJ(i,j)  = AConfIJ(j,i)];
 Symm[igConf(i,j)  = igConf(j,i)];
 Symm[gConf(i,j)   = gConf(j,i)];
-#Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
+#Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 
 ``
 `   for(ijk = 0; ijk < nn; ++ijk)`
@@ -113,7 +113,7 @@ Symm[gConf(i,j)   = gConf(j,i)];
 
        # P^{ij} = psi^(-10) \bar A^{ij} -2/3 K psi^{-4} \bar\gamma^{ij}
        # P^{ij}*n^{k}*\gamma_{jk} => cancels psi^(-4) so don't write it:
-       P(i,j) = _A_UiUj(i,j)/psi6-(2/3)*K*igConf(i,j);
+       P(i,j) = AConfIJ(i,j)/psi6-(2/3)*K*igConf(i,j);
        Symm[P(i,j)  = P(j,i)];
 
 # lower the index for better result:

@@ -34,7 +34,7 @@ C_macro3 = declare_and_alloc_xi(name);
 Declare = 
 {
   # _A^{ij}
- (obj = Field,name = _A_UiUj, rank = UU, C_macro);
+ (obj = Field,name = AConfIJ, rank = UU, C_macro);
 
  # conformal metric 
  (obj = Field,name = gConf, rank = DD, C_macro);
@@ -56,10 +56,10 @@ Declare =
 
 }
 # symmetries:
-Symm[_A_UiUj(i,j)  = _A_UiUj(j,i)];
+Symm[AConfIJ(i,j)  = AConfIJ(j,i)];
 #Symm[igConf(i,j)  = igConf(j,i)];
 Symm[gConf(i,j)   = gConf(j,i)];
-#Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
+#Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 
 ``
 `   for(ijk = 0; ijk < nn; ++ijk)`
@@ -82,7 +82,7 @@ Symm[gConf(i,j)   = gConf(j,i)];
     # note K^ij ~ psi^(-10)_A^{ij} but there is two gamma multiplication
     # in which gamma ~ psi^4 => psi^(-2)
     psim2 = psi**(-2);
-    Pn(i) = _A_UiUj(l,j)*gConf(-j,-k)*n(k)*psim2*gConf(-l,i);
+    Pn(i) = AConfIJ(l,j)*gConf(-j,-k)*n(k)*psim2*gConf(-l,i);
 
     xiP(i) = EIJK(i,j,k)*xi(-j)*Pn(-k);
 

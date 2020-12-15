@@ -48,7 +48,7 @@ Declare =
  (obj = Field,name = igConf, rank = UU, C_macro);
 
  # Christoffer symbol value
- (obj = Field,name = _Gamma, rank = UDD, C_macro);
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro);
 
  # normal vector components
  (obj = Field,name = n, rank = U, none);
@@ -65,7 +65,7 @@ Declare =
 # symmetries:
 Symm[igConf(i,j)  = igConf(j,i)];
 Symm[ddpsi(i,j)    = ddpsi(j,i)];
-Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
+Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 
 `    Uint nn = patch->nn;`
 `    Uint ijk;`
@@ -122,7 +122,7 @@ Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 `      DEF_RELATIVE_r`
 `      double att = r > CUTOFF ? 0:1;`
        M_v = igConf(i,j)*ddpsi(-i,-j) -\
-             igConf(-i,-j)*_Gamma(l,i,j)*dpsi(-l);
+             igConf(-i,-j)*ChrisConf(l,i,j)*dpsi(-l);
 `      ADM_mass_integrand_V[ijk] = M_v*att;`
 `      }`
 `      }`

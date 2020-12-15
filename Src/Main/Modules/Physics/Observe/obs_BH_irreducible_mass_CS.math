@@ -43,7 +43,7 @@ Declare =
  #(obj = Field,name = igConf, rank = UU, C_macro);
 
  # _A^{ij}
- #(obj = Field,name = _A_UiUj, rank = UU, C_macro);
+ #(obj = Field,name = AConfIJ, rank = UU, C_macro);
 
  # eta
  #(obj = Field,name = eta, rank = 0, C_macro);
@@ -74,7 +74,7 @@ Declare =
 
 }
 # symmetries:
-#Symm[_A_UiUj(i,j)  = _A_UiUj(j,i)];
+#Symm[AConfIJ(i,j)  = AConfIJ(j,i)];
 #Symm[igConf(i,j)  = igConf(j,i)];
 Symm[gConf(i,j)   = gConf(j,i)];
 
