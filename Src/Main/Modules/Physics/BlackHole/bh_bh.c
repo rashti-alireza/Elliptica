@@ -267,9 +267,6 @@ void bh_tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
 void bh_update_sConf_dsConf(Physics_T *const phys)
 {
   Grid_T *const grid = mygrid(phys,"BH_around_IB");
-  const double BH_center_x = Getd("center_x");
-  const double BH_center_y = Getd("center_y");
-  const double BH_center_z = Getd("center_z");
   
   FOR_ALL_p(grid->np)
   {
@@ -289,10 +286,6 @@ void bh_update_sConf_dsConf(Physics_T *const phys)
     
     FOR_ALL_ijk
     {
-      double x = patch->node[ijk]->x[0]-BH_center_x;
-      double y = patch->node[ijk]->x[1]-BH_center_y; 
-      double z = patch->node[ijk]->x[2]-BH_center_z;
-      double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
       
       bh_sConf_U0[ijk] = dq2_dq1(patch,_c_,_x_,ijk);
       bh_sConf_U1[ijk] = dq2_dq1(patch,_c_,_y_,ijk);
