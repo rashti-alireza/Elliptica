@@ -43,9 +43,9 @@ double obs_Kommar_mass(Observe_T *const obs)
   READ_v(dalphaPsi_D2)
   READ_v(dalphaPsi_D1)
   READ_v(dalphaPsi_D0)
-  READ_v(Beta_U1)
-  READ_v(Beta_U0)
-  READ_v(Beta_U2)
+  READ_v(beta_U1)
+  READ_v(beta_U0)
+  READ_v(beta_U2)
   READ_v(K)
   READ_v(psi)
   READ_v(dpsi_D0)
@@ -134,11 +134,11 @@ gConf_D2D2[ijk] + AConfIJ_U1U2[ijk]*gConf_D0D2[ijk]*gConf_D1D2[ijk] +
 AConfIJ_U2U2[ijk]*gConf_D0D2[ijk]*gConf_D2D2[ijk]);
 
     double integrand = 
--n_U0[ijk]*(Beta_U0[ijk]*K_DD_D0D0 + Beta_U1[ijk]*K_DD_D0D1 +
-Beta_U2[ijk]*K_DD_D0D2 - dalpha_U0) - n_U1[ijk]*(Beta_U0[ijk]*
-K_DD_D0D1 + Beta_U1[ijk]*K_DD_D1D1 + Beta_U2[ijk]*K_DD_D1D2 -
-dalpha_U1) - n_U2[ijk]*(Beta_U0[ijk]*K_DD_D0D2 + Beta_U1[ijk]*
-K_DD_D1D2 + Beta_U2[ijk]*K_DD_D2D2 - dalpha_U2);
+-n_U0[ijk]*(K_DD_D0D0*beta_U0[ijk] + K_DD_D0D1*beta_U1[ijk] +
+K_DD_D0D2*beta_U2[ijk] - dalpha_U0) - n_U1[ijk]*(K_DD_D0D1*
+beta_U0[ijk] + K_DD_D1D1*beta_U1[ijk] + K_DD_D1D2*beta_U2[ijk] -
+dalpha_U1) - n_U2[ijk]*(K_DD_D0D2*beta_U0[ijk] + K_DD_D1D2*
+beta_U1[ijk] + K_DD_D2D2*beta_U2[ijk] - dalpha_U2);
 
 
       Kommar_mass_integrand[ijk] = integrand;

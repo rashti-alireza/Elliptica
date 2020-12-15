@@ -51,8 +51,8 @@ Declare =
  # dalphaPsi
  #(obj = Field,name = dalphaPsi, rank = D, C_macro);
 
- # Beta
- #(obj = Field,name = Beta, rank = U, C_macro);
+ # beta
+ #(obj = Field,name = beta, rank = U, C_macro);
 
  # trKij
  #(obj = Field,name = K, rank = 0, C_macro);

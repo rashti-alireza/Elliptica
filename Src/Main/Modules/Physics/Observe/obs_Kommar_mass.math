@@ -45,8 +45,8 @@ Declare =
  # dalphaPsi
  (obj = Field,name = dalphaPsi, rank = D, C_macro);
 
- # Beta
- (obj = Field,name = Beta, rank = U, C_macro);
+ # beta
+ (obj = Field,name = beta, rank = U, C_macro);
 
  # trKij
  (obj = Field,name = K, rank = 0, C_macro);
@@ -85,7 +85,7 @@ Symm[gConf(i,j)   = gConf(j,i)];
        K_DD(-i,-j) = psim2*AConfIJ(ip,jp)*gConf(i,-ip)*gConf(j,-jp)+\
 		    1/3*K*psi4*gConf(i,j);
        Symm[K_DD(i,j) = K_DD(j,i)];
-       integrand = n(-i)*(dalpha(i)-K_DD(i,j)*Beta(-j));
+       integrand = n(-i)*(dalpha(i)-K_DD(i,j)*beta(-j));
 ``
 `      Kommar_mass_integrand[ijk] = integrand;`
 `    }`
