@@ -5,7 +5,6 @@
 
 
 #include "obs_calculate.h"
-#define VOLUME_INTEGRAL 1 /* put it to 1 if you want \int{Gdv} */
 
 /* plan and populate items_S sturct and obs struct
 // for binary and single objects.
@@ -21,711 +20,25 @@
 // */
 void obs_calculate(Observe_T *const obs)
 {
-  Grid_T *const grid = obs->grid;
   
-  if (grid->kind == Grid_SplitCubedSpherical_BHNS)
+  IFss("ADM(P,J)")
   {
-      
-  if (strcmp_i(obs->quantity,"ADM(P,J)|BHNS"))
-  {  
-    Patch_T **patches = 0;
-    Patch_T *patch    = 0;
-    const char *region = "outermost,filling_box,"
-                         "NS_around_OB,BH_around_OB";
-    struct items_S **adm = 0;
-    Uint n,N,ijk,nn;
-    
-    /* first collect all of the patches required */
-    patches = collect_patches(grid,region,&N);
-    
-    /* alloc memory for all patches */
-    adm = calloc(N,sizeof(*adm));
-    IsNull(adm);
-    /* this is where we link to obs struct */
-    obs->items = adm;
-    obs->Nitems = N;
-    
-    /* fill ADM struct for each patch */
-    for (n = 0; n < N; ++n)
-    {
-      adm[n] = calloc(1,sizeof(*adm[n]));
-      IsNull(adm[n]);
-      patch = patches[n];
-      nn    = patch->nn;
-      
-      double *g00 = alloc_double(nn);
-      double *g01 = alloc_double(nn);
-      double *g02 = alloc_double(nn);
-      double *g11 = alloc_double(nn);
-      double *g12 = alloc_double(nn);
-      double *g22 = alloc_double(nn);
-      
-      READ_v(gConf_D2D2)
-      READ_v(gConf_D0D2)
-      READ_v(gConf_D0D0)
-      READ_v(gConf_D0D1)
-      READ_v(gConf_D1D2)
-      READ_v(gConf_D1D1)
-      READ_v(psi);
-      
-      adm[n]->patch = patch;
-      /* populate metric components */ 
-      for (ijk = 0; ijk < nn; ++ijk)
-      {
-        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-        g00[ijk] = psi4*gConf_D0D0[ijk];
-        g01[ijk] = psi4*gConf_D0D1[ijk];
-        g02[ijk] = psi4*gConf_D0D2[ijk];
-        g11[ijk] = psi4*gConf_D1D1[ijk];
-        g12[ijk] = psi4*gConf_D1D2[ijk];
-        g22[ijk] = psi4*gConf_D2D2[ijk];
-      }
-      adm[n]->g00 = g00;
-      adm[n]->g01 = g01;
-      adm[n]->g02 = g02;
-      adm[n]->g11 = g11;
-      adm[n]->g12 = g12;
-      adm[n]->g22 = g22;
-      
-      /* surface integrals params */
-      if (IsItCovering(patch,"NS_around_OB") ||
-          IsItCovering(patch,"BH_around_OB")  )
-      {
-        adm[n]->surface_integration_flg = 1;
-        adm[n]->Z_surface = 1;
-        adm[n]->K = patch->n[2]-1;
-        n_physical_metric_around(adm[n],_c_);
-      }
-    }
-    
-    obs_populate_ADM_integrand_PdS_GdV_binary(obs);
-    obs->ret[0] = ADM_momentum_x_BHNS_CS(obs);
-    obs->ret[1] = ADM_momentum_y_BHNS_CS(obs);
-    obs->ret[2] = ADM_momentum_z_BHNS_CS(obs);
-    obs->ret[3] = ADM_angular_momentum_x_BHNS_CS(obs);
-    obs->ret[4] = ADM_angular_momentum_y_BHNS_CS(obs);
-    obs->ret[5] = ADM_angular_momentum_z_BHNS_CS(obs);
-    free(patches);
+    calc_ADM_PJ(obs);
   }
-  else if (strcmp_i(obs->quantity,"ADM(P,J)|NS"))
-  {  
-    Patch_T **patches = 0;
-    Patch_T *patch    = 0;
-    struct items_S **adm = 0;
-    const char *region = "NS_OB";
-    Uint n,N,ijk,nn;
-    
-    /* first collect all of the patches required */
-    patches = collect_patches(grid,region,&N);
-    
-    /* alloc memory for all patches */
-    adm = calloc(N,sizeof(*adm));
-    IsNull(adm);
-    /* this is where we link to obs struct */
-    obs->items = adm;
-    obs->Nitems = N;
-    
-    /* fill ADM struct for each patch */
-    for (n = 0; n < N; ++n)
-    {
-      adm[n] = calloc(1,sizeof(*adm[n]));
-      IsNull(adm[n]);
-      patch = patches[n];
-      nn    = patch->nn;
-      
-      double *g00 = alloc_double(nn);
-      double *g01 = alloc_double(nn);
-      double *g02 = alloc_double(nn);
-      double *g11 = alloc_double(nn);
-      double *g12 = alloc_double(nn);
-      double *g22 = alloc_double(nn);
-      
-      READ_v(gConf_D2D2)
-      READ_v(gConf_D0D2)
-      READ_v(gConf_D0D0)
-      READ_v(gConf_D0D1)
-      READ_v(gConf_D1D2)
-      READ_v(gConf_D1D1)
-      READ_v(psi);
-      
-      adm[n]->patch = patch;
-      /* populate metric components */ 
-      for (ijk = 0; ijk < nn; ++ijk)
-      {
-        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-        g00[ijk] = psi4*gConf_D0D0[ijk];
-        g01[ijk] = psi4*gConf_D0D1[ijk];
-        g02[ijk] = psi4*gConf_D0D2[ijk];
-        g11[ijk] = psi4*gConf_D1D1[ijk];
-        g12[ijk] = psi4*gConf_D1D2[ijk];
-        g22[ijk] = psi4*gConf_D2D2[ijk];
-      }
-      adm[n]->g00 = g00;
-      adm[n]->g01 = g01;
-      adm[n]->g02 = g02;
-      adm[n]->g11 = g11;
-      adm[n]->g12 = g12;
-      adm[n]->g22 = g22;
-      /* surface integral */
-      adm[n]->surface_integration_flg = 1;
-      adm[n]->Z_surface = 1;
-      adm[n]->K = patch->n[2]-1;
-      n_physical_metric_around(adm[n],_c_);
-    }
-    
-    obs_populate_ADM_integrand_PdS_GdV_single(obs);
-    obs->ret[0] = ADM_momentum_x_BHNS_CS(obs);
-    obs->ret[1] = ADM_momentum_y_BHNS_CS(obs);
-    obs->ret[2] = ADM_momentum_z_BHNS_CS(obs);
-    obs->ret[3] = ADM_angular_momentum_x_BHNS_CS(obs);
-    obs->ret[4] = ADM_angular_momentum_y_BHNS_CS(obs);
-    obs->ret[5] = ADM_angular_momentum_z_BHNS_CS(obs);
-    free(patches);
+  else IFss("Kommar(M)")
+  {
+    calc_Kommar_mass(obs);
   }
-  else if (strcmp_i(obs->quantity,"ADM(P,J)|BH"))
-  {  
-    Patch_T **patches = 0;
-    Patch_T *patch    = 0;
-    struct items_S **adm = 0;
-    const char *region = "BH_around_IB";
-    Uint n,N,ijk,nn;
-    
-    /* first collect all of the patches required */
-    patches = collect_patches(grid,region,&N);
-    
-    /* alloc memory for all patches */
-    adm = calloc(N,sizeof(*adm));
-    IsNull(adm);
-    /* this is where we link to obs struct */
-    obs->items = adm;
-    obs->Nitems = N;
-      
-    /* fill ADM struct for each patch */
-    for (n = 0; n < N; ++n)
-    {
-      adm[n] = calloc(1,sizeof(*adm[n]));
-      IsNull(adm[n]);
-      patch = patches[n];
-      nn    = patch->nn;
-      
-      double *g00 = alloc_double(nn);
-      double *g01 = alloc_double(nn);
-      double *g02 = alloc_double(nn);
-      double *g11 = alloc_double(nn);
-      double *g12 = alloc_double(nn);
-      double *g22 = alloc_double(nn);
-      
-      READ_v(gConf_D2D2)
-      READ_v(gConf_D0D2)
-      READ_v(gConf_D0D0)
-      READ_v(gConf_D0D1)
-      READ_v(gConf_D1D2)
-      READ_v(gConf_D1D1)
-      READ_v(psi);
-      
-      adm[n]->patch = patch;
-      /* populate metric components */ 
-      for (ijk = 0; ijk < nn; ++ijk)
-      {
-        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-        g00[ijk] = psi4*gConf_D0D0[ijk];
-        g01[ijk] = psi4*gConf_D0D1[ijk];
-        g02[ijk] = psi4*gConf_D0D2[ijk];
-        g11[ijk] = psi4*gConf_D1D1[ijk];
-        g12[ijk] = psi4*gConf_D1D2[ijk];
-        g22[ijk] = psi4*gConf_D2D2[ijk];
-      }
-      adm[n]->g00 = g00;
-      adm[n]->g01 = g01;
-      adm[n]->g02 = g02;
-      adm[n]->g11 = g11;
-      adm[n]->g12 = g12;
-      adm[n]->g22 = g22;
-      
-      /* surface integral */
-      adm[n]->surface_integration_flg = 1;
-      adm[n]->Z_surface = 1;
-      adm[n]->K = 0;
-      n_physical_metric_around(adm[n],_c_);
-    }
-    obs_populate_ADM_integrand_PdS_GdV_single(obs);
-    obs->ret[0] = ADM_momentum_x_BHNS_CS(obs);
-    obs->ret[1] = ADM_momentum_y_BHNS_CS(obs);
-    obs->ret[2] = ADM_momentum_z_BHNS_CS(obs);
-    obs->ret[3] = ADM_angular_momentum_x_BHNS_CS(obs);
-    obs->ret[4] = ADM_angular_momentum_y_BHNS_CS(obs);
-    obs->ret[5] = ADM_angular_momentum_z_BHNS_CS(obs);
-    free(patches);
+  else IFss("ADM(M)")
+  {
+    calc_ADM_mass(obs);
   }
-  else if (strcmp_i(obs->quantity,"Kommar(M)|BH"))
-  {  
-    Patch_T **patches = 0;
-    Patch_T *patch    = 0;
-    struct items_S **kommar = 0;
-    const char *region = "BH_around_IB";
-    Uint n,N,ijk,nn;
-    
-    /* first collect all of the patches required */
-    patches = collect_patches(grid,region,&N);
-    
-    /* alloc memory for all patches */
-    kommar = calloc(N,sizeof(*kommar));
-    IsNull(kommar);
-    /* this is where we link to obs struct */
-    obs->items = kommar;
-    obs->Nitems = N;
-        
-    /* fill kommar struct for each patch */
-    for (n = 0; n < N; ++n)
-    {
-      kommar[n] = calloc(1,sizeof(*kommar[n]));
-      IsNull(kommar[n]);
-      patch = patches[n];
-      nn    = patch->nn;
-      
-      double *g00 = alloc_double(nn);
-      double *g01 = alloc_double(nn);
-      double *g02 = alloc_double(nn);
-      double *g11 = alloc_double(nn);
-      double *g12 = alloc_double(nn);
-      double *g22 = alloc_double(nn);
-      
-      READ_v(gConf_D2D2)
-      READ_v(gConf_D0D2)
-      READ_v(gConf_D0D0)
-      READ_v(gConf_D0D1)
-      READ_v(gConf_D1D2)
-      READ_v(gConf_D1D1)
-      READ_v(psi);
-      
-      kommar[n]->patch = patch;
-      /* populate metric components */ 
-      for (ijk = 0; ijk < nn; ++ijk)
-      {
-        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-        g00[ijk] = psi4*gConf_D0D0[ijk];
-        g01[ijk] = psi4*gConf_D0D1[ijk];
-        g02[ijk] = psi4*gConf_D0D2[ijk];
-        g11[ijk] = psi4*gConf_D1D1[ijk];
-        g12[ijk] = psi4*gConf_D1D2[ijk];
-        g22[ijk] = psi4*gConf_D2D2[ijk];
-      }
-      kommar[n]->g00 = g00;
-      kommar[n]->g01 = g01;
-      kommar[n]->g02 = g02;
-      kommar[n]->g11 = g11;
-      kommar[n]->g12 = g12;
-      kommar[n]->g22 = g22;
-      
-      /* surface integral */
-      kommar[n]->surface_integration_flg = 1;
-      kommar[n]->Z_surface = 1;
-      kommar[n]->K = 0;
-      n_physical_metric_around(kommar[n],_c_);
-    }
-    obs->ret[0] = obs_Kommar_mass(obs);
-    free(patches);
+  else
+  {
+    Error0(NO_OPTION);
   }
-  else if (strcmp_i(obs->quantity,"Kommar(M)|NS"))
-  {  
-    Patch_T **patches = 0;
-    Patch_T *patch    = 0;
-    struct items_S **kommar = 0;
-    const char *region = "NS_OB";
-    Uint n,N,ijk,nn;
-    
-    /* first collect all of the patches required */
-    patches = collect_patches(grid,region,&N);
-    
-    /* alloc memory for all patches */
-    kommar = calloc(N,sizeof(*kommar));
-    IsNull(kommar);
-    /* this is where we link to obs struct */
-    obs->items = kommar;
-    obs->Nitems = N;
-        
-    /* fill kommar struct for each patch */
-    for (n = 0; n < N; ++n)
-    {
-      kommar[n] = calloc(1,sizeof(*kommar[n]));
-      IsNull(kommar[n]);
-      patch = patches[n];
-      nn    = patch->nn;
-      
-      double *g00 = alloc_double(nn);
-      double *g01 = alloc_double(nn);
-      double *g02 = alloc_double(nn);
-      double *g11 = alloc_double(nn);
-      double *g12 = alloc_double(nn);
-      double *g22 = alloc_double(nn);
-      
-      READ_v(gConf_D2D2)
-      READ_v(gConf_D0D2)
-      READ_v(gConf_D0D0)
-      READ_v(gConf_D0D1)
-      READ_v(gConf_D1D2)
-      READ_v(gConf_D1D1)
-      READ_v(psi);
-      
-      kommar[n]->patch = patch;
-      /* populate metric components */ 
-      for (ijk = 0; ijk < nn; ++ijk)
-      {
-        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-        g00[ijk] = psi4*gConf_D0D0[ijk];
-        g01[ijk] = psi4*gConf_D0D1[ijk];
-        g02[ijk] = psi4*gConf_D0D2[ijk];
-        g11[ijk] = psi4*gConf_D1D1[ijk];
-        g12[ijk] = psi4*gConf_D1D2[ijk];
-        g22[ijk] = psi4*gConf_D2D2[ijk];
-      }
-      kommar[n]->g00 = g00;
-      kommar[n]->g01 = g01;
-      kommar[n]->g02 = g02;
-      kommar[n]->g11 = g11;
-      kommar[n]->g12 = g12;
-      kommar[n]->g22 = g22;
-      
-      /* surface integral */
-      kommar[n]->surface_integration_flg = 1;
-      kommar[n]->Z_surface = 1;
-      kommar[n]->K = patch->n[2]-1;
-      n_physical_metric_around(kommar[n],_c_);
-    }
-    obs->ret[0] = obs_Kommar_mass(obs);
-    free(patches);
-  }
-  else if (strcmp_i(obs->quantity,"Kommar(M)|BHNS"))
-  {  
-    Patch_T **patches = 0;
-    Patch_T *patch    = 0;
-    struct items_S **kommar = 0;
-    Uint p = 0;
-    Uint n,N,ijk,nn;
-    
-    N = 10/* 10 sides for arounds */;
-        
-    patches = calloc(N,sizeof(*patches));
-    IsNull(patches);  
-    
-    /* alloc memory for all patches */
-    kommar = calloc(N,sizeof(*kommar));
-    IsNull(kommar);
-    /* this is where we link to obs struct */
-    obs->items = kommar;
-    obs->Nitems = N;
-    
-    /* first collect all of the patches required */
-    p = 0;
-    /* arounds for surface integrals */
-    patches[p++] = GetPatch("left_NS_around_up",grid);
-    patches[p++] = GetPatch("left_NS_around_down",grid);
-    patches[p++] = GetPatch("left_NS_around_left",grid);
-    patches[p++] = GetPatch("left_NS_around_back",grid);
-    patches[p++] = GetPatch("left_NS_around_front",grid);
-    
-    patches[p++] = GetPatch("right_BH_around_up",grid);
-    patches[p++] = GetPatch("right_BH_around_down",grid);
-    patches[p++] = GetPatch("right_BH_around_right",grid);
-    patches[p++] = GetPatch("right_BH_around_back",grid);
-    patches[p++] = GetPatch("right_BH_around_front",grid);
-
-    assert(p==N);
-    
-    /* fill kommar struct for each patch */
-    for (n = 0; n < N; ++n)
-    {
-      kommar[n] = calloc(1,sizeof(*kommar[n]));
-      IsNull(kommar[n]);
-      patch = patches[n];
-      nn    = patch->nn;
-      
-      double *g00 = alloc_double(nn);
-      double *g01 = alloc_double(nn);
-      double *g02 = alloc_double(nn);
-      double *g11 = alloc_double(nn);
-      double *g12 = alloc_double(nn);
-      double *g22 = alloc_double(nn);
-      
-      READ_v(gConf_D2D2)
-      READ_v(gConf_D0D2)
-      READ_v(gConf_D0D0)
-      READ_v(gConf_D0D1)
-      READ_v(gConf_D1D2)
-      READ_v(gConf_D1D1)
-      READ_v(psi);
-      
-      kommar[n]->patch = patch;
-      /* populate metric components */ 
-      for (ijk = 0; ijk < nn; ++ijk)
-      {
-        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-        g00[ijk] = psi4*gConf_D0D0[ijk];
-        g01[ijk] = psi4*gConf_D0D1[ijk];
-        g02[ijk] = psi4*gConf_D0D2[ijk];
-        g11[ijk] = psi4*gConf_D1D1[ijk];
-        g12[ijk] = psi4*gConf_D1D2[ijk];
-        g22[ijk] = psi4*gConf_D2D2[ijk];
-      }
-      kommar[n]->g00 = g00;
-      kommar[n]->g01 = g01;
-      kommar[n]->g02 = g02;
-      kommar[n]->g11 = g11;
-      kommar[n]->g12 = g12;
-      kommar[n]->g22 = g22;
-      
-      /* surface integral */
-      kommar[n]->surface_integration_flg = 1;
-      kommar[n]->Z_surface = 1;
-      kommar[n]->K = patch->n[2]-1;
-      n_physical_metric_around(kommar[n],_c_);
-    }
-    obs->ret[0] = obs_Kommar_mass(obs);
-    free(patches);
-  }
-  else if (strcmp_i(obs->quantity,"ADM(M)|BHNS"))
-  {  
-    Patch_T **patches1 = 0,**patches2 = 0;
-    Patch_T *patch    = 0;
-    const char *region;
-    struct items_S **adm = 0;
-    Uint n,N1,N2,ijk,nn;
-    
-    /* volume part */
-    region   = "outermost,filling_box,NS,NS_around,BH_around";
-    patches1 = collect_patches(grid,region,&N1);
-    /* surface part */
-    region   = "BH_around_IB";
-    patches2 = collect_patches(grid,region,&N2);
-    
-    /* alloc memory for all patches */
-    adm = calloc((N1+N2),sizeof(*adm));
-    IsNull(adm);
-    /* this is where we link to obs struct */
-    obs->items = adm;
-    obs->Nitems = N1+N2;
-    
-    /* fill ADM struct for each patch volume part */
-    for (n = 0; n < N1; ++n)
-    {
-      adm[n] = calloc(1,sizeof(*adm[n]));
-      IsNull(adm[n]);
-      patch = patches1[n];
-      nn    = patch->nn;
-      
-      double *g00 = alloc_double(nn);
-      double *g01 = alloc_double(nn);
-      double *g02 = alloc_double(nn);
-      double *g11 = alloc_double(nn);
-      double *g12 = alloc_double(nn);
-      double *g22 = alloc_double(nn);
-      
-      READ_v(gConf_D2D2)
-      READ_v(gConf_D0D2)
-      READ_v(gConf_D0D0)
-      READ_v(gConf_D0D1)
-      READ_v(gConf_D1D2)
-      READ_v(gConf_D1D1)
-      
-      adm[n]->patch = patch;
-      /* populate metric components, it uses conformal metric */ 
-      for (ijk = 0; ijk < nn; ++ijk)
-      {
-        g00[ijk] = gConf_D0D0[ijk];
-        g01[ijk] = gConf_D0D1[ijk];
-        g02[ijk] = gConf_D0D2[ijk];
-        g11[ijk] = gConf_D1D1[ijk];
-        g12[ijk] = gConf_D1D2[ijk];
-        g22[ijk] = gConf_D2D2[ijk];
-      }
-      adm[n]->g00 = g00;
-      adm[n]->g01 = g01;
-      adm[n]->g02 = g02;
-      adm[n]->g11 = g11;
-      adm[n]->g12 = g12;
-      adm[n]->g22 = g22;
-      
-    }
-    free(patches1);
-    
-    for (n = N1; n < N2; ++n)
-    {
-      adm[n] = calloc(1,sizeof(*adm[n]));
-      IsNull(adm[n]);
-      patch = patches2[n-N1];
-      nn    = patch->nn;
-      
-      double *g00 = alloc_double(nn);
-      double *g01 = alloc_double(nn);
-      double *g02 = alloc_double(nn);
-      double *g11 = alloc_double(nn);
-      double *g12 = alloc_double(nn);
-      double *g22 = alloc_double(nn);
-      
-      READ_v(gConf_D2D2)
-      READ_v(gConf_D0D2)
-      READ_v(gConf_D0D0)
-      READ_v(gConf_D0D1)
-      READ_v(gConf_D1D2)
-      READ_v(gConf_D1D1)
-      
-      adm[n]->patch = patch;
-      /* populate metric components, it uses conformal metric */ 
-      for (ijk = 0; ijk < nn; ++ijk)
-      {
-        g00[ijk] = gConf_D0D0[ijk];
-        g01[ijk] = gConf_D0D1[ijk];
-        g02[ijk] = gConf_D0D2[ijk];
-        g11[ijk] = gConf_D1D1[ijk];
-        g12[ijk] = gConf_D1D2[ijk];
-        g22[ijk] = gConf_D2D2[ijk];
-      }
-      adm[n]->g00 = g00;
-      adm[n]->g01 = g01;
-      adm[n]->g02 = g02;
-      adm[n]->g11 = g11;
-      adm[n]->g12 = g12;
-      adm[n]->g22 = g22;
-      
-      adm[n]->surface_integration_flg = 1;
-      adm[n]->Z_surface = 1;
-      adm[n]->K = 0;
-      n_conformal_metric_around(adm[n],_c_);
-    }
-    obs->ret[0] = obs_ADM_mass(obs);
-    free(patches2);
-  }
-  else if (strcmp_i(obs->quantity,"ADM(M)|BH"))
-  {  
-    Patch_T **patches = 0;
-    Patch_T *patch    = 0;
-    struct items_S **adm = 0;
-    const char *region = "BH_around_IB";
-    Uint n,N,ijk,nn;
-    
-    /* first collect all of the patches required */
-    patches = collect_patches(grid,region,&N);
-    
-    /* alloc memory for all patches */
-    adm = calloc(N,sizeof(*adm));
-    IsNull(adm);
-    /* this is where we link to obs struct */
-    obs->items = adm;
-    obs->Nitems = N;
-    
-    /* fill ADM struct for each patch */
-    for (n = 0; n < N; ++n)
-    {
-      adm[n] = calloc(1,sizeof(*adm[n]));
-      IsNull(adm[n]);
-      patch = patches[n];
-      nn    = patch->nn;
-      
-      double *g00 = alloc_double(nn);
-      double *g01 = alloc_double(nn);
-      double *g02 = alloc_double(nn);
-      double *g11 = alloc_double(nn);
-      double *g12 = alloc_double(nn);
-      double *g22 = alloc_double(nn);
-      
-      READ_v(gConf_D2D2)
-      READ_v(gConf_D0D2)
-      READ_v(gConf_D0D0)
-      READ_v(gConf_D0D1)
-      READ_v(gConf_D1D2)
-      READ_v(gConf_D1D1)
-      READ_v(psi);
-
-      adm[n]->patch = patch;
-      /* populate metric components, it uses conformal metric */ 
-      for (ijk = 0; ijk < nn; ++ijk)
-      {
-        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-        g00[ijk] = psi4*gConf_D0D0[ijk];
-        g01[ijk] = psi4*gConf_D0D1[ijk];
-        g02[ijk] = psi4*gConf_D0D2[ijk];
-        g11[ijk] = psi4*gConf_D1D1[ijk];
-        g12[ijk] = psi4*gConf_D1D2[ijk];
-        g22[ijk] = psi4*gConf_D2D2[ijk];
-      }
-      adm[n]->g00 = g00;
-      adm[n]->g01 = g01;
-      adm[n]->g02 = g02;
-      adm[n]->g11 = g11;
-      adm[n]->g12 = g12;
-      adm[n]->g22 = g22;
-      
-      adm[n]->surface_integration_flg = 1;
-      adm[n]->Z_surface = 1;
-      adm[n]->K = 0;
-      n_physical_metric_around(adm[n],_c_);
-    }
-    obs->ret[0] = obs_BH_ADM_mass(obs);
-    free(patches);
-  }
-  else if (strcmp_i(obs->quantity,"ADM(M)|NS"))
-  {  
-    Patch_T **patches = 0;
-    Patch_T *patch    = 0;
-    struct items_S **adm = 0;
-    const char *region = "NS";
-    Uint n,N,ijk,nn;
-    
-    /* first collect all of the patches required */
-    patches = collect_patches(grid,region,&N);
   
-    /* alloc memory for all patches */
-    adm = calloc(N,sizeof(*adm));
-    IsNull(adm);
-    /* this is where we link to obs struct */
-    obs->items = adm;
-    obs->Nitems = N;
-    
-    /* fill ADM struct for each patch */
-    for (n = 0; n < N; ++n)
-    {
-      adm[n] = calloc(1,sizeof(*adm[n]));
-      IsNull(adm[n]);
-      patch = patches[n];
-      nn    = patch->nn;
-      
-      double *g00 = alloc_double(nn);
-      double *g01 = alloc_double(nn);
-      double *g02 = alloc_double(nn);
-      double *g11 = alloc_double(nn);
-      double *g12 = alloc_double(nn);
-      double *g22 = alloc_double(nn);
-      
-      READ_v(gConf_D2D2)
-      READ_v(gConf_D0D2)
-      READ_v(gConf_D0D0)
-      READ_v(gConf_D0D1)
-      READ_v(gConf_D1D2)
-      READ_v(gConf_D1D1)
-      
-      adm[n]->patch = patch;
-      /* populate metric components, it uses conformal metric */ 
-      for (ijk = 0; ijk < nn; ++ijk)
-      {
-        g00[ijk] = gConf_D0D0[ijk];
-        g01[ijk] = gConf_D0D1[ijk];
-        g02[ijk] = gConf_D0D2[ijk];
-        g11[ijk] = gConf_D1D1[ijk];
-        g12[ijk] = gConf_D1D2[ijk];
-        g22[ijk] = gConf_D2D2[ijk];
-      }
-      adm[n]->g00 = g00;
-      adm[n]->g01 = g01;
-      adm[n]->g02 = g02;
-      adm[n]->g11 = g11;
-      adm[n]->g12 = g12;
-      adm[n]->g22 = g22;
-      
-    }
-    obs->ret[0] = obs_ADM_mass(obs);
-    free(patches);
-  }
-  else if (strcmp_i(obs->quantity,"CM|BH"))
+  if (strcmp_i(obs->quantity,"CM|BH"))
   {
     Rc_BH(obs);
   }
@@ -752,9 +65,6 @@ void obs_calculate(Observe_T *const obs)
   else
     Errors("There is no such '%s' plan.\n",obs->quantity);
     
-  }/* if (grid->kind == Grid_SplitCubedSpherical_BHNS) */
-  else
-    Error0(NO_OPTION);
 }
 
 /* populating normal outward vector for around patches according to the given dir 
@@ -1657,3 +967,396 @@ static void Rc_BH(Observe_T *const obs)
   Rc[1] /= (AH_area);
   Rc[2] /= (AH_area);
 }
+
+
+/* calculate adm P and J for various objects */
+static void calc_ADM_PJ(Observe_T *const obs)
+{
+  Grid_T *const grid   = obs->grid;  
+  Patch_T **patches    = 0;
+  Patch_T *patch       = 0;
+  const char *region   = 0;
+  struct items_S **adm = 0;
+  Uint n,N,ijk,nn;
+  
+  if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_SBH)
+  {
+    IFsc("ADM(P,J)|BHNS")
+    {
+      region = "outermost,filling_box,NS_around_OB,BH_around_OB";
+    }
+    else IFsc("ADM(P,J)|NS")
+    {
+      region = "NS_OB";
+    }
+    else IFsc("ADM(P,J)|BH")
+    {
+      region = "BH_around_IB";
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
+  }
+  
+  /* first collect all of the patches required */
+  patches = collect_patches(grid,region,&N);
+  
+  /* alloc memory for all patches */
+  adm = calloc(N,sizeof(*adm));
+  IsNull(adm);
+  /* this is where we link to obs struct */
+  obs->items = adm;
+  obs->Nitems = N;
+  
+  /* fill ADM struct for each patch */
+  for (n = 0; n < N; ++n)
+  {
+    adm[n] = calloc(1,sizeof(*adm[n]));
+    IsNull(adm[n]);
+    patch = patches[n];
+    nn    = patch->nn;
+    
+    double *g00 = alloc_double(nn);
+    double *g01 = alloc_double(nn);
+    double *g02 = alloc_double(nn);
+    double *g11 = alloc_double(nn);
+    double *g12 = alloc_double(nn);
+    double *g22 = alloc_double(nn);
+    
+    READ_v(gConf_D2D2)
+    READ_v(gConf_D0D2)
+    READ_v(gConf_D0D0)
+    READ_v(gConf_D0D1)
+    READ_v(gConf_D1D2)
+    READ_v(gConf_D1D1)
+    READ_v(psi);
+    
+    adm[n]->patch = patch;
+    /* populate metric components */ 
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
+      g00[ijk] = psi4*gConf_D0D0[ijk];
+      g01[ijk] = psi4*gConf_D0D1[ijk];
+      g02[ijk] = psi4*gConf_D0D2[ijk];
+      g11[ijk] = psi4*gConf_D1D1[ijk];
+      g12[ijk] = psi4*gConf_D1D2[ijk];
+      g22[ijk] = psi4*gConf_D2D2[ijk];
+    }
+    adm[n]->g00 = g00;
+    adm[n]->g01 = g01;
+    adm[n]->g02 = g02;
+    adm[n]->g11 = g11;
+    adm[n]->g12 = g12;
+    adm[n]->g22 = g22;
+    
+    if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_SBH)
+    {
+      IFsc("ADM(P,J)|BHNS")
+      {
+        /* surface integrals params */
+        if (IsItCovering(patch,"NS_around_OB") ||
+            IsItCovering(patch,"BH_around_OB")  )
+        {
+          adm[n]->surface_integration_flg = 1;
+          adm[n]->Z_surface = 1;
+          adm[n]->K = patch->n[2]-1;
+          n_physical_metric_around(adm[n],_c_);
+        }
+      }
+      else IFsc("ADM(P,J)|NS")
+      {
+        /* surface integral */
+        adm[n]->surface_integration_flg = 1;
+        adm[n]->Z_surface = 1;
+        adm[n]->K = patch->n[2]-1;
+        n_physical_metric_around(adm[n],_c_);
+      }
+      else IFsc("ADM(P,J)|BH")
+      {
+        /* surface integral */
+        adm[n]->surface_integration_flg = 1;
+        adm[n]->Z_surface = 1;
+        adm[n]->K = 0;
+        n_physical_metric_around(adm[n],_c_);
+      }
+      else
+      {
+        Error0(NO_OPTION);
+      }
+    }
+  }
+  
+  obs_populate_ADM_integrand_PdS_GdV_binary(obs);
+  obs->ret[0] = ADM_momentum_x_BHNS_CS(obs);
+  obs->ret[1] = ADM_momentum_y_BHNS_CS(obs);
+  obs->ret[2] = ADM_momentum_z_BHNS_CS(obs);
+  obs->ret[3] = ADM_angular_momentum_x_BHNS_CS(obs);
+  obs->ret[4] = ADM_angular_momentum_y_BHNS_CS(obs);
+  obs->ret[5] = ADM_angular_momentum_z_BHNS_CS(obs);
+  Free(patches);
+}
+  
+/* calculate Kommar mass for various objects */
+static void calc_Kommar_mass(Observe_T *const obs)
+{
+  Grid_T *const grid= obs->grid;  
+  Patch_T **patches = 0;
+  Patch_T *patch    = 0;
+  struct items_S **kommar = 0;
+  const char *region = "BH_around_IB";
+  Uint n,N,ijk,nn;
+  
+  if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_SBH)
+  {
+    IFsc("Kommar(M)|BHNS")
+    {
+      region = "BH_around_OB,NS_around_OB";
+    }
+    else IFsc("Kommar(M)|NS")
+    {
+      region = "NS_OB";
+    }
+    else IFsc("Kommar(M)|BH")
+    {
+      region = "BH_around_IB";
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
+  }
+  
+  /* first collect all of the patches required */
+  patches = collect_patches(grid,region,&N);
+  
+  /* alloc memory for all patches */
+  kommar = calloc(N,sizeof(*kommar));
+  IsNull(kommar);
+  /* this is where we link to obs struct */
+  obs->items = kommar;
+  obs->Nitems = N;
+      
+  /* fill kommar struct for each patch */
+  for (n = 0; n < N; ++n)
+  {
+    kommar[n] = calloc(1,sizeof(*kommar[n]));
+    IsNull(kommar[n]);
+    patch = patches[n];
+    nn    = patch->nn;
+    
+    double *g00 = alloc_double(nn);
+    double *g01 = alloc_double(nn);
+    double *g02 = alloc_double(nn);
+    double *g11 = alloc_double(nn);
+    double *g12 = alloc_double(nn);
+    double *g22 = alloc_double(nn);
+    
+    READ_v(gConf_D2D2)
+    READ_v(gConf_D0D2)
+    READ_v(gConf_D0D0)
+    READ_v(gConf_D0D1)
+    READ_v(gConf_D1D2)
+    READ_v(gConf_D1D1)
+    READ_v(psi);
+    
+    kommar[n]->patch = patch;
+    /* populate metric components */ 
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
+      g00[ijk] = psi4*gConf_D0D0[ijk];
+      g01[ijk] = psi4*gConf_D0D1[ijk];
+      g02[ijk] = psi4*gConf_D0D2[ijk];
+      g11[ijk] = psi4*gConf_D1D1[ijk];
+      g12[ijk] = psi4*gConf_D1D2[ijk];
+      g22[ijk] = psi4*gConf_D2D2[ijk];
+    }
+    kommar[n]->g00 = g00;
+    kommar[n]->g01 = g01;
+    kommar[n]->g02 = g02;
+    kommar[n]->g11 = g11;
+    kommar[n]->g12 = g12;
+    kommar[n]->g22 = g22;
+    
+    if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_SBH)
+    {
+      IFsc("Kommar(M)|BHNS")
+      {
+        /* surface integral */
+        kommar[n]->surface_integration_flg = 1;
+        kommar[n]->Z_surface = 1;
+        kommar[n]->K = patch->n[2]-1;
+        n_physical_metric_around(kommar[n],_c_);
+      }
+      else IFsc("Kommar(M)|NS")
+      {
+        /* surface integral */
+        kommar[n]->surface_integration_flg = 1;
+        kommar[n]->Z_surface = 1;
+        kommar[n]->K = patch->n[2]-1;
+        n_physical_metric_around(kommar[n],_c_);
+      }
+      else IFsc("Kommar(M)|BH")
+      {
+        /* surface integral */
+        kommar[n]->surface_integration_flg = 1;
+        kommar[n]->Z_surface = 1;
+        kommar[n]->K = 0;
+        n_physical_metric_around(kommar[n],_c_);
+      }
+      else
+      {
+        Error0(NO_OPTION);
+      }
+    }
+  }
+  obs->ret[0] = obs_Kommar_mass(obs);
+  
+  Free(patches);
+}
+
+/* calculate ADM mass for various objects */
+static void calc_ADM_mass(Observe_T *const obs)
+{
+  Grid_T *const grid = obs->grid;
+  Patch_T **patches1 = 0;/* for volume integrals */
+  Patch_T **patches2 = 0;/* for surface integrals */
+  Patch_T *patch     = 0;
+  struct items_S **adm = 0;
+  const char *region;
+  Uint N1 = 0;
+  Uint N2 = 0;
+  Uint n,ijk,nn;
+  
+  if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_SBH)
+  {
+    IFsc("ADM(M)|BHNS")
+    {
+      /* volume part */
+      region   = "outermost,filling_box,NS,NS_around,BH_around";
+      patches1 = collect_patches(grid,region,&N1);
+      /* surface part */
+      region   = "BH_around_IB";
+      patches2 = collect_patches(grid,region,&N2);
+    }
+    else IFsc("ADM(M)|NS")
+    {
+      region   = "NS";
+      patches1 = collect_patches(grid,region,&N1);
+    }
+    else IFsc("ADM(M)|BH")
+    {
+      region   = "BH_around_IB";
+      patches2 = collect_patches(grid,region,&N2);
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
+  }
+  
+  /* alloc memory for all patches */
+  adm = calloc((N1+N2),sizeof(*adm));
+  IsNull(adm);
+  /* this is where we link to obs struct */
+  obs->items = adm;
+  obs->Nitems = N1+N2;
+
+  /* fill ADM struct for each patch volume part */
+  for (n = 0; n < N1; ++n)
+  {
+    adm[n] = calloc(1,sizeof(*adm[n]));
+    IsNull(adm[n]);
+    patch = patches1[n];
+    nn    = patch->nn;
+    
+    double *g00 = alloc_double(nn);
+    double *g01 = alloc_double(nn);
+    double *g02 = alloc_double(nn);
+    double *g11 = alloc_double(nn);
+    double *g12 = alloc_double(nn);
+    double *g22 = alloc_double(nn);
+    
+    READ_v(gConf_D2D2)
+    READ_v(gConf_D0D2)
+    READ_v(gConf_D0D0)
+    READ_v(gConf_D0D1)
+    READ_v(gConf_D1D2)
+    READ_v(gConf_D1D1)
+    
+    adm[n]->patch = patch;
+    /* populate metric components, it uses conformal metric */ 
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      g00[ijk] = gConf_D0D0[ijk];
+      g01[ijk] = gConf_D0D1[ijk];
+      g02[ijk] = gConf_D0D2[ijk];
+      g11[ijk] = gConf_D1D1[ijk];
+      g12[ijk] = gConf_D1D2[ijk];
+      g22[ijk] = gConf_D2D2[ijk];
+    }
+    adm[n]->g00 = g00;
+    adm[n]->g01 = g01;
+    adm[n]->g02 = g02;
+    adm[n]->g11 = g11;
+    adm[n]->g12 = g12;
+    adm[n]->g22 = g22;
+  }
+  Free(patches1);
+  
+  for (n = N1; n < N2; ++n)
+  {
+    adm[n] = calloc(1,sizeof(*adm[n]));
+    IsNull(adm[n]);
+    patch = patches2[n-N1];
+    nn    = patch->nn;
+    
+    double *g00 = alloc_double(nn);
+    double *g01 = alloc_double(nn);
+    double *g02 = alloc_double(nn);
+    double *g11 = alloc_double(nn);
+    double *g12 = alloc_double(nn);
+    double *g22 = alloc_double(nn);
+    
+    READ_v(gConf_D2D2)
+    READ_v(gConf_D0D2)
+    READ_v(gConf_D0D0)
+    READ_v(gConf_D0D1)
+    READ_v(gConf_D1D2)
+    READ_v(gConf_D1D1)
+    
+    adm[n]->patch = patch;
+    /* populate metric components, it uses conformal metric */ 
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      g00[ijk] = gConf_D0D0[ijk];
+      g01[ijk] = gConf_D0D1[ijk];
+      g02[ijk] = gConf_D0D2[ijk];
+      g11[ijk] = gConf_D1D1[ijk];
+      g12[ijk] = gConf_D1D2[ijk];
+      g22[ijk] = gConf_D2D2[ijk];
+    }
+    adm[n]->g00 = g00;
+    adm[n]->g01 = g01;
+    adm[n]->g02 = g02;
+    adm[n]->g11 = g11;
+    adm[n]->g12 = g12;
+    adm[n]->g22 = g22;
+    
+    adm[n]->surface_integration_flg = 1;
+    adm[n]->Z_surface = 1;
+    adm[n]->K = 0;
+    n_conformal_metric_around(adm[n],_c_);
+  }
+    
+  obs->ret[0] = obs_BH_ADM_mass(obs);
+  Free(patches2);
+}
+
