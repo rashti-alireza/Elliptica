@@ -45,11 +45,11 @@ Declare =
  # _A^{ij}
  #(obj = Field,name = AConfIJ, rank = UU, C_macro);
 
- # eta
- #(obj = Field,name = eta, rank = 0, C_macro);
+ # alphaPsi
+ #(obj = Field,name = alphaPsi, rank = 0, C_macro);
 
- # deta
- #(obj = Field,name = deta, rank = D, C_macro);
+ # dalphaPsi
+ #(obj = Field,name = dalphaPsi, rank = D, C_macro);
 
  # Beta
  #(obj = Field,name = Beta, rank = U, C_macro);

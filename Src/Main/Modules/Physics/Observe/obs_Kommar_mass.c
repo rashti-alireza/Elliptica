@@ -39,10 +39,10 @@ double obs_Kommar_mass(Observe_T *const obs)
   READ_v(AConfIJ_U2U2)
   READ_v(AConfIJ_U1U1)
   READ_v(AConfIJ_U1U2)
-  READ_v(eta)
-  READ_v(deta_D0)
-  READ_v(deta_D1)
-  READ_v(deta_D2)
+  READ_v(alphaPsi)
+  READ_v(dalphaPsi_D2)
+  READ_v(dalphaPsi_D1)
+  READ_v(dalphaPsi_D0)
   READ_v(Beta_U1)
   READ_v(Beta_U0)
   READ_v(Beta_U2)
@@ -67,13 +67,16 @@ pow(psi[ijk], 2);
 pow(psi[ijk], 4);
 
     double dalpha_U1 = 
-deta_D1[ijk]/psi[ijk] - dpsi_D1[ijk]*eta[ijk]/psi2;
+-alphaPsi[ijk]*dpsi_D1[ijk]/psi2 + dalphaPsi_D1[ijk]/
+psi[ijk];
 
     double dalpha_U0 = 
-deta_D0[ijk]/psi[ijk] - dpsi_D0[ijk]*eta[ijk]/psi2;
+-alphaPsi[ijk]*dpsi_D0[ijk]/psi2 + dalphaPsi_D0[ijk]/
+psi[ijk];
 
     double dalpha_U2 = 
-deta_D2[ijk]/psi[ijk] - dpsi_D2[ijk]*eta[ijk]/psi2;
+-alphaPsi[ijk]*dpsi_D2[ijk]/psi2 + dalphaPsi_D2[ijk]/
+psi[ijk];
 
     double K_DD_D1D1 = 
 0.33333333333333331*K[ijk]*gConf_D1D1[ijk]*psi4 + psim2*

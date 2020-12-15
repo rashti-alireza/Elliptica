@@ -39,11 +39,11 @@ Declare =
  # _A^{ij}
  (obj = Field,name = AConfIJ, rank = UU, C_macro);
 
- # eta
- (obj = Field,name = eta, rank = 0, C_macro);
+ # alphaPsi
+ (obj = Field,name = alphaPsi, rank = 0, C_macro);
 
- # deta
- (obj = Field,name = deta, rank = D, C_macro);
+ # dalphaPsi
+ (obj = Field,name = dalphaPsi, rank = D, C_macro);
 
  # Beta
  (obj = Field,name = Beta, rank = U, C_macro);
@@ -81,7 +81,7 @@ Symm[gConf(i,j)   = gConf(j,i)];
        psim2 = psi**-2;
        psi2  = psi**2;
        psi4  = psi**4;
-       dalpha(i) = deta(i)/psi-eta*dpsi(i)/psi2;
+       dalpha(i) = dalphaPsi(i)/psi-alphaPsi*dpsi(i)/psi2;
        K_DD(-i,-j) = psim2*AConfIJ(ip,jp)*gConf(i,-ip)*gConf(j,-jp)+\
 		    1/3*K*psi4*gConf(i,j);
        Symm[K_DD(i,j) = K_DD(j,i)];
