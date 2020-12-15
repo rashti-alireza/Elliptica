@@ -35,10 +35,11 @@ bh_print_properties
   PR_PROPERTY_IN_FILE_d("min_radius", file, pr_screen)
  
   PR_PROPERTY_IN_FILE_d("irreducible_mass", file, pr_screen)
+  PR_PROPERTY_IN_FILE_d("Christodoulou_mass", file, pr_screen)
+  
   /*PR_PROPERTY_IN_FILE_d("irreducible_mass_current", file, pr_screen)
   PR_PROPERTY_IN_FILE_d("ADM_mass", file, pr_screen)
   PR_PROPERTY_IN_FILE_d("Kommar_mass", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Christodoulou_mass", file, pr_screen)
   
   PR_PROPERTY_IN_FILE_d("AH_area", file, pr_screen)
   PR_PROPERTY_IN_FILE_d("Sx_Campanelli", file, pr_screen)
