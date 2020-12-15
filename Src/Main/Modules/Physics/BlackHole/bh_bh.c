@@ -23,10 +23,12 @@ void bh_start_off_KerrSchild_perfect_s2(Physics_T *const phys)
   const double bh_R        = 2.0*bh_irr_mass;/* approximate initial radius */
   const double bh_a        = 0.;
   
-  /* set initial grid parameters */
+  /* set initial params */
   Setd("perfect_S2_radius",bh_R);
   Setd("min_radius",bh_R);
   Setd("max_radius",bh_R);
+  Setd("Christodoulou_mass",bh_irr_mass);
+  Setd("spin_a",bh_a);
   
   printf(Pretty0"%s properties:\n",phys->stype);
   printf(Pretty0"%s radius (Kerr-Schild Coords.) = %+e\n",phys->stype,bh_R);
@@ -59,6 +61,10 @@ void bh_start_off_KerrSchild_general_s2(Physics_T *const phys)
   if (GRT(bh_chi,1.))
     Errors("%s spin is too large!\n",phys->stype);
   
+  /* set initial params */
+  Setd("Christodoulou_mass",bh_irr_mass);
+  Setd("spin_a",bh_a);
+  
   printf(Pretty0"%s properties:\n",phys->stype);
   printf(Pretty0"%s irreducible mass             = %+e\n",phys->stype,bh_irr_mass);
   printf(Pretty0"%s Christodoulou_mass           = %+e\n",phys->stype,bh_chr_mass);
@@ -82,11 +88,13 @@ void bh_start_off_IsoSchild_perfect_s2(Physics_T *const phys)
   const double bh_irr_mass = Getd("irreducible_mass");
   const double bh_R        = 0.5*bh_irr_mass;/* approximate initial radius */
   
-  /* set initial grid parameters */
+  /* set initial params */
   Setd("perfect_S2_radius",bh_R);
   Setd("min_radius",bh_R);
   Setd("max_radius",bh_R);
-  
+  Setd("Christodoulou_mass",bh_irr_mass);
+  Setd("spin_a",0.);
+
   printf(Pretty0"%s properties:\n",phys->stype);
   printf(Pretty0"%s radius (isotropic Coords.)   = %+e\n",phys->stype,bh_R);
   printf(Pretty0"%s irreducible mass             = %+e\n",phys->stype,bh_irr_mass);
@@ -107,11 +115,13 @@ void bh_start_off_PGSchild_perfect_s2(Physics_T *const phys)
   const double bh_irr_mass = Getd("irreducible_mass");
   const double bh_R        = 2*bh_irr_mass;/* approximate initial radius */
   
-  /* set initial grid parameters */
+  /* set initial params */
   Setd("perfect_S2_radius",bh_R);
   Setd("min_radius",bh_R);
   Setd("max_radius",bh_R);
-  
+  Setd("Christodoulou_mass",bh_irr_mass);
+  Setd("spin_a",0.);
+
   printf(Pretty0"%s properties:\n",phys->stype);
   printf(Pretty0"%s radius (Painleve-Gullstrand) = %+e\n",phys->stype,bh_R);
   printf(Pretty0"%s irreducible mass             = %+e\n",phys->stype,bh_irr_mass);
