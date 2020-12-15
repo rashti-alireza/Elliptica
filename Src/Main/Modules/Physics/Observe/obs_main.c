@@ -7,8 +7,8 @@
 // =========
 //
 // * initialize observable *
-// observe(phys,sq,save); # the observed value saves in save 
-//                          # and sq is one of the followings:
+// observe(phys,sq,ret); # the observed value saves in ret 
+//                        # and sq is one of the followings:
 //
 // * list of quantities *
 // "ADM(P,J)  #=> compute P and J ADM for the given physics
@@ -17,7 +17,7 @@
 // "Irreducible(M) #=> irreducible mass for the givne physics (BH)
 // "CM"          #=> compute the center of mass for the given physics
 // "Spin|method" #=> compute spin for the given physics
-//                       with the specified method below:
+//                    with the specified method below:
 //
 // spin calculation methods:
 // Campanelli: gr-qc/0612076v4
@@ -33,7 +33,7 @@
 /* calculate the quantity of interest sq based on given physics 
 // and then return in ret variable. 
 // NOTE: one must provide enough memory for return value in ret; 
-// for instace for "ADM(P,J)" one need 6 double type memory.
+// for instace for "ADM(P,J)" one needs 6 double type memory.
 // NOTE: the order of population for "ADM(P,J)" is:
 // Px = ret[0], py = ret[1], pz = ret[2]
 // Jx = ret[3], Jy = ret[4], Jz = ret[5]
