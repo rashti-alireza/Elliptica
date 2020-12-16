@@ -663,9 +663,13 @@ how_much_memory
 void header_and_clock(const char *const msg)
 {
   char str[MAX_STR_LEN] = {'\0'};
-  sprintf(str,"{ %s ...",msg);
-  pr_clock();
-  pr_line_custom('=');
+  double t;
+  int d,h,m,s;
+  
+  t = convert_clock(&d,&h,&m,&s);
+  
+  sprintf(str,"{ %s ... [%02dd:%02dh:%02dm:%02ds = %.0fs]",
+                 msg,d,h,m,s,t);
   printf("%s\n",str);
   fflush(stdout);
 }
@@ -674,10 +678,14 @@ void header_and_clock(const char *const msg)
 void footer_and_clock(const char *const msg)
 {
   char str[MAX_STR_LEN] = {'\0'};
-  sprintf(str,"} %s ==> Done. :)",msg);
+  double t;
+  int d,h,m,s;
+  
+  t = convert_clock(&d,&h,&m,&s);
+  
+  sprintf(str,"} %s :)) [%02dd:%02dh:%02dm:%02ds = %.0fs]",
+                 msg,d,h,m,s,t);
   printf("%s\n",str);
-  pr_clock();
-  pr_line_custom('=');
   fflush(stdout);
 }
 
