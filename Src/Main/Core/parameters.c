@@ -64,7 +64,8 @@ void update_parameter_double_format(const char *const lv, const double rv,const 
   {
     if (print_flg)
     {
-      double diff = (rv-par->rv_double)/fabs((!EQL(rv,0.) ? rv : 1.));
+      double diff = (rv-par->rv_double)/
+                    fabs((!EQL(par->rv_double,0.) ? par->rv_double : 1.));
       printf(Pretty0"Update '%s': %+e -> %+e (%+0.2f%%)\n",
                     lv,par->rv_double,rv,diff*100.);
     }
