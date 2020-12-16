@@ -24,6 +24,9 @@
 // JRB:        Phys. Rev. D 100, 124046
 // AKV:        Phys.Rev.D78:084017,2008
 //
+// NOTES:
+// ======
+// o. ADM(M)|BH is a very crude approximation, don't rely on it.
 //
 */
 
