@@ -1140,7 +1140,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
     }
     else IFsc("Kommar(M)|SBH")
     {
-      region = "BH_around_IB";
+      region = "BH_around_OB";
     }
     else
     {
@@ -1236,7 +1236,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
         /* surface integral */
         kommar[n]->surface_integration_flg = 1;
         kommar[n]->Z_surface = 1;
-        kommar[n]->K = 0;
+        kommar[n]->K = patch->n[2]-1;
         n_physical_metric_around(kommar[n],_c_);
       }
       else
