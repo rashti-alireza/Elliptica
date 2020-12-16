@@ -81,7 +81,7 @@ pow(psi[ijk], 4);
   free(g12);
   free(g22);
   }
-  Setd("AH_area",A_AH);
 
   obs->ret[0] = sqrt(A_AH/(16*M_PI));
+  obs->ret[1] = A_AH;
 }

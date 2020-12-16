@@ -1,3 +1,9 @@
+## calculating BH_irreducible_mass. 
+## note:
+## obs->ret[0] = BH_irreducible_mass,
+## obs->ret[1] = AH physical surface area.
+
+
 # Manifold or grid Dimension
 Dimension = 3;
 
@@ -39,43 +45,11 @@ Declare =
  # conformal metric 
  (obj = Field,name = gConf, rank = DD, C_macro);
 
- # conformal metric inverse
- #(obj = Field,name = igConf, rank = UU, C_macro);
-
- # _A^{ij}
- #(obj = Field,name = AConfIJ, rank = UU, C_macro);
-
- # alphaPsi
- #(obj = Field,name = alphaPsi, rank = 0, C_macro);
-
- # dalphaPsi
- #(obj = Field,name = dalphaPsi, rank = D, C_macro);
-
- # beta
- #(obj = Field,name = beta, rank = U, C_macro);
-
- # trKij
- #(obj = Field,name = K, rank = 0, C_macro);
-
- # Killing vector xi^i, assumed 0
- #(obj = Field,name = xi, rank = U, C_macro);
-
  # conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
-
- # d(conformal factor)
- #(obj = Field,name = dpsi, rank = D, C_macro);
-
- # normal vector on AH
- #(obj = Field,name = _HS, rank = U, C_macro);
-
- # integrand P
- #(obj = Field,name = BH_irreducible_mass_integrand, rank = 0, none);
-
 }
+
 # symmetries:
-#Symm[AConfIJ(i,j)  = AConfIJ(j,i)];
-#Symm[igConf(i,j)  = igConf(j,i)];
 Symm[gConf(i,j)   = gConf(j,i)];
 
 `{`# make it local variables
@@ -122,7 +96,8 @@ Symm[gConf(i,j)   = gConf(j,i)];
 `  free(g22);`
 
 `  }`# end of FOR_ALL_PATCHES
-`  Setd("AH_area",A_AH);`
 ``
 `  obs->ret[0] = sqrt(A_AH/(16*M_PI));`
+`  obs->ret[1] = A_AH;`
 `}`
+

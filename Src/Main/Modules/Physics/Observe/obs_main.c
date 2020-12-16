@@ -42,7 +42,9 @@
 // NOTE: the order of population for "ADM(P,J)" is:
 // Px = ret[0], py = ret[1], pz = ret[2]
 // Jx = ret[3], Jy = ret[4], Jz = ret[5]
-// and generally for index quantities (x,y,z) fills with order (0,1,2). */
+// and generally for index quantities (x,y,z) fills with order (0,1,2). 
+// NOTE: for observe(bh,"Irreducible(M)",ret) we have:
+// ret[0] = bh irreducible mass and ret[1] = AH physical(proper) area. */
 int observe(Physics_T *const phys,const char *const sq,double *const ret)
 {
   Observe_T *const obs = calloc(1,sizeof(*obs));
