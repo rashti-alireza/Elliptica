@@ -15,3 +15,13 @@ void pr_half_line_custom(const char c);
 void pr_clock(void);
 double get_time_sec(void);
 void pr_spent_time(const double start,const char *const event);
+double convert_clock(int *const days,int *const hours,
+                     int *const minutes,int *const seconds);
+
+
+
+
+
+
+
+                     

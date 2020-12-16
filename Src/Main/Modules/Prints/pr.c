@@ -65,16 +65,30 @@ void pr_half_line_custom(const char c)
   
 }
 
-/* printing the sepnt time form the start of abc */
-void pr_clock(void)
+/* ->: total second from initial time
+// convert totol second from initial time to days, 
+// hours, minutes and seconds */
+double convert_clock(int *const days,int *const hours,
+                     int *const minutes,int *const seconds)
 {
   time_t now = time(0);
   double t = difftime(now,initial_time_global);
+  *days    = (int)(t/(24*60*60));
+  *hours   = (int)(t-(*days)*(24*60*60))/(60*60);
+  *minutes = (int)(t-(*days)*(24*60*60)-((*hours)*60*60))/60;
+  *seconds = (int)(t-(*days)*(24*60*60)-((*hours)*60*60)-(*minutes)*60);
+  
+  return t;
+}
+
+/* printing the sepnt time form the start of abc */
+void pr_clock(void)
+{
+  double t;
   int d,h,m,s;
-  d = (int)(t/(24*60*60));
-  h = (int)(t-d*(24*60*60))/(60*60);
-  m = (int)(t-d*(24*60*60)-(h*60*60))/60;
-  s = (int)(t-d*(24*60*60)-(h*60*60)-m*60);
+  
+  t = convert_clock(&d,&h,&m,&s);
+  
   printf("\nWALL-TIME: %02dd:%02dh:%02dm:%02ds = %.0fs\n",d,h,m,s,t);
   fflush(stdout);
 }
