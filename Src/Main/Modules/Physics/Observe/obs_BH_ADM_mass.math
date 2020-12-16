@@ -22,8 +22,6 @@ C_macro  = READ_v_UNUSED(name);
 `  for(p = 0; p < N; ++p)`
 `  {`
 `  Patch_T *patch = adm[p]->patch;`
-`  Error0("what to do for derives below?");`
-`  //obs_1st_derivatives_conformal_metric(patch);`
 ``
 Declare = 
 {
@@ -34,7 +32,7 @@ Declare =
  (obj = Field,name = dpsi, rank = D, C_macro);
 
  # partial derivative of conformal metric
- (obj = Field,name = _dgamma, rank = DDD, C_macro);
+ (obj = Field,name = dgConf, rank = DDD, C_macro);
 
  # conformal metric inverse
  (obj = Field,name = igConf, rank = UU, C_macro);
@@ -47,7 +45,7 @@ Declare =
 }
 # symmetries:
 Symm[igConf(i,j)  = igConf(j,i)];
-Symm[_dgamma(i,j,k) = _dgamma(j,i,k)];
+Symm[dgConf(i,j,k) = dgConf(j,i,k)];
 
 `    Uint nn = patch->nn;`
 `    Uint ijk;`
@@ -67,7 +65,7 @@ Symm[_dgamma(i,j,k) = _dgamma(j,i,k)];
 `      {`
        dlnpsi(k) = dpsi(k)/psi;
        M_s = n(-k)*(-8*dlnpsi(k) +\
-           igConf(-i,-j)*(_dgamma(i,k,j)-_dgamma(i,j,k)));
+           igConf(-i,-j)*(dgConf(i,k,j)-dgConf(i,j,k)));
 `      ADM_mass_integrand_S[ijk] = M_s;`
 `      }`
 `      }`
@@ -97,8 +95,6 @@ Symm[_dgamma(i,j,k) = _dgamma(j,i,k)];
 `    {`
 `      Error0("Wrong flag!\n");`
 `    }`
-`    Error0("what to do for below?");`
-`    //obs_rm_1st_derivatives_conformal_metric(patch);`
 ``
 `  }`# end of for(p = 0; p < N; ++p)
 `  adm_mass /= (16*M_PI);`

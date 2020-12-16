@@ -18,8 +18,6 @@ double obs_BH_ADM_mass(Observe_T *const obs)
   for(p = 0; p < N; ++p)
   {
   Patch_T *patch = adm[p]->patch;
-  Error0("what to do for derives below?");
-  //obs_1st_derivatives_conformal_metric(patch);
 
 
   /* declaring: */
@@ -27,24 +25,24 @@ double obs_BH_ADM_mass(Observe_T *const obs)
   READ_v_UNUSED(dpsi_D0)
   READ_v_UNUSED(dpsi_D1)
   READ_v_UNUSED(dpsi_D2)
-  READ_v_UNUSED(_dgamma_D0D0D1)
-  READ_v_UNUSED(_dgamma_D0D0D0)
-  READ_v_UNUSED(_dgamma_D2D2D2)
-  READ_v_UNUSED(_dgamma_D0D0D2)
-  READ_v_UNUSED(_dgamma_D0D2D1)
-  READ_v_UNUSED(_dgamma_D1D1D0)
-  READ_v_UNUSED(_dgamma_D1D1D2)
-  READ_v_UNUSED(_dgamma_D2D2D0)
-  READ_v_UNUSED(_dgamma_D2D2D1)
-  READ_v_UNUSED(_dgamma_D0D1D0)
-  READ_v_UNUSED(_dgamma_D0D1D1)
-  READ_v_UNUSED(_dgamma_D0D1D2)
-  READ_v_UNUSED(_dgamma_D0D2D0)
-  READ_v_UNUSED(_dgamma_D1D1D1)
-  READ_v_UNUSED(_dgamma_D1D2D1)
-  READ_v_UNUSED(_dgamma_D1D2D2)
-  READ_v_UNUSED(_dgamma_D1D2D0)
-  READ_v_UNUSED(_dgamma_D0D2D2)
+  READ_v_UNUSED(dgConf_D0D2D1)
+  READ_v_UNUSED(dgConf_D0D2D2)
+  READ_v_UNUSED(dgConf_D1D1D1)
+  READ_v_UNUSED(dgConf_D1D2D1)
+  READ_v_UNUSED(dgConf_D0D1D0)
+  READ_v_UNUSED(dgConf_D0D1D1)
+  READ_v_UNUSED(dgConf_D0D1D2)
+  READ_v_UNUSED(dgConf_D0D2D0)
+  READ_v_UNUSED(dgConf_D0D0D1)
+  READ_v_UNUSED(dgConf_D0D0D0)
+  READ_v_UNUSED(dgConf_D1D2D0)
+  READ_v_UNUSED(dgConf_D0D0D2)
+  READ_v_UNUSED(dgConf_D1D2D2)
+  READ_v_UNUSED(dgConf_D1D1D0)
+  READ_v_UNUSED(dgConf_D1D1D2)
+  READ_v_UNUSED(dgConf_D2D2D1)
+  READ_v_UNUSED(dgConf_D2D2D0)
+  READ_v_UNUSED(dgConf_D2D2D2)
   READ_v_UNUSED(igConf_U2U2)
   READ_v_UNUSED(igConf_U1U2)
   READ_v_UNUSED(igConf_U1U1)
@@ -76,25 +74,25 @@ dpsi_D1[ijk]/psi[ijk];
 dpsi_D0[ijk]/psi[ijk];
 
       double M_s = 
-n_U0[ijk]*(-8*dlnpsi_U0 + igConf_U0U1[ijk]*(_dgamma_D0D0D1[ijk] -
-_dgamma_D0D1D0[ijk]) + igConf_U0U2[ijk]*(_dgamma_D0D0D2[ijk] -
-_dgamma_D0D2D0[ijk]) + igConf_U1U1[ijk]*(_dgamma_D0D1D1[ijk] -
-_dgamma_D1D1D0[ijk]) + igConf_U1U2[ijk]*(_dgamma_D0D1D2[ijk] -
-_dgamma_D1D2D0[ijk]) + igConf_U1U2[ijk]*(_dgamma_D0D2D1[ijk] -
-_dgamma_D1D2D0[ijk]) + igConf_U2U2[ijk]*(_dgamma_D0D2D2[ijk] -
-_dgamma_D2D2D0[ijk])) - n_U1[ijk]*(8*dlnpsi_U1 + igConf_U0U0[ijk]*
-(_dgamma_D0D0D1[ijk] - _dgamma_D0D1D0[ijk]) + igConf_U0U1[ijk]*
-(_dgamma_D0D1D1[ijk] - _dgamma_D1D1D0[ijk]) - igConf_U0U2[ijk]*
-(_dgamma_D0D1D2[ijk] - _dgamma_D0D2D1[ijk]) + igConf_U0U2[ijk]*
-(_dgamma_D0D2D1[ijk] - _dgamma_D1D2D0[ijk]) - igConf_U1U2[ijk]*
-(_dgamma_D1D1D2[ijk] - _dgamma_D1D2D1[ijk]) - igConf_U2U2[ijk]*
-(_dgamma_D1D2D2[ijk] - _dgamma_D2D2D1[ijk])) - n_U2[ijk]*(8*dlnpsi_U2 +
-igConf_U0U0[ijk]*(_dgamma_D0D0D2[ijk] - _dgamma_D0D2D0[ijk]) +
-igConf_U0U1[ijk]*(_dgamma_D0D1D2[ijk] - _dgamma_D0D2D1[ijk]) +
-igConf_U0U1[ijk]*(_dgamma_D0D1D2[ijk] - _dgamma_D1D2D0[ijk]) +
-igConf_U0U2[ijk]*(_dgamma_D0D2D2[ijk] - _dgamma_D2D2D0[ijk]) +
-igConf_U1U1[ijk]*(_dgamma_D1D1D2[ijk] - _dgamma_D1D2D1[ijk]) +
-igConf_U1U2[ijk]*(_dgamma_D1D2D2[ijk] - _dgamma_D2D2D1[ijk]));
+n_U0[ijk]*(-8*dlnpsi_U0 + igConf_U0U1[ijk]*(dgConf_D0D0D1[ijk] -
+dgConf_D0D1D0[ijk]) + igConf_U0U2[ijk]*(dgConf_D0D0D2[ijk] -
+dgConf_D0D2D0[ijk]) + igConf_U1U1[ijk]*(dgConf_D0D1D1[ijk] -
+dgConf_D1D1D0[ijk]) + igConf_U1U2[ijk]*(dgConf_D0D1D2[ijk] -
+dgConf_D1D2D0[ijk]) + igConf_U1U2[ijk]*(dgConf_D0D2D1[ijk] -
+dgConf_D1D2D0[ijk]) + igConf_U2U2[ijk]*(dgConf_D0D2D2[ijk] -
+dgConf_D2D2D0[ijk])) - n_U1[ijk]*(8*dlnpsi_U1 + igConf_U0U0[ijk]*
+(dgConf_D0D0D1[ijk] - dgConf_D0D1D0[ijk]) + igConf_U0U1[ijk]*
+(dgConf_D0D1D1[ijk] - dgConf_D1D1D0[ijk]) - igConf_U0U2[ijk]*
+(dgConf_D0D1D2[ijk] - dgConf_D0D2D1[ijk]) + igConf_U0U2[ijk]*
+(dgConf_D0D2D1[ijk] - dgConf_D1D2D0[ijk]) - igConf_U1U2[ijk]*
+(dgConf_D1D1D2[ijk] - dgConf_D1D2D1[ijk]) - igConf_U2U2[ijk]*
+(dgConf_D1D2D2[ijk] - dgConf_D2D2D1[ijk])) - n_U2[ijk]*(8*dlnpsi_U2 +
+igConf_U0U0[ijk]*(dgConf_D0D0D2[ijk] - dgConf_D0D2D0[ijk]) +
+igConf_U0U1[ijk]*(dgConf_D0D1D2[ijk] - dgConf_D0D2D1[ijk]) +
+igConf_U0U1[ijk]*(dgConf_D0D1D2[ijk] - dgConf_D1D2D0[ijk]) +
+igConf_U0U2[ijk]*(dgConf_D0D2D2[ijk] - dgConf_D2D2D0[ijk]) +
+igConf_U1U1[ijk]*(dgConf_D1D1D2[ijk] - dgConf_D1D2D1[ijk]) +
+igConf_U1U2[ijk]*(dgConf_D1D2D2[ijk] - dgConf_D2D2D1[ijk]));
 
       ADM_mass_integrand_S[ijk] = M_s;
       }
@@ -124,8 +122,6 @@ igConf_U1U2[ijk]*(_dgamma_D1D2D2[ijk] - _dgamma_D2D2D1[ijk]));
     {
       Error0("Wrong flag!\n");
     }
-    Error0("what to do for below?");
-    //obs_rm_1st_derivatives_conformal_metric(patch);
 
   }
   adm_mass /= (16*M_PI);
