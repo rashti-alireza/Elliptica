@@ -1393,12 +1393,17 @@ static void calc_ADM_mass(Observe_T *const obs)
     adm[n]->g12 = g12;
     adm[n]->g22 = g22;
     
-    adm[n]->surface_integration_flg = 1;
-    adm[n]->Z_surface = 1;
-    adm[n]->K = 0;
-    n_conformal_metric_around(adm[n],_c_);
+    if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_SBH)
+    {
+      adm[n]->surface_integration_flg = 1;
+      adm[n]->Z_surface = 1;
+      adm[n]->K = 0;
+      n_conformal_metric_around(adm[n],_c_);
+    }
+    else
+      Error0(NO_OPTION);
   }
-    
   obs->ret[0] = obs_BH_ADM_mass(obs);
   Free(patches2);
 }
