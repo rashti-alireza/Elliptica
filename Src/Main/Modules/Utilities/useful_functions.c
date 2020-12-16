@@ -662,7 +662,7 @@ how_much_memory
 /* header and clock when the function called */
 void header_and_clock(const char *const msg)
 {
-  char str[9999] = {'\0'};
+  char str[MAX_STR_LEN] = {'\0'};
   sprintf(str,"{ %s ...",msg);
   pr_clock();
   pr_line_custom('=');
@@ -673,7 +673,7 @@ void header_and_clock(const char *const msg)
 /* header and clock when the function ends */
 void footer_and_clock(const char *const msg)
 {
-  char str[9999] = {'\0'};
+  char str[MAX_STR_LEN] = {'\0'};
   sprintf(str,"} %s ==> Done. :)",msg);
   printf("%s\n",str);
   pr_clock();
