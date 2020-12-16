@@ -56,14 +56,14 @@ bh_print_properties
   PR_PROPERTY_IN_FILE_d("Omega_U2", file, pr_screen)
   PR_PROPERTY_IN_FILE_d("Rcenter_x", file, pr_screen)
   PR_PROPERTY_IN_FILE_d("Rcenter_y", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Rcenter_z", file, pr_screen)
+  PR_PROPERTY_IN_FILE_d("Rcenter_z", file, pr_screen)*/
 
   PR_PROPERTY_IN_FILE_d("Px_ADM", file, pr_screen)
   PR_PROPERTY_IN_FILE_d("Py_ADM", file, pr_screen)
   PR_PROPERTY_IN_FILE_d("Pz_ADM", file, pr_screen)
   PR_PROPERTY_IN_FILE_d("Jx_ADM", file, pr_screen)
   PR_PROPERTY_IN_FILE_d("Jy_ADM", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Jz_ADM", file, pr_screen)*/
+  PR_PROPERTY_IN_FILE_d("Jz_ADM", file, pr_screen)
  
   fprintf(file,"\n");
 }
