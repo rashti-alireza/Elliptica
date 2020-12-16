@@ -662,30 +662,40 @@ how_much_memory
 /* header and clock when the function called */
 void header_and_clock(const char *const msg)
 {
-  char str[MAX_STR_LEN] = {'\0'};
-  double t;
+  const Uint Width = 74;/* number of rows in each line */
+  const Uint lmsg  = (Uint)strlen(msg)+2/* "{ " */+5/* " ... " */;
+  char clc[MAX_STR_LEN] = {'\0'};
   int d,h,m,s;
   
-  t = convert_clock(&d,&h,&m,&s);
+  /* clock */
+  convert_clock(&d,&h,&m,&s);
+  sprintf(clc,"[%02dd:%02dh:%02dm:%02ds]",d,h,m,s);
   
-  sprintf(str,"{ %s ... [%02dd:%02dh:%02dm:%02ds = %.0fs]",
-                 msg,d,h,m,s,t);
-  printf("%s\n",str);
+  if (Width>lmsg)/* right justification */
+    printf("{ %s ... %*s\n",msg,Width-lmsg,clc);
+  else
+    printf("{ %s ... %s\n",msg,clc);
+    
   fflush(stdout);
 }
 
 /* header and clock when the function ends */
 void footer_and_clock(const char *const msg)
 {
-  char str[MAX_STR_LEN] = {'\0'};
-  double t;
+  const Uint Width = 74;/* number of rows in each line */
+  const Uint lmsg  = (Uint)strlen(msg)+2/* "{ " */+5/* " ... " */;
+  char clc[MAX_STR_LEN] = {'\0'};
   int d,h,m,s;
   
-  t = convert_clock(&d,&h,&m,&s);
+  /* clock */
+  convert_clock(&d,&h,&m,&s);
+  sprintf(clc,"[%02dd:%02dh:%02dm:%02ds]",d,h,m,s);
   
-  sprintf(str,"} %s :)) [%02dd:%02dh:%02dm:%02ds = %.0fs]",
-                 msg,d,h,m,s,t);
-  printf("%s\n",str);
+  if (Width>lmsg)/* right justification */
+    printf("{ %s :)) %*s\n",msg,Width-lmsg,clc);
+  else
+    printf("{ %s :)) %s\n",msg,clc);
+    
   fflush(stdout);
 }
 
