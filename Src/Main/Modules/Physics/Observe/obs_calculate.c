@@ -1135,10 +1135,6 @@ static void calc_Kommar_mass(Observe_T *const obs)
     {
       region = "BH_around_IB";
     }
-    else IFsc("Kommar(M)|BH")
-    {
-      region = "BH_around_IB";
-    }
     else IFsc("Kommar(M)|SBH")
     {
       region = "BH_around_IB";

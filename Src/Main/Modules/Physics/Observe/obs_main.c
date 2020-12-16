@@ -27,6 +27,8 @@
 // NOTES:
 // ======
 // o. ADM(M)|BH is a very crude approximation, don't rely on it.
+// o. ADM(M)|*  depends on conformal factor psi thus if psi = const => 0.
+//
 //
 */
 
