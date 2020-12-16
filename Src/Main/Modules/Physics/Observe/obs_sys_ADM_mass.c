@@ -12,13 +12,13 @@
   ADD_FIELD(name);REALLOC_v_WRITE_v(name);
 
 
-double obs_ADM_mass(Observe_T *const obs);
-double obs_ADM_mass(Observe_T *const obs)
+double obs_sys_ADM_mass(Observe_T *const obs);
+double obs_sys_ADM_mass(Observe_T *const obs)
 {
   double adm_mass = 0;
   struct items_S **adm = obs->items;
   const Uint N = obs->Nitems;
-  const double CUTOFF = 1E3;
+  const double CUTOFF = 1E6;
   Uint p;
 
   for(p = 0; p < N; ++p)
@@ -42,24 +42,24 @@ double obs_ADM_mass(Observe_T *const obs)
   READ_v(igConf_U0U2)
   READ_v(igConf_U0U0)
   READ_v(igConf_U0U1)
-  READ_v(_Gamma_U2D1D1)
-  READ_v(_Gamma_U2D1D2)
-  READ_v(_Gamma_U0D1D1)
-  READ_v(_Gamma_U2D0D2)
-  READ_v(_Gamma_U2D2D2)
-  READ_v(_Gamma_U0D1D2)
-  READ_v(_Gamma_U0D0D2)
-  READ_v(_Gamma_U0D0D1)
-  READ_v(_Gamma_U0D0D0)
-  READ_v(_Gamma_U1D2D2)
-  READ_v(_Gamma_U2D0D1)
-  READ_v(_Gamma_U0D2D2)
-  READ_v(_Gamma_U2D0D0)
-  READ_v(_Gamma_U1D0D2)
-  READ_v(_Gamma_U1D1D2)
-  READ_v(_Gamma_U1D0D0)
-  READ_v(_Gamma_U1D0D1)
-  READ_v(_Gamma_U1D1D1)
+  READ_v(ChrisConf_U1D0D0)
+  READ_v(ChrisConf_U0D2D2)
+  READ_v(ChrisConf_U1D0D2)
+  READ_v(ChrisConf_U2D2D2)
+  READ_v(ChrisConf_U2D1D1)
+  READ_v(ChrisConf_U2D0D0)
+  READ_v(ChrisConf_U1D1D1)
+  READ_v(ChrisConf_U0D1D1)
+  READ_v(ChrisConf_U0D1D2)
+  READ_v(ChrisConf_U1D1D2)
+  READ_v(ChrisConf_U0D0D1)
+  READ_v(ChrisConf_U0D0D0)
+  READ_v(ChrisConf_U2D0D1)
+  READ_v(ChrisConf_U0D0D2)
+  READ_v(ChrisConf_U2D1D2)
+  READ_v(ChrisConf_U1D2D2)
+  READ_v(ChrisConf_U2D0D2)
+  READ_v(ChrisConf_U1D0D1)
 
 
     Uint nn = patch->nn;
@@ -116,25 +116,28 @@ n_U2[ijk];
       DEF_RELATIVE_r
       double att = r > CUTOFF ? 0:1;
       double M_v = 
--_Gamma_U0D0D0[ijk]*dpsi_D0[ijk]*igConf_U0U0[ijk] - 2.0*
-_Gamma_U0D0D1[ijk]*dpsi_D0[ijk]*igConf_U0U1[ijk] - 2.0*
-_Gamma_U0D0D2[ijk]*dpsi_D0[ijk]*igConf_U0U2[ijk] - _Gamma_U0D1D1[ijk]*
-dpsi_D0[ijk]*igConf_U1U1[ijk] - 2.0*_Gamma_U0D1D2[ijk]*dpsi_D0[ijk]*
-igConf_U1U2[ijk] - _Gamma_U0D2D2[ijk]*dpsi_D0[ijk]*igConf_U2U2[ijk] -
-_Gamma_U1D0D0[ijk]*dpsi_D1[ijk]*igConf_U0U0[ijk] - 2.0*
-_Gamma_U1D0D1[ijk]*dpsi_D1[ijk]*igConf_U0U1[ijk] - 2.0*
-_Gamma_U1D0D2[ijk]*dpsi_D1[ijk]*igConf_U0U2[ijk] - _Gamma_U1D1D1[ijk]*
-dpsi_D1[ijk]*igConf_U1U1[ijk] - 2.0*_Gamma_U1D1D2[ijk]*dpsi_D1[ijk]*
-igConf_U1U2[ijk] - _Gamma_U1D2D2[ijk]*dpsi_D1[ijk]*igConf_U2U2[ijk] -
-_Gamma_U2D0D0[ijk]*dpsi_D2[ijk]*igConf_U0U0[ijk] - 2.0*
-_Gamma_U2D0D1[ijk]*dpsi_D2[ijk]*igConf_U0U1[ijk] - 2.0*
-_Gamma_U2D0D2[ijk]*dpsi_D2[ijk]*igConf_U0U2[ijk] - _Gamma_U2D1D1[ijk]*
-dpsi_D2[ijk]*igConf_U1U1[ijk] - 2.0*_Gamma_U2D1D2[ijk]*dpsi_D2[ijk]*
-igConf_U1U2[ijk] - _Gamma_U2D2D2[ijk]*dpsi_D2[ijk]*igConf_U2U2[ijk] +
-ddpsi_D0D0[ijk]*igConf_U0U0[ijk] + 2.0*ddpsi_D0D1[ijk]*
-igConf_U0U1[ijk] + 2.0*ddpsi_D0D2[ijk]*igConf_U0U2[ijk] +
-ddpsi_D1D1[ijk]*igConf_U1U1[ijk] + 2.0*ddpsi_D1D2[ijk]*
-igConf_U1U2[ijk] + ddpsi_D2D2[ijk]*igConf_U2U2[ijk];
+-ChrisConf_U0D0D0[ijk]*dpsi_D0[ijk]*igConf_U0U0[ijk] - 2.0*
+ChrisConf_U0D0D1[ijk]*dpsi_D0[ijk]*igConf_U0U1[ijk] - 2.0*
+ChrisConf_U0D0D2[ijk]*dpsi_D0[ijk]*igConf_U0U2[ijk] -
+ChrisConf_U0D1D1[ijk]*dpsi_D0[ijk]*igConf_U1U1[ijk] - 2.0*
+ChrisConf_U0D1D2[ijk]*dpsi_D0[ijk]*igConf_U1U2[ijk] -
+ChrisConf_U0D2D2[ijk]*dpsi_D0[ijk]*igConf_U2U2[ijk] -
+ChrisConf_U1D0D0[ijk]*dpsi_D1[ijk]*igConf_U0U0[ijk] - 2.0*
+ChrisConf_U1D0D1[ijk]*dpsi_D1[ijk]*igConf_U0U1[ijk] - 2.0*
+ChrisConf_U1D0D2[ijk]*dpsi_D1[ijk]*igConf_U0U2[ijk] -
+ChrisConf_U1D1D1[ijk]*dpsi_D1[ijk]*igConf_U1U1[ijk] - 2.0*
+ChrisConf_U1D1D2[ijk]*dpsi_D1[ijk]*igConf_U1U2[ijk] -
+ChrisConf_U1D2D2[ijk]*dpsi_D1[ijk]*igConf_U2U2[ijk] -
+ChrisConf_U2D0D0[ijk]*dpsi_D2[ijk]*igConf_U0U0[ijk] - 2.0*
+ChrisConf_U2D0D1[ijk]*dpsi_D2[ijk]*igConf_U0U1[ijk] - 2.0*
+ChrisConf_U2D0D2[ijk]*dpsi_D2[ijk]*igConf_U0U2[ijk] -
+ChrisConf_U2D1D1[ijk]*dpsi_D2[ijk]*igConf_U1U1[ijk] - 2.0*
+ChrisConf_U2D1D2[ijk]*dpsi_D2[ijk]*igConf_U1U2[ijk] -
+ChrisConf_U2D2D2[ijk]*dpsi_D2[ijk]*igConf_U2U2[ijk] + ddpsi_D0D0[ijk]*
+igConf_U0U0[ijk] + 2.0*ddpsi_D0D1[ijk]*igConf_U0U1[ijk] + 2.0*
+ddpsi_D0D2[ijk]*igConf_U0U2[ijk] + ddpsi_D1D1[ijk]*igConf_U1U1[ijk] +
+2.0*ddpsi_D1D2[ijk]*igConf_U1U2[ijk] + ddpsi_D2D2[ijk]*
+igConf_U2U2[ijk];
 
       ADM_mass_integrand_V[ijk] = M_v*att;
       }

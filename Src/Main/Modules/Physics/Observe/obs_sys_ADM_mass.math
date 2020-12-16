@@ -17,13 +17,13 @@ C_macro2 = add_and_get_field(name);
          `  ADD_FIELD(name);REALLOC_v_WRITE_v(name);`
 ``
 ``
-`double obs_ADM_mass(Observe_T *const obs);`
-`double obs_ADM_mass(Observe_T *const obs)`
+`double obs_sys_ADM_mass(Observe_T *const obs);`
+`double obs_sys_ADM_mass(Observe_T *const obs)`
 `{`
 `  double adm_mass = 0;`
 `  struct items_S **adm = obs->items;`
 `  const Uint N = obs->Nitems;`
-`  const double CUTOFF = 1E3;`
+`  const double CUTOFF = 1E6;`
 `  Uint p;`
 ``
 `  for(p = 0; p < N; ++p)`

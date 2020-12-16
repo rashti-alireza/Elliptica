@@ -40,7 +40,7 @@ struct items_S
   Uint K;
 };
 
-double obs_ADM_mass(Observe_T *const obs);
+double obs_sys_ADM_mass(Observe_T *const obs);
 double obs_BH_ADM_mass(Observe_T *const obs);
 double obs_Kommar_mass(Observe_T *const obs);
 double obs_ADM_mass(Observe_T *const obs);
