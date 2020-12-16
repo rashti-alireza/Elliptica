@@ -986,7 +986,7 @@ static void calc_ADM_PJ(Observe_T *const obs)
     }
     else IFsc("ADM(P,J)|SBH")
     {
-      region = "BH_around_IB";
+      region = "outermost,BH_around_OB";
     }
     else
     {
@@ -1083,11 +1083,14 @@ static void calc_ADM_PJ(Observe_T *const obs)
       }
       else IFsc("ADM(P,J)|SBH")
       {
-        /* surface integral */
-        adm[n]->surface_integration_flg = 1;
-        adm[n]->Z_surface = 1;
-        adm[n]->K = 0;
-        n_physical_metric_around(adm[n],_c_);
+        /* surface integrals params */
+        if (IsItCovering(patch,"BH_around_OB"))
+        {
+          adm[n]->surface_integration_flg = 1;
+          adm[n]->Z_surface = 1;
+          adm[n]->K = patch->n[2]-1;
+          n_physical_metric_around(adm[n],_c_);
+        }
       }
       else
       {
