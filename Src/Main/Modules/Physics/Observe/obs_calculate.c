@@ -1404,7 +1404,36 @@ static void calc_ADM_mass(Observe_T *const obs)
     else
       Error0(NO_OPTION);
   }
-  obs->ret[0] = obs_BH_ADM_mass(obs);
+  
+  if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_SBH)
+  {
+    IFsc("ADM(M)|BHNS")
+    {
+      obs->ret[0] = obs_sys_ADM_mass(obs);
+    }
+    else IFsc("ADM(M)|NS")
+    {
+      obs->ret[0] = obs_sys_ADM_mass(obs); 
+    }
+    else IFsc("ADM(M)|BH")
+    {
+      obs->ret[0] = obs_BH_ADM_mass(obs);
+    }
+    else IFsc("ADM(M)|SBH")
+    {
+      obs->ret[0] = obs_sys_ADM_mass(obs);
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
+  }
+  else
+  {
+    Error0(NO_OPTION);
+  }
+  
   Free(patches2);
 }
 
