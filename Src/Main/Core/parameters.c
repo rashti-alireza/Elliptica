@@ -64,11 +64,9 @@ void update_parameter_double_format(const char *const lv, const double rv,const 
   {
     if (print_flg)
     {
-      printf("Updating Parameter:\n");
-      printf("         |--> parameter     = %s\n",lv);
-      printf("         |--> new value     = %+e\n",rv);
-      printf("         |--> old value     = %+e\n",par->rv_double);
-      printf("         |--> v_new - v_old = %+e\n",rv-par->rv_double);
+      double diff = (rv-par->rv_double)/fabs((!EQL(rv,0.) ? rv : 1.));
+      printf(Pretty0"Update '%s': %+e -> %+e (%+0.2f%%)\n",
+                    lv,par->rv_double,rv,diff*100.);
     }
     sprintf(str_rv,"%15.18f",rv);
     Free(par->rv);
@@ -107,9 +105,7 @@ void add_parameter_double(const char *const lv, const double rv,const int print_
   
   if (print_flg)
   {
-    printf("Adding Parameter:\n");
-    printf("       |--> parameter = %s\n",lv);
-    printf("       |--> value     = %+e\n",rv);
+    printf(Pretty0"Add '%s': %+e\n",lv,rv);
   }
 }
 
