@@ -22,6 +22,11 @@ C_macro = READ_v_UNUSED(name);
 ` FOR_ALL_p(grid->np)`
 ` {`
 ` Patch_T *patch = grid->patch[p];`
+` const Uint nX  = patch->n[0];`
+` const Uint nY  = patch->n[1];`
+` const Uint k   = 0;`
+``
+` if (patch->coordsys != CubedSpherical)  Error0(NO_OPTION);`
 ``
 Declare = 
 {
@@ -55,9 +60,11 @@ Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 Symm[AConfIJ(i,j)     = AConfIJ(j,i)];
 Symm[gConf(i,j)       = gConf(j,i)];
 
-` FOR_ALL_ijk`
+` for (Uint i = 0; i < nX; ++i)`
+` for (Uint j = 0; j < nY; ++j)`
 ` {`
-
+` Uint ijk = L(patch->n,i,j,k);`
+``
 DisConfI = (dbh_sConf(j,i) + ChrisConf(j,i,l)*bh_sConf(-l))*KD(-j,-i);
 
 Theta    = bh_sConf(i)*dpsi(-i) + \

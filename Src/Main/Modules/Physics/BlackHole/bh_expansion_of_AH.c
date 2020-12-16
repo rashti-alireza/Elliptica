@@ -17,6 +17,11 @@ double bh_calculate_expansion_on_AH(Physics_T *const phys)
  FOR_ALL_p(grid->np)
  {
  Patch_T *patch = grid->patch[p];
+ const Uint nX  = patch->n[0];
+ const Uint nY  = patch->n[1];
+ const Uint k   = 0;
+
+ if (patch->coordsys != CubedSpherical)  Error0(NO_OPTION);
 
 
   /* declaring: */
@@ -69,9 +74,12 @@ double bh_calculate_expansion_on_AH(Physics_T *const phys)
   READ_v_UNUSED(ChrisConf_U1D0D1)
 
 
- FOR_ALL_ijk
+ for (Uint i = 0; i < nX; ++i)
+ for (Uint j = 0; j < nY; ++j)
  {
- double DisConfI = 
+ Uint ijk = L(patch->n,i,j,k);
+
+  double DisConfI = 
 ChrisConf_U0D0D0[ijk]*bh_sConf_U0[ijk] + ChrisConf_U0D0D1[ijk]*
 bh_sConf_U1[ijk] + ChrisConf_U0D0D2[ijk]*bh_sConf_U2[ijk] +
 ChrisConf_U1D0D1[ijk]*bh_sConf_U0[ijk] + ChrisConf_U1D1D1[ijk]*
@@ -80,7 +88,7 @@ ChrisConf_U2D0D2[ijk]*bh_sConf_U0[ijk] + ChrisConf_U2D1D2[ijk]*
 bh_sConf_U1[ijk] + ChrisConf_U2D2D2[ijk]*bh_sConf_U2[ijk] +
 dbh_sConf_U0D0[ijk] + dbh_sConf_U1D1[ijk] + dbh_sConf_U2D2[ijk];
 
- double Theta = 
+  double Theta = 
 (1.0/4.0)*DisConfI*psi[ijk] + bh_sConf_U0[ijk]*dpsi_D0[ijk] +
 bh_sConf_U1[ijk]*dpsi_D1[ijk] + bh_sConf_U2[ijk]*dpsi_D2[ijk] - 1.0/
 6.0*pow(psi[ijk], 3)*trK[ijk] + (1.0/4.0)*(AConfIJ_U0U0[ijk]*
