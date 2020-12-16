@@ -66,14 +66,15 @@ void bh_start_off_KerrSchild_general_s2(Physics_T *const phys)
   Setd("spin_a",bh_a);
   
   printf(Pretty0"%s properties:\n",phys->stype);
-  printf(Pretty0"%s irreducible mass             = %+e\n",phys->stype,bh_irr_mass);
-  printf(Pretty0"%s Christodoulou_mass           = %+e\n",phys->stype,bh_chr_mass);
+  printf(Pretty0"%s radius (Kerr-Schild Coords.) ~ %+e\n",phys->stype,bh_R);
+  printf(Pretty0"%s irreducible mass             ~ %+e\n",phys->stype,bh_irr_mass);
+  printf(Pretty0"%s Christodoulou_mass           ~ %+e\n",phys->stype,bh_chr_mass);
   printf(Pretty0"%s dimensionless spin (x comp.) = %+e\n",phys->stype,bh_chi_x);
   printf(Pretty0"%s dimensionless spin (y comp.) = %+e\n",phys->stype,bh_chi_y);
   printf(Pretty0"%s dimensionless spin (z comp.) = %+e\n",phys->stype,bh_chi_z);
   printf(Pretty0"%s net dimensionless spin       = %+e\n",phys->stype,bh_chi);
-  printf(Pretty0"%s Spin/M (= a)                 = %+e\n",phys->stype,bh_a);
-  printf(Pretty0"%s approximate radius           ~ %+e\n",phys->stype,bh_R);
+  printf(Pretty0"%s spin/M (= a)                 = %+e\n",phys->stype,bh_a);
+  printf(Pretty0"%s radius (Kerr-Schild Coords.) ~ %+e\n",phys->stype,bh_R);
   
   FUNC_TOC
 }
