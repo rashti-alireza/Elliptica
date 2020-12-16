@@ -143,9 +143,9 @@ static void free_obs(Observe_T *obs)
     Free(adm[i]->n_U1);
     Free(adm[i]->n_U2);
     
-    free(adm[i]);
+    Free(adm[i]);
   }
   Free(adm);
-  
+  free(obs); 
 }
 
