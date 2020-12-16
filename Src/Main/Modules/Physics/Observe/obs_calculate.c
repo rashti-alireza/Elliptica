@@ -1292,6 +1292,10 @@ static void calc_ADM_mass(Observe_T *const obs)
     }
     else IFsc("ADM(M)|SBH")
     {
+      /* volume part */
+      region   = "outermost,BH_around";
+      patches1 = collect_patches(grid,region,&N1);
+      /* surface part */
       region   = "BH_around_IB";
       patches2 = collect_patches(grid,region,&N2);
     }
@@ -1354,7 +1358,7 @@ static void calc_ADM_mass(Observe_T *const obs)
   }
   Free(patches1);
   
-  for (n = N1; n < N2; ++n)
+  for (n = N1; n < N1+N2; ++n)
   {
     adm[n] = calloc(1,sizeof(*adm[n]));
     IsNull(adm[n]);
