@@ -24,7 +24,7 @@ void obs_calculate(Observe_T *const obs)
   {
     calc_ADM_PJ(obs);
   }
-  else IFss("Kommar(M)")
+  else IFss("Komar(M)")
   {
     calc_Kommar_mass(obs);
   }
@@ -1113,32 +1113,32 @@ static void calc_ADM_PJ(Observe_T *const obs)
   Free(patches);
 }
   
-/* calculate Kommar mass for various objects */
+/* calculate Komar mass for various objects */
 static void calc_Kommar_mass(Observe_T *const obs)
 {
   Grid_T *const grid= obs->grid;  
   Patch_T **patches = 0;
   Patch_T *patch    = 0;
-  struct items_S **kommar = 0;
+  struct items_S **Komar = 0;
   const char *region = 0;
   Uint n,N,ijk,nn;
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
   {
-    IFsc("Kommar(M)|BHNS")
+    IFsc("Komar(M)|BHNS")
     {
       region = "BH_around_OB,NS_around_OB";
     }
-    else IFsc("Kommar(M)|NS")
+    else IFsc("Komar(M)|NS")
     {
       region = "NS_OB";
     }
-    else IFsc("Kommar(M)|BH")
+    else IFsc("Komar(M)|BH")
     {
       region = "BH_around_IB";
     }
-    else IFsc("Kommar(M)|SBH")
+    else IFsc("Komar(M)|SBH")
     {
       region = "BH_around_OB";
     }
@@ -1156,17 +1156,17 @@ static void calc_Kommar_mass(Observe_T *const obs)
   patches = collect_patches(grid,region,&N);
   
   /* alloc memory for all patches */
-  kommar = calloc(N,sizeof(*kommar));
-  IsNull(kommar);
+  Komar = calloc(N,sizeof(*Komar));
+  IsNull(Komar);
   /* this is where we link to obs struct */
-  obs->items = kommar;
+  obs->items = Komar;
   obs->Nitems = N;
       
-  /* fill kommar struct for each patch */
+  /* fill Komar struct for each patch */
   for (n = 0; n < N; ++n)
   {
-    kommar[n] = calloc(1,sizeof(*kommar[n]));
-    IsNull(kommar[n]);
+    Komar[n] = calloc(1,sizeof(*Komar[n]));
+    IsNull(Komar[n]);
     patch = patches[n];
     nn    = patch->nn;
     
@@ -1185,7 +1185,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
     READ_v(gConf_D1D1)
     READ_v(psi);
     
-    kommar[n]->patch = patch;
+    Komar[n]->patch = patch;
     /* populate metric components */ 
     for (ijk = 0; ijk < nn; ++ijk)
     {
@@ -1197,47 +1197,47 @@ static void calc_Kommar_mass(Observe_T *const obs)
       g12[ijk] = psi4*gConf_D1D2[ijk];
       g22[ijk] = psi4*gConf_D2D2[ijk];
     }
-    kommar[n]->g00 = g00;
-    kommar[n]->g01 = g01;
-    kommar[n]->g02 = g02;
-    kommar[n]->g11 = g11;
-    kommar[n]->g12 = g12;
-    kommar[n]->g22 = g22;
+    Komar[n]->g00 = g00;
+    Komar[n]->g01 = g01;
+    Komar[n]->g02 = g02;
+    Komar[n]->g11 = g11;
+    Komar[n]->g12 = g12;
+    Komar[n]->g22 = g22;
     
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
         grid->kind == Grid_SplitCubedSpherical_SBH)
     {
-      IFsc("Kommar(M)|BHNS")
+      IFsc("Komar(M)|BHNS")
       {
         /* surface integral */
-        kommar[n]->surface_integration_flg = 1;
-        kommar[n]->Z_surface = 1;
-        kommar[n]->K = patch->n[2]-1;
-        n_physical_metric_around(kommar[n],_c_);
+        Komar[n]->surface_integration_flg = 1;
+        Komar[n]->Z_surface = 1;
+        Komar[n]->K = patch->n[2]-1;
+        n_physical_metric_around(Komar[n],_c_);
       }
-      else IFsc("Kommar(M)|NS")
+      else IFsc("Komar(M)|NS")
       {
         /* surface integral */
-        kommar[n]->surface_integration_flg = 1;
-        kommar[n]->Z_surface = 1;
-        kommar[n]->K = patch->n[2]-1;
-        n_physical_metric_around(kommar[n],_c_);
+        Komar[n]->surface_integration_flg = 1;
+        Komar[n]->Z_surface = 1;
+        Komar[n]->K = patch->n[2]-1;
+        n_physical_metric_around(Komar[n],_c_);
       }
-      else IFsc("Kommar(M)|BH")
+      else IFsc("Komar(M)|BH")
       {
         /* surface integral */
-        kommar[n]->surface_integration_flg = 1;
-        kommar[n]->Z_surface = 1;
-        kommar[n]->K = 0;
-        n_physical_metric_around(kommar[n],_c_);
+        Komar[n]->surface_integration_flg = 1;
+        Komar[n]->Z_surface = 1;
+        Komar[n]->K = 0;
+        n_physical_metric_around(Komar[n],_c_);
       }
-      else IFsc("Kommar(M)|SBH")
+      else IFsc("Komar(M)|SBH")
       {
         /* surface integral */
-        kommar[n]->surface_integration_flg = 1;
-        kommar[n]->Z_surface = 1;
-        kommar[n]->K = patch->n[2]-1;
-        n_physical_metric_around(kommar[n],_c_);
+        Komar[n]->surface_integration_flg = 1;
+        Komar[n]->Z_surface = 1;
+        Komar[n]->K = patch->n[2]-1;
+        n_physical_metric_around(Komar[n],_c_);
       }
       else
       {
@@ -1249,7 +1249,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
       Error0(NO_OPTION);
     }
   }
-  obs->ret[0] = obs_Kommar_mass(obs);
+  obs->ret[0] = obs_Komar_mass(obs);
   
   Free(patches);
 }

@@ -42,7 +42,7 @@ struct items_S
 
 double obs_sys_ADM_mass(Observe_T *const obs);
 double obs_BH_ADM_mass(Observe_T *const obs);
-double obs_Kommar_mass(Observe_T *const obs);
+double obs_Komar_mass(Observe_T *const obs);
 double obs_ADM_mass(Observe_T *const obs);
 void obs_populate_spin_integrands_akv(Patch_T *const patch,const double *const normal[3]);
 void obs_populate_spin_integrands_Campanelli(Patch_T *const patch,const double xc[3],const double *const normal[3]);
@@ -50,7 +50,6 @@ void obs_Rc_NS(Observe_T *const obs);
 void obs_populate_ADM_integrand_PdS_GdV_binary(const Observe_T *const obs);
 void obs_populate_ADM_integrand_PdS_GdV_single(const Observe_T *const obs);
 void obs_BH_irreducible_mass_CS(Observe_T *const obs);
-double obs_Kommar_mass(Observe_T *const obs);
 
 
 #endif

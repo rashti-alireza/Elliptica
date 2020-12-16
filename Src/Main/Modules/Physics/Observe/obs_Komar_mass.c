@@ -6,24 +6,24 @@
 
 #include "obs_header.h"
 
-double obs_Kommar_mass(Observe_T *const obs);
-double obs_Kommar_mass(Observe_T *const obs)
+double obs_Komar_mass(Observe_T *const obs);
+double obs_Komar_mass(Observe_T *const obs)
 {
-  double Kommar_mass = 0;
-  struct items_S **const kommar = obs->items;
+  double Komar_mass = 0;
+  struct items_S **const Komar = obs->items;
   const Uint N = obs->Nitems;
   Uint p;
 
   for(p = 0; p < N; ++p)
   {
-    Patch_T *patch     = kommar[p]->patch;
-    const double *n_U0 = kommar[p]->n_U0;
-    const double *n_U1 = kommar[p]->n_U1;
-    const double *n_U2 = kommar[p]->n_U2;
+    Patch_T *patch     = Komar[p]->patch;
+    const double *n_U0 = Komar[p]->n_U0;
+    const double *n_U1 = Komar[p]->n_U1;
+    const double *n_U2 = Komar[p]->n_U2;
     Uint nn        = patch->nn;
     Uint ijk;
 
-    ADD_FIELD(Kommar_mass_integrand)
+    ADD_FIELD(Komar_mass_integrand)
 
 
   /* declaring: */
@@ -54,7 +54,7 @@ double obs_Kommar_mass(Observe_T *const obs)
 
 
 {
-    REALLOC_v_WRITE_v(Kommar_mass_integrand)
+    REALLOC_v_WRITE_v(Komar_mass_integrand)
     for(ijk = 0; ijk < nn; ++ijk)
     {
     double psim2 = 
@@ -141,33 +141,33 @@ dalpha_U1) - n_U2[ijk]*(K_DD_D0D2*beta_U0[ijk] + K_DD_D1D2*
 beta_U1[ijk] + K_DD_D2D2*beta_U2[ijk] - dalpha_U2);
 
 
-      Kommar_mass_integrand[ijk] = integrand;
+      Komar_mass_integrand[ijk] = integrand;
     }
 }
 
-  DECLARE_FIELD(Kommar_mass_integrand)
+  DECLARE_FIELD(Komar_mass_integrand)
   Integration_T *I = init_integration();
   I->type = "Integral{f(x)dS},Spectral";
-  I->Spectral->f = Kommar_mass_integrand;
-  I->g00 = kommar[p]->g00;
-  I->g01 = kommar[p]->g01;
-  I->g02 = kommar[p]->g02;
-  I->g11 = kommar[p]->g11;
-  I->g12 = kommar[p]->g12;
-  I->g22 = kommar[p]->g22;
-  I->Spectral->X_surface = kommar[p]->X_surface;
-  I->Spectral->Y_surface = kommar[p]->Y_surface;
-  I->Spectral->Z_surface = kommar[p]->Z_surface;
-  I->Spectral->I         = kommar[p]->I;
-  I->Spectral->J         = kommar[p]->J;
-  I->Spectral->K         = kommar[p]->K;
+  I->Spectral->f = Komar_mass_integrand;
+  I->g00 = Komar[p]->g00;
+  I->g01 = Komar[p]->g01;
+  I->g02 = Komar[p]->g02;
+  I->g11 = Komar[p]->g11;
+  I->g12 = Komar[p]->g12;
+  I->g22 = Komar[p]->g22;
+  I->Spectral->X_surface = Komar[p]->X_surface;
+  I->Spectral->Y_surface = Komar[p]->Y_surface;
+  I->Spectral->Z_surface = Komar[p]->Z_surface;
+  I->Spectral->I         = Komar[p]->I;
+  I->Spectral->J         = Komar[p]->J;
+  I->Spectral->K         = Komar[p]->K;
   plan_integration(I);
-  Kommar_mass += execute_integration(I);
+  Komar_mass += execute_integration(I);
 
   free_integration(I);
-  REMOVE_FIELD(Kommar_mass_integrand)
+  REMOVE_FIELD(Komar_mass_integrand)
   }
 
-  Kommar_mass /= (4*M_PI);
-  return Kommar_mass;
+  Komar_mass /= (4*M_PI);
+  return Komar_mass;
 }

@@ -11,9 +11,9 @@
 //                        # and sq is one of the followings:
 //
 // * list of quantities *
-// "ADM(P,J)"  #=> compute P and J ADM for the given physics
-// "Kommar(M)" #=> compute Kommar mass for the given physics
-// "ADM(M)"    #=> compute Kommar ADM for the given physics
+// "ADM(P,J)" #=> compute P and J ADM for the given physics
+// "Komar(M)" #=> compute Komar mass for the given physics
+// "ADM(M)"   #=> compute Komar ADM for the given physics
 // "Irreducible(M)" #=> irreducible mass for the givne physics (BH)
 // "CM"          #=> compute the center of mass for the given physics
 // "Spin|method" #=> compute spin for the given physics
