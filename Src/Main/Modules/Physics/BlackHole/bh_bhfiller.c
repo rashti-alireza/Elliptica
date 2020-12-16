@@ -136,8 +136,8 @@ bhf_init
      IF_sval("surface_type","perfect_s2")
        bhf->bhfiller = bhf_ChebTn_Ylm_pefect_S2_CS;
      else
-       Error0(NO_OPTION);
-     
+       bhf->bhfiller = bhf_ChebTn_general_S2_CS;
+
      /* patches outside the BH */
      bhf->patches_outBH = 
       collect_patches(phys->grid,Ftype("BH_around_IB"),&npo);
