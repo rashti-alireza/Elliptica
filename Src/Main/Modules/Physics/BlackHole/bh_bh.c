@@ -74,7 +74,6 @@ void bh_start_off_KerrSchild_general_s2(Physics_T *const phys)
   printf(Pretty0"%s dimensionless spin (z comp.) = %+e\n",phys->stype,bh_chi_z);
   printf(Pretty0"%s net dimensionless spin       = %+e\n",phys->stype,bh_chi);
   printf(Pretty0"%s spin/M (= a)                 = %+e\n",phys->stype,bh_a);
-  printf(Pretty0"%s radius (Kerr-Schild Coords.) ~ %+e\n",phys->stype,bh_R);
   
   FUNC_TOC
 }
