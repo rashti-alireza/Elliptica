@@ -9,9 +9,9 @@ Dimension = 3;
 Point = ijk;
 
 C_macro1 = READ_v_STEM(name,given_g);
-C_macro2 = Write_v(name,BSSN_g);
-C_macro3 = Write_v(name,iBSSN_g);
-C_macro4 = Write_v(name,Psi);
+C_macro2 = Write_v_indexed(name,BSSN_g);
+C_macro3 = Write_v_indexed(name,iBSSN_g);
+C_macro4 = Write_v_scalar(name,Psi);
 
 
 `#include "dg_header.h"`
@@ -23,14 +23,25 @@ C_macro4 = Write_v(name,Psi);
 ``
 ``
 ``
-``
-`#define Write_v(name,stem)  \`
-`  indx = strrchr(#name,'_'); \`
+`#define Write_v_indexed(name,stem)  \`
 `  double *name = 0; \`
 `  if (stem) \`
 `  { \`
-`    if(indx){sprintf(fname,"%s%s",stem,indx);} \` # for indexed objects
-`    else{sprintf(fname,"%s",stem);} \`           # for non indexed objects
+`    sprintf(fname,"%s%s",stem,strrchr(#name,'_')); \`
+`    free_coeffs(patch->fields[Ind(fname)]); \`
+`    name = patch->fields[Ind(fname)]->v; \`
+`    if(!name) \` # if is null allocate
+`    { \`
+`      name = patch->fields[Ind(fname)]->v = alloc_double(patch->nn); \`
+`    } \`
+`  }`
+``
+``
+`#define Write_v_scalar(name,stem)  \`
+`  double *name = 0; \`
+`  if (stem) \`
+`  { \`
+`    sprintf(fname,"%s",stem); \`
 `    free_coeffs(patch->fields[Ind(fname)]); \`
 `    name = patch->fields[Ind(fname)]->v; \`
 `    if(!name) \` # if is null allocate
@@ -54,7 +65,6 @@ C_macro4 = Write_v(name,Psi);
 `                              const char *const Psi)`
 `{`
 ` char fname[STR_LEN] = {'\0'};`
-` const char *indx = 0;`
 ``
 Declare = 
 {

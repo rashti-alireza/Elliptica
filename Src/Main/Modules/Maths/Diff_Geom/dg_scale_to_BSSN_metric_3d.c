@@ -13,14 +13,25 @@
 
 
 
-
-#define Write_v(name,stem)  \
-  indx = strrchr(#name,'_'); \
+#define Write_v_indexed(name,stem)  \
   double *name = 0; \
   if (stem) \
   { \
-    if(indx){sprintf(fname,"%s%s",stem,indx);} \
-    else{sprintf(fname,"%s",stem);} \
+    sprintf(fname,"%s%s",stem,strrchr(#name,'_')); \
+    free_coeffs(patch->fields[Ind(fname)]); \
+    name = patch->fields[Ind(fname)]->v; \
+    if(!name) \
+    { \
+      name = patch->fields[Ind(fname)]->v = alloc_double(patch->nn); \
+    } \
+  }
+
+
+#define Write_v_scalar(name,stem)  \
+  double *name = 0; \
+  if (stem) \
+  { \
+    sprintf(fname,"%s",stem); \
     free_coeffs(patch->fields[Ind(fname)]); \
     name = patch->fields[Ind(fname)]->v; \
     if(!name) \
@@ -44,7 +55,6 @@ void scale_to_BSSN_metric_3d(Patch_T *const patch,
                               const char *const Psi)
 {
  char fname[STR_LEN] = {'\0'};
- const char *indx = 0;
 
 
   /* declaring: */
@@ -54,19 +64,19 @@ void scale_to_BSSN_metric_3d(Patch_T *const patch,
   READ_v_STEM(adm_g_D1D2,given_g)
   READ_v_STEM(adm_g_D1D1,given_g)
   READ_v_STEM(adm_g_D2D2,given_g)
-  Write_v(bssn_g_D0D0,BSSN_g)
-  Write_v(bssn_g_D0D1,BSSN_g)
-  Write_v(bssn_g_D0D2,BSSN_g)
-  Write_v(bssn_g_D2D2,BSSN_g)
-  Write_v(bssn_g_D1D1,BSSN_g)
-  Write_v(bssn_g_D1D2,BSSN_g)
-  Write_v(bssn_gI_U0U0,iBSSN_g)
-  Write_v(bssn_gI_U0U1,iBSSN_g)
-  Write_v(bssn_gI_U0U2,iBSSN_g)
-  Write_v(bssn_gI_U1U1,iBSSN_g)
-  Write_v(bssn_gI_U1U2,iBSSN_g)
-  Write_v(bssn_gI_U2U2,iBSSN_g)
-  Write_v(bssn_psi,Psi)
+  Write_v_indexed(bssn_g_D0D0,BSSN_g)
+  Write_v_indexed(bssn_g_D0D1,BSSN_g)
+  Write_v_indexed(bssn_g_D0D2,BSSN_g)
+  Write_v_indexed(bssn_g_D2D2,BSSN_g)
+  Write_v_indexed(bssn_g_D1D1,BSSN_g)
+  Write_v_indexed(bssn_g_D1D2,BSSN_g)
+  Write_v_indexed(bssn_gI_U0U0,iBSSN_g)
+  Write_v_indexed(bssn_gI_U0U1,iBSSN_g)
+  Write_v_indexed(bssn_gI_U0U2,iBSSN_g)
+  Write_v_indexed(bssn_gI_U1U1,iBSSN_g)
+  Write_v_indexed(bssn_gI_U1U2,iBSSN_g)
+  Write_v_indexed(bssn_gI_U2U2,iBSSN_g)
+  Write_v_scalar(bssn_psi,Psi)
 
 
  FOR_ALL_ijk
