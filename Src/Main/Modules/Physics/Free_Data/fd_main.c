@@ -44,6 +44,8 @@ static int set_free_data_params(Physics_T *const phys)
   // options:
   // flat:       gConf = delta_{ij}
   // KerrSchild: gConf = Kerr-Schild black hole
+  // ConfKerrSchild: gConf = Kerr-Schild black hole 
+                     which decomposed conformally so det(gConf) = 1.
   // IsoSchild:  gConf = delta_{ij} for Schwarzchild in isotropic coords.
   // PGSchild:   gConf = delta_{ij} for Schwarzchild in Painleve-Gullstrand coords */
   Pset_default(P_"conformal_metric","KerrSchild");
@@ -176,6 +178,34 @@ static int populate_free_data(Physics_T *const phys)
                        "RicciConf","trRicciConf");
     fd_extrinsic_curvature_PGSchild(bh,".*","igConf","ChrisConf",
                                     "adm_Kij","trK","dtrK");
+    free_physics(bh);
+  }
+  else if (phys->sys                             == SBH             && 
+           Pcmps(P_"conformal_metric"            ,"ConfKerrSchild") &&
+           Pcmps(P_"conformal_Christoffel_symbol","ConfKerrSchild") &&
+           Pcmps(P_"conformal_Ricci"             ,"ConfKerrSchild") &&
+           Pcmps(P_"trK"                         ,"KerrSchild")     &&
+           Pcmps(P_"MConfIJ"                     ,"zero"      ))
+  {
+    /* important to have dedicated BH physics to read correct parameters */
+    Physics_T *const bh = init_physics(phys,BH);
+
+    /* first make trK which is KerrSchild:  */
+    fd_populate_gConf_dgConf_igConf_KerrSchild(bh,".*","gConf",
+                                               "igConf","dgConf");
+    fd_compatible_Christoffel_symbol(bh,".*","igConf",
+                                     "dgConf","ChrisConf");
+    fd_extrinsic_curvature_KerrSchild(bh,".*","igConf","ChrisConf",
+                                      "adm_Kij","trK","dtrK");
+    /* then make the others, NOTE gConf is ready */
+    fd_populate_gConf_dgConf_igConf_ConfKerrSchild
+                 (bh,".*","gConf","gConf","igConf","dgConf");
+    fd_compatible_Christoffel_symbol(bh,".*","igConf",
+                                     "dgConf","ChrisConf");
+    fd_1st_derivative_Christoffel_symbol(bh,".*","dChrisConf");
+
+    fd_conformal_Ricci(bh,".*","igConf","ChrisConf","dChrisConf",
+                       "RicciConf","trRicciConf");
     free_physics(bh);
   }
   else

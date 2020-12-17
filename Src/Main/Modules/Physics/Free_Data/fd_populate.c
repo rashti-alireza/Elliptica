@@ -361,6 +361,61 @@ fd_populate_gConf_dgConf_igConf_KerrSchild
 }
 
 /* populate conformal metric, inverse of conformal metric 
+// and first order derivative of conformal metric for 
+// conformal KerrSchild, in this case the det(conformal metric) = 1
+// and conformal factor is no longer 1 as we have for KerrSchild itself.
+// the nomenclature of fields determined by the passed stems */
+void 
+fd_populate_gConf_dgConf_igConf_ConfKerrSchild
+ (
+ Physics_T *const phys,
+ const char *const region/* where computations take place */,
+ const char *g/* given metric stem (if is null it makes it)*/,
+ const char *const gConf/* given metric stem (if null it makes it)*/,
+ const char *const igConf/* inverse of metric stem */,
+ const char *const dgConf/* derivative of metric stem */
+ )
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,region);
+  Uint p;
+  
+  if (g)/* if no KerrSchild metric given, make it */
+  {
+    const double BHx   = Getd("center_x");
+    const double BHy   = Getd("center_y");
+    const double BHz   = Getd("center_z");
+    
+    fd_KerrSchild_set_params(phys);
+    
+    OpenMP_Patch_Pragma(omp parallel for)
+    for (p = 0; p < grid->np; ++p)
+    {
+      Patch_T *patch = grid->patch[p];
+      fd_kerr_schild_g_analytic(patch,BHx,BHy,BHz,gConf);
+    }
+    g = gConf;
+  }
+  
+  /* scale it to have det = 1. */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    char regex[99] = {'\0'};
+  
+    scale_to_BSSN_metric_3d(patch,g,gConf,igConf,0);
+    
+    /* derivatives */
+    sprintf(regex,"^%s_D.D.D.$",dgConf);
+    partial_derivative_with_regex(patch,regex);
+  }
+  
+  FUNC_TOC
+}
+
+/* populate conformal metric, inverse of conformal metric 
 // and first order derivative of conformal metric for Schwarzchild in
 // isotropic coords.
 // the nomenclature of fields determined by the passed stems */

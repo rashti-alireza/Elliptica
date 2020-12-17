@@ -198,7 +198,19 @@ void fd_beta_and_dbeta_PGSchild(Physics_T *const phys,
                                 const char *const beta,
                                 const char *const dbeta);
   
-
 double *fd_find_KerrSchild_BH_surface(Physics_T *const phys);
+
+void 
+fd_populate_gConf_dgConf_igConf_ConfKerrSchild
+ (
+ Physics_T *const phys,
+ const char *const region/* where computations take place */,
+ const char *g/* given metric stem (if is null it makes it)*/,
+ const char *const gConf/* given metric stem (if null it makes it)*/,
+ const char *const igConf/* inverse of metric stem */,
+ const char *const dgConf/* derivative of metric stem */
+ );
+ 
+ 
 #endif
 
