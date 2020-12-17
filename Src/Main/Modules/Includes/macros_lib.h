@@ -90,6 +90,7 @@
  if (regex_search(FIELD__STEM__REGEX__FORMAT,#xNAME))\
      {\
      const char *field__index__##xNAME = strrchr(#xNAME,'_');\
+     field__index__##xNAME = (field__index__##xNAME ? field__index__##xNAME : "???");\
      sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);\
      }\
  else{sprintf(field__name__##xNAME,"%s"  ,stem);}\
@@ -110,6 +111,7 @@
  if (regex_search(FIELD__STEM__REGEX__FORMAT,#xNAME))\
      {\
      const char *field__index__##xNAME = strrchr(#xNAME,'_');\
+     field__index__##xNAME = (field__index__##xNAME ? field__index__##xNAME : "???");\
      sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);\
      }\
  else {sprintf(field__name__##xNAME,"%s"  ,stem);}\
@@ -122,6 +124,7 @@
  if (regex_search(FIELD__STEM__REGEX__FORMAT,#xNAME))\
      {\
      const char *field__index__##xNAME = strrchr(#xNAME,'_');\
+     field__index__##xNAME = (field__index__##xNAME ? field__index__##xNAME : "???");\
      sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);\
      }\
  else {sprintf(field__name__##xNAME,"%s"  ,stem);}\
