@@ -129,7 +129,7 @@ fd_populate_gConf_dgConf_igConf_ConfKerrSchild
  Physics_T *const phys,
  const char *const region/* where computations take place */,
  const char *g/* given metric stem (if is null it makes it)*/,
- const char *const gConf/* given metric stem (if null it makes it)*/,
+ const char *const gConf/* stem of conformal metric */,
  const char *const igConf/* inverse of metric stem */,
  const char *const dgConf/* derivative of metric stem */
  );
