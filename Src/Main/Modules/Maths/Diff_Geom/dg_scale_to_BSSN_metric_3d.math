@@ -32,7 +32,11 @@ C_macro4 = Write_v(name,Psi);
 `    if(indx){sprintf(fname,"%s%s",stem,indx);} \` # for indexed objects
 `    else{sprintf(fname,"%s",stem);} \`           # for non indexed objects
 `    free_coeffs(patch->fields[Ind(fname)]); \`
-`    name = patch->fields[Ind(fname)]->v; assert(name); \`
+`    name = patch->fields[Ind(fname)]->v; \`
+`    if(!name) \` # if is null allocate
+`    { \`
+`      name = patch->fields[Ind(fname)]->v = alloc_double(patch->nn); \`
+`    } \`
 `  }`
 ``
 ``

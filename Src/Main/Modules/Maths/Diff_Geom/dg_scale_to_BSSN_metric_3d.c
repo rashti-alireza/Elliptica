@@ -22,7 +22,11 @@
     if(indx){sprintf(fname,"%s%s",stem,indx);} \
     else{sprintf(fname,"%s",stem);} \
     free_coeffs(patch->fields[Ind(fname)]); \
-    name = patch->fields[Ind(fname)]->v; assert(name); \
+    name = patch->fields[Ind(fname)]->v; \
+    if(!name) \
+    { \
+      name = patch->fields[Ind(fname)]->v = alloc_double(patch->nn); \
+    } \
   }
 
 
