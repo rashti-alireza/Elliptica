@@ -1,0 +1,117 @@
+## scale the given metric to BSSN metric, i.e a metric whose 
+## determinant is one.
+## NOTE: if bssn_g or ibssn_g or Psi is NULL it won't be made.
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro1 = READ_v_STEM(name,given_g);
+C_macro2 = Write_v(name,BSSN_g);
+C_macro3 = Write_v(name,iBSSN_g);
+C_macro4 = Write_v(name,Psi);
+
+
+`#include "dg_header.h"`
+`#include "maths_linear_algebra_lib.h"`
+``
+``
+``
+`#define STR_LEN (99)`
+``
+``
+``
+``
+`#define Write_v(name,stem)  \`
+`  indx = strrchr(#name,'_'); \`
+`  double *name = 0; \`
+`  if (stem) \`
+`  { \`
+`    if(indx){sprintf(fname,"%s%s",stem,indx);} \` # for indexed objects
+`    else{sprintf(fname,"%s",stem);} \`           # for non indexed objects
+`    free_coeffs(patch->fields[Ind(fname)]); \`
+`    name = patch->fields[Ind(fname)]->v; assert(name); \`
+`  }`
+``
+``
+`void scale_to_BSSN_metric_3d(Patch_T *const patch,`
+`                              const char *const given_g,`
+`                              const char *const BSSN_g,`
+`                              const char *const iBSSN_g,`
+`                              const char *const Psi);`
+``
+``
+`void scale_to_BSSN_metric_3d(Patch_T *const patch,`
+`                              const char *const given_g,`
+`                              const char *const BSSN_g,`
+`                              const char *const iBSSN_g,`
+`                              const char *const Psi)`
+`{`
+` char fname[STR_LEN] = {'\0'};`
+` const char *indx = 0;`
+``
+Declare = 
+{
+  # adm gij
+  (obj = Field,name = adm_g, rank = DD, C_macro1);
+
+  # bssn gij
+  (obj = Field,name = bssn_g, rank = DD, C_macro2);
+
+  # bssn gij inverse
+  (obj = Field,name = bssn_gI, rank = UU, C_macro3);
+
+  # psi: the conformal factor found
+  (obj = Field,name = bssn_psi, rank = 0, C_macro4);
+
+  # det adm_g
+  (obj = variable,name = detgb, none);
+
+}
+# symmetries:
+Symm[adm_g(i,j)   = adm_g(j,i)];
+Symm[bssn_g(i,j)  = bssn_g(j,i)];
+Symm[bssn_gI(i,j) = bssn_gI(j,i)];
+
+` FOR_ALL_ijk`
+` {`
+
+  ## conformal factors:
+  ` double detgb=Matrix_Determinant_3x3_Symmetric_Field(adm_g,D,ijk);`
+  ``
+  psi12 = detgb;
+  psim4 = psi12**(-1/3);
+  psi   = psi12**(1/12);
+  
+  ## basic rescaling:
+  Bssn_g(-i,-j) = psim4 * adm_g(i,j);
+  Symm[Bssn_g(i,j) = Bssn_g(j,i)];
+
+  ## the bssn_g if asked:
+` if (BSSN_g)`
+` {`  
+  Cpopulate[bssn_g  = Bssn_g];
+` }`
+``
+  ## inverse bssn metric if asked:
+` if (iBSSN_g)`
+` {`
+  Bssn_gI(i,j) = KD(i,j);# init variables
+  Symm[Bssn_gI(i,j) = Bssn_gI(j,i)];
+  ` Matrix_Inverse_3x3_Symmetric_Var(Bssn_g,D,Bssn_gI,U);`
+  Cpopulate[bssn_gI = Bssn_gI];
+` }`
+``
+  ## populate psi if asked:
+` if (Psi)`
+` {`
+` bssn_psi[ijk] = psi;`
+` }`
+ 
+` }`
+
+
+`}`
+
