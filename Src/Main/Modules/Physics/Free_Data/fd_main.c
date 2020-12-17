@@ -54,6 +54,7 @@ static int set_free_data_params(Physics_T *const phys)
   // options:
   // flat:       ChrisConf = 0
   // KerrSchild: ChrisConf made of gConf of Kerr-Schild black hole
+  // ConfKerrSchild: ChrisConf made of gConf of ConfKerrSchild black hole
   // IsoSchild:  ChrisConf = 0 for Schwarzchild in isotropic coords.
   // PGSchild:   ChrisConf = 0 for Schwarzchild in Painleve-Gullstrand coords */
   Pset_default(P_"conformal_Christoffel_symbol","KerrSchild");
@@ -70,6 +71,7 @@ static int set_free_data_params(Physics_T *const phys)
   // options:
   // flat:       RicciConf_{ij} = 0
   // KerrSchild: use Kerr-Schild black hole metric 
+  // ConfKerrSchild: use ConfKerrSchild black hole metric 
   // IsoSchild:  use Schwarzchild in isotropic coordinates.
   // PGSchild:   RicciConf_{ij} = 0 for Schwarzchild in Painleve-Gullstrand coords */
   Pset_default(P_"conformal_Ricci","KerrSchild");
@@ -189,7 +191,7 @@ static int populate_free_data(Physics_T *const phys)
   {
     /* important to have dedicated BH physics to read correct parameters */
     Physics_T *const bh = init_physics(phys,BH);
-
+    
     /* first make trK which is KerrSchild:  */
     fd_populate_gConf_dgConf_igConf_KerrSchild(bh,".*","gConf",
                                                "igConf","dgConf");
