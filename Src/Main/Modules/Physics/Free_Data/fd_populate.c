@@ -234,6 +234,19 @@ void fd_extrinsic_curvature_Minkowski(Physics_T *const phys,
     REALLOC_v_WRITE_v_STEM(dtr_D0,dtrK)
     REALLOC_v_WRITE_v_STEM(dtr_D1,dtrK)
     REALLOC_v_WRITE_v_STEM(dtr_D2,dtrK)
+    
+    /* UNUSED */
+    UNUSED(K_D2D2)
+    UNUSED(K_D0D2)
+    UNUSED(K_D0D0)
+    UNUSED(K_D0D1)
+    UNUSED(K_D1D2)
+    UNUSED(K_D1D1)
+    
+    UNUSED(tr)
+    UNUSED(dtr_D0)
+    UNUSED(dtr_D1)
+    UNUSED(dtr_D2)
   }
   
   FUNC_TOC
@@ -512,6 +525,10 @@ fd_populate_gConf_dgConf_igConf_flat
     UNUSED(igConf_U0U1);
     UNUSED(igConf_U1U2);
     
+    UNUSED(gConf_D0D2);
+    UNUSED(gConf_D0D1);
+    UNUSED(gConf_D1D2);
+    
     /* since gConf is constant dgConf is machine precision exact */
     sprintf(regex,"^%s_D.D.D.$",dgConf);
     partial_derivative_with_regex(patch,regex);
@@ -596,6 +613,95 @@ fd_populate_psi_alphaPsi_beta_KerrSchild
     else
      fd_psi_alphaPsi_beta_KerrSchild_patch(patch,BHx,BHy,BHz,
                                         ig,Psi,AlphaPsi,Beta);
+  }
+  
+  FUNC_TOC
+}
+
+/* populate psi, alpha and beta conformal KerrSchild value. */
+void 
+fd_populate_psi_alphaPsi_beta_ConfKerrSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Psi,
+ const char *const AlphaPsi,
+ const char *const Beta
+ )
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,region);
+  const double BHx   = Getd("center_x");
+  const double BHy   = Getd("center_y");
+  const double BHz   = Getd("center_z");
+  Uint p;
+  
+  fd_KerrSchild_set_params(phys);
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    /* make a KerrSchild metric */
+    ADD_AND_ALLOC_FIELD(fd_ks__g_D2D2)
+    ADD_AND_ALLOC_FIELD(fd_ks__g_D0D2)
+    ADD_AND_ALLOC_FIELD(fd_ks__g_D0D0)
+    ADD_AND_ALLOC_FIELD(fd_ks__g_D0D1)
+    ADD_AND_ALLOC_FIELD(fd_ks__g_D1D2)
+    ADD_AND_ALLOC_FIELD(fd_ks__g_D1D1)
+    
+    fd_kerr_schild_g_analytic(patch,BHx,BHy,BHz,"fd_ks__g");
+     
+    READ_v_STEM(g_D2D2,"fd_ks__g")
+    READ_v_STEM(g_D0D2,"fd_ks__g")
+    READ_v_STEM(g_D0D0,"fd_ks__g")
+    READ_v_STEM(g_D0D1,"fd_ks__g")
+    READ_v_STEM(g_D1D2,"fd_ks__g")
+    READ_v_STEM(g_D1D1,"fd_ks__g")
+    
+    /* populate ig */
+    ADD_FIELD(fd_ks__ig_U2U2)
+    ADD_FIELD(fd_ks__ig_U0U2)
+    ADD_FIELD(fd_ks__ig_U0U0)
+    ADD_FIELD(fd_ks__ig_U0U1)
+    ADD_FIELD(fd_ks__ig_U1U2)
+    ADD_FIELD(fd_ks__ig_U1U1)
+    
+    REALLOC_v_WRITE_v_STEM(ig_U2U2,"fd_ks__ig")
+    REALLOC_v_WRITE_v_STEM(ig_U0U2,"fd_ks__ig")
+    REALLOC_v_WRITE_v_STEM(ig_U0U0,"fd_ks__ig")
+    REALLOC_v_WRITE_v_STEM(ig_U0U1,"fd_ks__ig")
+    REALLOC_v_WRITE_v_STEM(ig_U1U2,"fd_ks__ig")
+    REALLOC_v_WRITE_v_STEM(ig_U1U1,"fd_ks__ig")
+    
+    FOR_ALL_ijk
+    {
+      Matrix_Inverse_3x3_Symmetric_Field(g,D,ig,U,ijk);
+    }
+    /* populate fields using KerrSchild */
+    fd_psi_alphaPsi_beta_KerrSchild_patch
+     (patch,BHx,BHy,BHz,"fd_ks__ig",Psi,AlphaPsi,Beta);
+    
+    /* rescale psi and alphaPsi */
+    ADD_AND_ALLOC_FIELD(fd_ks__psi)
+    scale_to_BSSN_metric_3d(patch,"fd_ks__g",0,0,"fd_ks__psi");
+    
+    WRITE_v_STEM(psi,Psi)
+    WRITE_v_STEM(alphaPsi,AlphaPsi)
+    READ_v_STEM(scaled_psi,"fd_ks__psi");
+    
+    FOR_ALL_ijk
+    {
+      psi[ijk]      *= scaled_psi[ijk];
+      alphaPsi[ijk] *= scaled_psi[ijk];
+    }
+    
+    /* remove redundant */
+    remove_field_with_regex(patch,"^fd_ks__g_D.+");
+    remove_field_with_regex(patch,"^fd_ks__ig_U.+");
+    remove_field_with_regex(patch,"^fd_ks__psi$");
   }
   
   FUNC_TOC

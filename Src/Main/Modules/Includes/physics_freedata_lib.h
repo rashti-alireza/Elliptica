@@ -74,6 +74,15 @@ fd_populate_psi_alphaPsi_beta_PGSchild
 
 double *fd_find_KerrSchild_BH_surface(Physics_T *const phys);
 
+void 
+fd_populate_psi_alphaPsi_beta_ConfKerrSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Psi,
+ const char *const AlphaPsi,
+ const char *const Beta
+ );
 
 #endif
 

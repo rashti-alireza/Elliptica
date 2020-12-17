@@ -211,6 +211,15 @@ fd_populate_gConf_dgConf_igConf_ConfKerrSchild
  const char *const dgConf/* derivative of metric stem */
  );
  
+void 
+fd_populate_psi_alphaPsi_beta_ConfKerrSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Psi,
+ const char *const AlphaPsi,
+ const char *const Beta
+ );
  
 #endif
 
