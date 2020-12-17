@@ -5,6 +5,9 @@
 /* str length */
 #define MACRO__STR__LEN1 (99)
 
+/* field stem regex format for using with stems */
+#define FIELD__STEM__REGEX__FORMAT  "^.+_(U|D)[012].*$"
+
 /* some useful messages and prints*/
 #define INCOMPLETE_FUNC "Other options have not been developed yet for this part!\n"
 #define NO_JOB    "No job has been defined for this case."
@@ -77,6 +80,23 @@
 #define WRITE_v(xNAME)  const int _field_index_of_##xNAME = Ind(#xNAME);\
                         free_coeffs(patch->fields[_field_index_of_##xNAME]);\
                         double *const xNAME = patch->fields[_field_index_of_##xNAME]->v;
+
+/* access to field->v with specified stem => so the indices are adjusted. 
+// note: stem is a pointer to char.
+// in effect, it takes the indices (if any) of xNAME and trails to stem.
+// ex: xNAME = g_D0 and stem = "K" => read field with name "K_D0" */
+#define WRITE_v_STEM(xNAME,stem) \
+ char field__name__##xNAME[MACRO__STR__LEN1] = {'\0'};\
+ if (regex_search(FIELD__STEM__REGEX__FORMAT,#xNAME))\
+     {\
+     const char *field__index__##xNAME = strrchr(#xNAME,'_');\
+     sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);\
+     }\
+ else{sprintf(field__name__##xNAME,"%s"  ,stem);}\
+ const int _field_index_of_##xNAME = Ind(field__name__##xNAME);\
+ free_coeffs(patch->fields[_field_index_of_##xNAME]);\
+ double *const xNAME = patch->fields[_field_index_of_##xNAME]->v;
+
                         
 /* access to the memory values READ ONLY */
 #define READ_v(xNAME)   const double *const xNAME = patch->fields[Ind(#xNAME)]->v;
@@ -87,24 +107,28 @@
 // ex: xNAME = g_D0 and stem = "K" => read field with name "K_D0" */
 #define READ_v_STEM(xNAME,stem) \
  char field__name__##xNAME[MACRO__STR__LEN1] = {'\0'};\
- const char *const field__index__##xNAME   = strrchr(#xNAME,'_');\
- if (field__index__##xNAME) {sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);}\
- else                       {sprintf(field__name__##xNAME,"%s"  ,stem);}\
- const double *const xNAME = patch->fields[Ind(field__name__##xNAME)]->v;\
- assert(xNAME);
+ if (regex_search(FIELD__STEM__REGEX__FORMAT,#xNAME))\
+     {\
+     const char *field__index__##xNAME = strrchr(#xNAME,'_');\
+     sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);\
+     }\
+ else {sprintf(field__name__##xNAME,"%s"  ,stem);}\
+ const double *const xNAME = patch->fields[Ind(field__name__##xNAME)]->v;
 
 /* it empty_field and alloc memory for v with specified stem => so the indices are adjusted.
 // note: stem is a pointer to char. */
 #define REALLOC_v_WRITE_v_STEM(xNAME,stem) \
  char field__name__##xNAME[MACRO__STR__LEN1] = {'\0'};\
- const char *field__index__##xNAME = strrchr(#xNAME,'_');\
- if (field__index__##xNAME) {sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);}\
- else                       {sprintf(field__name__##xNAME,"%s"  ,stem);}\
+ if (regex_search(FIELD__STEM__REGEX__FORMAT,#xNAME))\
+     {\
+     const char *field__index__##xNAME = strrchr(#xNAME,'_');\
+     sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);\
+     }\
+ else {sprintf(field__name__##xNAME,"%s"  ,stem);}\
  const int _field_index_of_##xNAME = Ind(field__name__##xNAME);\
  empty_field(patch->fields[_field_index_of_##xNAME]);\
  patch->fields[_field_index_of_##xNAME]->v = alloc_double(patch->nn);\
- double *const xNAME = patch->fields[_field_index_of_##xNAME]->v;\
- assert(xNAME);
+ double *const xNAME = patch->fields[_field_index_of_##xNAME]->v;
 
 /* it empty_field and alloc memory for v */
 #define REALLOC_v_WRITE_v(xNAME)   const int _field_index_of_##xNAME = Ind(#xNAME);\
