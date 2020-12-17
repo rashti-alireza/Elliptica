@@ -692,9 +692,9 @@ void footer_and_clock(const char *const msg)
   sprintf(clc,"[%02dd:%02dh:%02dm:%02ds]",d,h,m,s);
   
   if (Width>lmsg)/* right justification */
-    printf("{ %s :)) %*s\n",msg,Width-lmsg,clc);
+    printf("} %s :)) %*s\n",msg,Width-lmsg,clc);
   else
-    printf("{ %s :)) %s\n",msg,clc);
+    printf("} %s :)) %s\n",msg,clc);
     
   fflush(stdout);
 }
