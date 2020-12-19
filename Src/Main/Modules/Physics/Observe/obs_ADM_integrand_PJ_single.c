@@ -118,24 +118,24 @@ trK[ijk];
 
       double Pn_U2 = 
 psi4*(P_U0U0*gConf_D0D0[ijk]*gConf_D0D2[ijk]*n_U0[ijk] + P_U0U0*
-gConf_D0D1[ijk]*gConf_D0D2[ijk]*n_U1[ijk] + P_U0U0*
-pow(gConf_D0D2[ijk], 2)*n_U2[ijk] + P_U0U1*gConf_D0D0[ijk]*
-gConf_D1D2[ijk]*n_U0[ijk] + P_U0U1*gConf_D0D1[ijk]*gConf_D0D2[ijk]*
-n_U0[ijk] + P_U0U1*gConf_D0D1[ijk]*gConf_D1D2[ijk]*n_U1[ijk] + P_U0U1*
-gConf_D0D2[ijk]*gConf_D1D1[ijk]*n_U1[ijk] + 2.0*P_U0U1*gConf_D0D2[ijk]*
-gConf_D1D2[ijk]*n_U2[ijk] + P_U0U2*gConf_D0D0[ijk]*gConf_D2D2[ijk]*
-n_U0[ijk] + P_U0U2*gConf_D0D1[ijk]*gConf_D2D2[ijk]*n_U1[ijk] + P_U0U2*
-pow(gConf_D0D2[ijk], 2)*n_U0[ijk] + P_U0U2*gConf_D0D2[ijk]*
-gConf_D1D2[ijk]*n_U1[ijk] + 2.0*P_U0U2*gConf_D0D2[ijk]*gConf_D2D2[ijk]*
-n_U2[ijk] + P_U1U1*gConf_D0D1[ijk]*gConf_D1D2[ijk]*n_U0[ijk] + P_U1U1*
-gConf_D1D1[ijk]*gConf_D1D2[ijk]*n_U1[ijk] + P_U1U1*
-pow(gConf_D1D2[ijk], 2)*n_U2[ijk] + P_U1U2*gConf_D0D1[ijk]*
-gConf_D2D2[ijk]*n_U0[ijk] + P_U1U2*gConf_D0D2[ijk]*gConf_D1D2[ijk]*
-n_U0[ijk] + P_U1U2*gConf_D1D1[ijk]*gConf_D2D2[ijk]*n_U1[ijk] + P_U1U2*
-pow(gConf_D1D2[ijk], 2)*n_U1[ijk] + 2.0*P_U1U2*gConf_D1D2[ijk]*
-gConf_D2D2[ijk]*n_U2[ijk] + P_U2U2*gConf_D0D2[ijk]*gConf_D2D2[ijk]*
-n_U0[ijk] + P_U2U2*gConf_D1D2[ijk]*gConf_D2D2[ijk]*n_U1[ijk] + P_U2U2*
-pow(gConf_D2D2[ijk], 2)*n_U2[ijk]);
+gConf_D0D1[ijk]*gConf_D0D2[ijk]*n_U1[ijk] + P_U0U0*pow(gConf_D0D2[ijk], 2)*
+n_U2[ijk] + P_U0U1*gConf_D0D0[ijk]*gConf_D1D2[ijk]*n_U0[ijk] + P_U0U1*
+gConf_D0D1[ijk]*gConf_D0D2[ijk]*n_U0[ijk] + P_U0U1*gConf_D0D1[ijk]*
+gConf_D1D2[ijk]*n_U1[ijk] + P_U0U1*gConf_D0D2[ijk]*gConf_D1D1[ijk]*
+n_U1[ijk] + 2.0*P_U0U1*gConf_D0D2[ijk]*gConf_D1D2[ijk]*n_U2[ijk] + 
+P_U0U2*gConf_D0D0[ijk]*gConf_D2D2[ijk]*n_U0[ijk] + P_U0U2*
+gConf_D0D1[ijk]*gConf_D2D2[ijk]*n_U1[ijk] + P_U0U2*pow(gConf_D0D2[ijk], 2)*
+n_U0[ijk] + P_U0U2*gConf_D0D2[ijk]*gConf_D1D2[ijk]*n_U1[ijk] + 2.0*
+P_U0U2*gConf_D0D2[ijk]*gConf_D2D2[ijk]*n_U2[ijk] + P_U1U1*
+gConf_D0D1[ijk]*gConf_D1D2[ijk]*n_U0[ijk] + P_U1U1*gConf_D1D1[ijk]*
+gConf_D1D2[ijk]*n_U1[ijk] + P_U1U1*pow(gConf_D1D2[ijk], 2)*n_U2[ijk] + 
+P_U1U2*gConf_D0D1[ijk]*gConf_D2D2[ijk]*n_U0[ijk] + P_U1U2*
+gConf_D0D2[ijk]*gConf_D1D2[ijk]*n_U0[ijk] + P_U1U2*gConf_D1D1[ijk]*
+gConf_D2D2[ijk]*n_U1[ijk] + P_U1U2*pow(gConf_D1D2[ijk], 2)*n_U1[ijk] + 
+2.0*P_U1U2*gConf_D1D2[ijk]*gConf_D2D2[ijk]*n_U2[ijk] + P_U2U2*
+gConf_D0D2[ijk]*gConf_D2D2[ijk]*n_U0[ijk] + P_U2U2*gConf_D1D2[ijk]*
+gConf_D2D2[ijk]*n_U1[ijk] + P_U2U2*pow(gConf_D2D2[ijk], 2)*
+n_U2[ijk]);
 
       double Pn_U1 = 
 psi4*(P_U0U0*gConf_D0D0[ijk]*gConf_D0D1[ijk]*n_U0[ijk] + P_U0U0*
@@ -148,28 +148,27 @@ n_U2[ijk] + P_U0U2*gConf_D0D0[ijk]*gConf_D1D2[ijk]*n_U0[ijk] + P_U0U2*
 gConf_D0D1[ijk]*gConf_D0D2[ijk]*n_U0[ijk] + 2.0*P_U0U2*gConf_D0D1[ijk]*
 gConf_D1D2[ijk]*n_U1[ijk] + P_U0U2*gConf_D0D1[ijk]*gConf_D2D2[ijk]*
 n_U2[ijk] + P_U0U2*gConf_D0D2[ijk]*gConf_D1D2[ijk]*n_U2[ijk] + P_U1U1*
-gConf_D0D1[ijk]*gConf_D1D1[ijk]*n_U0[ijk] + P_U1U1*
-pow(gConf_D1D1[ijk], 2)*n_U1[ijk] + P_U1U1*gConf_D1D1[ijk]*
-gConf_D1D2[ijk]*n_U2[ijk] + P_U1U2*gConf_D0D1[ijk]*gConf_D1D2[ijk]*
-n_U0[ijk] + P_U1U2*gConf_D0D2[ijk]*gConf_D1D1[ijk]*n_U0[ijk] + 2.0*
-P_U1U2*gConf_D1D1[ijk]*gConf_D1D2[ijk]*n_U1[ijk] + P_U1U2*
-gConf_D1D1[ijk]*gConf_D2D2[ijk]*n_U2[ijk] + P_U1U2*
+gConf_D0D1[ijk]*gConf_D1D1[ijk]*n_U0[ijk] + P_U1U1*pow(gConf_D1D1[ijk], 2)*
+n_U1[ijk] + P_U1U1*gConf_D1D1[ijk]*gConf_D1D2[ijk]*n_U2[ijk] + P_U1U2*
+gConf_D0D1[ijk]*gConf_D1D2[ijk]*n_U0[ijk] + P_U1U2*gConf_D0D2[ijk]*
+gConf_D1D1[ijk]*n_U0[ijk] + 2.0*P_U1U2*gConf_D1D1[ijk]*gConf_D1D2[ijk]*
+n_U1[ijk] + P_U1U2*gConf_D1D1[ijk]*gConf_D2D2[ijk]*n_U2[ijk] + P_U1U2*
 pow(gConf_D1D2[ijk], 2)*n_U2[ijk] + P_U2U2*gConf_D0D2[ijk]*
 gConf_D1D2[ijk]*n_U0[ijk] + P_U2U2*pow(gConf_D1D2[ijk], 2)*n_U1[ijk] + 
 P_U2U2*gConf_D1D2[ijk]*gConf_D2D2[ijk]*n_U2[ijk]);
 
       double Pn_U0 = 
-psi4*(P_U0U0*pow(gConf_D0D0[ijk], 2)*n_U0[ijk] + P_U0U0*
-gConf_D0D0[ijk]*gConf_D0D1[ijk]*n_U1[ijk] + P_U0U0*gConf_D0D0[ijk]*
-gConf_D0D2[ijk]*n_U2[ijk] + 2.0*P_U0U1*gConf_D0D0[ijk]*gConf_D0D1[ijk]*
-n_U0[ijk] + P_U0U1*gConf_D0D0[ijk]*gConf_D1D1[ijk]*n_U1[ijk] + P_U0U1*
-gConf_D0D0[ijk]*gConf_D1D2[ijk]*n_U2[ijk] + P_U0U1*
-pow(gConf_D0D1[ijk], 2)*n_U1[ijk] + P_U0U1*gConf_D0D1[ijk]*
-gConf_D0D2[ijk]*n_U2[ijk] + 2.0*P_U0U2*gConf_D0D0[ijk]*gConf_D0D2[ijk]*
-n_U0[ijk] + P_U0U2*gConf_D0D0[ijk]*gConf_D1D2[ijk]*n_U1[ijk] + P_U0U2*
-gConf_D0D0[ijk]*gConf_D2D2[ijk]*n_U2[ijk] + P_U0U2*gConf_D0D1[ijk]*
-gConf_D0D2[ijk]*n_U1[ijk] + P_U0U2*pow(gConf_D0D2[ijk], 2)*n_U2[ijk] + 
-P_U1U1*pow(gConf_D0D1[ijk], 2)*n_U0[ijk] + P_U1U1*gConf_D0D1[ijk]*
+psi4*(P_U0U0*pow(gConf_D0D0[ijk], 2)*n_U0[ijk] + P_U0U0*gConf_D0D0[ijk]*
+gConf_D0D1[ijk]*n_U1[ijk] + P_U0U0*gConf_D0D0[ijk]*gConf_D0D2[ijk]*
+n_U2[ijk] + 2.0*P_U0U1*gConf_D0D0[ijk]*gConf_D0D1[ijk]*n_U0[ijk] + 
+P_U0U1*gConf_D0D0[ijk]*gConf_D1D1[ijk]*n_U1[ijk] + P_U0U1*
+gConf_D0D0[ijk]*gConf_D1D2[ijk]*n_U2[ijk] + P_U0U1*pow(gConf_D0D1[ijk], 2)*
+n_U1[ijk] + P_U0U1*gConf_D0D1[ijk]*gConf_D0D2[ijk]*n_U2[ijk] + 2.0*
+P_U0U2*gConf_D0D0[ijk]*gConf_D0D2[ijk]*n_U0[ijk] + P_U0U2*
+gConf_D0D0[ijk]*gConf_D1D2[ijk]*n_U1[ijk] + P_U0U2*gConf_D0D0[ijk]*
+gConf_D2D2[ijk]*n_U2[ijk] + P_U0U2*gConf_D0D1[ijk]*gConf_D0D2[ijk]*
+n_U1[ijk] + P_U0U2*pow(gConf_D0D2[ijk], 2)*n_U2[ijk] + P_U1U1*
+pow(gConf_D0D1[ijk], 2)*n_U0[ijk] + P_U1U1*gConf_D0D1[ijk]*
 gConf_D1D1[ijk]*n_U1[ijk] + P_U1U1*gConf_D0D1[ijk]*gConf_D1D2[ijk]*
 n_U2[ijk] + 2.0*P_U1U2*gConf_D0D1[ijk]*gConf_D0D2[ijk]*n_U0[ijk] + 
 P_U1U2*gConf_D0D1[ijk]*gConf_D1D2[ijk]*n_U1[ijk] + P_U1U2*

@@ -39,60 +39,54 @@ pow(psi[ijk], -4);
 
   double KIJ_U0U1 = 
 pow(psim4, 2)*(adm_Kij_D0D0[ijk]*igConf_U0U0[ijk]*igConf_U0U1[ijk] + 
-adm_Kij_D0D1[ijk]*igConf_U0U0[ijk]*igConf_U1U1[ijk] + 
-adm_Kij_D0D1[ijk]*pow(igConf_U0U1[ijk], 2) + adm_Kij_D0D2[ijk]*
-igConf_U0U0[ijk]*igConf_U1U2[ijk] + adm_Kij_D0D2[ijk]*igConf_U0U1[ijk]*
-igConf_U0U2[ijk] + adm_Kij_D1D1[ijk]*igConf_U0U1[ijk]*
-igConf_U1U1[ijk] + adm_Kij_D1D2[ijk]*igConf_U0U1[ijk]*
-igConf_U1U2[ijk] + adm_Kij_D1D2[ijk]*igConf_U0U2[ijk]*
+adm_Kij_D0D1[ijk]*igConf_U0U0[ijk]*igConf_U1U1[ijk] + adm_Kij_D0D1[ijk]*
+pow(igConf_U0U1[ijk], 2) + adm_Kij_D0D2[ijk]*igConf_U0U0[ijk]*
+igConf_U1U2[ijk] + adm_Kij_D0D2[ijk]*igConf_U0U1[ijk]*igConf_U0U2[ijk] + 
+adm_Kij_D1D1[ijk]*igConf_U0U1[ijk]*igConf_U1U1[ijk] + adm_Kij_D1D2[ijk]*
+igConf_U0U1[ijk]*igConf_U1U2[ijk] + adm_Kij_D1D2[ijk]*igConf_U0U2[ijk]*
 igConf_U1U1[ijk] + adm_Kij_D2D2[ijk]*igConf_U0U2[ijk]*
 igConf_U1U2[ijk]);
 
   double KIJ_U0U0 = 
 pow(psim4, 2)*(adm_Kij_D0D0[ijk]*pow(igConf_U0U0[ijk], 2) + 2.0*
 adm_Kij_D0D1[ijk]*igConf_U0U0[ijk]*igConf_U0U1[ijk] + 2.0*
-adm_Kij_D0D2[ijk]*igConf_U0U0[ijk]*igConf_U0U2[ijk] + 
-adm_Kij_D1D1[ijk]*pow(igConf_U0U1[ijk], 2) + 2.0*adm_Kij_D1D2[ijk]*
-igConf_U0U1[ijk]*igConf_U0U2[ijk] + adm_Kij_D2D2[ijk]*
-pow(igConf_U0U2[ijk], 2));
+adm_Kij_D0D2[ijk]*igConf_U0U0[ijk]*igConf_U0U2[ijk] + adm_Kij_D1D1[ijk]*
+pow(igConf_U0U1[ijk], 2) + 2.0*adm_Kij_D1D2[ijk]*igConf_U0U1[ijk]*
+igConf_U0U2[ijk] + adm_Kij_D2D2[ijk]*pow(igConf_U0U2[ijk], 2));
 
   double KIJ_U0U2 = 
 pow(psim4, 2)*(adm_Kij_D0D0[ijk]*igConf_U0U0[ijk]*igConf_U0U2[ijk] + 
-adm_Kij_D0D1[ijk]*igConf_U0U0[ijk]*igConf_U1U2[ijk] + 
-adm_Kij_D0D1[ijk]*igConf_U0U1[ijk]*igConf_U0U2[ijk] + 
-adm_Kij_D0D2[ijk]*igConf_U0U0[ijk]*igConf_U2U2[ijk] + 
-adm_Kij_D0D2[ijk]*pow(igConf_U0U2[ijk], 2) + adm_Kij_D1D1[ijk]*
-igConf_U0U1[ijk]*igConf_U1U2[ijk] + adm_Kij_D1D2[ijk]*igConf_U0U1[ijk]*
-igConf_U2U2[ijk] + adm_Kij_D1D2[ijk]*igConf_U0U2[ijk]*
+adm_Kij_D0D1[ijk]*igConf_U0U0[ijk]*igConf_U1U2[ijk] + adm_Kij_D0D1[ijk]*
+igConf_U0U1[ijk]*igConf_U0U2[ijk] + adm_Kij_D0D2[ijk]*igConf_U0U0[ijk]*
+igConf_U2U2[ijk] + adm_Kij_D0D2[ijk]*pow(igConf_U0U2[ijk], 2) + 
+adm_Kij_D1D1[ijk]*igConf_U0U1[ijk]*igConf_U1U2[ijk] + adm_Kij_D1D2[ijk]*
+igConf_U0U1[ijk]*igConf_U2U2[ijk] + adm_Kij_D1D2[ijk]*igConf_U0U2[ijk]*
 igConf_U1U2[ijk] + adm_Kij_D2D2[ijk]*igConf_U0U2[ijk]*
 igConf_U2U2[ijk]);
 
   double KIJ_U2U2 = 
 pow(psim4, 2)*(adm_Kij_D0D0[ijk]*pow(igConf_U0U2[ijk], 2) + 2.0*
 adm_Kij_D0D1[ijk]*igConf_U0U2[ijk]*igConf_U1U2[ijk] + 2.0*
-adm_Kij_D0D2[ijk]*igConf_U0U2[ijk]*igConf_U2U2[ijk] + 
-adm_Kij_D1D1[ijk]*pow(igConf_U1U2[ijk], 2) + 2.0*adm_Kij_D1D2[ijk]*
-igConf_U1U2[ijk]*igConf_U2U2[ijk] + adm_Kij_D2D2[ijk]*
-pow(igConf_U2U2[ijk], 2));
+adm_Kij_D0D2[ijk]*igConf_U0U2[ijk]*igConf_U2U2[ijk] + adm_Kij_D1D1[ijk]*
+pow(igConf_U1U2[ijk], 2) + 2.0*adm_Kij_D1D2[ijk]*igConf_U1U2[ijk]*
+igConf_U2U2[ijk] + adm_Kij_D2D2[ijk]*pow(igConf_U2U2[ijk], 2));
 
   double KIJ_U1U1 = 
 pow(psim4, 2)*(adm_Kij_D0D0[ijk]*pow(igConf_U0U1[ijk], 2) + 2.0*
 adm_Kij_D0D1[ijk]*igConf_U0U1[ijk]*igConf_U1U1[ijk] + 2.0*
-adm_Kij_D0D2[ijk]*igConf_U0U1[ijk]*igConf_U1U2[ijk] + 
-adm_Kij_D1D1[ijk]*pow(igConf_U1U1[ijk], 2) + 2.0*adm_Kij_D1D2[ijk]*
-igConf_U1U1[ijk]*igConf_U1U2[ijk] + adm_Kij_D2D2[ijk]*
-pow(igConf_U1U2[ijk], 2));
+adm_Kij_D0D2[ijk]*igConf_U0U1[ijk]*igConf_U1U2[ijk] + adm_Kij_D1D1[ijk]*
+pow(igConf_U1U1[ijk], 2) + 2.0*adm_Kij_D1D2[ijk]*igConf_U1U1[ijk]*
+igConf_U1U2[ijk] + adm_Kij_D2D2[ijk]*pow(igConf_U1U2[ijk], 2));
 
   double KIJ_U1U2 = 
 pow(psim4, 2)*(adm_Kij_D0D0[ijk]*igConf_U0U1[ijk]*igConf_U0U2[ijk] + 
-adm_Kij_D0D1[ijk]*igConf_U0U1[ijk]*igConf_U1U2[ijk] + 
-adm_Kij_D0D1[ijk]*igConf_U0U2[ijk]*igConf_U1U1[ijk] + 
-adm_Kij_D0D2[ijk]*igConf_U0U1[ijk]*igConf_U2U2[ijk] + 
-adm_Kij_D0D2[ijk]*igConf_U0U2[ijk]*igConf_U1U2[ijk] + 
-adm_Kij_D1D1[ijk]*igConf_U1U1[ijk]*igConf_U1U2[ijk] + 
-adm_Kij_D1D2[ijk]*igConf_U1U1[ijk]*igConf_U2U2[ijk] + 
-adm_Kij_D1D2[ijk]*pow(igConf_U1U2[ijk], 2) + adm_Kij_D2D2[ijk]*
-igConf_U1U2[ijk]*igConf_U2U2[ijk]);
+adm_Kij_D0D1[ijk]*igConf_U0U1[ijk]*igConf_U1U2[ijk] + adm_Kij_D0D1[ijk]*
+igConf_U0U2[ijk]*igConf_U1U1[ijk] + adm_Kij_D0D2[ijk]*igConf_U0U1[ijk]*
+igConf_U2U2[ijk] + adm_Kij_D0D2[ijk]*igConf_U0U2[ijk]*igConf_U1U2[ijk] + 
+adm_Kij_D1D1[ijk]*igConf_U1U1[ijk]*igConf_U1U2[ijk] + adm_Kij_D1D2[ijk]*
+igConf_U1U1[ijk]*igConf_U2U2[ijk] + adm_Kij_D1D2[ijk]*
+pow(igConf_U1U2[ijk], 2) + adm_Kij_D2D2[ijk]*igConf_U1U2[ijk]*
+igConf_U2U2[ijk]);
 
 
   /* populating: */

@@ -72,8 +72,7 @@ W_U2[ijk]*gConf_D1D2[ijk] + pow(W_U2[ijk], 2)*gConf_D2D2[ijk])/
 (pow(alpha, 2)*pow(enthalpy[ijk], 2)*pow(u0[ijk], 2));
 
   double G = 
--alpha*u0[ijk]*pow((alpha2 - t2)/alpha2, -0.5)*(v -
-1);
+-alpha*u0[ijk]*pow((alpha2 - t2)/alpha2, -0.5)*(v - 1);
 
 
 GAMMA_fb->v[ijk]  = G;

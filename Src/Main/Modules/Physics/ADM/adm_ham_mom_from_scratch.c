@@ -27,8 +27,8 @@
 #define Compute_Christoffel(name)  \
   Christoffel_symbol_3d(patch,"adm_ig","dadm_g","Gamma");
 
-extern fFunc_adm_update_adm_KIJ_T (*adm_update_adm_KIJ_patch);
 
+extern fFunc_adm_update_adm_KIJ_T (*adm_update_adm_KIJ_patch);
 void adm_ham_and_mom_from_scratch(Patch_T *const patch,
         const char *const Ham,const char *const Mom);
 
@@ -419,14 +419,14 @@ adm_KIJ_U0U2[ijk]*adm_KIJ_U1U1[ijk]*adm_g_D0D1[ijk]*adm_g_D1D2[ijk] +
 4.0*adm_KIJ_U0U2[ijk]*adm_KIJ_U1U2[ijk]*adm_g_D0D1[ijk]*
 adm_g_D2D2[ijk] + 4.0*adm_KIJ_U0U2[ijk]*adm_KIJ_U1U2[ijk]*
 adm_g_D0D2[ijk]*adm_g_D1D2[ijk] + 4.0*adm_KIJ_U0U2[ijk]*
-adm_KIJ_U2U2[ijk]*adm_g_D0D2[ijk]*adm_g_D2D2[ijk] +
-pow(adm_KIJ_U1U1[ijk], 2)*pow(adm_g_D1D1[ijk], 2) + 4.0*
-adm_KIJ_U1U1[ijk]*adm_KIJ_U1U2[ijk]*adm_g_D1D1[ijk]*adm_g_D1D2[ijk] +
-2.0*adm_KIJ_U1U1[ijk]*adm_KIJ_U2U2[ijk]*pow(adm_g_D1D2[ijk], 2) + 2.0*
-pow(adm_KIJ_U1U2[ijk], 2)*adm_g_D1D1[ijk]*adm_g_D2D2[ijk] + 2.0*
-pow(adm_KIJ_U1U2[ijk], 2)*pow(adm_g_D1D2[ijk], 2) + 4.0*
-adm_KIJ_U1U2[ijk]*adm_KIJ_U2U2[ijk]*adm_g_D1D2[ijk]*adm_g_D2D2[ijk] +
-pow(adm_KIJ_U2U2[ijk], 2)*pow(adm_g_D2D2[ijk], 2);
+adm_KIJ_U2U2[ijk]*adm_g_D0D2[ijk]*adm_g_D2D2[ijk] + pow(adm_KIJ_U1U1[ijk], 2)*
+pow(adm_g_D1D1[ijk], 2) + 4.0*adm_KIJ_U1U1[ijk]*adm_KIJ_U1U2[ijk]*
+adm_g_D1D1[ijk]*adm_g_D1D2[ijk] + 2.0*adm_KIJ_U1U1[ijk]*
+adm_KIJ_U2U2[ijk]*pow(adm_g_D1D2[ijk], 2) + 2.0*pow(adm_KIJ_U1U2[ijk], 2)*
+adm_g_D1D1[ijk]*adm_g_D2D2[ijk] + 2.0*pow(adm_KIJ_U1U2[ijk], 2)*
+pow(adm_g_D1D2[ijk], 2) + 4.0*adm_KIJ_U1U2[ijk]*adm_KIJ_U2U2[ijk]*
+adm_g_D1D2[ijk]*adm_g_D2D2[ijk] + pow(adm_KIJ_U2U2[ijk], 2)*
+pow(adm_g_D2D2[ijk], 2);
 
   double DjKij_U0 = 
 2.0*Gamma_U0D0D0[ijk]*adm_KIJ_U0U0[ijk] + 3.0*Gamma_U0D0D1[ijk]*

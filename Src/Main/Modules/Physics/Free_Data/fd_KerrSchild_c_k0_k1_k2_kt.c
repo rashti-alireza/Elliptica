@@ -375,11 +375,10 @@ pow(1 - B2, -0.5)*(-(Bx*By*(sqrt(1 - B2) - 1)*cos(phiz) + (B2*sqrt(1 -
 B2) + pow(Bx, 2)*(1 - sqrt(1 - B2)))*sin(phiz))*(fd_ks_dddK1_D0D1D2 KS_func_pass_args_macro ) + 
 (Bx*Bz*(sqrt(1 - B2) - 1)*sin(phiy) + (-Bx*By*(sqrt(1 - B2) - 1)*
 sin(phiz) + (B2*sqrt(1 - B2) + pow(Bx, 2)*(1 - sqrt(1 - B2)))*
-cos(phiz))*cos(phiy))*(fd_ks_dddK0_D0D1D2 KS_func_pass_args_macro ) - (Bx*
-Bz*(sqrt(1 - B2) - 1)*cos(phiy) + (Bx*By*(sqrt(1 - B2) - 1)*sin(phiz) + 
-(-B2*sqrt(1 - B2) + pow(Bx, 2)*(sqrt(1 - B2) - 1))*cos(phiz))*
-sin(phiy))*(fd_ks_dddK2_D0D1D2 KS_func_pass_args_macro ))/
-B2;
+cos(phiz))*cos(phiy))*(fd_ks_dddK0_D0D1D2 KS_func_pass_args_macro ) - (Bx*Bz*
+(sqrt(1 - B2) - 1)*cos(phiy) + (Bx*By*(sqrt(1 - B2) - 1)*sin(phiz) + (-
+B2*sqrt(1 - B2) + pow(Bx, 2)*(sqrt(1 - B2) - 1))*cos(phiz))*sin(phiy))*
+(fd_ks_dddK2_D0D1D2 KS_func_pass_args_macro ))/B2;
 }
 KS_func_def_macro(dddk0_D2D2D1) KS_func_args_macro
 {
@@ -517,11 +516,10 @@ pow(1 - B2, -0.5)*(-(Bx*By*(sqrt(1 - B2) - 1)*cos(phiz) + (B2*sqrt(1 -
 B2) + pow(Bx, 2)*(1 - sqrt(1 - B2)))*sin(phiz))*(fd_ks_dddK1_D0D1D2 KS_func_pass_args_macro ) + 
 (Bx*Bz*(sqrt(1 - B2) - 1)*sin(phiy) + (-Bx*By*(sqrt(1 - B2) - 1)*
 sin(phiz) + (B2*sqrt(1 - B2) + pow(Bx, 2)*(1 - sqrt(1 - B2)))*
-cos(phiz))*cos(phiy))*(fd_ks_dddK0_D0D1D2 KS_func_pass_args_macro ) - (Bx*
-Bz*(sqrt(1 - B2) - 1)*cos(phiy) + (Bx*By*(sqrt(1 - B2) - 1)*sin(phiz) + 
-(-B2*sqrt(1 - B2) + pow(Bx, 2)*(sqrt(1 - B2) - 1))*cos(phiz))*
-sin(phiy))*(fd_ks_dddK2_D0D1D2 KS_func_pass_args_macro ))/
-B2;
+cos(phiz))*cos(phiy))*(fd_ks_dddK0_D0D1D2 KS_func_pass_args_macro ) - (Bx*Bz*
+(sqrt(1 - B2) - 1)*cos(phiy) + (Bx*By*(sqrt(1 - B2) - 1)*sin(phiz) + (-
+B2*sqrt(1 - B2) + pow(Bx, 2)*(sqrt(1 - B2) - 1))*cos(phiz))*sin(phiy))*
+(fd_ks_dddK2_D0D1D2 KS_func_pass_args_macro ))/B2;
 }
 KS_func_def_macro(dddk0_D1D2D2) KS_func_args_macro
 {
@@ -606,11 +604,10 @@ pow(1 - B2, -0.5)*(-(Bx*By*(sqrt(1 - B2) - 1)*cos(phiz) + (B2*sqrt(1 -
 B2) + pow(Bx, 2)*(1 - sqrt(1 - B2)))*sin(phiz))*(fd_ks_dddK1_D0D1D2 KS_func_pass_args_macro ) + 
 (Bx*Bz*(sqrt(1 - B2) - 1)*sin(phiy) + (-Bx*By*(sqrt(1 - B2) - 1)*
 sin(phiz) + (B2*sqrt(1 - B2) + pow(Bx, 2)*(1 - sqrt(1 - B2)))*
-cos(phiz))*cos(phiy))*(fd_ks_dddK0_D0D1D2 KS_func_pass_args_macro ) - (Bx*
-Bz*(sqrt(1 - B2) - 1)*cos(phiy) + (Bx*By*(sqrt(1 - B2) - 1)*sin(phiz) + 
-(-B2*sqrt(1 - B2) + pow(Bx, 2)*(sqrt(1 - B2) - 1))*cos(phiz))*
-sin(phiy))*(fd_ks_dddK2_D0D1D2 KS_func_pass_args_macro ))/
-B2;
+cos(phiz))*cos(phiy))*(fd_ks_dddK0_D0D1D2 KS_func_pass_args_macro ) - (Bx*Bz*
+(sqrt(1 - B2) - 1)*cos(phiy) + (Bx*By*(sqrt(1 - B2) - 1)*sin(phiz) + (-
+B2*sqrt(1 - B2) + pow(Bx, 2)*(sqrt(1 - B2) - 1))*cos(phiz))*sin(phiy))*
+(fd_ks_dddK2_D0D1D2 KS_func_pass_args_macro ))/B2;
 }
 KS_func_def_macro(dddk0_D1D2D1) KS_func_args_macro
 {
@@ -812,11 +809,10 @@ pow(1 - B2, -0.5)*((Bx*By*(sqrt(1 - B2) - 1)*sin(phiz) + (B2*sqrt(1 -
 B2) + pow(By, 2)*(1 - sqrt(1 - B2)))*cos(phiz))*(fd_ks_dddK1_D0D1D2 KS_func_pass_args_macro ) + 
 (By*Bz*(sqrt(1 - B2) - 1)*sin(phiy) + (-Bx*By*(sqrt(1 - B2) - 1)*
 cos(phiz) + (B2*sqrt(1 - B2) + pow(By, 2)*(1 - sqrt(1 - B2)))*
-sin(phiz))*cos(phiy))*(fd_ks_dddK0_D0D1D2 KS_func_pass_args_macro ) - (By*
-Bz*(sqrt(1 - B2) - 1)*cos(phiy) + (Bx*By*(sqrt(1 - B2) - 1)*cos(phiz) + 
-(-B2*sqrt(1 - B2) + pow(By, 2)*(sqrt(1 - B2) - 1))*sin(phiz))*
-sin(phiy))*(fd_ks_dddK2_D0D1D2 KS_func_pass_args_macro ))/
-B2;
+sin(phiz))*cos(phiy))*(fd_ks_dddK0_D0D1D2 KS_func_pass_args_macro ) - (By*Bz*
+(sqrt(1 - B2) - 1)*cos(phiy) + (Bx*By*(sqrt(1 - B2) - 1)*cos(phiz) + (-
+B2*sqrt(1 - B2) + pow(By, 2)*(sqrt(1 - B2) - 1))*sin(phiz))*sin(phiy))*
+(fd_ks_dddK2_D0D1D2 KS_func_pass_args_macro ))/B2;
 }
 KS_func_def_macro(dddk1_D0D2D0) KS_func_args_macro
 {
@@ -936,11 +932,10 @@ pow(1 - B2, -0.5)*((Bx*By*(sqrt(1 - B2) - 1)*sin(phiz) + (B2*sqrt(1 -
 B2) + pow(By, 2)*(1 - sqrt(1 - B2)))*cos(phiz))*(fd_ks_dddK1_D0D1D2 KS_func_pass_args_macro ) + 
 (By*Bz*(sqrt(1 - B2) - 1)*sin(phiy) + (-Bx*By*(sqrt(1 - B2) - 1)*
 cos(phiz) + (B2*sqrt(1 - B2) + pow(By, 2)*(1 - sqrt(1 - B2)))*
-sin(phiz))*cos(phiy))*(fd_ks_dddK0_D0D1D2 KS_func_pass_args_macro ) - (By*
-Bz*(sqrt(1 - B2) - 1)*cos(phiy) + (Bx*By*(sqrt(1 - B2) - 1)*cos(phiz) + 
-(-B2*sqrt(1 - B2) + pow(By, 2)*(sqrt(1 - B2) - 1))*sin(phiz))*
-sin(phiy))*(fd_ks_dddK2_D0D1D2 KS_func_pass_args_macro ))/
-B2;
+sin(phiz))*cos(phiy))*(fd_ks_dddK0_D0D1D2 KS_func_pass_args_macro ) - (By*Bz*
+(sqrt(1 - B2) - 1)*cos(phiy) + (Bx*By*(sqrt(1 - B2) - 1)*cos(phiz) + (-
+B2*sqrt(1 - B2) + pow(By, 2)*(sqrt(1 - B2) - 1))*sin(phiz))*sin(phiy))*
+(fd_ks_dddK2_D0D1D2 KS_func_pass_args_macro ))/B2;
 }
 KS_func_def_macro(dddk1_D0D0D2) KS_func_args_macro
 {
@@ -1061,11 +1056,10 @@ pow(1 - B2, -0.5)*((Bx*By*(sqrt(1 - B2) - 1)*sin(phiz) + (B2*sqrt(1 -
 B2) + pow(By, 2)*(1 - sqrt(1 - B2)))*cos(phiz))*(fd_ks_dddK1_D0D1D2 KS_func_pass_args_macro ) + 
 (By*Bz*(sqrt(1 - B2) - 1)*sin(phiy) + (-Bx*By*(sqrt(1 - B2) - 1)*
 cos(phiz) + (B2*sqrt(1 - B2) + pow(By, 2)*(1 - sqrt(1 - B2)))*
-sin(phiz))*cos(phiy))*(fd_ks_dddK0_D0D1D2 KS_func_pass_args_macro ) - (By*
-Bz*(sqrt(1 - B2) - 1)*cos(phiy) + (Bx*By*(sqrt(1 - B2) - 1)*cos(phiz) + 
-(-B2*sqrt(1 - B2) + pow(By, 2)*(sqrt(1 - B2) - 1))*sin(phiz))*
-sin(phiy))*(fd_ks_dddK2_D0D1D2 KS_func_pass_args_macro ))/
-B2;
+sin(phiz))*cos(phiy))*(fd_ks_dddK0_D0D1D2 KS_func_pass_args_macro ) - (By*Bz*
+(sqrt(1 - B2) - 1)*cos(phiy) + (Bx*By*(sqrt(1 - B2) - 1)*cos(phiz) + (-
+B2*sqrt(1 - B2) + pow(By, 2)*(sqrt(1 - B2) - 1))*sin(phiz))*sin(phiy))*
+(fd_ks_dddK2_D0D1D2 KS_func_pass_args_macro ))/B2;
 }
 KS_func_def_macro(dddk1_D0D1D1) KS_func_args_macro
 {
@@ -1592,8 +1586,8 @@ return
 // Derivative
 pow(1 - B2, -0.5)*((Bx*sin(phiz) - By*cos(phiz))*(fd_ks_dK1_D2 KS_func_pass_args_macro ) + 
 (Bz*sin(phiy) - (Bx*cos(phiz) + By*sin(phiz))*cos(phiy))*
-(fd_ks_dK0_D2 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*cos(phiz) + 
-By*sin(phiz))*sin(phiy))*(fd_ks_dK2_D2 KS_func_pass_args_macro ));
+(fd_ks_dK0_D2 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*cos(phiz) + By*
+sin(phiz))*sin(phiy))*(fd_ks_dK2_D2 KS_func_pass_args_macro ));
 }
 KS_func_def_macro(dkt_D0) KS_func_args_macro
 {
@@ -1605,8 +1599,8 @@ return
 // Derivative
 pow(1 - B2, -0.5)*((Bx*sin(phiz) - By*cos(phiz))*(fd_ks_dK1_D0 KS_func_pass_args_macro ) + 
 (Bz*sin(phiy) - (Bx*cos(phiz) + By*sin(phiz))*cos(phiy))*
-(fd_ks_dK0_D0 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*cos(phiz) + 
-By*sin(phiz))*sin(phiy))*(fd_ks_dK2_D0 KS_func_pass_args_macro ));
+(fd_ks_dK0_D0 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*cos(phiz) + By*
+sin(phiz))*sin(phiy))*(fd_ks_dK2_D0 KS_func_pass_args_macro ));
 }
 KS_func_def_macro(dkt_D1) KS_func_args_macro
 {
@@ -1618,8 +1612,8 @@ return
 // Derivative
 pow(1 - B2, -0.5)*((Bx*sin(phiz) - By*cos(phiz))*(fd_ks_dK1_D1 KS_func_pass_args_macro ) + 
 (Bz*sin(phiy) - (Bx*cos(phiz) + By*sin(phiz))*cos(phiy))*
-(fd_ks_dK0_D1 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*cos(phiz) + 
-By*sin(phiz))*sin(phiy))*(fd_ks_dK2_D1 KS_func_pass_args_macro ));
+(fd_ks_dK0_D1 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*cos(phiz) + By*
+sin(phiz))*sin(phiy))*(fd_ks_dK2_D1 KS_func_pass_args_macro ));
 }
 KS_func_def_macro(ddkt_D2D2) KS_func_args_macro
 {
@@ -1631,8 +1625,8 @@ return
 // Derivative
 pow(1 - B2, -0.5)*((Bx*sin(phiz) - By*cos(phiz))*(fd_ks_ddK1_D2D2 KS_func_pass_args_macro ) + 
 (Bz*sin(phiy) - (Bx*cos(phiz) + By*sin(phiz))*cos(phiy))*
-(fd_ks_ddK0_D2D2 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*
-cos(phiz) + By*sin(phiz))*sin(phiy))*(fd_ks_ddK2_D2D2 KS_func_pass_args_macro ));
+(fd_ks_ddK0_D2D2 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*cos(phiz) + 
+By*sin(phiz))*sin(phiy))*(fd_ks_ddK2_D2D2 KS_func_pass_args_macro ));
 }
 KS_func_def_macro(ddkt_D1D2) KS_func_args_macro
 {
@@ -1670,8 +1664,8 @@ return
 // Derivative
 pow(1 - B2, -0.5)*((Bx*sin(phiz) - By*cos(phiz))*(fd_ks_ddK1_D0D0 KS_func_pass_args_macro ) + 
 (Bz*sin(phiy) - (Bx*cos(phiz) + By*sin(phiz))*cos(phiy))*
-(fd_ks_ddK0_D0D0 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*
-cos(phiz) + By*sin(phiz))*sin(phiy))*(fd_ks_ddK2_D0D0 KS_func_pass_args_macro ));
+(fd_ks_ddK0_D0D0 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*cos(phiz) + 
+By*sin(phiz))*sin(phiy))*(fd_ks_ddK2_D0D0 KS_func_pass_args_macro ));
 }
 KS_func_def_macro(ddkt_D0D2) KS_func_args_macro
 {
@@ -1696,8 +1690,8 @@ return
 // Derivative
 pow(1 - B2, -0.5)*((Bx*sin(phiz) - By*cos(phiz))*(fd_ks_ddK1_D1D1 KS_func_pass_args_macro ) + 
 (Bz*sin(phiy) - (Bx*cos(phiz) + By*sin(phiz))*cos(phiy))*
-(fd_ks_ddK0_D1D1 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*
-cos(phiz) + By*sin(phiz))*sin(phiy))*(fd_ks_ddK2_D1D1 KS_func_pass_args_macro ));
+(fd_ks_ddK0_D1D1 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*cos(phiz) + 
+By*sin(phiz))*sin(phiy))*(fd_ks_ddK2_D1D1 KS_func_pass_args_macro ));
 }
 KS_func_def_macro(dddkt_D0D0D0) KS_func_args_macro
 {
@@ -1709,8 +1703,8 @@ return
 // Derivative
 pow(1 - B2, -0.5)*((Bx*sin(phiz) - By*cos(phiz))*(fd_ks_dddK1_D0D0D0 KS_func_pass_args_macro ) + 
 (Bz*sin(phiy) - (Bx*cos(phiz) + By*sin(phiz))*cos(phiy))*
-(fd_ks_dddK0_D0D0D0 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*
-cos(phiz) + By*sin(phiz))*sin(phiy))*(fd_ks_dddK2_D0D0D0 KS_func_pass_args_macro ));
+(fd_ks_dddK0_D0D0D0 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*cos(phiz) + 
+By*sin(phiz))*sin(phiy))*(fd_ks_dddK2_D0D0D0 KS_func_pass_args_macro ));
 }
 KS_func_def_macro(dddkt_D0D0D1) KS_func_args_macro
 {
@@ -1800,8 +1794,8 @@ return
 // Derivative
 pow(1 - B2, -0.5)*((Bx*sin(phiz) - By*cos(phiz))*(fd_ks_dddK1_D2D2D2 KS_func_pass_args_macro ) + 
 (Bz*sin(phiy) - (Bx*cos(phiz) + By*sin(phiz))*cos(phiy))*
-(fd_ks_dddK0_D2D2D2 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*
-cos(phiz) + By*sin(phiz))*sin(phiy))*(fd_ks_dddK2_D2D2D2 KS_func_pass_args_macro ));
+(fd_ks_dddK0_D2D2D2 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*cos(phiz) + 
+By*sin(phiz))*sin(phiy))*(fd_ks_dddK2_D2D2D2 KS_func_pass_args_macro ));
 }
 KS_func_def_macro(dddkt_D1D1D1) KS_func_args_macro
 {
@@ -1813,8 +1807,8 @@ return
 // Derivative
 pow(1 - B2, -0.5)*((Bx*sin(phiz) - By*cos(phiz))*(fd_ks_dddK1_D1D1D1 KS_func_pass_args_macro ) + 
 (Bz*sin(phiy) - (Bx*cos(phiz) + By*sin(phiz))*cos(phiy))*
-(fd_ks_dddK0_D1D1D1 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*
-cos(phiz) + By*sin(phiz))*sin(phiy))*(fd_ks_dddK2_D1D1D1 KS_func_pass_args_macro ));
+(fd_ks_dddK0_D1D1D1 KS_func_pass_args_macro ) - (Bz*cos(phiy) + (Bx*cos(phiz) + 
+By*sin(phiz))*sin(phiy))*(fd_ks_dddK2_D1D1D1 KS_func_pass_args_macro ));
 }
 KS_func_def_macro(dddkt_D1D2D1) KS_func_args_macro
 {

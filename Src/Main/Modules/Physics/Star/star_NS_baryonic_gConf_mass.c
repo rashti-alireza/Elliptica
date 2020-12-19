@@ -64,11 +64,11 @@ pow(psi[ijk], 4);
 pow(psi[ijk], 6);
 
   double P2 = 
-2.0*W_U0[ijk]*dphi_D0[ijk] + 2.0*W_U1[ijk]*dphi_D1[ijk] + 2.0*
-W_U2[ijk]*dphi_D2[ijk] + psi4*(pow(W_U0[ijk], 2)*gConf_D0D0[ijk] + 2.0*
-W_U0[ijk]*W_U1[ijk]*gConf_D0D1[ijk] + 2.0*W_U0[ijk]*W_U2[ijk]*
-gConf_D0D2[ijk] + pow(W_U1[ijk], 2)*gConf_D1D1[ijk] + 2.0*W_U1[ijk]*
-W_U2[ijk]*gConf_D1D2[ijk] + pow(W_U2[ijk], 2)*gConf_D2D2[ijk]) + psim4*
+2.0*W_U0[ijk]*dphi_D0[ijk] + 2.0*W_U1[ijk]*dphi_D1[ijk] + 2.0*W_U2[ijk]*
+dphi_D2[ijk] + psi4*(pow(W_U0[ijk], 2)*gConf_D0D0[ijk] + 2.0*W_U0[ijk]*
+W_U1[ijk]*gConf_D0D1[ijk] + 2.0*W_U0[ijk]*W_U2[ijk]*gConf_D0D2[ijk] +
+pow(W_U1[ijk], 2)*gConf_D1D1[ijk] + 2.0*W_U1[ijk]*W_U2[ijk]*
+gConf_D1D2[ijk] + pow(W_U2[ijk], 2)*gConf_D2D2[ijk]) + psim4*
 (pow(dphi_D0[ijk], 2)*igConf_U0U0[ijk] + 2.0*dphi_D0[ijk]*dphi_D1[ijk]*
 igConf_U0U1[ijk] + 2.0*dphi_D0[ijk]*dphi_D2[ijk]*igConf_U0U2[ijk] +
 pow(dphi_D1[ijk], 2)*igConf_U1U1[ijk] + 2.0*dphi_D1[ijk]*dphi_D2[ijk]*

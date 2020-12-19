@@ -73,14 +73,6 @@ void rotation_transformation(Transformation_T *const t,const double *const in,do
 
 
 /* multiply */
-  double u0_U3 = 
-Rx_D3D0*v_U0 + Rx_D3D1*v_U1 + Rx_D3D2*v_U2 + Rx_D3D3*
-v_U3;
-
-  double u0_U2 = 
-Rx_D2D0*v_U0 + Rx_D2D1*v_U1 + Rx_D2D2*v_U2 + Rx_D2D3*
-v_U3;
-
   double u0_U0 = 
 Rx_D0D0*v_U0 + Rx_D0D1*v_U1 + Rx_D0D2*v_U2 + Rx_D0D3*
 v_U3;
@@ -88,6 +80,18 @@ v_U3;
   double u0_U1 = 
 Rx_D1D0*v_U0 + Rx_D1D1*v_U1 + Rx_D1D2*v_U2 + Rx_D1D3*
 v_U3;
+
+  double u0_U2 = 
+Rx_D2D0*v_U0 + Rx_D2D1*v_U1 + Rx_D2D2*v_U2 + Rx_D2D3*
+v_U3;
+
+  double u0_U3 = 
+Rx_D3D0*v_U0 + Rx_D3D1*v_U1 + Rx_D3D2*v_U2 + Rx_D3D3*
+v_U3;
+
+  double u1_U3 = 
+Ry_D3D0*u0_U0 + Ry_D3D1*u0_U1 + Ry_D3D2*u0_U2 + Ry_D3D3*
+u0_U3;
 
   double u1_U2 = 
 Ry_D2D0*u0_U0 + Ry_D2D1*u0_U1 + Ry_D2D2*u0_U2 + Ry_D2D3*
@@ -97,20 +101,16 @@ u0_U3;
 Ry_D1D0*u0_U0 + Ry_D1D1*u0_U1 + Ry_D1D2*u0_U2 + Ry_D1D3*
 u0_U3;
 
-  double u1_U3 = 
-Ry_D3D0*u0_U0 + Ry_D3D1*u0_U1 + Ry_D3D2*u0_U2 + Ry_D3D3*
-u0_U3;
-
   double u1_U0 = 
 Ry_D0D0*u0_U0 + Ry_D0D1*u0_U1 + Ry_D0D2*u0_U2 + Ry_D0D3*
 u0_U3;
 
-  double u_U2 = 
-Rz_D2D0*u1_U0 + Rz_D2D1*u1_U1 + Rz_D2D2*u1_U2 + Rz_D2D3*
-u1_U3;
-
   double u_U3 = 
 Rz_D3D0*u1_U0 + Rz_D3D1*u1_U1 + Rz_D3D2*u1_U2 + Rz_D3D3*
+u1_U3;
+
+  double u_U2 = 
+Rz_D2D0*u1_U0 + Rz_D2D1*u1_U1 + Rz_D2D2*u1_U2 + Rz_D2D3*
 u1_U3;
 
   double u_U1 = 

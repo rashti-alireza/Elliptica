@@ -227,16 +227,16 @@ trK[ijk];
       double G1_U1 = 
 ChrisConf_U0D0D0[ijk]*P__U0U1 + ChrisConf_U0D0D1[ijk]*P__U1U1 + 
 ChrisConf_U0D0D2[ijk]*P__U1U2 + ChrisConf_U1D0D0[ijk]*P__U0U0 + 3.0*
-ChrisConf_U1D0D1[ijk]*P__U0U1 + 2.0*ChrisConf_U1D0D2[ijk]*P__U0U2 + 
-2.0*ChrisConf_U1D1D1[ijk]*P__U1U1 + 3.0*ChrisConf_U1D1D2[ijk]*P__U1U2 + 
+ChrisConf_U1D0D1[ijk]*P__U0U1 + 2.0*ChrisConf_U1D0D2[ijk]*P__U0U2 + 2.0*
+ChrisConf_U1D1D1[ijk]*P__U1U1 + 3.0*ChrisConf_U1D1D2[ijk]*P__U1U2 + 
 ChrisConf_U1D2D2[ijk]*P__U2U2 + ChrisConf_U2D0D2[ijk]*P__U0U1 + 
 ChrisConf_U2D1D2[ijk]*P__U1U1 + ChrisConf_U2D2D2[ijk]*
 P__U1U2;
 
       double G1_U0 = 
 2.0*ChrisConf_U0D0D0[ijk]*P__U0U0 + 3.0*ChrisConf_U0D0D1[ijk]*P__U0U1 + 
-3.0*ChrisConf_U0D0D2[ijk]*P__U0U2 + ChrisConf_U0D1D1[ijk]*P__U1U1 + 
-2.0*ChrisConf_U0D1D2[ijk]*P__U1U2 + ChrisConf_U0D2D2[ijk]*P__U2U2 + 
+3.0*ChrisConf_U0D0D2[ijk]*P__U0U2 + ChrisConf_U0D1D1[ijk]*P__U1U1 + 2.0*
+ChrisConf_U0D1D2[ijk]*P__U1U2 + ChrisConf_U0D2D2[ijk]*P__U2U2 + 
 ChrisConf_U1D0D1[ijk]*P__U0U0 + ChrisConf_U1D1D1[ijk]*P__U0U1 + 
 ChrisConf_U1D1D2[ijk]*P__U0U2 + ChrisConf_U2D0D2[ijk]*P__U0U0 + 
 ChrisConf_U2D1D2[ijk]*P__U0U1 + ChrisConf_U2D2D2[ijk]*
@@ -246,9 +246,9 @@ P__U0U2;
 ChrisConf_U0D0D0[ijk]*P__U0U2 + ChrisConf_U0D0D1[ijk]*P__U1U2 + 
 ChrisConf_U0D0D2[ijk]*P__U2U2 + ChrisConf_U1D0D1[ijk]*P__U0U2 + 
 ChrisConf_U1D1D1[ijk]*P__U1U2 + ChrisConf_U1D1D2[ijk]*P__U2U2 + 
-ChrisConf_U2D0D0[ijk]*P__U0U0 + 2.0*ChrisConf_U2D0D1[ijk]*P__U0U1 + 
-3.0*ChrisConf_U2D0D2[ijk]*P__U0U2 + ChrisConf_U2D1D1[ijk]*P__U1U1 + 
-3.0*ChrisConf_U2D1D2[ijk]*P__U1U2 + 2.0*ChrisConf_U2D2D2[ijk]*
+ChrisConf_U2D0D0[ijk]*P__U0U0 + 2.0*ChrisConf_U2D0D1[ijk]*P__U0U1 + 3.0*
+ChrisConf_U2D0D2[ijk]*P__U0U2 + ChrisConf_U2D1D1[ijk]*P__U1U1 + 3.0*
+ChrisConf_U2D1D2[ijk]*P__U1U2 + 2.0*ChrisConf_U2D2D2[ijk]*
 P__U2U2;
 
       double G2_U0 = 

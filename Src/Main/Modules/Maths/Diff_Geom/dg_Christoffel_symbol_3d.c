@@ -83,9 +83,8 @@ dg_D2D2D0[ijk]) + 0.5*ig_U0U1[ijk]*(2*dg_D1D2D2[ijk] -
 dg_D2D2D1[ijk]);
 
   double GAMMA_U1D0D2 = 
-0.5*dg_D0D0D2[ijk]*ig_U0U1[ijk] + 0.5*dg_D2D2D0[ijk]*ig_U1U2[ijk] + 
-0.5*ig_U1U1[ijk]*(dg_D0D1D2[ijk] - dg_D0D2D1[ijk] + 
-dg_D1D2D0[ijk]);
+0.5*dg_D0D0D2[ijk]*ig_U0U1[ijk] + 0.5*dg_D2D2D0[ijk]*ig_U1U2[ijk] + 0.5*
+ig_U1U1[ijk]*(dg_D0D1D2[ijk] - dg_D0D2D1[ijk] + dg_D1D2D0[ijk]);
 
   double GAMMA_U2D2D2 = 
 0.5*dg_D2D2D2[ijk]*ig_U2U2[ijk] + 0.5*ig_U0U2[ijk]*(2*dg_D0D2D2[ijk] - 
@@ -98,9 +97,8 @@ dg_D1D1D0[ijk]) - 0.5*ig_U2U2[ijk]*(dg_D1D1D2[ijk] - 2*
 dg_D1D2D1[ijk]);
 
   double GAMMA_U1D0D1 = 
-0.5*dg_D0D0D1[ijk]*ig_U0U1[ijk] + 0.5*dg_D1D1D0[ijk]*ig_U1U1[ijk] + 
-0.5*ig_U1U2[ijk]*(-dg_D0D1D2[ijk] + dg_D0D2D1[ijk] + 
-dg_D1D2D0[ijk]);
+0.5*dg_D0D0D1[ijk]*ig_U0U1[ijk] + 0.5*dg_D1D1D0[ijk]*ig_U1U1[ijk] + 0.5*
+ig_U1U2[ijk]*(-dg_D0D1D2[ijk] + dg_D0D2D1[ijk] + dg_D1D2D0[ijk]);
 
   double GAMMA_U1D2D2 = 
 0.5*dg_D2D2D2[ijk]*ig_U1U2[ijk] + 0.5*ig_U0U1[ijk]*(2*dg_D0D2D2[ijk] - 
@@ -108,19 +106,16 @@ dg_D2D2D0[ijk]) + 0.5*ig_U1U1[ijk]*(2*dg_D1D2D2[ijk] -
 dg_D2D2D1[ijk]);
 
   double GAMMA_U2D1D2 = 
-0.5*dg_D1D1D2[ijk]*ig_U1U2[ijk] + 0.5*dg_D2D2D1[ijk]*ig_U2U2[ijk] + 
-0.5*ig_U0U2[ijk]*(dg_D0D1D2[ijk] + dg_D0D2D1[ijk] - 
-dg_D1D2D0[ijk]);
+0.5*dg_D1D1D2[ijk]*ig_U1U2[ijk] + 0.5*dg_D2D2D1[ijk]*ig_U2U2[ijk] + 0.5*
+ig_U0U2[ijk]*(dg_D0D1D2[ijk] + dg_D0D2D1[ijk] - dg_D1D2D0[ijk]);
 
   double GAMMA_U2D0D2 = 
-0.5*dg_D0D0D2[ijk]*ig_U0U2[ijk] + 0.5*dg_D2D2D0[ijk]*ig_U2U2[ijk] + 
-0.5*ig_U1U2[ijk]*(dg_D0D1D2[ijk] - dg_D0D2D1[ijk] + 
-dg_D1D2D0[ijk]);
+0.5*dg_D0D0D2[ijk]*ig_U0U2[ijk] + 0.5*dg_D2D2D0[ijk]*ig_U2U2[ijk] + 0.5*
+ig_U1U2[ijk]*(dg_D0D1D2[ijk] - dg_D0D2D1[ijk] + dg_D1D2D0[ijk]);
 
   double GAMMA_U2D0D1 = 
-0.5*dg_D0D0D1[ijk]*ig_U0U2[ijk] + 0.5*dg_D1D1D0[ijk]*ig_U1U2[ijk] + 
-0.5*ig_U2U2[ijk]*(-dg_D0D1D2[ijk] + dg_D0D2D1[ijk] + 
-dg_D1D2D0[ijk]);
+0.5*dg_D0D0D1[ijk]*ig_U0U2[ijk] + 0.5*dg_D1D1D0[ijk]*ig_U1U2[ijk] + 0.5*
+ig_U2U2[ijk]*(-dg_D0D1D2[ijk] + dg_D0D2D1[ijk] + dg_D1D2D0[ijk]);
 
   double GAMMA_U2D0D0 = 
 0.5*dg_D0D0D0[ijk]*ig_U0U2[ijk] - 0.5*ig_U1U2[ijk]*(dg_D0D0D1[ijk] - 2*
@@ -128,9 +123,8 @@ dg_D0D1D0[ijk]) - 0.5*ig_U2U2[ijk]*(dg_D0D0D2[ijk] - 2*
 dg_D0D2D0[ijk]);
 
   double GAMMA_U0D0D2 = 
-0.5*dg_D0D0D2[ijk]*ig_U0U0[ijk] + 0.5*dg_D2D2D0[ijk]*ig_U0U2[ijk] + 
-0.5*ig_U0U1[ijk]*(dg_D0D1D2[ijk] - dg_D0D2D1[ijk] + 
-dg_D1D2D0[ijk]);
+0.5*dg_D0D0D2[ijk]*ig_U0U0[ijk] + 0.5*dg_D2D2D0[ijk]*ig_U0U2[ijk] + 0.5*
+ig_U0U1[ijk]*(dg_D0D1D2[ijk] - dg_D0D2D1[ijk] + dg_D1D2D0[ijk]);
 
   double GAMMA_U1D1D1 = 
 0.5*dg_D1D1D1[ijk]*ig_U1U1[ijk] + 0.5*ig_U0U1[ijk]*(2*dg_D0D1D1[ijk] - 
@@ -148,19 +142,16 @@ dg_D0D1D0[ijk]) - 0.5*ig_U0U2[ijk]*(dg_D0D0D2[ijk] - 2*
 dg_D0D2D0[ijk]);
 
   double GAMMA_U1D1D2 = 
-0.5*dg_D1D1D2[ijk]*ig_U1U1[ijk] + 0.5*dg_D2D2D1[ijk]*ig_U1U2[ijk] + 
-0.5*ig_U0U1[ijk]*(dg_D0D1D2[ijk] + dg_D0D2D1[ijk] - 
-dg_D1D2D0[ijk]);
+0.5*dg_D1D1D2[ijk]*ig_U1U1[ijk] + 0.5*dg_D2D2D1[ijk]*ig_U1U2[ijk] + 0.5*
+ig_U0U1[ijk]*(dg_D0D1D2[ijk] + dg_D0D2D1[ijk] - dg_D1D2D0[ijk]);
 
   double GAMMA_U0D0D1 = 
-0.5*dg_D0D0D1[ijk]*ig_U0U0[ijk] + 0.5*dg_D1D1D0[ijk]*ig_U0U1[ijk] + 
-0.5*ig_U0U2[ijk]*(-dg_D0D1D2[ijk] + dg_D0D2D1[ijk] + 
-dg_D1D2D0[ijk]);
+0.5*dg_D0D0D1[ijk]*ig_U0U0[ijk] + 0.5*dg_D1D1D0[ijk]*ig_U0U1[ijk] + 0.5*
+ig_U0U2[ijk]*(-dg_D0D1D2[ijk] + dg_D0D2D1[ijk] + dg_D1D2D0[ijk]);
 
   double GAMMA_U0D1D2 = 
-0.5*dg_D1D1D2[ijk]*ig_U0U1[ijk] + 0.5*dg_D2D2D1[ijk]*ig_U0U2[ijk] + 
-0.5*ig_U0U0[ijk]*(dg_D0D1D2[ijk] + dg_D0D2D1[ijk] - 
-dg_D1D2D0[ijk]);
+0.5*dg_D1D1D2[ijk]*ig_U0U1[ijk] + 0.5*dg_D2D2D1[ijk]*ig_U0U2[ijk] + 0.5*
+ig_U0U0[ijk]*(dg_D0D1D2[ijk] + dg_D0D2D1[ijk] - dg_D1D2D0[ijk]);
 
 
   /* populating: */
