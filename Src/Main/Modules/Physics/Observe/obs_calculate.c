@@ -1273,7 +1273,14 @@ static void calc_ADM_mass(Observe_T *const obs)
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
   {
-    IFsc("ADM(M)|BHNS")
+    /* if S_inf => only surface integration */
+    IFss("ADM(M)|S_inf|")
+    {
+      /* surface part */
+      region   = "outermost_OB";
+      patches2 = collect_patches(grid,region,&N2);
+    }
+    else IFsc("ADM(M)|S+V|BHNS")
     {
       /* volume part */
       region   = "outermost,filling_box,NS,NS_around,BH_around";
@@ -1282,17 +1289,12 @@ static void calc_ADM_mass(Observe_T *const obs)
       region   = "BH_around_IB";
       patches2 = collect_patches(grid,region,&N2);
     }
-    else IFsc("ADM(M)|NS")
+    else IFsc("ADM(M)|S+V|NS")
     {
       region   = "NS";
       patches1 = collect_patches(grid,region,&N1);
     }
-    else IFsc("ADM(M)|BH")
-    {
-      region   = "BH_around_IB";
-      patches2 = collect_patches(grid,region,&N2);
-    }
-    else IFsc("ADM(M)|SBH")
+    else IFsc("ADM(M)|S+V|SBH")
     {
       /* volume part */
       region   = "outermost,BH_around";
@@ -1360,6 +1362,7 @@ static void calc_ADM_mass(Observe_T *const obs)
   }
   Free(patches1);
   
+  /* for surface part */
   for (n = N1; n < N1+N2; ++n)
   {
     adm[n] = calloc(1,sizeof(*adm[n]));
@@ -1402,10 +1405,22 @@ static void calc_ADM_mass(Observe_T *const obs)
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
         grid->kind == Grid_SplitCubedSpherical_SBH)
     {
-      adm[n]->surface_integration_flg = 1;
-      adm[n]->Z_surface = 1;
-      adm[n]->K = 0;
-      n_conformal_metric_around(adm[n],_c_);
+    
+      IFss("ADM(M)|S_inf|")
+      {
+        adm[n]->surface_integration_flg = 1;
+        adm[n]->Z_surface = 1;
+        adm[n]->K = patch->n[2]-3;/* a few surfaces to Inf to avoid 
+                                 // small determinant in Jacobian. */
+        n_conformal_metric_around(adm[n],_c_);
+      }
+      else 
+      {
+        adm[n]->surface_integration_flg = 1;
+        adm[n]->Z_surface = 1;
+        adm[n]->K = 0;
+        n_conformal_metric_around(adm[n],_c_);
+      }
     }
     else
       Error0(NO_OPTION);
@@ -1414,25 +1429,13 @@ static void calc_ADM_mass(Observe_T *const obs)
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
   {
-    IFsc("ADM(M)|BHNS")
-    {
-      obs->ret[0] = obs_ADM_mass_SV(obs);
-    }
-    else IFsc("ADM(M)|NS")
-    {
-      obs->ret[0] = obs_ADM_mass_SV(obs); 
-    }
-    else IFsc("ADM(M)|BH")
+    IFss("ADM(M)|S_inf|")
     {
       obs->ret[0] = obs_ADM_mass_S2(obs);
     }
-    else IFsc("ADM(M)|SBH")
+    else 
     {
       obs->ret[0] = obs_ADM_mass_SV(obs);
-    }
-    else
-    {
-      Error0(NO_OPTION);
     }
   }
   else
