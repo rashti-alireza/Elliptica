@@ -24,7 +24,7 @@ int adm_main(Physics_T *const phys)
     break;
     
     case ADM_COMPUTE_CONSTRAINTS:
-      ret = compute_ham_and_mom_constraints(phys);
+      ret = compute_ham_and_mom_constrains(phys);
     break;
     
     case ADM_UPDATE_AConfIJ:
@@ -167,7 +167,7 @@ static int add_adm_fields(Physics_T *const phys)
 }
 
 /* compute constraints */
-static int compute_ham_and_mom_constraints(Physics_T *const phys)
+static int compute_ham_and_mom_constrains(Physics_T *const phys)
 {
   FUNC_TIC
   
