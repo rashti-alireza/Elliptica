@@ -1236,7 +1236,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
         /* surface integral */
         Komar[n]->surface_integration_flg = 1;
         Komar[n]->Z_surface = 1;
-        Komar[n]->K = patch->n[2]-1;
+        Komar[n]->K = 0;/* NOTE: topology of the surface MUST be S2 */
         n_physical_metric_around(Komar[n],_c_);
       }
       else
