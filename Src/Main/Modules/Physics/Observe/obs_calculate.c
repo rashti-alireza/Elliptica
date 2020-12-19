@@ -1128,6 +1128,9 @@ static void calc_Kommar_mass(Observe_T *const obs)
   {
     IFsc("Komar(M)|BHNS")
     {
+      /* from experience outermost patches are in accurate.
+      // on the other hand we need only S2. */
+      Error0("where must be S2 integration!");
       region = "BH_around_OB,NS_around_OB";
     }
     else IFsc("Komar(M)|NS")
