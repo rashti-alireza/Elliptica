@@ -41,7 +41,7 @@ struct items_S
 };
 
 double obs_sys_ADM_mass(Observe_T *const obs);
-double obs_BH_ADM_mass(Observe_T *const obs);
+double obs_ADM_mass_S2(Observe_T *const obs);
 double obs_Komar_mass(Observe_T *const obs);
 double obs_ADM_mass(Observe_T *const obs);
 void obs_populate_spin_integrands_akv(Patch_T *const patch,const double *const normal[3]);

@@ -1,4 +1,4 @@
-# computing BH ADM Mass.
+# computing ADM Mass using a S2 surface
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -11,8 +11,8 @@ C_macro  = READ_v_UNUSED(name);
 `#include "obs_header.h"`
 ``
 ``
-`double obs_BH_ADM_mass(Observe_T *const obs);`
-`double obs_BH_ADM_mass(Observe_T *const obs)`
+`double obs_ADM_mass_S2(Observe_T *const obs);`
+`double obs_ADM_mass_S2(Observe_T *const obs)`
 `{`
 `  double adm_mass = 0;`
 `  struct items_S **adm = obs->items;`

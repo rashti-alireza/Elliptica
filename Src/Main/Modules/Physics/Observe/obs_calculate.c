@@ -1424,7 +1424,7 @@ static void calc_ADM_mass(Observe_T *const obs)
     }
     else IFsc("ADM(M)|BH")
     {
-      obs->ret[0] = obs_BH_ADM_mass(obs);
+      obs->ret[0] = obs_ADM_mass_S2(obs);
     }
     else IFsc("ADM(M)|SBH")
     {
