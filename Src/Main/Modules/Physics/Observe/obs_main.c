@@ -27,8 +27,12 @@
 // NOTES:
 // ======
 // o. ADM(M)|BH is a very crude approximation, don't rely on it.
-// o. ADM(M)|*  depends on conformal factor psi thus if psi = const => 0.
-//
+// o. ADM(M)|* depends on conformal factor psi thus if psi = const => 0.
+// o. ADM(M)|* is gauge dependent and to be valid g_{ij} must be decreasing 
+//    as O(r^-1) and Kij as O(r^-2).
+//    an example that donsn't work is Painleve-Gullstrand BH which fails
+//    g_{ij} condition, another example is Kerr-Schild BH which fails 
+//    K_{ij} condition.
 //
 */
 
