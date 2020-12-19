@@ -32,6 +32,10 @@ void obs_calculate(Observe_T *const obs)
   {
     calc_ADM_mass(obs);
   }
+  else IFsc ("Irreducible(M)|BH")
+  {
+    obs_BH_irreducible_mass_CS(obs);
+  }
   else IFsc("CM|BH")
   {
     Rc_BH(obs);
@@ -51,10 +55,6 @@ void obs_calculate(Observe_T *const obs)
   else IFss("Spin|AKV|")
   {
     define_spin_akv(obs);
-  }
-  else IFsc ("Irreducible(M)|BH")
-  {
-    obs_BH_irreducible_mass_CS(obs);
   }
   else
     Errors("There is no such '%s' plan.\n",obs->quantity);
