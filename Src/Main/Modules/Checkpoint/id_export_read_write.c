@@ -94,7 +94,9 @@ void
     }
     else
     {
-      Error1("It could not find X(x,y,z)!\n");
+      char errmsg[STR_LEN_MAX] = {'\0'};
+      sprintf(errmsg,"It could not find X(%f,%f,%f)!\n",x[0],x[1],x[2]);
+      Error1(errmsg);
     }
   }
 
