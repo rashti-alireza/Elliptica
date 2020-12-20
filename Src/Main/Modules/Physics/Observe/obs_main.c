@@ -8,37 +8,50 @@
 //
 // * initialize observable *
 // observe(phys,sq,ret); # the observed value saves in ret 
-//                        # and sq is one of the followings:
+//                       # and sq is one of the followings:
 //
 // * list of quantities *
+// ======================
+//
 // "ADM(P,J)" #=> compute P and J ADM for the given physics
+// ----------------------------------------------------------------------
 //
 // "Komar(M)" #=> compute Komar mass for the given physics
+// ----------------------------------------------------------------------
 //
 // "ADM(M)|method"   #=> compute Komar ADM for the given physics
 //        methods: [S_inf,S+V]
 //        S_inf: carry out integral at a S2 surface at inf
-//        	 does not depend on gauge but not very accurate
+//        	 does not depend on gauge but not very accurate.
+//               Notes:
+//               this method utilize conformal factor and conformal
+//               metric, thus if conformal flat is and metric are const
+//               this gives zero. an example is Painleve-Gullstrand.
+//
 //        S+V  : use Gauss lema to carry out the integral in a 
-//               volume and a closer surface. this is gauge dependent 
-//               and to be valid g_{ij} must be decreasing as O(r^-1) 
-//               and Kij as O(r^-2). An example that donsn't work is 
+//               volume and a closer surface than inf. 
+//               Notes:
+//               this is a gauge dependent and to be valid g_{ij} 
+//               must be decreasing as O(r^-1) and Kij as O(r^-2). 
+//               examples that not working with this method:
 //               Painleve-Gullstrand BH which fails g_{ij} condition, 
 //               another example is Kerr-Schild BH which fails K_{ij} 
 //               condition. furthermore, this method depends on conformal 
 //               factor psi thus if psi = const => 0.
+// ----------------------------------------------------------------------
 //
 // "Irreducible(M)" #=> irreducible mass for the givne physics (BH)
+// ----------------------------------------------------------------------
 //
 // "CM"          #=> compute the center of mass for the given physics
+// ----------------------------------------------------------------------
 //
 // "Spin|method" #=> compute spin for the given physics
-//                    with the specified method below:
-// methods:
-// spin calculation methods:
-// Campanelli: gr-qc/0612076v4
-// JRB:        Phys. Rev. D 100, 124046
-// AKV:        Phys.Rev.D78:084017,2008
+//       methods:
+//       Campanelli: gr-qc/0612076v4
+//       JRB:        Phys. Rev. D 100, 124046
+//       AKV:        Phys.Rev.D78:084017,2008
+// ----------------------------------------------------------------------
 //
 */
 

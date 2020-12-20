@@ -1260,6 +1260,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
 /* calculate ADM mass for various objects */
 static void calc_ADM_mass(Observe_T *const obs)
 {
+  const Uint N_Inf   = 3;/* number of surface before inf surface */
   Grid_T *const grid = obs->grid;
   Patch_T **patches1 = 0;/* for volume integrals */
   Patch_T **patches2 = 0;/* for surface integrals */
@@ -1405,14 +1406,14 @@ static void calc_ADM_mass(Observe_T *const obs)
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
         grid->kind == Grid_SplitCubedSpherical_SBH)
     {
-    
       IFss("ADM(M)|S_inf|")
       {
         adm[n]->surface_integration_flg = 1;
         adm[n]->Z_surface = 1;
-        adm[n]->K = patch->n[2]-3;/* a few surfaces to Inf to avoid 
-                                 // small determinant in Jacobian. */
+        adm[n]->K = patch->n[2]-N_Inf;/* a few surfaces to Inf to avoid 
+                                      // small determinant in Jacobian. */
         n_conformal_metric_around(adm[n],_c_);
+        assert(patch->n[2]>=N_Inf);
       }
       else 
       {
