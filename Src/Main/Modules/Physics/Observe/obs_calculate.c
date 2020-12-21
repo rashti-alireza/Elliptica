@@ -978,10 +978,10 @@ static void calc_ADM_PJ(Observe_T *const obs)
     IFsc("ADM(P,J)|BHNS")
     {
       /* volume part */
-      region   = "outermost,filling_box,NS,NS_around,BH_around";
+      region   = "outermost,filling_box,NS_around,BH_around";
       patches1 = collect_patches(grid,region,&N1);
       /* surface part */
-      region   = "BH_around_IB";
+      region   = "NS_around_IB,BH_around_IB";
       patches2 = collect_patches(grid,region,&N2);
     }
     else IFsc("ADM(P,J)|NS")
