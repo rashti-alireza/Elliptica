@@ -978,10 +978,10 @@ static void calc_ADM_PJ(Observe_T *const obs)
     IFsc("ADM(P,J)|BHNS")
     {
       /* volume part */
-      region   = "outermost,filling_box";
+      region   = "outermost,filling_box,NS,NS_around,BH_around";
       patches1 = collect_patches(grid,region,&N1);
       /* surface part */
-      region   = "NS_around_OB,BH_around_OB";
+      region   = "BH_around_IB";
       patches2 = collect_patches(grid,region,&N2);
     }
     else IFsc("ADM(P,J)|NS")
@@ -999,10 +999,9 @@ static void calc_ADM_PJ(Observe_T *const obs)
     else IFsc("ADM(P,J)|SBH")
     {
       /* volume part */
-      region   = "outermost";
+      region   = "outermost,BH_around_OB";
       patches1 = collect_patches(grid,region,&N1);
-      /* surface part */
-      region   = "BH_around_OB";
+      region   = "BH_around_IB";
       patches2 = collect_patches(grid,region,&N2);
     }
     else
@@ -1115,7 +1114,7 @@ static void calc_ADM_PJ(Observe_T *const obs)
       {
         adm[n]->surface_integration_flg = 1;
         adm[n]->Z_surface = 1;
-        adm[n]->K = patch->n[2]-1;
+        adm[n]->K = 0;
         n_physical_metric_around(adm[n],_c_);
       }
       else IFsc("ADM(P,J)|NS")
