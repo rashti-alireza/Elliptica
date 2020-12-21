@@ -24,9 +24,9 @@
 //        S_inf: carry out integral at a S2 surface at inf
 //        	 does not depend on gauge but not very accurate.
 //               Notes:
-//               this method utilize conformal factor and conformal
-//               metric, thus if conformal flat is and metric are const
-//               this gives zero. an example is Painleve-Gullstrand.
+//               this method utilizes conformal factor and conformal
+//               metric, thus if conformal factor is const and metric 
+//               is flat this gives zero, example is Painleve-Gullstrand.
 //
 //        S+V  : use Gauss lema to carry out the integral in a 
 //               volume and a closer surface than inf. 
