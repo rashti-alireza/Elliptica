@@ -14,12 +14,18 @@
 // ======================
 //
 // "ADM(P,J)" #=> compute P and J ADM for the given physics
+//        Note: definition of ADM quantities are only held when
+//        asymptotic flat gauge conditions are satisfied.
+//        (arXiv:gr-qc/0703035v1) a counter example is Painleve-Gullstrand.
 // ----------------------------------------------------------------------
 //
 // "Komar(M)" #=> compute Komar mass for the given physics
 // ----------------------------------------------------------------------
-//
 // "ADM(M)|method"   #=> compute Komar ADM for the given physics
+//        Note: definition of ADM quantities are only held when
+//        asymptotic flat gauge conditions are satisfied.
+//        (arXiv:gr-qc/0703035v1) a counter example is Painleve-Gullstrand.
+//
 //        methods: [S_inf,S+V]
 //        S_inf: carry out integral at a S2 surface at inf
 //        	 does not depend on gauge but not very accurate.
@@ -35,8 +41,7 @@
 //               must be decreasing as O(r^-1) and Kij as O(r^-2). 
 //               examples that not working with this method:
 //               Painleve-Gullstrand BH which fails g_{ij} condition, 
-//               another example is Kerr-Schild BH which fails K_{ij} 
-//               condition. furthermore, this method depends on conformal 
+//               furthermore, this method depends on conformal 
 //               factor psi thus if psi = const => 0.
 // ----------------------------------------------------------------------
 //

@@ -1001,6 +1001,7 @@ static void calc_ADM_PJ(Observe_T *const obs)
       /* volume part */
       region   = "outermost,BH_around_OB";
       patches1 = collect_patches(grid,region,&N1);
+      /* surface part */
       region   = "BH_around_IB";
       patches2 = collect_patches(grid,region,&N2);
     }
