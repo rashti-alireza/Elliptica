@@ -25,6 +25,9 @@ struct items_S
   double *n_U0;
   double *n_U1;
   double *n_U2;
+  /* volume integration type */
+  const char *vol_integration_type;/* ["Integral{f(x)dV}[i,f],Spectral",
+                                      "Integral{f(x)dV},Spectral"] */
   /* integration flags */
   Uint surface_integration_flg: 1;/* if 1 means it measn 
                                       // we need surface integration 
@@ -38,6 +41,10 @@ struct items_S
   Uint I;
   Uint J;
   Uint K;
+  /* interval for volume integration */
+  Uint Ii,If;
+  Uint Ji,Jf;
+  Uint Ki,Kf;
 };
 
 double obs_ADM_mass_SV(Observe_T *const obs);
