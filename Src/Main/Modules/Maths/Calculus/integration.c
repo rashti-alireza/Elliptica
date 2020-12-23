@@ -468,8 +468,6 @@ static double f_xyz_interval_dV_Cheb_Ext_Spec(Integration_T *const I)
           integral_conventional_ChebTn(n[2],k,th2i,th2f);
       }
         
-  sum *= -1.;/* - sign is for integration */
-  
   remove_field(F);
   free_temp_patch(&patch);
   
@@ -568,6 +566,7 @@ static double f_xyz_dS_Cheb_Ext_Spec(Integration_T *const I)
 // where N is total number of collocation points and x(theta) = cos(theta).
 // NOTE: theta = acos(x), thus if theta is not available one can take acos(x).
 //       this choice is for optimization purposes.
+// NOTE: there is a - sign difference between this and Int_ChebTn_OPTM.
 // -> return value: integral_{th_i}^{th_f} T(n,x(theta))dx(thea) */
 static double integral_conventional_ChebTn(const Uint N,
                                            const Uint n,
