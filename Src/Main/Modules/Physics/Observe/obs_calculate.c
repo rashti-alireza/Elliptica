@@ -575,10 +575,10 @@ static void calc_ADM_PJ(Observe_T *const obs)
     else IFsc("ADM(P,J)|SBH")
     {
       /* volume part */
-      region   = "outermost,BH_around_OB";
+      region   = "outermost_OB";
       patches1 = collect_patches(grid,region,&N1);
       /* surface part */
-      region   = "BH_around_IB";
+      region   = "outermost_IB";
       patches2 = collect_patches(grid,region,&N2);
     }
     else
@@ -639,6 +639,41 @@ static void calc_ADM_PJ(Observe_T *const obs)
     adm[n]->g11 = g11;
     adm[n]->g12 = g12;
     adm[n]->g22 = g22;
+    
+    if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_SBH)
+    {
+      IFsc("ADM(P,J)|BHNS")
+      {
+      ;
+      }
+      else IFsc("ADM(P,J)|NS")
+      {
+      ;
+      }
+      else IFsc("ADM(P,J)|BH")
+      {
+        ;
+      }
+      else IFsc("ADM(P,J)|SBH")
+      {
+        adm[n]->vol_integration_type = "Integral{f(x)dV}[i,f],Spectral";
+        adm[n]->Ii = 0;
+        adm[n]->If = patch->n[0]-1;
+        adm[n]->Ji = 0;
+        adm[n]->Kf = patch->n[1]-1;
+        adm[n]->Ki = 0;
+        adm[n]->Kf = patch->n[2]-1;
+      }
+      else
+      {
+        Error0(NO_OPTION);
+      }
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
   }
   Free(patches1);
  
@@ -711,6 +746,8 @@ static void calc_ADM_PJ(Observe_T *const obs)
       else IFsc("ADM(P,J)|SBH")
       {
         adm[n]->surface_integration_flg = 1;
+        adm[n]->vol_integration_type = "Integral{f(x)dV}[i,f],Spectral";
+        
         adm[n]->Z_surface = 1;
         adm[n]->K = patch->n[2]-1;
         n_physical_metric_around(adm[n],_c_);
@@ -1131,7 +1168,14 @@ static double integral_ADM_PJ(Observe_T *const obs,
     Patch_T *patch = adm[p]->patch;
     
     I  = init_integration();
-    I->type = "Integral{f(x)dV},Spectral";
+    I->type = adm[p]->vol_integration_type;
+    I->Spectral->Ii = adm[p]->Ii;
+    I->Spectral->If = adm[p]->If;
+    I->Spectral->Ji = adm[p]->Ji;
+    I->Spectral->Jf = adm[p]->Jf;
+    I->Spectral->Ki = adm[p]->Ki;
+    I->Spectral->Kf = adm[p]->Kf;
+    
     I->Spectral->f = patch->fields[Ind(sG)];
     I->g00 = adm[p]->g00;
     I->g01 = adm[p]->g01;
