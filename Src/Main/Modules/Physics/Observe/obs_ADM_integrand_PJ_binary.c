@@ -31,7 +31,7 @@ void obs_populate_ADM_integrand_PdS_GdV_binary(const Observe_T *const obs)
   const double x_cm = sysGetd("x_CM");
   const double y_cm = sysGetd("y_CM");
   const double z_cm = sysGetd("z_CM");
-  const double CUTOFF = 1E8;
+  const double CutOff = 1E4;
   Uint p;
 
   for(p = 0; p < N; ++p)
@@ -102,15 +102,15 @@ void obs_populate_ADM_integrand_PdS_GdV_binary(const Observe_T *const obs)
 
    for(ijk = 0; ijk < nn; ++ijk)
    {
-   double x    = patch->node[ijk]->x[0];
-   double y    = patch->node[ijk]->x[1];
-   double z    = patch->node[ijk]->x[2];
-   xi_U0[ijk] = x-x_cm;
-   xi_U1[ijk] = y-y_cm;
-   xi_U2[ijk] = z-z_cm;
+     double x    = patch->node[ijk]->x[0];
+     double y    = patch->node[ijk]->x[1];
+     double z    = patch->node[ijk]->x[2];
+     xi_U0[ijk] = x-x_cm;
+     xi_U1[ijk] = y-y_cm;
+     xi_U2[ijk] = z-z_cm;
    }
-    if (adm[p]->surface_integration_flg)
-    {
+   if (adm[p]->surface_integration_flg)
+   {
       const double *n_U0 = adm[p]->n_U0;
       const double *n_U1 = adm[p]->n_U1;
       const double *n_U2 = adm[p]->n_U2;
@@ -187,7 +187,7 @@ Pn_U0*xi_U2[ijk] - Pn_U2*xi_U0[ijk];
       ADM_integrand_xiP_U1[ijk] = xiP_U1;
       ADM_integrand_xiP_U0[ijk] = xiP_U0;
       }
-    }
+   }
     else
     {
       for (ijk = 0; ijk < nn; ++ijk)
@@ -196,7 +196,7 @@ Pn_U0*xi_U2[ijk] - Pn_U2*xi_U0[ijk];
       DEF_RELATIVE_y
       DEF_RELATIVE_z
       DEF_RELATIVE_r
-      double att = r > CUTOFF ? 0:1;
+      double att = r > CutOff ? 0:1;
       double psi6_ = 
 pow(psi[ijk], 6);
 

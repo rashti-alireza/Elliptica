@@ -1,6 +1,11 @@
 # populating ADM momentum integrand P^{ij}*n_{j} and G^{i} 
 # using arxiv:1506.01689 formalism.
 # their names are ADM_integrand_P and ADM_integrand_G respectively.
+# NOTE: the error of at outermost patches could be quite large it could be
+#       up to 20-25% off! however, for maximal slices and conformally flat
+#       metric the contribution of this integral is zero.
+# NOTE: the volume integral must not cover matter, see arxiv:1506.01689.
+
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -39,7 +44,7 @@ C_macro3 = declare_and_alloc_xi(name);
 `  const double x_cm = sysGetd("x_CM");`
 `  const double y_cm = sysGetd("y_CM");`
 `  const double z_cm = sysGetd("z_CM");`
-`  const double CUTOFF = 1E8;`
+`  const double CutOff = 1E4;`
 `  Uint p;`
 ``
 `  for(p = 0; p < N; ++p)`
@@ -101,18 +106,18 @@ Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 ``
 `   for(ijk = 0; ijk < nn; ++ijk)`
 `   {`
-`   double x    = patch->node[ijk]->x[0];`
-`   double y    = patch->node[ijk]->x[1];`
-`   double z    = patch->node[ijk]->x[2];`
-`   xi_U0[ijk] = x-x_cm;`
-`   xi_U1[ijk] = y-y_cm;`
-`   xi_U2[ijk] = z-z_cm;`
+`     double x    = patch->node[ijk]->x[0];`
+`     double y    = patch->node[ijk]->x[1];`
+`     double z    = patch->node[ijk]->x[2];`
+`     xi_U0[ijk] = x-x_cm;`
+`     xi_U1[ijk] = y-y_cm;`
+`     xi_U2[ijk] = z-z_cm;`
 `   }`
 # populating the integrands:
 
 # if we needs surface integral too.
-`    if (adm[p]->surface_integration_flg)`
-`    {`
+`   if (adm[p]->surface_integration_flg)`
+`   {`
 `      const double *n_U0 = adm[p]->n_U0;`
 `      const double *n_U1 = adm[p]->n_U1;`
 `      const double *n_U2 = adm[p]->n_U2;`
@@ -129,7 +134,7 @@ Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
        Cpopulate[ADM_integrand_P = Pn];
        Cpopulate[ADM_integrand_xiP = xiP];
 `      }`
-`    }`
+`   }`
 # if no need for surface inegral.
 `    else`
 `    {`
@@ -140,7 +145,7 @@ Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 `      DEF_RELATIVE_y`
 `      DEF_RELATIVE_z`
 `      DEF_RELATIVE_r`
-`      double att = r > CUTOFF ? 0:1;`
+`      double att = r > CutOff ? 0:1;`
        psi6_   = psi**(6);
        P_(i,j) = AConfIJ(i,j)-(2/3)*trK*psi6_*igConf(i,j);
        Symm[P_(i,j)  = P_(j,i)];
