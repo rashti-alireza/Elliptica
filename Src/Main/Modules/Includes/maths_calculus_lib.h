@@ -27,6 +27,9 @@ typedef struct INTEGRATION_T
   Uint I;/* the index showing the hyper-surface X = const */
   Uint J;/* the index showing the hyper-surface Y = const */
   Uint K;/* the index showing the hyper-surface Z = const */
+  Uint Ii,If;/* i in [Ii,If] for X-direction, used in vol integral */
+  Uint Ji,Jf;/* j in [Ji,Jf] for Y-direction, used in vol integral */
+  Uint Ki,Kf;/* k in [Ki,Kf] for K-direction, used in vol integral */
  }Spectral[1];
  struct
  {
@@ -67,7 +70,6 @@ double Legendre_weight_function(const double x, const Uint N);
 double dLegendre_dx(const Uint n, const double x);
 void init_Legendre_root_function(void);
 void init_dLegendre_dx(void);
-double Integrate_ChebTn(const Uint n,const double xi,const double xf);
 void partial_derivative_with_regex(Patch_T *const patch,
                                    const char *const regex_list);
 

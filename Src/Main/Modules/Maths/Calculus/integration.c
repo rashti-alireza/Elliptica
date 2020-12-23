@@ -19,6 +19,21 @@
 // I->type = "Integral{f(x)dV},Spectral"; # dV is sqrt(det(g)) dxdydz
 // I->Spectral->f = field;# this is the Field f(x)
 //
+//
+// VOLUME integration over an interval:
+// *** for integrating {fdV} over a partial of the patch in physical domain: ***
+// Note: dV is made automatically using the given metric, however,
+// the integrand f(x) must be provided fully by the user.
+// I->type = "Integral{f(x)dV}[i,f],Spectral"; # dV is sqrt(det(g)) dxdydz
+// I->Spectral->f = field;# this is the Field f(x)
+// *** the followings determine the intervals of volume integration ***
+// I->Spectral->Ii = initial i for X 
+// I->Spectral->If = final f for X
+// I->Spectral->Ji = initial i for Y
+// I->Spectral->Jf = final f for Y
+// I->Spectral->Ki = initial i for Z
+// I->Spectral->Kf = final f for Z
+//
 // # filling the metric (assumed symmetry):
 // I->g00 = gamma_D0D0;
 // I->g01 = gamma_D0D1;
@@ -143,7 +158,26 @@ void plan_integration(Integration_T *const I)
         if (patch->basis[i]       == Chebyshev_Tn_BASIS &&
             patch->collocation[i] == Chebyshev_Extrema    )
         {
-          I->integration_func = f_xyz_dV_Cheb_Ext_Spec;
+          I->integration_func = f_xyz_whole_dV_Cheb_Ext_Spec;
+        }
+        else
+          Error0(INCOMPLETE_FUNC);
+      }
+    }
+  }
+  else if (strcmp_i(I->type,"Integral{f(x)dV}[i,f],Spectral"))/* means over the interval [i,f] physical volume covered by the patch */
+  {
+    patch = I->Spectral->f->patch;
+    coordsys = patch->coordsys;
+    
+    if (coordsys == Cartesian || coordsys == CubedSpherical)
+    {
+      for (i = 0; i < 3; ++i)
+      {
+        if (patch->basis[i]       == Chebyshev_Tn_BASIS &&
+            patch->collocation[i] == Chebyshev_Extrema    )
+        {
+          I->integration_func = f_xyz_interval_dV_Cheb_Ext_Spec;
         }
         else
           Error0(INCOMPLETE_FUNC);
@@ -334,7 +368,7 @@ static double GaussQuadrature_Legendre(Integration_T *const I)
 // which has collocation points of Chebyshev extrema and
 // bases of Chebyshev, USING CARTESIAN COORDINATES.
 // Thread Safe */
-static double f_xyz_dV_Cheb_Ext_Spec(Integration_T *const I)
+static double f_xyz_whole_dV_Cheb_Ext_Spec(Integration_T *const I)
 {
   const Field_T *const f = I->Spectral->f;
   Patch_T patch = make_temp_patch(f->patch);
@@ -378,6 +412,70 @@ static double f_xyz_dV_Cheb_Ext_Spec(Integration_T *const I)
   
   return sum;
 }
+
+/* ->return value: integration over an INTERVAL of physical volume 
+// of the patch which has collocation points of Chebyshev extrema and
+// bases of Chebyshev, USING CARTESIAN COORDINATES.
+// Thread Safe */
+static double f_xyz_interval_dV_Cheb_Ext_Spec(Integration_T *const I)
+{
+  const Field_T *const f = I->Spectral->f;
+  Patch_T patch = make_temp_patch(f->patch);
+  Field_T *F    = add_field("integrand","(3dim)",&patch,YES);
+  const double *const fv = f->v;
+  double *const Fv = F->v;
+  const double *Fc;
+  const Uint nn       = patch.nn;
+  const Uint *const n = patch.n;
+  const Uint Ii = I->Spectral->Ii;
+  const Uint If = I->Spectral->If;
+  const Uint Ji = I->Spectral->Ji;
+  const Uint Jf = I->Spectral->Jf;
+  const Uint Ki = I->Spectral->Ki;
+  const Uint Kf = I->Spectral->Kf;
+  /* angels for Chebyshev extrema: */
+  const double th0i = Ii*M_PI/(n[0]-1);
+  const double th0f = If*M_PI/(n[0]-1);
+  const double th1i = Ji*M_PI/(n[1]-1);
+  const double th1f = Jf*M_PI/(n[1]-1);
+  const double th2i = Ki*M_PI/(n[2]-1);
+  const double th2f = Kf*M_PI/(n[2]-1);
+  double sum = 0.,g;
+  Uint ijk,i,j,k;
+  
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    double g00 = I->g00[ijk];
+    double g01 = I->g01[ijk];
+    double g02 = I->g02[ijk];
+    double g11 = I->g11[ijk];
+    double g12 = I->g12[ijk];
+    double g22 = I->g22[ijk];
+    g = g00*g11*g22 - g00*pow(g12, 2) - pow(g01, 2)*g22 + 
+        2*g01*g02*g12 - pow(g02, 2)*g11;/* determinant */
+    Fv[ijk] = fv[ijk]*sqrt(g)*J_xyzN0N1N2(&patch,ijk);
+  }
+  
+  Fc = make_coeffs_3d(F);
+  
+  for (i = 0; i < n[0]; ++i)
+    for (j = 0; j < n[1]; ++j)
+      for (k = 0; k < n[2]; ++k)
+      {
+        sum += Fc[L(n,i,j,k)]*
+          integral_conventional_ChebTn(n[0],i,th0i,th0f)*
+          integral_conventional_ChebTn(n[1],j,th1i,th1f)*
+          integral_conventional_ChebTn(n[2],k,th2i,th2f);
+      }
+        
+  sum *= -1.;/* - sign is for integration */
+  
+  remove_field(F);
+  free_temp_patch(&patch);
+  
+  return sum;
+}
+
 
 /* ->return value: integrating over the whole specified physical 
 // hypersurface of the patch that has collocation points of Chebyshev extrema and
@@ -462,27 +560,38 @@ static double f_xyz_dS_Cheb_Ext_Spec(Integration_T *const I)
   return sum;
 }
 
-/* taking the integral of Chebyshev T(n,x) appears in Chebyshev expansion
-// from {xi,xf}, namaly: f = c_{0}+c_{N-1}*T(N-1,x) + 2*sum c_{n}*T(n,x)
-// note: n is the coeffs number in c_{n} and N is total number of coeffs.
-// -> return value: integral_{xi}^{xf} T(n,x)dx */
-double Integrate_ChebTn(const Uint n,const double xi,const double xf)
+/* taking the integral of conventional Chebyshev T(n,x(theta)), i.e:
+// T(n,x(theta)) = 
+// 1                                            , if n == 0
+// first kind Chebyshev T_n(x(theta))           , if n == N-1
+// 2 times of first kind Chebyshev T_n(x(theta)), otherwise.
+// where N is total number of collocation points and x(theta) = cos(theta).
+// NOTE: theta = acos(x), thus if theta is not available one can take acos(x).
+//       this choice is for optimization purposes.
+// -> return value: integral_{th_i}^{th_f} T(n,x(theta))dx(thea) */
+static double integral_conventional_ChebTn(const Uint N,
+                                           const Uint n,
+                                           const double th_i,
+                                           const double th_f)
 {
-  if (fabs(xi) > 1. || fabs(xf) > 1.)
-    Error0("Bad argument for Int_ChebTn function.\n");
-    
-  const double i = acos(xi);
-  const double f = acos(xf);
-  double Int;
+  double Int = DBL_MAX;
   
-  if (n == 1)
-    Int = (cos(2*f) - cos(2*i))/4.;
+  if (n == 0)
+  {
+    Int = cos(th_f)-cos(th_i);
+  }
+  else if (n == 1)
+  {
+    Int = (cos(2*th_f) - cos(2*th_i))/4.;
+  }
   else
-    Int = (-cos(f)*cos(f*n) + cos(i)*cos(i*n) -
-           n*sin(f)*sin(f*n) + n*sin(i)*sin(i*n))/
+  {
+    Int = (-cos(th_f)*cos(th_f*n) + cos(th_i)*cos(th_i*n) -
+           n*sin(th_f)*sin(th_f*n) + n*sin(th_i)*sin(th_i*n))/
            (Pow2(n)-1.);
-     
-  return Int;
+  }
+  
+  return (n == 0 || n == N-1 ? Int : 2.*Int);
 }
 
 /* OPTIMIZED version of the integral of Chebyshev T(n,x) appears in Chebyshev expansion
