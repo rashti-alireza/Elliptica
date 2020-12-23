@@ -17,6 +17,10 @@
 //        Note: definition of ADM quantities are only held when
 //        asymptotic flat gauge conditions are satisfied.
 //        (arXiv:gr-qc/0703035v1) a counter example is Painleve-Gullstrand.
+//        the used method is very sensitive to fluctuation of the 
+//        volume integrand. But, if the metric is conformally flat
+//        and the slice is maximal there would be no error.
+//        Note: ADM(P,J)|BH is a very crude approximation.
 // ----------------------------------------------------------------------
 //
 // "Komar(M)" #=> compute Komar mass for the given physics
@@ -27,12 +31,11 @@
 //        (arXiv:gr-qc/0703035v1) a counter example is Painleve-Gullstrand.
 //
 //        methods: [S_inf,S+V]
-//        S_inf: carry out integral at a S2 surface at inf
-//        	 does not depend on gauge but not very accurate.
+//        S_inf: carry out integral at a S2 surface at inf not very accurate.
 //               Notes:
 //               this method utilizes conformal factor and conformal
 //               metric, thus if conformal factor is const and metric 
-//               is flat this gives zero, example is Painleve-Gullstrand.
+//               is flat this gives zero.
 //
 //        S+V  : use Gauss lema to carry out the integral in a 
 //               volume and a closer surface than inf. 
