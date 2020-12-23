@@ -44,7 +44,7 @@ C_macro3 = declare_and_alloc_xi(name);
 `  const double x_cm = sysGetd("x_CM");`
 `  const double y_cm = sysGetd("y_CM");`
 `  const double z_cm = sysGetd("z_CM");`
-`  const double CutOff = 1E4;`
+`  const double CutOff = 1E8;`
 `  Uint p;`
 ``
 `  for(p = 0; p < N; ++p)`

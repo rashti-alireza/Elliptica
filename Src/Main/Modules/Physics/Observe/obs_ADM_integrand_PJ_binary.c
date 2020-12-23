@@ -31,7 +31,7 @@ void obs_populate_ADM_integrand_PdS_GdV_binary(const Observe_T *const obs)
   const double x_cm = sysGetd("x_CM");
   const double y_cm = sysGetd("y_CM");
   const double z_cm = sysGetd("z_CM");
-  const double CutOff = 1E4;
+  const double CutOff = 1E8;
   Uint p;
 
   for(p = 0; p < N; ++p)
