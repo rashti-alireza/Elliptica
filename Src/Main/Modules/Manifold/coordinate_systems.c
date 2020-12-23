@@ -305,7 +305,8 @@ static double dq_dN(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const 
                        a02 *a10 *a21  - a02 *a11 *a20  ;/* determinate */
     const Uint a = q2_e%3;
     const Uint b = q1_e%3;
-    assert(!EQL(det,0));
+    
+    //assert(!EQL(det,0));
     
     if (a == 0)
     {
