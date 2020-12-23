@@ -4,7 +4,8 @@
 #define IFss(X)  if(strstr_i(obs->quantity,X))
 #define IFsc(X)  if(strcmp_i(obs->quantity,X))
 
-/* put it to 1 if you want \int{Gdv} */
+/* put it to 1 if you want \int{Gdv}
+// this is mainly for test purposes. */
 #define VOLUME_INTEGRAL (1)
 
 void obs_calculate(Observe_T *const obs);
