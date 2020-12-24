@@ -14,7 +14,11 @@
 // ======================
 //
 // "ADM(P,J)" #=> compute P and J ADM for the given physics
-//        Note: definition of ADM quantities are only held when
+//        Note: the definition of ADM momentum is only held when
+//        asymptotic flat gauge conditions are satisfied.
+//        (arXiv:gr-qc/0703035v1) a counter example is Painleve-Gullstrand.
+//        Note: the definition of ADM angular momentum is only held when
+//        quasi-isotropic and asymptotically maximal gauge are satisfied.
 //        asymptotic flat gauge conditions are satisfied.
 //        (arXiv:gr-qc/0703035v1) a counter example is Painleve-Gullstrand.
 //        the used method is very sensitive to fluctuation of the 
@@ -41,11 +45,15 @@
 //
 //        S+V  : use Gauss lema to carry out the integral in a 
 //               volume and a closer surface than inf. 
-//               Notes:
-//               this is a gauge dependent and to be valid g_{ij} 
-//               must be decreasing as O(r^-1) and Kij as O(r^-2). 
+//               Notes:(ref. arXiv:gr-qc/0703035v1)
+//               this is a gauge dependent and to be valid gConf_{ij} 
+//               must be decreasing as O(r^-2) and K as O(r^-3). 
+//               this gauges are called quasi-isotropic and 
+//               asymptotically maximal gauge, respectively. as one notices
+//               these are stronger than asymptotically flat gauges.
 //               examples that not working with this method:
-//               Painleve-Gullstrand BH which fails g_{ij} condition, 
+//               Painleve-Gullstrand BH and Kerr-Schild which fail
+//               g_{ij} condition and the latter fails K too.
 //               furthermore, this method depends on conformal 
 //               factor psi thus if psi = const => 0.
 // ----------------------------------------------------------------------

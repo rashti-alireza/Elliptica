@@ -5,7 +5,9 @@
 #       up to 2-3% off! however, for maximal slices and conformally flat
 #       metric the contribution of this integral is zero.
 # NOTE: the volume integral must not cover matter, see arxiv:1506.01689.
-
+# NOTE: the definition of ADM angular momentum is only held when
+#       quasi-isotropic and asymptotically maximal gauge are satisfied,
+#       see arXiv:gr-qc/0703035v1.
 
 # Manifold or grid Dimension
 Dimension = 3;
