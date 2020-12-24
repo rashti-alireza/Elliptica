@@ -546,6 +546,7 @@ static void calc_ADM_PJ(Observe_T *const obs)
   Patch_T *patch       = 0;
   const char *region   = 0;
   struct items_S **adm = 0;
+  const double Fac_K_c = Pgetd(P_"ADM_PJ_outermost_factor");
   Uint N1 = 0;
   Uint N2 = 0;
   Uint n,ijk,nn;
@@ -699,7 +700,7 @@ static void calc_ADM_PJ(Observe_T *const obs)
         /* for 1 split */
         if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
         {
-          adm[n]->Ki = patch->n[2]/2;
+          adm[n]->Ki = (Uint)((patch->n[2]-1)*Fac_K_c);
           adm[n]->Kf = patch->n[2]-1;
         }
         /* 2 splits => the most accurate one */
@@ -732,7 +733,7 @@ static void calc_ADM_PJ(Observe_T *const obs)
         /* for 1 split */
         if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
         {
-          adm[n]->Ki = patch->n[2]/2;
+          adm[n]->Ki = (Uint)((patch->n[2]-1)*Fac_K_c);
           adm[n]->Kf = patch->n[2]-1;
         }
         /* 2 splits => the most accurate one */
@@ -812,7 +813,7 @@ static void calc_ADM_PJ(Observe_T *const obs)
         /* for 1 split */
         if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
         {
-          adm[n]->K = patch->n[2]/2;
+          adm[n]->K = (Uint)((patch->n[2]-1)*Fac_K_c);
         }
         /* 2 splits => the most accurate one */
         else if (Pgeti("grid_SplitCS_Nsplit_c") == 2)
@@ -847,7 +848,7 @@ static void calc_ADM_PJ(Observe_T *const obs)
         /* for 1 split */
         if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
         {
-          adm[n]->K = patch->n[2]/2;
+          adm[n]->K = (Uint)((patch->n[2]-1)*Fac_K_c);
         }
         /* 2 splits => the most accurate one */
         else if (Pgeti("grid_SplitCS_Nsplit_c") == 2)
