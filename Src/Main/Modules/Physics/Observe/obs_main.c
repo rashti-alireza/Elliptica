@@ -80,11 +80,6 @@
 // ret[0] = bh irreducible mass and ret[1] = AH physical(proper) area. */
 int observe(Physics_T *const phys,const char *const sq,double *const ret)
 {
-  /* set default parameters: */
-  /* the proportion of (patch->n[2]-1) for surface and 
-  // volume integral used in ADM(P,J) at outermost patches. */
-  Pset_default(P_"ADM_PJ_outermost_factor","0.5");
-  
   Observe_T *const obs = calloc(1,sizeof(*obs));
   IsNull(obs);
 

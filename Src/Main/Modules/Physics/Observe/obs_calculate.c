@@ -22,6 +22,12 @@ void obs_calculate(Observe_T *const obs)
   
   IFss("ADM(P,J)")
   {
+    /* set default parameters: */
+    /* the proportion of (patch->n[2]-1) for surface and 
+    // volume integral used in ADM(P,J) at outermost patches.
+    // note: this only kicks in for single split cubed spherical. */
+    Pset_default(P_"ADM_PJ_outermost_factor","0.5");
+    
     calc_ADM_PJ(obs);
   }
   else IFss("Komar(M)")
