@@ -25,6 +25,7 @@ void obs_calculate(Observe_T *const obs)
     /* set default parameters: */
     /* the proportion of (patch->n[2]-1) for surface and 
     // volume integral used in ADM(P,J) at outermost patches.
+    // the range is [0,1].
     // note: this only kicks in for single split cubed spherical. */
     Pset_default(P_"ADM_PJ_outermost_factor","0.5");
     
@@ -556,6 +557,8 @@ static void calc_ADM_PJ(Observe_T *const obs)
   Uint N1 = 0;
   Uint N2 = 0;
   Uint n,ijk,nn;
+  
+  assert(LSSEQL(Fac_K_c,1.) && GRTEQL(Fac_K_c,0.));
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
