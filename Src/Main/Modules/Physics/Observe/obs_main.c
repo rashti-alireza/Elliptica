@@ -30,6 +30,15 @@
 // ----------------------------------------------------------------------
 //
 // "Komar(M)" #=> compute Komar mass for the given physics
+//            NOTE: the definition of Komar mass is based upon a time 
+//            like Killing vector, thus, if we don't this symmetry
+//            we cannot use Komar mass. Also, in the integral surface
+//            formula, it is assumed Killing^mu = alpha n^mu + beta^mu
+//            which might not be true close to compact objects, however,
+//            this assumtion mostly correct when the surface integral
+//            is quite far away from the compact objects, since the space-time
+//            becomes Minkowski and this holds.
+//
 // ----------------------------------------------------------------------
 // "ADM(M)|method"   #=> compute Komar ADM for the given physics
 //        Note: definition of ADM quantities are only held when
