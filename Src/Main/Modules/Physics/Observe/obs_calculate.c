@@ -901,6 +901,7 @@ static void calc_ADM_PJ(Observe_T *const obs)
 /* calculate Komar mass for various objects */
 static void calc_Kommar_mass(Observe_T *const obs)
 {
+  const Uint AH_K_away = 3;/* number of patches away from AH. */
   Grid_T *const grid= obs->grid;  
   Patch_T **patches = 0;
   Patch_T *patch    = 0;
@@ -913,14 +914,11 @@ static void calc_Kommar_mass(Observe_T *const obs)
   {
     IFsc("Komar(M)|BHNS")
     {
-      /* from experience outermost patches are in accurate.
-      // on the other hand we need only S2. */
-      Error0("where must be S2 integration!");
-      region = "BH_around_OB,NS_around_OB";
+      region = "BH_around_IB,NS_around_IB";
     }
     else IFsc("Komar(M)|NS")
     {
-      region = "NS_OB";
+      region = "NS_around_IB";
     }
     else IFsc("Komar(M)|BH")
     {
@@ -1000,7 +998,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
         /* surface integral */
         Komar[n]->surface_integration_flg = 1;
         Komar[n]->Z_surface = 1;
-        Komar[n]->K = patch->n[2]-1;
+        Komar[n]->K = 0;
         n_physical_metric_around(Komar[n],_c_);
       }
       else IFsc("Komar(M)|NS")
@@ -1008,7 +1006,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
         /* surface integral */
         Komar[n]->surface_integration_flg = 1;
         Komar[n]->Z_surface = 1;
-        Komar[n]->K = patch->n[2]-1;
+        Komar[n]->K = 0;
         n_physical_metric_around(Komar[n],_c_);
       }
       else IFsc("Komar(M)|BH")
@@ -1024,7 +1022,8 @@ static void calc_Kommar_mass(Observe_T *const obs)
         /* surface integral */
         Komar[n]->surface_integration_flg = 1;
         Komar[n]->Z_surface = 1;
-        Komar[n]->K = 0;/* NOTE: topology of the surface MUST be S2 */
+        Komar[n]->K = AH_K_away;/* topology of the surface MUST be S2 */
+        assert(AH_K_away < patch->n[2]);
         n_physical_metric_around(Komar[n],_c_);
       }
       else
