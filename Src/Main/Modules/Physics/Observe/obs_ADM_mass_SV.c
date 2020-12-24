@@ -18,7 +18,7 @@ double obs_ADM_mass_SV(Observe_T *const obs)
   double adm_mass = 0;
   struct items_S **adm = obs->items;
   const Uint N = obs->Nitems;
-  const double CUTOFF = 1E6;
+  const double CutOff = 1E8;
   Uint p;
 
   for(p = 0; p < N; ++p)
@@ -114,7 +114,7 @@ n_U2[ijk];
       DEF_RELATIVE_y
       DEF_RELATIVE_z
       DEF_RELATIVE_r
-      double att = r > CUTOFF ? 0:1;
+      double att = r > CutOff ? 0:1;
       double M_v = 
 -ChrisConf_U0D0D0[ijk]*dpsi_D0[ijk]*igConf_U0U0[ijk] - 2.0*
 ChrisConf_U0D0D1[ijk]*dpsi_D0[ijk]*igConf_U0U1[ijk] - 2.0*

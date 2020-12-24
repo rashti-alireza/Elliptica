@@ -23,7 +23,7 @@ C_macro2 = add_and_get_field(name);
 `  double adm_mass = 0;`
 `  struct items_S **adm = obs->items;`
 `  const Uint N = obs->Nitems;`
-`  const double CUTOFF = 1E6;`
+`  const double CutOff = 1E8;`
 `  Uint p;`
 ``
 `  for(p = 0; p < N; ++p)`
@@ -120,7 +120,7 @@ Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 `      DEF_RELATIVE_y`
 `      DEF_RELATIVE_z`
 `      DEF_RELATIVE_r`
-`      double att = r > CUTOFF ? 0:1;`
+`      double att = r > CutOff ? 0:1;`
        M_v = igConf(i,j)*ddpsi(-i,-j) -\
              igConf(-i,-j)*ChrisConf(l,i,j)*dpsi(-l);
 `      ADM_mass_integrand_V[ijk] = M_v*att;`
