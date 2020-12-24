@@ -3134,6 +3134,10 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
   Pseti(P_"SplitCS_Nsplit_a",(int)Nsd[0]);
   Pseti(P_"SplitCS_Nsplit_b",(int)Nsd[1]);
   Pseti(P_"SplitCS_Nsplit_c",(int)Nsd[2]);
+  /* current number of splits in each direction (global parameter) */
+  Pseti("grid_SplitCS_Nsplit_a",(int)Nsd[0]);
+  Pseti("grid_SplitCS_Nsplit_b",(int)Nsd[1]);
+  Pseti("grid_SplitCS_Nsplit_c",(int)Nsd[2]);
   
   /* test */
   if(Verbose)
