@@ -104,7 +104,7 @@ double dot(const Uint n, const double *const v2,const double *const v1)
 */
 double ABS(const double v)
 {
-  return v > 0 ? v : -v;
+  return (v > 0. ? v : -v);
 }
 
 /* finding summation of functional derivative of Chebyshev coefficients
