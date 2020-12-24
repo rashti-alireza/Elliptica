@@ -21,6 +21,8 @@
 //        volume integrand. But, if the metric is conformally flat
 //        and the slice is maximal there would be no error.
 //        Note: ADM(P,J)|BH is a very crude approximation.
+//        Note: for the best result multiple split at the outermost 
+//        patches recommended.
 // ----------------------------------------------------------------------
 //
 // "Komar(M)" #=> compute Komar mass for the given physics

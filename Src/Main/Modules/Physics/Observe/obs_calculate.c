@@ -535,7 +535,9 @@ static void Rc_BH(Observe_T *const obs)
 }
 
 
-/* calculate adm P and J for various objects */
+/* calculate adm P and J for various objects 
+// NOTE: the accuracy of this method required to take the integral in
+// outermost patches where the metric is conformally flat and trK = 0. */
 static void calc_ADM_PJ(Observe_T *const obs)
 {
   Grid_T *const grid   = obs->grid;  
@@ -554,11 +556,29 @@ static void calc_ADM_PJ(Observe_T *const obs)
     IFsc("ADM(P,J)|BHNS")
     {
       /* volume part */
-      region   = "outermost,filling_box,NS_around,BH_around";
+      region   = "outermost_OB";
       patches1 = collect_patches(grid,region,&N1);
-      /* surface part */
-      region   = "NS_around_IB,BH_around_IB";
-      patches2 = collect_patches(grid,region,&N2);
+      
+      /* for 1 split */
+      if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
+      {
+        /* surface part */
+        region   = "outermost_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      /* 2 splits => the most accurate one */
+      else if (Pgeti("grid_SplitCS_Nsplit_c") == 2)
+      {
+        /* surface part */
+        region   = "outermost_IB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else/* more than 3 */
+      {
+        /* surface part */
+        region   = "outermost_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
     }
     else IFsc("ADM(P,J)|NS")
     {
@@ -577,8 +597,34 @@ static void calc_ADM_PJ(Observe_T *const obs)
       /* volume part */
       region   = "outermost_OB";
       patches1 = collect_patches(grid,region,&N1);
+      
+      /* for 1 split */
+      if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
+      {
+        /* surface part */
+        region   = "outermost_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      /* 2 splits => the most accurate one */
+      else if (Pgeti("grid_SplitCS_Nsplit_c") == 2)
+      {
+        /* surface part */
+        region   = "outermost_IB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else/* more than 3 */
+      {
+        /* surface part */
+        region   = "outermost_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+    }
+    else IFsc("ADM(P,J)|NSNS")
+    {
+      /* NOTE:for maximal slice and conformal flat metric 
+      // volume integral is 0. like the case we have for NSNS */
       /* surface part */
-      region   = "outermost_IB";
+      region   = "NS1_OB,NS2_OB";
       patches2 = collect_patches(grid,region,&N2);
     }
     else
@@ -645,15 +691,36 @@ static void calc_ADM_PJ(Observe_T *const obs)
     {
       IFsc("ADM(P,J)|BHNS")
       {
-      ;
+        adm[n]->vol_integration_type = "Integral{f(x)dV}[i,f],Spectral";
+        adm[n]->Ii = 0;
+        adm[n]->If = patch->n[0]-1;
+        adm[n]->Ji = 0;
+        adm[n]->Jf = patch->n[1]-1;
+        /* for 1 split */
+        if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
+        {
+          adm[n]->Ki = patch->n[2]/2;
+          adm[n]->Kf = patch->n[2]-1;
+        }
+        /* 2 splits => the most accurate one */
+        else if (Pgeti("grid_SplitCS_Nsplit_c") == 2)
+        {
+          adm[n]->Ki = 0;
+          adm[n]->Kf = patch->n[2]-1;
+        }
+        else/* more than 3 */
+        {
+          adm[n]->Ki = 0;
+          adm[n]->Kf = patch->n[2]-1;
+        }
       }
       else IFsc("ADM(P,J)|NS")
       {
-      ;
+        ;/* nothing, to keep all options this empty if stays here */
       }
       else IFsc("ADM(P,J)|BH")
       {
-        ;
+        ;/* nothing, to keep all options this empty if stays here */
       }
       else IFsc("ADM(P,J)|SBH")
       {
@@ -661,9 +728,24 @@ static void calc_ADM_PJ(Observe_T *const obs)
         adm[n]->Ii = 0;
         adm[n]->If = patch->n[0]-1;
         adm[n]->Ji = 0;
-        adm[n]->Kf = patch->n[1]-1;
-        adm[n]->Ki = 0;
-        adm[n]->Kf = patch->n[2]-1;
+        adm[n]->Jf = patch->n[1]-1;
+        /* for 1 split */
+        if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
+        {
+          adm[n]->Ki = patch->n[2]/2;
+          adm[n]->Kf = patch->n[2]-1;
+        }
+        /* 2 splits => the most accurate one */
+        else if (Pgeti("grid_SplitCS_Nsplit_c") == 2)
+        {
+          adm[n]->Ki = 0;
+          adm[n]->Kf = patch->n[2]-1;
+        }
+        else/* more than 3 */
+        {
+          adm[n]->Ki = 0;
+          adm[n]->Kf = patch->n[2]-1;
+        }
       }
       else
       {
@@ -726,7 +808,21 @@ static void calc_ADM_PJ(Observe_T *const obs)
       {
         adm[n]->surface_integration_flg = 1;
         adm[n]->Z_surface = 1;
-        adm[n]->K = 0;
+        
+        /* for 1 split */
+        if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
+        {
+          adm[n]->K = patch->n[2]/2;
+        }
+        /* 2 splits => the most accurate one */
+        else if (Pgeti("grid_SplitCS_Nsplit_c") == 2)
+        {
+          adm[n]->K = patch->n[2]-1;
+        }
+        else/* more than 3 */
+        {
+          adm[n]->K = 0;
+        }
         n_physical_metric_around(adm[n],_c_);
       }
       else IFsc("ADM(P,J)|NS")
@@ -746,10 +842,22 @@ static void calc_ADM_PJ(Observe_T *const obs)
       else IFsc("ADM(P,J)|SBH")
       {
         adm[n]->surface_integration_flg = 1;
-        adm[n]->vol_integration_type = "Integral{f(x)dV}[i,f],Spectral";
-        
         adm[n]->Z_surface = 1;
-        adm[n]->K = patch->n[2]-1;
+        
+        /* for 1 split */
+        if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
+        {
+          adm[n]->K = patch->n[2]/2;
+        }
+        /* 2 splits => the most accurate one */
+        else if (Pgeti("grid_SplitCS_Nsplit_c") == 2)
+        {
+          adm[n]->K = patch->n[2]-1;
+        }
+        else/* more than 3 */
+        {
+          adm[n]->K = 0;
+        }
         n_physical_metric_around(adm[n],_c_);
       }
       else
