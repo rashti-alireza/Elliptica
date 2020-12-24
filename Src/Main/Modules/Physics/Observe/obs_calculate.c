@@ -901,32 +901,46 @@ static void calc_ADM_PJ(Observe_T *const obs)
 /* calculate Komar mass for various objects */
 static void calc_Kommar_mass(Observe_T *const obs)
 {
-  const Uint AH_K_away = 3;/* number of patches away from AH. */
-  Grid_T *const grid= obs->grid;  
-  Patch_T **patches = 0;
-  Patch_T *patch    = 0;
+  Grid_T *const grid = obs->grid;  
+  Patch_T **patches1   = 0;/* for volume integrals */
+  Patch_T **patches2   = 0;/* for surface integrals */
+  Patch_T *patch       = 0;
+  const char *region   = 0;
   struct items_S **Komar = 0;
-  const char *region = 0;
-  Uint n,N,ijk,nn;
+  const Uint AH_K_away   = 3;/* number of patches away from AH. */
+  Uint N1 = 0;
+  Uint N2 = 0;
+  Uint n,ijk,nn;
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
   {
     IFsc("Komar(M)|BHNS")
     {
-      region = "BH_around_IB,NS_around_IB";
+      /* volume part */
+      region   = "NS";
+      patches1 = collect_patches(grid,region,&N1);
+      /* surface part */
+      region   = "BH_around_IB";
+      patches2 = collect_patches(grid,region,&N2); 
     }
     else IFsc("Komar(M)|NS")
     {
-      region = "NS_around_IB";
+      /* volume part */
+      region = "NS";
+      patches1 = collect_patches(grid,region,&N1);
     }
     else IFsc("Komar(M)|BH")
     {
-      region = "BH_around_IB";
+      /* surface part */
+      region   = "BH_around_IB";
+      patches2 = collect_patches(grid,region,&N2); 
     }
     else IFsc("Komar(M)|SBH")
     {
-      region = "BH_around_OB";
+      /* surface part */
+      region   = "BH_around_OB";
+      patches2 = collect_patches(grid,region,&N2); 
     }
     else
     {
@@ -938,22 +952,63 @@ static void calc_Kommar_mass(Observe_T *const obs)
     Error0(NO_OPTION);
   }
   
-  /* first collect all of the patches required */
-  patches = collect_patches(grid,region,&N);
-  
   /* alloc memory for all patches */
-  Komar = calloc(N,sizeof(*Komar));
+  Komar = calloc(N1+N2,sizeof(*Komar));
   IsNull(Komar);
   /* this is where we link to obs struct */
   obs->items = Komar;
-  obs->Nitems = N;
+  obs->Nitems = N1+N2;
       
-  /* fill Komar struct for each patch */
-  for (n = 0; n < N; ++n)
+  /* fill Komar struct for each patch volume part */
+  for (n = 0; n < N1; ++n)
   {
     Komar[n] = calloc(1,sizeof(*Komar[n]));
     IsNull(Komar[n]);
-    patch = patches[n];
+    patch = patches1[n];
+    nn    = patch->nn;
+    
+    double *g00 = alloc_double(nn);
+    double *g01 = alloc_double(nn);
+    double *g02 = alloc_double(nn);
+    double *g11 = alloc_double(nn);
+    double *g12 = alloc_double(nn);
+    double *g22 = alloc_double(nn);
+    
+    READ_v(gConf_D2D2)
+    READ_v(gConf_D0D2)
+    READ_v(gConf_D0D0)
+    READ_v(gConf_D0D1)
+    READ_v(gConf_D1D2)
+    READ_v(gConf_D1D1)
+    READ_v(psi);
+    
+    Komar[n]->patch = patch;
+    /* populate metric components */ 
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
+      g00[ijk] = psi4*gConf_D0D0[ijk];
+      g01[ijk] = psi4*gConf_D0D1[ijk];
+      g02[ijk] = psi4*gConf_D0D2[ijk];
+      g11[ijk] = psi4*gConf_D1D1[ijk];
+      g12[ijk] = psi4*gConf_D1D2[ijk];
+      g22[ijk] = psi4*gConf_D2D2[ijk];
+    }
+    Komar[n]->g00 = g00;
+    Komar[n]->g01 = g01;
+    Komar[n]->g02 = g02;
+    Komar[n]->g11 = g11;
+    Komar[n]->g12 = g12;
+    Komar[n]->g22 = g22;
+  }
+  Free(patches1);
+  
+  /* fill Komar struct for each patch surface part */
+  for (n = N1; n < N1+N2; ++n)
+  {
+    Komar[n] = calloc(1,sizeof(*Komar[n]));
+    IsNull(Komar[n]);
+    patch = patches2[n-N1];
     nn    = patch->nn;
     
     double *g00 = alloc_double(nn);
@@ -1003,11 +1058,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
       }
       else IFsc("Komar(M)|NS")
       {
-        /* surface integral */
-        Komar[n]->surface_integration_flg = 1;
-        Komar[n]->Z_surface = 1;
-        Komar[n]->K = 0;
-        n_physical_metric_around(Komar[n],_c_);
+        ;
       }
       else IFsc("Komar(M)|BH")
       {
@@ -1036,9 +1087,9 @@ static void calc_Kommar_mass(Observe_T *const obs)
       Error0(NO_OPTION);
     }
   }
-  obs->ret[0] = obs_Komar_mass(obs);
+  Free(patches2);
   
-  Free(patches);
+  obs->ret[0] = obs_Komar_mass(obs);
 }
 
 /* calculate ADM mass for various objects */
