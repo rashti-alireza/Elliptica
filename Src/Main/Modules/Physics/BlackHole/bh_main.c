@@ -61,7 +61,10 @@ static int set_black_hole_params(Physics_T *const phys)
   FUNC_TIC
 
   /* these parameters have a prefix BH.?_ and 
-  // they are supposed to be added in parameter file:
+  // they are supposed to be added in parameter file
+  // since they are soft parameters. soft parameters
+  // can be used by different projects and not only this one.
+  // that's why they are not prefixed by macro P_.
   //
   // params:
   // =======
