@@ -38,6 +38,8 @@
 //            this assumtion mostly correct when the surface integral
 //            is quite far away from the compact objects, since the space-time
 //            becomes Minkowski and this holds.
+//            NOTE: the accuracy decreases if the integrating surface
+//            is not a diifeomorphism (C^inf continuous) to S2.
 //
 // ----------------------------------------------------------------------
 // "ADM(M)|method"   #=> compute Komar ADM for the given physics
