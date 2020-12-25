@@ -62,6 +62,7 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
     break;
     
     case SYS_SET_PARAMS:
+    case SYS_ADD_FIELDS:
     case SYS_TUNE_P_ADM:
     case SYS_INITIALIZE_FIELDS:
       ret = sys_main(phys);
@@ -78,6 +79,11 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
     case ADM_COMPUTE_CONSTRAINTS:
     case ADM_DOCTEST:
       ret = adm_main(phys);
+    break;
+    
+    case OBSERVE_SET_PARAMS:
+    case OBSERVE_ADD_FIELDS:
+      ret = observe_main(phys);
     break;
     
     default:

@@ -164,6 +164,7 @@ typedef enum CMD_T
  
  /* system related */
  SYS_SET_PARAMS,/* set params */
+ SYS_ADD_FIELDS,/* add fields */
  SYS_TUNE_P_ADM,/* adjust P_adm of the system */
  SYS_INITIALIZE_FIELDS,/* start off with these fields */
  
@@ -178,6 +179,10 @@ typedef enum CMD_T
  ADM_UPDATE_B1I,/* beta = B0+B1 in which B1 can be inspiral piece */
  ADM_COMPUTE_CONSTRAINTS,/* ham and mom constrains */
  ADM_DOCTEST,/* some internal tests */
+ 
+ /* observe related */
+ OBSERVE_SET_PARAMS,/* set params */
+ OBSERVE_ADD_FIELDS,/* add fields */
  
  CMD_END
 }cmd_T;
