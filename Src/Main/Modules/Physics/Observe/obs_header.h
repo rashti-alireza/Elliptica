@@ -11,7 +11,7 @@
 #include "physics_lib.h"
 
 /* prefix of parameters for this project */
-#define P_ "obs_"
+#define P_ "observe_"
 
 
 /* items needed to calculate Ps and Js ADMs */
