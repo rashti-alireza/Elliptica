@@ -14,18 +14,18 @@
 // ======================
 //
 // "ADM(P,J)" #=> compute P and J ADM for the given physics
-//        Note: the definition of ADM momentum is only held when
+//        NOTE: the definition of ADM momentum is only held when
 //        asymptotic flat gauge conditions are satisfied.
 //        (arXiv:gr-qc/0703035v1) a counter example is Painleve-Gullstrand.
-//        Note: the definition of ADM angular momentum is only held when
+//        NOTE: the definition of ADM angular momentum is only held when
 //        quasi-isotropic and asymptotically maximal gauge are satisfied.
 //        asymptotic flat gauge conditions are satisfied.
 //        (arXiv:gr-qc/0703035v1) a counter example is Painleve-Gullstrand.
 //        the used method is very sensitive to fluctuation of the 
 //        volume integrand. But, if the metric is conformally flat
 //        and the slice is maximal there would be no error.
-//        Note: ADM(P,J)|BH is a very crude approximation.
-//        Note: for the best result multiple split at the outermost 
+//        NOTE: ADM(P,J)|BH is a very crude approximation.
+//        NOTE: for the best result multiple split at the outermost 
 //        patches recommended.
 // ----------------------------------------------------------------------
 //
@@ -40,23 +40,25 @@
 //            becomes Minkowski and this holds.
 //            NOTE: the accuracy decreases if the integrating surface
 //            is not a diifeomorphism (C^inf continuous) to S2.
+//            NOTE: ADM mass is generally not equal to Komar mass unless
+//            lapse -> 1 and shift -> 0 at spatial infinity in the foliation.
 //
 // ----------------------------------------------------------------------
 // "ADM(M)|method"   #=> compute Komar ADM for the given physics
-//        Note: definition of ADM quantities are only held when
+//        NOTE: definition of ADM quantities are only held when
 //        asymptotic flat gauge conditions are satisfied.
 //        (arXiv:gr-qc/0703035v1) a counter example is Painleve-Gullstrand.
 //
 //        methods: [S_inf,S+V]
 //        S_inf: carry out integral at a S2 surface at inf not very accurate.
-//               Notes:
+//               NOTE:
 //               this method utilizes conformal factor and conformal
 //               metric, thus if conformal factor is const and metric 
 //               is flat this gives zero.
 //
 //        S+V  : use Gauss lema to carry out the integral in a 
 //               volume and a closer surface than inf. 
-//               Notes:(ref. arXiv:gr-qc/0703035v1)
+//               NOTE:(ref. arXiv:gr-qc/0703035v1)
 //               this is a gauge dependent and to be valid gConf_{ij} 
 //               must be decreasing as O(r^-2) and K as O(r^-3). 
 //               this gauges are called quasi-isotropic and 
