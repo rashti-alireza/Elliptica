@@ -19,29 +19,25 @@
 // 6. call the pertinent functions for the calculation. */
 void obs_calculate(Observe_T *const obs)
 {
-  
-  IFss("ADM(P,J)")
+  IFss("ADM(P)")
   {
-    /* set default parameters: */
-    /* the proportion of (patch->n[2]-1) for surface and 
-    // volume integral used in ADM(P,J) at outermost patches.
-    // the range is [0,1].
-    // note: this only kicks in for single split cubed spherical. */
-    Pset_default(P_"ADM_PJ_outermost_factor","0.5");
-    
-    calc_ADM_PJ(obs);
+    calc_ADM_P(obs);
   }
-  else IFss("Komar(M)")
+  else IFss("ADM(J)")
   {
-    calc_Kommar_mass(obs);
+    calc_ADM_J(obs);
   }
   else IFss("ADM(M)")
   {
     calc_ADM_mass(obs);
   }
-  else IFsc ("Irreducible(M)|BH")
+  else IFss("Komar(M)")
   {
-    obs_BH_irreducible_mass_CS(obs);
+    calc_Kommar_mass(obs);
+  }
+  else IFss("Irreducible(M)")
+  {
+    calc_irreducible_BH_mass(obs);
   }
   else IFsc("CM|BH")
   {
@@ -1566,4 +1562,30 @@ static double integral_ADM_PJ(Observe_T *const obs,
   
   ret /= (8*M_PI);
   return ret;
+}
+
+
+/* calculate irreducible mass of BH */
+static void calc_irreducible_BH_mass(Observe_T *const obs)
+{
+  Physics_T *const phys = obs->phys;
+  Grid_T *const grid    = obs->grid;
+  
+  if (IsIt(P_"Irreducible_M"),"S_obj")
+  {
+    if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_SBH)
+    {
+      obs_BH_irreducible_mass_CS(obs);
+    }
+    else
+    {
+      Errro0(NO_OPTION);
+    }
+  }
+  else
+  {
+    Error0(NO_OPTION);
+  }
+
 }

@@ -24,7 +24,6 @@ static void calc_Kommar_mass(Observe_T *const obs);
 static double integral_ADM_PJ(Observe_T *const obs,
                               const char *const sP/* integrand for S */,
                               const char *const sG/* intergrand for V */);
-
-
+static void calc_irreducible_BH_mass(Observe_T *const obs);
 
 

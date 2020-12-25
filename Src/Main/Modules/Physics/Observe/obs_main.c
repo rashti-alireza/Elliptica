@@ -259,6 +259,14 @@ static int set_observe_params(Physics_T *const phys)
   // S+V  : over all space and on BH surface if any. */
   Pset_default(MyParam(P_"ADM_M"),"S+V");
   
+  /* how to compute irreducible mass of BH.?:
+  // param name: MyParam(P_"irreducible_M")
+  // options:
+  // S_obj: over the surface of compact object (for single physics)
+  //
+  // NOTE: since this is very physics dependent, it's added in parameter
+  // file and no default is required here. */
+  
   UNUSED(phys);
   FUNC_TOC
   return EXIT_SUCCESS;  
