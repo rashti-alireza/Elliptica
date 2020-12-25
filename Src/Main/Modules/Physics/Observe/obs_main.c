@@ -243,7 +243,7 @@ static int set_observe_params(Physics_T *const phys)
   // S_obj: over the surface of compact object (for single physics)
   // V_obj: over the volume of compact object (for single physics)
   // S+V  : over all space and on BH surface if any. */
-  Pset_default(P_"Komar_M","S+V");
+  Pset_default(MyParam(P_"Komar_M"),"S+V");
   
   UNUSED(phys);
   FUNC_TOC
