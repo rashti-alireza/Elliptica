@@ -20,6 +20,10 @@ int sys_main(Physics_T *const phys)
       ret = set_system_params(phys);
     break;
     
+    case SYS_ADD_FIELDS:
+      ret = add_system_fields(phys);
+    break;
+    
     case SYS_TUNE_P_ADM:
       ret = tune_system_ADM_momenta(phys);
     break;
@@ -136,6 +140,15 @@ static int set_system_params(Physics_T *const phys)
   */
   Pset_default(P_"initialize","one_exact_KerrSchild");
 
+  UNUSED(phys);
+  FUNC_TOC
+  return EXIT_SUCCESS;
+}
+
+/* add fields. */
+static int add_system_fields(Physics_T *const phys)
+{
+  FUNC_TIC
   UNUSED(phys);
   FUNC_TOC
   return EXIT_SUCCESS;
