@@ -907,7 +907,6 @@ static void calc_Kommar_mass(Observe_T *const obs)
   Patch_T *patch       = 0;
   const char *region   = 0;
   struct items_S **Komar = 0;
-  const Uint AH_K_away   = 3;/* number of patches away from AH. */
   Uint N1 = 0;
   Uint N2 = 0;
   Uint n,ijk,nn;
@@ -1073,8 +1072,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
         /* surface integral */
         Komar[n]->surface_integration_flg = 1;
         Komar[n]->Z_surface = 1;
-        Komar[n]->K = AH_K_away;/* topology of the surface MUST be S2 */
-        assert(AH_K_away < patch->n[2]);
+        Komar[n]->K = 0;
         n_physical_metric_around(Komar[n],_c_);
       }
       else
