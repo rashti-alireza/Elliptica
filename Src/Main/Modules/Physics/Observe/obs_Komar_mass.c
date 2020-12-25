@@ -174,7 +174,6 @@ beta_U2[ijk] - dalpha_U2);
     plan_integration(I);
     Komar_mass += execute_integration(I)/(4*M_PI);
     free_integration(I);
-    REMOVE_FIELD(patch->fields[Ind("obs_komar_mass__s")]);
   }
   else
   {
@@ -225,10 +224,11 @@ beta_U1[ijk]*gConf_D1D2[ijk] + J_U2*beta_U2[ijk]*gConf_D2D2[ijk]);
     plan_integration(I);
     Komar_mass += execute_integration(I);
     free_integration(I);
-    REMOVE_FIELD(patch->fields[Ind("obs_komar_mass__v")]);
 
   }
 
+  REMOVE_FIELD(patch->fields[Ind("obs_komar_mass__s")]);
+  REMOVE_FIELD(patch->fields[Ind("obs_komar_mass__v")]);
   }
 
   return Komar_mass;

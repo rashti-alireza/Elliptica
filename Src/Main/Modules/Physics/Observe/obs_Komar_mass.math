@@ -120,7 +120,6 @@ Symm[gConf(i,j)   = gConf(j,i)];
 `    plan_integration(I);`
 `    Komar_mass += execute_integration(I)/(4*M_PI);`
 `    free_integration(I);`
-`    REMOVE_FIELD(patch->fields[Ind("obs_komar_mass__s")]);`
 `  }`
 `  else`
 `  {`
@@ -148,10 +147,11 @@ Symm[gConf(i,j)   = gConf(j,i)];
 `    plan_integration(I);`
 `    Komar_mass += execute_integration(I);`
 `    free_integration(I);`
-`    REMOVE_FIELD(patch->fields[Ind("obs_komar_mass__v")]);`
 ``
 `  }`# end of else
 ``
+`  REMOVE_FIELD(patch->fields[Ind("obs_komar_mass__s")]);`
+`  REMOVE_FIELD(patch->fields[Ind("obs_komar_mass__v")]);`
 `  }`# end of FOR_ALL_PATCHES
 ``
 `  return Komar_mass;`
