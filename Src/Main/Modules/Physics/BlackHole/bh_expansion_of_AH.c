@@ -154,6 +154,8 @@ AConfIJ_U2U2[ijk]*bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*gConf_D1D2[ijk]*
 gConf_D2D2[ijk] + AConfIJ_U2U2[ijk]*pow(bh_sConf_U2[ijk], 2)*
 pow(gConf_D2D2[ijk], 2))/pow(psi[ijk], 3);
 
+
+  Theta = fabs(Theta);
   max = (max < Theta ? Theta: max);
  }
  }

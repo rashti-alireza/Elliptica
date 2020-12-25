@@ -70,7 +70,8 @@ DisConfI = (dbh_sConf(j,i) + ChrisConf(j,i,l)*bh_sConf(-l))*KD(-j,-i);
 Theta    = bh_sConf(i)*dpsi(-i) + \
            psi*DisConfI/4 - trK*(psi**3)/6 +\
            (psi**-3)*AConfIJ(i,j)*gConf(-i,-l)*gConf(-j,-m)*bh_sConf(l)*bh_sConf(m)/4;
-
+``
+`  Theta = fabs(Theta);`
 `  max = (max < Theta ? Theta: max);`
 ` }`
 ` }`
