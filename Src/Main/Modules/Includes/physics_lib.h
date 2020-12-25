@@ -94,6 +94,10 @@
 #define sysSets(param_name,val) \
 {sprintf(phys->par,"%s_%s",phys->ssys,param_name); Psets(phys->par,(val));}
 
+/* return param name prefixed with appropriate physics */
+#define MyParam(param_name) \
+(sprintf(phys->par,"%s_%s",phys->stype,param_name) ? phys->par : NULL)
+
 
 /* handy string comparison against various values */
 #define IF_sval(par,val) if(strcmp_i(Gets(par),val))
