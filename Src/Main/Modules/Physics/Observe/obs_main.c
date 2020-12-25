@@ -89,6 +89,28 @@
 
 #include "obs_main.h"
 
+/* main function for mainly initialization */
+int observe_main(Physics_T *const phys)
+{
+  int ret = EXIT_SUCCESS;
+  
+  switch (phys->cmd)
+  {
+    case OBSERVE_SET_PARAMS:
+      ret = set_observe_params(phys);
+    break;
+    
+    case OBSERVE_ADD_FIELDS:
+      ret = add_observe_fields(phys);
+    break;
+    
+    default:
+      Error0(NO_OPTION);
+  }
+  
+  return ret;
+}
+
 /* calculate the quantity of interest sq based on given physics 
 // and then return in ret variable. 
 // NOTE: one must provide enough memory for return value in ret; 
@@ -208,5 +230,32 @@ static void free_obs(Observe_T *obs)
   }
   Free(adm);
   free(obs); 
+}
+
+/* set default paramters */
+static int set_observe_params(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  /* how to compute Komar mass:
+  // options:
+  // S_inf: on a surface at infinity. 
+  // S_obj: over the surface of compact object (for single physics)
+  // V_obj: over the volume of compact object (for single physics)
+  // S+V  : over all space and on BH surface if any. */
+  Pset_default(P_"Komar_M","S+V");
+  
+  UNUSED(phys);
+  FUNC_TOC
+  return EXIT_SUCCESS;  
+}
+
+/* add fields */
+static int add_observe_fields(Physics_T *const phys)
+{
+  FUNC_TIC
+  UNUSED(phys);
+  FUNC_TOC
+  return EXIT_SUCCESS;  
 }
 

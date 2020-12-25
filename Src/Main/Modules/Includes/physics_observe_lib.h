@@ -24,7 +24,7 @@ typedef struct OBSERVE_T
   
 }Observe_T;
 
-
+int observe_main(struct PHYSICS_T *const phys);
 int observe(struct PHYSICS_T *const phys,const char *const sq,double *const ret);
 
 #undef OBSERVE_STR_LEN
