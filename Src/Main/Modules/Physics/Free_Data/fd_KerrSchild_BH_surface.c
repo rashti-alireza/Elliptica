@@ -1,8 +1,8 @@
 #include "fd_KerrSchild_BH_surface.h"
 
 /* ->: alloc and populate radius for surface of BH
-// find apparent horizon (surface) of a Kerr-Schild BH
-// with arbitrary boost and spin. 
+// find EVENT HORIZON intersected with the slice of a Kerr-Schild BH
+// with arbitrary boost and spin. In principle it is different with AH.
 // NOTE: R measured from the center of BH. */
 double *fd_find_KerrSchild_BH_surface(Physics_T *const phys)
 {
