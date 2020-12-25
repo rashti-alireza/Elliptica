@@ -916,18 +916,44 @@ static void calc_Kommar_mass(Observe_T *const obs)
   {
     IFsc("Komar(M)|BHNS")
     {
-      /* volume part */
-      region   = "NS";
-      patches1 = collect_patches(grid,region,&N1);
-      /* surface part */
-      region   = "BH_around_IB";
-      patches2 = collect_patches(grid,region,&N2); 
+      if (Pcmps(P_"Komar_M","S+V"))
+      {
+        /* volume part */
+        region   = "NS";
+        patches1 = collect_patches(grid,region,&N1);
+        /* surface part */
+        region   = "BH_around_IB";
+        patches2 = collect_patches(grid,region,&N2); 
+      }
+      else if (Pcmps(P_"Komar_M","S_inf"))
+      {
+        /* surface part */
+        region   = "outermost_OB";
+        patches2 = collect_patches(grid,region,&N2);  
+      }
+      else
+      {
+        Error0(NO_OPTION);
+      }
     }
     else IFsc("Komar(M)|NS")
     {
-      /* volume part */
-      region = "NS";
-      patches1 = collect_patches(grid,region,&N1);
+      if (Pcmps(P_"Komar_M","V_obj"))
+      {
+        /* volume part */
+        region = "NS";
+        patches1 = collect_patches(grid,region,&N1);
+      }
+      else if (Pcmps(P_"Komar_M","S_obj"))
+      {
+        /* surface part */
+        region = "NS_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else
+      {
+        Error0(NO_OPTION);
+      }
     }
     else IFsc("Komar(M)|BH")
     {
@@ -937,9 +963,22 @@ static void calc_Kommar_mass(Observe_T *const obs)
     }
     else IFsc("Komar(M)|SBH")
     {
-      /* surface part */
-      region   = "BH_around_OB";
-      patches2 = collect_patches(grid,region,&N2); 
+      if (Pcmps(P_"Komar_M","S_obj"))
+      {
+        /* surface part */
+        region   = "BH_around_IB";
+        patches2 = collect_patches(grid,region,&N2); 
+      }
+      else if (Pcmps(P_"Komar_M","S_inf"))
+      {
+        /* surface part */
+        region   = "outermost_OB";
+        patches2 = collect_patches(grid,region,&N2); 
+      }
+      else
+      {
+        Error0(NO_OPTION);
+      }
     }
     else
     {
@@ -1049,15 +1088,57 @@ static void calc_Kommar_mass(Observe_T *const obs)
     {
       IFsc("Komar(M)|BHNS")
       {
-        /* surface integral */
-        Komar[n]->surface_integration_flg = 1;
-        Komar[n]->Z_surface = 1;
-        Komar[n]->K = 0;
-        n_physical_metric_around(Komar[n],_c_);
+        if (Pcmps(P_"Komar_M","S+V"))
+        {
+          /* surface integral */
+          Komar[n]->surface_integration_flg = 1;
+          Komar[n]->Z_surface = 1;
+          Komar[n]->K = 0;
+          n_physical_metric_around(Komar[n],_c_);
+        }
+        else if (Pcmps(P_"Komar_M","S_inf"))
+        {
+          /* for 1 split */
+          if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
+          {
+            /* surface integral */
+            Komar[n]->surface_integration_flg = 1;
+            Komar[n]->Z_surface = 1;
+            Komar[n]->K = patch->n[2]-1;
+            n_physical_metric_around(Komar[n],_c_);
+          }
+          else
+          {
+            /* surface integral */
+            Komar[n]->surface_integration_flg = 1;
+            Komar[n]->Z_surface = 1;
+            Komar[n]->K = 0;
+            n_physical_metric_around(Komar[n],_c_);
+          }
+        }
+        else
+        {
+          Error0(NO_OPTION);
+        }
       }
       else IFsc("Komar(M)|NS")
       {
-        ;
+        if (Pcmps(P_"Komar_M","V_obj"))
+        {
+          ;
+        }
+        else if (Pcmps(P_"Komar_M","S_obj"))
+        {
+          /* surface integral */
+          Komar[n]->surface_integration_flg = 1;
+          Komar[n]->Z_surface = 1;
+          Komar[n]->K = patch->n[2]-1;
+          n_physical_metric_around(Komar[n],_c_);
+        }
+        else
+        {
+          Error0(NO_OPTION);
+        }
       }
       else IFsc("Komar(M)|BH")
       {
@@ -1069,11 +1150,38 @@ static void calc_Kommar_mass(Observe_T *const obs)
       }
       else IFsc("Komar(M)|SBH")
       {
-        /* surface integral */
-        Komar[n]->surface_integration_flg = 1;
-        Komar[n]->Z_surface = 1;
-        Komar[n]->K = 0;
-        n_physical_metric_around(Komar[n],_c_);
+        if (Pcmps(P_"Komar_M","S_obj"))
+        {
+          /* surface integral */
+          Komar[n]->surface_integration_flg = 1;
+          Komar[n]->Z_surface = 1;
+          Komar[n]->K = 0;
+          n_physical_metric_around(Komar[n],_c_);
+        }
+        else if (Pcmps(P_"Komar_M","S_inf"))
+        {
+          /* for 1 split */
+          if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
+          {
+            /* surface integral */
+            Komar[n]->surface_integration_flg = 1;
+            Komar[n]->Z_surface = 1;
+            Komar[n]->K = patch->n[2]-1;
+            n_physical_metric_around(Komar[n],_c_);
+          }
+          else
+          {
+            /* surface integral */
+            Komar[n]->surface_integration_flg = 1;
+            Komar[n]->Z_surface = 1;
+            Komar[n]->K = 0;
+            n_physical_metric_around(Komar[n],_c_);
+          }
+        }
+        else
+        {
+          Error0(NO_OPTION);
+        }
       }
       else
       {
