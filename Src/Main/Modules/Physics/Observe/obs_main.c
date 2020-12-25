@@ -232,10 +232,16 @@ static void free_obs(Observe_T *obs)
   free(obs); 
 }
 
-/* set default paramters */
+/* set default paramters
+// NOTE: since these parameters are soft, they are prefixed with stype.
+// and they are supposed to set in paramter file. 
+// these soft parameters are only used by this project so, they are 
+// prefixed with P_. */
 static int set_observe_params(Physics_T *const phys)
 {
   FUNC_TIC
+  
+  /* followings are soft parameters to be set in parameter file: */
   
   /* how to compute Komar mass:
   // options:
