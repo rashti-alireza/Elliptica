@@ -901,7 +901,8 @@ static void calc_ADM_PJ(Observe_T *const obs)
 /* calculate Komar mass for various objects */
 static void calc_Kommar_mass(Observe_T *const obs)
 {
-  Grid_T *const grid = obs->grid;  
+  Physics_T *const phys = obs->phys;
+  Grid_T *const grid    = obs->grid;
   Patch_T **patches1   = 0;/* for volume integrals */
   Patch_T **patches2   = 0;/* for surface integrals */
   Patch_T *patch       = 0;
@@ -916,7 +917,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
   {
     IFsc("Komar(M)|BHNS")
     {
-      if (Pcmps(P_"Komar_M","S+V"))
+      if (IsIt(P_"Komar_M","S+V"))
       {
         /* volume part */
         region   = "NS";
@@ -925,7 +926,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
         region   = "BH_around_IB";
         patches2 = collect_patches(grid,region,&N2); 
       }
-      else if (Pcmps(P_"Komar_M","S_inf"))
+      else if (IsIt(P_"Komar_M","S_inf"))
       {
         /* surface part */
         region   = "outermost_OB";
@@ -938,13 +939,13 @@ static void calc_Kommar_mass(Observe_T *const obs)
     }
     else IFsc("Komar(M)|NS")
     {
-      if (Pcmps(P_"Komar_M","V_obj"))
+      if (IsIt(P_"Komar_M","V_obj"))
       {
         /* volume part */
         region = "NS";
         patches1 = collect_patches(grid,region,&N1);
       }
-      else if (Pcmps(P_"Komar_M","S_obj"))
+      else if (IsIt(P_"Komar_M","S_obj"))
       {
         /* surface part */
         region = "NS_OB";
@@ -963,13 +964,13 @@ static void calc_Kommar_mass(Observe_T *const obs)
     }
     else IFsc("Komar(M)|SBH")
     {
-      if (Pcmps(P_"Komar_M","S_obj"))
+      if (IsIt(P_"Komar_M","S_obj"))
       {
         /* surface part */
         region   = "BH_around_IB";
         patches2 = collect_patches(grid,region,&N2); 
       }
-      else if (Pcmps(P_"Komar_M","S_inf"))
+      else if (IsIt(P_"Komar_M","S_inf"))
       {
         /* surface part */
         region   = "outermost_OB";
@@ -1088,7 +1089,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
     {
       IFsc("Komar(M)|BHNS")
       {
-        if (Pcmps(P_"Komar_M","S+V"))
+        if (IsIt(P_"Komar_M","S+V"))
         {
           /* surface integral */
           Komar[n]->surface_integration_flg = 1;
@@ -1096,7 +1097,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
           Komar[n]->K = 0;
           n_physical_metric_around(Komar[n],_c_);
         }
-        else if (Pcmps(P_"Komar_M","S_inf"))
+        else if (IsIt(P_"Komar_M","S_inf"))
         {
           /* for 1 split */
           if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
@@ -1123,11 +1124,11 @@ static void calc_Kommar_mass(Observe_T *const obs)
       }
       else IFsc("Komar(M)|NS")
       {
-        if (Pcmps(P_"Komar_M","V_obj"))
+        if (IsIt(P_"Komar_M","V_obj"))
         {
           ;
         }
-        else if (Pcmps(P_"Komar_M","S_obj"))
+        else if (IsIt(P_"Komar_M","S_obj"))
         {
           /* surface integral */
           Komar[n]->surface_integration_flg = 1;
@@ -1150,7 +1151,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
       }
       else IFsc("Komar(M)|SBH")
       {
-        if (Pcmps(P_"Komar_M","S_obj"))
+        if (IsIt(P_"Komar_M","S_obj"))
         {
           /* surface integral */
           Komar[n]->surface_integration_flg = 1;
@@ -1158,7 +1159,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
           Komar[n]->K = 0;
           n_physical_metric_around(Komar[n],_c_);
         }
-        else if (Pcmps(P_"Komar_M","S_inf"))
+        else if (IsIt(P_"Komar_M","S_inf"))
         {
           /* for 1 split */
           if (Pgeti("grid_SplitCS_Nsplit_c") == 1)

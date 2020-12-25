@@ -1,8 +1,11 @@
 #include "obs_header.h"
 
 /* handy comparison */
-#define IFss(X)  if(strstr_i(obs->quantity,X))
-#define IFsc(X)  if(strcmp_i(obs->quantity,X))
+#define IFss(X)    if(strstr_i(obs->quantity,X))
+#define IFsc(X)    if(strcmp_i(obs->quantity,X))
+
+/* is X set to Y? note: X is prefixed with physics */
+#define IsIt(X,Y)  Pcmps(MyParam(X),Y)
 
 /* put it to 1 if you want \int{Gdv}
 // this is mainly for test purposes. */
