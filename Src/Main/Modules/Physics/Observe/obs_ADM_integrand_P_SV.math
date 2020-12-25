@@ -1,6 +1,5 @@
-# populating ADM momentum integrand P^{ij}*n_{j} and G^{i} 
+# calculating ADM momentum
 # using arxiv:1506.01689 formalism.
-# their names are ADM_integrand_P and ADM_integrand_G respectively.
 # NOTE: the error of at outermost patches could be quite large it could be
 #       up to 2-3% off! however, for maximal slices and conformally flat
 #       metric the contribution of this integral is zero.
