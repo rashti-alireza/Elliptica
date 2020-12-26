@@ -8,9 +8,6 @@
 #define IsIt(X,Y)  (strcmp_i(Gets(X),Y))
 
 void obs_calculate(Observe_T *const obs);
-double obs_integral_ADM_PJ_SV (Observe_T *const obs,
-                              const char *const sP/* integrand for S */,
-                              const char *const sG/* intergrand for V */);
 static void define_spin_campanelli(Observe_T *const obs);
 static void define_spin_JRP(Observe_T *const obs);
 static void define_spin_akv(Observe_T *const obs);

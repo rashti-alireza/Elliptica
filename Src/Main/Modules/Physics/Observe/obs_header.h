@@ -61,9 +61,6 @@ void obs_Rc_NS(Observe_T *const obs);
 void obs_BH_irreducible_mass_CS(Observe_T *const obs);
 void obs_ADM_P_Stokes_SV_Ossokine(Observe_T *const obs);
 void obs_ADM_J_integral_xiPdS(Observe_T *const obs);
-double obs_integral_ADM_PJ_SV (Observe_T *const obs,
-                              const char *const sP/* integrand for S */,
-                              const char *const sG/* intergrand for V */);
 void obs_ADM_P_Stokes_SV_Rashti(Observe_T *const obs);
 double obs_integral_SV (Observe_T *const obs,
                         const char *const sS/* integrand for S */,
