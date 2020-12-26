@@ -1,0 +1,162 @@
+# calculating ADM momentum
+# using arxiv:1506.01689 formalism.
+# NOTE: the error of at outermost patches could be quite large it could be
+#       up to 2-3% off! however, for maximal slices and conformally flat
+#       metric the contribution of this integral is zero.
+# NOTE: the volume integral must not cover matter, see arxiv:1506.01689.
+# NOTE: the definition of ADM angular momentum is only held when
+#       quasi-isotropic and asymptotically maximal gauge are satisfied,
+#       see arXiv:gr-qc/0703035v1.
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = add_and_get_field(name);
+C_macro3 = READ_v_UNUSED(name);
+
+`#include "obs_header.h"`
+``
+``
+`#define add_and_get_field(name) \`
+         `  if (_Ind(#name) >= 0)\`# means if it exists already
+         `  {DECLARE_FIELD(name);REMOVE_FIELD(name);}\`
+         `  ADD_FIELD(name);REALLOC_v_WRITE_v(name);`
+``
+``
+`void obs_ADM_P_Stokes_SV_Rashti(Observe_T *const obs);`
+`void obs_ADM_P_Stokes_SV_Rashti(Observe_T *const obs)`
+`{`
+`  struct items_S **adm = obs->items;`
+`  const Uint N = obs->Nitems;`
+`  Uint p;`
+``
+`  OpenMP_Patch_Pragma(omp parallel for)`
+`  for(p = 0; p < N; ++p)`
+`  {`
+`  Patch_T *patch = adm[p]->patch;`
+`  Uint nn = patch->nn;`
+`  Uint ijk;`
+
+Declare = 
+{
+ # AConf^{ij}
+ (obj = Field,name = AConfIJ, rank = UU, C_macro);
+
+ # dAConf^{ij}
+ (obj = Field,name = dAConfIJ, rank = UUD, C_macro3);
+
+ # conformal metric 
+ (obj = Field,name = gConf, rank = DD, C_macro);
+
+ # dconformal metric 
+ (obj = Field,name = dgConf, rank = DDD, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # conformal factor derivative
+ (obj = Field,name = dpsi, rank = D, C_macro);
+
+ # Christoffer symbol value
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro3);
+
+ # trKij
+ (obj = Field,name = trK, rank = 0, C_macro);
+
+ # dtrKij
+ (obj = Field,name = dtrK, rank = D, C_macro);
+
+ # normal vector components
+ (obj = Field,name = n, rank = U, none);
+
+ # integrand DP for vol
+ (obj = Field,name = obs__DPi, rank = D, C_macro2);
+
+ # integrand Pi for surf
+ (obj = Field,name = obs__Pin, rank = D, C_macro2);
+
+}
+# symmetries:
+Symm[AConfIJ(i,j)     = AConfIJ(j,i)];
+Symm[dAConfIJ(i,j,k)  = dAConfIJ(j,i,k)];
+Symm[gConf(i,j)       = gConf(j,i)];
+Symm[dgConf(i,j,k)    = dgConf(j,i,k)];
+Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
+
+``
+# populating the integrands:
+# if we needs surface integral too.
+`   if (adm[p]->surface_integration_flg)`
+`   {`
+`      const double *n_U0 = adm[p]->n_U0;`
+`      const double *n_U1 = adm[p]->n_U1;`
+`      const double *n_U2 = adm[p]->n_U2;`
+`      for (ijk = 0; ijk < nn; ++ijk)`
+`      {`
+
+      ## populate Pi_{ia} n^i integrand
+      psi4     = psi**4;
+
+      psim6    = psi**-6;
+
+      Pi(i,-a) = psim6*AConfIJ(l,i)*gConf(-l,a)-(2/3)*trK*KD(i,a);
+
+      Pin(-a)  = Pi(j,a)*n(k)*gConf(-j,-k)*psi4;
+
+      Cpopulate[obs__Pin = Pin];
+`      }`
+`   }`
+
+# if vol inegral.
+
+`    else`
+`    {`
+# suffix '_' is added to prevent cpi error for duplicate variables
+`      for (ijk = 0; ijk < nn; ++ijk)`
+`      {`
+
+      ## populate D_i Pi^{ia} integrand
+      psim6_    = psi**-6;
+
+      Pi_(i,-a) = psim6_*AConfIJ(l,i)*gConf(-l,a)-(2/3)*trK*KD(i,a);
+
+      dlnpsi(i) = dpsi(i)/psi;
+
+      dPi1(a)   = -6*dlnpsi(-i)*psim6_*AConfIJ(l,i)*gConf(-l,a);
+      dPi2(a)   = psim6_*dAConfIJ(l,i,ip)*KD(-i,-ip)*gConf(-l,a);
+      dPi3(a)   = psim6_*AConfIJ(-l,-i)*dgConf(l,a,i)-2/3*dtrK(i)*KD(-i,a);
+
+      dPi(a)    = dPi1(a)+dPi2(a)+dPi3(a);
+
+      G(k)      = 6*dlnpsi(k)+ChrisConf(i,ip,k)*KD(-i,-ip);
+
+      DPi(-a)   = dPi(a)+G(-k)*Pi_(k,a);
+
+      Cpopulate[obs__DPi = DPi];
+`      }`
+`    }`
+``
+``
+`  }`# end of for(p = 0; p < N; ++p)
+``
+## carry out the integration:
+`  obs->ret[0] = obs_integral_SV`
+`                 (obs,"obs__DPi_D0","obs__Pin_D0",'+','+')/(8*M_PI);`
+`  obs->ret[1] = obs_integral_SV`
+`                 (obs,"obs__DPi_D1","obs__Pin_D1",'+','+')/(8*M_PI);`
+`  obs->ret[2] = obs_integral_SV`
+`                 (obs,"obs__DPi_D2","obs__Pin_D2",'+','+')/(8*M_PI);`
+``
+## remove fields
+`  for(p = 0; p < N; ++p)`
+`  {`
+`    Patch_T *patch = adm[p]->patch;`
+`    remove_field_with_regex(patch,"^obs__DPi_D.$");`
+`    remove_field_with_regex(patch,"^obs__Pin_D.$");`
+`  }`
+``
+`}`
