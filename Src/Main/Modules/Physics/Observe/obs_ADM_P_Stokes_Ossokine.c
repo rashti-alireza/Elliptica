@@ -76,12 +76,12 @@ void obs_ADM_P_Stokes_SV_Ossokine(Observe_T *const obs)
   READ_v(ChrisConf_U2D0D2)
   READ_v(ChrisConf_U1D0D1)
   READ_v(trK)
-  add_and_get_field(obs_ADM_integrand__P_U1)
-  add_and_get_field(obs_ADM_integrand__P_U0)
-  add_and_get_field(obs_ADM_integrand__P_U2)
-  add_and_get_field(obs_ADM_integrand__G_U0)
-  add_and_get_field(obs_ADM_integrand__G_U1)
-  add_and_get_field(obs_ADM_integrand__G_U2)
+  add_and_get_field(obs__P_U1)
+  add_and_get_field(obs__P_U0)
+  add_and_get_field(obs__P_U2)
+  add_and_get_field(obs__G_U0)
+  add_and_get_field(obs__G_U1)
+  add_and_get_field(obs__G_U2)
 
 
 
@@ -145,9 +145,9 @@ n_U1[ijk] + P_U0U2*gConf_D2D2[ijk]*n_U2[ijk]);
 
 
       /* populating: */
-      obs_ADM_integrand__P_U1[ijk] = Pn_U1;
-      obs_ADM_integrand__P_U0[ijk] = Pn_U0;
-      obs_ADM_integrand__P_U2[ijk] = Pn_U2;
+      obs__P_U1[ijk] = Pn_U1;
+      obs__P_U0[ijk] = Pn_U0;
+      obs__P_U2[ijk] = Pn_U2;
       }
    }
     else
@@ -284,27 +284,27 @@ att*(G1_U2 + G2_U2);
 
 
       /* populating: */
-      obs_ADM_integrand__G_U0[ijk] = G_U0;
-      obs_ADM_integrand__G_U1[ijk] = G_U1;
-      obs_ADM_integrand__G_U2[ijk] = G_U2;
+      obs__G_U0[ijk] = G_U0;
+      obs__G_U1[ijk] = G_U1;
+      obs__G_U2[ijk] = G_U2;
       }
     }
 
 
   }
 
-  obs->ret[0] = obs_integral_ADM_PJ_SV
-                  (obs,"obs_ADM_integrand__P_U0","obs_ADM_integrand__G_U0");
-  obs->ret[1] = obs_integral_ADM_PJ_SV
-                  (obs,"obs_ADM_integrand__P_U1","obs_ADM_integrand__G_U1");
-  obs->ret[2] = obs_integral_ADM_PJ_SV
-                  (obs,"obs_ADM_integrand__P_U2","obs_ADM_integrand__G_U2");
+  obs->ret[0] = obs_integral_SV
+    (obs,"obs__P_U0","obs__G_U0",'+','-')/(8*M_PI);
+  obs->ret[1] = obs_integral_SV
+    (obs,"obs__P_U1","obs__G_U1",'+','-')/(8*M_PI);
+  obs->ret[2] = obs_integral_SV
+    (obs,"obs__P_U2","obs__G_U2",'+','-')/(8*M_PI);
 
   for(p = 0; p < N; ++p)
   {
     Patch_T *patch = adm[p]->patch;
-    remove_field_with_regex(patch,"^obs_ADM_integrand__P_U.$");
-    remove_field_with_regex(patch,"^obs_ADM_integrand__G_U.$");
+    remove_field_with_regex(patch,"^obs__P_U.$");
+    remove_field_with_regex(patch,"^obs__G_U.$");
   }
 
 }
