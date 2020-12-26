@@ -844,7 +844,7 @@ static void calc_ADM_J(Observe_T *const obs)
   }
   Free(patches2);
   
-  obs_ADM_J_integral_xiPdS(obs);
+  //obs_ADM_J_integral_xiPdS(obs);
 }
 
 /* calculate adm P for various objects 
