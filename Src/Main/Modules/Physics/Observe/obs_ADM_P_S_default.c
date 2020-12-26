@@ -41,9 +41,9 @@ void obs_populate_P_S_default(Observe_T *const obs)
   READ_v(gConf_D2D2)
   READ_v(psi)
   READ_v(trK)
-  add_and_get_field(obs__P_D2)
-  add_and_get_field(obs__P_D0)
-  add_and_get_field(obs__P_D1)
+  add_and_get_field(obs__Pn_D2)
+  add_and_get_field(obs__Pn_D1)
+  add_and_get_field(obs__Pn_D0)
 
 
 
@@ -133,10 +133,11 @@ pow(gConf_D2D2[ijk], 2)));
 
 
       /* populating: */
-      obs__P_D2[ijk] = Pn_D2;
-      obs__P_D0[ijk] = Pn_D0;
-      obs__P_D1[ijk] = Pn_D1;
+      obs__Pn_D2[ijk] = Pn_D2;
+      obs__Pn_D1[ijk] = Pn_D1;
+      obs__Pn_D0[ijk] = Pn_D0;
       }
+  }
 
   obs->ret[0] = obs_integral_SV
                  (obs,"obs__Pn_D0",0,'+','+')/(8*M_PI);
@@ -144,8 +145,6 @@ pow(gConf_D2D2[ijk], 2)));
                  (obs,"obs__Pn_D1",0,'+','+')/(8*M_PI);
   obs->ret[2] = obs_integral_SV
                  (obs,"obs__Pn_D2",0,'+','+')/(8*M_PI);
-  }
-
   for(p = 0; p < N; ++p)
   {
     Patch_T *patch = adm[p]->patch;

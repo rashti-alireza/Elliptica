@@ -56,7 +56,7 @@ Declare =
  (obj = Field,name = n, rank = U, none);
 
  # integrand P
- (obj = Field,name = obs__P, rank = D, C_macro2);
+ (obj = Field,name = obs__Pn, rank = D, C_macro2);
 }
 # symmetries:
 Symm[AConfIJ(i,j)  = AConfIJ(j,i)];
@@ -77,8 +77,9 @@ Symm[gConf(i,j)   = gConf(j,i)];
        Pn(-i) = n(-j)*\
 (psim2*AConfIJ(ip,jp)*gConf(i,-ip)*gConf(j,-jp)+(1/3)*trK*psi4*gConf(i,j));
 
-       Cpopulate[obs__P = Pn];
+       Cpopulate[obs__Pn = Pn];
 `      }`
+`  }`
 ``
 ## carry out the integration:
 `  obs->ret[0] = obs_integral_SV`
@@ -87,8 +88,6 @@ Symm[gConf(i,j)   = gConf(j,i)];
 `                 (obs,"obs__Pn_D1",0,'+','+')/(8*M_PI);`
 `  obs->ret[2] = obs_integral_SV`
 `                 (obs,"obs__Pn_D2",0,'+','+')/(8*M_PI);`
-`  }`
-``
 ## remove fields
 `  for(p = 0; p < N; ++p)`
 `  {`
