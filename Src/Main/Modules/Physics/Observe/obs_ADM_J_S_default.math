@@ -1,0 +1,129 @@
+# use the definition of P ADM at S infinite and carry out the integration
+# at arbitrary surface.
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = add_and_get_field(name);
+C_macro3 = declare_and_alloc_xi(name);
+
+`#include "obs_header.h"`
+``
+``
+`#define add_and_get_field(name) \`
+         `  if (_Ind(#name) >= 0)\`# means if it exists already
+         `  {DECLARE_FIELD(name);REMOVE_FIELD(name);}\`
+         `  ADD_FIELD(name);REALLOC_v_WRITE_v(name);`
+``
+`#define declare_and_alloc_xi(name) \`
+	`  double *name = alloc_double(nn);`
+``
+``
+`void obs_populate_P_J_default(Observe_T *const obs);`
+`void obs_populate_P_J_default(Observe_T *const obs)`
+`{`
+`  Physics_T *const phys = obs->phys;`
+`  struct items_S **adm = obs->items;`
+`  const Uint N = obs->Nitems;`
+`  const double x_cm = Getd("x_CM");`
+`  const double y_cm = Getd("y_CM");`
+`  const double z_cm = Getd("z_CM");`
+`  Uint p;`
+``
+`  for(p = 0; p < N; ++p)`
+`  {`
+`  Patch_T *patch = adm[p]->patch;`
+`  Uint nn = patch->nn;`
+`  Uint ijk;`
+
+Declare = 
+{
+  # _A^{ij}
+ (obj = Field,name = AConfIJ, rank = UU, C_macro);
+
+ # conformal metric 
+ (obj = Field,name = gConf, rank = DD, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # conformal factor derivative
+ #(obj = Field,name = dpsi, rank = D, C_macro);
+
+ # Christoffer symbol value
+ #(obj = Field,name = ChrisConf, rank = UDD, C_macro);
+
+ # trKij
+ (obj = Field,name = trK, rank = 0, C_macro);
+
+ # normal vector components
+ (obj = Field,name = n, rank = U, none);
+
+ # integrand P
+ (obj = Field,name = obs__Jn, rank = D, C_macro2);
+
+ # xi
+ (obj = Field,name = xi, rank = U, C_macro3);
+}
+# symmetries:
+Symm[AConfIJ(i,j)  = AConfIJ(j,i)];
+Symm[gConf(i,j)   = gConf(j,i)];
+
+``
+`   for(ijk = 0; ijk < nn; ++ijk)`
+`   {`
+`   double x    = patch->node[ijk]->x[0];`
+`   double y    = patch->node[ijk]->x[1];`
+`   double z    = patch->node[ijk]->x[2];`
+
+`   xi_U0[ijk] = x-x_cm;`
+`   xi_U1[ijk] = y-y_cm;`
+`   xi_U2[ijk] = z-z_cm;`
+`   }`
+# populating the integrands:
+`      const double *n_U0 = adm[p]->n_U0;`
+`      const double *n_U1 = adm[p]->n_U1;`
+`      const double *n_U2 = adm[p]->n_U2;`
+``
+`      for (ijk = 0; ijk < nn; ++ijk)`
+`      {`
+       psi4   = psi**4;
+
+       psim2  = psi**-2;
+       
+       # (K_ij - K g_ij)*n^j
+       Pn(-i) = n(-j)*\
+(psim2*AConfIJ(ip,jp)*gConf(i,-ip)*gConf(j,-jp)+(1/3)*trK*psi4*gConf(i,j));
+       
+       Jn(-i) = EIJK(i,j,k)*xi(-j)*Pn(-k);
+       Cpopulate[obs__Jn = Jn];
+`      }`
+``
+`  free(xi_U0);`
+`  free(xi_U1);`
+`  free(xi_U2);`
+`  }`
+``
+## carry out the integration:
+`  obs->ret[0] = obs_integral_SV`
+`                 (obs,"obs__Jn_D0",0,'+','+')/(8*M_PI);`
+`  obs->ret[1] = obs_integral_SV`
+`                 (obs,"obs__Jn_D1",0,'+','+')/(8*M_PI);`
+`  obs->ret[2] = obs_integral_SV`
+`                 (obs,"obs__Jn_D2",0,'+','+')/(8*M_PI);`
+``
+## remove fields
+`  for(p = 0; p < N; ++p)`
+`  {`
+`    Patch_T *patch = adm[p]->patch;`
+`    remove_field_with_regex(patch,"^obs__Pn_D.$");`
+`  }`
+``
+`}`
+
+
+

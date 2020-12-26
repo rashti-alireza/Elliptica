@@ -68,6 +68,6 @@ double obs_integral_SV (Observe_T *const obs,
                         const char sign_sS/* [+/-] integral of S */,
                         const char sign_sV/* [+/-] integral of V */);
 void obs_populate_P_S_default(Observe_T *const obs);
-
+void obs_populate_P_J_default(Observe_T *const obs);
 #endif
 
