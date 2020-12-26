@@ -59,8 +59,11 @@ void obs_populate_spin_integrands_akv(Patch_T *const patch,const double *const n
 void obs_populate_spin_integrands_Campanelli(Patch_T *const patch,const double xc[3],const double *const normal[3]);
 void obs_Rc_NS(Observe_T *const obs);
 void obs_BH_irreducible_mass_CS(Observe_T *const obs);
-void obs_ADM_P_integral_PdS_GdV(const Observe_T *const obs);
-void obs_ADM_J_integral_xiPdS(const Observe_T *const obs);
+void obs_ADM_P_integral_PdS_GdV(Observe_T *const obs);
+void obs_ADM_J_integral_xiPdS(Observe_T *const obs);
+double obs_integral_ADM_PJ_SV (Observe_T *const obs,
+                              const char *const sP/* integrand for S */,
+                              const char *const sG/* intergrand for V */);
 
 
 #endif
