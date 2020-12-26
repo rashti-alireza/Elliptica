@@ -1237,11 +1237,11 @@ static void calc_ADM_P(Observe_T *const obs)
   
   if (IsIt("Observe_ADM_P","S_inf,default"))
   {
-    
+    //obs_ADM_P_Sinf(obs);
   }
   else if (IsIt("Observe_ADM_P","S+V,Ossokine"))
   {
-    obs_ADM_P_integral_PdS_GdV(obs);
+    obs_ADM_P_Stokes_SV_Ossokine(obs);
   }
   else if (IsIt("Observe_ADM_P","S+V,Rashti"))
   {

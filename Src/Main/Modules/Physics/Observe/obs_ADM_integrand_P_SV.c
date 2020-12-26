@@ -20,8 +20,8 @@
   ADD_FIELD(name);REALLOC_v_WRITE_v(name);
 
 
-void obs_ADM_P_integral_PdS_GdV(Observe_T *const obs);
-void obs_ADM_P_integral_PdS_GdV(Observe_T *const obs)
+void obs_ADM_P_Stokes_SV_Ossokine(Observe_T *const obs);
+void obs_ADM_P_Stokes_SV_Ossokine(Observe_T *const obs)
 {
   struct items_S **adm = obs->items;
   const Uint N = obs->Nitems;
