@@ -5,7 +5,7 @@
 #define IFsc(X)    if(strcmp_i(obs->quantity,X))
 
 /* is X set to Y? note: X is prefixed with physics */
-#define IsIt(X,Y)  Pcmps(MyParam(X),Y)
+#define IsIt(X,Y)  (strcmp_i(Gets(X),Y))
 
 /* put it to 1 if you want \int{Gdv}
 // this is mainly for test purposes. */

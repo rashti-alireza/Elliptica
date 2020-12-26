@@ -150,72 +150,6 @@ static void free_obs(Observe_T *obs)
   
   for (i = 0; i < obs->Nitems; ++i)
   {
-    Patch_T *patch = adm[i]->patch;
-    if (patch)
-    {
-      if (_Ind("ADM_integrand_P_U0") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_P_U0);
-        REMOVE_FIELD(ADM_integrand_P_U0);
-      }
-      if (_Ind("ADM_integrand_P_U1") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_P_U1);
-        REMOVE_FIELD(ADM_integrand_P_U1);
-      }
-      if (_Ind("ADM_integrand_P_U2") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_P_U2);
-        REMOVE_FIELD(ADM_integrand_P_U2);
-      }
-      if (_Ind("ADM_integrand_G_U0") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_G_U0);
-        REMOVE_FIELD(ADM_integrand_G_U0);
-      }
-      if (_Ind("ADM_integrand_G_U1") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_G_U1);
-        REMOVE_FIELD(ADM_integrand_G_U1);
-      }
-      if (_Ind("ADM_integrand_G_U2") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_G_U2);
-        REMOVE_FIELD(ADM_integrand_G_U2);
-      }
-      
-      if (_Ind("ADM_integrand_xiP_U0") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_xiP_U0);
-        REMOVE_FIELD(ADM_integrand_xiP_U0);
-      }
-      if (_Ind("ADM_integrand_xiP_U2") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_xiP_U2);
-        REMOVE_FIELD(ADM_integrand_xiP_U2);
-      }
-      if (_Ind("ADM_integrand_xiP_U1") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_xiP_U1);
-        REMOVE_FIELD(ADM_integrand_xiP_U1);
-      }
-      
-      if (_Ind("ADM_integrand_xiG_U0") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_xiG_U0);
-        REMOVE_FIELD(ADM_integrand_xiG_U0);
-      }
-      if (_Ind("ADM_integrand_xiG_U2") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_xiG_U2);
-        REMOVE_FIELD(ADM_integrand_xiG_U2);
-      }
-      if (_Ind("ADM_integrand_xiG_U1") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_xiG_U1);
-        REMOVE_FIELD(ADM_integrand_xiG_U1);
-      }
-    }
     Free(adm[i]->g00);
     Free(adm[i]->g01);
     Free(adm[i]->g02);
@@ -241,32 +175,31 @@ static int set_observe_params(Physics_T *const phys)
 {
   FUNC_TIC
   
-  /* followings are soft parameters to be set in parameter file: */
+  /* followings are soft parameters to be set in parameter file.
+  // they are PREFIXED with phys->stype to instruct how calculations
+  // carried out, ex: BH1_observe_Komar_M.  */
   
   /* how to compute Komar mass:
+  // param:  "observe_Komar_M"
   // options:
   // S_inf: on a surface at infinity. 
   // S_obj: over the surface of compact object (for single physics)
   // V_obj: over the volume of compact object (for single physics)
   // S+V  : over all space and on BH surface if any. */
-  Pset_default(MyParam(P_"Komar_M"),"S+V");
   
-  /* how to compute ADM mass:
+  /* how to compute ADM mass: 
+  // param:  "observe_ADM_M"
   // options:
   // S_inf: on a surface at infinity. 
   // S_obj: over the surface of compact object (for single physics)
   // V_obj: over the volume of compact object (for single physics)
   // S+V  : over all space and on BH surface if any. */
-  Pset_default(MyParam(P_"ADM_M"),"S+V");
   
   /* how to compute irreducible mass of BH.?:
-  // param name: MyParam(P_"irreducible_M")
+  // param:  "observe_irreducible_M"
   // options:
-  // S_obj: over the surface of compact object (for single physics)
-  //
-  // NOTE: since this is very physics dependent, it's added in parameter
-  // file and no default is required here. */
-  
+  // S_obj: over the surface of compact object (for single physics) */
+
   UNUSED(phys);
   FUNC_TOC
   return EXIT_SUCCESS;  
