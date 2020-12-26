@@ -20,10 +20,9 @@
   ADD_FIELD(name);REALLOC_v_WRITE_v(name);
 
 
-void obs_ADM_P_integral_PdS_GdV(const Observe_T *const obs);
-void obs_ADM_P_integral_PdS_GdV(const Observe_T *const obs)
+void obs_ADM_P_integral_PdS_GdV(Observe_T *const obs);
+void obs_ADM_P_integral_PdS_GdV(Observe_T *const obs)
 {
-  Physics_T *const phys = obs->phys;
   struct items_S **adm = obs->items;
   const Uint N = obs->Nitems;
   const double CutOff = 1E8;
