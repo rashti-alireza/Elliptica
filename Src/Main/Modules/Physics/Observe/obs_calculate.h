@@ -22,5 +22,9 @@ static void calc_ADM_J(Observe_T *const obs);
 static void calc_ADM_P(Observe_T *const obs);
 static void calc_Kommar_mass(Observe_T *const obs);
 static void calc_irreducible_BH_mass(Observe_T *const obs);
-
+double obs_integral_SV (Observe_T *const obs,
+                        const char *const sS/* integrand for S */,
+                        const char *const sV/* intergrand for V */,
+                        const char sign_sS/* [+/-] integral of S */,
+                        const char sign_sV/* [+/-] integral of V */);
 
