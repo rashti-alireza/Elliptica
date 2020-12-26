@@ -195,6 +195,13 @@ static int set_observe_params(Physics_T *const phys)
   // V_obj: over the volume of compact object (for single physics)
   // S+V  : over all space and on BH surface if any. */
   
+  /* how to compute ADM angular momentum: 
+  // param:  "observe_ADM_J"
+  // options:
+  // S_inf: on a surface at infinity. 
+  // S_obj: over the surface of compact object (for single physics)
+  // S_obj1+S_obj2  : over surfaces of compact object 1 and 2 */
+  
   /* how to compute irreducible mass of BH.?:
   // param:  "observe_irreducible_M"
   // options:
