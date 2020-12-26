@@ -16,8 +16,8 @@
   double *name = alloc_double(nn);
 
 
-void obs_populate_P_J_default(Observe_T *const obs);
-void obs_populate_P_J_default(Observe_T *const obs)
+void obs_ADM_J_S_default(Observe_T *const obs);
+void obs_ADM_J_S_default(Observe_T *const obs)
 {
   Physics_T *const phys = obs->phys;
   struct items_S **adm = obs->items;
