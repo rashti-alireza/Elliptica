@@ -34,8 +34,8 @@ C_macro3 = declare_and_alloc_xi(name);
          `  ADD_FIELD(name);REALLOC_v_WRITE_v(name);`
 ``
 ``
-`void obs_ADM_J_Stokes_Ossokine(Observe_T *const obs);`
-`void obs_ADM_J_Stokes_Ossokine(Observe_T *const obs)`
+`void obs_ADM_J_Stokes_SV_Ossokine(Observe_T *const obs);`
+`void obs_ADM_J_Stokes_SV_Ossokine(Observe_T *const obs)`
 `{`
 `  Physics_T *const phys = obs->phys;`
 `  struct items_S **adm  = obs->items;`
@@ -66,7 +66,7 @@ Declare =
  (obj = Field,name = n, rank = U, none);
 
  # integrand xiP
- (obj = Field,name = obs_ADM_integrand__xiP, rank = U, C_macro2);
+ (obj = Field,name = obs__Jn, rank = U, C_macro2);
 
  # xi
  (obj = Field,name = xi, rank = U, C_macro3);
@@ -104,7 +104,7 @@ Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
        Pn(i)  = AConfIJ(i,j)*n(k)*gConf(-j,-k)*psi4;
        xiP(i) = EIJK(i,j,k)*xi(-j)*Pn(-k);
 
-       Cpopulate[obs_ADM_integrand__xiP = xiP];
+       Cpopulate[obs__Jn = xiP];
 `      }`
 `   }`
 ``
@@ -115,17 +115,18 @@ Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 `  }`# end of for(p = 0; p < N; ++p)
 ``
 
-`  obs->ret[0] = obs_integral_ADM_PJ_SV`
-`                  (obs,"obs_ADM_integrand__xiP_U0",0);`
-`  obs->ret[1] = obs_integral_ADM_PJ_SV`
-`                  (obs,"obs_ADM_integrand__xiP_U1",0);`
-`  obs->ret[2] = obs_integral_ADM_PJ_SV`
-`                  (obs,"obs_ADM_integrand__xiP_U2",0);`
+## carry out the integration:
+`  obs->ret[0] = obs_integral_SV`
+`    (obs,"obs__Jn_U0",0,'+','+')/(8*M_PI);`
+`  obs->ret[1] = obs_integral_SV`
+`    (obs,"obs__Jn_U1",0,'+','+')/(8*M_PI);`
+`  obs->ret[2] = obs_integral_SV`
+`    (obs,"obs__Jn_U2",0,'+','+')/(8*M_PI);`
 ``
 `  for(p = 0; p < N; ++p)`
 `  {`
 `    Patch_T *patch = adm[p]->patch;`
-`    remove_field_with_regex(patch,"^obs_ADM_integrand__xiP_U.$");`
+`    remove_field_with_regex(patch,"^obs__Jn_U.$");`
 `  }`
 ``
 `}`

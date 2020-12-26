@@ -843,8 +843,19 @@ static void calc_ADM_J(Observe_T *const obs)
     }
   }
   Free(patches2);
-  
-  //obs_ADM_J_integral_xiPdS(obs);
+
+  if (IsIt("Observe_ADM_P","J_inf,default"))
+  {
+    obs_ADM_J_S_default(obs);
+  }
+  else if (IsIt("Observe_ADM_J","S+V,Ossokine"))
+  {
+    obs_ADM_J_Stokes_SV_Ossokine(obs);
+  }
+  else
+  {
+    Error0(NO_OPTION);
+  }
 }
 
 /* calculate adm P for various objects 

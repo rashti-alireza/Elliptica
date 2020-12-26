@@ -60,14 +60,14 @@ void obs_populate_spin_integrands_Campanelli(Patch_T *const patch,const double x
 void obs_Rc_NS(Observe_T *const obs);
 void obs_BH_irreducible_mass_CS(Observe_T *const obs);
 void obs_ADM_P_Stokes_SV_Ossokine(Observe_T *const obs);
-void obs_ADM_J_integral_xiPdS(Observe_T *const obs);
+void obs_ADM_J_Stokes_SV_Ossokine(Observe_T *const obs);
 void obs_ADM_P_Stokes_SV_Rashti(Observe_T *const obs);
-double obs_integral_SV (Observe_T *const obs,
+void obs_ADM_P_S_default(Observe_T *const obs);
+void obs_ADM_J_S_default(Observe_T *const obs);
+double obs_integral_SV(Observe_T *const obs,
                         const char *const sS/* integrand for S */,
                         const char *const sV/* intergrand for V */,
                         const char sign_sS/* [+/-] integral of S */,
                         const char sign_sV/* [+/-] integral of V */);
-void obs_ADM_P_S_default(Observe_T *const obs);
-void obs_ADM_J_S_default(Observe_T *const obs);
 #endif
 
