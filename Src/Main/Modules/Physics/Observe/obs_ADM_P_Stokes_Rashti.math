@@ -1,12 +1,4 @@
-# calculating ADM momentum
-# using arxiv:1506.01689 formalism.
-# NOTE: the error of at outermost patches could be quite large it could be
-#       up to 2-3% off! however, for maximal slices and conformally flat
-#       metric the contribution of this integral is zero.
-# NOTE: the volume integral must not cover matter, see arxiv:1506.01689.
-# NOTE: the definition of ADM angular momentum is only held when
-#       quasi-isotropic and asymptotically maximal gauge are satisfied,
-#       see arXiv:gr-qc/0703035v1.
+# calculating ADM momentum using full Stoke theorem straightforwardly.
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -119,7 +111,7 @@ Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 `      for (ijk = 0; ijk < nn; ++ijk)`
 `      {`
 
-      ## populate D_i Pi^{ia} integrand
+      ## populate D_i Pi^{i}_{a} integrand
       psim6_    = psi**-6;
 
       Pi_(i,-a) = psim6_*AConfIJ(l,i)*gConf(-l,a)-(2/3)*trK*KD(i,a);
