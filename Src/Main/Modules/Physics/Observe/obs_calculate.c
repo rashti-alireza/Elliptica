@@ -1,6 +1,7 @@
 /*
 // Alireza Rashti
 // September 2019
+// December  2020
 */
 
 
@@ -13,51 +14,39 @@
 //
 // 1. collect all of the necessary patches.
 // 2. populate the required metric for the integrations.
-// 3. set flags for surface or volume integral.
+// 3. set flags for surface and volume integral.
 // 4. populate normal vectors for surface integrals.
 // 5. populate the integrands
 // 6. call the pertinent functions for the calculation. */
 void obs_calculate(Observe_T *const obs)
 {
-  IFss("ADM(P)")
+  IFss("ADM(P)|")
   {
     calc_ADM_P(obs);
   }
-  else IFss("ADM(J)")
+  else IFss("ADM(J)|")
   {
     calc_ADM_J(obs);
   }
-  else IFss("ADM(M)")
+  else IFss("ADM(M)|")
   {
     calc_ADM_mass(obs);
   }
-  else IFss("Komar(M)")
+  else IFss("Komar(M)|")
   {
     calc_Kommar_mass(obs);
   }
-  else IFss("Irreducible(M)")
+  else IFss("Irreducible(M)|")
   {
     calc_irreducible_BH_mass(obs);
   }
-  else IFsc("CM|BH")
+  else IFss("CM|")
   {
-    Rc_BH(obs);
+    calc_CM(obs);
   }
-  else IFsc("CM|NS")
+  else IFss("Spin|")
   {
-    obs_Rc_NS(obs);
-  }
-  else IFss("Spin|JRP|")
-  {
-    define_spin_JRP(obs);
-  }
-  else IFss("Spin|Campanelli|")
-  {
-    define_spin_campanelli(obs);
-  }
-  else IFss("Spin|AKV|")
-  {
-    define_spin_akv(obs);
+    calc_spin(obs);
   }
   else
     Errors("There is no such '%s' plan.\n",obs->quantity);
@@ -1914,3 +1903,82 @@ static void calc_irreducible_BH_mass(Observe_T *const obs)
   }
 
 }
+
+/* center mass */
+static void calc_CM(Observe_T *const obs)
+{
+  IFsc("CM|BH")
+  {
+    if (IsIt("S_obj,default"))
+    {
+      Rc_BH(obs);
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
+  }
+  else IFsc("CM|NS")
+  {
+    if (IsIt("S_obj,default"))
+    {
+      obs_Rc_NS(obs);
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
+  }
+  else
+  {
+    Error0(NO_OPTION);
+  }
+}
+
+/* calculate spin */
+static void calc_spin(Observe_T *const obs)
+{
+  IFsc("Spin|BH")
+  {
+    if (IsIt("S_obj,JRP"))
+    {
+      define_spin_JRP(obs);
+    }
+    else if (IsIt("S_obj,Campanelli"))
+    {
+      define_spin_campanelli(obs);
+    }
+    else if (IsIt("S_obj,AKV"))
+    {
+      define_spin_akv(obs);
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
+  }
+  else IFsc("Spin|NS")
+  {
+    if (IsIt("S_obj,JRP"))
+    {
+      define_spin_JRP(obs);
+    }
+    else if (IsIt("S_obj,Campanelli"))
+    {
+      define_spin_campanelli(obs);
+    }
+    else if (IsIt("S_obj,AKV"))
+    {
+      define_spin_akv(obs);
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
+  }
+  else
+  {
+    Error0(NO_OPTION);
+  }
+}
+

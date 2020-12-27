@@ -58,4 +58,6 @@ double obs_integral_SV (Observe_T *const obs,
                         const char *const sV/* intergrand for V */,
                         const char sign_sS/* [+/-] integral of S */,
                         const char sign_sV/* [+/-] integral of V */);
+static void calc_CM(Observe_T *const obs);
+static void calc_spin(Observe_T *const obs);
 
