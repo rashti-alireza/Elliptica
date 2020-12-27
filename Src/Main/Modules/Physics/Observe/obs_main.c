@@ -7,8 +7,9 @@
 // =========
 //
 // * initialize observable *
-// observe(phys,sq,ret); # the observed value saves in ret 
-//                       # and sq is one of the followings:
+// observe(phys,quantity,method,ret); # the observed value saves in ret 
+//
+// * for list of methods, see function set_observe_params *
 //
 // * list of quantities *
 // ======================
@@ -35,11 +36,11 @@
 //            we cannot use Komar mass. Also, in the integral surface
 //            formula, it is assumed Killing^mu = alpha n^mu + beta^mu
 //            which might not be true close to compact objects, however,
-//            this assumtion mostly correct when the surface integral
+//            this assumption mostly correct when the surface integral
 //            is quite far away from the compact objects, since the space-time
 //            becomes Minkowski and this holds.
 //            NOTE: the accuracy decreases if the integrating surface
-//            is not a diifeomorphism (C^inf continuous) to S2.
+//            is not a diffeomorphism (C^inf continuous) to S2.
 //            NOTE: ADM mass is generally not equal to Komar mass unless
 //            lapse -> 1 and shift -> 0 at spatial infinity in the foliation.
 //
@@ -121,14 +122,19 @@ int observe_main(Physics_T *const phys)
 // and generally for index quantities (x,y,z) fills with order (0,1,2). 
 // NOTE: for observe(bh,"Irreducible(M)",ret) we have:
 // ret[0] = bh irreducible mass and ret[1] = AH physical(proper) area. */
-int observe(Physics_T *const phys,const char *const sq,double *const ret)
+int observe(Physics_T *const phys,const char *const sq,
+            const char *const method,double *const ret)
 {
+  if (!method)
+    Error0("No method was given!\n");
+    
   Observe_T *const obs = calloc(1,sizeof(*obs));
   IsNull(obs);
 
   obs->phys  = phys;
   obs->grid  = phys->grid;
   obs->ret   = ret;
+  obs->method= method;
   
   sprintf(obs->quantity,"%s|%s",sq,phys->stype);
   
@@ -178,33 +184,84 @@ static int set_observe_params(Physics_T *const phys)
   /* followings are soft parameters to be set in parameter file.
   // they are PREFIXED with phys->stype to instruct how calculations
   // carried out, ex: BH1_observe_Komar_M.  */
+  // the method is suffixed and separated with a comma,
+  // ex: method = "S_inf,default" */
   
   /* how to compute Komar mass:
-  // param:  "observe_Komar_M"
+  // param:
+  // ======
+  // "observe_Komar_M"
+  //
+  // methods:
+  // ========
+  // default: used arXiv:gr-qc/0703035v1
+  //
   // options:
+  // ========
   // S_inf: on a surface at infinity. 
   // S_obj: over the surface of compact object (for single physics)
   // V_obj: over the volume of compact object (for single physics)
   // S+V  : over all space and on BH surface if any. */
   
   /* how to compute ADM mass: 
-  // param:  "observe_ADM_M"
+  // param:
+  // ======
+  // "observe_ADM_M"
+  //
+  // methods:
+  // ========
+  // default: used arXiv:gr-qc/0703035v1
+  //
   // options:
+  // ========
   // S_inf: on a surface at infinity. 
   // S_obj: over the surface of compact object (for single physics)
   // V_obj: over the volume of compact object (for single physics)
   // S+V  : over all space and on BH surface if any. */
   
-  /* how to compute ADM angular momentum: 
-  // param:  "observe_ADM_J"
+  /* how to compute irreducible mass:
+  // param:
+  // ======
+  // "observe_irreducible_M"
+  //
+  // methods:
+  // ========
+  // default: used standard definition
+  //
   // options:
+  // ========
+  // S_obj: over the surface of compact object (for single physics) */
+  
+  
+  /* how to compute ADM angular momentum: 
+  // param:
+  // ======
+  // "observe_ADM_J"
+  //
+  // methods:
+  // ========
+  // default:  used arXiv:gr-qc/0703035v1
+  // Ossokine: used arXiv:1506.01689
+  //
+  // options:
+  // ========
   // S_inf: on a surface at infinity. 
   // S_obj: over the surface of compact object (for single physics)
-  // S_obj1+S_obj2  : over surfaces of compact object 1 and 2 */
+  // S_obj1+S_obj2: over surfaces of compact object 1 and 2 */
   
-  /* how to compute ADM momentum: 
-  // param:  "observe_ADM_P"
+  /* how to compute ADM momentum:
+  // param:
+  // ======
+  // "observe_ADM_P"
+  //
+  // methods:
+  // ========
+  // default:  used arXiv:gr-qc/0703035v1
+  // Ossokine: used arXiv:1506.01689
+  // Rashti  : used full Stokes theorem
+  //
   // options:
+  // ========
   // S_inf: on a surface at infinity. 
   // S_obj: over the surface of compact object (for single physics)
   // S+V  : over surfaces of compact object 1 and 2 and the rest of space.

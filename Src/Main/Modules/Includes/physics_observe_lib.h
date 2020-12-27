@@ -13,6 +13,7 @@ struct GRID_T;
 typedef struct OBSERVE_T
 {
   char quantity[OBSERVE_STR_LEN];/* which quantity is computed */
+  const char *method;/* method used in calculation */
   double *ret;/* return value */
   struct GRID_T *grid;/* computational grid */
   struct PHYSICS_T *phys;/* physics pertinent to compact object of interest */
@@ -25,7 +26,8 @@ typedef struct OBSERVE_T
 }Observe_T;
 
 int observe_main(struct PHYSICS_T *const phys);
-int observe(struct PHYSICS_T *const phys,const char *const sq,double *const ret);
+int observe(struct PHYSICS_T *const phys,const char *const sq,
+            const char *const method,double *const ret);
 
 #undef OBSERVE_STR_LEN
 
