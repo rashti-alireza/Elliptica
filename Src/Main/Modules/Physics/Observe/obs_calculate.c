@@ -543,7 +543,6 @@ static void Rc_BH(Observe_T *const obs)
 // outermost patches where the metric is conformally flat and trK = 0. */
 static void calc_ADM_J(Observe_T *const obs)
 {
-  Physics_T *const phys = obs->phys;
   Grid_T *const grid   = obs->grid;  
   Patch_T **patches1   = 0;/* for volume integrals */
   Patch_T **patches2   = 0;/* for surface integrals */
@@ -559,13 +558,13 @@ static void calc_ADM_J(Observe_T *const obs)
   {
     IFsc("ADM(J)|BHNS")
     {
-      if (IsIt("Observe_ADM_J","S_inf,default"))
+      if (IsIt("S_inf,default"))
       {
         /* surface part */
         region   = "outermost_OB";
         patches2 = collect_patches(grid,region,&N2);
       }
-      else if (IsIt("Observe_ADM_J","S+V,Ossokine"))
+      else if (IsIt("S+V,Ossokine"))
       {
         /* this method does not have volume integrals */
         /* surface part */
@@ -579,7 +578,7 @@ static void calc_ADM_J(Observe_T *const obs)
     }
     else IFsc("ADM(J)|NS")
     {
-      if (IsIt("Observe_ADM_J","S_obj,default"))
+      if (IsIt("S_obj,default"))
       {
         /* surface part */
         region   = "NS_OB";
@@ -592,7 +591,7 @@ static void calc_ADM_J(Observe_T *const obs)
     }
     else IFsc("ADM(J)|BH")
     {
-      if (IsIt("Observe_ADM_J","S_obj,default"))
+      if (IsIt("S_obj,default"))
       {
         /* surface part */
         region   = "BH_around_IB";
@@ -605,13 +604,13 @@ static void calc_ADM_J(Observe_T *const obs)
     }
     else IFsc("ADM(J)|SBH")
     {
-      if (IsIt("Observe_ADM_J","S_inf,default"))
+      if (IsIt("S_inf,default"))
       {
         /* surface part */
         region   = "outermost_OB";
         patches2 = collect_patches(grid,region,&N2);
       }
-      else if (IsIt("Observe_ADM_J","S+V,Ossokine"))
+      else if (IsIt("S+V,Ossokine"))
       {
         /* this method does not have volume integrals */
         /* surface part */
@@ -628,7 +627,7 @@ static void calc_ADM_J(Observe_T *const obs)
       /* NOTE:for maximal slice and conformal flat metric 
       // volume integral is 0. like the case we have for NSNS */
       /* surface part */
-      if (IsIt("Observe_ADM_J","S_obj1+S_obj2,default"))
+      if (IsIt("S_obj1+S_obj2,default"))
       {
         /* surface part */
         region   = "NS1_OB,NS2_OB";
@@ -780,14 +779,14 @@ static void calc_ADM_J(Observe_T *const obs)
     {
       IFsc("ADM(J)|BHNS")
       {
-        if (IsIt("Observe_ADM_J","S_inf,default"))
+        if (IsIt("S_inf,default"))
         {
           adm[n]->surface_integration_flg = 1;
           adm[n]->Z_surface = 1;
           adm[n]->K = patch->n[2]-1;
           n_physical_metric_around(adm[n],_c_);
         }
-        else if (IsIt("Observe_ADM_J","S+V,Ossokine"))
+        else if (IsIt("S+V,Ossokine"))
         {
           Set_outermost_integral_S_SplitCS(adm)
           n_physical_metric_around(adm[n],_c_);
@@ -799,7 +798,7 @@ static void calc_ADM_J(Observe_T *const obs)
       }
       else IFsc("ADM(J)|NS")
       {
-        if (IsIt("Observe_ADM_J","S_obj,default"))
+        if (IsIt("S_obj,default"))
         {
           adm[n]->surface_integration_flg = 1;
           adm[n]->Z_surface = 1;
@@ -813,7 +812,7 @@ static void calc_ADM_J(Observe_T *const obs)
       }
       else IFsc("ADM(J)|BH")
       {
-        if (IsIt("Observe_ADM_J","S_obj,default"))
+        if (IsIt("S_obj,default"))
         {
           adm[n]->surface_integration_flg = 1;
           adm[n]->Z_surface = 1;
@@ -827,14 +826,14 @@ static void calc_ADM_J(Observe_T *const obs)
       }
       else IFsc("ADM(J)|SBH")
       {
-        if (IsIt("Observe_ADM_J","S_inf,default"))
+        if (IsIt("S_inf,default"))
         {
           adm[n]->surface_integration_flg = 1;
           adm[n]->Z_surface = 1;
           adm[n]->K = patch->n[2]-1;
           n_physical_metric_around(adm[n],_c_);
         }
-        else if (IsIt("Observe_ADM_J","S+V,Ossokine"))
+        else if (IsIt("S+V,Ossokine"))
         {
           Set_outermost_integral_S_SplitCS(adm)
           n_physical_metric_around(adm[n],_c_);
@@ -846,7 +845,7 @@ static void calc_ADM_J(Observe_T *const obs)
       }
       else IFsc("ADM(J)|NSNS")
       {
-        if (IsIt("Observe_ADM_J","S_obj1+S_obj2,default"))
+        if (IsIt("S_obj1+S_obj2,default"))
         {
           adm[n]->surface_integration_flg = 1;
           adm[n]->Z_surface = 1;
@@ -870,19 +869,19 @@ static void calc_ADM_J(Observe_T *const obs)
   }
   Free(patches2);
 
-  if (IsIt("Observe_ADM_P","S_inf,default"))
+  if (IsIt("S_inf,default"))
   {
     obs_ADM_J_S_default(obs);
   }
-  if (IsIt("Observe_ADM_P","S_obj,default"))
+  if (IsIt("S_obj,default"))
   {
     obs_ADM_J_S_default(obs);
   }
-  if (IsIt("Observe_ADM_P","S_obj1+S_obj2,default"))
+  if (IsIt("S_obj1+S_obj2,default"))
   {
     obs_ADM_J_S_default(obs);
   }
-  else if (IsIt("Observe_ADM_J","S+V,Ossokine"))
+  else if (IsIt("S+V,Ossokine"))
   {
     obs_ADM_J_Stokes_SV_Ossokine(obs);
   }
@@ -897,7 +896,6 @@ static void calc_ADM_J(Observe_T *const obs)
 // outermost patches where the metric is conformally flat and trK = 0. */
 static void calc_ADM_P(Observe_T *const obs)
 {
-  Physics_T *const phys = obs->phys;
   Grid_T *const grid   = obs->grid;  
   Patch_T **patches1   = 0;/* for volume integrals */
   Patch_T **patches2   = 0;/* for surface integrals */
@@ -913,13 +911,13 @@ static void calc_ADM_P(Observe_T *const obs)
   {
     IFsc("ADM(P)|BHNS")
     {
-      if (IsIt("Observe_ADM_P","S_inf,default"))
+      if (IsIt("S_inf,default"))
       {
         /* surface part */
         region   = "outermost_OB";
         patches2 = collect_patches(grid,region,&N2);
       }
-      else if (IsIt("Observe_ADM_P","S+V,Ossokine"))
+      else if (IsIt("S+V,Ossokine"))
       {
         /* for 1 split */
         if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
@@ -939,7 +937,7 @@ static void calc_ADM_P(Observe_T *const obs)
           patches2 = collect_patches(grid,region,&N2);
         }
       }
-      else if (IsIt("Observe_ADM_P","S+V,Rashti"))
+      else if (IsIt("S+V,Rashti"))
       {
         /* volume part */
         region   = "outermost,filling_box,NS_around,NS,BH_around";
@@ -956,7 +954,7 @@ static void calc_ADM_P(Observe_T *const obs)
     }
     else IFsc("ADM(P)|NS")
     {
-      if (IsIt("Observe_ADM_P","S_obj,default"))
+      if (IsIt("S_obj,default"))
       {
         /* surface part */
         region   = "NS_OB";
@@ -969,7 +967,7 @@ static void calc_ADM_P(Observe_T *const obs)
     }
     else IFsc("ADM(P)|BH")
     {
-      if (IsIt("Observe_ADM_P","S_obj,default"))
+      if (IsIt("S_obj,default"))
       {
         /* surface part */
         region   = "BH_around_IB";
@@ -982,17 +980,17 @@ static void calc_ADM_P(Observe_T *const obs)
     }
     else IFsc("ADM(P)|SBH")
     {
-      if (IsIt("Observe_ADM_P","S_inf,default"))
+      if (IsIt("S_inf,default"))
       {
         /* surface part */
         region   = "outermost_OB";
         patches2 = collect_patches(grid,region,&N2);
       }
-      else if (IsIt("Observe_ADM_P","S+V,Ossokine"))
+      else if (IsIt("S+V,Ossokine"))
       {
         Collect_outermost_S_V_SplitCS
       }
-      else if (IsIt("Observe_ADM_P","S+V,Rashti"))
+      else if (IsIt("S+V,Rashti"))
       {
         /* volume part */
         region   = "outermost,BH_around";
@@ -1009,7 +1007,7 @@ static void calc_ADM_P(Observe_T *const obs)
     }
     else IFsc("ADM(P)|NSNS")
     {
-      if (IsIt("Observe_ADM_P","S_obj1+S_obj2,default"))
+      if (IsIt("S_obj1+S_obj2,default"))
       {
         /* surface part */
         region   = "NS1_OB,NS2_OB";
@@ -1157,19 +1155,19 @@ static void calc_ADM_P(Observe_T *const obs)
     {
       IFsc("ADM(P)|BHNS")
       {
-        if (IsIt("Observe_ADM_P","S_inf,default"))
+        if (IsIt("S_inf,default"))
         {
           adm[n]->surface_integration_flg = 1;
           adm[n]->Z_surface = 1;
           adm[n]->K = patch->n[2]-1;
           n_physical_metric_around(adm[n],_c_);
         }
-        else if (IsIt("Observe_ADM_P","S+V,Ossokine"))
+        else if (IsIt("S+V,Ossokine"))
         {
           Set_outermost_integral_S_SplitCS(adm)
           n_physical_metric_around(adm[n],_c_);
         }
-        else if (IsIt("Observe_ADM_P","S+V,Rashti"))
+        else if (IsIt("S+V,Rashti"))
         {
           if (IsItCovering(patch,"BH_around_IB"))
           {
@@ -1190,7 +1188,7 @@ static void calc_ADM_P(Observe_T *const obs)
       }
       else IFsc("ADM(P)|NS")
       {
-        if (IsIt("Observe_ADM_P","S_obj,default"))
+        if (IsIt("S_obj,default"))
         {
           adm[n]->surface_integration_flg = 1;
           adm[n]->Z_surface = 1;
@@ -1204,7 +1202,7 @@ static void calc_ADM_P(Observe_T *const obs)
       }
       else IFsc("ADM(P)|BH")
       {
-        if (IsIt("Observe_ADM_P","S_obj,default"))
+        if (IsIt("S_obj,default"))
         {
           adm[n]->surface_integration_flg = 1;
           adm[n]->Z_surface = 1;
@@ -1218,19 +1216,19 @@ static void calc_ADM_P(Observe_T *const obs)
       }
       else IFsc("ADM(P)|SBH")
       {
-        if (IsIt("Observe_ADM_P","S_inf,default"))
+        if (IsIt("S_inf,default"))
         {
           adm[n]->surface_integration_flg = 1;
           adm[n]->Z_surface = 1;
           adm[n]->K = patch->n[2]-1;
           n_physical_metric_around(adm[n],_c_);
         }
-        else if (IsIt("Observe_ADM_P","S+V,Ossokine"))
+        else if (IsIt("S+V,Ossokine"))
         {
           Set_outermost_integral_S_SplitCS(adm)
           n_physical_metric_around(adm[n],_c_);
         }
-        else if (IsIt("Observe_ADM_P","S+V,Rashti"))
+        else if (IsIt("S+V,Rashti"))
         {
           adm[n]->surface_integration_flg = 1;
           adm[n]->Z_surface = 1;
@@ -1254,23 +1252,23 @@ static void calc_ADM_P(Observe_T *const obs)
   }
   Free(patches2);
   
-  if (IsIt("Observe_ADM_P","S_inf,default"))
+  if (IsIt("S_inf,default"))
   {
     obs_ADM_P_S_default(obs);
   }
-  else if (IsIt("Observe_ADM_P","S_obj,default"))
+  else if (IsIt("S_obj,default"))
   {
     obs_ADM_P_S_default(obs);
   }
-  else if (IsIt("Observe_ADM_P","S_obj1+S_obj2,default"))
+  else if (IsIt("S_obj1+S_obj2,default"))
   {
     obs_ADM_P_S_default(obs);
   }
-  else if (IsIt("Observe_ADM_P","S+V,Ossokine"))
+  else if (IsIt("S+V,Ossokine"))
   {
     obs_ADM_P_Stokes_SV_Ossokine(obs);
   }
-  else if (IsIt("Observe_ADM_P","S+V,Rashti"))
+  else if (IsIt("S+V,Rashti"))
   {
     obs_ADM_P_Stokes_SV_Rashti(obs);
   }
@@ -1284,7 +1282,6 @@ static void calc_ADM_P(Observe_T *const obs)
 /* calculate Komar mass for various objects */
 static void calc_Kommar_mass(Observe_T *const obs)
 {
-  Physics_T *const phys = obs->phys;
   Grid_T *const grid    = obs->grid;
   Patch_T **patches1   = 0;/* for volume integrals */
   Patch_T **patches2   = 0;/* for surface integrals */
@@ -1300,7 +1297,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
   {
     IFsc("Komar(M)|BHNS")
     {
-      if (IsIt(P_"Komar_M","S+V"))
+      if (IsIt("S+V"))
       {
         /* volume part */
         region   = "NS";
@@ -1309,7 +1306,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
         region   = "BH_around_IB";
         patches2 = collect_patches(grid,region,&N2); 
       }
-      else if (IsIt(P_"Komar_M","S_inf"))
+      else if (IsIt("S_inf"))
       {
         /* surface part */
         region   = "outermost_OB";
@@ -1322,13 +1319,13 @@ static void calc_Kommar_mass(Observe_T *const obs)
     }
     else IFsc("Komar(M)|NS")
     {
-      if (IsIt(P_"Komar_M","V_obj"))
+      if (IsIt("V_obj"))
       {
         /* volume part */
         region = "NS";
         patches1 = collect_patches(grid,region,&N1);
       }
-      else if (IsIt(P_"Komar_M","S_obj"))
+      else if (IsIt("S_obj"))
       {
         /* surface part */
         region = "NS_OB";
@@ -1347,13 +1344,13 @@ static void calc_Kommar_mass(Observe_T *const obs)
     }
     else IFsc("Komar(M)|SBH")
     {
-      if (IsIt(P_"Komar_M","S_obj"))
+      if (IsIt("S_obj"))
       {
         /* surface part */
         region   = "BH_around_IB";
         patches2 = collect_patches(grid,region,&N2); 
       }
-      else if (IsIt(P_"Komar_M","S_inf"))
+      else if (IsIt("S_inf"))
       {
         /* surface part */
         region   = "outermost_OB";
@@ -1472,7 +1469,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
     {
       IFsc("Komar(M)|BHNS")
       {
-        if (IsIt(P_"Komar_M","S+V"))
+        if (IsIt("S+V"))
         {
           /* surface integral */
           Komar[n]->surface_integration_flg = 1;
@@ -1480,7 +1477,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
           Komar[n]->K = 0;
           n_physical_metric_around(Komar[n],_c_);
         }
-        else if (IsIt(P_"Komar_M","S_inf"))
+        else if (IsIt("S_inf"))
         {
           /* NOTE: we can use a closer surface to the objects
           // since Komar is independent of surface, so: */
@@ -1494,11 +1491,11 @@ static void calc_Kommar_mass(Observe_T *const obs)
       }
       else IFsc("Komar(M)|NS")
       {
-        if (IsIt(P_"Komar_M","V_obj"))
+        if (IsIt("V_obj"))
         {
           ;
         }
-        else if (IsIt(P_"Komar_M","S_obj"))
+        else if (IsIt("S_obj"))
         {
           /* surface integral */
           Komar[n]->surface_integration_flg = 1;
@@ -1521,7 +1518,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
       }
       else IFsc("Komar(M)|SBH")
       {
-        if (IsIt(P_"Komar_M","S_obj"))
+        if (IsIt("S_obj"))
         {
           /* surface integral */
           Komar[n]->surface_integration_flg = 1;
@@ -1529,7 +1526,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
           Komar[n]->K = 0;
           n_physical_metric_around(Komar[n],_c_);
         }
-        else if (IsIt(P_"Komar_M","S_inf"))
+        else if (IsIt("S_inf"))
         {
           /* NOTE: we can use a closer surface to the objects
           // since Komar is independent of surface, so: */
@@ -1559,7 +1556,6 @@ static void calc_Kommar_mass(Observe_T *const obs)
 /* calculate ADM mass for various objects */
 static void calc_ADM_mass(Observe_T *const obs)
 {
-  Physics_T *const phys = obs->phys;
   Grid_T *const grid = obs->grid;
   Patch_T **patches1 = 0;/* for volume integrals */
   Patch_T **patches2 = 0;/* for surface integrals */
@@ -1575,7 +1571,7 @@ static void calc_ADM_mass(Observe_T *const obs)
   {
     IFsc("ADM(M)|BHNS")
     {
-      if (IsIt(P_"ADM_M","S+V"))
+      if (IsIt("S+V"))
       {
         /* volume part */
         region   = "outermost,filling_box,NS,NS_around,BH_around";
@@ -1584,7 +1580,7 @@ static void calc_ADM_mass(Observe_T *const obs)
         region   = "BH_around_IB";
         patches2 = collect_patches(grid,region,&N2); 
       }
-      else if (IsIt(P_"ADM_M","S_inf"))
+      else if (IsIt("S_inf"))
       {
         /* surface part */
         region   = "outermost_OB";
@@ -1597,7 +1593,7 @@ static void calc_ADM_mass(Observe_T *const obs)
     }
     else IFsc("ADM(M)|NS")
     {
-      if (IsIt(P_"ADM_M","V_obj"))
+      if (IsIt("V_obj"))
       {
         region   = "NS";
         patches1 = collect_patches(grid,region,&N1);
@@ -1609,7 +1605,7 @@ static void calc_ADM_mass(Observe_T *const obs)
     }
     else IFsc("ADM(M)|SBH")
     {
-      if (IsIt(P_"ADM_M","S+V"))
+      if (IsIt("S+V"))
       {
         /* volume part */
         region   = "outermost,BH_around";
@@ -1618,7 +1614,7 @@ static void calc_ADM_mass(Observe_T *const obs)
         region   = "BH_around_IB";
         patches2 = collect_patches(grid,region,&N2); 
       }
-      else if (IsIt(P_"ADM_M","S_inf"))
+      else if (IsIt("S_inf"))
       {
         /* surface part */
         region   = "outermost_OB";
@@ -1733,14 +1729,14 @@ static void calc_ADM_mass(Observe_T *const obs)
     {
       IFsc("ADM(M)|BHNS")
       {
-        if (IsIt(P_"ADM_M","S+V"))
+        if (IsIt("S+V"))
         {
           adm[n]->surface_integration_flg = 1;
           adm[n]->Z_surface = 1;
           adm[n]->K = 0;
           n_conformal_metric_around(adm[n],_c_);
         }
-        else if (IsIt(P_"ADM_M","S_inf"))
+        else if (IsIt("S_inf"))
         {
           /* surface integral */
           adm[n]->surface_integration_flg = 1;
@@ -1755,7 +1751,7 @@ static void calc_ADM_mass(Observe_T *const obs)
       }
       else IFsc("ADM(M)|NS")
       {
-        if (IsIt(P_"ADM_M","V_obj"))
+        if (IsIt("V_obj"))
         {
           ;
         }
@@ -1766,14 +1762,14 @@ static void calc_ADM_mass(Observe_T *const obs)
       }
       else IFsc("ADM(M)|SBH")
       {
-        if (IsIt(P_"ADM_M","S+V"))
+        if (IsIt("S+V"))
         {
           adm[n]->surface_integration_flg = 1;
           adm[n]->Z_surface = 1;
           adm[n]->K = 0;
           n_conformal_metric_around(adm[n],_c_);
         }
-        else if (IsIt(P_"ADM_M","S_inf"))
+        else if (IsIt("S_inf"))
         {
           /* surface integral */
           adm[n]->surface_integration_flg = 1;
@@ -1799,15 +1795,15 @@ static void calc_ADM_mass(Observe_T *const obs)
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
   {
-    if (IsIt(P_"ADM_M","S+V"))
+    if (IsIt("S+V"))
     {
       obs->ret[0] = obs_ADM_mass_SV(obs);
     }
-    else if (IsIt(P_"ADM_M","S_inf"))
+    else if (IsIt("S_inf"))
     {
       obs->ret[0] = obs_ADM_mass_S2(obs);
     }
-    else if (IsIt(P_"ADM_M","V_obj"))
+    else if (IsIt("V_obj"))
     {
       obs->ret[0] = obs_ADM_mass_SV(obs);
     }
@@ -1898,10 +1894,9 @@ double obs_integral_SV (Observe_T *const obs,
 /* calculate irreducible mass of BH */
 static void calc_irreducible_BH_mass(Observe_T *const obs)
 {
-  Physics_T *const phys = obs->phys;
   Grid_T *const grid    = obs->grid;
   
-  if (IsIt("observe_Irreducible_M","S_obj"))
+  if (IsIt("S_obj"))
   {
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
         grid->kind == Grid_SplitCubedSpherical_SBH)

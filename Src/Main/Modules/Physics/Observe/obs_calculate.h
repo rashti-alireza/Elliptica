@@ -4,8 +4,8 @@
 #define IFss(X)    if(strstr_i(obs->quantity,X))
 #define IFsc(X)    if(strcmp_i(obs->quantity,X))
 
-/* is X set to Y? note: X is prefixed with physics */
-#define IsIt(X,Y)  (strcmp_i(Gets(X),Y))
+/* is method set to X? */
+#define IsIt(X)  (strcmp_i(obs->method,X))
 
 /* handy macro for collecting patches1 and patches2 depending on split */
 #define Collect_outermost_S_V_SplitCS \
