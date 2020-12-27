@@ -34,7 +34,7 @@ C_macro2 = add_and_get_field(name);
 
 Declare = 
 {
-  # _A^{ij}
+  # AConf^{ij}
  (obj = Field,name = AConfIJ, rank = UU, C_macro);
 
  # conformal metric 
@@ -42,12 +42,6 @@ Declare =
 
  # conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
-
- # conformal factor derivative
- #(obj = Field,name = dpsi, rank = D, C_macro);
-
- # Christoffer symbol value
- #(obj = Field,name = ChrisConf, rank = UDD, C_macro);
 
  # trKij
  (obj = Field,name = trK, rank = 0, C_macro);
@@ -74,8 +68,9 @@ Symm[gConf(i,j)   = gConf(j,i)];
 
        psim2  = psi**-2;
 
+       # (K_ij - K g_ij)*n^j
        Pn(-i) = n(-j)*\
-(psim2*AConfIJ(ip,jp)*gConf(i,-ip)*gConf(j,-jp)+(1/3)*trK*psi4*gConf(i,j));
+(psim2*AConfIJ(ip,jp)*gConf(i,-ip)*gConf(j,-jp)-(2/3)*trK*psi4*gConf(i,j));
 
        Cpopulate[obs__Pn = Pn];
 `      }`

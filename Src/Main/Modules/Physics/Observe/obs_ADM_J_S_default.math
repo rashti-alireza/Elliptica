@@ -42,7 +42,7 @@ C_macro3 = declare_and_alloc_xi(name);
 
 Declare = 
 {
-  # _A^{ij}
+  # AConf^{ij}
  (obj = Field,name = AConfIJ, rank = UU, C_macro);
 
  # conformal metric 
@@ -50,12 +50,6 @@ Declare =
 
  # conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
-
- # conformal factor derivative
- #(obj = Field,name = dpsi, rank = D, C_macro);
-
- # Christoffer symbol value
- #(obj = Field,name = ChrisConf, rank = UDD, C_macro);
 
  # trKij
  (obj = Field,name = trK, rank = 0, C_macro);
@@ -97,7 +91,7 @@ Symm[gConf(i,j)   = gConf(j,i)];
        
        # (K_ij - K g_ij)*n^j
        Pn(-i) = n(-j)*\
-(psim2*AConfIJ(ip,jp)*gConf(i,-ip)*gConf(j,-jp)+(1/3)*trK*psi4*gConf(i,j));
+(psim2*AConfIJ(ip,jp)*gConf(i,-ip)*gConf(j,-jp)-(2/3)*trK*psi4*gConf(i,j));
        
        Jn(-i) = EIJK(i,j,k)*xi(-j)*Pn(-k);
        Cpopulate[obs__Jn = Jn];
@@ -120,7 +114,7 @@ Symm[gConf(i,j)   = gConf(j,i)];
 `  for(p = 0; p < N; ++p)`
 `  {`
 `    Patch_T *patch = adm[p]->patch;`
-`    remove_field_with_regex(patch,"^obs__Pn_D.$");`
+`    remove_field_with_regex(patch,"^obs__Jn_D.$");`
 `  }`
 ``
 `}`
