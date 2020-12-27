@@ -1339,13 +1339,13 @@ static void calc_Kommar_mass(Observe_T *const obs)
     }
     else IFsc("Komar(M)|SBH")
     {
-      if (IsIt("S_obj"))
+      if (IsIt("S_obj,default"))
       {
         /* surface part */
         region   = "BH_around_IB";
         patches2 = collect_patches(grid,region,&N2); 
       }
-      else if (IsIt("S_inf"))
+      else if (IsIt("S_inf,default"))
       {
         /* surface part */
         region   = "outermost_OB";
@@ -1464,7 +1464,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
     {
       IFsc("Komar(M)|BHNS")
       {
-        if (IsIt("S+V"))
+        if (IsIt("S+V,default"))
         {
           /* surface integral */
           Komar[n]->surface_integration_flg = 1;
@@ -1472,7 +1472,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
           Komar[n]->K = 0;
           n_physical_metric_around(Komar[n],_c_);
         }
-        else if (IsIt("S_inf"))
+        else if (IsIt("S_inf,default"))
         {
           /* NOTE: we can use a closer surface to the objects
           // since Komar is independent of surface, so: */
@@ -1486,11 +1486,11 @@ static void calc_Kommar_mass(Observe_T *const obs)
       }
       else IFsc("Komar(M)|NS")
       {
-        if (IsIt("V_obj"))
+        if (IsIt("V_obj,default"))
         {
           ;
         }
-        else if (IsIt("S_obj"))
+        else if (IsIt("S_obj,default"))
         {
           /* surface integral */
           Komar[n]->surface_integration_flg = 1;
@@ -1513,7 +1513,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
       }
       else IFsc("Komar(M)|SBH")
       {
-        if (IsIt("S_obj"))
+        if (IsIt("S_obj,default"))
         {
           /* surface integral */
           Komar[n]->surface_integration_flg = 1;
@@ -1521,7 +1521,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
           Komar[n]->K = 0;
           n_physical_metric_around(Komar[n],_c_);
         }
-        else if (IsIt("S_inf"))
+        else if (IsIt("S_inf,default"))
         {
           /* NOTE: we can use a closer surface to the objects
           // since Komar is independent of surface, so: */
@@ -1568,7 +1568,7 @@ static void calc_ADM_mass(Observe_T *const obs)
   {
     IFsc("ADM(M)|BHNS")
     {
-      if (IsIt("S+V"))
+      if (IsIt("S+V,default"))
       {
         /* volume part */
         region   = "outermost,filling_box,NS,NS_around,BH_around";
@@ -1577,7 +1577,7 @@ static void calc_ADM_mass(Observe_T *const obs)
         region   = "BH_around_IB";
         patches2 = collect_patches(grid,region,&N2); 
       }
-      else if (IsIt("S_inf"))
+      else if (IsIt("S_inf,default"))
       {
         /* surface part */
         region   = "outermost_OB";
@@ -1590,7 +1590,7 @@ static void calc_ADM_mass(Observe_T *const obs)
     }
     else IFsc("ADM(M)|NS")
     {
-      if (IsIt("V_obj"))
+      if (IsIt("V_obj,default"))
       {
         region   = "NS";
         patches1 = collect_patches(grid,region,&N1);
@@ -1602,7 +1602,7 @@ static void calc_ADM_mass(Observe_T *const obs)
     }
     else IFsc("ADM(M)|SBH")
     {
-      if (IsIt("S+V"))
+      if (IsIt("S+V,default"))
       {
         /* volume part */
         region   = "outermost,BH_around";
@@ -1611,7 +1611,7 @@ static void calc_ADM_mass(Observe_T *const obs)
         region   = "BH_around_IB";
         patches2 = collect_patches(grid,region,&N2); 
       }
-      else if (IsIt("S_inf"))
+      else if (IsIt("S_inf,default"))
       {
         /* surface part */
         region   = "outermost_OB";
@@ -1726,14 +1726,14 @@ static void calc_ADM_mass(Observe_T *const obs)
     {
       IFsc("ADM(M)|BHNS")
       {
-        if (IsIt("S+V"))
+        if (IsIt("S+V,default"))
         {
           adm[n]->surface_integration_flg = 1;
           adm[n]->Z_surface = 1;
           adm[n]->K = 0;
           n_conformal_metric_around(adm[n],_c_);
         }
-        else if (IsIt("S_inf"))
+        else if (IsIt("S_inf,default"))
         {
           /* surface integral */
           adm[n]->surface_integration_flg = 1;
@@ -1748,7 +1748,7 @@ static void calc_ADM_mass(Observe_T *const obs)
       }
       else IFsc("ADM(M)|NS")
       {
-        if (IsIt("V_obj"))
+        if (IsIt("V_obj,default"))
         {
           ;
         }
@@ -1759,14 +1759,14 @@ static void calc_ADM_mass(Observe_T *const obs)
       }
       else IFsc("ADM(M)|SBH")
       {
-        if (IsIt("S+V"))
+        if (IsIt("S+V,default"))
         {
           adm[n]->surface_integration_flg = 1;
           adm[n]->Z_surface = 1;
           adm[n]->K = 0;
           n_conformal_metric_around(adm[n],_c_);
         }
-        else if (IsIt("S_inf"))
+        else if (IsIt("S_inf,default"))
         {
           /* surface integral */
           adm[n]->surface_integration_flg = 1;
@@ -1792,15 +1792,15 @@ static void calc_ADM_mass(Observe_T *const obs)
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
   {
-    if (IsIt("S+V"))
+    if (IsIt("S+V,default"))
     {
       obs->ret[0] = obs_ADM_mass_SV(obs);
     }
-    else if (IsIt("S_inf"))
+    else if (IsIt("S_inf,default"))
     {
       obs->ret[0] = obs_ADM_mass_S2(obs);
     }
-    else if (IsIt("V_obj"))
+    else if (IsIt("V_obj,default"))
     {
       obs->ret[0] = obs_ADM_mass_SV(obs);
     }
@@ -1893,9 +1893,9 @@ static void calc_irreducible_BH_mass(Observe_T *const obs)
 {
   SET_MSG
   
-  Grid_T *const grid    = obs->grid;
+  Grid_T *const grid = obs->grid;
   
-  if (IsIt("S_obj"))
+  if (IsIt("S_obj,default"))
   {
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
         grid->kind == Grid_SplitCubedSpherical_SBH)
