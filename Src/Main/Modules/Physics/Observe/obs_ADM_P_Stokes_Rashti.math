@@ -26,7 +26,7 @@ C_macro3 = READ_v_UNUSED(name);
 `  const Uint N = obs->Nitems;`
 `  Uint p;`
 ``
-`  OpenMP_Patch_Pragma(omp parallel for)`
+## NO openMP safe, since surface and volume patches might have overlap
 `  for(p = 0; p < N; ++p)`
 `  {`
 `  Patch_T *patch = adm[p]->patch;`
