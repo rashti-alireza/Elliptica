@@ -75,14 +75,10 @@
 // "Irreducible(M)" #=> irreducible mass for the givne physics (BH)
 // ----------------------------------------------------------------------
 //
-// "CM"          #=> compute the center of mass for the given physics
+// "CM" #=> compute the center of mass for the given physics
 // ----------------------------------------------------------------------
 //
-// "Spin|method" #=> compute spin for the given physics
-//       methods:
-//       Campanelli: gr-qc/0612076v4
-//       JRB:        Phys. Rev. D 100, 124046
-//       AKV:        Phys.Rev.D78:084017,2008
+// "Spin" #=> compute spin for the given physics
 // ----------------------------------------------------------------------
 //
 */
@@ -185,7 +181,8 @@ static int set_observe_params(Physics_T *const phys)
   // they are PREFIXED with phys->stype to instruct how calculations
   // carried out, ex: BH1_observe_Komar_M.  */
   // the method is suffixed and separated with a comma,
-  // ex: method = "S_inf,default" */
+  // ex: method = "S_inf,default" 
+  // thus for instance param "BH1_observe_Komar_M" = "S_inf,default". */
   
   /* how to compute Komar mass:
   // param:
@@ -267,10 +264,22 @@ static int set_observe_params(Physics_T *const phys)
   // S+V  : over surfaces of compact object 1 and 2 and the rest of space.
   // S_obj1+S_obj2: over surfaces of compact object 1 and 2 */
   
-  /* how to compute irreducible mass of BH.?:
-  // param:  "observe_irreducible_M"
+  /* how to compute Spin:
+  // param:
+  // ======
+  // "Observe_Spin"
+  //
+  // methods:
+  // ========
+  // Campanelli: gr-qc/0612076v4
+  // JRB:        Phys. Rev. D 100, 124046
+  // AKV:        Phys.Rev.D78:084017,2008
+  //
   // options:
+  // ========
   // S_obj: over the surface of compact object (for single physics) */
+  
+  
 
   UNUSED(phys);
   FUNC_TOC
