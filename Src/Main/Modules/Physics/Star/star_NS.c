@@ -231,8 +231,8 @@ int star_NS_idealfluid_gConf_find_Euler_const(Physics_T *const phys)
   double bar_mass,adm_mass,Komar_mass;
   
   bar_mass = star_NS_baryonic_gConf_mass(phys,guess[0]);
-  observe(phys,"ADM(M)",&adm_mass);
-  observe(phys,"Komar(M)",&Komar_mass);
+  observe(phys,"ADM(M)"  ,Gets("Observe_ADM_M")  ,&adm_mass);
+  observe(phys,"Komar(M)",Gets("Observe_Komar_M"),&Komar_mass);
 
   printf(Pretty0"current NS baryonic mass = %e\n",bar_mass);
   printf(Pretty0"current NS ADM mass      = %e\n",adm_mass);

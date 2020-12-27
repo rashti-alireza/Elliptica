@@ -14,8 +14,9 @@ int sys_tune_ADM_momenta(Physics_T *const phys)
   FUNC_TIC
   
   const char *const par = sysGets("P_ADM_control_method");
-  char *adjust[3];
-  double adm[6];
+  char *adjust[3] = {0};
+  double adm_p[3] = {0};
+  double adm_j[3] = {0};
   
   printf(Pretty0"|--> %s\n",par);
   
@@ -31,17 +32,19 @@ int sys_tune_ADM_momenta(Physics_T *const phys)
                               get_func_P_ADM_adjustment(adjust[2]);
   
   
-  observe(phys,"ADM(P,J)|sys",adm);
-  printf(Pretty0"Current P_ADM = (%e,%e,%e)\n",adm[0],adm[1],adm[2]);
-  printf(Pretty0"Current J_ADM = (%e,%e,%e)\n",adm[3],adm[4],adm[5]);
+  observe(phys,"ADM(P)",Gets("Observe_ADM_P"),adm_p);
+  observe(phys,"ADM(J)",Gets("Observe_ADM_J"),adm_j);
   
-  sysSetd("Px_ADM",adm[0]);
-  sysSetd("Py_ADM",adm[1]);
-  sysSetd("Pz_ADM",adm[2]);
+  printf(Pretty0"Current P_ADM = (%e,%e,%e)\n",adm_p[0],adm_p[1],adm_p[2]);
+  printf(Pretty0"Current J_ADM = (%e,%e,%e)\n",adm_j[0],adm_j[1],adm_j[2]);
   
-  sysSetd("Jx_ADM",adm[3]);
-  sysSetd("Jy_ADM",adm[4]);
-  sysSetd("Jz_ADM",adm[5]);
+  sysSetd("Px_ADM",adm_p[0]);
+  sysSetd("Py_ADM",adm_p[1]);
+  sysSetd("Pz_ADM",adm_p[2]);
+  
+  sysSetd("Jx_ADM",adm_j[0]);
+  sysSetd("Jy_ADM",adm_j[1]);
+  sysSetd("Jz_ADM",adm_j[2]);
   
   if (P_ADM_control_0)
     P_ADM_control_0(phys);
