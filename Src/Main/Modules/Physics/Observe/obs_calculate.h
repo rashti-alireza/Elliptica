@@ -7,6 +7,41 @@
 /* is X set to Y? note: X is prefixed with physics */
 #define IsIt(X,Y)  (strcmp_i(Gets(X),Y))
 
+/* handy macro for collecting patches1 and patches2 depending on split */
+#define Collect_outermost_S_V_SplitCS \
+  /* for 1 split */ \
+  if (Pgeti("grid_SplitCS_Nsplit_c") == 1) \
+  { \
+    /* surface part */ \
+    region   = "outermost_OB"; \
+    patches2 = collect_patches(grid,region,&N2); \
+  } \
+  else \
+  { \
+    /* volume part */ \
+    region   = "outermost_OB"; \
+    patches1 = collect_patches(grid,region,&N1); \
+    /* surface part */ \
+    region   = "outermost_OB"; \
+    patches2 = collect_patches(grid,region,&N2); \
+  }
+
+/* set outermost surface integral flags depending on split */
+#define Set_outermost_integral_S_SplitCS \
+  adm[n]->surface_integration_flg = 1; \
+  adm[n]->Z_surface = 1; \
+  /* for 1 split */ \
+  if (Pgeti("grid_SplitCS_Nsplit_c") == 1) \
+  { \
+    adm[n]->K = patch->n[2]-1; \
+  } \
+  else \
+  { \
+    adm[n]->K = 0; \
+  } \
+  n_physical_metric_around(adm[n],_c_);
+
+
 void obs_calculate(Observe_T *const obs);
 static void define_spin_campanelli(Observe_T *const obs);
 static void define_spin_JRP(Observe_T *const obs);
