@@ -27,19 +27,18 @@
   }
 
 /* set outermost surface integral flags depending on split */
-#define Set_outermost_integral_S_SplitCS \
-  adm[n]->surface_integration_flg = 1; \
-  adm[n]->Z_surface = 1; \
+#define Set_outermost_integral_S_SplitCS(item) \
+  item[n]->surface_integration_flg = 1; \
+  item[n]->Z_surface = 1; \
   /* for 1 split */ \
   if (Pgeti("grid_SplitCS_Nsplit_c") == 1) \
   { \
-    adm[n]->K = patch->n[2]-1; \
+    item[n]->K = patch->n[2]-1; \
   } \
   else \
   { \
-    adm[n]->K = 0; \
-  } \
-  n_physical_metric_around(adm[n],_c_);
+    item[n]->K = 0; \
+  }
 
 
 void obs_calculate(Observe_T *const obs);

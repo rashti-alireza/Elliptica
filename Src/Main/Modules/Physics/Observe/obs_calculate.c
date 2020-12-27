@@ -789,7 +789,8 @@ static void calc_ADM_J(Observe_T *const obs)
         }
         else if (IsIt("Observe_ADM_J","S+V,Ossokine"))
         {
-          Set_outermost_integral_S_SplitCS
+          Set_outermost_integral_S_SplitCS(adm)
+          n_physical_metric_around(adm[n],_c_);
         }
         else
         {
@@ -835,7 +836,8 @@ static void calc_ADM_J(Observe_T *const obs)
         }
         else if (IsIt("Observe_ADM_J","S+V,Ossokine"))
         {
-          Set_outermost_integral_S_SplitCS
+          Set_outermost_integral_S_SplitCS(adm)
+          n_physical_metric_around(adm[n],_c_);
         }
         else
         {
@@ -1164,7 +1166,8 @@ static void calc_ADM_P(Observe_T *const obs)
         }
         else if (IsIt("Observe_ADM_P","S+V,Ossokine"))
         {
-          Set_outermost_integral_S_SplitCS
+          Set_outermost_integral_S_SplitCS(adm)
+          n_physical_metric_around(adm[n],_c_);
         }
         else if (IsIt("Observe_ADM_P","S+V,Rashti"))
         {
@@ -1224,7 +1227,8 @@ static void calc_ADM_P(Observe_T *const obs)
         }
         else if (IsIt("Observe_ADM_P","S+V,Ossokine"))
         {
-          Set_outermost_integral_S_SplitCS
+          Set_outermost_integral_S_SplitCS(adm)
+          n_physical_metric_around(adm[n],_c_);
         }
         else if (IsIt("Observe_ADM_P","S+V,Rashti"))
         {
@@ -1478,23 +1482,10 @@ static void calc_Kommar_mass(Observe_T *const obs)
         }
         else if (IsIt(P_"Komar_M","S_inf"))
         {
-          /* for 1 split */
-          if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
-          {
-            /* surface integral */
-            Komar[n]->surface_integration_flg = 1;
-            Komar[n]->Z_surface = 1;
-            Komar[n]->K = patch->n[2]-1;
-            n_physical_metric_around(Komar[n],_c_);
-          }
-          else
-          {
-            /* surface integral */
-            Komar[n]->surface_integration_flg = 1;
-            Komar[n]->Z_surface = 1;
-            Komar[n]->K = 0;
-            n_physical_metric_around(Komar[n],_c_);
-          }
+          /* NOTE: we can use a closer surface to the objects
+          // since Komar is independent of surface, so: */
+          Set_outermost_integral_S_SplitCS(Komar)
+          n_physical_metric_around(Komar[n],_c_);
         }
         else
         {
@@ -1540,23 +1531,10 @@ static void calc_Kommar_mass(Observe_T *const obs)
         }
         else if (IsIt(P_"Komar_M","S_inf"))
         {
-          /* for 1 split */
-          if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
-          {
-            /* surface integral */
-            Komar[n]->surface_integration_flg = 1;
-            Komar[n]->Z_surface = 1;
-            Komar[n]->K = patch->n[2]-1;
-            n_physical_metric_around(Komar[n],_c_);
-          }
-          else
-          {
-            /* surface integral */
-            Komar[n]->surface_integration_flg = 1;
-            Komar[n]->Z_surface = 1;
-            Komar[n]->K = 0;
-            n_physical_metric_around(Komar[n],_c_);
-          }
+          /* NOTE: we can use a closer surface to the objects
+          // since Komar is independent of surface, so: */
+          Set_outermost_integral_S_SplitCS(Komar)
+          n_physical_metric_around(Komar[n],_c_);
         }
         else
         {
