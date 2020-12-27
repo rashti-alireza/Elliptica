@@ -1764,23 +1764,11 @@ static void calc_ADM_mass(Observe_T *const obs)
         }
         else if (IsIt(P_"ADM_M","S_inf"))
         {
-          /* for 1 split */
-          if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
-          {
-            /* surface integral */
-            adm[n]->surface_integration_flg = 1;
-            adm[n]->Z_surface = 1;
-            adm[n]->K = patch->n[2]-1;
-            n_physical_metric_around(adm[n],_c_);
-          }
-          else
-          {
-            /* surface integral */
-            adm[n]->surface_integration_flg = 1;
-            adm[n]->Z_surface = 1;
-            adm[n]->K = 0;
-            n_physical_metric_around(adm[n],_c_);
-          }
+          /* surface integral */
+          adm[n]->surface_integration_flg = 1;
+          adm[n]->Z_surface = 1;
+          adm[n]->K = patch->n[2]-1;
+          n_physical_metric_around(adm[n],_c_);
         }
         else
         {
@@ -1809,23 +1797,11 @@ static void calc_ADM_mass(Observe_T *const obs)
         }
         else if (IsIt(P_"ADM_M","S_inf"))
         {
-          /* for 1 split */
-          if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
-          {
-            /* surface integral */
-            adm[n]->surface_integration_flg = 1;
-            adm[n]->Z_surface = 1;
-            adm[n]->K = patch->n[2]-1;
-            n_physical_metric_around(adm[n],_c_);
-          }
-          else
-          {
-            /* surface integral */
-            adm[n]->surface_integration_flg = 1;
-            adm[n]->Z_surface = 1;
-            adm[n]->K = 0;
-            n_physical_metric_around(adm[n],_c_);
-          }
+          /* surface integral */
+          adm[n]->surface_integration_flg = 1;
+          adm[n]->Z_surface = 1;
+          adm[n]->K = patch->n[2]-1;
+          n_physical_metric_around(adm[n],_c_);
         }
         else
         {
