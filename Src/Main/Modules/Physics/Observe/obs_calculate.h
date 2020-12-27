@@ -1,5 +1,8 @@
 #include "obs_header.h"
 
+/* string len */
+#define obs_STR_LEN (999)
+
 /* handy comparison */
 #define IFss(X)    if(strstr_i(obs->quantity,X))
 #define IFsc(X)    if(strcmp_i(obs->quantity,X))
@@ -39,6 +42,12 @@
   { \
     item[n]->K = 0; \
   }
+
+/* handy error msg */
+#define SET_MSG  \
+ char obs_err_msg[obs_STR_LEN]; \
+ sprintf(obs_err_msg,"In '%s' no such match '%s' and '%s' found!\n", \
+         __func__,obs->quantity,obs->method);
 
 
 void obs_calculate(Observe_T *const obs);

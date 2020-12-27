@@ -532,6 +532,8 @@ static void Rc_BH(Observe_T *const obs)
 // outermost patches where the metric is conformally flat and trK = 0. */
 static void calc_ADM_J(Observe_T *const obs)
 {
+  SET_MSG
+  
   Grid_T *const grid   = obs->grid;  
   Patch_T **patches1   = 0;/* for volume integrals */
   Patch_T **patches2   = 0;/* for surface integrals */
@@ -562,7 +564,7 @@ static void calc_ADM_J(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else IFsc("ADM(J)|NS")
@@ -575,7 +577,7 @@ static void calc_ADM_J(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else IFsc("ADM(J)|BH")
@@ -588,7 +590,7 @@ static void calc_ADM_J(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else IFsc("ADM(J)|SBH")
@@ -608,7 +610,7 @@ static void calc_ADM_J(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else IFsc("ADM(J)|NSNS")
@@ -624,17 +626,17 @@ static void calc_ADM_J(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else
     {
-      Error0(NO_OPTION);
+      Error0(obs_err_msg);
     }
   }
   else
   {
-    Error0(NO_OPTION);
+    Error0(obs_err_msg);
   }
   
   /* alloc memory for all patches */
@@ -711,12 +713,12 @@ static void calc_ADM_J(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else
     {
-      Error0(NO_OPTION);
+      Error0(obs_err_msg);
     }
   }
   Free(patches1);
@@ -782,7 +784,7 @@ static void calc_ADM_J(Observe_T *const obs)
         }
         else
         {
-          Error0(NO_OPTION);
+          Error0(obs_err_msg);
         }
       }
       else IFsc("ADM(J)|NS")
@@ -796,7 +798,7 @@ static void calc_ADM_J(Observe_T *const obs)
         }
         else
         {
-          Error0(NO_OPTION);
+          Error0(obs_err_msg);
         }
       }
       else IFsc("ADM(J)|BH")
@@ -810,7 +812,7 @@ static void calc_ADM_J(Observe_T *const obs)
         }
         else
         {
-          Error0(NO_OPTION);
+          Error0(obs_err_msg);
         }
       }
       else IFsc("ADM(J)|SBH")
@@ -829,7 +831,7 @@ static void calc_ADM_J(Observe_T *const obs)
         }
         else
         {
-          Error0(NO_OPTION);
+          Error0(obs_err_msg);
         }
       }
       else IFsc("ADM(J)|NSNS")
@@ -843,17 +845,17 @@ static void calc_ADM_J(Observe_T *const obs)
         }
         else
         {
-          Error0(NO_OPTION);
+          Error0(obs_err_msg);
         }
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else
     {
-      Error0(NO_OPTION);
+      Error0(obs_err_msg);
     }
   }
   Free(patches2);
@@ -876,7 +878,7 @@ static void calc_ADM_J(Observe_T *const obs)
   }
   else
   {
-    Error0(NO_OPTION);
+    Error0(obs_err_msg);
   }
 }
 
@@ -885,6 +887,8 @@ static void calc_ADM_J(Observe_T *const obs)
 // outermost patches where the metric is conformally flat and trK = 0. */
 static void calc_ADM_P(Observe_T *const obs)
 {
+  SET_MSG
+  
   Grid_T *const grid   = obs->grid;  
   Patch_T **patches1   = 0;/* for volume integrals */
   Patch_T **patches2   = 0;/* for surface integrals */
@@ -938,7 +942,7 @@ static void calc_ADM_P(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else IFsc("ADM(P)|NS")
@@ -951,7 +955,7 @@ static void calc_ADM_P(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else IFsc("ADM(P)|BH")
@@ -964,7 +968,7 @@ static void calc_ADM_P(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else IFsc("ADM(P)|SBH")
@@ -991,7 +995,7 @@ static void calc_ADM_P(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else IFsc("ADM(P)|NSNS")
@@ -1004,17 +1008,17 @@ static void calc_ADM_P(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else
     {
-      Error0(NO_OPTION);
+      Error0(obs_err_msg);
     }
   }
   else
   {
-    Error0(NO_OPTION);
+    Error0(obs_err_msg);
   }
   
   /* alloc memory for all patches */
@@ -1087,12 +1091,12 @@ static void calc_ADM_P(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else
     {
-      Error0(NO_OPTION);
+      Error0(obs_err_msg);
     }
   }
   Free(patches1);
@@ -1167,12 +1171,12 @@ static void calc_ADM_P(Observe_T *const obs)
           }
           else
           {
-            Error0(NO_OPTION);
+            Error0(obs_err_msg);
           }
         }
         else
         {
-          Error0(NO_OPTION);
+          Error0(obs_err_msg);
         }
       }
       else IFsc("ADM(P)|NS")
@@ -1186,7 +1190,7 @@ static void calc_ADM_P(Observe_T *const obs)
         }
         else
         {
-          Error0(NO_OPTION);
+          Error0(obs_err_msg);
         }
       }
       else IFsc("ADM(P)|BH")
@@ -1200,7 +1204,7 @@ static void calc_ADM_P(Observe_T *const obs)
         }
         else
         {
-          Error0(NO_OPTION);
+          Error0(obs_err_msg);
         }
       }
       else IFsc("ADM(P)|SBH")
@@ -1226,17 +1230,17 @@ static void calc_ADM_P(Observe_T *const obs)
         }
         else
         {
-          Error0(NO_OPTION);
+          Error0(obs_err_msg);
         }
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else
     {
-      Error0(NO_OPTION);
+      Error0(obs_err_msg);
     }  
   }
   Free(patches2);
@@ -1263,7 +1267,7 @@ static void calc_ADM_P(Observe_T *const obs)
   }
   else
   {
-    Error0(NO_OPTION);
+    Error0(obs_err_msg);
   }
   
 }
@@ -1271,6 +1275,8 @@ static void calc_ADM_P(Observe_T *const obs)
 /* calculate Komar mass for various objects */
 static void calc_Kommar_mass(Observe_T *const obs)
 {
+  SET_MSG
+  
   Grid_T *const grid    = obs->grid;
   Patch_T **patches1   = 0;/* for volume integrals */
   Patch_T **patches2   = 0;/* for surface integrals */
@@ -1303,7 +1309,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else IFsc("Komar(M)|NS")
@@ -1322,7 +1328,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else IFsc("Komar(M)|BH")
@@ -1347,17 +1353,17 @@ static void calc_Kommar_mass(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else
     {
-      Error0(NO_OPTION);
+      Error0(obs_err_msg);
     }
   }
   else
   {
-    Error0(NO_OPTION);
+    Error0(obs_err_msg);
   }
   
   /* alloc memory for all patches */
@@ -1475,7 +1481,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
         }
         else
         {
-          Error0(NO_OPTION);
+          Error0(obs_err_msg);
         }
       }
       else IFsc("Komar(M)|NS")
@@ -1494,7 +1500,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
         }
         else
         {
-          Error0(NO_OPTION);
+          Error0(obs_err_msg);
         }
       }
       else IFsc("Komar(M)|BH")
@@ -1524,17 +1530,17 @@ static void calc_Kommar_mass(Observe_T *const obs)
         }
         else
         {
-          Error0(NO_OPTION);
+          Error0(obs_err_msg);
         }
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else
     {
-      Error0(NO_OPTION);
+      Error0(obs_err_msg);
     }
   }
   Free(patches2);
@@ -1545,6 +1551,8 @@ static void calc_Kommar_mass(Observe_T *const obs)
 /* calculate ADM mass for various objects */
 static void calc_ADM_mass(Observe_T *const obs)
 {
+  SET_MSG
+  
   Grid_T *const grid = obs->grid;
   Patch_T **patches1 = 0;/* for volume integrals */
   Patch_T **patches2 = 0;/* for surface integrals */
@@ -1577,7 +1585,7 @@ static void calc_ADM_mass(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else IFsc("ADM(M)|NS")
@@ -1589,7 +1597,7 @@ static void calc_ADM_mass(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else IFsc("ADM(M)|SBH")
@@ -1611,17 +1619,17 @@ static void calc_ADM_mass(Observe_T *const obs)
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else
     {
-      Error0(NO_OPTION);
+      Error0(obs_err_msg);
     }
   }
   else
   {
-    Error0(NO_OPTION);
+    Error0(obs_err_msg);
   }
 
   /* alloc memory for all patches */
@@ -1735,7 +1743,7 @@ static void calc_ADM_mass(Observe_T *const obs)
         }
         else
         {
-          Error0(NO_OPTION);
+          Error0(obs_err_msg);
         }
       }
       else IFsc("ADM(M)|NS")
@@ -1746,7 +1754,7 @@ static void calc_ADM_mass(Observe_T *const obs)
         }
         else
         {
-          Error0(NO_OPTION);
+          Error0(obs_err_msg);
         }
       }
       else IFsc("ADM(M)|SBH")
@@ -1768,16 +1776,16 @@ static void calc_ADM_mass(Observe_T *const obs)
         }
         else
         {
-          Error0(NO_OPTION);
+          Error0(obs_err_msg);
         }
       }
       else
       {
-        Error0(NO_OPTION);
+        Error0(obs_err_msg);
       }
     }
     else
-      Error0(NO_OPTION);
+      Error0(obs_err_msg);
   }
   Free(patches2);
   
@@ -1798,12 +1806,12 @@ static void calc_ADM_mass(Observe_T *const obs)
     }
     else 
     {
-      Error0(NO_OPTION);
+      Error0(obs_err_msg);
     }
   }
   else
   {
-    Error0(NO_OPTION);
+    Error0(obs_err_msg);
   }
 }
 
@@ -1883,6 +1891,8 @@ double obs_integral_SV (Observe_T *const obs,
 /* calculate irreducible mass of BH */
 static void calc_irreducible_BH_mass(Observe_T *const obs)
 {
+  SET_MSG
+  
   Grid_T *const grid    = obs->grid;
   
   if (IsIt("S_obj"))
@@ -1894,12 +1904,12 @@ static void calc_irreducible_BH_mass(Observe_T *const obs)
     }
     else
     {
-      Error0(NO_OPTION);
+      Error0(obs_err_msg);
     }
   }
   else
   {
-    Error0(NO_OPTION);
+    Error0(obs_err_msg);
   }
 
 }
@@ -1907,6 +1917,8 @@ static void calc_irreducible_BH_mass(Observe_T *const obs)
 /* center mass */
 static void calc_CM(Observe_T *const obs)
 {
+  SET_MSG
+  
   IFsc("CM|BH")
   {
     if (IsIt("S_obj,default"))
@@ -1915,7 +1927,7 @@ static void calc_CM(Observe_T *const obs)
     }
     else
     {
-      Error0(NO_OPTION);
+      Error0(obs_err_msg);
     }
   }
   else IFsc("CM|NS")
@@ -1926,18 +1938,20 @@ static void calc_CM(Observe_T *const obs)
     }
     else
     {
-      Error0(NO_OPTION);
+      Error0(obs_err_msg);
     }
   }
   else
   {
-    Error0(NO_OPTION);
+    Error0(obs_err_msg);
   }
 }
 
 /* calculate spin */
 static void calc_spin(Observe_T *const obs)
 {
+  SET_MSG
+  
   IFsc("Spin|BH")
   {
     if (IsIt("S_obj,JRP"))
@@ -1954,7 +1968,7 @@ static void calc_spin(Observe_T *const obs)
     }
     else
     {
-      Error0(NO_OPTION);
+      Error0(obs_err_msg);
     }
   }
   else IFsc("Spin|NS")
@@ -1973,12 +1987,12 @@ static void calc_spin(Observe_T *const obs)
     }
     else
     {
-      Error0(NO_OPTION);
+      Error0(obs_err_msg);
     }
   }
   else
   {
-    Error0(NO_OPTION);
+    Error0(obs_err_msg);
   }
 }
 
