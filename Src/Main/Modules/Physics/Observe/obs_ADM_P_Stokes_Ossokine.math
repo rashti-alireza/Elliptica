@@ -1,12 +1,8 @@
 # calculating ADM momentum
 # using arxiv:1506.01689 formalism.
 # NOTE: the error of at outermost patches could be quite large it could be
-#       up to 2-3% off! however, for maximal slices and conformally flat
-#       metric the contribution of this integral is zero.
+#       up to 2-3% off!
 # NOTE: the volume integral must not cover matter, see arxiv:1506.01689.
-# NOTE: the definition of ADM angular momentum is only held when
-#       quasi-isotropic and asymptotically maximal gauge are satisfied,
-#       see arXiv:gr-qc/0703035v1.
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -17,13 +13,6 @@ Point = ijk;
 C_macro  = READ_v(name);
 C_macro2 = add_and_get_field(name);
 
-`#include "core_lib.h"`
-`#include "physics_observe_lib.h"`
-`#include "utilities_lib.h"`
-`#include "manifold_lib.h"`
-`#include "maths_general_lib.h"`
-`#include "maths_calculus_lib.h"`
-`#include "fields_lib.h"`
 `#include "obs_header.h"`
 ``
 ``
