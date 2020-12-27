@@ -636,7 +636,7 @@ static void calc_ADM_J(Observe_T *const obs)
   }
   else
   {
-    Error0(obs_err_msg);
+    Error0(NO_OPTION);
   }
   
   /* alloc memory for all patches */
@@ -718,7 +718,7 @@ static void calc_ADM_J(Observe_T *const obs)
     }
     else
     {
-      Error0(obs_err_msg);
+      Error0(NO_OPTION);
     }
   }
   Free(patches1);
@@ -855,30 +855,39 @@ static void calc_ADM_J(Observe_T *const obs)
     }
     else
     {
-      Error0(obs_err_msg);
+      Error0(NO_OPTION);
     }
   }
   Free(patches2);
 
-  if (IsIt("S_inf,default"))
+
+  if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_SBH)
   {
-    obs_ADM_J_S_default(obs);
-  }
-  if (IsIt("S_obj,default"))
-  {
-    obs_ADM_J_S_default(obs);
-  }
-  if (IsIt("S_obj1+S_obj2,default"))
-  {
-    obs_ADM_J_S_default(obs);
-  }
-  else if (IsIt("S+V,Ossokine"))
-  {
-    obs_ADM_J_Stokes_SV_Ossokine(obs);
+    if (IsIt("S_inf,default"))
+    {
+      obs_ADM_J_S_default(obs);
+    }
+    else if (IsIt("S_obj,default"))
+    {
+      obs_ADM_J_S_default(obs);
+    }
+    else if (IsIt("S_obj1+S_obj2,default"))
+    {
+      obs_ADM_J_S_default(obs);
+    }
+    else if (IsIt("S+V,Ossokine"))
+    {
+      obs_ADM_J_Stokes_SV_Ossokine(obs);
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
   }
   else
   {
-    Error0(obs_err_msg);
+    Error0(NO_OPTION);
   }
 }
 
@@ -1018,7 +1027,7 @@ static void calc_ADM_P(Observe_T *const obs)
   }
   else
   {
-    Error0(obs_err_msg);
+    Error0(NO_OPTION);
   }
   
   /* alloc memory for all patches */
@@ -1096,7 +1105,7 @@ static void calc_ADM_P(Observe_T *const obs)
     }
     else
     {
-      Error0(obs_err_msg);
+      Error0(NO_OPTION);
     }
   }
   Free(patches1);
@@ -1240,34 +1249,43 @@ static void calc_ADM_P(Observe_T *const obs)
     }
     else
     {
-      Error0(obs_err_msg);
+      Error0(NO_OPTION);
     }  
   }
   Free(patches2);
   
-  if (IsIt("S_inf,default"))
+  
+  if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_SBH)
   {
-    obs_ADM_P_S_default(obs);
-  }
-  else if (IsIt("S_obj,default"))
-  {
-    obs_ADM_P_S_default(obs);
-  }
-  else if (IsIt("S_obj1+S_obj2,default"))
-  {
-    obs_ADM_P_S_default(obs);
-  }
-  else if (IsIt("S+V,Ossokine"))
-  {
-    obs_ADM_P_Stokes_SV_Ossokine(obs);
-  }
-  else if (IsIt("S+V,Rashti"))
-  {
-    obs_ADM_P_Stokes_SV_Rashti(obs);
+    if (IsIt("S_inf,default"))
+    {
+      obs_ADM_P_S_default(obs);
+    }
+    else if (IsIt("S_obj,default"))
+    {
+      obs_ADM_P_S_default(obs);
+    }
+    else if (IsIt("S_obj1+S_obj2,default"))
+    {
+      obs_ADM_P_S_default(obs);
+    }
+    else if (IsIt("S+V,Ossokine"))
+    {
+      obs_ADM_P_Stokes_SV_Ossokine(obs);
+    }
+    else if (IsIt("S+V,Rashti"))
+    {
+      obs_ADM_P_Stokes_SV_Rashti(obs);
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
   }
   else
   {
-    Error0(obs_err_msg);
+    Error0(NO_OPTION);
   }
   
 }
@@ -1292,7 +1310,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
   {
     IFsc("Komar(M)|BHNS")
     {
-      if (IsIt("S+V"))
+      if (IsIt("S+V,default"))
       {
         /* volume part */
         region   = "NS";
@@ -1301,7 +1319,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
         region   = "BH_around_IB";
         patches2 = collect_patches(grid,region,&N2); 
       }
-      else if (IsIt("S_inf"))
+      else if (IsIt("S_inf,default"))
       {
         /* surface part */
         region   = "outermost_OB";
@@ -1314,13 +1332,13 @@ static void calc_Kommar_mass(Observe_T *const obs)
     }
     else IFsc("Komar(M)|NS")
     {
-      if (IsIt("V_obj"))
+      if (IsIt("V_obj,default"))
       {
         /* volume part */
         region = "NS";
         patches1 = collect_patches(grid,region,&N1);
       }
-      else if (IsIt("S_obj"))
+      else if (IsIt("S_obj,default"))
       {
         /* surface part */
         region = "NS_OB";
@@ -1363,7 +1381,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
   }
   else
   {
-    Error0(obs_err_msg);
+    Error0(NO_OPTION);
   }
   
   /* alloc memory for all patches */
@@ -1540,12 +1558,39 @@ static void calc_Kommar_mass(Observe_T *const obs)
     }
     else
     {
-      Error0(obs_err_msg);
+      Error0(NO_OPTION);
     }
   }
   Free(patches2);
   
-  obs->ret[0] = obs_Komar_mass(obs);
+  if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_SBH)
+  {
+    if (IsIt("S+V,default"))
+    {
+      obs->ret[0] = obs_Komar_mass(obs);
+    }
+    else if (IsIt("S_obj,default"))
+    {
+      obs->ret[0] = obs_Komar_mass(obs);
+    }
+    else if (IsIt("S_inf,default"))
+    {
+      obs->ret[0] = obs_Komar_mass(obs);
+    }
+    else if (IsIt("V_obj,default"))
+    {
+      obs->ret[0] = obs_Komar_mass(obs);
+    }
+    else if (IsIt("S+V,default"))
+    {
+      obs->ret[0] = obs_Komar_mass(obs);
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
+  }
 }
 
 /* calculate ADM mass for various objects */
@@ -1629,7 +1674,7 @@ static void calc_ADM_mass(Observe_T *const obs)
   }
   else
   {
-    Error0(obs_err_msg);
+    Error0(NO_OPTION);
   }
 
   /* alloc memory for all patches */
@@ -1785,7 +1830,7 @@ static void calc_ADM_mass(Observe_T *const obs)
       }
     }
     else
-      Error0(obs_err_msg);
+      Error0(NO_OPTION);
   }
   Free(patches2);
   
@@ -1811,7 +1856,7 @@ static void calc_ADM_mass(Observe_T *const obs)
   }
   else
   {
-    Error0(obs_err_msg);
+    Error0(NO_OPTION);
   }
 }
 

@@ -46,7 +46,7 @@
 /* handy error msg */
 #define SET_MSG  \
  char obs_err_msg[obs_STR_LEN]; \
- sprintf(obs_err_msg,"In '%s' no such match '%s' and '%s' found!\n", \
+ sprintf(obs_err_msg,"In '%s' NO such '%s' or '%s' found!\n", \
          __func__,obs->quantity,obs->method);
 
 
