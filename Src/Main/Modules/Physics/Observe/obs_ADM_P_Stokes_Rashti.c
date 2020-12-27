@@ -20,7 +20,6 @@ void obs_ADM_P_Stokes_SV_Rashti(Observe_T *const obs)
   const Uint N = obs->Nitems;
   Uint p;
 
-  OpenMP_Patch_Pragma(omp parallel for)
   for(p = 0; p < N; ++p)
   {
   Patch_T *patch = adm[p]->patch;
