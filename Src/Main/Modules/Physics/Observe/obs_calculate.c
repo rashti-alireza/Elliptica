@@ -1868,7 +1868,7 @@ double obs_integral_SV (Observe_T *const obs,
       I->Spectral->K         = adm[p]->K;
       
       plan_integration(I);
-      sum_s  = execute_integration(I);
+      sum_s = execute_integration(I);
       free_integration(I);
     }
     else

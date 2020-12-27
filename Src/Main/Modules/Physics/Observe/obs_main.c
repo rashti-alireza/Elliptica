@@ -114,10 +114,10 @@ int observe_main(Physics_T *const phys)
 /* calculate the quantity of interest sq based on given physics 
 // and then return in ret variable. 
 // NOTE: one must provide enough memory for return value in ret; 
-// for instace for "ADM(P,J)" one needs 6 double type memory.
-// NOTE: the order of population for "ADM(P,J)" is:
+// for instace for "ADM(P)" or "ADM(J)" one needs 3 double type memory.
+// NOTE: the order of population for "ADM(P)" and "ADM(J)" are:
 // Px = ret[0], py = ret[1], pz = ret[2]
-// Jx = ret[3], Jy = ret[4], Jz = ret[5]
+// Jx = ret[0], Jy = ret[1], Jz = ret[2]
 // and generally for index quantities (x,y,z) fills with order (0,1,2). 
 // NOTE: for observe(bh,"Irreducible(M)",ret) we have:
 // ret[0] = bh irreducible mass and ret[1] = AH physical(proper) area. */
