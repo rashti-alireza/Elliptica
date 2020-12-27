@@ -1,8 +1,7 @@
 # calculating ADM angular momentum
 # using arxiv:1506.01689 formalism.
 # NOTE: the error of at outermost patches could be quite large it could be
-#       up to 2-3% off! however, for maximal slices and conformally flat
-#       metric the contribution of this integral is zero.
+#       up to 2-3% off!
 # NOTE: the volume integral must not cover matter, see arxiv:1506.01689.
 # NOTE: the definition of ADM angular momentum is only held when
 #       quasi-isotropic and asymptotically maximal gauge are satisfied,
@@ -12,6 +11,7 @@
 #       on the surface where the integraion carried out whether 
 #       conformal metric is flat and trK is zero like NS-NS system
 #       or the surface is at infinity which these conditions are met.
+# NOTE: this formula is used for the whole system and not single object.
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -74,9 +74,7 @@ Declare =
 }
 # symmetries:
 Symm[AConfIJ(i,j)  = AConfIJ(j,i)];
-Symm[igConf(i,j)  = igConf(j,i)];
 Symm[gConf(i,j)   = gConf(j,i)];
-Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 
 ``
 `   for(ijk = 0; ijk < nn; ++ijk)`
@@ -100,7 +98,8 @@ Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 `      {`
        psi4   = psi**4;
 
-       # psi^10 K^{ij} where trK assume zero at large distances
+       # psi^10 K^{ij} where trK assumed to be zero at large distances
+       # this is how they did it in the paper.
        Pn(i)  = AConfIJ(i,j)*n(k)*gConf(-j,-k)*psi4;
        xiP(i) = EIJK(i,j,k)*xi(-j)*Pn(-k);
 
