@@ -419,6 +419,10 @@ static void define_spin_JRP(Observe_T *const obs)
   else
     Error0(NO_OPTION);
 
+  R[0] = obs->ret[0];
+  R[1] = obs->ret[1];
+  R[2] = obs->ret[2];
+
   S[0] = J[0] - (-P[1]*R[2] + P[2]*R[1]);
   S[1] = J[1] - (P[0]*R[2] - P[2]*R[0]);
   S[2] = J[2] - (-P[0]*R[1] + P[1]*R[0]);
