@@ -40,6 +40,21 @@
   h[2] = scale*(patch->max[2]-patch->min[2])/patch->n[2];\
 }
 
+/* should i do spell check? */
+#define SPELL_CHECK (1)
+
+/* dictionary variable for SCS */
+const char *Dictionary_SCS = "(BH_around)(BH_around_IB)(BH_around_OB)"
+                             "(BH1_around)(BH1_around_IB)(BH1_around_OB)"
+                             "(BH2_around)(BH2_around_IB)(BH2_around_OB)"
+                             "(NS_around)(NS_around_IB)(NS_around_OB)"
+                             "(NS1_around)(NS1_around_IB)(NS1_around_OB)"
+                             "(NS2_around)(NS2_around_IB)(NS2_around_OB)"
+                             "(outermost)(outermost_IB)(outermost_OB)"
+                             "(filling_box)(central_box)"
+                             "(NS)(NS1)(NS2)(BH)(BH1)(BH2)";
+                             
+                             
 
 typedef enum MODE_T
 {

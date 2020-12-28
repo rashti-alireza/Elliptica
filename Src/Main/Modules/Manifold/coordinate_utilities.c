@@ -815,6 +815,15 @@ IsItCovering
     while (reg[i])
     {
       sprintf(s,"(%s)",reg[i]);
+      
+      /* check the spell of given */
+      if (SPELL_CHECK)
+      {
+        if (!strstr_i(Dictionary_SCS,s))
+          Errors("Please spell check '%s'!",reg[i]);
+      }
+      
+      /* check if covers */
       if (strstr_i(patch->CoordSysInfo->region,s))
       {
         free_2d(reg);
