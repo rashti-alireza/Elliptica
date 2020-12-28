@@ -1598,6 +1598,8 @@ static void calc_ADM_mass(Observe_T *const obs)
 {
   SET_MSG
   
+  /* in these cases use gConf and not g */
+  const int IsConf   = (IsIt("S+V,default")||IsIt("V_obj,default"));
   Grid_T *const grid = obs->grid;
   Patch_T **patches1 = 0;/* for volume integrals */
   Patch_T **patches2 = 0;/* for surface integrals */
@@ -1705,18 +1707,20 @@ static void calc_ADM_mass(Observe_T *const obs)
     READ_v(gConf_D0D1)
     READ_v(gConf_D1D2)
     READ_v(gConf_D1D1)
+    READ_v(psi);
     
     adm[n]->patch = patch;
-    /* populate metric components, it uses conformal metric */ 
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      g00[ijk] = gConf_D0D0[ijk];
-      g01[ijk] = gConf_D0D1[ijk];
-      g02[ijk] = gConf_D0D2[ijk];
-      g11[ijk] = gConf_D1D1[ijk];
-      g12[ijk] = gConf_D1D2[ijk];
-      g22[ijk] = gConf_D2D2[ijk];
+      double psi4 = (IsConf ? 1. : Pow2(psi[ijk])*Pow2(psi[ijk]));
+      g00[ijk] = psi4*gConf_D0D0[ijk];
+      g01[ijk] = psi4*gConf_D0D1[ijk];
+      g02[ijk] = psi4*gConf_D0D2[ijk];
+      g11[ijk] = psi4*gConf_D1D1[ijk];
+      g12[ijk] = psi4*gConf_D1D2[ijk];
+      g22[ijk] = psi4*gConf_D2D2[ijk];
     }
+    
     adm[n]->g00 = g00;
     adm[n]->g01 = g01;
     adm[n]->g02 = g02;
@@ -1747,17 +1751,18 @@ static void calc_ADM_mass(Observe_T *const obs)
     READ_v(gConf_D0D1)
     READ_v(gConf_D1D2)
     READ_v(gConf_D1D1)
+    READ_v(psi);
     
     adm[n]->patch = patch;
-    /* populate metric components, it uses conformal metric */ 
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      g00[ijk] = gConf_D0D0[ijk];
-      g01[ijk] = gConf_D0D1[ijk];
-      g02[ijk] = gConf_D0D2[ijk];
-      g11[ijk] = gConf_D1D1[ijk];
-      g12[ijk] = gConf_D1D2[ijk];
-      g22[ijk] = gConf_D2D2[ijk];
+      double psi4 = (IsConf ? 1. : Pow2(psi[ijk])*Pow2(psi[ijk]));
+      g00[ijk] = psi4*gConf_D0D0[ijk];
+      g01[ijk] = psi4*gConf_D0D1[ijk];
+      g02[ijk] = psi4*gConf_D0D2[ijk];
+      g11[ijk] = psi4*gConf_D1D1[ijk];
+      g12[ijk] = psi4*gConf_D1D2[ijk];
+      g22[ijk] = psi4*gConf_D2D2[ijk];
     }
     adm[n]->g00 = g00;
     adm[n]->g01 = g01;

@@ -209,12 +209,12 @@ static int set_observe_params(Physics_T *const phys)
   // ========
   // default: used arXiv:gr-qc/0703035v1
   //          note: for S+V this method assumes isotropic gauge.
-  //
+  // 
   // options:
   // ========
   // S_inf: on a surface at infinity. 
   // S_obj: over the surface of compact object (for single physics)
-  // V_obj: over the volume of compact object (for single physics)
+  // V_obj: over the volume of compact object (for single physics) (arXiv:1910.09690v1)
   // S+V  : over all space and on BH surface if any. */
   
   /* how to compute irreducible mass:
