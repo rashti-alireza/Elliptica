@@ -290,8 +290,7 @@ int star_NS_idealfluid_extrapolate_matter_fields(Physics_T *const phys)
     
     star_NS_extrapolate(phys,fields_name,"poly2");
     
-    phys->region = Ftype("NS_around");
-    star_W_spin_vector_idealfluid_update(phys);
+    star_W_spin_vector_idealfluid_update(phys,"NS_around");
     phys_set_region(phys);
   }
   else
@@ -305,13 +304,13 @@ int star_NS_idealfluid_extrapolate_matter_fields(Physics_T *const phys)
 
 
 /* calculate W = Omega_NS x (r-C_NS) */
-void star_W_spin_vector_idealfluid_update(Physics_T *const phys)
+void star_W_spin_vector_idealfluid_update(Physics_T *const phys,
+                                          const char *const region)
 {
   FUNC_TIC
   
-  Grid_T *const grid = phys->grid;
+  Grid_T *const grid = mygrid(phys,region);
   double Omega_NS[3],C_NS[3];
-  Uint p;
   
   Omega_NS[0] = Getd("Omega_U0");
   Omega_NS[1] = Getd("Omega_U1");
@@ -320,14 +319,11 @@ void star_W_spin_vector_idealfluid_update(Physics_T *const phys)
   C_NS[1]     = Getd("center_y");
   C_NS[2]     = Getd("center_z");
   
-  FOR_ALL_PATCHES(p,grid)
+  FOR_ALL_p(grid->np)
   {
     Patch_T *patch = grid->patch[p];
     
-    IF_not_cover(patch,phys) continue;
-    
     W_spin_vector_idealfluid(patch,Omega_NS,C_NS);
-    
   }
   
   FUNC_TOC
