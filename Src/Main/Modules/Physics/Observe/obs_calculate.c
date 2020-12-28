@@ -1839,7 +1839,7 @@ static void calc_ADM_mass(Observe_T *const obs)
   {
     if (IsIt("S+V,default"))
     {
-      obs->ret[0] = obs_ADM_mass_SV(obs);
+      obs->ret[0] = obs_ADM_mass_SV_isotropic(obs);
     }
     else if (IsIt("S_inf,default"))
     {
@@ -1847,7 +1847,7 @@ static void calc_ADM_mass(Observe_T *const obs)
     }
     else if (IsIt("V_obj,default"))
     {
-      obs->ret[0] = obs_ADM_mass_SV(obs);
+      obs->ret[0] = obs_ADM_mass_SV_isotropic(obs);
     }
     else 
     {

@@ -208,6 +208,7 @@ static int set_observe_params(Physics_T *const phys)
   // methods:
   // ========
   // default: used arXiv:gr-qc/0703035v1
+  //          note: for S+V this method assumes isotropic gauge.
   //
   // options:
   // ========

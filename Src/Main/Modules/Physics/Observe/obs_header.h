@@ -51,7 +51,7 @@ struct items_S
   Uint Ki,Kf;
 };
 
-double obs_ADM_mass_SV(Observe_T *const obs);
+double obs_ADM_mass_SV_isotropic(Observe_T *const obs);
 double obs_ADM_mass_S2(Observe_T *const obs);
 double obs_Komar_mass(Observe_T *const obs);
 double obs_ADM_mass(Observe_T *const obs);
