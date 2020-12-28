@@ -11,7 +11,8 @@
 // note: if either of them is null 0 is returned.
 // ->return value: 1 for success, 0 otherwise.
 */
-int strcmp_i(const char *const s1, const char *const s2)
+int strcmp_i(const char *const s1/* haystack */, 
+             const char *const s2/* needle */)
 {
   if (!s2 || !s1) return 0;
   
@@ -51,7 +52,8 @@ int strcmp_i(const char *const s1, const char *const s2)
 // note: if either of them is null 0 is returned.
 // ->return value: 1 for found, 0 otherwise.
 */
-int strstr_i(const char *const s1, const char *const s2)
+int strstr_i(const char *const s1/* haystack */, 
+             const char *const s2/* needle */)
 {
   if (!s2 || !s1) return 0;
   
