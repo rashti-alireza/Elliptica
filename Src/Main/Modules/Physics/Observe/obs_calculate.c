@@ -42,6 +42,10 @@ void obs_calculate(Observe_T *const obs)
   {
     calc_irreducible_BH_mass(obs);
   }
+  else IFss("Baryonic(M)|")
+  {
+    calc_baryonic_mass(obs);
+  }
   else IFss("CM|")
   {
     calc_CM(obs);
@@ -2036,3 +2040,31 @@ static void calc_spin(Observe_T *const obs)
   }
 }
 
+
+/* calculate Baryonic mass */
+static void calc_baryonic_mass(Observe_T *const obs)
+{
+  SET_MSG
+  
+  Physics_T *const phys = obs->phys;
+  
+  IFsc("Baryonic(M)|NS")
+  {
+    obs->ret[0] = star_NS_baryonic_gConf_mass
+        (phys,Getd("Euler_equation_constant"));
+  }
+  else IFsc("Baryonic(M)|NS1")
+  {
+    obs->ret[0] = star_NS_baryonic_gConf_mass
+        (phys,Getd("Euler_equation_constant"));
+  }
+  else IFsc("Baryonic(M)|NS2")
+  {
+    obs->ret[0] = star_NS_baryonic_gConf_mass
+        (phys,Getd("Euler_equation_constant"));
+  }
+  else
+  {
+    Error0(obs_err_msg);
+  }
+}

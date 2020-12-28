@@ -1,4 +1,6 @@
 #include "obs_header.h"
+#include "physics_star_lib.h"
+
 
 /* string len */
 #define obs_STR_LEN (999)
@@ -69,4 +71,6 @@ double obs_integral_SV (Observe_T *const obs,
                         const char sign_sV/* [+/-] integral of V */);
 static void calc_CM(Observe_T *const obs);
 static void calc_spin(Observe_T *const obs);
+static void calc_baryonic_mass(Observe_T *const obs);
+
 
