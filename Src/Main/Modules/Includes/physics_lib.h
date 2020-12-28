@@ -6,16 +6,7 @@
 #define PAR_LEN   (99)
 #define STEMP_LEN (99)
 
-/* if the given patch DOES cover the region. 
-// this is generally used in a loop over all patches */ 
-#define IF_cover(patch,phys)     \
- if(IsItCovering(patch,phys->region))
  
-/* if the given patch DOES NOT cover the region. 
-// this is generally used in a loop over all patches */ 
-#define IF_not_cover(patch,phys) \
- if(!IsItCovering(patch,phys->region))
-
 /* get double parameter for the given physics. ex: 
 // phys->stype = "NS1",par = "enthalpy_update_weight" => 
 // s = "NS1_enthalpy_update_weight"; thus, we can have various parameter
