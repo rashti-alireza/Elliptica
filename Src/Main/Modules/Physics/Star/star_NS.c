@@ -291,7 +291,6 @@ int star_NS_idealfluid_extrapolate_matter_fields(Physics_T *const phys)
     star_NS_extrapolate(phys,fields_name,"poly2");
     
     star_W_spin_vector_idealfluid_update(phys,"NS_around");
-    phys_set_region(phys);
   }
   else
   {

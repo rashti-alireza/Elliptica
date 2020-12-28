@@ -17,14 +17,7 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
   int ret = EXIT_SUCCESS;
   char msg[STR_LEN] = {'\0'};
   
-  phys->cmd   = cmd;
-  
-  /* if initialy user already specifed a region, make a backup */
-  if (phys->region)
-    phys->Uregion = phys->region;
-    
-  /* note: first must set phys->cmd */
-  phys_set_region(phys);
+  phys->cmd = cmd;
   
   switch (cmd)
   {
@@ -94,8 +87,7 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
   }
   
   /* set to 0 to trap bugs */
-  phys->cmd    = CMD_UNDEFINED;
-  phys->region = 0;
+  phys->cmd = CMD_UNDEFINED;
   
   return ret;
 }
@@ -330,15 +322,6 @@ void free_physics(Physics_T *phys)
   }
 }
 
-/* set default phys->region  */
-void phys_set_region(Physics_T *const phys)
-{
-  /* set natural region, later one can make it more sophisticated */
-  if (phys->Uregion)
-    phys->region = phys->Uregion;
-  else
-    phys->region = phys->stype;
-}
 
 /* ->: stype with correct indices (kind of auto spell).
 // since we have different indices for objects like NS1, BH2 etc
