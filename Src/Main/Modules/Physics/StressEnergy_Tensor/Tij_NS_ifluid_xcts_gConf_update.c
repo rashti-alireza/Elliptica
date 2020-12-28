@@ -11,11 +11,10 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
 {
   FUNC_TIC
   
-  Grid_T *const grid  = phys->grid;
+  Grid_T *const grid  = mygrid(phys,"NS");
   const double W  = Getd("enthalpy_update_weight");
   const int  neat = Geti("enthalpy_neat");
   const double Euler_const = Getd("Euler_equation_constant");
-  Uint p;
   
   printf(Pretty0"weight update  = %e\n"
          Pretty0"neat it?       = %d\n"
@@ -23,14 +22,10 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
          W,neat,Euler_const);
   fflush(stdout);
          
-  FOR_ALL_PATCHES(p,grid)
+  FOR_ALL_p(grid->np)
   {
     Patch_T *patch = grid->patch[p];
-    
-    IF_not_cover(patch,phys)  continue;
-    
-    Physics_T *ns  = init_physics(phys,NS);
-    EoS_T *eos     = init_EoS(ns);
+    EoS_T *eos     = init_EoS(phys);
     
     RELAX_UPDATE_FUNC(Tij_NS_IF_XCTS_gConf_enthalpy(patch,Euler_const),
                       patch,enthalpy,W);
@@ -46,7 +41,6 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
     Tij_NS_IF_XCTS_gConf_psi6E(patch,eos);
     Tij_NS_IF_XCTS_gConf_psi6S(patch,eos);
     
-    free_physics(ns);
     free_EoS(eos);
   }
   

@@ -16,6 +16,7 @@ int Tij_main(Physics_T *const phys)
   switch (phys->cmd)
   {
     case STRESS_ENERGY_UPDATE:
+      AssureType(phys->ctype == NS);
       ret = update_stress_energy_tensor(phys);
     break;
     
