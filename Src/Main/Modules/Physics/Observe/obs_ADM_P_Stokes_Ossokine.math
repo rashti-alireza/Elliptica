@@ -20,7 +20,7 @@ C_macro2 = add_and_get_field(name);
 ## thus, don't remove field if exists.
 `#define add_and_get_field(name) \`
          `  if (_Ind(#name) < 0) \`
-         `  {ADD_ADN_ALLOC_FIELD(name);} \`
+         `  {ADD_AND_ALLOC_FIELD(name);} \`
          `  WRITE_v(name);`
 ``
 ``

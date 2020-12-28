@@ -10,9 +10,9 @@
   double *name = alloc_double(nn);
 
 #define add_and_get_field(name) \
-  if (_Ind(#name) >= 0)\
-  {DECLARE_FIELD(name);REMOVE_FIELD(name);}\
-  ADD_FIELD(name);REALLOC_v_WRITE_v(name);
+  if (_Ind(#name) < 0) \
+  {ADD_AND_ALLOC_FIELD(name);} \
+  WRITE_v(name);
 
 
 void obs_populate_spin_integrands_Campanelli(Patch_T *const patch,const double xc[3],const double *const normal[3]);

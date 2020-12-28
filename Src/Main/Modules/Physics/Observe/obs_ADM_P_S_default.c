@@ -8,9 +8,9 @@
 
 
 #define add_and_get_field(name) \
-  if (_Ind(#name) >= 0)\
-  {DECLARE_FIELD(name);REMOVE_FIELD(name);}\
-  ADD_FIELD(name);REALLOC_v_WRITE_v(name);
+  if (_Ind(#name) < 0) \
+  {ADD_AND_ALLOC_FIELD(name);} \
+  WRITE_v(name);
 
 
 void obs_ADM_P_S_default(Observe_T *const obs);
@@ -145,6 +145,7 @@ pow(gConf_D2D2[ijk], 2)));
                  (obs,"obs__Pn_D1",0,'+','+')/(8*M_PI);
   obs->ret[2] = obs_integral_SV
                  (obs,"obs__Pn_D2",0,'+','+')/(8*M_PI);
+
   for(p = 0; p < N; ++p)
   {
     Patch_T *patch = adm[p]->patch;

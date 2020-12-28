@@ -7,9 +7,9 @@
 #include "obs_header.h"
 
 #define add_and_get_field(name) \
-  if (_Ind(#name) >= 0)\
-  {DECLARE_FIELD(name);REMOVE_FIELD(name);}\
-  ADD_FIELD(name);REALLOC_v_WRITE_v(name);
+  if (_Ind(#name) < 0) \
+  {ADD_AND_ALLOC_FIELD(name);} \
+  WRITE_v(name);
 
 
 void obs_Rc_NS(Observe_T *const obs);
