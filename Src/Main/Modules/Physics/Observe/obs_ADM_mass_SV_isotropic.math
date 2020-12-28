@@ -1,5 +1,4 @@
-# computing ADM Mass using the default definition casted into psi and
-# conformal metric.
+# computing ADM Mass using Gauss theorem assuming dgConf/dx = O(r^-3).
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -7,17 +6,26 @@ Dimension = 3;
 # point on manifold shown by:
 Point = ijk;
 
-C_macro  = READ_v_UNUSED(name);
+C_macro  = READ_v(name);
+C_macro2 = add_and_get_field(name);
 
 `#include "obs_header.h"`
 ``
+## note: surface patches and volume patches might have overlap
+## thus, don't remove field if exists.
+`#define add_and_get_field(name) \`
+         `  if (_Ind(#name) < 0) \`
+         `  {ADD_ADN_ALLOC_FIELD(name);} \`
+         `  WRITE_v(name);`
 ``
-`double obs_ADM_mass_S2(Observe_T *const obs);`
-`double obs_ADM_mass_S2(Observe_T *const obs)`
+``
+`double obs_ADM_mass_SV_isotropic(Observe_T *const obs);`
+`double obs_ADM_mass_SV_isotropic(Observe_T *const obs)`
 `{`
 `  double adm_mass = 0;`
 `  struct items_S **adm = obs->items;`
 `  const Uint N = obs->Nitems;`
+`  const double CutOff = 1E8;`
 `  Uint p;`
 ``
 `  for(p = 0; p < N; ++p)`
@@ -27,26 +35,39 @@ C_macro  = READ_v_UNUSED(name);
 Declare = 
 {
  # conformal factor
- (obj = Field,name = psi, rank = 0, C_macro);
+ #(obj = Field,name = psi, rank = 0, C_macro);
 
  # conformal factor first derivative 
  (obj = Field,name = dpsi, rank = D, C_macro);
 
- # partial derivative of conformal metric
- (obj = Field,name = dgConf, rank = DDD, C_macro);
+ # conformal factor second derivative 
+ (obj = Field,name = ddpsi, rank = DD, C_macro);
+
+ # conformal metric 
+ #(obj = Field,name = gConf, rank = DD, C_macro);
 
  # conformal metric inverse
  (obj = Field,name = igConf, rank = UU, C_macro);
+
+ # Christoffer symbol value
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro);
 
  # normal vector components
  (obj = Field,name = n, rank = U, none);
 
  # integrand P
  (obj = Field,name = ADM_mass_integrand_S, rank = 0, none);
+
+ # integrand G
+ (obj = Field,name = ADM_mass_integrand_V, rank = 0, none);
+
+ # attenuation factor
+ (obj = variable,name = att, none);
 }
 # symmetries:
 Symm[igConf(i,j)  = igConf(j,i)];
-Symm[dgConf(i,j,k) = dgConf(j,i,k)];
+Symm[ddpsi(i,j)    = ddpsi(j,i)];
+Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 
 `    Uint nn = patch->nn;`
 `    Uint ijk;`
@@ -64,9 +85,7 @@ Symm[dgConf(i,j,k) = dgConf(j,i,k)];
 `      REALLOC_v_WRITE_v(ADM_mass_integrand_S)`
 `      for (ijk = 0; ijk < nn; ++ijk)`
 `      {`
-       dlnpsi(k) = dpsi(k)/psi;
-       M_s = n(-k)*(-8*dlnpsi(k) +\
-           igConf(-i,-j)*(dgConf(i,k,j)-dgConf(i,j,k)));
+       M_s = n(i)*dpsi(-i);
 `      ADM_mass_integrand_S[ijk] = M_s;`
 `      }`
 `      }`
@@ -91,13 +110,41 @@ Symm[dgConf(i,j,k) = dgConf(j,i,k)];
 `      free_integration(I);`
 `      REMOVE_FIELD(ADM_mass_integrand_S)`
 `    }`
-# must not reach else
+# if this is volume integral.
 `    else`
 `    {`
-`      Error0("Wrong flag!\n");`
+`      ADD_FIELD(ADM_mass_integrand_V)`
+`      {` # make it local variable
+`      REALLOC_v_WRITE_v(ADM_mass_integrand_V)`
+`      for (ijk = 0; ijk < nn; ++ijk)`
+`      {`
+`      DEF_RELATIVE_x`
+`      DEF_RELATIVE_y`
+`      DEF_RELATIVE_z`
+`      DEF_RELATIVE_r`
+`      double att = r > CutOff ? 0:1;`
+       M_v = igConf(i,j)*ddpsi(-i,-j) -\
+             igConf(-i,-j)*ChrisConf(l,i,j)*dpsi(-l);
+`      ADM_mass_integrand_V[ijk] = M_v*att;`
+`      }`
+`      }`
+`      DECLARE_FIELD(ADM_mass_integrand_V)`
+`      Integration_T *I = init_integration();`
+`      I->type = "Integral{f(x)dV},Spectral";`
+`      I->Spectral->f = ADM_mass_integrand_V;`
+`      I->g00 = adm[p]->g00;`
+`      I->g01 = adm[p]->g01;`
+`      I->g02 = adm[p]->g02;`
+`      I->g11 = adm[p]->g11;`
+`      I->g12 = adm[p]->g12;`
+`      I->g22 = adm[p]->g22;`
+`      plan_integration(I);`
+`      adm_mass += execute_integration(I);`
+`      free_integration(I);`
+`      REMOVE_FIELD(ADM_mass_integrand_V)`
 `    }`
 ``
 `  }`# end of for(p = 0; p < N; ++p)
-`  adm_mass /= (16*M_PI);`
+`  adm_mass /= (-2*M_PI);`
 `  return adm_mass;`
 `}`

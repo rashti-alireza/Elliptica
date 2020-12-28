@@ -16,10 +16,12 @@ C_macro2 = add_and_get_field(name);
 `#include "obs_header.h"`
 ``
 ``
+## note: surface patches and volume patches might have overlap
+## thus, don't remove field if exists.
 `#define add_and_get_field(name) \`
-         `  if (_Ind(#name) >= 0)\`# means if it exists already
-         `  {DECLARE_FIELD(name);REMOVE_FIELD(name);}\`
-         `  ADD_FIELD(name);REALLOC_v_WRITE_v(name);`
+         `  if (_Ind(#name) < 0) \`
+         `  {ADD_ADN_ALLOC_FIELD(name);} \`
+         `  WRITE_v(name);`
 ``
 ``
 `void obs_ADM_P_Stokes_SV_Ossokine(Observe_T *const obs);`
@@ -124,8 +126,10 @@ Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 ## carry out the integration:
 `  obs->ret[0] = obs_integral_SV`
 `    (obs,"obs__P_U0","obs__G_U0",'+','-')/(8*M_PI);`
+
 `  obs->ret[1] = obs_integral_SV`
 `    (obs,"obs__P_U1","obs__G_U1",'+','-')/(8*M_PI);`
+
 `  obs->ret[2] = obs_integral_SV`
 `    (obs,"obs__P_U2","obs__G_U2",'+','-')/(8*M_PI);`
 ``

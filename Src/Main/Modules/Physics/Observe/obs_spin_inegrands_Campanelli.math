@@ -16,10 +16,12 @@ C_macro3 = declare_and_alloc_xi(name);
 `#define declare_and_alloc_xi(name) \`
 	`  double *name = alloc_double(nn);`
 ``
+## note: surface patches and volume patches might have overlap
+## thus, don't remove field if exists.
 `#define add_and_get_field(name) \`
-         `  if (_Ind(#name) >= 0)\`# means if it exists already
-         `  {DECLARE_FIELD(name);REMOVE_FIELD(name);}\`
-         `  ADD_FIELD(name);REALLOC_v_WRITE_v(name);`
+         `  if (_Ind(#name) < 0) \`
+         `  {ADD_ADN_ALLOC_FIELD(name);} \`
+         `  WRITE_v(name);`
 ``
 ``
 `void obs_populate_spin_integrands_Campanelli(Patch_T *const patch,const double xc[3],const double *const normal[3]);`

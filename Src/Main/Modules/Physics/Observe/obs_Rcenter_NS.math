@@ -11,10 +11,12 @@ C_macro2 = add_and_get_field(name);
 
 `#include "obs_header.h"`
 ``
+## note: surface patches and volume patches might have overlap
+## thus, don't remove field if exists.
 `#define add_and_get_field(name) \`
-         `  if (_Ind(#name) >= 0)\`# means if it exists already
-         `  {DECLARE_FIELD(name);REMOVE_FIELD(name);}\`
-         `  ADD_FIELD(name);REALLOC_v_WRITE_v(name);`
+         `  if (_Ind(#name) < 0) \`
+         `  {ADD_ADN_ALLOC_FIELD(name);} \`
+         `  WRITE_v(name);`
 ``
 ``
 

@@ -28,10 +28,12 @@ C_macro3 = declare_and_alloc_xi(name);
 `#define declare_and_alloc_xi(name) \`
 	`  double *name = alloc_double(nn);`
 ``
+## note: surface patches and volume patches might have overlap
+## thus, don't remove field if exists.
 `#define add_and_get_field(name) \`
-         `  if (_Ind(#name) >= 0)\`# means if it exists already
-         `  {DECLARE_FIELD(name);REMOVE_FIELD(name);}\`
-         `  ADD_FIELD(name);REALLOC_v_WRITE_v(name);`
+         `  if (_Ind(#name) < 0) \`
+         `  {ADD_ADN_ALLOC_FIELD(name);} \`
+         `  WRITE_v(name);`
 ``
 ``
 `void obs_ADM_J_Stokes_SV_Ossokine(Observe_T *const obs);`
@@ -88,7 +90,7 @@ Symm[gConf(i,j)   = gConf(j,i)];
 `   }`
 # populating the integrands:
 
-# if we needs surface integral too.
+# if we needs surface integral
 `   if (adm[p]->surface_integration_flg)`
 `   {`
 `      const double *n_U0 = adm[p]->n_U0;`
@@ -117,8 +119,10 @@ Symm[gConf(i,j)   = gConf(j,i)];
 ## carry out the integration:
 `  obs->ret[0] = obs_integral_SV`
 `    (obs,"obs__Jn_U0",0,'+','+')/(8*M_PI);`
+
 `  obs->ret[1] = obs_integral_SV`
 `    (obs,"obs__Jn_U1",0,'+','+')/(8*M_PI);`
+
 `  obs->ret[2] = obs_integral_SV`
 `    (obs,"obs__Jn_U2",0,'+','+')/(8*M_PI);`
 ``
