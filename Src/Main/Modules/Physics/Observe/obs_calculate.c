@@ -4,6 +4,8 @@
 // December  2020
 */
 
+/* NOTE: please keep the format of implantation (with all of the ifs elses)
+//       the same so later one can add new situations and cases easily. */
 
 #include "obs_calculate.h"
 
@@ -921,23 +923,7 @@ static void calc_ADM_P(Observe_T *const obs)
       }
       else if (IsIt("S+V,Ossokine"))
       {
-        /* for 1 split */
-        if (Pgeti("grid_SplitCS_Nsplit_c") == 1)
-        {
-          /* surface part */
-          region   = "outermost_OB";
-          patches2 = collect_patches(grid,region,&N2);
-        }
-        else
-        {
-          /* volume part */
-          region   = "outermost_OB";
-          patches1 = collect_patches(grid,region,&N1);
-          
-          /* surface part */
-          region   = "outermost_OB";
-          patches2 = collect_patches(grid,region,&N2);
-        }
+        Collect_outermost_S_V_SplitCS
       }
       else if (IsIt("S+V,Rashti"))
       {
