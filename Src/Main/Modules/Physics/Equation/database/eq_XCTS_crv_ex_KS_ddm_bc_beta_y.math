@@ -1,0 +1,114 @@
+# Beta_U1 BC equation:
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
+C_macro3 = READ_v_IF_ON_HORIZON(name);
+
+# main function:
+`#include "bbn_headers.h"`;
+`#include "maths_equation_solvings_lib.h"`;
+`#include "bbn_XCTS_equations_lib.h"\n\n`;
+
+`void *bbn_bc_Beta_U1(void *vp1,void *vp2)\n{`;
+
+# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
+# patch, S, map, F, node, N, n.
+# THUS, DO NOT DEFINE THEM AGAIN.
+`  DDM_SCHUR_BC_DECLARE`;
+`  Uint ijk;/* node index */`;
+
+# declare for Cpi
+Declare = 
+{
+ # B0 in Beta^i = B0^i+B1^i
+ (obj = Field,name = B0_U1, rank = 0, C_macro);
+
+ # B1 in Beta^i = B0^i+B1^i
+ (obj = Field,name = B1_U1, rank = 0, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # eta = alpha*psi
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # normal vector at the horizon
+ (obj = Field,name = _HS_U1, rank = 0, C_macro3);
+
+ # Cartesian x, y and z coords
+ (obj = variable,name = x,none);
+ #(obj = variable,name = y,none);
+ (obj = variable,name = z,none);
+
+ # BH_Omega
+ (obj = variable,name = BH_Omega_U0,none);
+ #(obj = variable,name = BH_Omega_U1,none);
+ (obj = variable,name = BH_Omega_U2,none);
+
+ # boost velocity
+ #(obj = variable,name = v0_boost,none);
+ (obj = variable,name = v1_boost,none);
+ #(obj = variable,name = v2_boost,none);
+}
+
+# symmetries for Cpi
+# no symmetry
+
+
+# NOTE: write each equation in terms of ijk point, and if there is no
+# outer boundary or inner boundary equation, let it be 0.
+
+# OUTER BOUNDARY LIKE INFINITY #
+
+`  const double BH_center_x = Pgetd("BH_center_x");`
+#`  const double BH_center_y = Pgetd("BH_center_y");`
+`  const double BH_center_z = Pgetd("BH_center_z");`
+#`  const double C_BH = 0.5*Pgetd("BH_NS_separation");`;
+`  const double BH_Omega_U0 = Pgetd("BH_Omega_U0");`;
+#`  const double BH_Omega_U1 = Pgetd("BH_Omega_U1");`;
+`  const double BH_Omega_U2 = Pgetd("BH_Omega_U2");`;
+`  const double v1_boost    = Pgetd("v*_boost_y");`
+`  if (patch->outerB)/* at outer boundary */`;
+`  {`;
+`  DDM_SCHUR_BC_OPEN\n`;
+
+
+# bc equation for outer boundary at ijk point:
+outerB_F = B0_U1-v1_boost;
+
+
+`  F[map[ijk]] = outerB_F;\n`;
+`  DDM_SCHUR_BC_CLOSE`;
+`  }/* end of if (patch->outerB) */`;
+
+# INNER BOUNDARY LIKE BLACK HOLE HORIZON #
+`  else if (patch->innerB)/* at inner boundary */`;
+`  {`;
+`  DDM_SCHUR_BC_OPEN\n`;
+
+
+# bc equation for inner boundary at ijk point:
+
+alpha = eta/psi;
+S_U1  = _HS_U1/(psi**2);
+`  double x = patch->node[ijk]->x[0]-BH_center_x;`;
+#`  double y = patch->node[ijk]->x[1]-BH_center_y;`;
+`  double z = patch->node[ijk]->x[2]-BH_center_z;`;
+OmegaXr_U1 = BH_Omega_U2*x-BH_Omega_U0*z;
+#OmegaXr_U1 = BH_Omega_U2*x;
+
+innerB_F = B0_U1+B1_U1 - alpha*S_U1 - OmegaXr_U1;
+
+`  F[map[ijk]] = innerB_F;\n`;
+`  DDM_SCHUR_BC_CLOSE`;
+`  }/* end of else if (patch->innerB) */`;
+
+`  return 0;`;
+`}`;
+

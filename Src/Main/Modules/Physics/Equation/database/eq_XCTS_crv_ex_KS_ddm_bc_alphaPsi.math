@@ -1,0 +1,98 @@
+# eta BC equation:
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
+
+# main function:
+`#include "bbn_headers.h"`;
+`#include "maths_equation_solvings_lib.h"`;
+`#include "bbn_XCTS_equations_lib.h"\n\n`;
+
+`void *bbn_bc_eta(void *vp1,void *vp2)\n{`;
+
+# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
+# patch, S, map, F, node, N, n.
+# THUS, DO NOT DEFINE THEM AGAIN.
+`  DDM_SCHUR_BC_DECLARE`;
+`  Uint ijk;/* node index */`;
+
+# declare for Cpi
+Declare = 
+{
+
+ # eta
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # variables
+ (obj = variable,name = r2, none);
+ (obj = variable,name = r02, none);
+ (obj = variable,name = KS_alpha, none);
+
+}
+
+# symmetries for Cpi
+# no symmetry
+
+# NOTE: write each equation in terms of ijk point, and if there is no
+# outer boundary or inner boundary equation, let it be 0.
+
+# OUTER BOUNDARY LIKE INFINITY #
+`  if (patch->outerB)/* at outer boundary */`;
+`  {`;
+`  DDM_SCHUR_BC_OPEN\n`;
+
+# bc equation for outer boundary at ijk point:
+outerB_F = eta - 1;
+
+
+`  F[map[ijk]] = outerB_F;\n`;
+`  DDM_SCHUR_BC_CLOSE`;
+`  }/* end of if (patch->outerB) */`;
+
+# INNER BOUNDARY LIKE BLACK HOLE HORIZON #
+`  else if (patch->innerB)/* at inner boundary */`;
+`  {`;
+`  const double r02   = Pow2(Pgetd("BH_KerrSchild_RollOff"));`;
+`  const double M_BH  = Pgetd("BH_irreducible_mass");`;
+`  const double a_BH  = Pgetd("BH_net_spin");`;
+`  const double BH_center_x = Pgetd("BH_center_x");`
+`  const double BH_center_y = Pgetd("BH_center_y");`
+`  const double BH_center_z = Pgetd("BH_center_z");`
+`  /* populate tB tR */`
+`  Transformation_T *tB = initialize_transformation();`
+`  Transformation_T *tR = initialize_transformation();`
+`  bbn_transform_populate_boost_rotation(tB,tR);`
+
+`  DDM_SCHUR_BC_OPEN\n`;
+`  double x,y,z,r2,H,k0,k1,k2,kt;`
+
+`  x = patch->node[ijk]->x[0]-BH_center_x;`
+`  y = patch->node[ijk]->x[1]-BH_center_y;`
+`  z = patch->node[ijk]->x[2]-BH_center_z;`
+`  r2 = Pow2(x)+Pow2(y)+Pow2(z);`
+`  bbn_transform_get_k_and_H_KerrSchild(x,y,z,a_BH,M_BH,tB,tR,&kt,&k0,&k1,&k2,&H);`
+
+`  double C = 2.*H;`
+`  double KS_alpha = 1/sqrt(1+C*kt*kt);`
+``
+innerB_F = eta - psi*exp(-((r2/r02)**2))*KS_alpha;
+
+`  F[map[ijk]] = innerB_F;\n`;
+`  DDM_SCHUR_BC_CLOSE`;
+`  free_transformation(tB);`
+`  free_transformation(tR);`
+
+`  }/* end of else if (patch->innerB) */`;
+
+`  return 0;`;
+`}`;
+
