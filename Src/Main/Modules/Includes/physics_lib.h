@@ -175,6 +175,12 @@ typedef enum CMD_T
  OBSERVE_SET_PARAMS,/* set params */
  OBSERVE_ADD_FIELDS,/* add fields */
  
+ /* equation related */
+ EQ_SET_PARAMS,/* set params */
+ EQ_ADD_FIELDS,/* add fields */
+ EQ_SOLVE,/* solve eq(s) */
+ 
+ 
  CMD_END
 }cmd_T;
 

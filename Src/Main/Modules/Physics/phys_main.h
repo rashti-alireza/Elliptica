@@ -8,7 +8,7 @@
 #include "physics_system_lib.h"
 #include "physics_adm_lib.h"
 #include "physics_observe_lib.h"
-
+#include "physics_equation_lib.h"
 
 #define STR_LEN (999)
 

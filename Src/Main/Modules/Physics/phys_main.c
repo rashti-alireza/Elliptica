@@ -79,6 +79,12 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
       ret = observe_main(phys);
     break;
     
+    case EQ_SET_PARAMS:
+    case EQ_ADD_FIELDS:
+    case EQ_SOLVE:
+      ret = eq_main(phys);
+    break;
+    
     default:
       sprintf(msg,"No such command found!\n"
               "Incident triggered at:\n"
