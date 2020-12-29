@@ -38,47 +38,127 @@ static int set_equation_params(Physics_T *const phys)
 {
   FUNC_TIC
   
+  /* equation name and region to be solved
+  // format: par_name = equation_name,region.
+  // for instance, Eq_psi=XCTS_curve_excision_KerrSchild_DDM, .*
+  // which shows Eq_psi is "XCTS_curve_excision_KerrSchild_DDM" and
+  // it is supposed to be solved everywhere. */
+  
+  /* params:
+  // ==============
+  // phi,phi1,ph2: irrotaional piece of NS fluid
+  // psi         : conformal factor
+  // alphaPsi:   : lapse * psi
+  // beta_?      : shifts
+  //
+  // options:
+  // XCTS        : extended conformal thin sandwich method
+  // curve       : metric is not flat
+  // excision    : BH is excised so we have B.C on AH
+  // DDM         : DDM_Schur_Complement method for solve.
+  // Wolf        : Wolfgang Tichy's formalism
+  // KerrSchild  : Using KerrSchild values for BC
+  // .*          : everywhere
+  // NS?          : only for patches covering NS? */
+  
+  Pset_default(P_"phi","XCTS_curve_Wolf_DDM,NS");
+  Pset_default(P_"phi1","XCTS_curve_Wolf_DDM,NS1");
+  Pset_default(P_"phi2","XCTS_curve_Wolf_DDM,NS2");
+  Pset_default(P_"psi","XCTS_curve_excision_KerrSchild_DDM,.*");
+  Pset_default(P_"alphaPsi","XCTS_curve_excision_KerrSchild_DDM,.*");
+  Pset_default(P_"beta_x","XCTS_curve_excision_KerrSchild_DDM,.*");
+  Pset_default(P_"beta_y","XCTS_curve_excision_KerrSchild_DDM,.*");
+  Pset_default(P_"beta_z","XCTS_curve_excision_KerrSchild_DDM,.*");
+  
+  /* please add all of the possible equations below as shown.
+  // there is no problem to have same equation with multiple names.
+  // also note the convention used for name of the equations. */
+  
   /* add equations data base */
   field_eq          = init_eq();
   bc_eq             = init_eq();
   jacobian_field_eq = init_eq();
   jacobian_bc_eq    = init_eq();
   
-   /* XCTS_phi equations */
-  add_eq(&field_eq,eq_eq_XCTS_phi,"eq_XCTS_phi");
-  add_eq(&bc_eq   ,eq_bc_XCTS_phi,"bc_XCTS_phi");
-  add_eq(&jacobian_field_eq,eq_jacobian_eq_XCTS_phi,"jacobian_eq_XCTS_phi");
-  add_eq(&jacobian_bc_eq   ,eq_jacobian_bc_XCTS_phi,"jacobian_bc_XCTS_phi");
+  /* XCTS_curve_Wolf_ddm_phi equations */
+  add_eq(&field_eq,eq_XCTS_curve_Wolf_ddm_eq_phi,
+         "eq_XCTS_curve_Wolf_ddm_phi");
+  add_eq(&bc_eq ,eq_XCTS_curve_Wolf_ddm_bc_phi,
+         "bc_XCTS_curve_Wolf_ddm_phi");
+  add_eq(&jacobian_field_eq,eq_XCTS_curve_Wolf_ddm_jacobian_eq_phi,
+         "jacobian_eq_XCTS_curve_Wolf_ddm_phi");
+  add_eq(&jacobian_bc_eq,eq_XCTS_curve_Wolf_ddm_jacobian_bc_phi,
+         "jacobian_bc_XCTS_curve_Wolf_ddm_phi");
   
-  /* XCTS_psi equations */
-  add_eq(&field_eq,eq_eq_XCTS_psi,"eq_XCTS_psi");
-  add_eq(&bc_eq   ,eq_bc_XCTS_psi,"bc_XCTS_psi");
-  add_eq(&jacobian_field_eq,eq_jacobian_eq_XCTS_psi,"jacobian_eq_XCTS_psi");
-  add_eq(&jacobian_bc_eq   ,eq_jacobian_bc_XCTS_psi,"jacobian_bc_XCTS_psi");
-
-  /* XCTS_alphaPsi equations */
-  add_eq(&field_eq,eq_eq_XCTS_alphaPsi,"eq_XCTS_alphaPsi");
-  add_eq(&bc_eq   ,eq_bc_XCTS_alphaPsi,"bc_XCTS_alphaPsi");
-  add_eq(&jacobian_field_eq,eq_jacobian_eq_XCTS_alphaPsi,"jacobian_eq_XCTS_alphaPsi");
-  add_eq(&jacobian_bc_eq   ,eq_jacobian_bc_XCTS_alphaPsi,"jacobian_bc_XCTS_alphaPsi");
+  /* XCTS_curve_Wolf_ddm_phi1 equations */
+  add_eq(&field_eq,eq_XCTS_curve_Wolf_ddm_eq_phi,
+         "eq_XCTS_curve_Wolf_ddm_phi1");
+  add_eq(&bc_eq,eq_XCTS_curve_Wolf_ddm_bc_phi,
+         "bc_XCTS_curve_Wolf_ddm_phi1");
+  add_eq(&jacobian_field_eq,eq_XCTS_curve_Wolf_ddm_jacobian_eq_phi,
+         "jacobian_eq_XCTS_curve_Wolf_ddm_phi1");
+  add_eq(&jacobian_bc_eq,eq_XCTS_curve_Wolf_ddm_jacobian_bc_phi,
+         "jacobian_bc_XCTS_curve_Wolf_ddm_phi1");
   
-  /* XCTS_beta_U0 equations */
-  add_eq(&field_eq,eq_eq_XCTS_beta_U0,"eq_XCTS_beta_x");
-  add_eq(&bc_eq   ,eq_bc_XCTS_beta_U0,"bc_XCTS_beta_x");
-  add_eq(&jacobian_field_eq,eq_jacobian_eq_XCTS_beta_U0,"jacobian_eq_XCTS_beta_x");
-  add_eq(&jacobian_bc_eq   ,eq_jacobian_bc_XCTS_beta_U0,"jacobian_bc_XCTS_beta_x");
+  /* XCTS_curve_Wolf_ddm_phi2 equations */
+  add_eq(&field_eq,eq_XCTS_curve_Wolf_ddm_eq_phi,
+         "eq_XCTS_curve_Wolf_ddm_phi2");
+  add_eq(&bc_eq,eq_XCTS_curve_Wolf_ddm_bc_phi,
+         "bc_XCTS_curve_Wolf_ddm_phi2");
+  add_eq(&jacobian_field_eq,eq_XCTS_curve_Wolf_ddm_jacobian_eq_phi,
+         "jacobian_eq_XCTS_curve_Wolf_ddm_phi2");
+  add_eq(&jacobian_bc_eq,eq_XCTS_curve_Wolf_ddm_jacobian_bc_phi,
+         "jacobian_bc_XCTS_curve_Wolf_ddm_phi2");
+  
+  /* XCTS_curve_excision_KerrSchild_ddm_psi equations */
+  add_eq(&field_eq,eq_XCTS_curve_exc_KS_ddm_eq_psi,
+         "eq_XCTS_curve_excision_KerrSchild_ddm_psi");
+  add_eq(&bc_eq,eq_XCTS_curve_exc_KS_ddm_bc_psi,
+         "bc_XCTS_curve_excision_KerrSchild_ddm_psi");
+  add_eq(&jacobian_field_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_eq_psi,
+         "jacobian_eq_XCTS_curve_excision_KerrSchild_ddm_psi");
+  add_eq(&jacobian_bc_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_bc_psi,
+         "jacobian_bc_XCTS_curve_excision_KerrSchild_ddm_psi");
 
-  /* XCTS_beta_U1 equations */
-  add_eq(&field_eq,eq_eq_XCTS_beta_U1,"eq_XCTS_beta_y");
-  add_eq(&bc_eq   ,eq_bc_XCTS_beta_U1,"bc_XCTS_beta_y");
-  add_eq(&jacobian_field_eq,eq_jacobian_eq_XCTS_beta_U1,"jacobian_eq_XCTS_beta_y");
-  add_eq(&jacobian_bc_eq   ,eq_jacobian_bc_XCTS_beta_U1,"jacobian_bc_XCTS_beta_y");
+  /* XCTS_curve_excision_KerrSchild_ddm_alphaPsi equations */
+  add_eq(&field_eq,eq_XCTS_curve_exc_KS_ddm_eq_alphaPsi,
+         "eq_XCTS_curve_excision_KerrSchild_ddm_alphaPsi");
+  add_eq(&bc_eq,eq_XCTS_curve_exc_KS_ddm_bc_alphaPsi,
+        "bc_XCTS_curve_excision_KerrSchild_ddm_alphaPsi");
+  add_eq(&jacobian_field_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_eq_alphaPsi,
+        "jacobian_eq_XCTS_curve_excision_KerrSchild_ddm_alphaPsi");
+  add_eq(&jacobian_bc_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_bc_alphaPsi,
+        "jacobian_bc_XCTS_curve_excision_KerrSchild_ddm_alphaPsi");
+  
+  /* XCTS_curve_excision_KerrSchild_ddm_beta_x equations */
+  add_eq(&field_eq,eq_XCTS_curve_exc_KS_ddm_eq_beta_U0,
+         "eq_XCTS_curve_excision_KerrSchild_ddm_beta_x");
+  add_eq(&bc_eq ,eq_XCTS_curve_exc_KS_ddm_bc_beta_U0,
+         "bc_XCTS_curve_excision_KerrSchild_ddm_beta_x");
+  add_eq(&jacobian_field_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_eq_beta_U0,
+         "jacobian_eq_XCTS_curve_excision_KerrSchild_ddm_beta_x");
+  add_eq(&jacobian_bc_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_bc_beta_U0,
+         "jacobian_bc_XCTS_curve_excision_KerrSchild_ddm_beta_x");
 
-  /* XCTS_beta_U2 equations */
-  add_eq(&field_eq,eq_eq_XCTS_beta_U2,"eq_XCTS_beta_z");
-  add_eq(&bc_eq   ,eq_bc_XCTS_beta_U2,"bc_XCTS_beta_z");
-  add_eq(&jacobian_field_eq,eq_jacobian_eq_XCTS_beta_U2,"jacobian_eq_XCTS_beta_z");
-  add_eq(&jacobian_bc_eq   ,eq_jacobian_bc_XCTS_beta_U2,"jacobian_bc_XCTS_beta_z");
+  /* XCTS_curve_excision_KerrSchild_ddm_beta_y equations */
+  add_eq(&field_eq,eq_XCTS_curve_exc_KS_ddm_eq_beta_U1,
+         "eq_XCTS_curve_excision_KerrSchild_ddm_beta_y");
+  add_eq(&bc_eq,eq_XCTS_curve_exc_KS_ddm_bc_beta_U1,
+         "bc_XCTS_curve_excision_KerrSchild_ddm_beta_y");
+  add_eq(&jacobian_field_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_eq_beta_U1,
+         "jacobian_eq_XCTS_curve_excision_KerrSchild_ddm_beta_y");
+  add_eq(&jacobian_bc_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_bc_beta_U1,
+         "jacobian_bc_XCTS_curve_excision_KerrSchild_ddm_beta_y");
+
+  /* XCTS_curve_excision_KerrSchild_ddm_beta_z equations */
+  add_eq(&field_eq,eq_XCTS_curve_exc_KS_ddm_eq_beta_U2,
+         "eq_XCTS_curve_excision_KerrSchild_ddm_beta_z");
+  add_eq(&bc_eq,eq_XCTS_curve_exc_KS_ddm_bc_beta_U2,
+         "bc_XCTS_curve_excision_KerrSchild_ddm_beta_z");
+  add_eq(&jacobian_field_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_eq_beta_U2,
+         "jacobian_eq_XCTS_curve_excision_KerrSchild_ddm_beta_z");
+  add_eq(&jacobian_bc_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_bc_beta_U2,
+         "jacobian_bc_XCTS_curve_excision_KerrSchild_ddm_beta_z");
   
 
   UNUSED(phys);
