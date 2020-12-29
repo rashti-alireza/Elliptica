@@ -14,7 +14,7 @@ C_macro4 = READ_v_UNUSED(name);
 # main function:
 `#include "eq_header.h"`;
 `#include "maths_equation_solvings_lib.h"`;
-`void *eq_bc_psi(void *vp1,void *vp2)\n{`;
+`void *eq_XCTS_curve_exc_KS_ddm_bc_psi(void *vp1,void *vp2)\n{`;
 
 # NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
 # patch, S, map, F, node, N, n.

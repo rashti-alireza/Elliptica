@@ -14,7 +14,7 @@ C_macro3 = READ_v_IF_IN_NS(name);
 `#include "eq_header.h"`;
 `#include "maths_equation_solvings_lib.h"`;
 
-`void *eq_bc_phi(void *vp1,void *vp2)\n{`;
+`void *eq_XCTS_curve_Wolf_ddm_bc_phi(void *vp1,void *vp2)\n{`;
 
 # NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
 # patch, S, map, F, node, N, n.
