@@ -1,4 +1,5 @@
 #include "eq_header.h"
+#include "eq_db_header.h"
 
 /* equation data base */
 static sEquation_T **field_eq = 0;/* field equation */
