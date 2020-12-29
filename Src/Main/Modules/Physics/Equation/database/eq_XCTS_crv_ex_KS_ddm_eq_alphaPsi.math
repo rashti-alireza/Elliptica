@@ -1,4 +1,4 @@
-# equation: eta = alpha*psi
+# equation: alphaPsi = alpha*psi
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -25,13 +25,13 @@ C_macro2 = REALLOC_v_WRITE_v(name);
 # declare for Cpi:
 Declare = 
 {
- # eta
- (obj = Field,name = eta, rank = 0, C_macro);
+ # alphaPsi
+ (obj = Field,name = alphaPsi, rank = 0, C_macro);
 
- # eta first derivative 
- (obj = Field,name = deta, rank = D, C_macro);
+ # alphaPsi first derivative 
+ (obj = Field,name = dalphaPsi, rank = D, C_macro);
 
- # eta second derivative 
+ # alphaPsi second derivative 
  (obj = Field,name = ddeta, rank = DD, C_macro);
 
  # conformal factor
@@ -41,35 +41,35 @@ Declare =
  (obj = Field,name = Beta, rank = U, C_macro);
 
  # Ricci
- (obj = Field,name = _R, rank = 0, C_macro);
+ (obj = Field,name = trRicciConf, rank = 0, C_macro);
 
  # trKij
- (obj = Field,name = K, rank = 0, C_macro);
+ (obj = Field,name = trK, rank = 0, C_macro);
 
  # d trKij
- (obj = Field,name = dK, rank = D, C_macro);
+ (obj = Field,name = dtrK, rank = D, C_macro);
 
  # _A_{ij}*_A^{ij}
  (obj = Field,name = _Aij2, rank = 0, C_macro);
 
  # total conformal energy density
- (obj = Field,name = _E, rank = 0, C_macro);
+ (obj = Field,name = EConf, rank = 0, C_macro);
 
  # conformal momentum density
- (obj = Field,name = _S, rank = 0, C_macro);
+ (obj = Field,name = SConf, rank = 0, C_macro);
 
  # conformal metric inverse
- (obj = Field,name = _gammaI, rank = UU, C_macro);
+ (obj = Field,name = igConf, rank = UU, C_macro);
 
  # conformal connections
- (obj = Field,name = _Gamma, rank = UDD, C_macro);
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro);
 
 }
 
 # symmetries for Cpi:
 Symm[ddeta(i,j)     = ddeta(j,i)];
-Symm[_gammaI(i,j)   = _gammaI(j,i)];
-Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
+Symm[igConf(i,j)   = igConf(j,i)];
+Symm[ChrisConf(i,j,k)  = ChrisConf(i,k,j)];
 
 ##########################################################################
 # NOTE: In domain decomposition method n is relabed from point ijk.
@@ -87,9 +87,9 @@ Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 psi4 = psi**4;
 aij2 = _Aij2/psi4;
 F_eq = \
- _gammaI(-i,-j)*(ddeta(i,j) - _Gamma(l,i,j)*deta(-l))\
- - eta*(_R/8+(5/12)*(psi4)*(K**2)+(7/8)*aij2/psi4)\
- - Beta(i)*dK(-i)*(psi4)*psi-2*pi*eta*(psi**-2)*(_E+2*_S);
+ igConf(-i,-j)*(ddeta(i,j) - ChrisConf(l,i,j)*dalphaPsi(-l))\
+ - alphaPsi*(trRicciConf/8+(5/12)*(psi4)*(trK**2)+(7/8)*aij2/psi4)\
+ - Beta(i)*dtrK(-i)*(psi4)*psi-2*pi*alphaPsi*(psi**-2)*(EConf+2*SConf);
 
 
 `  F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme

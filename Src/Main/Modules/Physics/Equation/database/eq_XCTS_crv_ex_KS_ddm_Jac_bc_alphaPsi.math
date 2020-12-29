@@ -1,4 +1,4 @@
-# Jacobian for eta BC equation:
+# Jacobian for alphaPsi BC equation:
 
 # Manifold or grid Dimension
 Dimension = 3;

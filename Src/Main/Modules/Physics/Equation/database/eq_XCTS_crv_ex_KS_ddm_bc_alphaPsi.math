@@ -1,4 +1,4 @@
-# eta BC equation:
+# alphaPsi BC equation:
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -26,8 +26,8 @@ C_macro2 = REALLOC_v_WRITE_v(name);
 Declare = 
 {
 
- # eta
- (obj = Field,name = eta, rank = 0, C_macro);
+ # alphaPsi
+ (obj = Field,name = alphaPsi, rank = 0, C_macro);
 
  # conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
@@ -51,7 +51,7 @@ Declare =
 `  DDM_SCHUR_BC_OPEN\n`;
 
 # bc equation for outer boundary at ijk point:
-outerB_F = eta - 1;
+outerB_F = alphaPsi - 1;
 
 
 `  F[map[ijk]] = outerB_F;\n`;
@@ -84,7 +84,7 @@ outerB_F = eta - 1;
 `  double C = 2.*H;`
 `  double KS_alpha = 1/sqrt(1+C*kt*kt);`
 ``
-innerB_F = eta - psi*exp(-((r2/r02)**2))*KS_alpha;
+innerB_F = alphaPsi - psi*exp(-((r2/r02)**2))*KS_alpha;
 
 `  F[map[ijk]] = innerB_F;\n`;
 `  DDM_SCHUR_BC_CLOSE`;

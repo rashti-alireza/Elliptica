@@ -49,12 +49,12 @@ Declare =
  (obj = Field,name = Beta, rank = U, C_macro);
 
  # conformal metric inverse
- (obj = Field,name = _gammaI, rank = UU, C_macro);
+ (obj = Field,name = igConf, rank = UU, C_macro);
 
 }
 
 # symmetries for Cpi:
-Symm[_gammaI(i,j)   = _gammaI(j,i)];
+Symm[igConf(i,j)   = igConf(j,i)];
 
 # NOTE: write each equation in terms of ijk point, and if there is no
 # outer boundary or inner boundary equation, let it be 0.
@@ -66,7 +66,7 @@ Symm[_gammaI(i,j)   = _gammaI(j,i)];
 
 # bc equation for outer boundary at ijk point:
 outerB_F = \
-(psi**-4)*_gammaI(i,l)*dphi(-l)*drho0(-i)+W(i)*drho0(-i)-enthalpy*u0*Beta(i)*drho0(-i);
+(psi**-4)*igConf(i,l)*dphi(-l)*drho0(-i)+W(i)*drho0(-i)-enthalpy*u0*Beta(i)*drho0(-i);
 
 
 `  F[map[ijk]] = outerB_F;\n`;

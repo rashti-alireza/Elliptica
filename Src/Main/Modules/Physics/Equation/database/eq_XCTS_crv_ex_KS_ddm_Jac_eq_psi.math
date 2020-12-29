@@ -39,22 +39,22 @@ Declare =
  (obj = Field,name = psi, rank = 0, C_macro);
 
  # Ricci
- (obj = Field,name = _R, rank = 0, C_macro);
+ (obj = Field,name = trRicciConf, rank = 0, C_macro);
 
  # trKij
- (obj = Field,name = K, rank = 0, C_macro);
+ (obj = Field,name = trK, rank = 0, C_macro);
 
  # _A_{ij}*_A^{ij}
  (obj = Field,name = _Aij2, rank = 0, C_macro);
 
  # total conformal energy density
- (obj = Field,name = _E, rank = 0, C_macro);
+ (obj = Field,name = EConf, rank = 0, C_macro);
 
  # conformal metric inverse
- (obj = Field,name = _gammaI, rank = UU, C_macro);
+ (obj = Field,name = igConf, rank = UU, C_macro);
 
  # conformal connections
- (obj = Field,name = _Gamma, rank = UDD, C_macro);
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro);
 
  # jacobian derivative 1st order :
  (obj = Field,name = Jpsi, rank = D, C_macro3,C_arg);
@@ -65,8 +65,8 @@ Declare =
 }
 
 # symmetries for cpi
-Symm[_gammaI(i,j)   = _gammaI(j,i)];
-Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
+Symm[igConf(i,j)   = igConf(j,i)];
+Symm[ChrisConf(i,j,k)  = ChrisConf(i,k,j)];
 Symm[JJpsi(i,j)   = JJpsi(j,i)];
 
 ##########################################################################
@@ -101,22 +101,22 @@ Symm[JJpsi(i,j)   = JJpsi(j,i)];
 psi4_B = psi**4;
 aij2_B = _Aij2/psi4_B;
 
-# with _Aij^2 and  _R :
-Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
+# with AConfIJ^2 and  trRicciConf :
+Bpart =  igConf(i,j)*JJpsi(-i,-j) - igConf(-i,-j)*ChrisConf(l,i,j)*Jpsi(-l)\
  -kd*(\
-       _R/8 + 5*psi4_B*(K**2)/12 + (7/8)*aij2_B/psi4_B + 2*pi*_E*(psi**-2)\
+       trRicciConf/8 + 5*psi4_B*(trK**2)/12 + (7/8)*aij2_B/psi4_B + 2*pi*EConf*(psi**-2)\
      );
 
-# with _Aij^2 and no _R:
-#Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
+# with AConfIJ^2 and no trRicciConf:
+#Bpart =  igConf(i,j)*JJpsi(-i,-j) - igConf(-i,-j)*ChrisConf(l,i,j)*Jpsi(-l)\
 # -kd*(\
-#       5*psi4_B*(K**2)/12 + (7/8)*aij2_B/psi4_B + 2*pi*_E*(psi**-2)\
+#       5*psi4_B*(trK**2)/12 + (7/8)*aij2_B/psi4_B + 2*pi*EConf*(psi**-2)\
 #     );
 
-# no _Aij^2 and no adjsustment for _R sign:
-# Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
+# no AConfIJ^2 and no adjsustment for trRicciConf sign:
+# Bpart =  igConf(i,j)*JJpsi(-i,-j) - igConf(-i,-j)*ChrisConf(l,i,j)*Jpsi(-l)\
 # -kd*(\
-#       _R/8 + 5*psi4_B*(K**2)/12 + 2*pi*_E*(psi**-2)\
+#       trRicciConf/8 + 5*psi4_B*(trK**2)/12 + 2*pi*EConf*(psi**-2)\
 #     );
 
 `  B[i][j] = Bpart;\n`;
@@ -132,22 +132,22 @@ Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
 psi4_E = psi**4;
 aij2_E = _Aij2/psi4_E;
 
-# with _Aij^2 and _R:
-Epart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
+# with AConfIJ^2 and trRicciConf:
+Epart =  igConf(i,j)*JJpsi(-i,-j) - igConf(-i,-j)*ChrisConf(l,i,j)*Jpsi(-l)\
 -kd*(\
-       _R/8 + 5*psi4_E*(K**2)/12 + (7/8)*aij2_E/psi4_E + 2*pi*_E*(psi**-2)\
+       trRicciConf/8 + 5*psi4_E*(trK**2)/12 + (7/8)*aij2_E/psi4_E + 2*pi*EConf*(psi**-2)\
      );
 
-# with _Aij^2 and no _R:
-# Epart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
+# with AConfIJ^2 and no trRicciConf:
+# Epart =  igConf(i,j)*JJpsi(-i,-j) - igConf(-i,-j)*ChrisConf(l,i,j)*Jpsi(-l)\
 # -kd*(\
-#        5*psi4_E*(K**2)/12 + (7/8)*aij2_E/psi4_E + 2*pi*_E*(psi**-2)\
+#        5*psi4_E*(trK**2)/12 + (7/8)*aij2_E/psi4_E + 2*pi*EConf*(psi**-2)\
 #     );
 
-# no _Aij^2 and no adjsustment for _R sign:
-# Epart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
+# no AConfIJ^2 and no adjsustment for trRicciConf sign:
+# Epart =  igConf(i,j)*JJpsi(-i,-j) - igConf(-i,-j)*ChrisConf(l,i,j)*Jpsi(-l)\
 # -kd*(\
-#       _R/8 + 5*psi4_E*(K**2)/12 + 2*pi*_E*(psi**-2)\
+#       trRicciConf/8 + 5*psi4_E*(trK**2)/12 + 2*pi*EConf*(psi**-2)\
 #     );
 
 

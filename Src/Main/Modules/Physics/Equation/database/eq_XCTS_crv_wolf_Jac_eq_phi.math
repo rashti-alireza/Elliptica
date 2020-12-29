@@ -57,11 +57,11 @@ Declare =
  # rest mass density 1st derivative
  (obj = Field,name = drho0, rank = D, C_macro4);
 
- # eta
- (obj = Field,name = eta, rank = 0, C_macro);
+ # alphaPsi
+ (obj = Field,name = alphaPsi, rank = 0, C_macro);
 
- # eta first derivative 
- (obj = Field,name = deta, rank = D, C_macro);
+ # alphaPsi first derivative 
+ (obj = Field,name = dalphaPsi, rank = D, C_macro);
 
  # conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
@@ -70,10 +70,10 @@ Declare =
  (obj = Field,name = dpsi, rank = D, C_macro);
 
  # conformal metric inverse
- (obj = Field,name = _gammaI, rank = UU, C_macro);
+ (obj = Field,name = igConf, rank = UU, C_macro);
 
  # conformal connections
- (obj = Field,name = _Gamma, rank = UDD, C_macro);
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro);
 
  # rho_center
  (obj = variable,name = rhoc, rank = 0, none);
@@ -88,8 +88,8 @@ Declare =
 
 # symmetries for cpi
 Symm[JJphi(i,j)      = JJphi(j,i)];
-Symm[_gammaI(i,j)   = _gammaI(j,i)];
-Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
+Symm[igConf(i,j)   = igConf(j,i)];
+Symm[ChrisConf(i,j,k)  = ChrisConf(i,k,j)];
 
 `  const double rhoc = Pgetd("rho_center");`
 `  const double e    = Pgetd("NS_phi_equation_smoothness");`
@@ -123,15 +123,15 @@ Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 ###############################################
 
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n`;
-dLn_of_alpha_b_(i) = deta(i)/eta - dpsi(i)/psi;
+dLn_of_alpha_b_(i) = dalphaPsi(i)/alphaPsi - dpsi(i)/psi;
 #dLn_of_rho0_b(i)  = drho0(i)/rho0;
 dLn_of_enthalpy_b_(i)  = denthalpy(i)/enthalpy;
 #dLns0_b(i) = dLn_of_alpha_b_(i) + dLn_of_rho0_b(i) - dLn_of_enthalpy_b_(i);
 dLns0_b_(i) = drho0(i)+rho0*(dLn_of_alpha_b_(i) - dLn_of_enthalpy_b_(i));
 
-t1_b_ = dLns0_b_(-i)*(psi**-4)*_gammaI(i,l)*Jphi(-l);
-t2_b_ = 2*(psi**-5)*dpsi(-i)*_gammaI(i,l)*Jphi(-l);
-t3_b_ = (psi**-4)*_gammaI(-i,-l)*(JJphi(i,l)-_Gamma(n,i,l)*Jphi(-n));
+t1_b_ = dLns0_b_(-i)*(psi**-4)*igConf(i,l)*Jphi(-l);
+t2_b_ = 2*(psi**-5)*dpsi(-i)*igConf(i,l)*Jphi(-l);
+t3_b_ = (psi**-4)*igConf(-i,-l)*(JJphi(i,l)-ChrisConf(n,i,l)*Jphi(-n));
 
 Bpart_ = t1_b_+rho0*(t2_b_+t3_b_)+att*((1-rho0/rhoc)**4)*t3_b_;
 
@@ -143,15 +143,15 @@ Bpart_ = t1_b_+rho0*(t2_b_+t3_b_)+att*((1-rho0/rhoc)**4)*t3_b_;
 ###############################################
 
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
-dLn_of_alpha_e_(i) = deta(i)/eta - dpsi(i)/psi;
+dLn_of_alpha_e_(i) = dalphaPsi(i)/alphaPsi - dpsi(i)/psi;
 #dLn_of_rho0_e(i)  = drho0(i)/rho0;
 dLn_of_enthalpy_e_(i)  = denthalpy(i)/enthalpy;
 #dLns0_e(i) = dLn_of_alpha_e_(i) + dLn_of_rho0_e(i) - dLn_of_enthalpy_e_(i);
 dLns0_e_(i) = drho0(i)+rho0*(dLn_of_alpha_e_(i) - dLn_of_enthalpy_e_(i));
 
-t1_e_ = dLns0_e_(-i)*(psi**-4)*_gammaI(i,l)*Jphi(-l);
-t2_e_ = 2*(psi**-5)*dpsi(-i)*_gammaI(i,l)*Jphi(-l);
-t3_e_ = (psi**-4)*_gammaI(-i,-l)*(JJphi(i,l)-_Gamma(n,i,l)*Jphi(-n));
+t1_e_ = dLns0_e_(-i)*(psi**-4)*igConf(i,l)*Jphi(-l);
+t2_e_ = 2*(psi**-5)*dpsi(-i)*igConf(i,l)*Jphi(-l);
+t3_e_ = (psi**-4)*igConf(-i,-l)*(JJphi(i,l)-ChrisConf(n,i,l)*Jphi(-n));
 
 Epart_ = t1_e_+rho0*(t2_e_+t3_e_)+att*((1-rho0/rhoc)**4)*t3_e_;
 

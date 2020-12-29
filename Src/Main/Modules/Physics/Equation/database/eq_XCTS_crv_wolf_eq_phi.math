@@ -60,11 +60,11 @@ Declare =
  # first component of fluid velocity first derivative
  (obj = Field,name = du0, rank = D, C_macro3);
 
- # eta
- (obj = Field,name = eta, rank = 0, C_macro);
+ # alphaPsi
+ (obj = Field,name = alphaPsi, rank = 0, C_macro);
 
- # eta first derivative 
- (obj = Field,name = deta, rank = D, C_macro);
+ # alphaPsi first derivative 
+ (obj = Field,name = dalphaPsi, rank = D, C_macro);
 
  # conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
@@ -73,16 +73,16 @@ Declare =
  (obj = Field,name = dpsi, rank = D, C_macro);
 
  # trKij
- (obj = Field,name = K, rank = 0, C_macro);
+ (obj = Field,name = trK, rank = 0, C_macro);
 
  # shifts
  (obj = Field,name = Beta, rank = U, C_macro);
 
  # conformal metric inverse
- (obj = Field,name = _gammaI, rank = UU, C_macro);
+ (obj = Field,name = igConf, rank = UU, C_macro);
 
  # conformal connections
- (obj = Field,name = _Gamma, rank = UDD, C_macro);
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro);
 
  # rho_center
  (obj = variable,name = rhoc, rank = 0, none);
@@ -96,8 +96,8 @@ Declare =
 }
 
 # symmetries for Cpi:
-Symm[_gammaI(i,j)   = _gammaI(j,i)];
-Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
+Symm[igConf(i,j)   = igConf(j,i)];
+Symm[ChrisConf(i,j,k)  = ChrisConf(i,k,j)];
 Symm[ddphi(i,j)     = ddphi(j,i)];
 
 `  const double rhoc = Pgetd("rho_center");`
@@ -116,7 +116,7 @@ Symm[ddphi(i,j)     = ddphi(j,i)];
 
 # write the equation below at ijk point:
 
-dLn_of_alpha(i) = deta(i)/eta - dpsi(i)/psi;
+dLn_of_alpha(i) = dalphaPsi(i)/alphaPsi - dpsi(i)/psi;
 #dLn_of_rho0(i)  = drho0(i)/rho0;
 dLn_of_enthalpy(i)  = denthalpy(i)/enthalpy;
 dLn_of_u0(i)  = du0(i)/u0;
@@ -124,15 +124,15 @@ dLn_of_u0(i)  = du0(i)/u0;
 #dLns1(i) = dLn_of_alpha(i) + dLn_of_rho0(i) + dLn_of_u0(i);
 dLns0(i) = drho0(i)+rho0*(dLn_of_alpha(i)- dLn_of_enthalpy(i));
 dLns1(i) = drho0(i)+rho0*(dLn_of_alpha(i) + dLn_of_u0(i));
-alpha = eta/psi;
+alpha = alphaPsi/psi;
 
-t1 = dLns0(-i)*((psi**-4)*_gammaI(i,l)*dphi(-l)+W(i));
-t2 = (2*(psi**-5)*dpsi(-i)*_gammaI(i,l)*dphi(-l));
-t3 = ((psi**-4)*_gammaI(-i,-l)*(ddphi(i,l)-_Gamma(n,i,l)*dphi(-n)));
-t4 = (6*dpsi(i)*W(-i)/psi + _Gamma(i,ip,l)*W(-l)*KD(-i,-ip));
-#t5 = -enthalpy*u0*(dLns1(i)*Beta(-i)+alpha*K);
+t1 = dLns0(-i)*((psi**-4)*igConf(i,l)*dphi(-l)+W(i));
+t2 = (2*(psi**-5)*dpsi(-i)*igConf(i,l)*dphi(-l));
+t3 = ((psi**-4)*igConf(-i,-l)*(ddphi(i,l)-ChrisConf(n,i,l)*dphi(-n)));
+t4 = (6*dpsi(i)*W(-i)/psi + ChrisConf(i,ip,l)*W(-l)*KD(-i,-ip));
+#t5 = -enthalpy*u0*(dLns1(i)*Beta(-i)+alpha*trK);
 t5 = -enthalpy*u0*dLns1(i)*Beta(-i);
-t6 = -rho0*enthalpy*u0*alpha*K;
+t6 = -rho0*enthalpy*u0*alpha*trK;
 
 F_eq = t1+rho0*(t2+t3+t4)+t5+t6+att*((1-rho0/rhoc)**4)*t3;
 

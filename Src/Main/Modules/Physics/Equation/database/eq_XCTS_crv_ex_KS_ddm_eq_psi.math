@@ -35,29 +35,29 @@ Declare =
  (obj = Field,name = ddpsi, rank = DD, C_macro);
 
  # Ricci
- (obj = Field,name = _R, rank = 0, C_macro);
+ (obj = Field,name = trRicciConf, rank = 0, C_macro);
 
  # trKij
- (obj = Field,name = K, rank = 0, C_macro);
+ (obj = Field,name = trK, rank = 0, C_macro);
 
  # _A_{ij}*_A^{ij}
  (obj = Field,name = _Aij2, rank = 0, C_macro);
 
  # total conformal energy density
- (obj = Field,name = _E, rank = 0, C_macro);
+ (obj = Field,name = EConf, rank = 0, C_macro);
 
  # conformal metric inverse
- (obj = Field,name = _gammaI, rank = UU, C_macro);
+ (obj = Field,name = igConf, rank = UU, C_macro);
 
  # conformal connections
- (obj = Field,name = _Gamma, rank = UDD, C_macro);
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro);
 
 }
 
 # symmetries for Cpi:
 Symm[ddpsi(i,j)     = ddpsi(j,i)];
-Symm[_gammaI(i,j)   = _gammaI(j,i)];
-Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
+Symm[igConf(i,j)   = igConf(j,i)];
+Symm[ChrisConf(i,j,k)  = ChrisConf(i,k,j)];
 
 
 ##########################################################################
@@ -73,9 +73,9 @@ Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 # write the equation below at ijk point:
 psi4 = psi**4;
 aij2 = _Aij2/psi4;
-F_eq = _gammaI(i,j)*ddpsi(-i,-j) \
-     - _gammaI(-i,-j)*_Gamma(l,i,j)*dpsi(-l)\
-     - psi*_R/8 - psi4*psi*(K**2)/12 + aij2/(8*psi**3) + 2*pi*_E/psi;
+F_eq = igConf(i,j)*ddpsi(-i,-j) \
+     - igConf(-i,-j)*ChrisConf(l,i,j)*dpsi(-l)\
+     - psi*trRicciConf/8 - psi4*psi*(trK**2)/12 + aij2/(8*psi**3) + 2*pi*EConf/psi;
 
 `  F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
 `  DDM_SCHUR_EQ_CLOSE\n`;

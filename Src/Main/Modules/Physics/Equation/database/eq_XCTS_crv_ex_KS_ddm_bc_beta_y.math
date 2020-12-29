@@ -35,8 +35,8 @@ Declare =
  # conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
 
- # eta = alpha*psi
- (obj = Field,name = eta, rank = 0, C_macro);
+ # alphaPsi = alpha*psi
+ (obj = Field,name = alphaPsi, rank = 0, C_macro);
 
  # normal vector at the horizon
  (obj = Field,name = _HS_U1, rank = 0, C_macro3);
@@ -95,7 +95,7 @@ outerB_F = B0_U1-v1_boost;
 
 # bc equation for inner boundary at ijk point:
 
-alpha = eta/psi;
+alpha = alphaPsi/psi;
 S_U1  = _HS_U1/(psi**2);
 `  double x = patch->node[ijk]->x[0]-BH_center_x;`;
 #`  double y = patch->node[ijk]->x[1]-BH_center_y;`;

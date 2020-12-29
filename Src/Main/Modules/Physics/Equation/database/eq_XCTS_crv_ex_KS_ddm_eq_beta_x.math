@@ -27,36 +27,36 @@ C_macro4 = READ_v_UNUSED(name);
 Declare = 
 {
  # _A^{ij}
- (obj = Field,name = _A_UiUj, rank = UU, C_macro4);
+ (obj = Field,name = AConfIJ, rank = UU, C_macro4);
 
  # partial derivative of _A^{ij}
- (obj = Field,name = _dA_UiUj, rank = UUD, C_macro4);
+ (obj = Field,name = dAConfIJ, rank = UUD, C_macro4);
 
  # conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
 
  # alpha*psi
- (obj = Field,name = eta, rank = 0, C_macro);
+ (obj = Field,name = alphaPsi, rank = 0, C_macro);
  
  # trKij first derivative
- (obj = Field,name = dK, rank = D, C_macro);
+ (obj = Field,name = dtrK, rank = D, C_macro);
 
  # conformal metric inverse
- (obj = Field,name = _gammaI, rank = UU, C_macro4);
+ (obj = Field,name = igConf, rank = UU, C_macro4);
 
  # conformal connections
- (obj = Field,name = _Gamma, rank = UDD, C_macro4);
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro4);
 
  # conformal momentum current
- (obj = Field,name = _J, rank = U, C_macro4);
+ (obj = Field,name = JConf, rank = U, C_macro4);
 
 }
 
 # symmetries for Cpi:
-Symm[_dA_UiUj(i,j,k) = _dA_UiUj(j,i,k)];
-Symm[_A_UiUj(i,j)    = _A_UiUj(j,i)];
-Symm[_gammaI(i,j)    = _gammaI(j,i)];
-Symm[_Gamma(i,j,k)   = _Gamma(i,k,j)];
+Symm[dAConfIJ(i,j,k) = dAConfIJ(j,i,k)];
+Symm[AConfIJ(i,j)    = AConfIJ(j,i)];
+Symm[igConf(i,j)    = igConf(j,i)];
+Symm[ChrisConf(i,j,k)   = ChrisConf(i,k,j)];
 
 
 ##########################################################################
@@ -69,18 +69,18 @@ Symm[_Gamma(i,j,k)   = _Gamma(i,k,j)];
 
 `  DDM_SCHUR_EQ_OPEN\n`;
 
-#alphabar = eta*psi**(-7);# alpha * psi^-6 => large error for psi < 1
+#alphabar = alphaPsi*psi**(-7);# alpha * psi^-6 => large error for psi < 1
 
 F00(i) = psi**(-3)*(\
- _dA_UiUj(i,j,jp)*KD(-j,-jp)+\
-_Gamma(i,j,l)*_A_UiUj(-l,-j)+\
-_Gamma(j,jp,l)*_A_UiUj(i,-l)*KD(-j,-jp));
+ dAConfIJ(i,j,jp)*KD(-j,-jp)+\
+ChrisConf(i,j,l)*AConfIJ(-l,-j)+\
+ChrisConf(j,jp,l)*AConfIJ(i,-l)*KD(-j,-jp));
 
 F0(i) = psi**(-4)*F00(i);
 
-F1(i) = -2/3*_gammaI(i,j)*dK(-j)/psi -8*pi*(psi**-3)*_J(i);
+F1(i) = -2/3*igConf(i,j)*dtrK(-j)/psi -8*pi*(psi**-3)*JConf(i);
 
-F_eq(i) = 2*eta*(F0(i)+F1(i));
+F_eq(i) = 2*alphaPsi*(F0(i)+F1(i));
 
 `  F[n] = F_eq_U0;\n`;# Jx = -F in Newton-Raphson scheme
 `  DDM_SCHUR_EQ_CLOSE\n`;
