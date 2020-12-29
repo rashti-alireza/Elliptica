@@ -18,11 +18,10 @@ C_arg2 = [ijk == lmn]; # for kd
 C_arg3 =;# no argument for U
 
 # main function:
-`#include "bbn_headers.h"`;
+`#include "eq_header.h"`;
 `#include "maths_equation_solvings_lib.h"`;
-`#include "bbn_XCTS_equations_lib.h"\n\n`;
 ``
-`void *bbn_jacobian_eq_Beta_U0(void *vp1,void *vp2)\n{`;
+`void *eq_jacobian_eq_Beta_U0(void *vp1,void *vp2)\n{`;
 
 # NOTE: THE FOLLOWING MACRO DECLARES OR DEFINES THE FOLLOWING VARIABLES:
 # patch, S, B, E_Trans, node, Ni, Nj, K0, Nk, i,j,k
