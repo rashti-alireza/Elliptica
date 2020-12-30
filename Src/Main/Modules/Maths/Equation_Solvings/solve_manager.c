@@ -34,7 +34,7 @@ void add_eq(sEquation_T ***const data_base, fEquation_T *const eq,const char *co
     ndb = 0;
   
   /* check if this is not already exists */
-  for (Uint i; i < ndb: ++i)
+  for (Uint i; i < ndb; ++i)
   {
     if (strcmp_i(db[i]->name,name))
       Errors("Equation '%s' has been already added!",name);
@@ -53,13 +53,23 @@ void add_eq(sEquation_T ***const data_base, fEquation_T *const eq,const char *co
 }
 
 /* initializing Solving_Man_T struct and its elements */
-void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_field_eq,sEquation_T **const jacobian_bc_eq)
+void initialize_solving_man(Grid_T *const grid,
+                            sEquation_T **const field_eq,
+                            sEquation_T **const bc_eq,
+                            sEquation_T **const jacobian_field_eq,
+                            sEquation_T **const jacobian_bc_eq,
+                            const char *const par_prefix/* prefix for eq param, ex: Eq_phi1 */)
 {
   const char *par_f = Pgets("solve_Order");
-  char *par;
+  char eq_fname[STR_LEN]  = {'\0'};
+  char par_fname[STR_LEN] = {'\0'};
+  char val_fname[STR_LEN] = {'\0'};
   char **field_name = 0;
+  char *tok  = 0;
+  char *save = 0;
+  char *par  = 0;
+  char *aux  = 0;
   Uint nf = 0;
-  char *tok,*save = 0;
   Uint p,i;
   
   /* finding fields's name */
@@ -112,11 +122,36 @@ void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEqu
     
     for (i = 0; i < nf; ++i)
     {
-      patch->solving_man->field_name[i]  = dup_s(field_name[i]);
-      patch->solving_man->field_eq[i]    = get_field_eq(field_name[i],field_eq);
-      patch->solving_man->bc_eq[i]       = get_field_eq(field_name[i],bc_eq);
-      patch->solving_man->jacobian_field_eq[i] = get_field_eq(field_name[i],jacobian_field_eq);
-      patch->solving_man->jacobian_bc_eq[i]    = get_field_eq(field_name[i],jacobian_bc_eq);
+      /* get the prefix of equation name if par_prefix != 0
+      // ex:
+      // par_fname = "Eq_phi"
+      // val_fname = "XCTS_curve,NS"
+      // => eq_name = "XCTS_curve_phi". */
+      if (par_prefix)
+      {
+        /* get the param name */
+        sprintf(par_fname,"%s%s",par_prefix,field_name[i]);
+        /* get param value */
+        sprintf(val_fname,"%s",Pgets(par_fname));
+        /* get rid of comma, since there must be a comma in param value */
+        aux = strchr(val_fname,',');
+        if (!aux)
+        {
+          Errors("Could not find comma in parameter '%s'!",par_fname);
+        }
+        aux[0] = '\0';
+        sprintf(eq_fname,"%s_%s",aux,field_name[i]);
+      }
+      else
+      {
+       sprintf(eq_fname,"%s",field_name[i]); 
+      }
+      
+      patch->solving_man->field_name[i] = dup_s(field_name[i]);
+      patch->solving_man->field_eq[i]   = get_field_eq(eq_fname,field_eq);
+      patch->solving_man->bc_eq[i]      = get_field_eq(eq_fname,bc_eq);
+      patch->solving_man->jacobian_field_eq[i] = get_field_eq(eq_fname,jacobian_field_eq);
+      patch->solving_man->jacobian_bc_eq[i]    = get_field_eq(eq_fname,jacobian_bc_eq);
     }
       
     patch->solving_man->nf    = nf;

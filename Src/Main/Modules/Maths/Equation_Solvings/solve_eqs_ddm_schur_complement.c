@@ -39,14 +39,13 @@
 */
 int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
 {
+  FUNC_TIC
+  
   Grid_T *grid;
   char **field_name = 0;/* name of all fields to be solved */
   Uint nf = 0;/* number of all fields */
   Uint f;/* dummy index */
   
-  pr_line_custom('=');
-  
-  printf("{ Solve equation by Schur Complement Domain Decomposition Method ...\n\n");
   pr_intro_ddm_schur_complement();
   
   /* read order of fields to be solved from input */
@@ -96,10 +95,7 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
   /* free names */
   free_2d_mem(field_name,nf);
   
-  printf("\n} Solve equation by Schur Complement Domain Decomposition Method ==> Done.\n\n");
-  pr_clock();
-  pr_line_custom('=');
-  
+  FUNC_TOC
   return EXIT_SUCCESS;
 }  
 
@@ -2023,7 +2019,7 @@ static void make_map_and_inv(Patch_T *const patch)
 
 /* read the names of the fields to be solved
 // in order given in the input file.
-// the parameter is called Solving_Order
+// the parameter is called solve_Order
 // ->return value: name and number of fields. */
 char **get_solving_field_name(const char *const solving_order,Uint *const nf)
 {

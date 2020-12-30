@@ -13,7 +13,7 @@ int solve_eqs(Solve_Equations_T *const SolveEqs)
   fSolve_T *fsolve = 0;
   
   /* choosing solving method */
-  if (strcmp_i(Pgets("solve_Method"),"DDM_Schur_Complement"))
+  if (Pcmps("solve_Method","DDM_Schur_Complement"))
     fsolve = ddm_schur_complement;
   else
     Errors("No such method \"%s\" defined for this function.\n",
@@ -26,14 +26,15 @@ int solve_eqs(Solve_Equations_T *const SolveEqs)
 }
 
 // ->return value: 0 means stop, 1 means continue; */
-int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const name)
+static int default_stop_criteria_solve_equations (Grid_T *const grid,
+                                                  const char *const name)
 {
   int stop = 1;
   int stop_max = 1;
   int stop_res = 0;
   int stop_abnormal = 1;
   const double res_d    = Pgetd("solve_Residual");/* desired residual */
-  const int max_step    = Pgeti("solve_Max_Number_of_Newton_Step");
+  const int max_step    = Pgeti("solve_Max_Newton_Step");
   const Uint npatch = grid->np;
   Uint p;
 
@@ -70,7 +71,7 @@ int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const n
   if (!stop_abnormal)
   {
     printf("%s equation:\n"
-           "---> Newton solver got abnormal residual so exit ...\n",name);
+           Pretty0"Newton solver got abnormal residual so exit ...\n",name);
     fflush(stdout);
     return stop_abnormal;
   }
@@ -78,7 +79,7 @@ int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const n
   if (!stop_max)
   {
     printf("%s equation:\n"
-           "---> Newton solver reached maximum step number so existing ...\n",name);
+           Pretty0"Newton solver reached maximum step number so existing ...\n",name);
     fflush(stdout);
     return stop_max;
   }
@@ -86,7 +87,7 @@ int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const n
   if (!stop_res)  
   {
     printf("%s equation:\n"
-           "---> Newton solver satisfies demanding residual so existing ...\n",name);
+           Pretty0"Newton solver satisfies demanding residual so existing ...\n",name);
     fflush(stdout);
     return stop_res;
   }

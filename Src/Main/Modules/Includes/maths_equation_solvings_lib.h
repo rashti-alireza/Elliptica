@@ -11,6 +11,11 @@ struct FIELD_T;
 struct MATRIX_T;
 
 
+/* typedef function for Solve_Equations_T */
+typedef void fFunc_field_update_T(Patch_T *const patch,const char *const name);
+typedef void fFunc_source_update_T(Grid_T *const grid,const char *const name);
+typedef int  fFunc_stop_criteria_T(Grid_T *const grid,const char *const name);
+
 /* a general prototype to embrace various types of equations */
 typedef void *fEquation_T(void *vp1,void *vp2);
 
@@ -270,20 +275,19 @@ typedef struct SOLVE_EQUATIONS_T
   /* instructions for updating field and its derivative according to the
   // field name particulare task for updating is done. note, if 
   // it has not been assigned it won't be execute. */
-  void (*FieldUpdate)(Patch_T *const patch,const char *const name);
+  fFunc_field_update_T(*FieldUpdate);
   
   /* instructions for updating the sources after the field has been 
   // solved on the whole grid and its derivative according to the given
   // name of the field. 
   // note, if it has not been assigned it won't be executed.*/
-  void (*SourceUpdate)(Grid_T *const grid,const char *const name);
+  fFunc_source_update_T(*SourceUpdate);
   
   /* this is the function specifies the stop criteria of the solver
   // if 1 it means continue, 0 means stop. if no function defined 
   // the default function is made using 
   // Solving_Residual and Solving_Max_Number_of_Solver_Step parameter */
-  int (*StopCriteria)(Grid_T *const grid,const char *const name);
-  
+  fFunc_stop_criteria_T(*StopCriteria);
 }Solve_Equations_T;
 
 void calculate_equation_residual(Solve_Equations_T *const SolveEqs);
@@ -305,7 +309,14 @@ void test_dfs_df_values(Grid_T *const grid);
 void test_dInterp_a_df(Grid_T *const grid);
 void *init_eq(void);
 void add_eq(sEquation_T ***const data_base, fEquation_T *const eq,const char *const name);
-void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_field_eq, sEquation_T **const jacobian_bc_eq);
+
+void initialize_solving_man(Grid_T *const grid,
+                            sEquation_T **const field_eq,
+                            sEquation_T **const bc_eq,
+                            sEquation_T **const jacobian_field_eq,
+                            sEquation_T **const jacobian_bc_eq,
+                            const char *const prefix);
+
 struct MATRIX_T *get_j_matrix(const Patch_T *const patch,const char *type);
 void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types);
 double read_matrix_entry_ccs(struct MATRIX_T *const m, const long r,const long c);
