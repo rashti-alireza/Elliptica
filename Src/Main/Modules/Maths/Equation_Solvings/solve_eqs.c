@@ -128,9 +128,11 @@ Solve_Equations_T *init_solve_equations(Grid_T *const grid)
   solve->grid         = grid;
   solve->StopCriteria = default_stop_criteria_solve_equations; 
   
-  /* default values for umfpack settings */
-  solve->umfpack_size   = 0;/* means di */
-  solve->umfpack_refine = DBL_MAX;/* then it uses the default value of UMFPACK */
+  /* umfpack settings */
+  solve->solving_order  = Pgets("solve_Order");
+  solve->umfpack_refine = Pgetd("solve_UMFPACK_refinement_step");
+  solve->umfpack_size   = Pgeti("solve_UMFPACK_size");
+  
   return solve;
 }
 
