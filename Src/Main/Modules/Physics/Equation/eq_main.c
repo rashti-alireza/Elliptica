@@ -38,6 +38,24 @@ static int set_equation_params(Physics_T *const phys)
 {
   FUNC_TIC
   
+  /* equation type
+  //
+  // options:
+  // ========
+  // elliptic: elliptic PDE. */
+  Pset_default(P_"type","elliptic");
+  
+  /* field update method:
+  //
+  // options:
+  // ========
+  // relaxed_scheme: update fields using weights => new = W1*solved+W2*old */
+  Pset_default(P_"update_method","relaxed_scheme");
+  
+  /* update_weight (soft paramter):
+  // one should add required update weight as the following example:
+  // Eq_update_weight_phi1 = 0.2. */
+  
   /* equation name and region to be solved
   // format: par_name = equation_name,region.
   // for instance, Eq_psi=XCTS_curve_excision_KerrSchild_DDM, .*
@@ -70,9 +88,20 @@ static int set_equation_params(Physics_T *const phys)
   Pset_default(P_"beta_y","XCTS_curve_excision_KerrSchild_DDM,.*");
   Pset_default(P_"beta_z","XCTS_curve_excision_KerrSchild_DDM,.*");
   
+  /* external functions */
+  eq_field_update  = 0;
+  eq_source_update = 0;
+  eq_stop_criteria = 0;
+  
   /* please add all of the possible equations below as shown.
   // there is no problem to have same equation with multiple names.
   // also note the convention used for name of the equations. */
+  
+  /* free data base of equations if exists */
+  free_db_eqs(field_eq);
+  free_db_eqs(bc_eq);
+  free_db_eqs(jacobian_field_eq);
+  free_db_eqs(jacobian_bc_eq);
   
   /* add equations data base */
   field_eq          = init_eq();
@@ -170,7 +199,28 @@ static int set_equation_params(Physics_T *const phys)
 static int add_equation_fields(Physics_T *const phys)
 {
   FUNC_TIC
-  UNUSED(phys);
+  
+  /* add backup fields */
+  Grid_T *const grid = phys->grid;
+  char **fields_name = read_separated_items_in_string(Pgets("solve_Order"),',');
+  Uint f;
+  
+  f = 0;
+  while (fields_name[f])
+  {
+    char field_backup[STR_LEN];
+    sprintf(field_backup,P_Backup_"%s",fields_name[f]);
+    
+    FOR_ALL_p(grid->np)
+    {
+      Patch_T *patch = grid->patch[p];
+      
+      add_field(field_backup,0,patch,NO);
+    }
+    f++;
+  }
+  free_2d(fields_name);
+  
   FUNC_TOC
   return EXIT_SUCCESS;
 }
@@ -180,81 +230,12 @@ static int solve_equation(Physics_T *const phys)
 {
   FUNC_TIC
   
-  /* populating solution managment */
-  initialize_solving_man(grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq);
-  
-  /* solving equation(s) */
-  Solve_Equations_T *SolveEqs = init_solve_equations(grid);
-  SolveEqs->solving_order = Pgets("Solving_Order");
-  SolveEqs->FieldUpdate   = bbn_SolveEqs_FieldUpdate;
-  SolveEqs->SourceUpdate  = bbn_SolveEqs_SourceUpdate;
-  SolveEqs->StopCriteria  = bbn_stop_criteria;
-  SolveEqs->umfpack_refine= PgetdEZ("Solving_UMFPACK_refinement_step");
-  SolveEqs->umfpack_size  = PgetiEZ("Solving_UMFPACK_size");
-  Grid_T *phi_grid = bbn_phi_grid(grid);/* phi needed to be solved only in NS */
-  add_special_grid_solve_equations(phi_grid,"phi",SolveEqs);
-  
-  /* saving the field being solved for relaxation scheme purposes */
-  save_fields(grid);
-
-  const Uint max_iter = (Uint)Pgeti("Solving_Max_Number_of_Iteration");
-  const int max_newton_step = Pgeti("Solving_Max_Number_of_Newton_Step");
-  Uint iter = 0;
-  
-  while (iter < max_iter)
-  {
-    /* some prints */
-    pr_line_custom('=');
-    printf("{ Solving XCTS equations at a fixed resolution ...\n");
-    printf("  |---> Iteration      = %d / %d\n",iter+1,max_iter);
-    printf("  |---> Equation(s)    = %s\n",SolveEqs->solving_order);
-    printf("  |---> Newton step(s) = %d\n",max_newton_step);
-    fflush(stdout);
+  if (Pcmps(P_"type","elliptic"))
+    eq_solve_elliptic_equation(phys);
+  else
+    Error0(NO_OPTION);
     
-    /* solve equations */
-    solve_eqs(SolveEqs);
-    
-    /* study the solution */
-    if (Pcmps("Elliptic_Convergence_Test","yes"))
-    {
-      calculate_equation_residual(SolveEqs);
-      bbn_study_initial_data(grid);
-      bbn_write_checkpoint(grid);
-    }
-    
-    /* some prints */
-    
-    printf("} Solving XCTS equations at a fixed resolution ==> Done.\n ");
-    pr_clock();
-    
-    ++iter;
-  }
-  pr_line_custom('=');
-
-  /* updating the fields using relaxed scheme */
-  update_fields_relaxed_scheme(grid);
-
-  /* calculate the field residual for diagnostic purposes */
-  calculate_equation_residual(SolveEqs);
-
-  /* free SolveEqs and phi grid */
-  free_solve_equations(SolveEqs);
-  bbn_free_phi_grid(phi_grid);
-
-  /* free data base of equations */
-  free_db_eqs(field_eq);
-  free_db_eqs(bc_eq);
-  free_db_eqs(jacobian_field_eq);
-  free_db_eqs(jacobian_bc_eq);
-  
-  field_eq = 0;
-  bc_eq    = 0;
-  jacobian_field_eq = 0;
-  jacobian_bc_eq    = 0;
-  
-  UNUSED(phys);
   FUNC_TOC
   return EXIT_SUCCESS;
 }
-
 

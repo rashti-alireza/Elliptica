@@ -13,7 +13,13 @@
 #include "maths_spectral_methods_lib.h"
 
 /* prefix of internal parameters of this project */
-#define P_ "Eq_"
+#define P_  "Eq_"
+
+/* backup field name prefix */
+#define P_Backup_  P_"backup_"
+
+
+void eq_solve_elliptic_equation(Physics_T *const phys);
 
 
 #endif
