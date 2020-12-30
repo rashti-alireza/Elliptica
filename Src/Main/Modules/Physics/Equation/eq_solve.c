@@ -23,7 +23,7 @@ void eq_solve_elliptic_equation(Physics_T *const phys)
   
   /* populating solution managment */
   initialize_solving_man
-    (grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq,P_);
+    (grid,eq_global_field_eq,eq_global_bc_eq,eq_global_jacobian_field_eq,eq_global_jacobian_bc_eq,P_);
   
   /* solving equation(s) */
   Solve_Equations_T *SolveEqs = init_solve_equations(grid);
@@ -74,14 +74,14 @@ void eq_solve_elliptic_equation(Physics_T *const phys)
   free_equations_grid(lgrid);
 
   /* free data base of equations */
-  free_db_eqs(field_eq);
-  free_db_eqs(bc_eq);
-  free_db_eqs(jacobian_field_eq);
-  free_db_eqs(jacobian_bc_eq);
-  field_eq = 0;
-  bc_eq    = 0;
-  jacobian_field_eq = 0;
-  jacobian_bc_eq    = 0;
+  free_db_eqs(eq_global_field_eq);
+  free_db_eqs(eq_global_bc_eq);
+  free_db_eqs(eq_global_jacobian_field_eq);
+  free_db_eqs(eq_global_jacobian_bc_eq);
+  eq_global_field_eq = 0;
+  eq_global_bc_eq    = 0;
+  eq_global_jacobian_field_eq = 0;
+  eq_global_jacobian_bc_eq    = 0;
   
   FUNC_TOC
 }

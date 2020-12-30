@@ -12,10 +12,10 @@ fFunc_field_update_T(*eq_field_update);/* how to update field after solve */
 
 /* global variables */
 /* equation data base */
-sEquation_T **field_eq = 0;/* field equation */
-sEquation_T **bc_eq = 0;/* B.C. for the field */
-sEquation_T **jacobian_field_eq = 0;/* jacobian for field_eq */
-sEquation_T **jacobian_bc_eq = 0;/* jacobian for bc_eq */
+sEquation_T **eq_global_field_eq = 0;/* field equation */
+sEquation_T **eq_global_bc_eq = 0;/* B.C. for the field */
+sEquation_T **eq_global_jacobian_field_eq = 0;/* jacobian for eq_global_field_eq */
+sEquation_T **eq_global_jacobian_bc_eq = 0;/* jacobian for eq_global_bc_eq */
 
 
 int eq_main(Physics_T *const phys);

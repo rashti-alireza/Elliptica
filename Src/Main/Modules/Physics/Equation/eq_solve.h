@@ -11,10 +11,10 @@ extern fFunc_field_backup_T(*eq_field_backup);/* how to backup field before solv
 
 /* global variables */
 /* equation data base */
-extern sEquation_T **field_eq;/* field equation */
-extern sEquation_T **bc_eq;/* B.C. for the field */
-extern sEquation_T **jacobian_field_eq;/* jacobian for field_eq */
-extern sEquation_T **jacobian_bc_eq;/* jacobian for bc_eq */
+extern sEquation_T **eq_global_field_eq;/* field equation */
+extern sEquation_T **eq_global_bc_eq;/* B.C. for the field */
+extern sEquation_T **eq_global_jacobian_field_eq;/* jacobian for eq_global_field_eq */
+extern sEquation_T **eq_global_jacobian_bc_eq;/* jacobian for eq_global_bc_eq */
 
 
 void eq_solve_elliptic_equation(Physics_T *const phys);
