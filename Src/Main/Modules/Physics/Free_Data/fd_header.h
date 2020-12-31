@@ -220,6 +220,10 @@ fd_populate_psi_alphaPsi_beta_ConfKerrSchild
  const char *const AlphaPsi,
  const char *const Beta
  );
- 
+
+void fd_alpha_KerrSchild_patch(Patch_T *const patch,
+ const double BH_center_x,const double BH_center_y,
+ const double BH_center_z,const char *const Alpha);
+
 #endif
 

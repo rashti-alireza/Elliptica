@@ -707,6 +707,51 @@ fd_populate_psi_alphaPsi_beta_ConfKerrSchild
   FUNC_TOC
 }
 
+
+/* populate alpha conformal KerrSchild value.
+// it's the same as fd_populate_alpha_KerrSchild */
+void 
+fd_populate_alpha_ConfKerrSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Alpha,
+ )
+{
+  FUNC_TIC
+  fd_populate_alpha_KerrSchild(phys,region,Alpha);
+  FUNC_TOC
+}
+
+/* populate alpha of KerrSchild value. */
+void 
+fd_populate_alpha_KerrSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Alpha,
+ )
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,region);
+  const double BHx   = Getd("center_x");
+  const double BHy   = Getd("center_y");
+  const double BHz   = Getd("center_z");
+  Uint p;
+  
+  fd_KerrSchild_set_params(phys);
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    fd_alpha_KerrSchild_patch(patch,BHx,BHy,BHz,Alpha);
+  }
+  
+  FUNC_TOC
+}
+
 /* populate psi, alpha and beta Schwarzchild in isotropic coords value. */
 void 
 fd_populate_psi_alphaPsi_beta_IsoSchild

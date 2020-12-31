@@ -84,6 +84,23 @@ fd_populate_psi_alphaPsi_beta_ConfKerrSchild
  const char *const Beta
  );
 
+void 
+fd_populate_alpha_ConfKerrSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Alpha,
+ );
+
+void 
+fd_populate_alpha_KerrSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Alpha,
+ );
+ 
+ 
 #endif
 
 
