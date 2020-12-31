@@ -38,7 +38,7 @@ Declare =
  (obj = Field,name = alphaPsi, rank = 0, C_macro);
 
  # normal vector at the horizon
- (obj = Field,name = _HS_U2, rank = 0, C_macro3);
+ (obj = Field,name = bh_sConf_U2, rank = 0, C_macro3);
 
  # Cartesian x, y and z coords
  (obj = variable,name = x,none);
@@ -95,7 +95,7 @@ outerB_F = B0_U2-v2_boost;
 # bc equation for inner boundary at ijk point:
 
 alpha = alphaPsi/psi;
-S_U2  = _HS_U2/(psi**2);
+S_U2  = bh_sConf_U2/(psi**2);
 `  double x = patch->node[ijk]->x[0]-BH_center_x;`;
 `  double y = patch->node[ijk]->x[1]-BH_center_y;`;
 #`  double z = patch->node[ijk]->x[2]-BH_center_z;`;

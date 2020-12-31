@@ -38,6 +38,9 @@ static int set_equation_params(Physics_T *const phys)
 {
   FUNC_TIC
   
+  /* prefix of system paramter (no leading '_') */
+  Pset_default(P_"system_prefix",phys->ssys);
+  
   /* equation type
   //
   // options:
@@ -190,7 +193,6 @@ static int set_equation_params(Physics_T *const phys)
          "jacobian_bc_XCTS_curve_excision_KerrSchild_ddm_B0_U2");
   
 
-  UNUSED(phys);
   FUNC_TOC
   return EXIT_SUCCESS;
 }
