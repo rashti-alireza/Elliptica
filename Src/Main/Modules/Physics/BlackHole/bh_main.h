@@ -7,4 +7,6 @@ static int add_black_hole_fields(Physics_T *const phys);
 static int tune_black_hole_radius(Physics_T *const phys);
 static int find_black_hole_surface(Physics_T *const phys);
 static int update_conformal_normal_vector_on_AH(Physics_T *const phys);
+static int update_inner_BC_values(Physics_T *const phys);
+
 

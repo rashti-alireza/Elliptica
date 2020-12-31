@@ -45,6 +45,7 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
     case BH_SET_PARAMS:
     case BH_ADD_FIELDS:
     case BH_UPDATE_sConf:
+    case BH_UPDATE_INNER_BC:
       ret = bh_main(phys);
     break;
     

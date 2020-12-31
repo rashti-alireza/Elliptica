@@ -48,6 +48,11 @@ int bh_main(Physics_T *const phys)
       ret = update_conformal_normal_vector_on_AH(phys);
     break;
     
+    case BH_UPDATE_INNER_BC:
+      AssureType(phys->ctype == BH);
+      ret = update_inner_BC_values(phys);
+    break;
+    
     default:
       Error0(NO_OPTION);
   }
@@ -183,6 +188,17 @@ static int update_conformal_normal_vector_on_AH(Physics_T *const phys)
   FUNC_TIC
   
   bh_update_sConf_dsConf(phys);
+  
+  FUNC_TOC
+  return EXIT_SUCCESS;
+}
+
+/* update inner BC values on AH */
+static int update_inner_BC_values(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  bh_update_inner_BC(phys);
   
   FUNC_TOC
   return EXIT_SUCCESS;
