@@ -27,8 +27,11 @@ Declare =
  # alphaPsi
  (obj = Field,name = alphaPsi, rank = 0, C_macro);
 
- # conformal factor
- (obj = Field,name = ibc_alphaPsi, rank = 0, C_macro);
+ #  conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # inner BC value for lapse
+ (obj = Field,name = ibc_alpha, rank = 0, C_macro);
 
 }
 
@@ -56,7 +59,7 @@ outerB_F = alphaPsi - 1;
 `  {`;
 
 ``
-innerB_F = alphaPsi - ibc_alphaPsi;
+innerB_F = alphaPsi - ibc_alpha*psi;
 
 `  F[map[ijk]] = innerB_F;\n`;
 `  DDM_SCHUR_BC_CLOSE`;
