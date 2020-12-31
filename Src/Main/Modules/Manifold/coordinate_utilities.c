@@ -800,7 +800,6 @@ IsItCovering
 {
   Grid_T *const grid = patch->grid;
   char **reg = read_separated_items_in_string(region,',');
-  int ret = 0;  
   char s[999] = {'\0'};
   Uint i = 0;
   
@@ -814,20 +813,32 @@ IsItCovering
     i = 0;
     while (reg[i])
     {
-      sprintf(s,"(%s)",reg[i]);
-      
-      /* check the spell of region (for debug purposes) */
-      if (SPELL_CHECK)
+      /* if this is a patch name request. */
+      if (strstr(reg[i],PATCH_NAME_P_))
       {
-        if (!strstr(Dictionary_SCS,s))
-          Errors("Please spell check '%s'!",reg[i]);
+        /* does match? */
+        if (!strcmp(patch->name,reg[i]))
+        {
+          free_2d(reg);
+          return 1;
+        } 
       }
-      
-      /* check if covers */
-      if (strstr(patch->CoordSysInfo->region,s))
+      else
       {
-        free_2d(reg);
-        return 1;
+        sprintf(s,"(%s)",reg[i]);
+        /* check the spell of region (for debug purposes) */
+        if (SPELL_CHECK)
+        {
+          if (!strstr(Dictionary_SCS,s))
+            Errors("Please spell check '%s'!",reg[i]);
+        }
+        
+        /* does cover? */
+        if (strstr(patch->CoordSysInfo->region,s))
+        {
+          free_2d(reg);
+          return 1;
+        }
       }
       i++;
     }
@@ -838,7 +849,7 @@ IsItCovering
   }
   free_2d(reg);
   
-  return ret;
+  return 0;
 }
 
 /* ->: initialize a grid character. */
