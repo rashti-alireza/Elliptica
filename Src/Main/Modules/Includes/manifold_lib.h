@@ -2,6 +2,12 @@
 #define manifold_LIB_H
 #include "elliptica_system_lib.h"
 
+/* prefix for patch name */
+#define PATCH_NAME_P_      "grid"
+
+/* prefix for patch name used in sprint */
+#define PATCH_NAME_PRT_P_  PATCH_NAME_P_"%u_"
+
 /* for now only two objects */
 #define NPARAMS_GRID_CHAR (2)
 

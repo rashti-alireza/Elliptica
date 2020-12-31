@@ -92,7 +92,7 @@ static void populate_left_NS_sphere(Grid_T *const grid,const Uint pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_left_NS",grid->gn);
+  sprintf(name,PATCH_NAME_PRT_P_"left_NS",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -120,17 +120,17 @@ static void populate_left_NS_sphere(Grid_T *const grid,const Uint pn)
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_NS_center_a",grid->gn);
   patch->c[0] = Pgetd(var);
-  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_NS_center_b",grid->gn);
   patch->c[1] = Pgetd(var);
-  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_NS_center_c",grid->gn);
   patch->c[2] = Pgetd(var);
   
   /* filling Rs */
-  sprintf(var,"grid%u_left_NS_R1",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_NS_R1",grid->gn);
   R1_array = Pgetdd(var);
-  sprintf(var,"grid%u_left_NS_R2",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_NS_R2",grid->gn);
   R2_array = Pgetdd(var);
   
   R1->v = alloc_double(patch->nn);
@@ -224,7 +224,7 @@ static void populate_right_NS_sphere(Grid_T *const grid,const Uint pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_right_NS",grid->gn);
+  sprintf(name,PATCH_NAME_PRT_P_"right_NS",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -252,17 +252,17 @@ static void populate_right_NS_sphere(Grid_T *const grid,const Uint pn)
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_NS_center_a",grid->gn);
   patch->c[0] = Pgetd(var);
-  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_NS_center_b",grid->gn);
   patch->c[1] = Pgetd(var);
-  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_NS_center_c",grid->gn);
   patch->c[2] = Pgetd(var);
   
   /* filling Rs */
-  sprintf(var,"grid%u_right_NS_R1",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_NS_R1",grid->gn);
   R1_array = Pgetdd(var);
-  sprintf(var,"grid%u_right_NS_R2",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_NS_R2",grid->gn);
   R2_array = Pgetdd(var);
   
   R1->v = alloc_double(patch->nn);
@@ -356,7 +356,7 @@ static void populate_left_NS_around_sphere(Grid_T *const grid,const Uint pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_left_NS_around",grid->gn);
+  sprintf(name,PATCH_NAME_PRT_P_"left_NS_around",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -384,17 +384,17 @@ static void populate_left_NS_around_sphere(Grid_T *const grid,const Uint pn)
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_NS_center_a",grid->gn);
   patch->c[0] = Pgetd(var);
-  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_NS_center_b",grid->gn);
   patch->c[1] = Pgetd(var);
-  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_NS_center_c",grid->gn);
   patch->c[2] = Pgetd(var);
   
   /* filling Rs */
-  sprintf(var,"grid%u_left_NS_Surrounding_R2",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_NS_Surrounding_R2",grid->gn);
   R2_const = Pgetd(var);
-  sprintf(var,"grid%u_left_NS_R2",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_NS_R2",grid->gn);
   R1_array = Pgetdd(var);
   
   R1->v = alloc_double(patch->nn);
@@ -488,7 +488,7 @@ static void populate_right_NS_around_sphere(Grid_T *const grid,const Uint pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_right_NS_around",grid->gn);
+  sprintf(name,PATCH_NAME_PRT_P_"right_NS_around",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -516,17 +516,17 @@ static void populate_right_NS_around_sphere(Grid_T *const grid,const Uint pn)
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_NS_center_a",grid->gn);
   patch->c[0] = Pgetd(var);
-  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_NS_center_b",grid->gn);
   patch->c[1] = Pgetd(var);
-  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_NS_center_c",grid->gn);
   patch->c[2] = Pgetd(var);
   
   /* filling Rs */
-  sprintf(var,"grid%u_right_NS_Surrounding_R2",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_NS_Surrounding_R2",grid->gn);
   R2_const = Pgetd(var);
-  sprintf(var,"grid%u_right_NS_R2",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_NS_R2",grid->gn);
   R1_array = Pgetdd(var);
   
   R1->v = alloc_double(patch->nn);

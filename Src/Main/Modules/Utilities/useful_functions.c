@@ -514,7 +514,7 @@ Patch_T *GetPatch(const char *const stem,const Grid_T *const grid)
   char name[1000];
   Uint p;
   
-  sprintf(name,"grid%u_%s",grid->gn,stem);
+  sprintf(name,PATCH_NAME_PRT_P_"%s",grid->gn,stem);
   
   FOR_ALL_PATCHES(p,grid)
   {

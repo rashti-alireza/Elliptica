@@ -32,7 +32,7 @@
 // NOTE: d0,d1,d2,grid,dir,obj and side are required.
 // ex: grid1_sigmaU_left_NS_backX0Y2Z3 */
 #define SCS_par_sigma(par,sigma) \
-  sprintf(par,"grid%u_%s_%s_%s_%s"SCS_suffix,\
+  sprintf(par,PATCH_NAME_PRT_P_"%s_%s_%s_%s"SCS_suffix,\
   grid->gn,sigma,dir,obj,StrSide[side],d0,d1,d2);
 
 /* par format for center of patch with respect to the 
@@ -40,7 +40,7 @@
 // NOTE: grid,dir,obj and side are required.
 // ex: grid1_left_BH_front_center_a */
 #define SCS_par_CS_center(par,axis) \
-  sprintf(par,"grid%u_%s_%s_center_%s_%s",\
+  sprintf(par,PATCH_NAME_PRT_P_"%s_%s_center_%s_%s",\
   grid->gn,dir,obj,StrSide[side],axis);
 
 /* par format for center of patch with respect to the 
@@ -48,28 +48,28 @@
 // NOTE: grid,dir,obj,d0,d1,d2 and side are required.
 // ex: grid1_left_central_box_left_center_aX0Y0Z1 */
 #define SCS_par_box_center(par,axis) \
-  sprintf(par,"grid%u_%s_%s_center_%s_%s"SCS_suffix,\
+  sprintf(par,PATCH_NAME_PRT_P_"%s_%s_center_%s_%s"SCS_suffix,\
   grid->gn,dir,obj,StrSide[side],axis,d0,d1,d2);
 
 /* par format for box lengths.
 // NOTE: d0,d1,d2,grid,dir and obj are required.
 // ex: grid1_central_box_len_a_leftX0Y2Z3 */
 #define SCS_par_box_length(par,axis) \
-  sprintf(par,"grid%u_%s_len_%s_%s"SCS_suffix,\
+  sprintf(par,PATCH_NAME_PRT_P_"%s_len_%s_%s"SCS_suffix,\
   grid->gn,obj,axis,dir,d0,d1,d2);
 
 /* par format for patch->min[index]
 // NOTE: d0,d1,d2,grid,dir,obj and side are required.
 // ex: grid1_left_NS_up_min2X0Y2Z3 */
 #define SCS_par_min(par,index) \
-  sprintf(par,"grid%u_%s_%s_%s_min%u"SCS_suffix,\
+  sprintf(par,PATCH_NAME_PRT_P_"%s_%s_%s_min%u"SCS_suffix,\
   grid->gn,dir,obj,StrSide[side],index,d0,d1,d2);
 
 /* par format for patch->max[index].
 // NOTE: d0,d1,d2,grid,dir,obj and side are required.
 // ex: grid1_left_NS_up_max2X0Y2Z3 */
 #define SCS_par_max(par,index) \
-  sprintf(par,"grid%u_%s_%s_%s_max%u"SCS_suffix,\
+  sprintf(par,PATCH_NAME_PRT_P_"%s_%s_%s_max%u"SCS_suffix,\
   grid->gn,dir,obj,StrSide[side],index,d0,d1,d2);
 
 
@@ -77,7 +77,7 @@
 // NOTE: d0,d1,d2,grid,dir,obj and side are required.
 // ex: grid1_left_NS_up_X0Y2Z3 */
 #define SCS_par_name(par) \
-  sprintf(par,"grid%u_%s_%s_%s"SCS_suffix,\
+  sprintf(par,PATCH_NAME_PRT_P_"%s_%s_%s"SCS_suffix,\
   grid->gn,dir,obj,StrSide[side],d0,d1,d2);
 
 

@@ -361,7 +361,7 @@ void free_grid_params(const Grid_T *const grid)
   while (parameters_global != 0 && parameters_global[np] != 0)
     np++;
   
-  sprintf(suffix,"grid%u_",grid->gn);/* parameters related to this grid */
+  sprintf(suffix,PATCH_NAME_PRT_P_"",grid->gn);/* parameters related to this grid */
   for (i = 0; i < np;)/* no increment */
   {
     if (strstr(parameters_global[i]->lv,suffix))

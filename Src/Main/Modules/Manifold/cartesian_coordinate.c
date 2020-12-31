@@ -330,36 +330,36 @@ void populate_left_NS_central_box(Grid_T *const grid,const Uint pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_left_central_box",grid->gn);
+  sprintf(name,PATCH_NAME_PRT_P_"left_central_box",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
-  sprintf(var,"grid%u_left_central_box_n_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_central_box_n_a",grid->gn);
   patch->n[0] = (Uint)Pgeti(var);
   
-  sprintf(var,"grid%u_left_central_box_n_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_central_box_n_b",grid->gn);
   patch->n[1] = (Uint)Pgeti(var);
   
-  sprintf(var,"grid%u_left_central_box_n_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_central_box_n_c",grid->gn);
   patch->n[2] = (Uint)Pgeti(var);
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_NS_center_a",grid->gn);
   patch->c[0] = Pgetd(var);
-  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_NS_center_b",grid->gn);
   patch->c[1] = Pgetd(var);
-  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_NS_center_c",grid->gn);
   patch->c[2] = Pgetd(var);
   
   /* filling size */
-  sprintf(var,"grid%u_left_central_box_size_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_central_box_size_a",grid->gn);
   patch->s[0] = Pgetd(var);
-  sprintf(var,"grid%u_left_central_box_size_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_central_box_size_b",grid->gn);
   patch->s[1] = Pgetd(var);
-  sprintf(var,"grid%u_left_central_box_size_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"left_central_box_size_c",grid->gn);
   patch->s[2] = Pgetd(var);
   
   /* filling min: min = center-l/2 */
@@ -404,36 +404,36 @@ void populate_right_BH_central_box(Grid_T *const grid,const Uint pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_right_central_box",grid->gn);
+  sprintf(name,PATCH_NAME_PRT_P_"right_central_box",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
-  sprintf(var,"grid%u_right_central_box_n_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_central_box_n_a",grid->gn);
   patch->n[0] = (Uint)Pgeti(var);
   
-  sprintf(var,"grid%u_right_central_box_n_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_central_box_n_b",grid->gn);
   patch->n[1] = (Uint)Pgeti(var);
   
-  sprintf(var,"grid%u_right_central_box_n_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_central_box_n_c",grid->gn);
   patch->n[2] = (Uint)Pgeti(var);
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_right_BH_center_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_BH_center_a",grid->gn);
   patch->c[0] = Pgetd(var);
-  sprintf(var,"grid%u_right_BH_center_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_BH_center_b",grid->gn);
   patch->c[1] = Pgetd(var);
-  sprintf(var,"grid%u_right_BH_center_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_BH_center_c",grid->gn);
   patch->c[2] = Pgetd(var);
   
   /* filling size */
-  sprintf(var,"grid%u_right_central_box_size_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_central_box_size_a",grid->gn);
   patch->s[0] = Pgetd(var);
-  sprintf(var,"grid%u_right_central_box_size_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_central_box_size_b",grid->gn);
   patch->s[1] = Pgetd(var);
-  sprintf(var,"grid%u_right_central_box_size_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_central_box_size_c",grid->gn);
   patch->s[2] = Pgetd(var);
   
   /* filling min: min = center-l/2 */
@@ -479,36 +479,36 @@ void populate_central_NS_central_box(Grid_T *const grid,const Uint pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_central_box",grid->gn);
+  sprintf(name,PATCH_NAME_PRT_P_"central_box",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
-  sprintf(var,"grid%u_central_box_n_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"central_box_n_a",grid->gn);
   patch->n[0] = (Uint)Pgeti(var);
   
-  sprintf(var,"grid%u_central_box_n_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"central_box_n_b",grid->gn);
   patch->n[1] = (Uint)Pgeti(var);
   
-  sprintf(var,"grid%u_central_box_n_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"central_box_n_c",grid->gn);
   patch->n[2] = (Uint)Pgeti(var);
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_NS_center_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"NS_center_a",grid->gn);
   patch->c[0] = Pgetd(var);
-  sprintf(var,"grid%u_NS_center_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"NS_center_b",grid->gn);
   patch->c[1] = Pgetd(var);
-  sprintf(var,"grid%u_NS_center_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"NS_center_c",grid->gn);
   patch->c[2] = Pgetd(var);
   
   /* filling size */
-  sprintf(var,"grid%u_central_box_size_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"central_box_size_a",grid->gn);
   patch->s[0] = Pgetd(var);
-  sprintf(var,"grid%u_central_box_size_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"central_box_size_b",grid->gn);
   patch->s[1] = Pgetd(var);
-  sprintf(var,"grid%u_central_box_size_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"central_box_size_c",grid->gn);
   patch->s[2] = Pgetd(var);
   
   /* filling min: min = center-l/2 */
@@ -553,36 +553,36 @@ void populate_right_box_sns(Grid_T *const grid,const Uint pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_right_box",grid->gn);
+  sprintf(name,PATCH_NAME_PRT_P_"right_box",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
-  sprintf(var,"grid%u_right_box_n_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_box_n_a",grid->gn);
   patch->n[0] = (Uint)Pgeti(var);
   
-  sprintf(var,"grid%u_right_box_n_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_box_n_b",grid->gn);
   patch->n[1] = (Uint)Pgeti(var);
   
-  sprintf(var,"grid%u_right_box_n_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_box_n_c",grid->gn);
   patch->n[2] = (Uint)Pgeti(var);
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_right_box_center_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_box_center_a",grid->gn);
   patch->c[0] = Pgetd(var);
-  sprintf(var,"grid%u_right_box_center_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_box_center_b",grid->gn);
   patch->c[1] = Pgetd(var);
-  sprintf(var,"grid%u_right_box_center_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_box_center_c",grid->gn);
   patch->c[2] = Pgetd(var);
   
   /* filling size */
-  sprintf(var,"grid%u_right_box_size_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_box_size_a",grid->gn);
   patch->s[0] = Pgetd(var);
-  sprintf(var,"grid%u_right_box_size_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_box_size_b",grid->gn);
   patch->s[1] = Pgetd(var);
-  sprintf(var,"grid%u_right_box_size_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_box_size_c",grid->gn);
   patch->s[2] = Pgetd(var);
   
   /* filling min: min = center-l/2 */
@@ -639,10 +639,10 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const Uint pn,const 
   {
     case UP:
     /* filling name */
-    sprintf(name,"grid%u_filling_box_up",grid->gn);
+    sprintf(name,PATCH_NAME_PRT_P_"filling_box_up",grid->gn);
     patch->name = dup_s(name);
     
-    sprintf(var,"grid%u_around_box_length",grid->gn);
+    sprintf(var,PATCH_NAME_PRT_P_"around_box_length",grid->gn);
     l = Pgetd(var);
     
     /* filling center */
@@ -668,10 +668,10 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const Uint pn,const 
     break;
     case DOWN:
     /* filling name */
-    sprintf(name,"grid%u_filling_box_down",grid->gn);
+    sprintf(name,PATCH_NAME_PRT_P_"filling_box_down",grid->gn);
     patch->name = dup_s(name);
     
-    sprintf(var,"grid%u_around_box_length",grid->gn);
+    sprintf(var,PATCH_NAME_PRT_P_"around_box_length",grid->gn);
     l = Pgetd(var);
     
     /* filling center */
@@ -697,10 +697,10 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const Uint pn,const 
     break;
     case BACK:
     /* filling name */
-    sprintf(name,"grid%u_filling_box_back",grid->gn);
+    sprintf(name,PATCH_NAME_PRT_P_"filling_box_back",grid->gn);
     patch->name = dup_s(name);
     
-    sprintf(var,"grid%u_around_box_length",grid->gn);
+    sprintf(var,PATCH_NAME_PRT_P_"around_box_length",grid->gn);
     l = Pgetd(var);
     
     /* filling center */
@@ -726,10 +726,10 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const Uint pn,const 
     break;
     case FRONT:
     /* filling name */
-    sprintf(name,"grid%u_filling_box_front",grid->gn);
+    sprintf(name,PATCH_NAME_PRT_P_"filling_box_front",grid->gn);
     patch->name = dup_s(name);
     
-    sprintf(var,"grid%u_around_box_length",grid->gn);
+    sprintf(var,PATCH_NAME_PRT_P_"around_box_length",grid->gn);
     l = Pgetd(var);
     
     /* filling center */
@@ -802,36 +802,36 @@ void populate_right_NS_central_box(Grid_T *const grid,const Uint pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_right_central_box",grid->gn);
+  sprintf(name,PATCH_NAME_PRT_P_"right_central_box",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
-  sprintf(var,"grid%u_right_central_box_n_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_central_box_n_a",grid->gn);
   patch->n[0] = (Uint)Pgeti(var);
   
-  sprintf(var,"grid%u_right_central_box_n_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_central_box_n_b",grid->gn);
   patch->n[1] = (Uint)Pgeti(var);
   
-  sprintf(var,"grid%u_right_central_box_n_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_central_box_n_c",grid->gn);
   patch->n[2] = (Uint)Pgeti(var);
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_NS_center_a",grid->gn);
   patch->c[0] = Pgetd(var);
-  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_NS_center_b",grid->gn);
   patch->c[1] = Pgetd(var);
-  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_NS_center_c",grid->gn);
   patch->c[2] = Pgetd(var);
   
   /* filling size */
-  sprintf(var,"grid%u_right_central_box_size_a",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_central_box_size_a",grid->gn);
   patch->s[0] = Pgetd(var);
-  sprintf(var,"grid%u_right_central_box_size_b",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_central_box_size_b",grid->gn);
   patch->s[1] = Pgetd(var);
-  sprintf(var,"grid%u_right_central_box_size_c",grid->gn);
+  sprintf(var,PATCH_NAME_PRT_P_"right_central_box_size_c",grid->gn);
   patch->s[2] = Pgetd(var);
   
   /* filling min: min = center-l/2 */

@@ -686,66 +686,66 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
   
   /* n_a, n_b, n_c */
   /* left box */
-  sprintf(par,"grid%u_left_central_box_n_a",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_central_box_n_a",gn);
   sprintf(val,"%u",nlb[0]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_left_central_box_n_b",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_central_box_n_b",gn);
   sprintf(val,"%u",nlb[1]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_left_central_box_n_c",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_central_box_n_c",gn);
   sprintf(val,"%u",nlb[2]);
   add_parameter_string(par,val);
   
   /* size a,b,c */
-  sprintf(par,"grid%u_left_central_box_size_a",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_central_box_size_a",gn);
   Psetd(par,box_size_l);
   
-  sprintf(par,"grid%u_left_central_box_size_b",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_central_box_size_b",gn);
   Psetd(par,box_size_l);
   
-  sprintf(par,"grid%u_left_central_box_size_c",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_central_box_size_c",gn);
   Psetd(par,box_size_l);
   
   /* around box length */
-  sprintf(par,"grid%u_around_box_length",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"around_box_length",gn);
   Psetd(par,C);
   
   /* R1 and R2 outermost */
-  sprintf(par,"grid%u_outermost%u_R2",gn,0);
+  sprintf(par,PATCH_NAME_PRT_P_"outermost%u_R2",gn,0);
   Psetd(par,R_outermost[0]);
     
   for (i = 1; i < N_Outermost_Split; i++)
   {
     /* R1: */
-    sprintf(par,"grid%u_outermost%u_R1",gn,i);
+    sprintf(par,PATCH_NAME_PRT_P_"outermost%u_R1",gn,i);
     Psetd(par,R_outermost[i-1]);
     
     /* R2: */
-    sprintf(par,"grid%u_outermost%u_R2",gn,i);
+    sprintf(par,PATCH_NAME_PRT_P_"outermost%u_R2",gn,i);
     Psetd(par,R_outermost[i]);
     
   }
   
   /* assuming the center of left NS at (0,-C/2,0) */
-  sprintf(par,"grid%u_left_NS_center_a",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_center_a",gn);
   Psetd(par,0.0);
   
-  sprintf(par,"grid%u_left_NS_center_b",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_center_b",gn);
   Psetd(par,-C/2);
   
-  sprintf(par,"grid%u_left_NS_center_c",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_center_c",gn);
   Psetd(par,0.0);
   
   /* assuming the center of right BH at (0,C/2,0) */
-  sprintf(par,"grid%u_right_BH_center_a",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_BH_center_a",gn);
   Psetd(par,0.0);
   
-  sprintf(par,"grid%u_right_BH_center_b",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_BH_center_b",gn);
   Psetd(par,C/2);
   
-  sprintf(par,"grid%u_right_BH_center_c",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_BH_center_c",gn);
   Psetd(par,0.0);
   
   free(R_outermost);
@@ -1191,17 +1191,17 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
       for (k = 0; k < N[2]; ++k)
         R[L(N,i,j,k)] = R_NS_l;
         
-  sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_surface_function_up",grid->gn);
   add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_surface_function_down",grid->gn);
   add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_surface_function_back",grid->gn);
   add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_surface_function_front",grid->gn);
   add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_surface_function_left",grid->gn);
   add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_surface_function_right",grid->gn);
   add_parameter_array(par,R,N_total);
   
   free(R);
@@ -1254,9 +1254,9 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
         R[L(N,i,j,k)] = r;
     }
   }
-  sprintf(par,"grid%u_right_BH_surface_function_up",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_BH_surface_function_up",grid->gn);
   add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_right_BH_surface_function_down",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_BH_surface_function_down",grid->gn);
   add_parameter_array(par,R,N_total);
   
   /* surface back */
@@ -1274,7 +1274,7 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
         R[L(N,i,j,k)] = r;
     }
   }
-  sprintf(par,"grid%u_right_BH_surface_function_back",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_BH_surface_function_back",grid->gn);
   add_parameter_array(par,R,N_total);
   
   /* surface front */
@@ -1292,7 +1292,7 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
         R[L(N,i,j,k)] = r;
     }
   }
-  sprintf(par,"grid%u_right_BH_surface_function_front",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_BH_surface_function_front",grid->gn);
   add_parameter_array(par,R,N_total);
   
   /* surface left */
@@ -1310,7 +1310,7 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
         R[L(N,i,j,k)] = r;
     }
   }
-  sprintf(par,"grid%u_right_BH_surface_function_left",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_BH_surface_function_left",grid->gn);
   add_parameter_array(par,R,N_total);
   
   /* surface right */
@@ -1328,7 +1328,7 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
         R[L(N,i,j,k)] = r;
     }
   }
-  sprintf(par,"grid%u_right_BH_surface_function_right",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_BH_surface_function_right",grid->gn);
   add_parameter_array(par,R,N_total);
   
   free(R);
@@ -1420,88 +1420,88 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
   
   /* n_a, n_b, n_c */
   /* left box */
-  sprintf(par,"grid%u_left_central_box_n_a",nlb[0]);
+  sprintf(par,PATCH_NAME_PRT_P_"left_central_box_n_a",nlb[0]);
   sprintf(val,"%u",nlb[0]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_left_central_box_n_b",nlb[1]);
+  sprintf(par,PATCH_NAME_PRT_P_"left_central_box_n_b",nlb[1]);
   sprintf(val,"%u",nlb[1]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_left_central_box_n_c",nlb[2]);
+  sprintf(par,PATCH_NAME_PRT_P_"left_central_box_n_c",nlb[2]);
   sprintf(val,"%u",nlb[2]);
   add_parameter_string(par,val);
   
   /* right box */
-  sprintf(par,"grid%u_right_central_box_n_a",nrb[0]);
+  sprintf(par,PATCH_NAME_PRT_P_"right_central_box_n_a",nrb[0]);
   sprintf(val,"%u",nrb[0]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_right_central_box_n_b",nrb[1]);
+  sprintf(par,PATCH_NAME_PRT_P_"right_central_box_n_b",nrb[1]);
   sprintf(val,"%u",nrb[1]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_right_central_box_n_c",nrb[2]);
+  sprintf(par,PATCH_NAME_PRT_P_"right_central_box_n_c",nrb[2]);
   sprintf(val,"%u",nrb[2]);
   add_parameter_string(par,val);
   
   /* size a,b,c */
-  sprintf(par,"grid%u_left_central_box_size_a",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_central_box_size_a",gn);
   Psetd(par,box_size_l);
   
-  sprintf(par,"grid%u_left_central_box_size_b",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_central_box_size_b",gn);
   Psetd(par,box_size_l);
   
-  sprintf(par,"grid%u_left_central_box_size_c",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_central_box_size_c",gn);
   Psetd(par,box_size_l);
   
-  sprintf(par,"grid%u_right_central_box_size_a",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_central_box_size_a",gn);
   Psetd(par,box_size_r);
   
-  sprintf(par,"grid%u_right_central_box_size_b",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_central_box_size_b",gn);
   Psetd(par,box_size_r);
   
-  sprintf(par,"grid%u_right_central_box_size_c",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_central_box_size_c",gn);
   Psetd(par,box_size_r);
   
   /* around box length */
-  sprintf(par,"grid%u_around_box_length",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"around_box_length",gn);
   Psetd(par,C);
   
   /* R1 and R2 outermost */
-  sprintf(par,"grid%u_outermost%u_R2",gn,0);
+  sprintf(par,PATCH_NAME_PRT_P_"outermost%u_R2",gn,0);
   Psetd(par,R_outermost[0]);
     
   for (i = 1; i < N_Outermost_Split; i++)
   {
     /* R1: */
-    sprintf(par,"grid%u_outermost%u_R1",gn,i);
+    sprintf(par,PATCH_NAME_PRT_P_"outermost%u_R1",gn,i);
     Psetd(par,R_outermost[i-1]);
     
     /* R2: */
-    sprintf(par,"grid%u_outermost%u_R2",gn,i);
+    sprintf(par,PATCH_NAME_PRT_P_"outermost%u_R2",gn,i);
     Psetd(par,R_outermost[i]);
     
   }
   
   /* assuming the center of left NS at (0,-C/2,0) */
-  sprintf(par,"grid%u_left_NS_center_a",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_center_a",gn);
   Psetd(par,0.0);
   
-  sprintf(par,"grid%u_left_NS_center_b",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_center_b",gn);
   Psetd(par,-C/2);
   
-  sprintf(par,"grid%u_left_NS_center_c",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_center_c",gn);
   Psetd(par,0.0);
   
   /* assuming the center of right NS at (0,C/2,0) */
-  sprintf(par,"grid%u_right_NS_center_a",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_NS_center_a",gn);
   Psetd(par,0.0);
   
-  sprintf(par,"grid%u_right_NS_center_b",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_NS_center_b",gn);
   Psetd(par,C/2);
   
-  sprintf(par,"grid%u_right_NS_center_c",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_NS_center_c",gn);
   Psetd(par,0.0);
   
   free(R_outermost);
@@ -1569,10 +1569,10 @@ static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
   /* adding the results to the parameter data base: */
   
   /* R2 arounds */
-  sprintf(par,"grid%u_left_NS_Surrounding_R2",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_Surrounding_R2",gn);
   Psetd(par,R_Surr_l);
   
-  sprintf(par,"grid%u_right_NS_Surrounding_R2",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_NS_Surrounding_R2",gn);
   Psetd(par,R_Surr_r);
   
   /* R1 and R2 outermost */
@@ -1581,47 +1581,47 @@ static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
     /* R1: */
     if (i == 0)
     {
-      sprintf(par,"grid%u_left_outermost%u_R1",gn,i);
+      sprintf(par,PATCH_NAME_PRT_P_"left_outermost%u_R1",gn,i);
       Psetd(par,R_Surr_l);
       
-      sprintf(par,"grid%u_right_outermost%u_R1",gn,i);
+      sprintf(par,PATCH_NAME_PRT_P_"right_outermost%u_R1",gn,i);
       Psetd(par,R_Surr_r);
     }
     else
     {
-      sprintf(par,"grid%u_left_outermost%u_R1",gn,i);
+      sprintf(par,PATCH_NAME_PRT_P_"left_outermost%u_R1",gn,i);
       Psetd(par,R_outmost_l[i-1]);
       
-      sprintf(par,"grid%u_right_outermost%u_R1",gn,i);
+      sprintf(par,PATCH_NAME_PRT_P_"right_outermost%u_R1",gn,i);
       Psetd(par,R_outmost_r[i-1]);
     }
     
     /* R2: */
-    sprintf(par,"grid%u_left_outermost%u_R2",gn,i);
+    sprintf(par,PATCH_NAME_PRT_P_"left_outermost%u_R2",gn,i);
     Psetd(par,R_outmost_l[i]);
     
-    sprintf(par,"grid%u_right_outermost%u_R2",gn,i);
+    sprintf(par,PATCH_NAME_PRT_P_"right_outermost%u_R2",gn,i);
     Psetd(par,R_outmost_r[i]);
   }
   
   /* assuming the center of left NS at (0,-O_l,0) */
-  sprintf(par,"grid%u_left_NS_center_a",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_center_a",gn);
   Psetd(par,0.0);
   
-  sprintf(par,"grid%u_left_NS_center_b",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_center_b",gn);
   Psetd(par,-O_l);
   
-  sprintf(par,"grid%u_left_NS_center_c",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_center_c",gn);
   Psetd(par,0.0);
   
   /* assuming the center of right NS at (0,O_r,0) */
-  sprintf(par,"grid%u_right_NS_center_a",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_NS_center_a",gn);
   Psetd(par,0.0);
   
-  sprintf(par,"grid%u_right_NS_center_b",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_NS_center_b",gn);
   Psetd(par,O_r);
   
-  sprintf(par,"grid%u_right_NS_center_c",gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_NS_center_c",gn);
   Psetd(par,0.0);
   
   free(R0);
@@ -1669,7 +1669,7 @@ static void NS_radii_BNS_Spherical_grid_eg(Grid_T *const grid,void *vp)
   for (ijk = 0; ijk < N_total; ++ijk)
       R2[ijk] = R_NS_l;
       
-  sprintf(par,"grid%u_left_NS_R2",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_R2",grid->gn);
   add_parameter_array(par,R2,N_total);
   
   /* inside: R1 */
@@ -1677,7 +1677,7 @@ static void NS_radii_BNS_Spherical_grid_eg(Grid_T *const grid,void *vp)
   for (ijk = 0; ijk < N_total; ++ijk)
       R1[ijk] = 0;
       
-  sprintf(par,"grid%u_left_NS_R1",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_R1",grid->gn);
   add_parameter_array(par,R1,N_total);
   free(R1);
   free(R2);
@@ -1710,7 +1710,7 @@ static void NS_radii_BNS_Spherical_grid_eg(Grid_T *const grid,void *vp)
   for (ijk = 0; ijk < N_total; ++ijk)
     R2[ijk] = R_NS_r;
       
-  sprintf(par,"grid%u_right_NS_R2",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_NS_R2",grid->gn);
   add_parameter_array(par,R2,N_total);
   
   /* inside: R1*/
@@ -1718,7 +1718,7 @@ static void NS_radii_BNS_Spherical_grid_eg(Grid_T *const grid,void *vp)
   for (ijk = 0; ijk < N_total; ++ijk)
       R1[ijk] = 0;
 
-  sprintf(par,"grid%u_right_NS_R1",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_NS_R1",grid->gn);
   add_parameter_array(par,R1,N_total);
   free(R1);
   free(R2);
@@ -1763,17 +1763,17 @@ static void NS_surface_BNS_CS_grid_eg(Grid_T *const grid)
       for (k = 0; k < N[2]; ++k)
         R[L(N,i,j,k)] = R_NS_l;
       
-  sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_surface_function_up",grid->gn);
   add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_surface_function_down",grid->gn);
   add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_surface_function_back",grid->gn);
   add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_surface_function_front",grid->gn);
   add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_surface_function_left",grid->gn);
   add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"left_NS_surface_function_right",grid->gn);
   add_parameter_array(par,R,N_total);
   
   free(R);
@@ -1808,17 +1808,17 @@ static void NS_surface_BNS_CS_grid_eg(Grid_T *const grid)
       for (k = 0; k < N[2]; ++k)
         R[L(N,i,j,k)] = R_NS_r;
       
-  sprintf(par,"grid%u_right_NS_surface_function_up",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_NS_surface_function_up",grid->gn);
   add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_right_NS_surface_function_down",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_NS_surface_function_down",grid->gn);
   add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_right_NS_surface_function_back",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_NS_surface_function_back",grid->gn);
   add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_right_NS_surface_function_front",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_NS_surface_function_front",grid->gn);
   add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_right_NS_surface_function_left",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_NS_surface_function_left",grid->gn);
   add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_right_NS_surface_function_right",grid->gn);
+  sprintf(par,PATCH_NAME_PRT_P_"right_NS_surface_function_right",grid->gn);
   add_parameter_array(par,R,N_total);
   
   free(R);
