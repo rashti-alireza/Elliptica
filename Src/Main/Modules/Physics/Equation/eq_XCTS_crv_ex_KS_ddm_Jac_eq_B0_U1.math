@@ -1,4 +1,4 @@
-# Jacobian equation for Beta_U1
+# Jacobian equation for B0_U1
 
 # Manifold or grid Dimension
 Dimension = 3;

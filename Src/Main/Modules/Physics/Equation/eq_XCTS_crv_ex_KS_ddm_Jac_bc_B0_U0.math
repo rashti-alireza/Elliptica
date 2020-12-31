@@ -1,4 +1,4 @@
-# Jacobian for Beta_U0 (shift) BC equation:
+# Jacobian for B0_U0 (shift) BC equation:
 
 # Manifold or grid Dimension
 Dimension = 3;
