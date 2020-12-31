@@ -10,7 +10,6 @@ Point = ijk;
 C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
 C_macro3 = JACOBIAN_DERIVATIVE(name);
-C_macro4 = READ_v_IF_IN_NS(name);
 
 # C arguments for jacobian of derivatives
 C_arg = (j_name,ijk,lmn);
@@ -36,7 +35,7 @@ Declare =
  (obj = Field,name = Jphi, rank = D, C_macro3,C_arg);
 
  # rest mass density 1st derivative
- (obj = Field,name = drho0, rank = D, C_macro4);
+ (obj = Field,name = drho0, rank = D, C_macro);
 
  # conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
