@@ -260,6 +260,35 @@ void bh_tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
   
 }
 
+/* update inner BC values, for example the values of alpha on AH */
+void bh_update_inner_BC(Physics_T *const phys)
+{
+  
+  IF_sval("Eq_inner_BC_fields","none")
+  {
+    ;
+  }
+  else IF_sval("Eq_inner_BC_fields","XCTS")
+  {
+    IF_sval("Eq_inner_BC_alpha","exact_ConfKerrSchild")
+    {
+      fd_populate_alpha_ConfKerrSchild(phys,".*","ibc_alpha");
+    }
+    else IF_sval("Eq_inner_BC_alpha","exact_KerrSchild")
+    {
+      fd_populate_alpha_KerrSchild(phys,".*","ibc_alpha");
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
+  }
+  else
+  {
+    Error0(NO_OPTION);
+  }
+}
+
 
 /* updating conformal normal vector and its derivatives on 
 // apparent horizon. 

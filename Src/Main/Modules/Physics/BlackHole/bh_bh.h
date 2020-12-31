@@ -9,7 +9,7 @@ void bh_start_off_PGSchild_perfect_s2(Physics_T *const phys);
 void bh_start_off_KerrSchild_general_s2(Physics_T *const phys);
 void bh_find_bh_surface_KerrSchild_s2(Physics_T *const phys);
 void bh_update_sConf_dsConf(Physics_T *const phys);
-
+void bh_update_inner_BC(Physics_T *const phys);
 
 
 
