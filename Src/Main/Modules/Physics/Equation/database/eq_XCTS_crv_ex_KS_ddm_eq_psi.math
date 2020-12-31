@@ -39,8 +39,8 @@ Declare =
  # trKij
  (obj = Field,name = trK, rank = 0, C_macro);
 
- # _A_{ij}*_A^{ij}
- (obj = Field,name = _Aij2, rank = 0, C_macro);
+ # AConf_{ij}*AConf^{ij}
+ (obj = Field,name = AConfIJ2, rank = 0, C_macro);
 
  # total conformal energy density
  (obj = Field,name = EConf, rank = 0, C_macro);
@@ -71,7 +71,7 @@ Symm[ChrisConf(i,j,k)  = ChrisConf(i,k,j)];
 
 # write the equation below at ijk point:
 psi4 = psi**4;
-aij2 = _Aij2/psi4;
+aij2 = AConfIJ2/psi4;
 F_eq = igConf(i,j)*ddpsi(-i,-j) \
      - igConf(-i,-j)*ChrisConf(l,i,j)*dpsi(-l)\
      - psi*trRicciConf/8 - psi4*psi*(trK**2)/12 + aij2/(8*psi**3) + 2*pi*EConf/psi;

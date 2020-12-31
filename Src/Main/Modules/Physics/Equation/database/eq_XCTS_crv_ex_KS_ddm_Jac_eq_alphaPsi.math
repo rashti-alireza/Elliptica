@@ -57,7 +57,7 @@ Declare =
  (obj = Field,name = SConf, rank = 0, C_macro);
 
  # _A_{ij}*_A^{ij}
- (obj = Field,name = _Aij2, rank = 0, C_macro);
+ (obj = Field,name = AConfIJ2, rank = 0, C_macro);
 
  # conformal metric inverse
  (obj = Field,name = igConf, rank = UU, C_macro);
@@ -103,7 +103,7 @@ Symm[ChrisConf(i,j,k)  = ChrisConf(i,k,j)];
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n`;
 
 psi4_B = psi**4;
-aij2_B = _Aij2/psi4_B;
+aij2_B = AConfIJ2/psi4_B;
 
 # with AConfIJ and  trRicciConf :
 Bpart = \
@@ -135,7 +135,7 @@ igConf(-i,-j)*(JJeta(i,j) - ChrisConf(l,i,j)*Jeta(-l))\
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
 
 psi4_E = psi**4;
-aij2_E = _Aij2/psi4_E;
+aij2_E = AConfIJ2/psi4_E;
 
 # with AConfIJ and trRicciConf :
 Epart = \

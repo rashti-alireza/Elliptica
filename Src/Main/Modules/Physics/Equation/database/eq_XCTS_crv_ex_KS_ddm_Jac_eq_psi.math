@@ -44,7 +44,7 @@ Declare =
  (obj = Field,name = trK, rank = 0, C_macro);
 
  # _A_{ij}*_A^{ij}
- (obj = Field,name = _Aij2, rank = 0, C_macro);
+ (obj = Field,name = AConfIJ2, rank = 0, C_macro);
 
  # total conformal energy density
  (obj = Field,name = EConf, rank = 0, C_macro);
@@ -98,7 +98,7 @@ Symm[JJpsi(i,j)   = JJpsi(j,i)];
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n`;
 
 psi4_B = psi**4;
-aij2_B = _Aij2/psi4_B;
+aij2_B = AConfIJ2/psi4_B;
 
 # with AConfIJ^2 and  trRicciConf :
 Bpart =  igConf(i,j)*JJpsi(-i,-j) - igConf(-i,-j)*ChrisConf(l,i,j)*Jpsi(-l)\
@@ -129,7 +129,7 @@ Bpart =  igConf(i,j)*JJpsi(-i,-j) - igConf(-i,-j)*ChrisConf(l,i,j)*Jpsi(-l)\
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
 
 psi4_E = psi**4;
-aij2_E = _Aij2/psi4_E;
+aij2_E = AConfIJ2/psi4_E;
 
 # with AConfIJ^2 and trRicciConf:
 Epart =  igConf(i,j)*JJpsi(-i,-j) - igConf(-i,-j)*ChrisConf(l,i,j)*Jpsi(-l)\
