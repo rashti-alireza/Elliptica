@@ -24,17 +24,11 @@ C_macro2 = REALLOC_v_WRITE_v(name);
 # declare for Cpi
 Declare = 
 {
-
  # alphaPsi
  (obj = Field,name = alphaPsi, rank = 0, C_macro);
 
  # conformal factor
- (obj = Field,name = psi, rank = 0, C_macro);
-
- # variables
- (obj = variable,name = r2, none);
- (obj = variable,name = r02, none);
- (obj = variable,name = KS_alpha, none);
+ (obj = Field,name = ibc_alphaPsi, rank = 0, C_macro);
 
 }
 
@@ -60,35 +54,12 @@ outerB_F = alphaPsi - 1;
 # INNER BOUNDARY LIKE BLACK HOLE HORIZON #
 `  else if (patch->innerB)/* at inner boundary */`;
 `  {`;
-`  const double r02   = Pow2(Pgetd("BH_KerrSchild_RollOff"));`;
-`  const double M_BH  = Pgetd("BH_irreducible_mass");`;
-`  const double a_BH  = Pgetd("BH_net_spin");`;
-`  const double BH_center_x = Pgetd("BH_center_x");`
-`  const double BH_center_y = Pgetd("BH_center_y");`
-`  const double BH_center_z = Pgetd("BH_center_z");`
-`  /* populate tB tR */`
-`  Transformation_T *tB = initialize_transformation();`
-`  Transformation_T *tR = initialize_transformation();`
-`  eq_transform_populate_boost_rotation(tB,tR);`
 
-`  DDM_SCHUR_BC_OPEN\n`;
-`  double x,y,z,r2,H,k0,k1,k2,kt;`
-
-`  x = patch->node[ijk]->x[0]-BH_center_x;`
-`  y = patch->node[ijk]->x[1]-BH_center_y;`
-`  z = patch->node[ijk]->x[2]-BH_center_z;`
-`  r2 = Pow2(x)+Pow2(y)+Pow2(z);`
-`  eq_transform_get_k_and_H_KerrSchild(x,y,z,a_BH,M_BH,tB,tR,&kt,&k0,&k1,&k2,&H);`
-
-`  double C = 2.*H;`
-`  double KS_alpha = 1/sqrt(1+C*kt*kt);`
 ``
-innerB_F = alphaPsi - psi*exp(-((r2/r02)**2))*KS_alpha;
+innerB_F = alphaPsi - ibc_alphaPsi;
 
 `  F[map[ijk]] = innerB_F;\n`;
 `  DDM_SCHUR_BC_CLOSE`;
-`  free_transformation(tB);`
-`  free_transformation(tR);`
 
 `  }/* end of else if (patch->innerB) */`;
 
