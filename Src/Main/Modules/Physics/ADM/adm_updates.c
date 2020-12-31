@@ -162,77 +162,96 @@ void adm_update_beta(Physics_T *const phys,const char *const region)
   {
     Patch_T *const patch = grid->patch[p];
     
-    PREP_beta(0);
-    PREP_dbeta(0,0);
-    PREP_dbeta(0,1);
-    PREP_dbeta(0,2);
-    PREP_ddbeta(0,0,0);
-    PREP_ddbeta(0,0,1);
-    PREP_ddbeta(0,0,2);
-    PREP_ddbeta(0,1,1);
-    PREP_ddbeta(0,1,2);
-    PREP_ddbeta(0,2,2);
+    adm_update_beta_U0(patch);
+    adm_update_beta_U1(patch);
+    adm_update_beta_U2(patch);
+  }
+}
 
-    PREP_beta(1);
-    PREP_dbeta(1,0);
-    PREP_dbeta(1,1);
-    PREP_dbeta(1,2);
-    PREP_ddbeta(1,0,0);
-    PREP_ddbeta(1,0,1);
-    PREP_ddbeta(1,0,2);
-    PREP_ddbeta(1,1,1);
-    PREP_ddbeta(1,1,2);
-    PREP_ddbeta(1,2,2);
+/* update beta_U0 patch wise. */
+void adm_update_beta_U0(Patch_T *const patch)
+{
+  PREP_beta(0);
+  PREP_dbeta(0,0);
+  PREP_dbeta(0,1);
+  PREP_dbeta(0,2);
+  PREP_ddbeta(0,0,0);
+  PREP_ddbeta(0,0,1);
+  PREP_ddbeta(0,0,2);
+  PREP_ddbeta(0,1,1);
+  PREP_ddbeta(0,1,2);
+  PREP_ddbeta(0,2,2);
 
-    PREP_beta(2);
-    PREP_dbeta(2,0);
-    PREP_dbeta(2,1);
-    PREP_dbeta(2,2);
-    PREP_ddbeta(2,0,0);
-    PREP_ddbeta(2,0,1);
-    PREP_ddbeta(2,0,2);
-    PREP_ddbeta(2,1,1);
-    PREP_ddbeta(2,1,2);
-    PREP_ddbeta(2,2,2);
-  
-    FOR_ALL_ijk
-    {
-      UPDATE_beta(0);
-      UPDATE_dbeta(0,0);
-      UPDATE_dbeta(0,1);
-      UPDATE_dbeta(0,2);
-      UPDATE_ddbeta(0,0,0);
-      UPDATE_ddbeta(0,0,1);
-      UPDATE_ddbeta(0,0,2);
-      UPDATE_ddbeta(0,1,1);
-      UPDATE_ddbeta(0,1,2);
-      UPDATE_ddbeta(0,2,2);
-      
-      
-      UPDATE_beta(1);
-      UPDATE_dbeta(1,0);
-      UPDATE_dbeta(1,1);
-      UPDATE_dbeta(1,2);
-      UPDATE_ddbeta(1,0,0);
-      UPDATE_ddbeta(1,0,1);
-      UPDATE_ddbeta(1,0,2);
-      UPDATE_ddbeta(1,1,1);
-      UPDATE_ddbeta(1,1,2);
-      UPDATE_ddbeta(1,2,2);
-      
-      
-      UPDATE_beta(2);
-      UPDATE_dbeta(2,0);
-      UPDATE_dbeta(2,1);
-      UPDATE_dbeta(2,2);
-      UPDATE_ddbeta(2,0,0);
-      UPDATE_ddbeta(2,0,1);
-      UPDATE_ddbeta(2,0,2);
-      UPDATE_ddbeta(2,1,1);
-      UPDATE_ddbeta(2,1,2);
-      UPDATE_ddbeta(2,2,2);
-    }
+  FOR_ALL_ijk
+  {
+    UPDATE_beta(0);
+    UPDATE_dbeta(0,0);
+    UPDATE_dbeta(0,1);
+    UPDATE_dbeta(0,2);
+    UPDATE_ddbeta(0,0,0);
+    UPDATE_ddbeta(0,0,1);
+    UPDATE_ddbeta(0,0,2);
+    UPDATE_ddbeta(0,1,1);
+    UPDATE_ddbeta(0,1,2);
+    UPDATE_ddbeta(0,2,2);
+  }
+}
 
+/* update beta_U1 patch wise. */
+void adm_update_beta_U1(Patch_T *const patch)
+{
+  PREP_beta(1);
+  PREP_dbeta(1,0);
+  PREP_dbeta(1,1);
+  PREP_dbeta(1,2);
+  PREP_ddbeta(1,0,0);
+  PREP_ddbeta(1,0,1);
+  PREP_ddbeta(1,0,2);
+  PREP_ddbeta(1,1,1);
+  PREP_ddbeta(1,1,2);
+  PREP_ddbeta(1,2,2);
+
+  FOR_ALL_ijk
+  {
+    UPDATE_beta(1);
+    UPDATE_dbeta(1,0);
+    UPDATE_dbeta(1,1);
+    UPDATE_dbeta(1,2);
+    UPDATE_ddbeta(1,0,0);
+    UPDATE_ddbeta(1,0,1);
+    UPDATE_ddbeta(1,0,2);
+    UPDATE_ddbeta(1,1,1);
+    UPDATE_ddbeta(1,1,2);
+    UPDATE_ddbeta(1,2,2);
+  }
+}
+
+/* update beta_U2 patch wise. */
+void adm_update_beta_U2(Patch_T *const patch)
+{
+  PREP_beta(2);
+  PREP_dbeta(2,0);
+  PREP_dbeta(2,1);
+  PREP_dbeta(2,2);
+  PREP_ddbeta(2,0,0);
+  PREP_ddbeta(2,0,1);
+  PREP_ddbeta(2,0,2);
+  PREP_ddbeta(2,1,1);
+  PREP_ddbeta(2,1,2);
+  PREP_ddbeta(2,2,2);
+
+  FOR_ALL_ijk
+  {
+    UPDATE_beta(2);
+    UPDATE_dbeta(2,0);
+    UPDATE_dbeta(2,1);
+    UPDATE_dbeta(2,2);
+    UPDATE_ddbeta(2,0,0);
+    UPDATE_ddbeta(2,0,1);
+    UPDATE_ddbeta(2,0,2);
+    UPDATE_ddbeta(2,1,1);
+    UPDATE_ddbeta(2,1,2);
+    UPDATE_ddbeta(2,2,2);
   }
 }
 
