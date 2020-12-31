@@ -13,7 +13,7 @@
 #include "maths_spectral_methods_lib.h"
 
 /* prefix of internal parameters of this project */
-#define P_  "Eq_"
+#define P_  "EQ_"
 
 /* backup field name prefix */
 #define P_Backup_  P_"backup_"
