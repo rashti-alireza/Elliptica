@@ -8,7 +8,6 @@ Point = ijk;
 
 C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
-C_macro3 = READ_v_IF_ON_HORIZON(name);
 
 # main function:
 `#include "eq_header.h"`;
@@ -38,7 +37,7 @@ Declare =
  (obj = Field,name = alphaPsi, rank = 0, C_macro);
 
  # normal vector at the horizon
- (obj = Field,name = bh_sConf_U1, rank = 0, C_macro3);
+ (obj = Field,name = bh_sConf_U1, rank = 0, C_macro);
 
  # Cartesian x, y and z coords
  (obj = variable,name = x,none);
@@ -64,17 +63,13 @@ Declare =
 # outer boundary or inner boundary equation, let it be 0.
 
 # OUTER BOUNDARY LIKE INFINITY #
-
-`  const double BH_center_x = Pgetd("BH_center_x");`
-#`  const double BH_center_y = Pgetd("BH_center_y");`
-`  const double BH_center_z = Pgetd("BH_center_z");`
-#`  const double C_BH = 0.5*Pgetd("BH_NS_separation");`;
-`  const double BH_Omega_U0 = Pgetd("BH_Omega_U0");`;
-#`  const double BH_Omega_U1 = Pgetd("BH_Omega_U1");`;
-`  const double BH_Omega_U2 = Pgetd("BH_Omega_U2");`;
-`  const double v1_boost    = Pgetd("v*_boost_y");`
 `  if (patch->outerB)/* at outer boundary */`;
 `  {`;
+## define prefix for parameter
+`  EQ_Def_Param_Prefix_Char`
+`  EQ_Set_Prefix("system")`
+``
+`  const double v1_boost = Pgetd(EQ_PrefixIt("boost_y"));`
 `  DDM_SCHUR_BC_OPEN\n`;
 
 
@@ -89,6 +84,17 @@ outerB_F = B0_U1-v1_boost;
 # INNER BOUNDARY LIKE BLACK HOLE HORIZON #
 `  else if (patch->innerB)/* at inner boundary */`;
 `  {`;
+## define prefix for parameter
+`  EQ_Def_Param_Prefix_Char`
+`  EQ_Set_Prefix("BH")`
+``
+`  const double BH_center_x = Pgetd(EQ_PrefixIt("center_x"));`
+#`  const double BH_center_y = Pgetd(EQ_PrefixIt("center_y"));`
+`  const double BH_center_z = Pgetd(EQ_PrefixIt("center_z"));`
+`  const double BH_Omega_U0 = Pgetd(EQ_PrefixIt("Omega_U0"));`;
+#`  const double BH_Omega_U1 = Pgetd(EQ_PrefixIt("Omega_U1"));`;
+`  const double BH_Omega_U2 = Pgetd(EQ_PrefixIt("Omega_U2"));`;
+``
 `  DDM_SCHUR_BC_OPEN\n`;
 
 

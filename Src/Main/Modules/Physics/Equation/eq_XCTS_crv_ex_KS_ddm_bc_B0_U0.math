@@ -1,4 +1,4 @@
-# Beta_U2 BC equation:
+# Beta_U0 BC equation:
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -8,13 +8,12 @@ Point = ijk;
 
 C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
-C_macro3 = READ_v_IF_ON_HORIZON(name);
 
 # main function:
 `#include "eq_header.h"`;
 `#include "maths_equation_solvings_lib.h"`;
 
-`void *eq_XCTS_curve_exc_KS_ddm_bc_B0_U2(void *vp1,void *vp2)\n{`;
+`void *eq_XCTS_curve_exc_KS_ddm_bc_B0_U0(void *vp1,void *vp2)\n{`;
 
 # NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
 # patch, S, map, F, node, N, n.
@@ -22,14 +21,15 @@ C_macro3 = READ_v_IF_ON_HORIZON(name);
 `  DDM_SCHUR_BC_DECLARE`;
 `  Uint ijk;/* node index */`;
 
+``
 # declare for Cpi
 Declare = 
 {
  # B0 in beta^i = B0^i+B1^i
- (obj = Field,name = B0_U2, rank = 0, C_macro);
+ (obj = Field,name = B0_U0, rank = 0, C_macro);
 
  # B1 in beta^i = B0^i+B1^i
- (obj = Field,name = B1_U2, rank = 0, C_macro);
+ (obj = Field,name = B1_U0, rank = 0, C_macro);
 
  # conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
@@ -38,22 +38,23 @@ Declare =
  (obj = Field,name = alphaPsi, rank = 0, C_macro);
 
  # normal vector at the horizon
- (obj = Field,name = bh_sConf_U2, rank = 0, C_macro3);
+ (obj = Field,name = bh_sConf_U0, rank = 0, C_macro);
 
  # Cartesian x, y and z coords
- (obj = variable,name = x,none);
+ #(obj = variable,name = x,none);
  (obj = variable,name = y,none);
- #(obj = variable,name = z,none);
+ (obj = variable,name = z,none);
 
  # BH_Omega
- (obj = variable,name = BH_Omega_U0,none);
+ #(obj = variable,name = BH_Omega_U0,none);
  (obj = variable,name = BH_Omega_U1,none);
- #(obj = variable,name = BH_Omega_U2,none);
+ (obj = variable,name = BH_Omega_U2,none);
+
 
  # boost velocity
- #(obj = variable,name = v0_boost,none);
+ (obj = variable,name = v0_boost,none);
  #(obj = variable,name = v1_boost,none);
- (obj = variable,name = v2_boost,none);
+ #(obj = variable,name = v2_boost,none);
 }
 
 # symmetries for Cpi
@@ -64,22 +65,18 @@ Declare =
 # outer boundary or inner boundary equation, let it be 0.
 
 # OUTER BOUNDARY LIKE INFINITY #
-
-`  const double BH_center_x = Pgetd("BH_center_x");`
-`  const double BH_center_y = Pgetd("BH_center_y");`
-#`  const double BH_center_z = Pgetd("BH_center_z");`
-#`  const double C_BH = 0.5*Pgetd("BH_NS_separation");`;
-`  const double BH_Omega_U0 = Pgetd("BH_Omega_U0");`;
-`  const double BH_Omega_U1 = Pgetd("BH_Omega_U1");`;
-#`  const double BH_Omega_U2 = Pgetd("BH_Omega_U2");`;
-`  const double v2_boost = Pgetd("v*_boost_z");`
 `  if (patch->outerB)/* at outer boundary */`;
 `  {`;
+## define prefix for parameter
+`  EQ_Def_Param_Prefix_Char`
+`  EQ_Set_Prefix("system")`
+``
+`  const double v0_boost = Pgetd(EQ_PrefixIt("boost_x"));`
 `  DDM_SCHUR_BC_OPEN\n`;
 
 
 # bc equation for outer boundary at ijk point:
-outerB_F = B0_U2-v2_boost;
+outerB_F = B0_U0-v0_boost;
 
 
 `  F[map[ijk]] = outerB_F;\n`;
@@ -89,20 +86,31 @@ outerB_F = B0_U2-v2_boost;
 # INNER BOUNDARY LIKE BLACK HOLE HORIZON #
 `  else if (patch->innerB)/* at inner boundary */`;
 `  {`;
+## define prefix for parameter
+`  EQ_Def_Param_Prefix_Char`
+`  EQ_Set_Prefix("BH")`
+``
+#`  const double BH_center_x = Pgetd(EQ_PrefixIt("center_x"));`
+`  const double BH_center_y = Pgetd(EQ_PrefixIt("center_y"));`
+`  const double BH_center_z = Pgetd(EQ_PrefixIt("center_z"));`
+#`  const double BH_Omega_U0 = Pgetd(EQ_PrefixIt("Omega_U0"));`;
+`  const double BH_Omega_U1 = Pgetd(EQ_PrefixIt("Omega_U1"));`;
+`  const double BH_Omega_U2 = Pgetd(EQ_PrefixIt("Omega_U2"));`;
+``
 `  DDM_SCHUR_BC_OPEN\n`;
 
 
 # bc equation for inner boundary at ijk point:
 
 alpha = alphaPsi/psi;
-S_U2  = bh_sConf_U2/(psi**2);
-`  double x = patch->node[ijk]->x[0]-BH_center_x;`;
+S_U0  = bh_sConf_U0/(psi**2);
+#` double x = patch->node[ijk]->x[0]-BH_center_x;`;
 `  double y = patch->node[ijk]->x[1]-BH_center_y;`;
-#`  double z = patch->node[ijk]->x[2]-BH_center_z;`;
-OmegaXr_U2 = BH_Omega_U0*y-BH_Omega_U1*x;
-#OmegaXr_U2 = 0;
+`  double z = patch->node[ijk]->x[2]-BH_center_z;`;
+OmegaXr_U0 = BH_Omega_U1*z-BH_Omega_U2*y;
+#OmegaXr_U0 = -BH_Omega_U2*y;
 
-innerB_F = B0_U2+B1_U2 - alpha*S_U2 - OmegaXr_U2;
+innerB_F = B0_U0+B1_U0 - alpha*S_U0 - OmegaXr_U0;
 
 `  F[map[ijk]] = innerB_F;\n`;
 `  DDM_SCHUR_BC_CLOSE`;
