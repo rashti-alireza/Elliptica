@@ -1,4 +1,5 @@
 # equation: phi, irrational piece of fluid velocity
+# curve + Wolfgang's eq.
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -7,8 +8,6 @@ Dimension = 3;
 Point = ijk;
 
 C_macro  = READ_v(name);
-C_macro2 = REALLOC_v_WRITE_v(name);
-C_macro3 = READ_v_IF_IN_NS(name);
 
 # main function:
 `#include "eq_header.h"`;
@@ -22,42 +21,43 @@ C_macro3 = READ_v_IF_IN_NS(name);
 `  DDM_SCHUR_EQ_DECLARE`;
 `  Uint ijk;/* node index */`;
 ``
-`  if (!strcmp_i(Pgets("grid_kind"),"BBN_CubedSpherical_grid"))`
-`    Error0("For this grid you need to figure out where to set phi = 0.\n");`
-`  `
+## define prefix for parameter
+`  EQ_Def_Param_Prefix_Char`
+`  EQ_Set_Prefix("NS")`
+``
 # declare for Cpi:
 Declare = 
 {
 
  # phi
- #(obj = Field,name = phi, rank = 0, C_macro3);
+ #(obj = Field,name = phi, rank = 0, C_macro);
 
  # dphi 1st derivative
- (obj = Field,name = dphi, rank = D, C_macro3);
+ (obj = Field,name = dphi, rank = D, C_macro);
 
  # ddphi 2nd derivative
- (obj = Field,name = ddphi, rank = DD, C_macro3);
+ (obj = Field,name = ddphi, rank = DD, C_macro);
 
  # spin of NS
- (obj = Field,name = W, rank = U, C_macro3);
+ (obj = Field,name = W, rank = U, C_macro);
 
  # enthalpy
- (obj = Field,name = enthalpy, rank = 0, C_macro3);
+ (obj = Field,name = enthalpy, rank = 0, C_macro);
 
  # enthalpy 1st derivative
- (obj = Field,name = denthalpy, rank = D, C_macro3);
+ (obj = Field,name = denthalpy, rank = D, C_macro);
 
  # rest mass density
- (obj = Field,name = rho0, rank = 0, C_macro3);
+ (obj = Field,name = rho0, rank = 0, C_macro);
 
  # rest mass density 1st derivative
- (obj = Field,name = drho0, rank = D, C_macro3);
+ (obj = Field,name = drho0, rank = D, C_macro);
 
  # first component of fluid velocity
- (obj = Field,name = u0, rank = 0, C_macro3);
+ (obj = Field,name = u0, rank = 0, C_macro);
 
  # first component of fluid velocity first derivative
- (obj = Field,name = du0, rank = D, C_macro3);
+ (obj = Field,name = du0, rank = D, C_macro);
 
  # alphaPsi
  (obj = Field,name = alphaPsi, rank = 0, C_macro);
@@ -95,12 +95,12 @@ Declare =
 }
 
 # symmetries for Cpi:
-Symm[igConf(i,j)   = igConf(j,i)];
-Symm[ChrisConf(i,j,k)  = ChrisConf(i,k,j)];
-Symm[ddphi(i,j)     = ddphi(j,i)];
+Symm[igConf(i,j)      = igConf(j,i)];
+Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
+Symm[ddphi(i,j)       = ddphi(j,i)];
 
-`  const double rhoc = Pgetd("rho_center");`
-`  const double e    = Pgetd("NS_phi_equation_smoothness");`
+`  const double rhoc = Pgetd(EQ_PrefixIt("rho_center"));`
+`  const double e    = Pgetd(EQ_PrefixIt("phi_polish"));`
 `  const double att  = e*rhoc;`
 
 ##########################################################################
@@ -139,26 +139,36 @@ F_eq = t1+rho0*(t2+t3+t4)+t5+t6+att*((1-rho0/rhoc)**4)*t3;
 `  DDM_SCHUR_EQ_CLOSE\n`;
 
 ## put phi zero at a point in the center of NS
-`  if(strstr(patch->name,"left_central_box"))`
+
+`  if(patch->grid->kind != Grid_SplitCubedSpherical_BHNS &&`
+`     patch->grid->kind != Grid_SplitCubedSpherical_NSNS &&`
+`     patch->grid->kind != Grid_SplitCubedSpherical_SNS)`
+`    Error0("For this grid you need to figure out where to set phi = 0.\n");`
+``
+`  if(IsItCovering(patch,"central_box"))`
 `  {`
 `    const double Att_Con_Num = 1E-5;`
-`    const double NS_center[3] = {Pgetd("NS_center_x"),Pgetd("NS_center_y"),Pgetd("NS_center_z")};`
-`    Interpolation_T *interp_phi0 = init_interpolation();`
+`    const double NS_center[3] = {Pgetd(EQ_PrefixIt("center_x")),`
+`                                 Pgetd(EQ_PrefixIt("center_y")),`
+`                                 Pgetd(EQ_PrefixIt("center_z"))};`
 `    double interp;`
 `    double X[3] = {0};`
 ``
-`    X_of_x(X,NS_center,patch);`
-`    interp_phi0->field = patch->fields[Ind("phi")];`
-`    interp_phi0->X = X[0];`
-`    interp_phi0->Y = X[1];`
-`    interp_phi0->Z = X[2];`
-`    interp_phi0->XYZ_dir_flag = 1;`
-`    plan_interpolation(interp_phi0);`
-`    interp = execute_interpolation(interp_phi0);`
-`    free_interpolation(interp_phi0);`
-``
-`    for (n = 0; n < N; ++n)`
-`    	F[n] += Att_Con_Num*interp;` # phi = 0 at the center of NS
+     # if this patch covers NS center
+`    if (X_of_x(X,NS_center,patch))`
+`    {`
+`      Interpolation_T *interp_phi0 = init_interpolation();`
+`      interp_phi0->field = patch->fields[Ind("phi")];`
+`      interp_phi0->X = X[0];`
+`      interp_phi0->Y = X[1];`
+`      interp_phi0->Z = X[2];`
+`      interp_phi0->XYZ_dir_flag = 1;`
+`      plan_interpolation(interp_phi0);`
+`      interp = execute_interpolation(interp_phi0);`
+`      free_interpolation(interp_phi0);`
+`      for (n = 0; n < N; ++n)`
+`	 F[n] += Att_Con_Num*interp;` # phi = 0 at the center of NS
+`   }`
 `   `
 `  }`
 
