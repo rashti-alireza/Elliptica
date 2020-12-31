@@ -7,8 +7,6 @@ Dimension = 3;
 Point = ijk;
 
 C_macro  = READ_v(name);
-C_macro2 = REALLOC_v_WRITE_v(name);
-C_macro3 = READ_v_IF_IN_NS(name);
 
 # main function:
 `#include "eq_header.h"`;
@@ -27,19 +25,19 @@ Declare =
 {
 
  # dphi 1st derivative
- (obj = Field,name = dphi, rank = D, C_macro3);
+ (obj = Field,name = dphi, rank = D, C_macro);
 
  # spin of NS
- (obj = Field,name = W, rank = U, C_macro3);
+ (obj = Field,name = W, rank = U, C_macro);
 
  # enthalpy
- (obj = Field,name = enthalpy, rank = 0, C_macro3);
+ (obj = Field,name = enthalpy, rank = 0, C_macro);
 
  # rest mass density 1st derivative
- (obj = Field,name = drho0, rank = D, C_macro3);
+ (obj = Field,name = drho0, rank = D, C_macro);
 
  # first component of fluid velocity
- (obj = Field,name = u0, rank = 0, C_macro3);
+ (obj = Field,name = u0, rank = 0, C_macro);
 
  # conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
@@ -53,12 +51,12 @@ Declare =
 }
 
 # symmetries for Cpi:
-Symm[igConf(i,j)   = igConf(j,i)];
+Symm[igConf(i,j) = igConf(j,i)];
 
 # NOTE: write each equation in terms of ijk point, and if there is no
 # outer boundary or inner boundary equation, let it be 0.
 
-# OUTER BOUNDARY LIKE INFINITY #
+# OUTER BOUNDARY, NS surface #
 `  if (patch->outerB)/* at outer boundary */`;
 `  {`;
 `  DDM_SCHUR_BC_OPEN\n`;
