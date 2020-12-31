@@ -10,8 +10,7 @@ Point = ijk;
 C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
 C_macro3 = JACOBIAN_DERIVATIVE(name);
-C_macro4 = READ_v_IF_ON_HORIZON(name);
-C_macro5 = READ_v_UNUSED(name);
+C_macro4 = READ_v_UNUSED(name);
 
 # C arguments for jacobian of derivatives
 C_arg = (j_name,ijk,lmn);
@@ -29,7 +28,7 @@ C_arg2 = [ijk == lmn]; # for kd
 `  DDM_SCHUR_JACOBIAN_BC_DECLARE`;
 `  Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */`;
 `  const double kd[2] = {0.,1.};/* Kronecker delta */`;
-`  const double is_Aij_on = Pgetd("is_Aij_on_at_AH?");`
+`  const double is_Aij_on = 1.;`
 ``
 # declare for Cpi
 Declare = 
@@ -44,25 +43,25 @@ Declare =
  (obj = Field,name = trK, rank = 0, C_macro);
 
  # _A^{ij}
- (obj = Field,name = AConfIJ, rank = UU, C_macro5);
+ (obj = Field,name = AConfIJ, rank = UU, C_macro4);
 
  # conformal factor first derivative 
  #(obj = Field,name = dpsi, rank = D, C_macro);
 
  # conformal metric 
- (obj = Field,name = gConf, rank = DD, C_macro5);
+ (obj = Field,name = gConf, rank = DD, C_macro4);
 
  # normal vector at the horizon
- (obj = Field,name = _HS, rank = U, C_macro4);
+ (obj = Field,name = bh_sConf, rank = U, C_macro);
 
  # first derivative of normal vector at the horizon
- (obj = Field,name = _dHS, rank = UD, C_macro4);
+ (obj = Field,name = dbh_sConf, rank = UD, C_macro);
 
  # jacobian derivative 1st order :
  (obj = Field,name = Jpsi, rank = D, C_macro3,C_arg);
 
  # conformal connections
- (obj = Field,name = ChrisConf, rank = UDD, C_macro5);
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro4);
 
  # variable
  (obj = Variable,name = is_Aij_on, none);
@@ -141,15 +140,15 @@ outerB_Epart = 0;
 ###############################################
 `  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN\n`;
 
-_DiHSi_b     = (_dHS(j,i) + ChrisConf(j,i,l)*_HS(-l))*KD(-j,-i);
+_DiHSi_b     = (dbh_sConf(j,i) + ChrisConf(j,i,l)*bh_sConf(-l))*KD(-j,-i);
 
 # with AConfIJ
-B_t1         = 3/4*(psi**-4)*AConfIJ(i,j)*gConf(-i,-l)*gConf(-j,-m)*_HS(l)*_HS(m);
+B_t1         = 3/4*(psi**-4)*AConfIJ(i,j)*gConf(-i,-l)*gConf(-j,-m)*bh_sConf(l)*bh_sConf(m);
 
 # with no AConfIJ
 #B_t1         = 0;
 
-innerB_Bpart = _HS(i)*Jpsi(-i) -kd*(-_DiHSi_b/4+trK*(psi**2)/2+is_Aij_on*B_t1);
+innerB_Bpart = bh_sConf(i)*Jpsi(-i) -kd*(-_DiHSi_b/4+trK*(psi**2)/2+is_Aij_on*B_t1);
 
 
 `  B[i][j] = innerB_Bpart;\n`;
@@ -162,15 +161,15 @@ innerB_Bpart = _HS(i)*Jpsi(-i) -kd*(-_DiHSi_b/4+trK*(psi**2)/2+is_Aij_on*B_t1);
 ###############################################
 `  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN\n`;
 
-_DiHSi_e    = (_dHS(j,i) + ChrisConf(j,i,l)*_HS(-l))*KD(-j,-i);
+_DiHSi_e    = (dbh_sConf(j,i) + ChrisConf(j,i,l)*bh_sConf(-l))*KD(-j,-i);
 
 # with AConfIJ
-E_t1 = 3/4*(psi**-4)*AConfIJ(i,j)*gConf(-i,-l)*gConf(-j,-m)*_HS(l)*_HS(m);
+E_t1 = 3/4*(psi**-4)*AConfIJ(i,j)*gConf(-i,-l)*gConf(-j,-m)*bh_sConf(l)*bh_sConf(m);
 
 # with no AConfIJ
 #E_t1 = 0;
 
-innerB_Epart = _HS(i)*Jpsi(-i) -kd*(-_DiHSi_e/4+trK*(psi**2)/2+is_Aij_on*E_t1);
+innerB_Epart = bh_sConf(i)*Jpsi(-i) -kd*(-_DiHSi_e/4+trK*(psi**2)/2+is_Aij_on*E_t1);
 
 `  E_Trans[j][i] = innerB_Epart;\n`;
 `  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE\n`;

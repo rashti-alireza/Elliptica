@@ -8,7 +8,6 @@ Point = ijk;
 
 C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
-C_macro3 = READ_v_IF_ON_HORIZON(name);
 C_macro4 = READ_v_UNUSED(name);
 
 # main function:
@@ -45,10 +44,10 @@ Declare =
  (obj = Field,name = ChrisConf, rank = UDD, C_macro4);
 
  # normal vector at the horizon
- (obj = Field,name = _HS, rank = U, C_macro3);
+ (obj = Field,name = bh_sConf, rank = U, C_macro);
 
  # first derivative of normal vector at the horizon
- (obj = Field,name = _dHS, rank = UD, C_macro3);
+ (obj = Field,name = dbh_sConf, rank = UD, C_macro);
 }
 
 # symmetries for Cpi
@@ -79,10 +78,10 @@ outerB_F = psi-1;
 
 # bc equation for inner boundary at ijk point:
 
-_DiHSi   = (_dHS(j,i) + ChrisConf(j,i,l)*_HS(-l))*KD(-j,-i);
-innerB_F = _HS(i)*dpsi(-i) + \
+_DiHSi   = (dbh_sConf(j,i) + ChrisConf(j,i,l)*bh_sConf(-l))*KD(-j,-i);
+innerB_F = bh_sConf(i)*dpsi(-i) + \
            psi*_DiHSi/4 - trK*(psi**3)/6 +\
-           (psi**-3)*AConfIJ(i,j)*gConf(-i,-l)*gConf(-j,-m)*_HS(l)*_HS(m)/4;
+           (psi**-3)*AConfIJ(i,j)*gConf(-i,-l)*gConf(-j,-m)*bh_sConf(l)*bh_sConf(m)/4;
 
 `  F[map[ijk]] = innerB_F;\n`;
 `  DDM_SCHUR_BC_CLOSE`;
