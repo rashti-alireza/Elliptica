@@ -39,7 +39,9 @@ char EQ__Temp2[EQ__STR__LEN0] = {'\0'};
 // EQ__param__prefix will be "BH2" according to the patch->name.
 // if given X has already index then EQ__param__prefix = X
 // this is working because while setting up the region on each equation 
-// only pertinent patches have been chosen. */
+// only pertinent patches have been chosen. 
+// note: if X = system, it prefixes with system like "BHNS_" 
+// for BHNS system. */
 #define EQ_Set_Prefix(X) \
 sprintf(EQ__temp1,"%s1",X);\
 sprintf(EQ__temp2,"%s2",X);\
@@ -49,7 +51,9 @@ else if (strstr(patch->name,EQ__temp1))\
   sprintf(EQ__param__prefix,"%s1",X);\
 else if (strstr(patch->name,EQ__temp2))\
   sprintf(EQ__param__prefix,"%s2",X);\
-else\
+else if (strcmp_i("system",X))\
+  sprintf(EQ__param__prefix,"%s_",Pgets(P_"system_prefix"));\
+else \
   sprintf(EQ__param__prefix,"%s",X);
 
 /* prefix given parameter X by EQ_prefix_par defined in 
