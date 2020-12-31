@@ -202,7 +202,6 @@ static int add_equation_fields(Physics_T *const phys)
 {
   FUNC_TIC
   
-  /* add backup fields */
   Grid_T *const grid = phys->grid;
   char **fields_name = read_separated_items_in_string(Pgets("solve_Order"),',');
   Uint f;
@@ -210,15 +209,15 @@ static int add_equation_fields(Physics_T *const phys)
   f = 0;
   while (fields_name[f])
   {
+    /* add backup fields */
     char field_backup[STR_LEN];
     sprintf(field_backup,P_Backup_"%s",fields_name[f]);
-    
     FOR_ALL_p(grid->np)
     {
       Patch_T *patch = grid->patch[p];
-      
       add_field(field_backup,0,patch,NO);
     }
+    
     f++;
   }
   free_2d(fields_name);
