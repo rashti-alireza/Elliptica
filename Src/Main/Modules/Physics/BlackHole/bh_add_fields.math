@@ -29,6 +29,9 @@ Declare =
  # dbh_sConf: dsConf^i/d?
  (obj = Field,name = dbh_sConf, rank = UD, C_macro);
 
+ # inner BC for alpha
+ (obj = Field,name = ibc_alpha, rank = 0, C_macro);
+
 }
 
 ` }`

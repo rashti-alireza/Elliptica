@@ -28,6 +28,7 @@ void bh_add_fields(Grid_T *const grid)
   ADD_FIELD(dbh_sConf_U1D2)
   ADD_FIELD(dbh_sConf_U1D1)
   ADD_FIELD(dbh_sConf_U1D0)
+  ADD_FIELD(ibc_alpha)
 
 
  }
