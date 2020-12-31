@@ -52,10 +52,10 @@ Declare =
 }
 
 # symmetries for Cpi:
-Symm[dAConfIJ(i,j,k) = dAConfIJ(j,i,k)];
-Symm[AConfIJ(i,j)    = AConfIJ(j,i)];
-Symm[igConf(i,j)    = igConf(j,i)];
-Symm[ChrisConf(i,j,k)   = ChrisConf(i,k,j)];
+Symm[dAConfIJ(i,j,k)  = dAConfIJ(j,i,k)];
+Symm[AConfIJ(i,j)     = AConfIJ(j,i)];
+Symm[igConf(i,j)      = igConf(j,i)];
+Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 
 
 ##########################################################################
