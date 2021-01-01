@@ -89,7 +89,6 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
     pr_half_line_custom('-');
     printf("} Solving equation for field: \"%s\" ==> Done.\n",field_name[f]);
     pr_half_line_custom('-');
-    pr_clock();
   }
   
   /* free names */
