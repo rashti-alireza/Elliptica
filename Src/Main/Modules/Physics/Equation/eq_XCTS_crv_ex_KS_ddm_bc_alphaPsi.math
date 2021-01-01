@@ -57,7 +57,7 @@ outerB_F = alphaPsi - 1;
 # INNER BOUNDARY LIKE BLACK HOLE HORIZON #
 `  else if (patch->innerB)/* at inner boundary */`;
 `  {`;
-
+`  DDM_SCHUR_BC_OPEN\n`;
 ``
 innerB_F = alphaPsi - ibc_alpha*psi;
 

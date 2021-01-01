@@ -55,7 +55,7 @@ Declare =
  (obj = Field,name = bh_sConf, rank = U, C_macro);
 
  # first derivative of normal vector at the horizon
- (obj = Field,name = dbh_sConf, rank = UD, C_macro);
+ (obj = Field,name = dbh_sConf, rank = UD, C_macro4);
 
  # jacobian derivative 1st order :
  (obj = Field,name = Jpsi, rank = D, C_macro3,C_arg);
