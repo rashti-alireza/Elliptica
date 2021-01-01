@@ -218,6 +218,15 @@ static int add_equation_fields(Physics_T *const phys)
       add_field(field_backup,0,patch,NO);
     }
     
+    /* add residual fields */
+    char field_res[STR_LEN];
+    sprintf(field_res,"%s"EQ_Residual_Suffix,fields_name[f]);
+    FOR_ALL_p(grid->np)
+    {
+      Patch_T *patch = grid->patch[p];
+      add_field(field_res,0,patch,NO);
+    }
+    
     f++;
   }
   free_2d(fields_name);

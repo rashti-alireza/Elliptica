@@ -67,6 +67,7 @@ void eq_solve_elliptic_equation(Physics_T *const phys)
     Error0(NO_OPTION);
     
   /* calculate the field residual for diagnostic purposes */
+  SolveEqs->residual_suffix = EQ_Residual_Suffix;
   calculate_equation_residual(SolveEqs);
 
   /* free */

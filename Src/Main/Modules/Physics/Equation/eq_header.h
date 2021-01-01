@@ -22,6 +22,9 @@
 /* backup field name prefix */
 #define P_Backup_  P_"backup_"
 
+/* residual field name suffix */
+#define EQ_Residual_Suffix  "_residual"
+
 /* define paramter and prefix used in EQ_Set_Prefix and EQ_PrefixIt*/
 #define EQ_Def_Param_Prefix_Char \
 char EQ__param__prefix[EQ__STR__LEN0] = {'\0'}; \
