@@ -51,12 +51,11 @@ void eq_solve_elliptic_equation(Physics_T *const phys)
     solve_eqs(SolveEqs);
     
     /* study the solution */
-    //if (Pcmps("Elliptic_Convergence_Test","yes"))
-    //{
-      //calculate_equation_residual(SolveEqs);
-      //bbn_study_initial_data(grid);
-      //bbn_write_checkpoint(grid);
-    //}
+    if (Pcmps(P_"elliptic_test","yes"))
+    {
+      calculate_equation_residual(SolveEqs);
+      if (eq_analyze_solution) eq_analyze_solution(phys,iter);
+    }
     
     ++iter;
   }

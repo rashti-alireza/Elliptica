@@ -48,6 +48,13 @@ static int set_equation_params(Physics_T *const phys)
   // elliptic: elliptic PDE. */
   Pset_default(P_"type","elliptic");
   
+  /* equation test
+  //
+  // options:
+  // ========
+  // elliptic_test: test and analyze elliptic eqs after each iteration. */
+  Pset_default(P_"elliptic_test","no");
+  
   /* field update method:
   //
   // options:
@@ -95,6 +102,7 @@ static int set_equation_params(Physics_T *const phys)
   eq_field_update  = 0;
   eq_source_update = 0;
   eq_stop_criteria = 0;
+  eq_analyze_solution = 0;
   
   /* please add all of the possible equations below as shown.
   // there is no problem to have same equation with multiple names.

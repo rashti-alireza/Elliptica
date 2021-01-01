@@ -8,6 +8,7 @@
 fFunc_stop_criteria_T(*eq_stop_criteria);/* when to stop solve */
 fFunc_source_update_T(*eq_source_update);/* how to update source after solve */
 fFunc_field_update_T(*eq_field_update);/* how to update field after solve */
+fFunc_analyze_solution_T(*eq_analyze_solution);/* analyzing solution after solve */
 
 
 /* global variables */
