@@ -398,12 +398,12 @@ $(strip $(1)) 2> $@.COMPILE_ERROR ; \
 ret=$$? ; \
 if [ $$ret -eq 0 ]; \
 then \
-printf "%s %s %-39s %s\n" $(PR_F0) "building" $(strip $(2)) "=> [SUCCESSFUL] <="; \
+printf "%s %s %-45s %s\n" $(PR_F0) "make" $(strip $(2)) "=> [SUCCESSFUL] <="; \
 else \
 echo $(PR_L0) ; \
 echo $(PR_ERROR) ; \
 cat $@.COMPILE_ERROR ; \
-printf "\n%s %s %-39s %s\n" $(PR_F0) "building" $(strip $(2)) "=> [FAILED] <="; \
+printf "\n%s %s %-45s %s\n" $(PR_F0) "make" $(strip $(2)) "=> [FAILED] <="; \
 echo $(PR_L0) ;\
 fi ; \
 rm -rf $@.COMPILE_ERROR; \
