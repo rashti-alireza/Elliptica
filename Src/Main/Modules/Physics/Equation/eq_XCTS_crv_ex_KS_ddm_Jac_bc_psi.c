@@ -6,6 +6,8 @@
 
 #include "eq_header.h"
 #include "maths_equation_solvings_lib.h"
+
+void *eq_XCTS_curve_exc_KS_ddm_jacobian_bc_psi(void *vp1,void *vp2);
 void *eq_XCTS_curve_exc_KS_ddm_jacobian_bc_psi(void *vp1,void *vp2)
 {
   DDM_SCHUR_JACOBIAN_BC_DECLARE

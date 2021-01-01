@@ -11,7 +11,6 @@
 #include "fields_lib.h"
 #include "maths_equation_solvings_lib.h"
 #include "maths_spectral_methods_lib.h"
-#include "eq_db_header.h"
 
 /* string leng */
 #define EQ__STR__LEN0 (33)
