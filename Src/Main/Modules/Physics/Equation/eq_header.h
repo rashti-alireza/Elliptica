@@ -52,7 +52,7 @@ else if (strstr(patch->name,EQ__Temp1))\
 else if (strstr(patch->name,EQ__Temp2))\
   sprintf(EQ__param__prefix,"%s2",X);\
 else if (strcmp_i("system",X))\
-  sprintf(EQ__param__prefix,"%s_",Pgets(P_"system_prefix"));\
+  sprintf(EQ__param__prefix,"%s",Pgets(P_"system_prefix"));\
 else \
   sprintf(EQ__param__prefix,"%s",X);
 
