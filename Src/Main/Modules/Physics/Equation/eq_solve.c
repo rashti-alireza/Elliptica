@@ -61,7 +61,7 @@ void eq_solve_elliptic_equation(Physics_T *const phys)
   }
 
   /* updating the fields using relaxed scheme */
-  if (Pcmp(P_"update_method","relaxed_scheme"))
+  if (Pcmps(P_"update_method","relaxed_scheme"))
     update_fields_relaxed_scheme(phys);
   else
     Error0(NO_OPTION);
@@ -71,7 +71,7 @@ void eq_solve_elliptic_equation(Physics_T *const phys)
 
   /* free */
   free_solve_equations(SolveEqs);
-  free_equations_grid(lgrid);
+  free_equation_grid(lgrid);
 
   /* free data base of equations */
   free_db_eqs(eq_global_field_eq);
@@ -97,7 +97,7 @@ static Grid_T **set_equation_grid(Physics_T *const phys,
   
   /* what fields to be solved */
   Grid_T **lgrid = 0;
-  char **fields_name = read_separated_items_in_string(Pgets("solve_Order"));
+  char **fields_name = read_separated_items_in_string(Pgets("solve_Order"),',');
   char par_val[STR_LEN];
   char par_name[STR_LEN];
   char *aux = 0;
@@ -143,7 +143,6 @@ static Grid_T **set_equation_grid(Physics_T *const phys,
         eq_grid->patch[p][0]    = patch[0];
         eq_grid->patch[p]->pn   = p;
         eq_grid->patch[p]->grid = eq_grid;
-        eq_grid->nn            += patch->nn;
         /* the following needs to be constructed from scratch */
         eq_grid->patch[p]->interface = 0;
         eq_grid->patch[p]->solving_man = calloc(1,sizeof(*eq_grid->patch[p]->solving_man));
@@ -206,14 +205,14 @@ static void backup_fields(Physics_T *const phys)
 {
   Grid_T *const grid = phys->grid;
   const Uint npatch  = grid->np;
-  char **field_name = read_separated_items_in_string(Pgets("solve_Order"));
-  Uint f;
+  char **field_name = read_separated_items_in_string(Pgets("solve_Order"),',');
+  Uint fn;
   
-  f = 0;
-  while (field_name[f])
+  fn = 0;
+  while (field_name[fn])
   {
     char field_backup[STR_LEN];
-    sprintf(field_backup,P_Backup_"%s",field_name[f]);
+    sprintf(field_backup,P_Backup_"%s",field_name[fn]);
     
     OpenMP_Patch_Pragma(omp parallel for)
     for (Uint p = 0; p < npatch; ++p)
@@ -221,9 +220,9 @@ static void backup_fields(Physics_T *const phys)
       Patch_T *patch = grid->patch[p];
   
       /* if field not defined in this patch */
-      if (_Ind(field_name[f]) < 0) continue;
+      if (_Ind(field_name[fn]) < 0) continue;
         
-      Field_T *f      = patch->fields[Ind(field_name[f])];
+      Field_T *f      = patch->fields[Ind(field_name[fn])];
       Field_T *f_bckp = patch->fields[Ind(field_backup)];
       
       /* if no field value defined in this patch */
@@ -236,7 +235,7 @@ static void backup_fields(Physics_T *const phys)
         f_bckp->v[ijk] = f->v[ijk];
    
     }
-    f++
+    fn++;
   }
   
   free_2d(field_name);
@@ -249,7 +248,7 @@ static void update_fields_relaxed_scheme(Physics_T *const phys)
 {
   Grid_T *const grid = phys->grid;
   const Uint npatch  = grid->np;
-  char **field_name = read_separated_items_in_string(Pgets("solve_Order"));
+  char **field_name = read_separated_items_in_string(Pgets("solve_Order"),',');
   Uint f;
   
   /* update all of the fields were solved according to the given weight */
@@ -290,7 +289,7 @@ static void update_fields_relaxed_scheme(Physics_T *const phys)
         f_new->v[ijk] = W1*f_new->v[ijk]+W2*f_old->v[ijk];
       
       if (eq_field_update)
-        eq_field_update(patch,field_new)
+        eq_field_update(patch,field_new);
     }
     f++;
   }

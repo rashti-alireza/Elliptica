@@ -6,7 +6,6 @@
 extern fFunc_stop_criteria_T(*eq_stop_criteria);/* when to stop solve */
 extern fFunc_source_update_T(*eq_source_update);/* how to update source after solve */
 extern fFunc_field_update_T(*eq_field_update);/* how to update field after solve */
-extern fFunc_field_backup_T(*eq_field_backup);/* how to backup field before solve */
 
 
 /* global variables */
