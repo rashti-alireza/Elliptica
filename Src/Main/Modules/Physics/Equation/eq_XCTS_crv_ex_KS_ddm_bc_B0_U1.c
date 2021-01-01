@@ -43,8 +43,8 @@ B0_U1[ijk] - v1_boost;
 
   const double BH_center_x = Pgetd(EQ_PrefixIt("center_x"));
   const double BH_center_z = Pgetd(EQ_PrefixIt("center_z"));
-  const double BH_Omega_U0 = Pgetd(EQ_PrefixIt("Omega_U0"));
-  const double BH_Omega_U2 = Pgetd(EQ_PrefixIt("Omega_U2"));
+  const double BH_Omega_U0 = Pgetd(EQ_PrefixIt("Omega_x"));
+  const double BH_Omega_U2 = Pgetd(EQ_PrefixIt("Omega_z"));
 
   DDM_SCHUR_BC_OPEN
 
