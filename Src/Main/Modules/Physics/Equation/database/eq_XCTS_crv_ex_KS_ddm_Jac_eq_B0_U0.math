@@ -126,11 +126,11 @@ t8_B(i) = -1/3*igConf(i,-m)*(ChrisConf(n,m,j)*KD0i(-j)*JB0(-n)+KD(-l,-lp)*KD(-j,
 t9_B(i) = igConf(i,-m)*RicciConf(m,l)*KD0i(-l)*kd;
 
 # for AConfIJ
-contB    = KD0i(-m)*JB0(m)+KD(-mp,-m)*ChrisConf(mp,m,l)*KD0i(-l)*kd;
-t10_B(i) = -dLnOf_alpha_B(-j)*( \
-igConf(j,-m)*(KD0i(i)*JB0(m)+ChrisConf(i,m,l)*KD0i(-l)*kd)+ \
-igConf(i,-m)*(KD0i(j)*JB0(m)+ChrisConf(j,m,l)*KD0i(-l)*kd)- \
-contB*2/3*igConf(i,j));
+contB      = KD0i(-m)*JB0(m)+KD(-mp,-m)*ChrisConf(mp,m,l)*KD0i(-l)*kd;
+t1p10_B(i) = dLnOf_alpha_B(-j)*contB*2/3*igConf(i,j);
+t2p10_B(i) = -dLnOf_alpha_B(-j)*igConf(j,-m)*(KD0i(i)*JB0(m)+ChrisConf(i,m,l)*KD0i(-l)*kd);
+t3p10_B(i) = -dLnOf_alpha_B(-j)*igConf(i,-m)*(KD0i(j)*JB0(m)+ChrisConf(j,m,l)*KD0i(-l)*kd);
+t10_B(i)   = t1p10_B(i)+t2p10_B(i)+t3p10_B(i);
 
 # with AConfIJ and RicciConf
 Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(i)+t10_B(i);
@@ -174,11 +174,11 @@ t8_E(i) = -1/3*igConf(i,-m)*(ChrisConf(n,m,j)*KD0i(-j)*JB0(-n)+KD(-l,-lp)*KD(-j,
 t9_E(i) = igConf(i,-m)*RicciConf(m,l)*KD0i(-l)*kd;
 
 # for AConfIJ
-contE    = KD0i(-m)*JB0(m)+KD(-mp,-m)*ChrisConf(mp,m,l)*KD0i(-l)*kd;
-t10_E(i) = -dLnOf_alpha_E(-j)*( \
-igConf(j,-m)*(KD0i(i)*JB0(m)+ChrisConf(i,m,l)*KD0i(-l)*kd)+ \
-igConf(i,-m)*(KD0i(j)*JB0(m)+ChrisConf(j,m,l)*KD0i(-l)*kd)- \
-contE*2/3*igConf(i,j));
+contE      = KD0i(-m)*JB0(m)+KD(-mp,-m)*ChrisConf(mp,m,l)*KD0i(-l)*kd;
+t1p10_E(i) = dLnOf_alpha_E(-j)*contE*2/3*igConf(i,j);
+t2p10_E(i) = -dLnOf_alpha_E(-j)*igConf(j,-m)*(KD0i(i)*JB0(m)+ChrisConf(i,m,l)*KD0i(-l)*kd);
+t3p10_E(i) = -dLnOf_alpha_E(-j)*igConf(i,-m)*(KD0i(j)*JB0(m)+ChrisConf(j,m,l)*KD0i(-l)*kd);
+t10_E(i)   = t1p10_E(i)+t2p10_E(i)+t3p10_E(i);
 
 # with AConfIJ and RicciConf
 Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t9_E(i)+t10_E(i);
