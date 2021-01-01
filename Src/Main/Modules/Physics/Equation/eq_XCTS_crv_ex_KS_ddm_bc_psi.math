@@ -8,7 +8,7 @@ Point = ijk;
 
 C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
-C_macro4 = READ_v_UNUSED(name);
+C_macro3 = READ_v_UNUSED(name);
 
 # main function:
 `#include "eq_header.h"`;
@@ -41,13 +41,13 @@ Declare =
  (obj = Field,name = gConf, rank = DD, C_macro);
 
  # conformal connections
- (obj = Field,name = ChrisConf, rank = UDD, C_macro4);
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro3);
 
  # normal vector at the horizon
  (obj = Field,name = bh_sConf, rank = U, C_macro);
 
  # first derivative of normal vector at the horizon
- (obj = Field,name = dbh_sConf, rank = UD, C_macro);
+ (obj = Field,name = dbh_sConf, rank = UD, C_macro3);
 }
 
 # symmetries for Cpi

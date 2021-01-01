@@ -8,7 +8,6 @@ Point = ijk;
 
 C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
-C_macro3 = READ_v_IF_ON_HORIZON(name);
 
 # main function:
 `#include "eq_header.h"`;
@@ -38,7 +37,7 @@ Declare =
  (obj = Field,name = alphaPsi, rank = 0, C_macro);
 
  # normal vector at the horizon
- (obj = Field,name = bh_sConf_U2, rank = 0, C_macro3);
+ (obj = Field,name = bh_sConf_U2, rank = 0, C_macro);
 
  # Cartesian x, y and z coords
  (obj = variable,name = x,none);
