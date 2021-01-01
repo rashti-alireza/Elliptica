@@ -24,7 +24,7 @@ void *eq_XCTS_curve_exc_KS_ddm_bc_B0_U2(void *vp1,void *vp2)
   if (patch->outerB)/* at outer boundary */
   {
   EQ_Def_Param_Prefix_Char
-  EQ_Set_Prefix("BH")
+  EQ_Set_Prefix("system")
 
   const double v2_boost = Pgetd(EQ_PrefixIt("boost_z"));
   DDM_SCHUR_BC_OPEN

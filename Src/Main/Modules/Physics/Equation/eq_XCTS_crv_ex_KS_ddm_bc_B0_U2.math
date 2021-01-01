@@ -69,7 +69,7 @@ Declare =
 `  {`;
 ## define prefix for parameter
 `  EQ_Def_Param_Prefix_Char`
-`  EQ_Set_Prefix("BH")`
+`  EQ_Set_Prefix("system")`
 ``
 `  const double v2_boost = Pgetd(EQ_PrefixIt("boost_z"));`
 `  DDM_SCHUR_BC_OPEN\n`;
