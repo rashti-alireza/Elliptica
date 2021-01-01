@@ -12,12 +12,14 @@
 // Note: the physics ctype must be of system type
 // arguments:
 // ==========
+// params: print these parameters (comma separated)
 // file: pointer to where writing properties
 // pr_screen: if 1, it ALSO prints in standard output, 
 //            otherwise only in file. */
 void 
 sys_print_properties
   (Physics_T *const phys,
+  const char *const params,
   FILE *const file,
   const int pr_screen)
 {
@@ -31,10 +33,18 @@ sys_print_properties
               phys->ctype == SNS);
   
   
-  PR_PROPERTY_IN_FILE_d("x_CM", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("y_CM", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("z_CM", file, pr_screen)
+  char **param = read_separated_items_in_string(params,',');
+  Uint p;
+  
+  p = 0;
+  while(param[p])
+  {
+    PR_PROPERTY_IN_FILE_d(param[p], file, pr_screen);
+    p++;
+  }
   
   fprintf(file,"\n");
+  
+  free_2d(param);
 }
 

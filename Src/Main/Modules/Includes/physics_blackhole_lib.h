@@ -6,6 +6,7 @@
 struct PHYSICS_T;
 
 int bh_main(struct PHYSICS_T *const phys);
+
 void 
 bh_interpolating_fields_on_a_line
   (
@@ -18,9 +19,10 @@ bh_interpolating_fields_on_a_line
 void 
 bh_print_properties
   (Physics_T *const phys,
+  const char *const params,
   FILE *const file,
   const int pr_screen);
-
+  
 double bh_calculate_expansion_on_AH(Physics_T *const phys);
 
 #endif

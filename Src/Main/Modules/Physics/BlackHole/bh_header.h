@@ -40,12 +40,13 @@ bh_interpolating_fields_on_a_line
   const char *const dir/* output directory */,
   const char *const stem_g/* if stem of a metric given => test det(g) > 0 */
   );
-  
+
 void 
 bh_print_properties
   (Physics_T *const phys,
+  const char *const params,
   FILE *const file,
-  const int pr_screen);
+  const int pr_screen);  
   
 void bh_start_off_IsoSchild_perfect_s2(Physics_T *const phys);
 void bh_start_off_PGSchild_perfect_s2(Physics_T *const phys);
