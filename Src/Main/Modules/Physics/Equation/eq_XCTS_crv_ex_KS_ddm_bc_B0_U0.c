@@ -27,7 +27,7 @@ void *eq_XCTS_curve_exc_KS_ddm_bc_B0_U0(void *vp1,void *vp2)
   EQ_Def_Param_Prefix_Char
   EQ_Set_Prefix("system")
 
-  const double v0_boost = Pgetd(EQ_PrefixIt("boost_x"));
+  const double v0_boost = Pgetd(EQ_PrefixIt("boost_Vx"));
   DDM_SCHUR_BC_OPEN
 
   double outerB_F = 

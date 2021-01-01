@@ -71,7 +71,7 @@ Declare =
 `  EQ_Def_Param_Prefix_Char`
 `  EQ_Set_Prefix("system")`
 ``
-`  const double v2_boost = Pgetd(EQ_PrefixIt("boost_z"));`
+`  const double v2_boost = Pgetd(EQ_PrefixIt("boost_Vz"));`
 `  DDM_SCHUR_BC_OPEN\n`;
 
 
