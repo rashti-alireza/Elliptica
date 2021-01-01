@@ -724,7 +724,7 @@ void set_default_parameter(const char *const lhs,const char *const rhs)
     v = PgetsEZ(lhs);
     if (v == 0)
       par->rv = dup_s(rhs);
-    else if (v[0] == '\0' || strcmp_i(v,"default"))
+    else if (v[0] == '\0')
     {
       free(par->rv);
       par->rv = dup_s(rhs);
