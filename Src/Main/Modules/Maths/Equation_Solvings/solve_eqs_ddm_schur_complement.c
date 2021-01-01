@@ -2995,12 +2995,13 @@ static Matrix_T *making_J_Schur_Method(Solve_Equations_T *const SolveEqs)
 // it assumes the Schur struct and equation structs are filled. */
 void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
 {
+  FUNC_TIC
+  
   Grid_T *grid;
   char **field_name = 0;/* name of all fields to be solved */
+  const char *const fsuffix = SolveEqs->residual_suffix;
   Uint nf = 0;/* number of all fields */
   Uint f;/* dummy index */
-  
-  pr_line_custom('=');
   
   /* read order of fields to be solved from input */
   field_name = get_solving_field_name(SolveEqs->solving_order,&nf);
@@ -3032,7 +3033,7 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
       Patch_T *patch = grid->patch[0];
       DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
       char field_res[MSG_SIZE1];
-      sprintf(field_res,"%s_residual",field_name[f]);
+      sprintf(field_res,"%s%s",field_name[f],fsuffix);
       
       empty_field(patch->fields[Ind(field_res)]);
       patch->fields[Ind(field_res)]->v = alloc_double(patch->nn);
@@ -3070,7 +3071,7 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
         Patch_T *patch = grid->patch[p];
         DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
         char field_res[MSG_SIZE1];
-        sprintf(field_res,"%s_residual",field_name[f]);
+        sprintf(field_res,"%s%s",field_name[f],fsuffix);
       
         empty_field(patch->fields[Ind(field_res)]);
         patch->fields[Ind(field_res)]->v = alloc_double(patch->nn);
@@ -3100,6 +3101,8 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
   
   /* free names */
   free_2d_mem(field_name,nf);
+  
+  FUNC_TOC
 }
 
 /* print an introcuction to Schur complement method */

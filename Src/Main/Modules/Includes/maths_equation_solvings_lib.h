@@ -253,7 +253,7 @@ typedef struct SOLVE_EQUATIONS_T
   const char *solving_order;/* field name separated with comma to be solved,
                       // e.g. "phi,psi' means solve for first phi 
                       // and then psi. */
-                      
+  const char *residual_suffix;/* residual field name suffix */                    
   double relaxation_factor;/* in relaxation scheme we have :
                            // X_new = A*X'+(A-1)X_old, where
                            // A is the relaxation_factor, 
