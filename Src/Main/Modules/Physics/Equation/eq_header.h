@@ -11,6 +11,7 @@
 #include "fields_lib.h"
 #include "maths_equation_solvings_lib.h"
 #include "maths_spectral_methods_lib.h"
+#include "eq_db_header.h"
 
 /* string leng */
 #define EQ__STR__LEN0 (33)
@@ -43,13 +44,13 @@ char EQ__Temp2[EQ__STR__LEN0] = {'\0'};
 // note: if X = system, it prefixes with system like "BHNS_" 
 // for BHNS system. */
 #define EQ_Set_Prefix(X) \
-sprintf(EQ__temp1,"%s1",X);\
-sprintf(EQ__temp2,"%s2",X);\
+sprintf(EQ__Temp1,"%s1",X);\
+sprintf(EQ__Temp2,"%s2",X);\
 if (strchr(X,'1') || strchr(X,'2'))\
   sprintf(EQ__param__prefix,"%s",X);\
-else if (strstr(patch->name,EQ__temp1))\
+else if (strstr(patch->name,EQ__Temp1))\
   sprintf(EQ__param__prefix,"%s1",X);\
-else if (strstr(patch->name,EQ__temp2))\
+else if (strstr(patch->name,EQ__Temp2))\
   sprintf(EQ__param__prefix,"%s2",X);\
 else if (strcmp_i("system",X))\
   sprintf(EQ__param__prefix,"%s_",Pgets(P_"system_prefix"));\
@@ -59,7 +60,7 @@ else \
 /* prefix given parameter X by EQ_prefix_par defined in 
 // EQ_Set_Prefix. */
 #define EQ_PrefixIt(X) \
-  (sprintf(EQ__param,"%s_%s",EQ__param_prefix,X) ? EQ__param : NULL)
+  (sprintf(EQ__param,"%s_%s",EQ__param__prefix,X) ? EQ__param : NULL)
   
 void eq_solve_elliptic_equation(Physics_T *const phys);
 
