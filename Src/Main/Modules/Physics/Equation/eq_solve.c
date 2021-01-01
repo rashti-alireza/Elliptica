@@ -30,6 +30,7 @@ void eq_solve_elliptic_equation(Physics_T *const phys)
   if (eq_field_update)  SolveEqs->FieldUpdate  = eq_field_update;
   if (eq_source_update) SolveEqs->SourceUpdate = eq_source_update;
   if (eq_stop_criteria) SolveEqs->StopCriteria = eq_stop_criteria;
+  SolveEqs->residual_suffix = EQ_Residual_Suffix;
   
   /* set region of each equation */
   Grid_T **lgrid = set_equation_grid(phys,SolveEqs);
@@ -67,7 +68,7 @@ void eq_solve_elliptic_equation(Physics_T *const phys)
     Error0(NO_OPTION);
     
   /* calculate the field residual for diagnostic purposes */
-  SolveEqs->residual_suffix = EQ_Residual_Suffix;
+
   calculate_equation_residual(SolveEqs);
 
   /* free */
