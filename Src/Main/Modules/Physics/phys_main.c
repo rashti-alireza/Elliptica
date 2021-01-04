@@ -125,7 +125,7 @@ init_physics
   
   phys->type = type;
   
-  if (Pcmps("project","BH_NS_initial_data"))
+  if (Pcmps("project","BH_NS_binary_initial_data"))
   {
     phys->sys  = BHNS;
     phys->ssys = "BHNS";
