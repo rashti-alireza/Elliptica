@@ -56,8 +56,7 @@ MODULE += $(MODULE_DIR)/Physics/ADM
 #PROJECT += $(PROJECT_DIR)/Poissons/Poisson0
 #PROJECT += $(PROJECT_DIR)/Tests/Modules_Test
 #PROJECT += $(PROJECT_DIR)/TOV_star
-#PROJECT += $(PROJECT_DIR)/Binary_BH_NS_Initial_Data
-#PROJECT += $(PROJECT_DIR)/BH_NS_Initial_Data
+#PROJECT += $(PROJECT_DIR)/BH_NS_Binary_Initial_Data
 
 ########################################################################
 ##########################
