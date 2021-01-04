@@ -67,7 +67,7 @@ int Modules_Test(void *vp)
     mt_fill_db_eqs(&field_eq,&bc_eq,&jacobian_field_eq,&jacobian_bc_eq);
 
     /* initializing and solving */
-    initialize_solving_man(grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq);/* populating solution_man */
+    initialize_solving_man(grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq,0);/* populating solution_man */
     
     double start = get_time_sec();
     FT_OpenMP(omp parallel for)

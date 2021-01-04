@@ -20,7 +20,7 @@ int poisson0_solve_eq(Grid_T *const grid)
   poisson0_fill_db_eqs(&field_eq,&bc_eq,&jacobian_field_eq,&jacobian_bc_eq);
   
   /* initializing and solving */
-  initialize_solving_man(grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq);/* populating solution managing */
+  initialize_solving_man(grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq,0);/* populating solution managing */
   enable_fields(grid);/* allocating required fields in patch->fields */
   poisson0_initial_data_alpha(grid);/* initial data for field alpha */
   
