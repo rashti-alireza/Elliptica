@@ -223,7 +223,7 @@ install: $(EXEC)
 	@echo $(PR_L0)
 	@echo $(PR_F1) "successful compilation for '$(EXEC)'"
 	@echo $(PR_F1) "find '$(EXEC)' at '$(EXEC_DIR)'"
-	@echo $(PR_F1) "Enjoy!"
+	@echo $(PR_F1) "Thanks!"
 	
 	@true
 .PHONY: install
