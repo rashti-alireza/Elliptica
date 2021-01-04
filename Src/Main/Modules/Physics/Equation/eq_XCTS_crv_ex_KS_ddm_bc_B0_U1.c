@@ -13,12 +13,11 @@ void *eq_XCTS_curve_exc_KS_ddm_bc_B0_U1(void *vp1,void *vp2)
   DDM_SCHUR_BC_DECLARE
   Uint ijk;/* node index */
 
+
   /* declaring: */
   READ_v(B0_U1)
   READ_v(B1_U1)
-  READ_v(psi)
-  READ_v(alphaPsi)
-  READ_v(bh_sConf_U1)
+  READ_v(ibc_beta_U1)
 
 
   if (patch->outerB)/* at outer boundary */
@@ -38,29 +37,10 @@ B0_U1[ijk] - v1_boost;
   }/* end of if (patch->outerB) */
   else if (patch->innerB)/* at inner boundary */
   {
-  EQ_Def_Param_Prefix_Char
-  EQ_Set_Prefix("BH")
-
-  const double BH_center_x = Pgetd(EQ_PrefixIt("center_x"));
-  const double BH_center_z = Pgetd(EQ_PrefixIt("center_z"));
-  const double BH_Omega_U0 = Pgetd(EQ_PrefixIt("Omega_x"));
-  const double BH_Omega_U2 = Pgetd(EQ_PrefixIt("Omega_z"));
-
   DDM_SCHUR_BC_OPEN
 
-  double alpha = 
-alphaPsi[ijk]/psi[ijk];
-
-  double S_U1 = 
-bh_sConf_U1[ijk]/pow(psi[ijk], 2);
-
-  double x = patch->node[ijk]->x[0]-BH_center_x;
-  double z = patch->node[ijk]->x[2]-BH_center_z;
-  double OmegaXr_U1 = 
--BH_Omega_U0*z + BH_Omega_U2*x;
-
   double innerB_F = 
-B0_U1[ijk] + B1_U1[ijk] - OmegaXr_U1 - S_U1*alpha;
+B0_U1[ijk] + B1_U1[ijk] - ibc_beta_U1[ijk];
 
   F[map[ijk]] = innerB_F;
 
