@@ -100,6 +100,24 @@ fd_populate_alpha_KerrSchild
  const char *const Alpha
  );
  
+
+void 
+fd_populate_beta_ConfKerrSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Beta
+ );
+
+
+void 
+fd_populate_beta_KerrSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Beta
+ );
+
  
 #endif
 
