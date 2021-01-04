@@ -34,7 +34,7 @@ void add_eq(sEquation_T ***const data_base, fEquation_T *const eq,const char *co
     ndb = 0;
   
   /* check if this is not already exists */
-  for (Uint i; i < ndb; ++i)
+  for (Uint i = 0; i < ndb; ++i)
   {
     if (strcmp_i(db[i]->name,name))
       Errors("Equation '%s' has been already added!",name);
