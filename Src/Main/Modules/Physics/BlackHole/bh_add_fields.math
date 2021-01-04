@@ -32,6 +32,9 @@ Declare =
  # inner BC for alpha
  (obj = Field,name = ibc_alpha, rank = 0, C_macro);
 
+ # inner BC for beta
+ (obj = Field,name = ibc_beta, rank = U, C_macro);
+
 }
 
 ` }`
