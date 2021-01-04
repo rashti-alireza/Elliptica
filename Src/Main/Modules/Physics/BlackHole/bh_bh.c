@@ -273,11 +273,11 @@ void bh_update_inner_BC(Physics_T *const phys)
     /* alpha field */
     IF_sval("Eq_inner_BC_alpha","exact_ConfKerrSchild")
     {
-      fd_populate_alpha_ConfKerrSchild(phys,".*","ibc_alpha");
+      fd_populate_alpha_ConfKerrSchild(phys,"BH_around_IB","ibc_alpha");
     }
     else IF_sval("Eq_inner_BC_alpha","exact_KerrSchild")
     {
-      fd_populate_alpha_KerrSchild(phys,".*","ibc_alpha");
+      fd_populate_alpha_KerrSchild(phys,"BH_around_IB","ibc_alpha");
     }
     else
     {
@@ -287,11 +287,11 @@ void bh_update_inner_BC(Physics_T *const phys)
     /* beta fields */
     IF_sval("Eq_inner_BC_beta","exact_KerrSchild")
     {
-      fd_populate_beta_KerrSchild(phys,".*","ibc_beta");
+      fd_populate_beta_KerrSchild(phys,"BH_around_IB","ibc_beta");
     }
     else IF_sval("Eq_inner_BC_beta","exact_ConfKerrSchild")
     {
-      fd_populate_beta_ConfKerrSchild(phys,".*","ibc_beta");
+      fd_populate_beta_ConfKerrSchild(phys,"BH_around_IB","ibc_beta");
     }
     //else IF_sval("Eq_inner_BC_beta","omega x Xi")
     else
