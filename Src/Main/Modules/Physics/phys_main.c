@@ -297,6 +297,7 @@ init_physics
       
     break;
     case BHNS:
+      phys->ctype = BHNS;
       phys->stype = "BHNS";
       phys->pos   = NONE;
       
