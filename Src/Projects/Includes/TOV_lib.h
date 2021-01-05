@@ -1,10 +1,13 @@
 #ifndef TOV_LIB_H
 #define TOV_LIB_H
 
+/* forward declaration */
+struct PHYSICS_T;
 
 /* struct for TOV stars */
 typedef struct TOV_PROJECT_T
 {
+ struct PHYSICS_T *phys;/* physics */
  const char *description;
  double ADM_m;/* ADM mass of NS */
  double bar_m;/* baryonic mass of NS */

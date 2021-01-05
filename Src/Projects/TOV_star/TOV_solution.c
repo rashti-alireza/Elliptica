@@ -7,6 +7,7 @@
 
 /* solving TOV equations. it approximates the properties of a NS.
 // it only deals with inside of the star, since the outside is analytic.
+// NOTE: not thread safe.
 // ->return value: solution of TOV equations for inside of a star with give EoS */
 TOV_T *TOV_solution(TOV_T *const TOV)
 {
@@ -18,8 +19,9 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   double m = 0;/* ADM mass of NS for various central enthalpy */
   Flag_T increase  = YES;
   Flag_T bisection = NO;
-  EoS_T *eos = 0;
   Uint i,iter;
+  
+  tov_eos = init_EoS(TOV->phys);
   
   pr_line_custom('=');
   printf("{ Solving TOV equations for %s ...\n",TOV->description);
@@ -114,11 +116,10 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   calculate_ADM_and_Komar_mass(TOV);/* perform some tests */
   
   /* having known every thing, now populate pressure */
-  eos = init_EoS();
   for (i = 0; i < TOV->N; ++i)
   {
-    eos->h = TOV->h[i];
-    TOV->p[i] = eos->pressure(eos);
+    tov_eos->h = TOV->h[i];
+    TOV->p[i] = tov_eos->pressure(tov_eos);
   }
   
   isotropic_coords_transformation(TOV);
@@ -134,10 +135,12 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   printf("--> psi at the center                 = %+e\n",TOV->psi[0]);
   printf("--> central enthalpy                  = %+e\n",TOV->h[0]);
   printf("--> central pressure                  = %+e\n",TOV->p[0]);
-  eos->h = TOV->h_cent;
-  printf("--> central energy density            = %+e\n",eos->energy_density(eos));
-  printf("--> central rest_mass_density         = %+e\n",eos->rest_mass_density(eos));
-  free_EoS(eos);
+  tov_eos->h = TOV->h_cent;
+  printf("--> central energy density            = %+e\n",tov_eos->energy_density(tov_eos));
+  printf("--> central rest_mass_density         = %+e\n",tov_eos->rest_mass_density(tov_eos));
+  
+  /* free global tov_eos */
+  free_EoS(tov_eos);
   
   /* some checks */
   if (
@@ -342,18 +345,15 @@ static double *Komar_mass_integrand(const TOV_T *const TOV)
                *const m = TOV->m,
                *const h = TOV->h,
                *const phi = TOV->phi;
-  EoS_T *eos = init_EoS();
   Uint i;
   
   f[0] = 0;
   for (i = 1; i < TOV->N; ++i)
   {
-    eos->h = h[i];
-    f[i] = 4*M_PI*(eos->energy_density(eos)+3*eos->pressure(eos))*
+    tov_eos->h = h[i];
+    f[i] = 4*M_PI*(tov_eos->energy_density(tov_eos)+3*tov_eos->pressure(tov_eos))*
             exp(phi[i])/sqrt(1-2*m[i]/r[i])*Pow2(r[i])*dr_dh(h[i],r[i],m[i]);
   }
-  
-  free_EoS(eos);
   
   return f;
 }
@@ -366,17 +366,14 @@ static double *ADM_mass_integrand(const TOV_T *const TOV)
   const double *const r = TOV->r,
                *const m = TOV->m,
                *const h = TOV->h;
-  EoS_T *eos = init_EoS();
   Uint i;
   
   f[0] = 0;
   for (i = 1; i < TOV->N; ++i)
   {
-    eos->h = h[i];
-    f[i] = 4*M_PI*eos->energy_density(eos)*Pow2(r[i])*dr_dh(h[i],r[i],m[i]);
+    tov_eos->h = h[i];
+    f[i] = 4*M_PI*tov_eos->energy_density(tov_eos)*Pow2(r[i])*dr_dh(h[i],r[i],m[i]);
   }
-  
-  free_EoS(eos);
   
   return f;
 }
@@ -412,20 +409,17 @@ static double *baryonic_mass_integrand(const TOV_T *const TOV)
   const double *const r = TOV->r,
                *const m = TOV->m,
                *const h = TOV->h;
-  EoS_T *eos = init_EoS();
   double s;
   Uint i;
   
   f[0] = 0;
   for (i = 1; i < TOV->N; ++i)
   {
-    eos->h = h[i];
-    rho = (eos->energy_density(eos)+eos->pressure(eos))/h[i];
+    tov_eos->h = h[i];
+    rho = (tov_eos->energy_density(tov_eos)+tov_eos->pressure(tov_eos))/h[i];
     s = 1-2*m[i]/r[i];
     f[i] = 4*M_PI*rho/sqrt(s)*Pow2(r[i])*dr_dh(h[i],r[i],m[i]);
   }
-  
-  free_EoS(eos);
   
   return f;
 }
@@ -497,15 +491,13 @@ static void solve_ODE_enthalpy_approach(TOV_T *const TOV)
 /* ->return value: approximate r near center of star */
 static double r_approx(const double h,const double h_c/* central enthalpy */)
 {
-  EoS_T *eos = init_EoS();
   double r = 0;
   double e,p,de_dh;
   
-  eos->h = h_c;
-  e = eos->energy_density(eos);
-  p = eos->pressure(eos);
-  de_dh = eos->de_dh(eos);
-  free_EoS(eos);
+  tov_eos->h = h_c;
+  e = tov_eos->energy_density(tov_eos);
+  p = tov_eos->pressure(tov_eos);
+  de_dh = tov_eos->de_dh(tov_eos);
   
   r = sqrt(3*(h_c-h)/(2*M_PI*(e+3*p)))*
       (1-0.25*(e-3*p-3*de_dh/5)*(h_c-h)/(e+3*p));
@@ -516,14 +508,12 @@ static double r_approx(const double h,const double h_c/* central enthalpy */)
 /* ->return value: approximate m near center of star */
 static double m_approx(const double h,const double h_c/* central enthalpy */)
 {
-  EoS_T *eos = init_EoS();
   double m = 0;
   double e,de_dh;
   
-  eos->h = h_c;
-  e = eos->energy_density(eos);
-  de_dh = eos->de_dh(eos);
-  free_EoS(eos);
+  tov_eos->h = h_c;
+  e = tov_eos->energy_density(tov_eos);
+  de_dh = tov_eos->de_dh(tov_eos);
   
   m = 4*M_PI/3*e*pow(r_approx(h,h_c),3)*
       (1-3./5.*de_dh*(h_c-h)/e);
@@ -550,15 +540,13 @@ static double drbar_dh(const double h,const double rbar,const double r, const do
 // \frac {dr}{dh}=-\frac {r\left( r-2m\right) }{\left( m+4\pi r^{3}p\right) h}\\ . */
 static double dr_dh(const double h,const double r, const double m)
 {
-  EoS_T *eos = init_EoS();
   double f;
   double p;/* pressure */
   const double r3 = r*r*r;
   
-  eos->h = h;
-  p = eos->pressure(eos); 
+  tov_eos->h = h;
+  p = tov_eos->pressure(tov_eos); 
   f = - r*(r-2*m)/(m+4*M_PI*r3*p)/h;
-  free_EoS(eos);
 
   return f;
 }
@@ -567,17 +555,14 @@ static double dr_dh(const double h,const double r, const double m)
 // \frac {dm}{dh}=4\pi r^{2}e\frac {dr}{dh}\\ . */
 static double dm_dh(const double h,const double r, const double m)
 {
-  EoS_T *eos = init_EoS();
   double f;
   double e;/* energy density */
   const double r2 = r*r;
   
-  eos->h = h;
-  e = eos->energy_density(eos); 
+  tov_eos->h = h;
+  e = tov_eos->energy_density(tov_eos); 
   f = 4*M_PI*r2*e*dr_dh(h,r,m);;
   
-  free_EoS(eos);
-
   return f;
 }
 
