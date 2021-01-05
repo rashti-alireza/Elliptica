@@ -41,6 +41,47 @@ void bh_start_off_KerrSchild_perfect_s2(Physics_T *const phys)
   FUNC_TOC
 }
 
+/* use close to a KerrSchild BH assuming pefect S2 to start off 
+// some black hole paramters and domain shape etc. 
+// Note: this mainly used to initiate a binary system. */
+void bh_start_off_CloseKerrSchild_perfect_s2(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  const double Fac         = 1.5;/* this is an experimental factor */
+  const double bh_chi_x    = Getd("chi_x");
+  const double bh_chi_y    = Getd("chi_y");
+  const double bh_chi_z    = Getd("chi_z");
+  const double bh_irr_mass = Getd("irreducible_mass");
+  const double bh_chi = sqrt(Pow2(bh_chi_x)+Pow2(bh_chi_y)+Pow2(bh_chi_z));
+  const double bh_chr_mass = bh_irr_mass*sqrt(2./(1.+sqrt(1-Pow2(bh_chi))));
+  const double bh_R        = Fac*bh_irr_mass;/* approximate initial radius */
+  const double bh_a        = bh_chi*bh_chr_mass;
+  
+  /* check size of bh_chi */
+  if (GRT(bh_chi,1.))
+    Errors("%s spin is too large!\n",phys->stype);
+  
+  /* set initial params */
+  Setd("perfect_S2_radius",bh_R);
+  Setd("min_radius",bh_R);
+  Setd("max_radius",bh_R);
+  Setd("Christodoulou_mass",bh_irr_mass);
+  Setd("spin_a",bh_a);
+  
+  printf(Pretty0"%s properties:\n",phys->stype);
+  printf(Pretty0"%s radius (Kerr-Schild Coords.) = %+e\n",phys->stype,bh_R);
+  printf(Pretty0"%s irreducible mass             = %+e\n",phys->stype,bh_irr_mass);
+  printf(Pretty0"%s Christodoulou_mass           ~ %+e\n",phys->stype,bh_chr_mass);
+  printf(Pretty0"%s dimensionless spin (x comp.) = %+e\n",phys->stype,bh_chi_x);
+  printf(Pretty0"%s dimensionless spin (y comp.) = %+e\n",phys->stype,bh_chi_y);
+  printf(Pretty0"%s dimensionless spin (z comp.) = %+e\n",phys->stype,bh_chi_z);
+  printf(Pretty0"%s net dimensionless spin       = %+e\n",phys->stype,bh_chi);
+  printf(Pretty0"%s spin/M (= a)                 = %+e\n",phys->stype,bh_a);
+  
+  FUNC_TOC
+}
+
 /* use a general KerrSchild to start off black hole
 // print properties.
 // NOTE: this is NOT assuming perfect sphere. */

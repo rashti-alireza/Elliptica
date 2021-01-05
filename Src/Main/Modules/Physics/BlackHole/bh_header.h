@@ -56,6 +56,7 @@ void bh_add_fields(Grid_T *const grid);
 void bh_update_sConf_dsConf(Physics_T *const phys);
 double bh_calculate_expansion_on_AH(Physics_T *const phys);
 void bh_update_inner_BC(Physics_T *const phys);
+void bh_start_off_CloseKerrSchild_perfect_s2(Physics_T *const phys);
 
 #endif
 
