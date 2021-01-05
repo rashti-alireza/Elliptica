@@ -235,10 +235,47 @@ static int set_star_params(Physics_T *const phys)
     // slop_method: required to have C^2 field across the boundary. */
     Pset_default(P_"NS_extrapolate_matter_fields","poly2");
     
-    /* which root finder to be used to find NS surface :
+    /* soft parameters: */
+    
+    /* how to start off at the very beginning:
+    //
+    // param:
+    // ======
+    // start_off
+    //
     // options:
-    // slop_method: required to have C^2 field across the boundary. */
-    Pset_default(P_"NS_surface_finder","bisection");
+    // ========
+    // TOV : using a TOV star. */
+    
+    /* how NS surface looks like:
+    //
+    // param:
+    // ======
+    // surface_type
+    //
+    // options:
+    // ========
+    // perfect_s2  : pefect sphere 
+    // topology_s2 : a general surface with s2 topology. */
+    
+    /* l max for Ylm expansion
+    //
+    // param:
+    // ======
+    // surface_Ylm_max_l .*/
+    
+    
+    /* which root finder to be used to find NS surface:
+    //
+    // param:
+    // ======
+    // surface_finder:
+    //
+    // options:
+    // ========
+    // bisection: using bisection root finder to find enthalpy = 1. 
+    // note: if the surface_type is perfect_s2 the surface is set 
+    // by its parameters and not a root finder. */
   }
   else
     Error0(NO_OPTION);
