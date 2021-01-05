@@ -22,7 +22,7 @@ int star_main(Physics_T *const phys)
     
     case STAR_EXTRAPOLATE_MATTERS:
       AssureType(phys->ctype == NS);
-      ret = extrapolate_matter(phys);
+      ret = extrapolate_star_matter(phys);
     break;
     
     case STAR_FIND_SURFACE:
@@ -45,12 +45,12 @@ int star_main(Physics_T *const phys)
     break;
     
     case STAR_ADD_FIELDS:
-      ret = star_add_fields(phys);
+      ret = add_star_fields(phys);
     break;
     
-    //case STAR_START:
-      //ret = star_NS_start_off(phys);
-    //break;
+    case STAR_START:
+      ret = start_off_star(phys);
+    break;
     
     default:
       Error0(NO_OPTION);
@@ -84,7 +84,7 @@ static int tune_star_Euler_constant(Physics_T *const phys)
 }
 
 /* extrapolate matter where there is no matter! */
-static int extrapolate_matter(Physics_T *const phys)
+static int extrapolate_star_matter(Physics_T *const phys)
 {
   FUNC_TIC
   
@@ -180,7 +180,7 @@ static int tune_star_center(Physics_T *const phys)
 }
 
 /* star add fields */
-static int star_add_fields(Physics_T *const phys)
+static int add_star_fields(Physics_T *const phys)
 {
   FUNC_TIC
   
