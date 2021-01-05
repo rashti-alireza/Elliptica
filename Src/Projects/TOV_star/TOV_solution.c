@@ -11,6 +11,8 @@
 // ->return value: solution of TOV equations for inside of a star with give EoS */
 TOV_T *TOV_solution(TOV_T *const TOV)
 {
+  Physics_T *const phys = TOV->phys;
+  tov_eos               = init_EoS(phys);/* global variable */
   const double Fac = 0.25;
   const Uint MAX_iter = 1000;
   double h_cent_prev = 1;
@@ -20,11 +22,6 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   Flag_T increase  = YES;
   Flag_T bisection = NO;
   Uint i,iter;
-  
-  tov_eos = init_EoS(TOV->phys);
-  
-  pr_line_custom('=');
-  printf("{ Solving TOV equations for %s ...\n",TOV->description);
   
   /* set some default parameters: */
   
@@ -96,10 +93,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
     }
     else
     {
-      fprintf(stderr,"~> TOV solution failed! Exiting ...\n");
-      printf("} Solving TOV equations for %s ==> Done.\n",TOV->description);
-      pr_clock();
-      pr_line_custom('=');
+      fprintf(stderr,Pretty0"TOV solution failed! Exiting ...\n");
       return TOV;
     }
   }
@@ -125,19 +119,21 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   isotropic_coords_transformation(TOV);
   
   /* print some informations about TOV */
-  printf("TOV properties:\n");
-  if (PgetsEZ("EoS_description"))
-    printf("--> NS equation of state              = %s\n",PgetsEZ("EoS_description"));
-  printf("--> NS radius (Schwarzschild Coords.) = %+e\n",TOV->r[TOV->N-1]);
-  printf("--> NS radius (Isotropic Coords.)     = %+e\n",TOV->rbar[TOV->N-1]);
-  printf("--> ADM mass                          = %+e\n",TOV->ADM_m);
-  printf("--> baryonic mass                     = %+e\n",TOV->bar_m);
-  printf("--> psi at the center                 = %+e\n",TOV->psi[0]);
-  printf("--> central enthalpy                  = %+e\n",TOV->h[0]);
-  printf("--> central pressure                  = %+e\n",TOV->p[0]);
-  tov_eos->h = TOV->h_cent;
-  printf("--> central energy density            = %+e\n",tov_eos->energy_density(tov_eos));
-  printf("--> central rest_mass_density         = %+e\n",tov_eos->rest_mass_density(tov_eos));
+  if (TOV->description)
+  {
+    printf("TOV properties:\n");
+    printf("--> NS equation of state              = %s\n",Gets("EoS_description"));
+    printf("--> NS radius (Schwarzschild Coords.) = %+e\n",TOV->r[TOV->N-1]);
+    printf("--> NS radius (Isotropic Coords.)     = %+e\n",TOV->rbar[TOV->N-1]);
+    printf("--> ADM mass                          = %+e\n",TOV->ADM_m);
+    printf("--> baryonic mass                     = %+e\n",TOV->bar_m);
+    printf("--> psi at the center                 = %+e\n",TOV->psi[0]);
+    printf("--> central enthalpy                  = %+e\n",TOV->h[0]);
+    printf("--> central pressure                  = %+e\n",TOV->p[0]);
+    tov_eos->h = TOV->h_cent;
+    printf("--> central energy density            = %+e\n",tov_eos->energy_density(tov_eos));
+    printf("--> central rest_mass_density         = %+e\n",tov_eos->rest_mass_density(tov_eos));
+  }
   
   /* free global tov_eos */
   free_EoS(tov_eos);
@@ -160,18 +156,10 @@ TOV_T *TOV_solution(TOV_T *const TOV)
     }
     else
     {
-      fprintf(stderr,"~> TOV solution failed! Exiting ...\n");
-      printf("} Solving TOV equations for %s ==> Done.\n",TOV->description);
-      pr_clock();
-      pr_line_custom('=');
-  
+      fprintf(stderr,Pretty0"TOV solution failed! Exiting ...\n");
       return TOV;
     }
   }
-  
-  printf("} Solving TOV equations for %s ==> Done.\n",TOV->description);
-  pr_clock();
-  pr_line_custom('=');
   
   return TOV;
 }

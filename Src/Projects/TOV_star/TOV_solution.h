@@ -3,6 +3,7 @@
 #include "maths_general_lib.h"
 #include "maths_calculus_lib.h"
 #include "maths_spectral_methods_lib.h"
+#include "physics_lib.h"
 #include "TOV_lib.h"
 
 /* global variable(s) */
