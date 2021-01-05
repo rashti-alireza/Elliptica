@@ -1,4 +1,5 @@
 #include "core_lib.h"
+#include "physics_lib.h"
 #include "TOV_lib.h"
 
 int TOV_star(void *vp);

@@ -10,10 +10,9 @@
 // ->return value: if succeeds EXIT_SUCCESS */
 int TOV_star(void *vp)
 {
-  /* print some description */
-  pr_clock();
-  pr_line_custom('=');
-  printf("Solving TOV star ...\n");
+  FUNC_TIC
+
+  Physics_T *const phys = init_physics(0,NS);
 
   /* making output directory for this project */
   char folder[STR_LEN_MAX] = {'\0'};
@@ -31,6 +30,7 @@ int TOV_star(void *vp)
   Pset_default("TOV_Star_n","91");
   
   TOV_T *tov = TOV_init();
+  tov->phys  = phys;
   const char *const path_par = Pgets("top_directory");
   char *path =  make_directory(path_par,"TOV_Star");
   char file_name[STR_LEN_MAX];
@@ -77,14 +77,11 @@ int TOV_star(void *vp)
     
   Fclose(file);
   
+  free_physics(phys);
   TOV_free(tov);
   free(path);
-  
-  /* print some description */
-  printf("Solving TOV star ==> Done. :)\n");
-  pr_clock();
-  pr_line_custom('=');
-  
   UNUSED(vp);
+  
+  FUNC_TOC
   return EXIT_SUCCESS;
 }
