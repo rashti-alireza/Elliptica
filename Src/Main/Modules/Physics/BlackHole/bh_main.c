@@ -87,6 +87,8 @@ static int set_black_hole_params(Physics_T *const phys)
   //	o. KerrSchild: a kerr-schild black hole
   //    o. IsoSchild : a Schwarzchild in isotropic coords.
   //    o. PGSchild  : a Schwarzchild in Painleve-Gullstrand coords.
+  //    o. CloseKerrSchild : close to a Kerr-Schild BH used to initiate 
+  //                         binary systems
   //
   //
   // BH_Eq_inner_BC_fields: fields to set their inner BC
@@ -96,6 +98,12 @@ static int set_black_hole_params(Physics_T *const phys)
   //
   //
   // Eq_inner_BC_alpha: inner BC for alpha
+  // 	o. exact_ConfKerrSchild: use analytic value of ConfKerrSchild
+  // 	o. exact_KerrSchild: use analytic value of KerrSchild
+  //
+  //
+  //
+  // Eq_inner_BC_beta: inner BC for beta
   // 	o. exact_ConfKerrSchild: use analytic value of ConfKerrSchild
   // 	o. exact_KerrSchild: use analytic value of KerrSchild
   //
