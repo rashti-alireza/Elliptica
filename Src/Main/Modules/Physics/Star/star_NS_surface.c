@@ -1003,16 +1003,60 @@ double star_NS_mass_shedding_indicator(Physics_T *const phys)
 /* find NS surface */
 int star_NS_find_star_surface(Physics_T *const phys)
 {
-  if (Pcmps(P_"NS_surface_finder","bisection"))
+  IF_sval("surface_type","topology_s2")
   {
-    find_NS_surface_Ylm_bisect_CS(phys);
+    IF_sval("surface_finder","bisection")
+      find_NS_surface_Ylm_bisect_CS(phys);
+    else
+      Error0(NO_OPTION);
+  }
+  else IF_sval("surface_type","perfect_s2")
+  {
+    find_NS_surface_perfect_s2(phys);
   }
   else
-  {
-    Error0(NO_OPTION);
-  }
+      Error0(NO_OPTION);
   
   return EXIT_SUCCESS;
+}
+
+/* find NS surface and then set grid characteristic for perfect S2 */
+static void find_NS_surface_perfect_s2(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  Grid_Char_T *grid_char = phys->grid_char;
+  const Uint lmax   = (Uint)Geti("surface_Ylm_max_l");
+  const Uint Ntheta = Ntheta_Ylm(lmax);
+  const Uint Nphi   = Nphi_Ylm(lmax);
+  const Uint Ntot   = Ntotal_Ylm(lmax);
+  const double R_BH = Getd("perfect_S2_radius");
+  double *rbh = alloc_double(Ntot);/* surface function r = r(th,ph). */
+  double *reClm_rbh = alloc_ClmYlm(lmax),
+         *imClm_rbh = alloc_ClmYlm(lmax);
+  Uint ij;
+  
+  init_Legendre_root_function();
+  for (ij = 0; ij < Ntot; ++ij)
+  {
+    rbh[ij] = R_BH;
+  }
+  /* calculating coeffs */
+  get_Ylm_coeffs(reClm_rbh,imClm_rbh,rbh,Ntheta,Nphi,lmax);
+  
+  assert(!grid_char->params[phys->igc]->occupied);
+  grid_char->params[phys->igc]->obj    = phys->stype;
+  grid_char->params[phys->igc]->dir    = phys->spos;
+  grid_char->params[phys->igc]->relClm = reClm_rbh;
+  grid_char->params[phys->igc]->imgClm = imClm_rbh;
+  grid_char->params[phys->igc]->r_min  = Getd("min_radius");
+  grid_char->params[phys->igc]->r_max  = Getd("max_radius");
+  grid_char->params[phys->igc]->lmax   = lmax;
+  grid_char->params[phys->igc]->occupied = 1;
+
+  Free(rbh);
+  
+  FUNC_TOC
 }
 
 /* use TOV star (pefect S2) to start off a star parameters 
