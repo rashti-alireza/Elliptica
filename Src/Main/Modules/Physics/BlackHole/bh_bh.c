@@ -182,7 +182,7 @@ void bh_find_bh_surface_perfect_s2(Physics_T *const phys)
   const Uint Ntheta = Ntheta_Ylm(lmax);
   const Uint Nphi   = Nphi_Ylm(lmax);
   const Uint Ntot   = Ntotal_Ylm(lmax);
-  const double R_BH     = Getd("perfect_S2_radius");
+  const double R_BH = Getd("perfect_S2_radius");
   double *rbh = alloc_double(Ntot);/* surface function r = r(th,ph). */
   double *reClm_rbh = alloc_ClmYlm(lmax),
          *imClm_rbh = alloc_ClmYlm(lmax);
