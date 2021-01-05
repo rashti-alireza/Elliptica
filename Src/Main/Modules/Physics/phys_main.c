@@ -155,6 +155,11 @@ init_physics
     phys->sys  = OBJ_UNDEFINED;
     phys->ssys = "OBJ_UNDEFINED";/* important to have different name for system */
   }
+  else if (Pcmps("project","TOV_Star"))
+  {
+    phys->sys  = OBJ_UNDEFINED;
+    phys->ssys = "OBJ_UNDEFINED";/* important to have different name for system */
+  }
   else
     Error0(NO_OPTION);
   
