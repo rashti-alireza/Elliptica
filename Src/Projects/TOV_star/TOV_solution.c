@@ -23,6 +23,15 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   Flag_T bisection = NO;
   Uint i,iter;
   
+  /* some checks */
+  if (EQL(TOV->bar_m,0.))
+  {
+    printf(Pretty0"%s baryonic mass is zero => exiting ...\n",phys->stype);
+    /* free global tov_eos */
+    free_EoS(tov_eos);
+    return TOV;
+  }
+  
   /* set some default parameters: */
   
   /* number of points for composite Simpson's rule integral.
