@@ -8,4 +8,5 @@ static int tune_star_force_balance_equation(Physics_T *const phys);
 static int tune_star_center(Physics_T *const phys);
 static int add_star_fields(Physics_T *const phys);
 static int set_star_params(Physics_T *const phys);
+static int start_off_star(Physics_T *const phys);
 

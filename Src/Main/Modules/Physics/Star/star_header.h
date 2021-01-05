@@ -12,6 +12,7 @@
 #include "fields_lib.h"
 #include "maths_equation_solvings_lib.h"
 #include "maths_spectral_methods_lib.h"
+#include "TOV_lib.h"
 
 /* parameter prefix 
 // PLEASE keep it capitalized. */
@@ -76,6 +77,7 @@ double star_NS_idealfluid_gConf_dLnGamma_force_bal(Patch_T *const patch,const do
 double star_NS_idealfluid_gConf_root_force_bal(void *params,const double *const x);
 void star_NS_find_where_denthalpy_is_0(Physics_T *const phys,double xdh0[3]);
 int star_NS_keep_center_fixed(Physics_T *const phys);
+void star_start_off_TOV (Physics_T *const phys);
 
 #endif
 

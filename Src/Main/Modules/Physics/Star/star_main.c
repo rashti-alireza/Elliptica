@@ -49,6 +49,7 @@ int star_main(Physics_T *const phys)
     break;
     
     case STAR_START:
+      AssureType(phys->ctype == NS);
       ret = start_off_star(phys);
     break;
     
@@ -248,4 +249,19 @@ static int set_star_params(Physics_T *const phys)
   FUNC_TOC
   return EXIT_SUCCESS;
 }
+
+/* start off a star according to the parameter */
+static int start_off_star(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  IF_sval("start_off","TOV")
+    star_start_off_TOV(phys);
+  else
+    Error0(NO_OPTION);
+
+  FUNC_TOC
+  return EXIT_SUCCESS;
+}
+
 

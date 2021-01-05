@@ -1014,3 +1014,23 @@ int star_NS_find_star_surface(Physics_T *const phys)
   
   return EXIT_SUCCESS;
 }
+
+/* use TOV star (pefect S2) to start off a star parameters 
+// and domain shape etc. */
+void star_start_off_TOV (Physics_T *const phys)
+{
+  TOV_T *tov = TOV_init();
+  tov->phys  = phys;
+  tov->bar_m = Getd("baryonic_mass");
+  tov->description = "estimating NS";
+  tov = TOV_solution(tov);
+  
+  const double ns_R = tov->rbar[tov->N-1];
+  
+  Setd("perfect_S2_radius",ns_R);
+  Setd("min_radius",ns_R);
+  Setd("max_radius",ns_R);
+  
+  TOV_free(tov);
+}
+

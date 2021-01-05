@@ -99,7 +99,7 @@ static double NS_surface_enthalpy_root_finder_eq(void *params,const double *cons
 static double NS_surface_denthalpy_dr_root_finder(void *params,const double *const x,const Uint dir);
 double star_NS_mass_shedding_indicator(Physics_T *const phys);
 int star_NS_find_star_surface(Physics_T *const phys);
-
+void star_start_off_TOV (Physics_T *const phys);
 
 
 
