@@ -388,7 +388,8 @@ fd_populate_gConf_igConf_dgConf_KerrSchild
 // "flat + exp(-r^4)*(KerrSchild-flat)"  which is:
 // gConf_{ij} = delta_{ij} + atten * (gKS_{ij} - delta_{ij}).
 // this free data mainly is used for BHNS system.
-// the nomenclature of fields determined by the passed stems */
+// the nomenclature of fields determined by the passed stems
+// NOTE: it assumes gConf has already populated with KerrSchild metric */
 void 
 fd_populate_gConf_igConf_dgConf_flat_expm4KS
  (
@@ -401,27 +402,13 @@ fd_populate_gConf_igConf_dgConf_flat_expm4KS
 {
   FUNC_TIC
   
+  AssureType(phys->type == BH)
+  
   Grid_T *const grid  = mygrid(phys,region);
-  Physics_T *const bh = init_physics(phys,BH);
-  const double BHx    = Pgetd("BH_center_x");
-  const double BHy    = Pgetd("BH_center_y");
-  const double BHz    = Pgetd("BH_center_z");
+  const double BHx    = Getd("center_x");
+  const double BHy    = Getd("center_y");
+  const double BHz    = Getd("center_z");
   const double R04    = pow(Pgetd(P_"RollOff_radius"),4.);
-  
-  /* add some auxiliary fields */
-  FOR_ALL_p(grid->np)
-  {
-    Patch_T *patch = grid->patch[p];
-    ADD_AND_ALLOC_FIELD(fd_ks__g_D2D2)
-    ADD_AND_ALLOC_FIELD(fd_ks__g_D0D2)
-    ADD_AND_ALLOC_FIELD(fd_ks__g_D0D0)
-    ADD_AND_ALLOC_FIELD(fd_ks__g_D0D1)
-    ADD_AND_ALLOC_FIELD(fd_ks__g_D1D2)
-    ADD_AND_ALLOC_FIELD(fd_ks__g_D1D1)
-  }
-  
-  /* populate fd_ks__g */
-  fd_populate_gConf_igConf_dgConf_KerrSchild(bh,".*","fd_ks__g",0,0);
   
   /* superimpose */
   OpenMP_Patch_Pragma(omp parallel for)
@@ -429,19 +416,20 @@ fd_populate_gConf_igConf_dgConf_flat_expm4KS
   {
     Patch_T *patch = grid->patch[p];
     
-    READ_v(fd_ks__g_D2D2)
-    READ_v(fd_ks__g_D0D2)
-    READ_v(fd_ks__g_D0D0)
-    READ_v(fd_ks__g_D0D1)
-    READ_v(fd_ks__g_D1D2)
-    READ_v(fd_ks__g_D1D1)
+    /* since gConf has KS values */
+    READ_v_STEM(gKS_D2D2,gConf)
+    READ_v_STEM(gKS_D0D2,gConf)
+    READ_v_STEM(gKS_D0D0,gConf)
+    READ_v_STEM(gKS_D0D1,gConf)
+    READ_v_STEM(gKS_D1D2,gConf)
+    READ_v_STEM(gKS_D1D1,gConf)
     
-    REALLOC_v_WRITE_v_STEM(gConf_D2D2,gConf)
-    REALLOC_v_WRITE_v_STEM(gConf_D0D2,gConf)
-    REALLOC_v_WRITE_v_STEM(gConf_D0D0,gConf)
-    REALLOC_v_WRITE_v_STEM(gConf_D0D1,gConf)
-    REALLOC_v_WRITE_v_STEM(gConf_D1D2,gConf)
-    REALLOC_v_WRITE_v_STEM(gConf_D1D1,gConf)
+    WRITE_v_STEM(gConf_D2D2,gConf)
+    WRITE_v_STEM(gConf_D0D2,gConf)
+    WRITE_v_STEM(gConf_D0D0,gConf)
+    WRITE_v_STEM(gConf_D0D1,gConf)
+    WRITE_v_STEM(gConf_D1D2,gConf)
+    WRITE_v_STEM(gConf_D1D1,gConf)
     
     /* g = delta_{ij} + atten * (gKS_{ij} - delta_{ij}) */
     FOR_ALL_ijk
@@ -453,14 +441,14 @@ fd_populate_gConf_igConf_dgConf_flat_expm4KS
       double att = exp(-pow(r2,2.)/R04);
       
       /* diagonal */
-      gConf_D0D0[ijk] = 1.+att*(fd_ks__g_D0D0[ijk]-1.);
-      gConf_D1D1[ijk] = 1.+att*(fd_ks__g_D1D1[ijk]-1.);
-      gConf_D2D2[ijk] = 1.+att*(fd_ks__g_D2D2[ijk]-1.);
+      gConf_D0D0[ijk] = 1.+att*(gKS_D0D0[ijk]-1.);
+      gConf_D1D1[ijk] = 1.+att*(gKS_D1D1[ijk]-1.);
+      gConf_D2D2[ijk] = 1.+att*(gKS_D2D2[ijk]-1.);
       
       /* off diagonal */
-      gConf_D0D1[ijk] = att*(fd_ks__g_D0D1[ijk]);
-      gConf_D0D2[ijk] = att*(fd_ks__g_D0D2[ijk]);
-      gConf_D1D2[ijk] = att*(fd_ks__g_D1D2[ijk]);
+      gConf_D0D1[ijk] = att*(gKS_D0D1[ijk]);
+      gConf_D0D2[ijk] = att*(gKS_D0D2[ijk]);
+      gConf_D1D2[ijk] = att*(gKS_D1D2[ijk]);
     }
   }
   
@@ -493,14 +481,6 @@ fd_populate_gConf_igConf_dgConf_flat_expm4KS
       Matrix_Inverse_3x3_Symmetric_Field(gConf,D,igConf,U,ijk);
     }
   }
-  
-  /* remove added fields */
-  for (Uint p = 0; p < grid->np; ++p)
-  {
-    Patch_T *patch = grid->patch[p];
-    remove_field_with_regex(patch,"^fd_ks__g__D.D.$");
-  }
-  free_physics(bh);
   
   FUNC_TOC
 }
