@@ -412,12 +412,12 @@ fd_populate_gConf_igConf_dgConf_flat_expm4KS
   FOR_ALL_p(grid->np)
   {
     Patch_T *patch = grid->patch[p];
-    ADD_FIELD(fd_ks__g_D2D2)
-    ADD_FIELD(fd_ks__g_D0D2)
-    ADD_FIELD(fd_ks__g_D0D0)
-    ADD_FIELD(fd_ks__g_D0D1)
-    ADD_FIELD(fd_ks__g_D1D2)
-    ADD_FIELD(fd_ks__g_D1D1)
+    ADD_AND_ALLOC_FIELD(fd_ks__g_D2D2)
+    ADD_AND_ALLOC_FIELD(fd_ks__g_D0D2)
+    ADD_AND_ALLOC_FIELD(fd_ks__g_D0D0)
+    ADD_AND_ALLOC_FIELD(fd_ks__g_D0D1)
+    ADD_AND_ALLOC_FIELD(fd_ks__g_D1D2)
+    ADD_AND_ALLOC_FIELD(fd_ks__g_D1D1)
   }
   
   /* populate fd_ks__g */
