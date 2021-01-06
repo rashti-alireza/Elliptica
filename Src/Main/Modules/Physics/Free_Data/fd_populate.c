@@ -33,10 +33,12 @@ void fd_extrinsic_curvature_KerrSchild(Physics_T *const phys,
     Patch_T *patch = grid->patch[p];
     fd_Kij_trK_KerrSchild(patch,BHx,BHy,BHz,ig,Chris,Kij,trK);
     
-    dField_di_STEM(dtrK_D0,dtrK);
-    dField_di_STEM(dtrK_D1,dtrK);
-    dField_di_STEM(dtrK_D2,dtrK);
-    
+    if (dtrK)
+    {
+     dField_di_STEM(dtrK_D0,dtrK);
+     dField_di_STEM(dtrK_D1,dtrK);
+     dField_di_STEM(dtrK_D2,dtrK);
+    }
   }
   
   FUNC_TOC
