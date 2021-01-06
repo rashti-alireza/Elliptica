@@ -210,6 +210,28 @@ static int populate_free_data(Physics_T *const phys)
                        "RicciConf","trRicciConf");
     free_physics(bh);
   }
+  else if 
+   (phys->sys                             == BHNS                             && 
+   Pcmps(P_"conformal_metric"            ,"flat+exp(-r^4)*(KerrSchild-flat)") &&
+   Pcmps(P_"conformal_Christoffel_symbol","flat+exp(-r^4)*(KerrSchild-flat)") &&
+   Pcmps(P_"conformal_Ricci"             ,"flat+exp(-r^4)*(KerrSchild-flat)") &&
+   Pcmps(P_"trK"                         ,"exp(-r^4)*KerrSchild")             &&
+   Pcmps(P_"MConfIJ"                     ,"zero")                              )
+  {
+    AssureType(phys->ctype == BHNS)
+    
+    fd_populate_gConf_dgConf_igConf_flat_expm4KS(phys,".*","gConf",
+                                                 "igConf","dgConf");
+    fd_compatible_Christoffel_symbol(phys,".*","igConf",
+                                     "dgConf","ChrisConf");
+    fd_1st_derivative_Christoffel_symbol(phys,".*","dChrisConf");
+
+    fd_conformal_Ricci(phys,".*","igConf","ChrisConf","dChrisConf",
+                       "RicciConf","trRicciConf");
+    /* this ??? */                   
+    fd_extrinsic_curvature_KerrSchild(phys,".*","igConf","ChrisConf",
+                                      "adm_Kij","trK","dtrK");
+  }
   else
     Error0(NO_OPTION);
   

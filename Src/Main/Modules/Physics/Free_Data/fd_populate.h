@@ -2,6 +2,8 @@
 #include "maths_linear_algebra_lib.h"
 #include "physics_transformation_lib.h"
 
+#define STR_LEN (99)
+
 void 
 fd_populate_gConf_dgConf_igConf_KerrSchild
  (
@@ -177,4 +179,12 @@ fd_populate_beta_ConfKerrSchild
  const char *const Beta
  );
 
-
+void 
+fd_populate_gConf_dgConf_igConf_flat_expm4KS
+ (
+ Physics_T *const phys,
+ const char *const region/* where computations take place */,
+ const char *const gConf/* metric stem */,
+ const char *const igConf/* inverse of metric stem */,
+ const char *const dgConf/* derivative of metric stem */
+ );
