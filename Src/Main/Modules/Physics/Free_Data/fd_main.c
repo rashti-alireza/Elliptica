@@ -42,46 +42,50 @@ static int set_free_data_params(Physics_T *const phys)
   
   /* how to set confromal metic:
   // options:
-  // flat:       gConf = delta_{ij}
-  // KerrSchild: gConf = Kerr-Schild black hole
-  // ConfKerrSchild: gConf = Kerr-Schild black hole 
-                     which decomposed conformally so det(gConf) = 1.
+  // flat:       gConf = delta_{ij}.
+  // KerrSchild: gConf = Kerr-Schild black hole.
+  // ConfKerrSchild: gConf = Kerr-Schild black hole which decomposed conformally so det(gConf) = 1.
   // IsoSchild:  gConf = delta_{ij} for Schwarzchild in isotropic coords.
-  // PGSchild:   gConf = delta_{ij} for Schwarzchild in Painleve-Gullstrand coords */
+  // PGSchild:   gConf = delta_{ij} for Schwarzchild in Painleve-Gullstrand coords.
+  // flat+exp(-r^4)*(KerrSchild-flat): gConf_{ij} = delta_{ij} + atten * (gKS_{ij} - delta_{ij}). */
   Pset_default(P_"conformal_metric","KerrSchild");
   
   /* how to set Christoffel symbol:
   // options:
-  // flat:       ChrisConf = 0
-  // KerrSchild: ChrisConf made of gConf of Kerr-Schild black hole
-  // ConfKerrSchild: ChrisConf made of gConf of ConfKerrSchild black hole
+  // flat:       ChrisConf = 0.
+  // KerrSchild: ChrisConf made of gConf of Kerr-Schild black hole.
+  // ConfKerrSchild: ChrisConf made of gConf of ConfKerrSchild black hole.
   // IsoSchild:  ChrisConf = 0 for Schwarzchild in isotropic coords.
-  // PGSchild:   ChrisConf = 0 for Schwarzchild in Painleve-Gullstrand coords */
+  // PGSchild:   ChrisConf = 0 for Schwarzchild in Painleve-Gullstrand coords.
+  // flat+exp(-r^4)*(KerrSchild-flat): for gConf_{ij} = delta_{ij} + atten * (gKS_{ij} - delta_{ij}). */
   Pset_default(P_"conformal_Christoffel_symbol","KerrSchild");
   
   /* how to set trK = Tr(K_{ij})
   // options:
   // maximal:    trK = 0.
-  // KerrSchild: trK = trK of Kerr-Schild black hole K_{ij} 
+  // KerrSchild: trK = trK of Kerr-Schild black hole K_{ij}.
   // IsoSchild:  trK = 0 for Schwarzchild in isotropic coordinates.
-  // PGSchild:   trK for Schwarzchild in Painleve-Gullstrand coords */
+  // PGSchild:   trK for Schwarzchild in Painleve-Gullstrand coords.
+  // exp(-r^4)*KerrSchild: trK = exp(-r^4)*(KerrSchild trK). */
   Pset_default(P_"trK","KerrSchild");
   
   /* how to set conformal Ricci tensor
   // options:
-  // flat:       RicciConf_{ij} = 0
-  // KerrSchild: use Kerr-Schild black hole metric 
-  // ConfKerrSchild: use ConfKerrSchild black hole metric 
+  // flat:       RicciConf_{ij} = 0.
+  // KerrSchild: use Kerr-Schild black hole metric .
+  // ConfKerrSchild: use ConfKerrSchild black hole metric .
   // IsoSchild:  use Schwarzchild in isotropic coordinates.
-  // PGSchild:   RicciConf_{ij} = 0 for Schwarzchild in Painleve-Gullstrand coords */
+  // PGSchild:   RicciConf_{ij} = 0 for Schwarzchild in Painleve-Gullstrand coords.
+  // flat+exp(-r^4)*(KerrSchild-flat): for gConf_{ij} = delta_{ij} + atten * (gKS_{ij} - delta_{ij}). */
   Pset_default(P_"conformal_Ricci","KerrSchild");
   
- 
   /* how to set MConf^{ij} in AConf^{ij} = 1/sigma (LConf W)^{ij} + MConf^{ij}
   // options:
-  // zero:       MConf^{ij} = 0 */
+  // zero:       MConf^{ij} = 0. */
   Pset_default(P_"MConfIJ","zero");
   
+  /* roll off radius used for attenuation of metric, trK etc. */
+  Pset_default(P_"RollOff_radius","0.");
   
   UNUSED(phys);
   FUNC_TOC
