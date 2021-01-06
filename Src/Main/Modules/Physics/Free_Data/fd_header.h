@@ -248,7 +248,7 @@ fd_populate_beta_ConfKerrSchild
  );
 
 void 
-fd_populate_gConf_igConf_dgConf_flat_expm4KS
+fd_modify_gConf_igConf_dgConf_to_flat_expm4KS
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,

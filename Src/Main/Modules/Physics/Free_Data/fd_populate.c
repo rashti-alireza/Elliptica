@@ -393,7 +393,7 @@ fd_populate_gConf_igConf_dgConf_KerrSchild
 // the nomenclature of fields determined by the passed stems
 // NOTE: it assumes gConf has already populated with KerrSchild metric */
 void 
-fd_populate_gConf_igConf_dgConf_flat_expm4KS
+fd_modify_gConf_igConf_dgConf_to_flat_expm4KS
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
