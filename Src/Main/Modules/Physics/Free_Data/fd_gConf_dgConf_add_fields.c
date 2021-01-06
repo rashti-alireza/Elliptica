@@ -7,8 +7,8 @@
 #include "fd_header.h"
 
 
-void fd_add_fields_gConf_dgConf_igConf(Grid_T *const grid);
-void fd_add_fields_gConf_dgConf_igConf(Grid_T *const grid)
+void fd_add_fields_gConf_igConf_dgConf(Grid_T *const grid);
+void fd_add_fields_gConf_igConf_dgConf(Grid_T *const grid)
 {
  Uint p;
  FOR_ALL_PATCHES(p,grid)

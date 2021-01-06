@@ -30,7 +30,7 @@ void adm_doctest_AConfIJ(Physics_T *const phys)
 
       add_3x3_symmetric_field(grid,"test_adm_Kij","down");
       
-      fd_populate_gConf_dgConf_igConf_KerrSchild(bh,".*","gConf",
+      fd_populate_gConf_igConf_dgConf_KerrSchild(bh,".*","gConf",
                                                   "igConf","dgConf");
                                                   
       fd_1st_derivative_Christoffel_symbol(bh,".*","dChrisConf");

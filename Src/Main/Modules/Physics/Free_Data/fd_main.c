@@ -95,7 +95,7 @@ static int add_free_data_fields(Physics_T *const phys)
   
   assert(phys->grid);
   
-  fd_add_fields_gConf_dgConf_igConf(phys->grid);
+  fd_add_fields_gConf_igConf_dgConf(phys->grid);
   fd_add_fields_ChrisConf_dChrisConf(phys->grid);
   fd_add_fields_trK_dtrK(phys->grid);
   fd_add_fields_RicciConf(phys->grid);
@@ -122,7 +122,7 @@ static int populate_free_data(Physics_T *const phys)
     /* important to have dedicated BH physics to read correct parameters */
     Physics_T *const bh = init_physics(phys,BH);
 
-    fd_populate_gConf_dgConf_igConf_KerrSchild(bh,".*","gConf",
+    fd_populate_gConf_igConf_dgConf_KerrSchild(bh,".*","gConf",
                                               "igConf","dgConf");
     fd_compatible_Christoffel_symbol(bh,".*","igConf",
                                      "dgConf","ChrisConf");
@@ -146,7 +146,7 @@ static int populate_free_data(Physics_T *const phys)
     /* important to have dedicated BH physics to read correct parameters */
     Physics_T *const bh = init_physics(phys,BH);
 
-    fd_populate_gConf_dgConf_igConf_IsoSchild(bh,".*","gConf",
+    fd_populate_gConf_igConf_dgConf_IsoSchild(bh,".*","gConf",
                                               "igConf","dgConf");
     fd_compatible_Christoffel_symbol(bh,".*","igConf",
                                     "dgConf","ChrisConf");
@@ -170,7 +170,7 @@ static int populate_free_data(Physics_T *const phys)
     /* important to have dedicated BH physics to read correct parameters */
     Physics_T *const bh = init_physics(phys,BH);
 
-    fd_populate_gConf_dgConf_igConf_PGSchild(bh,".*","gConf",
+    fd_populate_gConf_igConf_dgConf_PGSchild(bh,".*","gConf",
                                              "igConf","dgConf");
     fd_compatible_Christoffel_symbol(bh,".*","igConf",
                                     "dgConf","ChrisConf");
@@ -193,14 +193,14 @@ static int populate_free_data(Physics_T *const phys)
     Physics_T *const bh = init_physics(phys,BH);
     
     /* first make trK which is KerrSchild:  */
-    fd_populate_gConf_dgConf_igConf_KerrSchild(bh,".*","gConf",
+    fd_populate_gConf_igConf_dgConf_KerrSchild(bh,".*","gConf",
                                                "igConf","dgConf");
     fd_compatible_Christoffel_symbol(bh,".*","igConf",
                                      "dgConf","ChrisConf");
     fd_extrinsic_curvature_KerrSchild(bh,".*","igConf","ChrisConf",
                                       "adm_Kij","trK","dtrK");
     /* then make the others, NOTE gConf is ready */
-    fd_populate_gConf_dgConf_igConf_ConfKerrSchild
+    fd_populate_gConf_igConf_dgConf_ConfKerrSchild
                  (bh,".*","gConf","gConf","igConf","dgConf");
     fd_compatible_Christoffel_symbol(bh,".*","igConf",
                                      "dgConf","ChrisConf");
@@ -220,7 +220,7 @@ static int populate_free_data(Physics_T *const phys)
   {
     AssureType(phys->ctype == BHNS)
     
-    fd_populate_gConf_dgConf_igConf_flat_expm4KS(phys,".*","gConf",
+    fd_populate_gConf_igConf_dgConf_flat_expm4KS(phys,".*","gConf",
                                                  "igConf","dgConf");
     fd_compatible_Christoffel_symbol(phys,".*","igConf",
                                      "dgConf","ChrisConf");

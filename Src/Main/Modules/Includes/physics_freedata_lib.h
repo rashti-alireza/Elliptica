@@ -19,7 +19,7 @@ fd_populate_psi_alphaPsi_beta_KerrSchild
  );
 
 void 
-fd_populate_gConf_dgConf_igConf_KerrSchild
+fd_populate_gConf_igConf_dgConf_KerrSchild
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,

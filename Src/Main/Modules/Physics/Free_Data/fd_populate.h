@@ -5,7 +5,7 @@
 #define STR_LEN (99)
 
 void 
-fd_populate_gConf_dgConf_igConf_KerrSchild
+fd_populate_gConf_igConf_dgConf_KerrSchild
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -46,7 +46,7 @@ fd_populate_psi_alphaPsi_beta_KerrSchild
  );
  
 void 
-fd_populate_gConf_dgConf_igConf_IsoSchild
+fd_populate_gConf_igConf_dgConf_IsoSchild
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -82,7 +82,7 @@ fd_populate_psi_alphaPsi_beta_IsoSchild
  );
  
 void 
-fd_populate_gConf_dgConf_igConf_flat
+fd_populate_gConf_igConf_dgConf_flat
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -92,7 +92,7 @@ fd_populate_gConf_dgConf_igConf_flat
  );
 
 void 
-fd_populate_gConf_dgConf_igConf_PGSchild
+fd_populate_gConf_igConf_dgConf_PGSchild
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -126,7 +126,7 @@ void fd_beta_and_dbeta_PGSchild(Physics_T *const phys,
                                 const char *const dbeta);
 
 void 
-fd_populate_gConf_dgConf_igConf_ConfKerrSchild
+fd_populate_gConf_igConf_dgConf_ConfKerrSchild
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -180,7 +180,7 @@ fd_populate_beta_ConfKerrSchild
  );
 
 void 
-fd_populate_gConf_dgConf_igConf_flat_expm4KS
+fd_populate_gConf_igConf_dgConf_flat_expm4KS
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,

@@ -323,7 +323,7 @@ void fd_1st_derivative_Christoffel_symbol(Physics_T *const phys,
 // and first order derivative of conformal metric for KerrSchild.
 // the nomenclature of fields determined by the passed stems */
 void 
-fd_populate_gConf_dgConf_igConf_KerrSchild
+fd_populate_gConf_igConf_dgConf_KerrSchild
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -390,7 +390,7 @@ fd_populate_gConf_dgConf_igConf_KerrSchild
 // this free data mainly is used for BHNS system.
 // the nomenclature of fields determined by the passed stems */
 void 
-fd_populate_gConf_dgConf_igConf_flat_expm4KS
+fd_populate_gConf_igConf_dgConf_flat_expm4KS
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -421,7 +421,7 @@ fd_populate_gConf_dgConf_igConf_flat_expm4KS
   }
   
   /* populate fd_ks__g */
-  fd_populate_gConf_dgConf_igConf_KerrSchild(bh,".*","fd_ks__g",0,0);
+  fd_populate_gConf_igConf_dgConf_KerrSchild(bh,".*","fd_ks__g",0,0);
   
   /* superimpose */
   OpenMP_Patch_Pragma(omp parallel for)
@@ -511,7 +511,7 @@ fd_populate_gConf_dgConf_igConf_flat_expm4KS
 // and conformal factor is no longer 1 as we have for KerrSchild itself.
 // the nomenclature of fields determined by the passed stems */
 void 
-fd_populate_gConf_dgConf_igConf_ConfKerrSchild
+fd_populate_gConf_igConf_dgConf_ConfKerrSchild
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -565,7 +565,7 @@ fd_populate_gConf_dgConf_igConf_ConfKerrSchild
 // isotropic coords.
 // the nomenclature of fields determined by the passed stems */
 void 
-fd_populate_gConf_dgConf_igConf_IsoSchild
+fd_populate_gConf_igConf_dgConf_IsoSchild
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -576,7 +576,7 @@ fd_populate_gConf_dgConf_igConf_IsoSchild
 {
   FUNC_TIC
   
-  fd_populate_gConf_dgConf_igConf_flat
+  fd_populate_gConf_igConf_dgConf_flat
    (phys,region,gConf,igConf,dgConf);
   
   FUNC_TOC
@@ -587,7 +587,7 @@ fd_populate_gConf_dgConf_igConf_IsoSchild
 // Painleve-Gullstrand coords.
 // the nomenclature of fields determined by the passed stems */
 void 
-fd_populate_gConf_dgConf_igConf_PGSchild
+fd_populate_gConf_igConf_dgConf_PGSchild
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -598,7 +598,7 @@ fd_populate_gConf_dgConf_igConf_PGSchild
 {
   FUNC_TIC
   
-  fd_populate_gConf_dgConf_igConf_flat
+  fd_populate_gConf_igConf_dgConf_flat
    (phys,region,gConf,igConf,dgConf);
   
   FUNC_TOC
@@ -608,7 +608,7 @@ fd_populate_gConf_dgConf_igConf_PGSchild
 // and first order derivative of conformal metric for flat space .
 // the nomenclature of fields determined by the passed stems */
 void 
-fd_populate_gConf_dgConf_igConf_flat
+fd_populate_gConf_igConf_dgConf_flat
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
