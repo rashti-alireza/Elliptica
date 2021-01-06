@@ -257,6 +257,14 @@ fd_modify_gConf_igConf_dgConf_to_flat_expm4KS
  const char *const dgConf/* derivative of metric stem */
  );
 
+void 
+fd_modify_trK_to_expm4trK_compute_dtrK
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const trK,
+ const char *const dtrK
+ );
 
 #endif
 

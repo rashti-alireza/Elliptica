@@ -218,19 +218,33 @@ static int populate_free_data(Physics_T *const phys)
    Pcmps(P_"trK"                         ,"exp(-r^4)*KerrSchild")             &&
    Pcmps(P_"MConfIJ"                     ,"zero")                              )
   {
-    AssureType(phys->ctype == BHNS)
+    /* important to have dedicated BH physics to read correct parameters */
+    Physics_T *const bh = init_physics(phys,BH);
+
+    /* first must make KerrSchild */
+    fd_populate_gConf_igConf_dgConf_KerrSchild(bh,".*","gConf",
+                                              "igConf","dgConf");
+    fd_compatible_Christoffel_symbol(bh,".*","igConf",
+                                     "dgConf","ChrisConf");
+    fd_extrinsic_curvature_KerrSchild(bh,".*","igConf","ChrisConf",
+                                      "adm_Kij","trK",0);
     
-    fd_populate_gConf_igConf_dgConf_flat_expm4KS(phys,".*","gConf",
+    /* modify metric to be "flat+exp(-r^4)*(KerrSchild-flat)" */
+    fd_modify_gConf_igConf_dgConf_to_flat_expm4KS(bh,".*","gConf",
                                                  "igConf","dgConf");
+    
     fd_compatible_Christoffel_symbol(phys,".*","igConf",
                                      "dgConf","ChrisConf");
     fd_1st_derivative_Christoffel_symbol(phys,".*","dChrisConf");
 
     fd_conformal_Ricci(phys,".*","igConf","ChrisConf","dChrisConf",
                        "RicciConf","trRicciConf");
-    /* this ??? */                   
-    fd_extrinsic_curvature_KerrSchild(phys,".*","igConf","ChrisConf",
-                                      "adm_Kij","trK","dtrK");
+    
+    /* modify trK to exp(-r^4)*trK and computer its derivatives */
+    fd_modify_trK_to_expm4trK_compute_dtrK(bh,".*","trK","dtrK");
+
+    free_physics(bh);
+    
   }
   else
     Error0(NO_OPTION);

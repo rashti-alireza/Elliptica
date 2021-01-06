@@ -391,7 +391,7 @@ fd_populate_gConf_igConf_dgConf_KerrSchild
 // gConf_{ij} = delta_{ij} + atten * (gKS_{ij} - delta_{ij}).
 // this free data mainly is used for BHNS system.
 // the nomenclature of fields determined by the passed stems
-// NOTE: it assumes gConf has already populated with KerrSchild metric */
+// NOTE: it assumes gConf has already been populated with KerrSchild metric */
 void 
 fd_modify_gConf_igConf_dgConf_to_flat_expm4KS
  (
@@ -482,6 +482,62 @@ fd_modify_gConf_igConf_dgConf_to_flat_expm4KS
     {
       Matrix_Inverse_3x3_Symmetric_Field(gConf,D,igConf,U,ijk);
     }
+  }
+  
+  FUNC_TOC
+}
+
+/* populate trK and dtrK such as:
+// trK|new = exp(-r^4)*trK|old
+// this free data mainly is used for BHNS system.
+// the nomenclature of fields determined by the passed stems
+// NOTE: it assumes trK has already been populated. */
+void 
+fd_modify_trK_to_expm4trK_compute_dtrK
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const trK,
+ const char *const dtrK
+ )
+{
+  FUNC_TIC
+  
+  AssureType(phys->type == BH)
+  
+  Grid_T *const grid  = mygrid(phys,region);
+  const double BHx    = Getd("center_x");
+  const double BHy    = Getd("center_y");
+  const double BHz    = Getd("center_z");
+  const double R04    = pow(Pgetd(P_"RollOff_radius"),4.);
+  
+  /* modify */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (Uint p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    char regex[STR_LEN];
+    
+    /* since K has value */
+    READ_v_STEM(K_old,trK)
+    
+    WRITE_v_STEM(K_new,trK)
+    
+    /* trK|new = atten * trK|old */
+    FOR_ALL_ijk
+    {
+      double x   = patch->node[ijk]->x[0] - BHx;
+      double y   = patch->node[ijk]->x[1] - BHy;
+      double z   = patch->node[ijk]->x[2] - BHz;
+      double r2  = (Pow2(x)+Pow2(y)+Pow2(z));
+      double att = exp(-pow(r2,2.)/R04);
+      
+      K_new[ijk] = att*K_old[ijk];
+    }
+    
+    /* derivatives */
+    sprintf(regex,"^%s_D.$",dtrK);
+    partial_derivative_with_regex(patch,regex);
   }
   
   FUNC_TOC
