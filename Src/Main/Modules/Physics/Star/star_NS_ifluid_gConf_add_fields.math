@@ -22,8 +22,6 @@ C_macro2 = ADD_AND_ALLOC_FIELD(name);# Improtant to set source 0 everywhere.
 ``
 Declare =
 {
- # rho0: rest mass density
- (obj = Field,name = rho0, rank = 0, C_macro);
 
  # phi: scalar for the irrotational part of fluid i.e h*u = dphi+W
  (obj = Field,name = phi, rank = 0, C_macro);

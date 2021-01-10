@@ -17,7 +17,6 @@ void star_NS_idealfluid_gConf_add_fields(Grid_T *const grid)
 
 
   /* declaring: */
-  ADD_FIELD(rho0)
   ADD_FIELD(phi)
   ADD_FIELD(W_U1)
   ADD_FIELD(W_U0)
