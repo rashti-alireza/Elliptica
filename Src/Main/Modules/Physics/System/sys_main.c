@@ -135,6 +135,7 @@ static int initialize_fields(Physics_T *const phys)
         (ns,".*","psi_tov","alphaPsi_tov","enthalpy","rho0","phi","W");
       free_physics(ns);
       
+      /* beta, phi,W and rho0 remain intact */
       /* superimpose add f = f1 + f2 -1. */
       superimpose_simple(mygrid(phys,".*"),
                          "psi","psi_tov","psi_ks",-1.);
