@@ -91,6 +91,15 @@ double diff_3x3_symmetric_fields(Grid_T *const grid,
                                const char *const stem2/* field2 */,
                                const char *const rank/* [up/down] */,
                                const int pr_points/* print all points */);
+
+void superimpose_simple(Grid_T *const grid,
+                        const char *const f,
+                        const char *const f1,
+                        const char *const f2,
+                        const double extra);
+
+
+
 #endif
 
 
