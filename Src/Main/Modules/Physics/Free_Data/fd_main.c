@@ -248,7 +248,6 @@ static int populate_free_data(Physics_T *const phys)
     fd_modify_trK_to_exprm4trK_compute_dtrK(bh,".*","trK","dtrK");
 
     free_physics(bh);
-    
   }
   else
     Error0(NO_OPTION);
