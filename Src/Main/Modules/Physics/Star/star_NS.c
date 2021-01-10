@@ -934,3 +934,128 @@ static void adjust_NS_center_Taylor_expansion(Physics_T *const phys)
   
 }
 
+/* populate psi, alphaPsi, enthalpy, phi and W fields using
+// TOV solution (stems must be given) */
+void star_populate_psi_alphaPsi_matter_fields_TOV
+      (Physics_T *const phys,const char *const region,
+      const char *const Psi,const char *const AlphaPsi,
+      const char *const Enthalpy,const char *const Rho0,
+      const char *const Phi,const char *const W)
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,region);
+  const double NSx   = Getd("center_x");
+  const double NSy   = Getd("center_y");
+  const double NSz   = Getd("center_z");
+  const double O_x   = Getd("omega_x");
+  const double O_y   = Getd("omega_y");
+  const double O_z   = Getd("omega_z");
+  const double Omega = sysGetd("angular_velocity");
+  const double y_CM  = sysGetd("y_CM");
+  
+  /* find TOV solution */
+  TOV_T *tov = TOV_init();
+  tov->phys  = phys;
+  tov->bar_m = Getd("baryonic_mass");
+  tov = TOV_solution(tov);
+  const double R_Schwar = tov->r[tov->N-1];/* NS's Schwarzchild radius */
+  const double M_NS  = tov->ADM_m;/* NS adm mass */
+  
+  FOR_ALL_p(grid->np)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (IsItCovering(patch,"NS"))
+    {
+      REALLOC_v_WRITE_v_STEM(psi,Psi)
+      REALLOC_v_WRITE_v_STEM(alphaPsi,AlphaPsi)
+      REALLOC_v_WRITE_v_STEM(enthalpy,Enthalpy)
+      REALLOC_v_WRITE_v_STEM(rho0,Rho0)
+      REALLOC_v_WRITE_v_STEM(phi,Phi)
+      REALLOC_v_WRITE_v_STEM(w_U0,W)
+      REALLOC_v_WRITE_v_STEM(w_U1,W)
+      REALLOC_v_WRITE_v_STEM(w_U2,W)
+      
+      Interpolation_T *interp_psi = init_interpolation();
+      interp_psi->method          = "Natural_Cubic_Spline_1D";
+      interp_psi->N_cubic_spline_1d->f = tov->psi;
+      interp_psi->N_cubic_spline_1d->x = tov->rbar;
+      interp_psi->N_cubic_spline_1d->N = tov->N;
+      plan_interpolation(interp_psi);
+
+      Interpolation_T *interp_h = init_interpolation();
+      interp_h->method          = "Natural_Cubic_Spline_1D";
+      interp_h->N_cubic_spline_1d->f = tov->h;
+      interp_h->N_cubic_spline_1d->x = tov->rbar;
+      interp_h->N_cubic_spline_1d->N = tov->N;
+      plan_interpolation(interp_h);
+      
+      EoS_T *eos = init_EoS(phys);
+
+      FOR_ALL_ijk
+      {
+        double x = patch->node[ijk]->x[0]-NSx;
+        double y = patch->node[ijk]->x[1]-NSy;
+        double z = patch->node[ijk]->x[2]-NSz;
+        double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+        double alpha;
+        double enthalpy_h;
+
+        interp_psi->N_cubic_spline_1d->h = r;
+        interp_h->N_cubic_spline_1d->h   = r;
+
+        /* psi */
+        psi[ijk] = execute_interpolation(interp_psi);
+
+        /* alphaPsi */
+        enthalpy_h = execute_interpolation(interp_h);
+        alpha = sqrt(1-2*M_NS/R_Schwar)/enthalpy_h;
+        alphaPsi[ijk] = psi[ijk]*alpha;
+
+        /* enthalpy */
+        enthalpy[ijk] = enthalpy_h;
+
+        /* rho0 */
+        eos->h = enthalpy_h;
+        rho0[ijk] = eos->rest_mass_density(eos);
+
+        /* phi Newtonian approximation */
+        phi[ijk] = -Omega*(NSy-y_CM)*x;
+
+        /* spin part */
+        w_U0[ijk] = O_y*z-O_z*y;
+        w_U1[ijk] = O_z*x-O_x*z;
+        w_U2[ijk] = O_x*y-O_y*x;
+      }
+      free_interpolation(interp_psi);
+      free_interpolation(interp_h);
+      free_EoS(eos);
+    }
+    else
+    {
+      REALLOC_v_WRITE_v_STEM(psi,Psi)
+      REALLOC_v_WRITE_v_STEM(alphaPsi,AlphaPsi)
+
+      FOR_ALL_ijk
+      {
+        double x    = patch->node[ijk]->x[0]-NSx;
+        double y    = patch->node[ijk]->x[1]-NSy;
+        double z    = patch->node[ijk]->x[2]-NSz;
+        double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+        double alpha;
+
+        /* psi */
+        psi[ijk] = 1+0.5*M_NS/r;
+
+        /* alphaPsi */
+        alpha = (1-0.5*M_NS/r)/(1+0.5*M_NS/r);
+        alphaPsi[ijk] = psi[ijk]*alpha;
+      }
+    }
+  }
+  
+  TOV_free(tov);
+  
+  FUNC_TOC
+}
