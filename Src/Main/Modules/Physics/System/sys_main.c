@@ -114,6 +114,41 @@ static int initialize_fields(Physics_T *const phys)
     else
       Error0(NO_OPTION);
   }
+  else if(phys->sys == BHNS                    &&
+          Pcmps(P_"initialize","TOV+KerrSchild"))
+  {
+    if(Pcmps(P_"initialize_fields","XCTS"))
+    {
+      /* add some auxiliary fields */
+      add_aux_fields(mygrid(phys,".*"),
+        "psi_ks,alphaPsi_ks,psi_tov,alphaPsi_tov");
+      
+      /* important to have dedicated BH physics to read correct parameters */
+      Physics_T *const bh = init_physics(phys,BH);
+      fd_populate_psi_alphaPsi_beta_KerrSchild
+        (bh,".*","psi_ks","alphaPsi_ks","beta",0);
+      free_physics(bh);
+      
+      /* important to have dedicated NS physics to read correct parameters */
+      Physics_T *const ns = init_physics(phys,NS);
+      star_populate_psi_alphaPsi_matter_fields_TOV
+        (ns,".*","psi_tov","alphaPsi_tov","enthalpy","rho0","phi","W");
+      free_physics(ns);
+      
+      /* superimpose add f = f1 + f2 -1. */
+      superimpose_simple(mygrid(phys,".*"),
+                         "psi","psi_tov","psi_ks",-1.);
+      superimpose_simple(mygrid(phys,".*"),
+                        "alphaPsi","alphaPsi_tov","alphaPsi_ks",-1.);
+      
+      /* remove auxiliary fields */
+      remove_aux_fields(mygrid(phys,".*"),
+        "psi_ks,alphaPsi_ks,psi_tov,alphaPsi_tov");
+      
+    }
+    else
+      Error0(NO_OPTION);
+  }
   else
     Error0(NO_OPTION);
   

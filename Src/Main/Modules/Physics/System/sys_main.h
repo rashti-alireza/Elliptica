@@ -1,4 +1,5 @@
 #include "sys_header.h"
+#include "physics_star_lib.h"
 
 
 int sys_main(Physics_T *const phys);
