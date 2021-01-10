@@ -950,4 +950,41 @@ int free_coeffs(Field_T *fld)
   return 0;
 }
 
+/* add auxiliary fields over given grid, comma separated.
+// no memory allocation */
+void add_aux_fields(Grid_T *const grid,const char *const aux_names)
+{
+  char **field_names = read_separated_items_in_string(aux_names,',');
+  Uint fn;
+  
+  fn = 0;
+  while (field_names[fn])
+  {
+    FOR_ALL_p(grid->np)
+      add_field(field_names[fn],0,grid->patch[p],NO);
+  
+    fn++;
+  }
+  
+  free_2d(field_names);
+}
 
+/* remove auxiliary fields over given grid, comma separated. */
+void remove_aux_fields(Grid_T *const grid,const char *const aux_names)
+{
+  char **field_names = read_separated_items_in_string(aux_names,',');
+  Uint fn;
+  
+  fn = 0;
+  while (field_names[fn])
+  {
+    FOR_ALL_p(grid->np)
+    {
+      Patch_T *patch = grid->patch[p];
+      remove_field(patch->fields[Ind(field_names[fn])]);
+    }
+    fn++;
+  }
+  
+  free_2d(field_names);
+}
