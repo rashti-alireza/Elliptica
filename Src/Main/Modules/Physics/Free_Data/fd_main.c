@@ -234,7 +234,7 @@ static int populate_free_data(Physics_T *const phys)
                                       "adm_Kij","trK",0);
     
     /* modify metric to be "flat+exp(-r^4)*(KerrSchild-flat)" */
-    fd_modify_gConf_igConf_dgConf_to_flat_exprm4KS(bh,".*","gConf",
+    fd_modify_gConf_igConf_dgConf_to_flat_expmr4KS(bh,".*","gConf",
                                                  "igConf","dgConf");
     
     fd_compatible_Christoffel_symbol(phys,".*","igConf",
@@ -245,7 +245,7 @@ static int populate_free_data(Physics_T *const phys)
                        "RicciConf","trRicciConf");
     
     /* modify trK to exp(-r^4)*trK and computer its derivatives */
-    fd_modify_trK_to_exprm4trK_compute_dtrK(bh,".*","trK","dtrK");
+    fd_modify_trK_to_expmr4trK_compute_dtrK(bh,".*","trK","dtrK");
 
     free_physics(bh);
   }
