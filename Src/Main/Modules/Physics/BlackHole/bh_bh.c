@@ -257,19 +257,16 @@ void bh_tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
   const double current_r_bh   = Getd("perfect_S2_radius");
   const double W              = Getd("radius_update_weight");
   const double dM_tolerance   = Getd("mass_tolerance");
-  double Komar_mass, adm_mass,irr_mass;
+  double Komar_mass, irr_mass;
   double dr,r_bh,dM;
   
   observe(phys,"Irreducible(M)",Gets("Observe_Irreducible_M"),&irr_mass);
-  observe(phys,"ADM(M)"  ,Gets("Observe_ADM_M"),&adm_mass);
   observe(phys,"Komar(M)",Gets("Observe_Komar_M"),&Komar_mass);
   
   printf(Pretty0"current BH irreducible mass = %e\n",irr_mass);
-  printf(Pretty0"current BH ADM mass         = %e\n",adm_mass);
   printf(Pretty0"current BH Komar mass      = %e\n",Komar_mass);
   
   Setd("irreducible_mass_current",irr_mass);
-  Setd("ADM_mass",adm_mass);
   Setd("Komar_mass",Komar_mass);
   
   dM = fabs(irr_mass/target_bh_mass-1);
