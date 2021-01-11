@@ -13,7 +13,7 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
   
   Grid_T *const grid  = mygrid(phys,"NS");
   const double W  = Getd("enthalpy_update_weight");
-  const int  neat = Geti("enthalpy_neat");
+  const int  neat = strstr_i(Gets("enthalpy_neat"),"yes");
   const double Euler_const = Getd("Euler_equation_constant");
   
   printf(Pretty0"weight update  = %e\n"
