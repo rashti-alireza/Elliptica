@@ -18,7 +18,7 @@ int sys_tune_ADM_momenta(Physics_T *const phys)
   double adm_p[3] = {0};
   double adm_j[3] = {0};
   
-  printf(Pretty0"|--> %s\n",par);
+  printf(Pretty0"%s\n",par);
   
   parse_adjust_parameter(par,adjust);
   
