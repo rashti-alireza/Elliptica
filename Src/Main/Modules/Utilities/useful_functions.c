@@ -825,3 +825,147 @@ void superimpose_simple(Grid_T *const grid,
       F[ijk] = F1[ijk]+F2[ijk]+extra;
   }
 }
+
+
+/* interpolate or copy the given comma separated fields 
+// from old grid to new grid. 
+// Note: when copy is used, it assumes the number of patches 
+// and the resulotions are equal in both grids. */
+void interpolate_fields_from_old_grid_to_new_grid
+     (Grid_T *const ogrid/* old */,Grid_T *const ngrid/* new */,
+     const char *const field_names/* comma separated field names */,
+     const int copy/* if 1, only copy, if 0, only 3d interpolation */)
+{
+  FUNC_TIC
+  
+  /* some checks */
+  if (!ogrid || !ngrid || !field_names)
+  {
+    FUNC_TOC
+    printf(Pretty0"Empty argument(s)!\n");
+    return;
+  }
+  
+  char **fnames = read_separated_items_in_string(field_names,',');
+  Uint f;
+  
+  /* if it is interpolation */
+  if(copy == 0)
+  {
+    /* save points info for interpolation */
+    struct Interp_S
+    {
+      double X[3];/* X of old patch */
+      Patch_T *patch;/* old patch */
+    }**pnts = 0;
+    
+    /* find all points and pertinent patches */
+    pnts = calloc(ngrid->np,sizeof(*pnts));
+    IsNull(pnts);
+    OpenMP_Patch_Pragma(omp parallel for)
+    FOR_ALL_p(ngrid->np)
+    {
+      Patch_T *patch = ngrid->patch[p];
+      pnts[p] = calloc(patch->nn,sizeof(*pnts[p]));
+      IsNull(pnts[p]);
+      
+      FOR_ALL_ijk
+      {
+        pnts[p][ijk].patch = 
+          X_in_which_patch(pnts[p][ijk].X,ogrid->patch,ogrid->np);
+        
+        if (!pnts[p][ijk].patch) Error0("Point could not be found.");
+      }
+    }
+    
+    /* make coeffs */
+    f = 0;
+    while(fnames[f])
+    {
+      OpenMP_Patch_Pragma(omp parallel for)
+      FOR_ALL_p(ogrid->np)
+      {
+        Patch_T *patch = ogrid->patch[p];
+        Field_T *fld   = patch->fields[Ind(fnames[f])];
+        
+        if (fld->v)
+          make_coeffs_3d(fld);
+        else
+          Errors("There is no value for field '%s'.\n",fld->name);
+      }
+      f++;
+    }
+    
+    /* interpolates from old to new */
+    f = 0;
+    while(fnames[f])
+    {
+      printf(Pretty0"Interpolating '%s' from grid%u to grid%u\n",
+                                    fnames[f],ogrid->gn,ngrid->gn);
+      fflush(stdout);
+      
+      OpenMP_Patch_Pragma(omp parallel for)
+      FOR_ALL_p(ngrid->np)
+      {
+        Patch_T *patch = ngrid->patch[p];
+        Field_T *fld   = patch->fields[Ind(fnames[f])];
+        
+        empty_field(fld);
+        double *v = fld->v = alloc_double(patch->nn);
+        
+        FOR_ALL_ijk
+        {
+          v[ijk] = f_of_X(fnames[f],pnts[p][ijk].X,pnts[p][ijk].patch);
+        }
+      }
+      f++;
+    }
+    
+    /* free */
+    if(pnts)
+    FOR_ALL_p(ngrid->np)
+      Free(pnts[p])
+    Free(pnts);
+  } 
+  /* if copy */
+  else if (copy == 1)
+  {
+    /* number of patches must be equal */
+    if (ngrid->np != ogrid->np)
+      Error0("Number of patches are different for copy!\n");
+
+    f = 0;
+    while(fnames[f])
+    {
+      printf(Pretty0"Copying '%s' from grid%u to grid%u\n",
+             fnames[f],ogrid->gn,ngrid->gn);
+      fflush(stdout);
+      
+      OpenMP_Patch_Pragma(omp parallel for)
+      FOR_ALL_p(ngrid->np)
+      {
+        Patch_T *patch   = ngrid->patch[p];
+        Field_T *fld_new = patch->fields[Ind(fnames[f])];
+        Field_T *fld_old = ogrid->patch[p]->
+                           fields[LookUpField_E(fnames[f],ogrid->patch[p])];
+        assert(fld_old->v);
+        empty_field(fld_new);
+        double *v = fld_new->v = alloc_double(patch->nn);
+        
+        /* resolution must be equal */
+        if(patch->nn != ogrid->patch[p]->nn)
+          Error0("Resolution of patches are different for copy!\n");
+        
+        FOR_ALL_ijk
+          v[ijk] = fld_old->v[ijk];
+      }
+      f++;
+    }
+  }
+  else
+    Error0(NO_OPTION);
+  
+  free_2d(fnames);
+  
+  FUNC_TOC
+}

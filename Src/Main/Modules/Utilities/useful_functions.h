@@ -90,3 +90,10 @@ void superimpose_simple(Grid_T *const grid,
 
 
 
+void interpolate_fields_from_old_grid_to_new_grid
+     (Grid_T *const ogrid/* old */,Grid_T *const ngrid/* new */,
+     const char *const field_names/* comma separated field names */,
+     const int copy/* if 1 only copy, if 0 only 3d interpolation */);
+
+
+
