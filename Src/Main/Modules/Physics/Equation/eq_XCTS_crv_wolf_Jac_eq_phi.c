@@ -241,7 +241,8 @@ t1_e_;
      patch->grid->kind != Grid_SplitCubedSpherical_SNS)
     Error0("For this grid you need to figure out where to set phi = 0.\n");
 
-  if(IsItCovering(patch,"central_box"))
+
+  if(IsItCovering(patch,"left_central_box") || IsItCovering(patch,"right_central_box"))
   {
     const double Att_Con_Num = 1E-5;
     const double NS_center[3] = {Pgetd(EQ_PrefixIt("center_x")),
