@@ -15,6 +15,13 @@ void star_populate_psi_alphaPsi_matter_fields_TOV
       const char *const Phi,const char *const W);
 double star_NS_current_Euler_eq_const(Physics_T *const phys);
 
+void 
+star_print_properties
+  (Physics_T *const phys,
+  const char *const params,
+  FILE *const file,
+  const int pr_screen);
+
 #endif
 
 
