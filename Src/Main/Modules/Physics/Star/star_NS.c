@@ -310,9 +310,9 @@ void star_W_spin_vector_idealfluid_update(Physics_T *const phys,
   Grid_T *const grid = mygrid(phys,region);
   double Omega_NS[3],C_NS[3];
   
-  Omega_NS[0] = Getd("Omega_U0");
-  Omega_NS[1] = Getd("Omega_U1");
-  Omega_NS[2] = Getd("Omega_U2");
+  Omega_NS[0] = Getd("Omega_x");
+  Omega_NS[1] = Getd("Omega_y");
+  Omega_NS[2] = Getd("Omega_z");
   C_NS[0]     = Getd("center_x");
   C_NS[1]     = Getd("center_y");
   C_NS[2]     = Getd("center_z");
@@ -744,8 +744,7 @@ void star_NS_find_where_denthalpy_is_0(Physics_T *const phys,double xdh0[3])
   root->f[1]        = dh_dx1_root_finder_eq;
   root->f[2]        = dh_dx2_root_finder_eq;    
   params->patches   = grid->patch;
-  if (strstr_i(Gets("RootFinder_verbose"),"yes"))
-    root->verbose = 1;
+  root->verbose     = strstr_i(Gets("RootFinder_verbose"),"yes");
 
   plan_root_finder(root);
   NS_center = execute_root_finder(root);
