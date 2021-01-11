@@ -320,10 +320,10 @@ void bh_update_inner_BC(Physics_T *const phys)
     {
       fd_populate_alpha_KerrSchild(phys,"BH_around_IB","ibc_alpha");
     }
-    //else IF_sval("Eq_inner_BC_alpha","exp(-r^4)*KerrSchild")
-    //{
-      //fd_populate_alpha_exprm4_KerrSchild(phys,"BH_around_IB","ibc_alpha");
-    //}
+    else IF_sval("Eq_inner_BC_alpha","exp(-r^4)*KerrSchild")
+    {
+      fd_populate_alpha_expmr4_KerrSchild(phys,"BH_around_IB","ibc_alpha");
+    }
     else
     {
       Error0(NO_OPTION);

@@ -198,4 +198,11 @@ fd_modify_trK_to_exprm4trK_compute_dtrK
  const char *const dtrK
  );
 
+void 
+fd_populate_alpha_expmr4_KerrSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Alpha
+ );
 

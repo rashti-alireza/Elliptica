@@ -1010,6 +1010,51 @@ fd_populate_alpha_KerrSchild
   FUNC_TOC
 }
 
+/* populate alpha of exp(-r^4)*KerrSchild value. */
+void 
+fd_populate_alpha_expmr4_KerrSchild
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const Alpha
+ )
+{
+  FUNC_TIC
+  
+  AssureType(phys->ctype == BH)
+  
+  Grid_T *const grid = mygrid(phys,region);
+  const double BHx   = Getd("center_x");
+  const double BHy   = Getd("center_y");
+  const double BHz   = Getd("center_z");
+  const double R04   = pow(Pgetd(P_"RollOff_radius"),4.);
+  
+  fd_KerrSchild_set_params(phys);
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  FOR_ALL_p(grid->np)
+  {
+    Patch_T *patch = grid->patch[p];
+    fd_alpha_KerrSchild_patch(patch,BHx,BHy,BHz,Alpha);
+    
+    WRITE_v_STEM(alpha,Alpha);
+    
+    FOR_ALL_ijk
+    {
+      double x,y,z,r2;
+      
+      x = patch->node[ijk]->x[0]-BHx;
+      y = patch->node[ijk]->x[1]-BHy;
+      z = patch->node[ijk]->x[2]-BHz;
+      r2 = Pow2(x)+Pow2(y)+Pow2(z);
+      
+      alpha[ijk] *= exp(-Pow2(r2)/R04);
+    }
+  }
+  
+  FUNC_TOC
+}
+
 /* populate psi, alpha and beta Schwarzchild in isotropic coords value. */
 void 
 fd_populate_psi_alphaPsi_beta_IsoSchild
