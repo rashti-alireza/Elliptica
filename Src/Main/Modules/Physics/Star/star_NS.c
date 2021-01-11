@@ -251,8 +251,7 @@ int star_NS_idealfluid_gConf_find_Euler_const(Physics_T *const phys)
   root->x_gss       = guess;
   root->params      = params;
   root->f[0]        = Euler_eq_const_gConf_rootfinder_eq;
-  if (strstr_i(Gets("RootFinder_verbose"),"yes"))
-    root->verbose = 1;
+  root->verbose     = strstr_i(Gets("RootFinder_verbose"),"yes");
 
   plan_root_finder(root);
   
