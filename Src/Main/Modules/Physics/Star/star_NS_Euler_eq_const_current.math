@@ -1,7 +1,7 @@
 # find the current Euler equation const using:
 # C+h/u0+D_{i}phi*(D^{i}phi+W^{i})/(h*u0)-beta^{i}*D_{i}phi = 0.
-# Note: it uses only one point and one patch, mainly used for the very first
-#       Euler eq constant.
+# Note: it uses only one point and the central patch; 
+#       mainly used for the very first Euler eq constant.
 
 # Manifold or grid Dimension
 Dimension = 3;
