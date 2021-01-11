@@ -20,11 +20,13 @@ C_macro  = READ_v(name);
 `{`
 `  AssureType(phys->type == NS)`
 `  Grid_T *const grid = mygrid(phys,"NS");`
+`  char cover[99] = {'\0'};`
 ``
+`  sprintf(cover,"%s_%s",phys->spos,"central_box");`
 `  FOR_ALL_p(grid->np)`
 `  {`
 `  Patch_T *patch = grid->patch[p];`
-`  if (!IsItCovering(patch,"central_box"))`
+`  if (!IsItCovering(patch,cover))`
 `    continue;`
 ``
 `  Uint ijk = L(patch->n,patch->n[0]/2,patch->n[1]/2,patch->n[2]/2);`;
@@ -64,6 +66,7 @@ Euler_C = -enthalpy/u0 - dphiP/(enthalpy*u0) + beta(i)*dphi(-i);
 `  return Euler_C;`
 
 `  }`
+`  Error0("Could not find NS central patch!");`
 ``
 `  return DBL_MAX;`
 `}`

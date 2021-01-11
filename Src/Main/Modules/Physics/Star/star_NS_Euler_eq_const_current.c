@@ -13,11 +13,13 @@ double star_NS_current_Euler_eq_const(Physics_T *const phys)
 {
   AssureType(phys->type == NS)
   Grid_T *const grid = mygrid(phys,"NS");
+  char cover[99] = {'\0'};
 
+  sprintf(cover,"%s_%s",phys->spos,"central_box");
   FOR_ALL_p(grid->np)
   {
   Patch_T *patch = grid->patch[p];
-  if (!IsItCovering(patch,"central_box"))
+  if (!IsItCovering(patch,cover))
     continue;
 
   Uint ijk = L(patch->n,patch->n[0]/2,patch->n[1]/2,patch->n[2]/2);
@@ -64,6 +66,7 @@ dphi_D0[ijk] + beta_U1[ijk]*dphi_D1[ijk] + beta_U2[ijk]*dphi_D2[ijk]))/
 
   return Euler_C;
   }
+  Error0("Could not find NS central patch!");
 
   return DBL_MAX;
 }
