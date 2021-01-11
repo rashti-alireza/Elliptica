@@ -7,7 +7,7 @@ struct PHYSICS_T;
 
 
 int Tij_main(struct PHYSICS_T *const phys);
-
+void Tij_NS_IF_XCTS_gConf_u0(Patch_T *const patch);
 
 #endif
 
