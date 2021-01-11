@@ -43,7 +43,7 @@ Declare =
  (obj = Field,name = alphaPsi, rank = 0, C_macro);
 
  # Beta
- (obj = Field,name = Beta, rank = U, C_macro);
+ (obj = Field,name = beta, rank = U, C_macro);
 
  # Killing vector xi^i, assumed 0
  #(obj = Field,name = xi, rank = U, C_macro);
@@ -68,7 +68,7 @@ Ccode["  {"];
      psi4  = psi**(4);
      P2    = psim4*igConf(i,j)*dphi(-i)*dphi(-j)+2*dphi(-i)*W(i)+psi4*gConf(-i,-j)*W(i)*W(j);
      uW    = dphi(-i)*W(i)+psi4*gConf(-i,-j)*W(i)*W(j);
-     Bdphi = Beta(i)*dphi(-i);
+     Bdphi = beta(i)*dphi(-i);
      b     = (Bdphi-Euler_C)**2 + 2*(alpha**2)*uW;
      L2    = (b+(b**2-4*(alpha**4)*(uW**2))**(0.5))/(2*alpha**2);
      h2    = L2-P2;
