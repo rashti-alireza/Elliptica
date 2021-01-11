@@ -60,8 +60,8 @@ Declare =
  # d(phi)/d? for irrotional part of fluid
  #(obj = Field,name = dphi, rank = D, C_macro);
 
- # eta
- (obj = Field,name = eta, rank = 0, C_macro);
+ # alphaPsi
+ (obj = Field,name = alphaPsi, rank = 0, C_macro);
 
  # beta
  #(obj = Field,name = beta, rank = U, C_macro);
@@ -107,7 +107,7 @@ Symm[gConf(i,j)   = gConf(j,i)];
   `double B1_U2 = 0;`
 
    beta(i)    = B0(i)+B1(i);
-   alpha      = eta/psi;
+   alpha      = alphaPsi/psi;
    alpha2     = alpha**2;
    psi4       = psi**4;
    t(i)       = beta(i)+W(i)/(enthalpy*u0);
