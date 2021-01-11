@@ -13,6 +13,7 @@ void star_populate_psi_alphaPsi_matter_fields_TOV
       const char *const Psi,const char *const AlphaPsi,
       const char *const Enthalpy,const char *const Rho0,
       const char *const Phi,const char *const W);
+double star_NS_current_Euler_eq_const(Physics_T *const phys);
 
 #endif
 

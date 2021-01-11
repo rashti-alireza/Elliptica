@@ -78,6 +78,8 @@ double star_NS_idealfluid_gConf_root_force_bal(void *params,const double *const 
 void star_NS_find_where_denthalpy_is_0(Physics_T *const phys,double xdh0[3]);
 int star_NS_keep_center_fixed(Physics_T *const phys);
 void star_start_off_TOV (Physics_T *const phys);
+double star_NS_current_Euler_eq_const(Physics_T *const phys);
+
 
 #endif
 

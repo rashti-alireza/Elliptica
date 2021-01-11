@@ -1,0 +1,70 @@
+# find the current Euler equation const using:
+# C+h/u0+D_{i}phi*(D^{i}phi+W^{i})/(h*u0)-beta^{i}*D_{i}phi = 0.
+# Note: it uses only one point and one patch, mainly used for the very first
+#       Euler eq constant.
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+
+`#include "star_header.h"`
+`#include "physics_stress_energy_lib.h"`
+``
+``
+`double star_NS_current_Euler_eq_const(Physics_T *const phys);`
+`double star_NS_current_Euler_eq_const(Physics_T *const phys)`
+`{`
+`  AssureType(phys->type == NS)`
+`  Grid_T *const grid = mygrid(phys,"NS");`
+``
+`  FOR_ALL_p(grid->np)`
+`  {`
+`  Patch_T *patch = grid->patch[p];`
+`  if (!IsItCovering(patch,"central_box"))`
+`    continue;`
+``
+`  Uint ijk = L(patch->n,patch->n[0]/2,patch->n[1]/2,patch->n[2]/2);`;
+``
+`  Tij_NS_IF_XCTS_gConf_u0(patch);`
+``
+Declare = 
+{
+ # enthalpy
+ (obj = Field,name = enthalpy, rank = 0, C_macro);
+
+ # conformal metric inverse
+ (obj = Field,name = igConf, rank = UU, C_macro);
+
+ # spin part of fluid
+ (obj = Field,name = W, rank = U, C_macro);
+
+ # d(phi)/d? for irrotional part of fluid
+ (obj = Field,name = dphi, rank = D, C_macro);
+
+ # beta
+ (obj = Field,name = beta, rank = U, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # u0
+ (obj = Field,name = u0, rank = 0, C_macro);
+}
+# symmetries:
+Symm[igConf(i,j)  = igConf(j,i)];
+
+psim4 = psi**(-4);
+dphiP = psim4*igConf(i,j)*dphi(-i)*dphi(-j)+dphi(-i)*W(i);
+Euler_C = -enthalpy/u0 - dphiP/(enthalpy*u0) + beta(i)*dphi(-i);
+
+`  return Euler_C;`
+
+`  }`
+``
+`  return DBL_MAX;`
+`}`
+
