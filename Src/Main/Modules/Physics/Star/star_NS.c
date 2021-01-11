@@ -172,7 +172,7 @@ int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys)
   Free(adjust[2]);
   
   /* update stress energy tensor and related */
-  Seti("enthalpy_neat",0);
+  Sets("enthalpy_neat","no");
   physics(phys,STRESS_ENERGY_UPDATE);
   
   interp_s->field = denthalpy_D0;
