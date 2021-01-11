@@ -320,6 +320,10 @@ void bh_update_inner_BC(Physics_T *const phys)
     {
       fd_populate_alpha_KerrSchild(phys,"BH_around_IB","ibc_alpha");
     }
+    //else IF_sval("Eq_inner_BC_alpha","exp(-r^4)*KerrSchild")
+    //{
+      //fd_populate_alpha_exprm4_KerrSchild(phys,"BH_around_IB","ibc_alpha");
+    //}
     else
     {
       Error0(NO_OPTION);
@@ -334,7 +338,10 @@ void bh_update_inner_BC(Physics_T *const phys)
     {
       fd_populate_beta_ConfKerrSchild(phys,"BH_around_IB","ibc_beta");
     }
-    //else IF_sval("Eq_inner_BC_beta","omega x Xi")
+    else IF_sval("Eq_inner_BC_beta","alpha+Omega*r")
+    {
+      set_beta_inner_bc_alpha_omegaXr(phys,"BH_around_IB","ibc_beta");
+    }
     else
     {
       Error0(NO_OPTION);
@@ -407,3 +414,61 @@ gConf_D1D2[ijk] + pow(bh_sConf_U2[ijk], 2)*gConf_D2D2[ijk];
   
 }
 
+/* set inner BC for beta such that:
+// beta^i = alpha*s^i + Omega x r. */
+static void 
+set_beta_inner_bc_alpha_omegaXr
+ (
+ Physics_T *const phys,
+ const char *const region,
+ const char *const ib_Beta
+ )
+{
+ FUNC_TIC
+ 
+ AssureType(phys->ctype == BH)
+ 
+ Grid_T *const grid = mygrid(phys,region);
+ const double BH_center_x = Getd("center_x");
+ const double BH_center_y = Getd("center_y");
+ const double BH_center_z = Getd("center_z");
+ const double BH_Omega_U0 = Getd("Omega_x");
+ const double BH_Omega_U1 = Getd("Omega_y");
+ const double BH_Omega_U2 = Getd("Omega_z");
+ 
+ FOR_ALL_p(grid->np)
+ {
+   Patch_T *patch = grid->patch[p];
+   
+   READ_v(alphaPsi)
+   READ_v(psi)
+   READ_v(bh_sConf_U0)
+   READ_v(bh_sConf_U1)
+   READ_v(bh_sConf_U2)
+   REALLOC_v_WRITE_v_STEM(ibc_U0,ib_Beta)
+   REALLOC_v_WRITE_v_STEM(ibc_U1,ib_Beta)
+   REALLOC_v_WRITE_v_STEM(ibc_U2,ib_Beta)
+   
+   FOR_ALL_ijk
+   {
+     double x = patch->node[ijk]->x[0]-BH_center_x;
+     double y = patch->node[ijk]->x[1]-BH_center_y;
+     double z = patch->node[ijk]->x[2]-BH_center_z; 
+     
+     double alpha = alphaPsi[ijk]/psi[ijk];
+     double S_U0  = bh_sConf_U0[ijk]/pow(psi[ijk], 2);
+     double S_U1  = bh_sConf_U1[ijk]/pow(psi[ijk], 2);
+     double S_U2  = bh_sConf_U2[ijk]/pow(psi[ijk], 2);
+     
+     double OmegaXr_U0 = BH_Omega_U1*z - BH_Omega_U2*y;
+     double OmegaXr_U1 = -BH_Omega_U0*z + BH_Omega_U2*x;
+     double OmegaXr_U2 = BH_Omega_U0*y - BH_Omega_U1*x;
+
+     ibc_U0[ijk] =  OmegaXr_U0 + S_U0*alpha;
+     ibc_U1[ijk] =  OmegaXr_U1 + S_U1*alpha;
+     ibc_U2[ijk] =  OmegaXr_U2 + S_U2*alpha;
+   }
+ }
+ 
+ FUNC_TOC
+}
