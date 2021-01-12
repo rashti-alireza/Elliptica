@@ -687,9 +687,13 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
     grid_char->params[phys->igc]->r_min = Getd("min_radius");
     grid_char->params[phys->igc]->lmax  = lmax;
     grid_char->params[phys->igc]->occupied = 1;
+    
     free(Rnew_NS);
     free(h_res);
     free_root_finder(root);
+    Free(patches_NS);
+    Free(patches_Ar);
+    Free(patches_s);
   
     FUNC_TOC
     return;
