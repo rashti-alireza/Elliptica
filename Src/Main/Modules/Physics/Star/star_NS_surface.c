@@ -330,7 +330,6 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
       
       field->v[ijk] = extrap->extrap(demand);
      }
-     ++f;
     }
   }
   
@@ -357,8 +356,6 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
         Field_T *ddf = patch->fields[Ind(extrap->fld[f]->ddf[ii])];
         REMOVE_FIELD(ddf);
       }
-      
-      ++f;
     }
   }
   
