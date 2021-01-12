@@ -133,6 +133,8 @@ static int initialize_fields(Physics_T *const phys)
       Physics_T *const ns = init_physics(phys,NS);
       star_populate_psi_alphaPsi_matter_fields_TOV
         (ns,".*","psi_tov","alphaPsi_tov","enthalpy","rho0","phi","W");
+      /* alse we need NS spin vector */
+      star_W_spin_vector_idealfluid_update(ns,"NS");
       free_physics(ns);
       
       /* beta, phi,W and rho0 remain intact */
