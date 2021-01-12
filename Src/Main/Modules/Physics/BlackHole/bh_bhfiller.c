@@ -694,7 +694,7 @@ static int bhf_ChebTn_general_S2_CS(struct BHFiller_S *const bhf)
             _ddfddr[_i] += (KD[_i==_j]/rSurf - ox[_i]*ox[_j]/rSurf3)*df_dx[_j];
             _ddfddr[_i] += N[_j]*ddf_ddx[IJsymm3(_i,_j)];
           }
-          ddfddr += _ddfddr[_i]*N[_i]; \
+          ddfddr += _ddfddr[_i]*N[_i];
         }
         
         /* find and set the coeffs */
