@@ -10,6 +10,8 @@
 #define Ntheta_Ylm(lmax) (2*(lmax)+1)
 /* Ntheta*Nphi at Ylm */
 #define Ntotal_Ylm(lmax) (Ntheta_Ylm(lmax)*Nphi_Ylm(lmax))
+/* number of coeffs */
+#define Ncoeffs_Ylm(lmax) (((lmax)+1)*(lmax)/2 + (lmax)+1)
 
 struct INTERPOLATION_T;
 struct FIELD_T;
