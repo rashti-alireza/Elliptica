@@ -152,7 +152,7 @@ static double *root_finder_bisect_single(Root_Finder_T *const root)
   const double A = root->a_bisect;
   const double B = root->b_bisect;
   const char *const desc = root->description;
-  double *const x = alloc_double(n);
+  double *const x = root->x_sol;
   double a = A,b = B;
   double FA,FP,p[1] = {0},d;
   Uint i;
