@@ -43,6 +43,10 @@
 /* should i do spell check? */
 #define SPELL_CHECK (1)
 
+/* if 1, active some checks */
+#define DEBUGGING (0)
+
+
 /* dictionary variable for split cubed spherical */
 static const char *const Dictionary_SCS = 
        "(BH_around)(BH_around_IB)(BH_around_OB)"

@@ -955,11 +955,8 @@ void find_theta_phi_of_XYZ_CS(double *const theta,double *const phi,
   }
   
   /* more test */
-  if(1)
+  if(DEBUGGING)
   {
-    printf("Test:\n");
-    fflush(stdout);
-    
     double th = *theta;
     double ph = *phi;
     switch (side)
