@@ -352,10 +352,10 @@ const char *phys_autoindex_stype(Physics_T *const phys,
   if (!strcmp(stype,".*"))
     return ".*";
     
-  /* some checks: */
-  /* if there is no NS or BH */
+  /* if there is no NS or BH for instance it is outermost */
   if (!strstr(stype,"NS") && !strstr(stype,"BH"))
-      Errors("Argument '%s' is not supported!",stype);
+    return stype;
+  
   /* if two different object asked, right now this is not supported! */
   if (strstr(stype,"NS") && strstr(stype,"BH"))
       Errors("Two different objects (%s) are not supported!",stype);
@@ -371,7 +371,8 @@ const char *phys_autoindex_stype(Physics_T *const phys,
     return stype;
   
   /* having made sure everything is find now do a simple autoindex
-  // it replace NS (BH) with NSi (BHi) in which i is the correct index. */
+  // it replaces NS (BH) with NSi (BHi) in which i is the correct index. */
+  AssureType(phys->ctype == NS || phys->ctype == BH);
   regex_replace(stype,"(NS|BH)",phys->stype,phys->stemp);
   
   return phys->stemp;
