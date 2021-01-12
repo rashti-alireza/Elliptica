@@ -1053,7 +1053,8 @@ static void find_NS_surface_perfect_s2(Physics_T *const phys)
   grid_char->params[phys->igc]->r_max  = Getd("max_radius");
   grid_char->params[phys->igc]->lmax   = lmax;
   grid_char->params[phys->igc]->occupied = 1;
-
+  Seti("did_NS_surface_finder_work?",1);
+  
   Free(rbh);
   
   FUNC_TOC
