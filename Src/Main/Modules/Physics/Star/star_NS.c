@@ -306,6 +306,7 @@ void star_W_spin_vector_idealfluid_update(Physics_T *const phys,
                                           const char *const region)
 {
   FUNC_TIC
+  AssureType(phys->ctype == NS);
   
   Grid_T *const grid = mygrid(phys,region);
   double Omega_NS[3],C_NS[3];

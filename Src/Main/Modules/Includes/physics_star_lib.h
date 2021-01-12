@@ -22,6 +22,7 @@ star_print_properties
   FILE *const file,
   const int pr_screen);
 
+void star_W_spin_vector_idealfluid_update(Physics_T *const phys,const char *const region);
 #endif
 
 
