@@ -527,10 +527,9 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
                                Getd("center_y"),
                                Getd("center_z")};
   const Uint Nincr = 100;
-  Uint Npn,Npa,Nps;/* number of patches below: */
-  Patch_T **patches_NS = collect_patches(phys->grid,Ftype("NS"),&Npn);
-  Patch_T **patches_Ar = collect_patches(phys->grid,Ftype("NS_around"),&Npa);
-  Patch_T **patches_s  = collect_patches(phys->grid,Ftype("NS_OB"),&Nps);
+  Uint Np_h,Np_ob;/* number of patches below: */
+  Patch_T **patches_h  = collect_patches(phys->grid,Ftype("NS,NS_around"),&Np_h);
+  Patch_T **patches_ob = collect_patches(phys->grid,Ftype("NS_OB"),&Np_ob);
   double h_L2_res = 0;
   double theta,phi;
   double *Rnew_NS = 0;/* new R for NS */
@@ -577,7 +576,7 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
       /* find patch and X,Y,Z at NS surface in which theta and phi take place */
       X[2] = 1.;
       find_XYZ_and_patch_of_theta_phi_CS(X,&patch,NS_center,
-                                         theta,phi,patches_s,Nps);
+                                         theta,phi,patches_ob,Np_ob);
       
       /* find enthalpy at the (X,Y,Z) */
       Interpolation_T *interp_h = init_interpolation();
@@ -589,8 +588,6 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
       plan_interpolation(interp_h);
       h = execute_interpolation(interp_h);/* enthalpy */
       
-      //if (h <= 0)
-        //printf("WARNING: enthalpy = %g\n",h);
       assert(h > 0);
       
       free_interpolation(interp_h);
@@ -606,17 +603,9 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
       y2[1] = x[1]-NS_center[1];
       y2[2] = x[2]-NS_center[2];  
       
-      if(LSSEQL(h,1))/* if it takes place at NS patch */
-      {
-        par->hpatches = patches_NS;
-        par->Nph      = Npn;
-      }
-      else/* which means h = 1 occures in neighboring patch */
-      {
-        par->hpatches = patches_Ar;
-        par->Nph      = Npa;
-
-      }
+      par->hpatches = patches_h;
+      par->Nph      = Np_h;
+      
       /* having found hpatches, now find the the position of h = 1 */
       par->x0[0] = x[0];
       par->x0[1] = x[1];
@@ -694,9 +683,8 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
     free(Rnew_NS);
     free(h_res);
     free_root_finder(root);
-    Free(patches_NS);
-    Free(patches_Ar);
-    Free(patches_s);
+    Free(patches_h);
+    Free(patches_ob);
   
     FUNC_TOC
     return;
@@ -762,9 +750,8 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
   Setd("max_radius",Max_R_NS);
   Setd("min_radius",Min_R_NS);
   
-  Free(patches_NS);
-  Free(patches_Ar);
-  Free(patches_s);
+  Free(patches_h);
+  Free(patches_ob);
   
   UNUSED(NS_surface_denthalpy_dr_root_finder);
   FUNC_TOC
