@@ -16,7 +16,7 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
   const int  neat = strstr_i(Gets("enthalpy_neat"),"yes");
   const double Euler_const = Getd("Euler_equation_constant");
   
-  printf(Pretty0"weight update  = %e\n"
+  printf(Pretty0"update weight  = %e\n"
          Pretty0"neat it?       = %d\n"
          Pretty0"Euler constant = %e\n",
          W,neat,Euler_const);
