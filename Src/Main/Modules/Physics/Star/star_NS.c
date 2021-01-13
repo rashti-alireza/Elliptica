@@ -726,7 +726,7 @@ void star_NS_find_where_denthalpy_is_0(Physics_T *const phys,double xdh0[3])
 {
   FUNC_TIC
   
-  Grid_T *const grid = mygrid(phys,"NS,NS_around");
+  Grid_T *const grid = mygrid(phys,"NS");
   double *NS_center;
   struct NC_Center_RootFinder_S params[1] = {0};
   const double RESIDUAL = sqrt(Getd("RootFinder_Tolerance"));
@@ -745,6 +745,7 @@ void star_NS_find_where_denthalpy_is_0(Physics_T *const phys,double xdh0[3])
   root->f[1]        = dh_dx1_root_finder_eq;
   root->f[2]        = dh_dx2_root_finder_eq;    
   params->patches   = grid->patch;
+  params->Np        = grid->np;
   root->verbose     = strstr_i(Gets("RootFinder_verbose"),"yes");
 
   plan_root_finder(root);
@@ -779,7 +780,7 @@ static double dh_dx0_root_finder_eq(void *params,const double *const x)
 {
   struct NC_Center_RootFinder_S *const par = params;
   Patch_T **const patches = par->patches;
-  const Uint Np       = par->Np;
+  const Uint Np           = par->Np;
   Patch_T *const patch    = x_in_which_patch(x,patches,Np);
   Interpolation_T *interp_s;
   double interp,X[3];
@@ -807,12 +808,12 @@ static double dh_dx0_root_finder_eq(void *params,const double *const x)
   return interp;
 }
 
-/* dh/dx^1 = 1 */
+/* dh/dx^1 = 0 */
 static double dh_dx1_root_finder_eq(void *params,const double *const x)
 {
   struct NC_Center_RootFinder_S *const par = params;
   Patch_T **const patches = par->patches;
-  const Uint Np       = par->Np;
+  const Uint Np           = par->Np;
   Patch_T *const patch    = x_in_which_patch(x,patches,Np);
   Interpolation_T *interp_s;
   double interp,X[3];
@@ -845,7 +846,7 @@ static double dh_dx2_root_finder_eq(void *params,const double *const x)
 {
   struct NC_Center_RootFinder_S *const par = params;
   Patch_T **const patches = par->patches;
-  const Uint Np       = par->Np;
+  const Uint Np           = par->Np;
   Patch_T *const patch    = x_in_which_patch(x,patches,Np);
   Interpolation_T *interp_s;
   double interp,X[3];
