@@ -520,27 +520,30 @@ void print_root_finder_exit_status(const Root_Finder_T *const root)
   switch(root->exit_status)
   {
     case ROOT_FINDER_OK:
-      printf("Root finder found the root(s) up to the specified tolerance.\n");
+      printf(Pretty0"Root finder found the root(s) up to the specified tolerance.\n");
+      printf(Pretty0"Root finder residual = %e.\n",root->residual);
     break;
     case ROOT_FINDER_EXTREMA:
-      printf("Root finder hit an extrema.\n");
+      printf(Pretty0"Root finder hit an extrema.\n");
+      printf(Pretty0"Root finder residual = %e.\n",root->residual);
     break;
     case ROOT_FINDER_MAX_ITER:
-      printf("Root finder exceeded the maximum number of iteration.\n");
+      printf(Pretty0"Root finder exceeded the maximum number of iteration.\n");
+      printf(Pretty0"Root finder residual = %e.\n",root->residual);
     break;
     case ROOT_FINDER_NO_IMPROVEMENT:
-      printf("Root finder cannot improve the solution further.\n");
+      printf(Pretty0"Root finder cannot improve the solution further.\n");
+      printf(Pretty0"Root finder residual = %e.\n",root->residual);
     break;
     case ROOT_FINDER_INTERRUPTED:
-      printf("Root finder was interrupted.\n");
+      printf(Pretty0"Root finder was interrupted.\n");
     break;
     case ROOT_FINDER_NAN:
-      printf("Root finder failed with an abnormal residual.\n");
+      printf(Pretty0"Root finder failed with an abnormal residual.\n");
     break;
     default:
-      printf("The status is not defined.\n");
+      printf(Pretty0"The status is not defined.\n");
   }
-  
   fflush(stdout);
 }
 
