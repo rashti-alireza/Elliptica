@@ -20,6 +20,9 @@
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
 
+/* global variable for this file */
+static int Verbose = 0;
+
 /* root finder struct for NS surface eq */
 struct NS_surface_RootFinder_S
 {

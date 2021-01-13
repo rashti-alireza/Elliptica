@@ -175,15 +175,16 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
         int indxf = _Ind(extrap->fld[f]->df[ii]);
         if (indxf >= 0)
         {
-         make_coeffs_2d(patch->fields[indxf],0,1);
+          make_coeffs_2d(patch->fields[indxf],0,1);
         }
         else
         {
-         printf(Pretty0"compute %s in %s\n",
+          if(Verbose)
+            printf(Pretty0"compute %s in %s\n",
                        extrap->fld[f]->df[ii],patch->name);
-         extrap->fld[f]->did_add_df = 1;
-         Field_T *df = add_field(extrap->fld[f]->df[ii],0,patch,NO);
-         partial_derivative(df);
+          extrap->fld[f]->did_add_df = 1;
+          Field_T *df = add_field(extrap->fld[f]->df[ii],0,patch,NO);
+          partial_derivative(df);
         }
       }
       
@@ -197,11 +198,12 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
         }
         else
         {
-         printf(Pretty0"compute %s in %s\n",
+          if(Verbose)
+            printf(Pretty0"compute %s in %s\n",
                        extrap->fld[f]->ddf[ii],patch->name);
-         extrap->fld[f]->did_add_ddf = 1;
-         Field_T *ddf = add_field(extrap->fld[f]->ddf[ii],0,patch,NO);
-         partial_derivative(ddf);
+          extrap->fld[f]->did_add_ddf = 1;
+          Field_T *ddf = add_field(extrap->fld[f]->ddf[ii],0,patch,NO);
+          partial_derivative(ddf);
         }
       }
     }
@@ -211,20 +213,21 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
   OpenMP_1d_Pragma(omp parallel for)
   for (p = 0; p < npo; p++)
   {
-    Patch_T *patch = extrap->patches_out[p];
+    Patch_T *opatch = extrap->patches_out[p];
     Uint f = 0;
     
     for (f = 0; f < nf; ++f)
     {
      struct Demand_S demand[1] = {0};
      
-     Field_T *field = patch->fields[Ind(extrap->fld[f]->f)];
+     Field_T *field = 
+       opatch->fields[LookUpField_E(extrap->fld[f]->f,opatch)];
      empty_field(field);
-     field->v = alloc_double(patch->nn);
+     field->v = alloc_double(opatch->nn);
      
-     FOR_ALL_ijk
+     for(Uint ijk = 0; ijk < opatch->nn; ++ijk)
      {
-      Patch_T *patchp = 0;/* patch prime to be used for f,df,ddf */
+      Patch_T *patch = 0;/* patch inside NS to be used for f,df,ddf */
       double th = 0,ph = 0;
       double X[3] = {0}, N[3] = {0}, x[3] = {0};
       double KD[2]      = {0,1};
@@ -235,28 +238,31 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
       double rSurf,rSurf3,r;
       Uint d1,d2;/* derivative */
 
-      /* find th and ph and X */
-      find_theta_phi_of_XYZ_CS(&th,&ph,patch->node[ijk]->X,
-           patch->CoordSysInfo->CubedSphericalCoord->side);
-      /* find xp in patch_in */
-      X[2] = 1.;
-      find_XYZ_and_patch_of_theta_phi_CS(X,&patchp,NS_center,th,ph,
-                                        extrap->patches_in,npi);
-    
-      /* find r */
-      assert(x_of_X(x,X,patch));
-      x[0] -= NS_center[0];
-      x[1] -= NS_center[1];
-      x[2] -= NS_center[2];
-      r     = sqrt(Pow2(x[0])+Pow2(x[1])+Pow2(x[2]));
+      /* outside r,th,ph */
+      x[0]= opatch->node[ijk]->x[0]-NS_center[0];
+      x[1]= opatch->node[ijk]->x[1]-NS_center[1];
+      x[2]= opatch->node[ijk]->x[2]-NS_center[2];
+      r   = sqrt(Pow2(x[0])+Pow2(x[1])+Pow2(x[2]));
+      th = acos(x[2]/r);
+      ph = arctan(x[1],x[0]);
       
       /* normal vector */
       N[0]  = sin(th)*cos(ph);
       N[1]  = sin(th)*sin(ph);
       N[2]  = cos(th); 
+
+      /* find X and patch inside surface */
+      if (opatch->coordsys == CubedSpherical)
+      {
+        X[2] = 1.;
+        find_XYZ_and_patch_of_theta_phi_CS
+          (X,&patch,NS_center,th,ph,extrap->patches_in,npi);
+      }
+      else
+        Error0(NO_OPTION);
       
-      /* find rSurf */
-      assert(x_of_X(x,X,patchp));
+      /* find x and r at surface */
+      assert(x_of_X(x,X,patch));
       x[0] -= NS_center[0];
       x[1] -= NS_center[1];
       x[2] -= NS_center[2];
@@ -272,20 +278,20 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
       
       if (patch->coordsys == CubedSpherical)
       {
-        interp_s->K = patchp->n[2]-1;
+        interp_s->K = patch->n[2]-1;
       }
       else 
-       Error0(NO_OPTION);
+        Error0(NO_OPTION);
        
       /* f value at r = r0 = rSurf*/
-      interp_s->field = patchp->fields[Ind(extrap->fld[f]->f)];
+      interp_s->field = patch->fields[Ind(extrap->fld[f]->f)];
       plan_interpolation(interp_s);
       fr0 = execute_interpolation(interp_s);
        
       /* df/dx value */
       for (d1 = 0; d1 < 3; d1++)
       {
-        interp_s->field = patchp->fields[Ind(extrap->fld[f]->df[d1])];
+        interp_s->field = patch->fields[Ind(extrap->fld[f]->df[d1])];
         plan_interpolation(interp_s);
         df_dx[d1] = execute_interpolation(interp_s);
       }
@@ -296,7 +302,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
         for (d2 = d1; d2 < 3; d2++)
         {
           interp_s->field = 
-            patchp->fields[Ind(extrap->fld[f]->ddf[IJsymm3(d1,d2)])];
+            patch->fields[Ind(extrap->fld[f]->ddf[IJsymm3(d1,d2)])];
           plan_interpolation(interp_s);
           ddf_ddx[IJsymm3(d1,d2)] = execute_interpolation(interp_s);
         }
@@ -318,7 +324,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
           _ddfddr[_i] += (KD[_i==_j]/rSurf - x[_i]*x[_j]/rSurf3)*df_dx[_j];
           _ddfddr[_i] += N[_j]*ddf_ddx[IJsymm3(_i,_j)];
         }
-        ddfddr += _ddfddr[_i]*N[_i]; \
+        ddfddr += _ddfddr[_i]*N[_i];
       }
       
       /* extrap */
