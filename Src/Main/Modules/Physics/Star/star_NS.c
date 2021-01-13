@@ -663,7 +663,10 @@ static void adjust_NS_center_interpolation(Physics_T *const phys)
   
   /* if it is already located at the designted point */
   if (EQL(0,dR[0]) && EQL(0,dR[1]) && EQL(0,dR[2]))
+  {
+    FUNC_TOC
     return;
+  }
     
   FOR_ALL_PATCHES(p,grid)
   {
@@ -907,7 +910,10 @@ static void adjust_NS_center_Taylor_expansion(Physics_T *const phys)
   
   /* if it is already located at the designted point */
   if (EQL(0,dR[0]) && EQL(0,dR[1]) && EQL(0,dR[2]))
+  {
+    FUNC_TOC
     return;
+  }
   
   if (!patch_center)
     Error0("could not find the pertinent patch!");
