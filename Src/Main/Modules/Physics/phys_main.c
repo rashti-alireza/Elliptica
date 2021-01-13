@@ -356,13 +356,30 @@ const char *phys_autoindex_stype(Physics_T *const phys,
   if (!strstr(stype,"NS") && !strstr(stype,"BH"))
     return stype;
   
-  /* if two different object asked, right now this is not supported! */
+  /* if two different object asked */
   if (strstr(stype,"NS") && strstr(stype,"BH"))
-      Errors("Two different objects (%s) are not supported!",stype);
+  {
+    if (phys->grid->kind == Grid_SplitCubedSpherical_BHNS)
+      return stype;
+    else
+      Errors("%s is not supported!\n",stype);
+  }
+  
   if (strstr(stype,"BH1") && strstr(stype,"BH2"))
-      Errors("Two different objects (%s) are not supported!",stype);
+  {
+    if (phys->grid->kind == Grid_SplitCubedSpherical_BHBH)
+      return stype;
+    else
+      Errors("%s is not supported!\n",stype);
+  }
+  
   if (strstr(stype,"NS1") && strstr(stype,"NS2"))
-      Errors("Two different objects (%s) are not supported!",stype);
+  {
+    if (phys->grid->kind == Grid_SplitCubedSpherical_NSNS)
+      return stype;
+    else
+      Errors("%s is not supported!\n",stype);
+  }
   
   /* if indices 1 or 2 is already taken into account 
   // or the object doesn't have any index, don't change anything. */
