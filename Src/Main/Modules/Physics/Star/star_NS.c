@@ -774,7 +774,9 @@ void star_NS_find_where_denthalpy_is_0(Physics_T *const phys,double xdh0[3])
   else
   {
     print_root_finder_exit_status(root);
-    Error0("NS center could not be found.\n");
+    xdh0[0] = guess[0];
+    xdh0[1] = guess[1];
+    xdh0[2] = guess[2];
   }
   
   free_root_finder(root);
