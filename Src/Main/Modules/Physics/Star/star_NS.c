@@ -645,6 +645,8 @@ static void parse_adjust_parameter(const char *const par,char *adjust[3])
 // finally update the enthalpy and its derivatives. */
 static void adjust_NS_center_interpolation(Physics_T *const phys)
 {
+  FUNC_TIC
+  
   Grid_T *const grid  = mygrid(phys,"NS,NS_around");
   double NS_center[3] = {Getd("center_x"),
                          Getd("center_y"),
@@ -718,6 +720,8 @@ static void adjust_NS_center_interpolation(Physics_T *const phys)
     dField_di(denthalpy_D1);
     dField_di(denthalpy_D2);
   }
+  
+  FUNC_TOC
 }
 
 /* find the NS center (coords where denthalpy is 0) 
@@ -880,6 +884,8 @@ static double dh_dx2_root_finder_eq(void *params,const double *const x)
 // the enthalpy be 0 at NS center, using Taylor expansion. */
 static void adjust_NS_center_Taylor_expansion(Physics_T *const phys)
 {
+  FUNC_TIC
+  
   Grid_T *const grid  = mygrid(phys,"NS,NS_around");
    
   double NS_center[3] = {Getd("center_x"),
@@ -932,6 +938,7 @@ static void adjust_NS_center_Taylor_expansion(Physics_T *const phys)
     dField_di(denthalpy_D2);
   }
   
+  FUNC_TOC
 }
 
 /* populate psi, alphaPsi, enthalpy, phi and W fields using
