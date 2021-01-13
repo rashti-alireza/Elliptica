@@ -873,7 +873,14 @@ void interpolate_fields_from_old_grid_to_new_grid
       {
         Patch_T *opatch = 
           x_in_which_patch(patch->node[ijk]->x,ogrid->patch,ogrid->np);
-        if (!opatch) Error0("Point could not be found.");
+        if (!opatch) 
+        {
+          fprintf(stderr,"x = (%g,%g,%g) could not be found!\n",
+                  patch->node[ijk]->x[0],
+                  patch->node[ijk]->x[1],
+                  patch->node[ijk]->x[2]);
+          Error0("Point could not be found.");
+        }
         
         pnts[p][ijk].patch = opatch;
         X_of_x(pnts[p][ijk].X,patch->node[ijk]->x,opatch);
