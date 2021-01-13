@@ -570,28 +570,13 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
       
       Patch_T *patch = 0;
       double y2[3] = {0};
-      double h,*dr,a,b,Fa,Fb;
+      double *dr,a,b,Fa,Fb;
       Uint iincr;
       
       /* find patch and X,Y,Z at NS surface in which theta and phi take place */
       X[2] = 1.;
       find_XYZ_and_patch_of_theta_phi_CS(X,&patch,NS_center,
                                          theta,phi,patches_ob,Np_ob);
-      
-      /* find enthalpy at the (X,Y,Z) */
-      Interpolation_T *interp_h = init_interpolation();
-      interp_h->field = patch->fields[Ind("enthalpy")];
-      interp_h->XY_dir_flag  = 1;
-      interp_h->X            = X[0];
-      interp_h->Y            = X[1];
-      interp_h->K            = patch->n[2]-1;
-      plan_interpolation(interp_h);
-      h = execute_interpolation(interp_h);/* enthalpy */
-      
-      assert(h > 0);
-      
-      free_interpolation(interp_h);
-      
       /* finding x */
       assert(x_of_X(x,X,patch));
       
@@ -605,12 +590,10 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
       
       par->hpatches = patches_h;
       par->Nph      = Np_h;
-      
-      /* having found hpatches, now find the the position of h = 1 */
-      par->x0[0] = x[0];
-      par->x0[1] = x[1];
-      par->x0[2] = x[2];
-      par->N     = N;
+      par->x0[0]    = x[0];
+      par->x0[1]    = x[1];
+      par->x0[2]    = x[2];
+      par->N        = N;
       /* set [a,b] for bisect */
       a  = -0.1;
       b  = 0.1;
