@@ -21,6 +21,8 @@ const double *const V2CM = par->V2CM;
 double Omega = 0, y_CM = 0, x_CM = 0;
 Uint ijk;
 
+if(!Pcmps("ADM_B1I_form","inspiral")) Error0(NO_OPTION);
+
 if(par->find_y_CM)
 {
   Omega = par->Omega;
