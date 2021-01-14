@@ -9,7 +9,7 @@
 #define TAB     '\t'
 #define END      0
 #define EQUAL   '='
-#define MAX_NUM_CHAR 3000
+#define MAX_NUM_CHAR (9999)
 
 enum FLOW {e_Left,e_Right};
 
