@@ -264,17 +264,18 @@ void bh_tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
   observe(phys,"Komar(M)",Gets("Observe_Komar_M"),&Komar_mass);
   
   printf(Pretty0"current BH irreducible mass = %e\n",irr_mass);
-  printf(Pretty0"current BH Komar mass      = %e\n",Komar_mass);
+  printf(Pretty0"current BH Komar mass       = %e\n",Komar_mass);
   
   Setd("irreducible_mass_current",irr_mass);
   Setd("Komar_mass",Komar_mass);
   
   dM = fabs(irr_mass/target_bh_mass-1);
   dr = -current_r_bh*(irr_mass/target_bh_mass-1);
+  
+  printf(Pretty0"update weight = %e\n",W);
   if (EQL(W,0))
   {
     dr = 0;
-    printf(Pretty0"updating weight factor is zero.\n");
   }
   if (LSSEQL(dM,dM_tolerance)) 
   {

@@ -18,7 +18,9 @@ int sys_tune_ADM_momenta(Physics_T *const phys)
   double adm_p[3] = {0};
   double adm_j[3] = {0};
   
-  printf(Pretty0"%s\n",par);
+  printf(Pretty0"method        = %s\n",par);
+  printf(Pretty0"update weight = %e\n",
+        sysGetd("P_ADM_control_update_weight"));
   
   parse_adjust_parameter(par,adjust);
   

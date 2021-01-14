@@ -143,8 +143,10 @@ int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys)
   plan_interpolation(interp_s);
   dh1[2] = execute_interpolation(interp_s);
   
-  /* show method */  
-  printf(Pretty0"method = %s\n",par);
+  /* show info */  
+  printf(Pretty0"method        = %s\n",par);
+  printf(Pretty0"update weight = %e\n",
+         Getd("force_balance_update_weight"));
   
   /* set functions method */
   parse_adjust_parameter(par,adjust);
@@ -236,7 +238,7 @@ int star_NS_ifluid_gConf_find_EulerC_fix_baryon_mass(Physics_T *const phys)
 
   printf(Pretty0"current NS baryonic mass = %e\n",bar_mass);
   printf(Pretty0"current NS ADM mass      = %e\n",adm_mass);
-  printf(Pretty0"current NS Komar mass   = %e\n",Komar_mass);
+  printf(Pretty0"current NS Komar mass    = %e\n",Komar_mass);
   
   Setd("baryonic_mass_current",bar_mass);
   Setd("ADM_mass",adm_mass);
@@ -252,10 +254,10 @@ int star_NS_ifluid_gConf_find_EulerC_fix_baryon_mass(Physics_T *const phys)
   root->params      = params;
   root->f[0]        = Euler_eq_const_gConf_rootfinder_eq;
   root->verbose     = strstr_i(Gets("RootFinder_verbose"),"yes");
-
   plan_root_finder(root);
-  
   Euler_const       = execute_root_finder(root);
+  
+  printf(Pretty0"update weight = %e\n",W1);
   /* if root finder is not OK for some reason */
   if (GRT(root->residual,RESIDUAL))
     Euler_const[0] = guess[0];/* don't update */
