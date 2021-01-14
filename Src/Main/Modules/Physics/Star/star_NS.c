@@ -538,8 +538,9 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   sprintf(s,"%s_%s",phys->ssys,par);
   Psetd(s,new_par[0]);
   
-  /* update B1 */
+  /* update */
   physics(phys,ADM_UPDATE_B1I);
+  physics(phys,ADM_UPDATE_beta);
   
   free_root_finder(root);
 }
