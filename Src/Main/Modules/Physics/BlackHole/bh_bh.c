@@ -290,11 +290,11 @@ void bh_tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
   
   if (EQL(dr,0))/* => no change in AH surface */
   {
-    Seti("did_AH_surface_change?",0);
+    Seti("did_BH_surface_change?",0);
   }
   else          /* => change in AH surface */
   {
-    Seti("did_AH_surface_change?",1);
+    Seti("did_BH_surface_change?",1);
   }
   
 }
