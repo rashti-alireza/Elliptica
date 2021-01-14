@@ -72,7 +72,10 @@ static int tune_star_Euler_constant(Physics_T *const phys)
     if (Pcmps(P_"NS_fluid","ideal_fluid") && 
         Pcmps(P_"NS_gConf","general"))
     {
-      ret = star_NS_idealfluid_gConf_find_Euler_const(phys);
+      IF_sval("Euler_const_criteria","fix_baryonic_mass")
+        ret = star_NS_idealfluid_gConf_find_Euler_const(phys);
+      else
+        Error0(NO_OPTION);
     }
     else
       Error0(NO_OPTION);
