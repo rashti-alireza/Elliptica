@@ -56,7 +56,7 @@ struct Force_Balance_RootFinder_S
 
 
 
-int star_NS_idealfluid_gConf_find_Euler_const(Physics_T *const phys);
+int star_NS_ifluid_gConf_find_EulerC_fix_baryon_mass(Physics_T *const phys);
 double star_NS_baryonic_gConf_mass(Physics_T *const phys,const double Euler_C);
 void star_NS_idealfluid_gConf_add_fields(Grid_T *const grid);
 int star_NS_idealfluid_extrapolate_matter_fields(Physics_T *const phys);

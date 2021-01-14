@@ -217,7 +217,7 @@ int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys)
 }
 
 /* find Euler equation constant to meet NS baryonic mass */
-int star_NS_idealfluid_gConf_find_Euler_const(Physics_T *const phys)
+int star_NS_ifluid_gConf_find_EulerC_fix_baryon_mass(Physics_T *const phys)
 {
   FUNC_TIC
   

@@ -3,7 +3,7 @@
 
 typedef void fAdjustment_t (Physics_T *const phys);
 
-int star_NS_idealfluid_gConf_find_Euler_const(Physics_T *const phys);
+int star_NS_ifluid_gConf_find_EulerC_fix_baryon_mass(Physics_T *const phys);
 int star_NS_idealfluid_extrapolate_matter_fields(Physics_T *const phys);
 int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys);
 static double Euler_eq_const_gConf_rootfinder_eq(void *params,const double *const x);
