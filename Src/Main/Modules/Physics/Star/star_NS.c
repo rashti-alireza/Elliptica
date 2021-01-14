@@ -508,7 +508,7 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
     Error0(NO_OPTION);
   
   sprintf(s,"Solving Force Balance Eq. "
-               "for '%s' at direction 'x^%d'",par,dir);
+               "for '%s' at direction 'x^%d'\n",par,dir);
   
   Root_Finder_T *root = init_root_finder(1);
   root->description   = s;
@@ -518,8 +518,7 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   root->x_gss         = guess;
   root->params        = params;
   root->f[0]          = star_NS_idealfluid_gConf_root_force_bal;
-  if (strstr_i(Gets("RootFinder_verbose"),"yes"))
-    root->verbose = 1;
+  root->verbose       = strstr_i(Gets("RootFinder_verbose"),"yes");
   
   plan_root_finder(root);
   
@@ -541,10 +540,6 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   /* update parameter */
   sprintf(s,"%s_%s",phys->ssys,par);
   Psetd(s,new_par[0]);
-  
-  /* since B1 has been changed let's update the pertinent fields */
-  Error0("WHAT TO DO for B?");//update_B1_dB1_Beta_dBete_Aij_dAij(grid);
-  // ??Physics(phys,UPDATE_SHIFT_GAUGE);
   
   free_root_finder(root);
 }
