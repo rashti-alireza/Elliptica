@@ -437,6 +437,9 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   Patch_T *patch    = 0;
   char s[999] = {'\0'};
   
+  printf(Pretty0"Solving Force Balance Eq. for '%s' at direction 'x^%d'\n",
+         par,dir);
+  
   /* initial values before adjustments */
   patch = x_in_which_patch(NS_center,grid->patch,grid->np);
   assert(patch);
@@ -507,11 +510,7 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   else
     Error0(NO_OPTION);
   
-  sprintf(s,"Solving Force Balance Eq. "
-               "for '%s' at direction 'x^%d'\n",par,dir);
-  
   Root_Finder_T *root = init_root_finder(1);
-  root->description   = s;
   root->type          = Gets("RootFinder_Method");
   root->tolerance     = Getd("RootFinder_Tolerance");
   root->MaxIter       = (Uint)Geti("RootFinder_Iteration");
@@ -519,9 +518,7 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   root->params        = params;
   root->f[0]          = star_NS_idealfluid_gConf_root_force_bal;
   root->verbose       = strstr_i(Gets("RootFinder_verbose"),"yes");
-  
   plan_root_finder(root);
-  
   new_par = execute_root_finder(root);
   
   if (root->exit_status != ROOT_FINDER_OK && GRT(root->residual,RESIDUAL))
@@ -540,6 +537,9 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   /* update parameter */
   sprintf(s,"%s_%s",phys->ssys,par);
   Psetd(s,new_par[0]);
+  
+  /* update B1 */
+  physics(phys,ADM_UPDATE_B1I);
   
   free_root_finder(root);
 }
