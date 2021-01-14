@@ -101,7 +101,7 @@ Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 Symm[ddphi(i,j)       = ddphi(j,i)];
 
 `  const double rhoc = Pgetd(EQ_PrefixIt("rho_center"));`
-`  const double e    = Pgetd(EQ_PrefixIt("phi_polish"));`
+`  const double e    = Pgetd(EQ_PrefixIt("Eq_phi_polish"));`
 `  const double att  = e*rhoc;`
 
 ##########################################################################

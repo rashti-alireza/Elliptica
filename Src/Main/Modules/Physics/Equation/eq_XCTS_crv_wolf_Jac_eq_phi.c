@@ -70,7 +70,7 @@ void *eq_XCTS_curve_Wolf_ddm_jacobian_eq_phi(void *vp1,void *vp2)
 
 
   const double rhoc = Pgetd(EQ_PrefixIt("rho_center"));
-  const double e    = Pgetd(EQ_PrefixIt("phi_polish"));
+  const double e    = Pgetd(EQ_PrefixIt("Eq_phi_polish"));
   const double att  = e*rhoc;
   DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN
 
