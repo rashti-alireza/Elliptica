@@ -12,20 +12,25 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
   FUNC_TIC
   
   Grid_T *const grid  = mygrid(phys,"NS");
+  Patch_T *patch      = 0;
   const double W  = Getd("enthalpy_update_weight");
   const int  neat = strstr_i(Gets("enthalpy_neat"),"yes");
   const double Euler_const = Getd("Euler_equation_constant");
-  
+  const double NS_center[3] = {Getd("center_x"),
+                               Getd("center_y"),
+                               Getd("center_z")};
+  double X[3] = {0};
+                                 
   printf(Pretty0"update weight  = %e\n"
          Pretty0"neat it?       = %d\n"
          Pretty0"Euler constant = %e\n",
          W,neat,Euler_const);
   fflush(stdout);
-         
+  
+  EoS_T *eos     = init_EoS(phys);
   FOR_ALL_p(grid->np)
   {
-    Patch_T *patch = grid->patch[p];
-    EoS_T *eos     = init_EoS(phys);
+    patch = grid->patch[p];
     
     RELAX_UPDATE_FUNC(Tij_NS_IF_XCTS_gConf_enthalpy(patch,Euler_const),
                       patch,enthalpy,W);
@@ -40,9 +45,27 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
     Tij_NS_IF_XCTS_gConf_psi6J_Ui(patch);
     Tij_NS_IF_XCTS_gConf_psi6E(patch,eos);
     Tij_NS_IF_XCTS_gConf_psi6S(patch,eos);
-    
-    free_EoS(eos);
   }
+  
+  /* update central quantities */
+  Interpolation_T *interp_s = init_interpolation();
+  patch = x_in_which_patch(NS_center,grid->patch,grid->np);
+  assert(patch);
+  assert(X_of_x(X,NS_center,patch));
+  interp_s->field = patch->fields[Ind("enthalpy")];
+  interp_s->X = X[0];
+  interp_s->Y = X[1];
+  interp_s->Z = X[2];
+  interp_s->XYZ_dir_flag = 1;
+  plan_interpolation(interp_s);
+  eos->h = execute_interpolation(interp_s);
+  free_interpolation(interp_s);
+  
+  Setd("rho_center",eos->rest_mass_density(eos));
+  Setd("pressure_center",eos->pressure(eos));
+  Setd("energy_density_center",eos->energy_density(eos));
+  
+  free_EoS(eos);
   
   FUNC_TOC
 }
