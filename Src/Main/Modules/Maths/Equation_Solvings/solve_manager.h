@@ -4,7 +4,9 @@
 #include "maths_matrix_solvers_lib.h"
 #include "maths_equation_solvings_lib.h"
 
-#define STR_LEN (999)
+#define STR_LEN0  (100)
+#define STR_LEN1  (200)
+#define STR_LEN2  (400)
 
 /* equation data base prefix name convention */
 #define Prefix_EQ     "eq_"

@@ -60,10 +60,10 @@ void initialize_solving_man(Grid_T *const grid,
                             sEquation_T **const jacobian_bc_eq,
                             const char *const par_prefix/* prefix for eq param, ex: Eq_phi1 */)
 {
-  const char *par_f = Pgets("solve_Order");
-  char eq_fname[STR_LEN]  = {'\0'};
-  char par_fname[STR_LEN] = {'\0'};
-  char val_fname[STR_LEN] = {'\0'};
+  const char *par_f = Pgets("solve_order");
+  char eq_fname[STR_LEN1]  = {'\0'};
+  char par_fname[STR_LEN0] = {'\0'};
+  char val_fname[STR_LEN0] = {'\0'};
   char **field_name = 0;
   char *tok  = 0;
   char *save = 0;
@@ -173,7 +173,7 @@ static fEquation_T *get_field_eq(const char *const name,
                                  const char *const prefix)
 {
   fEquation_T *eq = 0;
-  char eq_name[STR_LEN] = {'\0'};
+  char eq_name[STR_LEN2] = {'\0'};
   Uint i;
   
   sprintf(eq_name,"%s%s",prefix,name);
