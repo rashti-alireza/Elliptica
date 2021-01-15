@@ -149,10 +149,10 @@ void initialize_solving_man(Grid_T *const grid,
       }
       
       patch->solving_man->field_name[i] = dup_s(field_name[i]);
-      patch->solving_man->field_eq[i]   = get_field_eq(eq_fname,field_eq);
-      patch->solving_man->bc_eq[i]      = get_field_eq(eq_fname,bc_eq);
-      patch->solving_man->jacobian_field_eq[i] = get_field_eq(eq_fname,jacobian_field_eq);
-      patch->solving_man->jacobian_bc_eq[i]    = get_field_eq(eq_fname,jacobian_bc_eq);
+      patch->solving_man->field_eq[i]   = get_field_eq(eq_fname,field_eq,Prefix_EQ);
+      patch->solving_man->bc_eq[i]      = get_field_eq(eq_fname,bc_eq,Prefix_BC);
+      patch->solving_man->jacobian_field_eq[i] = get_field_eq(eq_fname,jacobian_field_eq,Prefix_Jac_EQ);
+      patch->solving_man->jacobian_bc_eq[i]    = get_field_eq(eq_fname,jacobian_bc_eq,Prefix_Jac_BC);
     }
       
     patch->solving_man->nf    = nf;
@@ -168,17 +168,22 @@ void initialize_solving_man(Grid_T *const grid,
 // it returns the corresponding equation to that given name.
 // ->return value: found equation, error if not found
 */
-fEquation_T *get_field_eq(const char *const name, sEquation_T **const db)
+static fEquation_T *get_field_eq(const char *const name, 
+                                 sEquation_T **const db,
+                                 const char *const prefix)
 {
   fEquation_T *eq = 0;
+  char eq_name[STR_LEN] = {'\0'};
   Uint i;
   
+  sprintf(eq_name,"%s%s",prefix,name);
+  
   if (!db)
-    return 0;
+    Error0("Empty data base!");
   
   for (i = 0; db[i] != 0; ++i)
   {
-    if (strstr_i(db[i]->name,name))
+    if (strcmp_i(db[i]->name,eq_name))
     {
       eq = db[i]->eq;
       break;
@@ -186,10 +191,7 @@ fEquation_T *get_field_eq(const char *const name, sEquation_T **const db)
   }
   
   if (!eq)
-    Errors("No such equation for \"%s\" exists.\n"
-    "Note: if it is a Jacobian E.Q. and supposed to be for couple of fields, \n"
-    "the naming convenstion is jacobian_f1_f2_... \n"
-    "i.e. every related field must be mentioned in the name of function.\n",name);
+    Errors("No such equation \"%s\" found!",eq_name);
   
   return eq;
 }
