@@ -846,7 +846,6 @@ void interpolate_fields_from_old_grid_to_new_grid
     return;
   }
   
-  const double Tolerance = 1E-3;/* just a benign guess! */
   char **fnames = read_separated_items_in_string(field_names,',');
   Uint f;
   
@@ -874,30 +873,20 @@ void interpolate_fields_from_old_grid_to_new_grid
       {
         Patch_T *opatch = 
           x_in_which_patch(patch->node[ijk]->x,ogrid->patch,ogrid->np);
-        if (!opatch) 
+
+        /* approximate it */
+        if (!opatch)
         {
-          /* force it to be the similar patch in the old grid */
-          if (ngrid->np == ogrid->np)
-          {
-            opatch = ogrid->patch[p];
-            /* test it */
-            double test_X[3] = {0},test_x[3] = {0};
-            double test_dx;
-            X_of_x(test_X,patch->node[ijk]->x,opatch);
-            x_of_X(test_x,test_X,opatch);
-            test_dx = L2_norm(3,test_x,patch->node[ijk]->x);
-            if (GRT(test_dx,Tolerance))
-              printf(Pretty0"An interpolating point got x difference = "
-                     "%e.\n",test_dx);
-          }
-          else
-          {
-            fprintf(stderr,"x = (%g,%g,%g) could not be found!\n",
-                    patch->node[ijk]->x[0],
-                    patch->node[ijk]->x[1],
-                    patch->node[ijk]->x[2]);
-            Error0("Point could not be found.");
-          }
+          opatch = 
+            x_in_closest_patch(patch->node[ijk]->x,ogrid->patch,ogrid->np);
+          /* test it */
+          double test_X[3] = {0},test_x[3] = {0};
+          double test_dx;
+          X_of_x(test_X,patch->node[ijk]->x,opatch);
+          x_of_X(test_x,test_X,opatch);
+          test_dx = L2_norm(3,test_x,patch->node[ijk]->x);
+          printf(Pretty0"An interpolating point got x difference = "
+                   "%e.\n",test_dx);
         }
         pnts[p][ijk].patch = opatch;
         X_of_x(pnts[p][ijk].X,patch->node[ijk]->x,opatch);
