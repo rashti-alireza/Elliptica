@@ -140,6 +140,7 @@ void initialize_solving_man(Grid_T *const grid,
           Errors("Could not find comma in parameter '%s'!",par_fname);
         }
         aux[0] = '\0';
+        aux = val_fname;
         sprintf(eq_fname,"%s_%s",aux,field_name[i]);
       }
       else
