@@ -233,11 +233,6 @@ static int set_star_params(Physics_T *const phys)
     // general:  => general gConf. */
     Pset_default(P_"NS_gConf","general");
     
-    /* how to extrapolate matter fields outside the NS :
-    // options:
-    // slop_method: required to have C^2 field across the boundary. */
-    Pset_default(P_"NS_extrapolate_matter_fields","poly2");
-    
     /* soft parameters: */
     
     /* how to start off at the very beginning:
@@ -267,6 +262,16 @@ static int set_star_params(Physics_T *const phys)
     // ======
     // surface_Ylm_max_l .*/
     
+    /* how to extrapolate matter fields outside the NS :
+    //
+    // param:
+    // ======
+    // extrapolate_matter_fields
+    //
+    // options:
+    // ========
+    // poly2: C^2 continuity across the boundary using a 2nd-order polynomial.
+    // exp2 : C^2 continuity across the boundary using a exponential. */
     
     /* which root finder to be used to find NS surface:
     //
