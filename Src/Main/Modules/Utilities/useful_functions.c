@@ -882,6 +882,7 @@ void interpolate_fields_from_old_grid_to_new_grid
           /* test it */
           double test_X[3] = {0},test_x[3] = {0};
           double test_dx;
+          assert(opatch);
           X_of_x(test_X,patch->node[ijk]->x,opatch);
           x_of_X(test_x,test_X,opatch);
           test_dx = L2_norm(3,test_x,patch->node[ijk]->x);
