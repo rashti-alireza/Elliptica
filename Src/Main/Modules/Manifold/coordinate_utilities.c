@@ -1148,7 +1148,7 @@ Patch_T *x_in_which_patch(const double x[3],Patch_T **const patches,
   return 0;
 }
 
-/* ->: closest patch that has the Cartesian point x.
+/* ->: closest patch that has the Cartesian point x; null if failes.
 // get a Cartesian point x and collection of patches,
 // it returns the closest patch that has this point.
 // Np is the number of patches. 
@@ -1173,12 +1173,15 @@ Patch_T *x_in_closest_patch(const double x[3],Patch_T **const patches,
     X_of_x(X,x,patch);
     x_of_X(xp,X,patch);
     dx = L2_norm(3,x,xp);
-    if (dx < min)
+    if (dx < min && isfinite(dx))
     {
       pmin = p;
       min  = dx;
     }
   }
+  
+  if (pmin == UINT_MAX)
+    return 0;
   
   return patches[pmin];
 }
