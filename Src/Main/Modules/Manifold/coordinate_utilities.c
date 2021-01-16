@@ -1037,7 +1037,7 @@ find_XYZ_and_patch_of_theta_phi_CS
     double a = 0, b = 0;
     double a_sign = 0,b_sign = 0,c_sign = 0;
     double x[3],phi2,theta2,r;
-    int IsInside;
+    int is_inside;
     
     /* first calculate the magnetitude of a and b 
     // which are related to X[0] and X[1] with a sign */
@@ -1109,14 +1109,14 @@ find_XYZ_and_patch_of_theta_phi_CS
     X[1] = fabs(b)*b_sign;
     
     /* check if x of X really gives you the correct angles */
-    IsInside = x_of_X(x,X,patch);
+    is_inside = x_of_X(x,X,patch);
     x[0] -= center[0];
     x[1] -= center[1];
     x[2] -= center[2];
     r = root_square(3,x,0);
     theta2 = acos(x[2]/r);
     phi2   = arctan(x[1],x[0]);
-    if (EQL(theta2,theta) && EQL(phi2,phi) && IsInside)
+    if (EQL(theta2,theta) && EQL(phi2,phi) && is_inside)
     {
       found_flg = YES;
       *ppatch = patch;
@@ -1160,6 +1160,7 @@ Patch_T *x_in_closest_patch(const double x[3],Patch_T **const patches,
   if (!Np)
     return 0;
 
+  const double Eps = 1E-3;
   double min = DBL_MAX;
   Uint pmin  = UINT_MAX;/* patch with min dx */
   Uint p;
@@ -1173,7 +1174,8 @@ Patch_T *x_in_closest_patch(const double x[3],Patch_T **const patches,
     X_of_x(X,x,patch);
     x_of_X(xp,X,patch);
     dx = L2_norm(3,x,xp);
-    if (dx < min && isfinite(dx))
+    if (dx < min && isfinite(dx) && 
+        IsInside(X,patch->min,patch->max,Eps))
     {
       pmin = p;
       min  = dx;
