@@ -104,6 +104,7 @@ static void find_NS_surface_perfect_s2(Physics_T *const phys);
 double star_NS_mass_shedding_indicator(Physics_T *const phys);
 int star_NS_find_star_surface(Physics_T *const phys);
 void star_start_off_TOV (Physics_T *const phys);
+static double approx_inverse_r2(struct Demand_S *const demand);
 
 
 
