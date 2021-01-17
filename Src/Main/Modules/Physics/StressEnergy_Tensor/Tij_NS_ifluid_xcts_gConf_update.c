@@ -13,8 +13,8 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
   
   Grid_T *const grid  = mygrid(phys,"NS");
   Patch_T *patch      = 0;
-  const double W  = Getd("enthalpy_update_weight");
   const int  neat = strstr_i(Gets("enthalpy_neat"),"yes");
+  const double W  = (neat == 0 ? Getd("enthalpy_update_weight") : 0.);
   const double Euler_const = Getd("Euler_equation_constant");
   const double NS_center[3] = {Getd("center_x"),
                                Getd("center_y"),
@@ -32,8 +32,9 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
   {
     patch = grid->patch[p];
     
-    RELAX_UPDATE_FUNC(Tij_NS_IF_XCTS_gConf_enthalpy(patch,Euler_const),
-                      patch,enthalpy,W);
+    if (!EQL(W,0.))
+      RELAX_UPDATE_FUNC(Tij_NS_IF_XCTS_gConf_enthalpy(patch,Euler_const),
+                        patch,enthalpy,W);
     
     if (neat)
       Tij_NS_neat_enthalpy(patch);
