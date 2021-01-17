@@ -271,7 +271,9 @@ static int set_star_params(Physics_T *const phys)
     // options:
     // ========
     // poly2: C^2 continuity across the boundary using a 2nd-order polynomial.
-    // exp2 : C^2 continuity across the boundary using a exponential. */
+    // exp2 : C^2 continuity across the boundary using a exponential.
+    // inverse_r2 : C^2 continuity across the boundary using a+b/r+c/r^2. */
+    
     
     /* which root finder to be used to find NS surface:
     //
