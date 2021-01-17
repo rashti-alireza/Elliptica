@@ -321,6 +321,7 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
          bhf->fld[f]->did_add_df = 1;
          Field_T *df = add_field(bhf->fld[f]->df[ii],0,patch,NO);
          partial_derivative(df);
+         make_coeffs_2d(df,0,1);
         }
       }
       
@@ -340,6 +341,7 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
          bhf->fld[f]->did_add_ddf = 1;
          Field_T *ddf = add_field(bhf->fld[f]->ddf[ii],0,patch,NO);
          partial_derivative(ddf);
+         make_coeffs_2d(ddf,0,1);
         }
       }
     }
@@ -560,6 +562,7 @@ static int bhf_ChebTn_general_S2_CS(struct BHFiller_S *const bhf)
          bhf->fld[f]->did_add_df = 1;
          Field_T *df = add_field(bhf->fld[f]->df[ii],0,patch,NO);
          partial_derivative(df);
+         make_coeffs_2d(df,0,1);
         }
       }
       
@@ -579,6 +582,7 @@ static int bhf_ChebTn_general_S2_CS(struct BHFiller_S *const bhf)
          bhf->fld[f]->did_add_ddf = 1;
          Field_T *ddf = add_field(bhf->fld[f]->ddf[ii],0,patch,NO);
          partial_derivative(ddf);
+         make_coeffs_2d(ddf,0,1);
         }
       }
     }

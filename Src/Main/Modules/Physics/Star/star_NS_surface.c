@@ -185,6 +185,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
           extrap->fld[f]->did_add_df = 1;
           Field_T *df = add_field(extrap->fld[f]->df[ii],0,patch,NO);
           partial_derivative(df);
+          make_coeffs_2d(df,0,1);
         }
       }
       
@@ -204,6 +205,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
           extrap->fld[f]->did_add_ddf = 1;
           Field_T *ddf = add_field(extrap->fld[f]->ddf[ii],0,patch,NO);
           partial_derivative(ddf);
+          make_coeffs_2d(ddf,0,1);
         }
       }
     }
