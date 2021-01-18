@@ -708,10 +708,15 @@ static void adjust_NS_center_interpolation(Physics_T *const phys)
         X_of_x(Xp,x,patchp);
         shifted_enthalpy[ijk] = f_of_X("enthalpy",Xp,patchp);
       }
-      /* if point x located outside of NS around */
       else
       {
-        shifted_enthalpy[ijk] = 1.;
+        /* try */
+        patchp = x_in_which_patch_force(x,grid->patch,grid->np,Xp);
+        if (patchp)
+          shifted_enthalpy[ijk] = f_of_X("enthalpy",Xp,patchp);
+        /* if point x located outside of NS around */
+        else
+          shifted_enthalpy[ijk] = 1.;
       }
     }
   }
