@@ -495,6 +495,24 @@ static double approx_inverse_r2(struct Demand_S *const demand)
  return a+b/r+c/Pow2(r);
 }
 
+/* ->: f(r) = (a+b/r+c/r^2)*exp(-r/r0).
+// conditions: f be C^2 continues across the surface. */
+static double approx_inverse_r2_exp(struct Demand_S *const demand)
+{
+ const double r0 = demand->r0;
+ const double fr0 = demand->fr0;
+ const double dfr0  = demand->dfr0;
+ const double ddfr0 = demand->ddfr0;
+ const double r     = demand->r;
+ double a,b,c;
+ 
+ a = M_E*(fr0 + (r0*(4*dfr0 + ddfr0*r0))/2.);
+ b = -(M_E*Pow2(r0)*(3*dfr0 + ddfr0*r0));
+ c = (M_E*Pow3(r0)*(2*dfr0 + ddfr0*r0))/2.;
+ 
+ return (a+b/r+c/Pow2(r))*exp(-r/r0);
+}
+
 
 /* ->: f(r) = a+b*exp(c*r)
 // conditions: f be C^2 continues across the surface. */
