@@ -1148,34 +1148,36 @@ Patch_T *x_in_which_patch(const double x[3],Patch_T **const patches,
   return 0;
 }
 
-/* ->: closest patch that has the Cartesian point x; null if failes.
+/* ->: find forcefully patch that has the Cartesian point x; 
+// ->: null if failes. also find the corresponding X coordinates.
 // get a Cartesian point x and collection of patches,
 // it returns the closest patch that has this point.
 // Np is the number of patches. 
 // Note: sometime x_in_which_patch may fail and we have to use
 // this function so ONLY use this if x_in_which_patch failed. */
-Patch_T *x_in_closest_patch(const double x[3],Patch_T **const patches,
-                            const Uint Np)
+Patch_T *x_in_which_patch_force(const double x[3],Patch_T **const patches,
+                                const Uint Np,double *const X)
 {
   if (!Np)
     return 0;
-
+  
   const double Eps = 1E-3;
+  Patch_T *patch   = 0;
   double min = DBL_MAX;
   Uint pmin  = UINT_MAX;/* patch with min dx */
   Uint p;
   
   for (p = 0; p < Np; ++p)
   {
-    Patch_T *patch = patches[p];
-    double X[3]  = {0};
+    patch        = patches[p];
+    double Xp[3] = {0};
     double xp[3] = {0};
     double dx;
-    X_of_x(X,x,patch);
-    x_of_X(xp,X,patch);
+    X_of_x(Xp,x,patch);
+    x_of_X(xp,Xp,patch);
     dx = L2_norm(3,x,xp);
     if (dx < min && isfinite(dx) && 
-        IsInside(X,patch->min,patch->max,Eps))
+        IsInside(Xp,patch->min,patch->max,Eps))
     {
       pmin = p;
       min  = dx;
@@ -1185,7 +1187,18 @@ Patch_T *x_in_closest_patch(const double x[3],Patch_T **const patches,
   if (pmin == UINT_MAX)
     return 0;
   
-  return patches[pmin];
+  patch = patches[pmin];
+  X_of_x(X,x,patch);
+  /* adujusting boundary number to avoid some unexpeted behavior
+  // due to interpolation error. */
+  if (EQL_coord(X[0],patch->max[0],Eps))  X[0] = patch->max[0];
+  if (EQL_coord(X[0],patch->min[0],Eps))  X[0] = patch->min[0];
+  if (EQL_coord(X[1],patch->max[1],Eps))  X[1] = patch->max[1];
+  if (EQL_coord(X[1],patch->min[1],Eps))  X[1] = patch->min[1];
+  if (EQL_coord(X[2],patch->max[2],Eps))  X[2] = patch->max[2];
+  if (EQL_coord(X[2],patch->min[2],Eps))  X[2] = patch->min[2];  
+  
+  return patch;
 }
 
 

@@ -422,9 +422,8 @@ collect_patches_with_regex
 
 
 void free_grid_params(const Grid_T *const grid);
-Patch_T *x_in_closest_patch(const double x[3],Patch_T **const patches,
-                            const Uint Np);
-
+Patch_T *x_in_which_patch_force(const double x[3],Patch_T **const patches,
+                                const Uint Np,double *const X);
 
 
 #endif

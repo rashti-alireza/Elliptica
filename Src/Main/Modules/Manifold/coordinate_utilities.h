@@ -153,7 +153,7 @@ collect_patches_with_regex
   Uint *const Np/* number of patches found */
   );
 
-Patch_T *x_in_closest_patch(const double x[3],Patch_T **const patches,
-                            const Uint Np);
+Patch_T *x_in_which_patch_force(const double x[3],Patch_T **const patches,
+                                const Uint Np,double *const X);
 
 
