@@ -74,7 +74,7 @@ int star_NS_keep_center_fixed(Physics_T *const phys)
   dh2[2] = execute_interpolation(interp_s);
   
   /* print initial values before adjustments */
-  printf(Pretty0"Enthalpy derivatives at NS center before force balance eq.:\n");
+  printf(Pretty0"Enthalpy derivatives at NS center before adjustment:\n");
   printf(Pretty0"dh(%g,%g,%g)/dx = %+g\n",
     NS_center[0],NS_center[1],NS_center[2],dh1[0]);
   printf(Pretty0"dh(%g,%g,%g)/dy = %+g\n",
@@ -83,7 +83,7 @@ int star_NS_keep_center_fixed(Physics_T *const phys)
     NS_center[0],NS_center[1],NS_center[2],dh1[2]);
     
   /* print initial values after adjustments */
-  printf(Pretty0"Enthalpy derivatives at NS center after force balance eq.:\n");
+  printf(Pretty0"Enthalpy derivatives at NS center after adjustment:\n");
   printf(Pretty0"dh(%g,%g,%g)/dx = %+g\n",
     NS_center[0],NS_center[1],NS_center[2],dh2[0]);
   printf(Pretty0"dh(%g,%g,%g)/dy = %+g\n",
@@ -91,7 +91,7 @@ int star_NS_keep_center_fixed(Physics_T *const phys)
   printf(Pretty0"dh(%g,%g,%g)/dz = %+g\n",
     NS_center[0],NS_center[1],NS_center[2],dh2[2]);
     
-  printf(Pretty0"Changes in enthalpy derivatives after force balance eq.:\n");
+  printf(Pretty0"Changes in enthalpy derivatives after adjustment:\n");
   printf(Pretty0"dh2/dx-dh1/dx = %+g\n",dh2[0]-dh1[0]);
   printf(Pretty0"dh2/dy-dh1/dy = %+g\n",dh2[1]-dh1[1]);
   printf(Pretty0"dh2/dz-dh1/dz = %+g\n",dh2[2]-dh1[2]);
