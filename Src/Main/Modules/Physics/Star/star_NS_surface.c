@@ -74,9 +74,10 @@ extrap_init
   extrap->grid = grid;
   sprintf(extrap->method,"%s",method);
   
-  if (strcmp_i(method,"poly2")     ||
-      strcmp_i(method,"exp2")      ||
-      strcmp_i(method,"inverse_r2"))
+  if (strcmp_i(method,"poly2")           ||
+      strcmp_i(method,"exp2")            ||
+      strcmp_i(method,"inverse_r2")      ||
+      strcmp_i(method,"inverse_r2_expmr"))
   {
     Uint nf,npo,npi;
     
@@ -113,6 +114,8 @@ extrap_init
       extrap->extrap = approx_exp2;
     else if (strcmp_i(method,"inverse_r2"))
       extrap->extrap = approx_inverse_r2;
+    else if (strcmp_i(method,"inverse_r2_expmr"))
+      extrap->extrap = approx_inverse_r2_expmr;
     else
       Error0(NO_OPTION);
     
@@ -497,7 +500,7 @@ static double approx_inverse_r2(struct Demand_S *const demand)
 
 /* ->: f(r) = (a+b/r+c/r^2)*exp(-r/r0).
 // conditions: f be C^2 continues across the surface. */
-static double approx_inverse_r2_exp(struct Demand_S *const demand)
+static double approx_inverse_r2_expmr(struct Demand_S *const demand)
 {
  const double r0 = demand->r0;
  const double fr0 = demand->fr0;
