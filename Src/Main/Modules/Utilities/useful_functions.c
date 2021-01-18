@@ -877,17 +877,18 @@ void interpolate_fields_from_old_grid_to_new_grid
         /* approximate it */
         if (!opatch)
         {
-          opatch = 
-            x_in_closest_patch(patch->node[ijk]->x,ogrid->patch,ogrid->np);
+          opatch = x_in_which_patch_force
+            (patch->node[ijk]->x,ogrid->patch,ogrid->np,pnts[p][ijk].X);
           /* test it */
-          double test_X[3] = {0},test_x[3] = {0};
+          double test_x[3] = {0};
           double test_dx;
           assert(opatch);
-          X_of_x(test_X,patch->node[ijk]->x,opatch);
-          x_of_X(test_x,test_X,opatch);
+          x_of_X(test_x,pnts[p][ijk].X,opatch);
           test_dx = L2_norm(3,test_x,patch->node[ijk]->x);
           printf(Pretty0"An interpolating point got x difference = "
                    "%e.\n",test_dx);
+          
+          continue;
         }
         pnts[p][ijk].patch = opatch;
         X_of_x(pnts[p][ijk].X,patch->node[ijk]->x,opatch);
