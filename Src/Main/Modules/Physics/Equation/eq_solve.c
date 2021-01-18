@@ -247,6 +247,8 @@ static void backup_fields(Physics_T *const phys)
 // NOTE: it updates source and fields too. */ 
 static void update_fields_relaxed_scheme(Physics_T *const phys)
 {
+  FUNC_TIC
+  
   Grid_T *const grid = phys->grid;
   const Uint npatch  = grid->np;
   char **field_name = read_separated_items_in_string(Pgets("solve_Order"),',');
@@ -299,5 +301,7 @@ static void update_fields_relaxed_scheme(Physics_T *const phys)
   
   /* free names */
   free_2d(field_name);
+  
+  FUNC_TOC
 }
 
