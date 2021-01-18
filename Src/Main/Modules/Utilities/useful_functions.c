@@ -879,6 +879,8 @@ void interpolate_fields_from_old_grid_to_new_grid
         {
           opatch = x_in_which_patch_force
             (patch->node[ijk]->x,ogrid->patch,ogrid->np,pnts[p][ijk].X);
+          pnts[p][ijk].patch = opatch;
+          
           /* test it */
           double test_x[3] = {0};
           double test_dx;
