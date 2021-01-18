@@ -779,16 +779,22 @@ static double NS_surface_enthalpy_root_finder_eq(void *params,const double *cons
   double X[3],h;
   int h_ind;
   
+  /* find enthalpy at the (X,Y,Z) */
   patch = x_in_which_patch(y,pars->hpatches,pars->Nph);
   if (!patch)
   {
-    Root_Finder_T *root_finder = pars->root_finder;
-    root_finder->interrupt = 1;
-    return DBL_MAX;
+    /* try */
+    patch = x_in_which_patch_force(y,pars->hpatches,pars->Nph,X);
+    if (!patch)/* fails! */
+    {
+      Root_Finder_T *root_finder = pars->root_finder;
+      root_finder->interrupt = 1;
+      return DBL_MAX;
+    }
   }
-  
-  /* find enthalpy at the (X,Y,Z) */
-  assert(X_of_x(X,y,patch));
+  else
+    assert(X_of_x(X,y,patch));
+    
   h_ind = Ind("enthalpy");
   if (!patch->fields[h_ind]->v)/* if there is no enthalpy defined in the patch */
     return -1.;
