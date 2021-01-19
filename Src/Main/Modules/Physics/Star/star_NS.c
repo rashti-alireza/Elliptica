@@ -284,7 +284,19 @@ int star_NS_idealfluid_extrapolate_matter_fields(Physics_T *const phys)
 {
   FUNC_TIC
   
-  IF_sval("extrapolate_matter_fields","exp2")
+  IF_sval("extrapolate_matter_fields","enthalpy_expmr_phi_inverse_r2")
+  {
+    const char *fields_name[2] = {0,0};
+    
+    fields_name[0] = "enthalpy";
+    star_NS_extrapolate(phys,fields_name,"expmr");
+    
+    fields_name[0] = "phi";
+    star_NS_extrapolate(phys,fields_name,"inverse_r2");
+    
+    star_W_spin_vector_idealfluid_update(phys,"NS_around");
+  }
+  else IF_sval("extrapolate_matter_fields","exp2")
   {
     /* make phi, W => enthalpy */
     const char *fields_name[] = {"phi","enthalpy",0};
