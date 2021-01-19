@@ -119,12 +119,47 @@ extrap_init
     else
       Error0(NO_OPTION);
     
-    extrap->patches_in = collect_patches(phys->grid,Ftype("NS_OB"),&npi);
+    extrap->patches_in  = collect_patches(phys->grid,Ftype("NS_OB"),&npi);
     extrap->patches_out = collect_patches(phys->grid,Ftype("NS_around"),&npo);
      
     extrap->npo = npo;
     extrap->npi = npi;
+  }
+  else if (strcmp_i(method,"expmr"))
+  {
+    Uint nf,npo,npi;
     
+    nf = 0;/* number of fields */
+    while(fields_name[nf]) ++nf;
+    
+    /* alloc */
+    extrap->nf = nf;
+    extrap->fld= calloc(nf,sizeof(*extrap->fld));IsNull(extrap->fld);
+    
+    /* collect names */
+    collect_names(extrap,fields_name,nf);
+    
+    if (grid->kind == Grid_SplitCubedSpherical_NSNS ||
+        grid->kind == Grid_SplitCubedSpherical_BHBH ||
+        grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_SBH  ||
+        grid->kind == Grid_SplitCubedSpherical_SNS  ||
+        grid->kind == Grid_CubedSpherical_BHNS      ||
+        grid->kind == Grid_CubedSpherical_NSNS
+       )
+    {
+     /* this function finds field values and its derivative
+     // on the surface with the known values of the field. */ 
+     extrap->fmain = extrapolate_expmr_C0_CS;
+    }
+    else
+     Error0(NO_OPTION);
+    
+    extrap->patches_in  = collect_patches(phys->grid,Ftype("NS_OB"),&npi);
+    extrap->patches_out = collect_patches(phys->grid,Ftype("NS_around"),&npo);
+     
+    extrap->npo = npo;
+    extrap->npi = npi;
   }
   else
     Error0(NO_OPTION);
@@ -1106,5 +1141,111 @@ void star_start_off_TOV(Physics_T *const phys)
   Setd("max_radius",ns_R);
   
   TOV_free(tov);
+}
+
+/* ->: success int.
+// decrease given field(s) exponentially from the NS surface 
+//  it is C^0 continues. */
+static int extrapolate_expmr_C0_CS(struct Extrap_S *const extrap)
+{
+  Physics_T *const phys = extrap->phys;
+  const Uint npo = extrap->npo;
+  const Uint npi = extrap->npi;
+  const Uint nf  = extrap->nf;/* numebr of fields */
+  const double NS_center[3] = {Getd("center_x"),
+                               Getd("center_y"),
+                               Getd("center_z")};
+  const double att          = 0.1;/* exp(-att*(r2-r1)) */
+  Uint p;
+
+  /* update all coeffs to avoid race condition */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < npi; p++)
+  {
+    Patch_T *patch = extrap->patches_in[p];
+    Uint f = 0;
+
+    /* make coeffs in  X and Y direction inside this patch */
+    for (f = 0; f < nf; ++f)
+    {
+      /* must have the field */
+      make_coeffs_2d(patch->fields[Ind(extrap->fld[f]->f)],0,1);
+    }
+  }
+  
+  /* populating f */
+  OpenMP_1d_Pragma(omp parallel for)
+  for (p = 0; p < npo; p++)
+  {
+    Patch_T *opatch = extrap->patches_out[p];
+    Uint f = 0;
+    
+    for (f = 0; f < nf; ++f)
+    {
+      Field_T *field = 
+        opatch->fields[LookUpField_E(extrap->fld[f]->f,opatch)];
+      empty_field(field);
+      field->v = alloc_double(opatch->nn);
+      
+      for(Uint ijk = 0; ijk < opatch->nn; ++ijk)
+      {
+        Patch_T *patch = 0;/* patch inside NS to be used for f0 */
+        double th = 0,ph = 0;
+        double X[3] = {0}, x[3] = {0};
+        double fr0 = 0;
+        double rSurf,r;
+
+        /* outside r,th,ph */
+        x[0]= opatch->node[ijk]->x[0]-NS_center[0];
+        x[1]= opatch->node[ijk]->x[1]-NS_center[1];
+        x[2]= opatch->node[ijk]->x[2]-NS_center[2];
+        r   = sqrt(Pow2(x[0])+Pow2(x[1])+Pow2(x[2]));
+        th = acos(x[2]/r);
+        ph = arctan(x[1],x[0]);
+        
+        /* find X and patch inside surface */
+        if (opatch->coordsys == CubedSpherical)
+        {
+          X[2] = 1.;
+          find_XYZ_and_patch_of_theta_phi_CS
+            (X,&patch,NS_center,th,ph,extrap->patches_in,npi);
+        }
+        else
+          Error0(NO_OPTION);
+        
+        /* find x and r at surface */
+        assert(x_of_X(x,X,patch));
+        x[0] -= NS_center[0];
+        x[1] -= NS_center[1];
+        x[2] -= NS_center[2];
+        rSurf  = sqrt(Pow2(x[0])+Pow2(x[1])+Pow2(x[2]));
+        
+        /* find f(r0) */
+        /* 2d interpolate on the surface */
+        Interpolation_T *interp_s = init_interpolation();
+        interp_s->XY_dir_flag = 1;
+        interp_s->X = X[0];
+        interp_s->Y = X[1];
+        
+        if (patch->coordsys == CubedSpherical)
+        {
+          interp_s->K = patch->n[2]-1;
+        }
+        else 
+          Error0(NO_OPTION);
+         
+        /* f value at r = r0 = rSurf*/
+        interp_s->field = patch->fields[Ind(extrap->fld[f]->f)];
+        plan_interpolation(interp_s);
+        fr0 = execute_interpolation(interp_s);
+        free_interpolation(interp_s);
+         
+        /* exp extrapolate */
+        field->v[ijk] = fr0*exp(-att*(r-rSurf));
+      }
+    }
+  }
+  
+  return EXIT_SUCCESS;
 }
 
