@@ -74,10 +74,11 @@ extrap_init
   extrap->grid = grid;
   sprintf(extrap->method,"%s",method);
   
-  if (strcmp_i(method,"poly2")           ||
-      strcmp_i(method,"exp2")            ||
-      strcmp_i(method,"inverse_r2")      ||
-      strcmp_i(method,"inverse_r2_expmr"))
+  if (strcmp_i(method,"poly2")             ||
+      strcmp_i(method,"exp2")              ||
+      strcmp_i(method,"inverse_r2")        ||
+      strcmp_i(method,"inverse_r2_expmr")  ||
+      strcmp_i(method,"inverse_r2_expmAr"))
   {
     Uint nf,npo,npi;
     
@@ -116,6 +117,8 @@ extrap_init
       extrap->extrap = approx_inverse_r2;
     else if (strcmp_i(method,"inverse_r2_expmr"))
       extrap->extrap = approx_inverse_r2_expmr;
+    else if (strcmp_i(method,"inverse_r2_expmAr"))
+      extrap->extrap = approx_inverse_r2_expmAr;
     else
       Error0(NO_OPTION);
     
@@ -549,6 +552,25 @@ static double approx_inverse_r2_expmr(struct Demand_S *const demand)
  c = (M_E*Pow3(r0)*(2*dfr0 + ddfr0*r0))/2.;
  
  return (a+b/r+c/Pow2(r))*exp(-r/r0);
+}
+
+/* ->: f(r) = (a+b/r+c/r^2)*exp(-Att*(r-r0)).
+// conditions: f be C^2 continues across the surface. */
+static double approx_inverse_r2_expmAr(struct Demand_S *const demand)
+{
+ const double r0 = demand->r0;
+ const double fr0 = demand->fr0;
+ const double dfr0  = demand->dfr0;
+ const double ddfr0 = demand->ddfr0;
+ const double r     = demand->r;
+ const double Att   = 0.1;/* coming from experiment */
+ double a,b,c;
+ 
+ a = fr0 + (r0*(4*dfr0 + ddfr0*r0))/2.;
+ b = -(Pow2(r0)*(3*dfr0 + ddfr0*r0));
+ c = (Pow3(r0)*(2*dfr0 + ddfr0*r0))/2.;
+ 
+ return (a+b/r+c/Pow2(r))*exp(-Att*(r-r0));
 }
 
 

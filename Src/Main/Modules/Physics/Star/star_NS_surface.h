@@ -106,6 +106,7 @@ int star_NS_find_star_surface(Physics_T *const phys);
 void star_start_off_TOV (Physics_T *const phys);
 static double approx_inverse_r2(struct Demand_S *const demand);
 static double approx_inverse_r2_expmr(struct Demand_S *const demand);
+static double approx_inverse_r2_expmAr(struct Demand_S *const demand);
 static int extrapolate_expmr_C0_CS(struct Extrap_S *const extrap);
 
 
