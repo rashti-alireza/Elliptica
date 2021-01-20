@@ -37,30 +37,15 @@ star_print_properties
     PR_PROPERTY_IN_FILE_d(param[p], file, pr_screen);
     p++;
   }
-  
   free_2d(param);
+  
+  PR_PROPERTY_IN_FILE_s("EoS_description",file, pr_screen)
+  PR_PROPERTY_IN_FILE_s("EoS_type",file, pr_screen)
+  PR_PROPERTY_IN_FILE_s("EoS_unit",file, pr_screen)
+  PR_PROPERTY_IN_FILE_s("EoS_K",file, pr_screen)
+  PR_PROPERTY_IN_FILE_s("EoS_Gamma",file, pr_screen)
+  PR_PROPERTY_IN_FILE_s("EoS_rho_th",file, pr_screen)
+  
   fprintf(file,"\n");
-  
-  /*PR_PROPERTY_IN_FILE_d("irreducible_mass_current", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("ADM_mass", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Komar_mass", file, pr_screen)
-  
-  PR_PROPERTY_IN_FILE_d("AH_area", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Sx_Campanelli", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Sy_Campanelli", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Sz_Campanelli", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Sx_JRP", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Sy_JRP", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Sz_JRP", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("chi_x", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("chi_y", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("chi_z", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Omega_U0", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Omega_U1", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Omega_U2", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Rcenter_x", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Rcenter_y", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Rcenter_z", file, pr_screen)*/
- 
 }
 
