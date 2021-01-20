@@ -1976,7 +1976,7 @@ static void calc_CM(Observe_T *const obs)
   }
   else IFsc("CM|NS")
   {
-    if (IsIt("S_obj,default"))
+    if (IsIt("V_obj,default"))
     {
       obs_Rc_NS(obs);
     }
