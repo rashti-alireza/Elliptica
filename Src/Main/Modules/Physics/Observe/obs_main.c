@@ -75,6 +75,9 @@
 // "Irreducible(M)" #=> irreducible mass for the givne physics (BH)
 // ----------------------------------------------------------------------
 //
+// "Baryonic(M)" #=> compute baryonic mass of NS
+// ----------------------------------------------------------------------
+//
 // "CM" #=> compute the center of mass for the given physics
 // ----------------------------------------------------------------------
 //
@@ -230,6 +233,18 @@ static int set_observe_params(Physics_T *const phys)
   // ========
   // S_obj: over the surface of compact object (for single physics) */
   
+  /* how to compute baryonic mass:
+  // param:
+  // ======
+  // "observe_baryonic_M"
+  //
+  // methods:
+  // ========
+  // default: used standard definition
+  //
+  // options:
+  // ========
+  // V_obj: over the volume of compact object (for NS physics) */
   
   /* how to compute ADM angular momentum: 
   // param:
