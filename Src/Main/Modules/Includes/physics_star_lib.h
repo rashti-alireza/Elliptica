@@ -23,6 +23,9 @@ star_print_properties
   const int pr_screen);
 
 void star_W_spin_vector_idealfluid_update(Physics_T *const phys,const char *const region);
+double star_NS_mass_shedding_indicator(Physics_T *const phys);
+
+
 #endif
 
 
