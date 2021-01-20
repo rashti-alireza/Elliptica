@@ -289,6 +289,28 @@ static int set_star_params(Physics_T *const phys)
     // bisection: using bisection root finder to find enthalpy = 1. 
     // note: if the surface_type is perfect_s2 the surface is set 
     // by its parameters and not a root finder. */
+    
+    /* force balance:
+    // 
+    // param:
+    // ======
+    // force_balance_equation
+    // 
+    // options:
+    // ========
+    // none: do nothing
+    // d/dx:x_CM:   adjust x_CM such that dh/dx|NS_center = 0.
+    // d/dy:x_CM:   adjust x_CM such that dh/dy|NS_center = 0.
+    // d/dz:x_CM:   adjust x_CM such that dh/dz|NS_center = 0.
+    // d/dx:y_CM:   adjust y_CM such that dh/dx|NS_center = 0.
+    // d/dy:y_CM:   adjust y_CM such that dh/dy|NS_center = 0.
+    // d/dz:y_CM:   adjust y_CM such that dh/dz|NS_center = 0.
+    // d/dCM:Omega: adjust Omega such that dh/dCM|NS_center = 0.
+    // d/dx:Omega:  adjust Omega such that dh/dx|NS_center = 0.
+    // d/dy:Omega:  adjust Omega such that dh/dy|NS_center = 0.
+    // d/dz:Omega:  adjust Omega such that dh/dz|NS_center = 0.
+    // exmaple: adjust(d/dy:Omega).
+    */
   }
   else
     Error0(NO_OPTION);
