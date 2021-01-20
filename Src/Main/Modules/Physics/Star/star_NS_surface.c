@@ -799,6 +799,8 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
   printf(Pretty0"L2 norm of enthalpy     = %e\n",h_L2_res);
   printf(Pretty0"Mass shedding indicator = %e\n",
                       star_NS_mass_shedding_indicator(phys));
+
+  Setd("enthalpy_L2_residual",h_L2_res);
   
   l = lmax;
   for (m = 0; m <= l; ++m)
