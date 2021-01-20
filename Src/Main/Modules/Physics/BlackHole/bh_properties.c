@@ -41,27 +41,5 @@ bh_print_properties
   
   free_2d(param);
   fprintf(file,"\n");
-  
-  /*PR_PROPERTY_IN_FILE_d("irreducible_mass_current", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("ADM_mass", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Komar_mass", file, pr_screen)
-  
-  PR_PROPERTY_IN_FILE_d("AH_area", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Sx_Campanelli", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Sy_Campanelli", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Sz_Campanelli", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Sx_JRP", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Sy_JRP", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Sz_JRP", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("chi_x", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("chi_y", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("chi_z", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Omega_U0", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Omega_U1", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Omega_U2", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Rcenter_x", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Rcenter_y", file, pr_screen)
-  PR_PROPERTY_IN_FILE_d("Rcenter_z", file, pr_screen)*/
- 
 }
 
