@@ -2050,18 +2050,39 @@ static void calc_baryonic_mass(Observe_T *const obs)
   
   IFsc("Baryonic(M)|NS")
   {
-    obs->ret[0] = star_NS_baryonic_gConf_mass
-        (phys,Getd("Euler_equation_constant"));
+    if (IsIt("V_obj,default"))
+    {
+      obs->ret[0] = star_NS_baryonic_gConf_mass
+          (phys,Getd("Euler_equation_constant"));
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
   }
   else IFsc("Baryonic(M)|NS1")
   {
-    obs->ret[0] = star_NS_baryonic_gConf_mass
-        (phys,Getd("Euler_equation_constant"));
+    if (IsIt("V_obj,default"))
+    {
+      obs->ret[0] = star_NS_baryonic_gConf_mass
+          (phys,Getd("Euler_equation_constant"));
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
   }
   else IFsc("Baryonic(M)|NS2")
   {
-    obs->ret[0] = star_NS_baryonic_gConf_mass
-        (phys,Getd("Euler_equation_constant"));
+    if (IsIt("V_obj,default"))
+    {
+      obs->ret[0] = star_NS_baryonic_gConf_mass
+          (phys,Getd("Euler_equation_constant"));
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
   }
   else
   {
