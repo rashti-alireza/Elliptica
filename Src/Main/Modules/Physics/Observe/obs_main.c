@@ -295,7 +295,19 @@ static int set_observe_params(Physics_T *const phys)
   // ========
   // S_obj: over the surface of compact object (for single physics) */
   
-  
+  /* how to compute CM of an object
+  // param:
+  // ======
+  // "observe_CM"
+  // 
+  // methods:
+  // default: using classical mechanics definition
+  // 
+  // options:
+  // ========
+  // S_obj: over the surface of the object (mainly for BH)
+  // V_obj: over the volume of the object (mainly for NS)
+  */
 
   UNUSED(phys);
   FUNC_TOC
