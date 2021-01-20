@@ -178,6 +178,28 @@ static int set_system_params(Physics_T *const phys)
   */
   Pset_default(P_"initialize","one_exact_KerrSchild");
 
+  /* SOFT params: */
+  
+  /* how to adjust P_ADM:
+  // name: "P_ADM_control_method"
+  // options:
+  // none: do nothing
+  // adjust(x_CM): adjust x_CM to drive P_y = 0.
+  // adjust(y_CM): adjust y_CM to drive P_x = 0.
+  // also one can combine things for instance: adjust(x_CM,y_CM).
+  */
+  
+  /* update weight for P_ADM
+  // name:
+  // "P_ADM_control_update_weight"
+  */
+  
+  /* how sensitive gets to adjust P_ADM
+  // name:
+  // "P_ADM_control_tolerance"
+  */
+  
+  
   UNUSED(phys);
   FUNC_TOC
   return EXIT_SUCCESS;
