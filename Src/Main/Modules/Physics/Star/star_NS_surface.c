@@ -212,18 +212,10 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
     {
       int ii;
       
-      /* must have the field */
-      make_coeffs_2d(patch->fields[Ind(extrap->fld[f]->f)],0,1);
-      
-      /* must have dfield */
+      /* add dfield if does not exist, field must exist already. */
       for (ii = 0; ii < 3; ++ii)
       {
-        int indxf = _Ind(extrap->fld[f]->df[ii]);
-        if (indxf >= 0)
-        {
-          make_coeffs_2d(patch->fields[indxf],0,1);
-        }
-        else
+        if (_Ind(extrap->fld[f]->df[ii]) < 0)
         {
           if(Verbose)
             printf(Pretty0"compute %s in %s\n",
@@ -231,19 +223,12 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
           extrap->fld[f]->did_add_df = 1;
           Field_T *df = add_field(extrap->fld[f]->df[ii],0,patch,NO);
           partial_derivative(df);
-          make_coeffs_2d(df,0,1);
         }
       }
-      
-      /* must have ddfield */
+      /* add ddfield if does not exist, dfield must exist already. */
       for (ii = 0; ii < 6; ++ii)
       {
-        int indxf = _Ind(extrap->fld[f]->ddf[ii]);
-        if (indxf >= 0)
-        {
-          make_coeffs_2d(patch->fields[indxf],0,1);
-        }
-        else
+        if (_Ind(extrap->fld[f]->ddf[ii]) < 0)
         {
           if(Verbose)
             printf(Pretty0"compute %s in %s\n",
@@ -251,9 +236,17 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
           extrap->fld[f]->did_add_ddf = 1;
           Field_T *ddf = add_field(extrap->fld[f]->ddf[ii],0,patch,NO);
           partial_derivative(ddf);
-          make_coeffs_2d(ddf,0,1);
         }
       }
+      /* Note: partial derivatives modify coeffs thus it is made here */
+      /* populate coeffs */
+      make_coeffs_2d(patch->fields[Ind(extrap->fld[f]->f)],0,1);
+      
+      for (ii = 0; ii < 3; ++ii)
+        make_coeffs_2d(patch->fields[Ind(extrap->fld[f]->df[ii])],0,1);
+        
+      for (ii = 0; ii < 6; ++ii)
+        make_coeffs_2d(patch->fields[Ind(extrap->fld[f]->ddf[ii])],0,1);
     }
   }
   
