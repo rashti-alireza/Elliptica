@@ -708,7 +708,7 @@ static void adjust_NS_center_interpolation(Physics_T *const phys)
   dR[2] = R[2]-NS_center[2];
   
   /* if it is already located at the designted point */
-  if (EQL(0,dR[0]) && EQL(0,dR[1]) && EQL(0,dR[2]))
+  if (EQL(dR[0],0.) && EQL(dR[1],0.) && EQL(dR[2],0.))
   {
     FUNC_TOC
     return;
@@ -962,7 +962,7 @@ static void adjust_NS_center_Taylor_expansion(Physics_T *const phys)
   dR[2] = R[2]-NS_center[2];
   
   /* if it is already located at the designted point */
-  if (EQL(0,dR[0]) && EQL(0,dR[1]) && EQL(0,dR[2]))
+  if (EQL(dR[0],0.) && EQL(dR[1],0.) && EQL(dR[2],0.))
   {
     FUNC_TOC
     return;
