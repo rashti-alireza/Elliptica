@@ -31,9 +31,9 @@ C_macro3 = declare_and_alloc_xi(name);
 `  Physics_T *const phys = obs->phys;`
 `  struct items_S **adm = obs->items;`
 `  const Uint N = obs->Nitems;`
-`  const double x_cm = Getd("x_CM");`
-`  const double y_cm = Getd("y_CM");`
-`  const double z_cm = Getd("z_CM");`
+`  const double x_cm = sysGetd("x_CM");`
+`  const double y_cm = sysGetd("y_CM");`
+`  const double z_cm = sysGetd("z_CM");`
 `  Uint p;`
 ``
 `  for(p = 0; p < N; ++p)`
