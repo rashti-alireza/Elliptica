@@ -623,7 +623,9 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
   const double NS_center[3] = {Getd("center_x"),
                                Getd("center_y"),
                                Getd("center_z")};
-  const Uint Nincr = 100;
+  const double incr_a = 0.01;
+  const double incr_b = 0.01;
+  const Uint Nincr    = 500;
   Uint Np_h,Np_ob;/* number of patches below: */
   Patch_T **patches_h  = collect_patches(phys->grid,Ftype("NS,NS_around"),&Np_h);
   Patch_T **patches_ob = collect_patches(phys->grid,Ftype("NS_OB"),&Np_ob);
@@ -692,20 +694,41 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
       par->x0[2]    = x[2];
       par->N        = N;
       /* set [a,b] for bisect */
-      a  = -0.1;
-      b  = 0.1;
+      a  = 0.;
       Fa = NS_surface_enthalpy_root_finder_eq(par,&a);
-      Fb = NS_surface_enthalpy_root_finder_eq(par,&b);
+      /* since we expect at some point h > 1 inside the star */
       iincr = 0;
-      while( Fa*Fb > 0 && iincr < Nincr)
+      while (LSS(Fa,0.) && iincr < Nincr)
       {
-        a -= 0.1;
-        b += 0.1;
+        a -= incr_a;
         Fa = NS_surface_enthalpy_root_finder_eq(par,&a);
+        iincr++;
+      }
+      if (Fa < 0.)
+      {
+        printf(Pretty0"Could not the beginning of the interval "
+              "where root takes place!\n");
+        root->interrupt = 1;
+        break;
+      }
+      
+      b  = 0.;
+      Fb = NS_surface_enthalpy_root_finder_eq(par,&b);
+      /* since we expect at some point h < 1 outside the star */
+      iincr = 0;
+      while(GRT(Fb,0.) && iincr < Nincr)
+      {
+        b += incr_b;
         Fb = NS_surface_enthalpy_root_finder_eq(par,&b);
         iincr++;
       }
-      assert(Fa*Fb <= 0);
+      if (Fb > 0.)
+      {
+        printf(Pretty0"Could not the end of the interval "
+              "where root takes place!\n");
+        root->interrupt = 1;
+        break;
+      }
       root->a_bisect  = a;
       root->b_bisect  = b;
       dr = execute_root_finder(root);
