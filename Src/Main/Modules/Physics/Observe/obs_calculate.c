@@ -1958,7 +1958,8 @@ static void calc_irreducible_BH_mass(Observe_T *const obs)
 
 }
 
-/* center mass */
+/* center mass 
+// NOTE: CM of each object measured with respect to system CM. */
 static void calc_CM(Observe_T *const obs)
 {
   SET_MSG

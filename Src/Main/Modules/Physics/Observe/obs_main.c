@@ -78,7 +78,8 @@
 // "Baryonic(M)" #=> compute baryonic mass of NS
 // ----------------------------------------------------------------------
 //
-// "CM" #=> compute the center of mass for the given physics
+// "CM" #=> compute the center of mass for the given physics,
+//          NOTE:CM of an object measured with respect to the system CM.
 // ----------------------------------------------------------------------
 //
 // "Spin" #=> compute spin for the given physics
