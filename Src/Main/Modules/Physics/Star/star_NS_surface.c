@@ -706,7 +706,7 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
       }
       if (Fa < 0.)
       {
-        printf(Pretty0"Could not the beginning of the interval "
+        printf(Pretty0"Could not find the beginning of the interval "
               "where root takes place!\n");
         root->interrupt = 1;
         break;
@@ -724,7 +724,7 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
       }
       if (Fb > 0.)
       {
-        printf(Pretty0"Could not the end of the interval "
+        printf(Pretty0"Could not find the end of the interval "
               "where root takes place!\n");
         root->interrupt = 1;
         break;
