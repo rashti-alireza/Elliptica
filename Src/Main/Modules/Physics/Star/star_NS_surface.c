@@ -706,8 +706,8 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
       }
       if (Fa < 0.)
       {
-        printf(Pretty0"Could not find the beginning of the interval "
-              "where root takes place!\n");
+        printf(Pretty0"Star's radius shrunk too much in %s!\n",
+               patch->name);
         root->interrupt = 1;
         break;
       }
@@ -724,8 +724,8 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
       }
       if (Fb > 0.)
       {
-        printf(Pretty0"Could not find the end of the interval "
-              "where root takes place!\n");
+        printf(Pretty0"Star's radius expanded too much in %s!\n",
+               patch->name);
         root->interrupt = 1;
         break;
       }
