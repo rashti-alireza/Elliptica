@@ -5,6 +5,10 @@
 #define STR_SIZE1 (99)
 #define STR_SIZE2 (999)
 
+/* print param related */
+#define PAR_WIDTH_PR  (29)
+#define PAR_FORMAT_PR "%-*s = %+5.4e,|%+5.4e|,(%+08.3f%%)"
+
 /* prefix the given string str with the given prefix pre and 
 // return string prepar.
 // NOTE: prepar must be defined. */
