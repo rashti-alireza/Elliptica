@@ -1176,8 +1176,7 @@ Patch_T *x_in_which_patch_force(const double x[3],Patch_T **const patches,
     X_of_x(Xp,x,patch);
     x_of_X(xp,Xp,patch);
     dx = L2_norm(3,x,xp);
-    if (dx < min && isfinite(dx) && 
-        IsInside(Xp,patch->min,patch->max,Eps))
+    if (dx < min && IsInside(Xp,patch->min,patch->max,Eps))
     {
       pmin = p;
       min  = dx;
