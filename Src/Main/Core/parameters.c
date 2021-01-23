@@ -65,14 +65,16 @@ void update_parameter_double_format(const char *const lv, const double rv,const 
     if (print_flg)
     {
       char pr_msg[STR_SIZE1];
-      double diff = 0.;
+      double diff_a = 0.;/* absolute */
+      double diff_r = 0.;/* relative */
       
-      if (EQL(par->rv_double,0.))
-        diff = 0.;
-      else
-        diff = (rv-par->rv_double)/fabs(par->rv_double);
+      if (!EQL(par->rv_double,0.))
+      {
+        diff_a = (rv-par->rv_double);
+        diff_r = diff_a/fabs(par->rv_double)*100.;
+      }
         
-      sprintf(pr_msg,PAR_FORMAT_PR,PAR_WIDTH_PR,lv,rv,diff,diff*100.);
+      sprintf(pr_msg,PAR_FORMAT_PR,PAR_WIDTH_PR,lv,rv,diff_a,diff_r);
       printf(Pretty0"%s\n",pr_msg);
     }
     sprintf(str_rv,"%15.18f",rv);
@@ -113,9 +115,9 @@ void add_parameter_double(const char *const lv, const double rv,const int print_
   if (print_flg)
   {
     char pr_msg[STR_SIZE1];
-    double diff = 0.;
+    const double diff = 0.;
     
-    sprintf(pr_msg,PAR_FORMAT_PR,PAR_WIDTH_PR,lv,rv,diff,diff*100.);
+    sprintf(pr_msg,PAR_FORMAT_PR,PAR_WIDTH_PR,lv,rv,diff,diff);
     printf(Pretty0"%s\n",pr_msg);
   }
 }
