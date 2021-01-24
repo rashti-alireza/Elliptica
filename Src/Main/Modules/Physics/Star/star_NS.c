@@ -943,7 +943,7 @@ static void adjust_NS_center_Taylor_expansion(Physics_T *const phys)
   FUNC_TIC
   
   Grid_T *const grid  = mygrid(phys,"NS,NS_around");
-   
+  const double W      = Getd("enthalpy_update_weight");
   double NS_center[3] = {Getd("center_x"),
                          Getd("center_y"),
                          Getd("center_z")};
@@ -989,7 +989,7 @@ static void adjust_NS_center_Taylor_expansion(Physics_T *const phys)
       double y = patch->node[ijk]->x[1];
       double z = patch->node[ijk]->x[2];
       
-      enthalpy[ijk] = enthalpy[ijk]-dh[0]*x-dh[1]*y-dh[2]*z;
+      enthalpy[ijk] += W*(-dh[0]*x-dh[1]*y-dh[2]*z);
     }
     
     dField_di(denthalpy_D0);
