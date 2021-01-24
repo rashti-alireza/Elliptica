@@ -40,6 +40,7 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
     
     case BH_FIND_SURFACE:
     case BH_TUNE_RADIUS:
+    case BH_TUNE_SPIN:
     case BH_FILL:
     case BH_START:
     case BH_SET_PARAMS:
