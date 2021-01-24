@@ -168,6 +168,7 @@
 
 /* comparing value of the parameter x with y using strcmp_i */
 #define Pcmps(x,y)   strcmp_i(Pgets(x),y)
+#define Pcmpss(x,y)  strstr_i(Pgets(x),y)
 #define PcmpsEZ(x,y) strcmp_i(PgetsEZ(x),y)
 
 /* get value of a string parameter */
