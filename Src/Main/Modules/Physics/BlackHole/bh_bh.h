@@ -23,7 +23,7 @@ set_beta_inner_bc_alpha_omegaXr
  );
 
 
-
+void bh_tune_BH_chi_simple(Physics_T *const phys);
 
 
 

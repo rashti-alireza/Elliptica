@@ -294,6 +294,67 @@ void bh_tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
   
 }
 
+/* adjust BH omega to meet BH's chi (dimensionless spin) target value */
+void bh_tune_BH_chi_simple(Physics_T *const phys)
+{
+  const double W1        = Getd("spin_update_weight");
+  const double W2        = 1.-W1;
+  const double dchi_tol  = Getd("spin_tolerance");
+  const double chi_x     = Getd("chi_x");
+  const double chi_y     = Getd("chi_y");
+  const double chi_z     = Getd("chi_z");
+  const double omega_x   = Getd("Omega_x");
+  const double omega_y   = Getd("Omega_y");
+  const double omega_z   = Getd("Omega_z");
+  double omega[3]        = {0.};
+  double s[3]            = {0.};
+  double chi_current[3]  = {0.};
+  double dchi[3]         = {0.};
+  
+  observe(phys,"spin",Gets("Observe_spin"),s);
+
+  /* calculate BH current Christodoulou mass.
+  // NOTE: s[?] depend on BH spin on top */
+  double irr_mass = Getd("irreducible_mass_current");
+  double net_spin = sqrt(Pow2(s[0])+Pow2(s[1])+Pow2(s[2]));
+  double m = sqrt(Pow2(irr_mass)+Pow2(net_spin)/(4*Pow2(irr_mass)));
+
+  /* current chi */
+  chi_current[0] = s[0]/Pow2(m);
+  chi_current[1] = s[1]/Pow2(m);
+  chi_current[2] = s[2]/Pow2(m);
+  
+  dchi[0] = chi_current[0] - chi_x;
+  dchi[1] = chi_current[1] - chi_y;
+  dchi[2] = chi_current[2] - chi_z;
+  
+  printf(Pretty0"current %s chi_x = %e\n",phys->stype,chi_current[0]);
+  printf(Pretty0"current %s chi_y = %e\n",phys->stype,chi_current[1]);
+  printf(Pretty0"current %s chi_z = %e\n",phys->stype,chi_current[2]);
+  printf(Pretty0"update weight    = %e\n",W1);
+  printf(Pretty0"chi tolerance    = %e\n",dchi_tol);
+  
+  if (EQL(W1,0.))
+  {
+    return;
+  }
+  if (GRT(fabs(dchi[0]),dchi_tol))
+  {
+    omega[0] = W2*omega_x-W1*dchi[0];
+    Setd("Omega_x",omega[0]);
+  }
+  if (GRT(fabs(dchi[1]),dchi_tol))
+  {
+    omega[1] = W2*omega_y-W1*dchi[1];
+    Setd("Omega_y",omega[1]);
+  }
+  if (GRT(fabs(dchi[2]),dchi_tol))
+  {
+    omega[2] = W2*omega_z-W1*dchi[2];
+    Setd("Omega_z",omega[2]);
+  }
+}
+
 /* update inner BC values, for example the values of alpha on AH */
 void bh_update_inner_BC(Physics_T *const phys)
 {
