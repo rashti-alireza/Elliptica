@@ -694,6 +694,8 @@ static void adjust_NS_center_interpolation(Physics_T *const phys)
   FUNC_TIC
   
   Grid_T *const grid  = mygrid(phys,"NS,NS_around");
+  const double W1     = Getd("adjust_center_update_weight");
+  const double W2     = 1.-W1;
   double NS_center[3] = {Getd("center_x"),
                          Getd("center_y"),
                          Getd("center_z")};
@@ -717,6 +719,7 @@ static void adjust_NS_center_interpolation(Physics_T *const phys)
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
+    const double *h_old = 0;
     double x[3],Xp[3];
     
     /* now shift enthalpy */
@@ -725,6 +728,7 @@ static void adjust_NS_center_interpolation(Physics_T *const phys)
     ADD_FIELD(shifted_enthalpy);
     REALLOC_v_WRITE_v(shifted_enthalpy);
     make_coeffs_3d(enthalpy);
+    h_old = enthalpy->v;
     
     FOR_ALL_ijk
     {
@@ -736,17 +740,17 @@ static void adjust_NS_center_interpolation(Physics_T *const phys)
       if (patchp) 
       {
         X_of_x(Xp,x,patchp);
-        shifted_enthalpy[ijk] = f_of_X("enthalpy",Xp,patchp);
+        shifted_enthalpy[ijk] = W2*h_old[ijk]+W1*f_of_X("enthalpy",Xp,patchp);
       }
       else
       {
         /* try */
         patchp = x_in_which_patch_force(x,grid->patch,grid->np,Xp);
         if (patchp)
-          shifted_enthalpy[ijk] = f_of_X("enthalpy",Xp,patchp);
+          shifted_enthalpy[ijk] = W2*h_old[ijk]+W1*f_of_X("enthalpy",Xp,patchp);
         /* if point x located outside of NS around */
         else
-          shifted_enthalpy[ijk] = 1.;
+          shifted_enthalpy[ijk] = h_old[ijk];
       }
     }
   }
@@ -943,7 +947,7 @@ static void adjust_NS_center_Taylor_expansion(Physics_T *const phys)
   FUNC_TIC
   
   Grid_T *const grid  = mygrid(phys,"NS,NS_around");
-  const double W      = Getd("enthalpy_update_weight");
+  const double W      = Getd("adjust_center_update_weight");
   double NS_center[3] = {Getd("center_x"),
                          Getd("center_y"),
                          Getd("center_z")};
