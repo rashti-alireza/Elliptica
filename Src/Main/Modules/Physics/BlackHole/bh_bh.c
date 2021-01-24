@@ -257,22 +257,18 @@ void bh_tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
   const double current_r_bh   = Getd("perfect_S2_radius");
   const double W              = Getd("radius_update_weight");
   const double dM_tolerance   = Getd("mass_tolerance");
-  double Komar_mass, irr_mass;
+  double irr_mass;
   double dr,r_bh,dM;
   
   observe(phys,"Irreducible(M)",Gets("Observe_Irreducible_M"),&irr_mass);
-  observe(phys,"Komar(M)",Gets("Observe_Komar_M"),&Komar_mass);
+  Setd("irreducible_mass_current",irr_mass);
   
   printf(Pretty0"current BH irreducible mass = %e\n",irr_mass);
-  printf(Pretty0"current BH Komar mass       = %e\n",Komar_mass);
-  
-  Setd("irreducible_mass_current",irr_mass);
-  Setd("Komar_mass",Komar_mass);
+  printf(Pretty0"update weight               = %e\n",W);
+  printf(Pretty0"mass tolerance              = %e\n",dM_tolerance);
   
   dM = fabs(irr_mass/target_bh_mass-1);
   dr = -current_r_bh*(irr_mass/target_bh_mass-1);
-  
-  printf(Pretty0"update weight = %e\n",W);
   if (EQL(W,0))
   {
     dr = 0;
@@ -282,7 +278,6 @@ void bh_tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
     dr = 0;
     printf(Pretty0"|dM/M| = %g < Tol. = %g\n",dM,dM_tolerance);
   }
-
   r_bh = current_r_bh + W*dr;
   
   Setd("min_radius",r_bh);
