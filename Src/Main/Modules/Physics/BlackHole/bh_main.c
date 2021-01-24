@@ -20,6 +20,11 @@ int bh_main(Physics_T *const phys)
       ret = tune_black_hole_radius(phys);
     break;
     
+    case BH_TUNE_SPIN:
+      AssureType(phys->ctype == BH);
+      ret = tune_black_hole_spin(phys);
+    break;
+    
     case BH_FIND_SURFACE:
       AssureType(phys->ctype == BH);
       ret = find_black_hole_surface(phys);
@@ -143,6 +148,17 @@ static int tune_black_hole_radius(Physics_T *const phys)
   }
   else
     Error0(NO_OPTION);
+  
+  FUNC_TOC
+  return EXIT_SUCCESS;
+}
+
+/* adjust BH spin to reach the target value */
+static int tune_black_hole_spin(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  bh_tune_BH_chi_simple(phys);
   
   FUNC_TOC
   return EXIT_SUCCESS;
