@@ -18,9 +18,12 @@
 # such that the first column is row number and the second is value 
 # pertinent to that row.
 #
-# Note: It is case insensitive.
-# Note: This script tends to mainly use *_geometry_and_physics.txt files.
+# Note1: It is case insensitive.
+# Note2: This script tends to mainly use *_properties.txt files.
+# Note3: you should be in the directory that contains the file.
 #
+# ToDo: fix Note3.
+# 
 # usage:
 # $collect.sh quantity_name file_name    # collect and plot
 # $collect.sh -s quantity_name file_name # collect, scale and plot
