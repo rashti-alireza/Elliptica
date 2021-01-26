@@ -312,14 +312,14 @@ MyConfig:
           cp Doc/MyConfig.example MyConfig; \
         fi
 ##
-## clean Lib, Exe, dependecy files:
+## clean Lib, auto generated files and dependency files in submake:
 clean:
 	@echo $(PR_F0) "cleaning '$(EXEC)':"
 	@echo $(PR_L0)
 	@$(call PR_TASK_relPATH,"rm -rf",$(LIB_DIR))
 	@-rm -rf $(LIB_DIR)
-	@$(call PR_TASK_relPATH,"rm -rf",$(EXEC_DIR))
-	@-rm -rf $(EXEC_DIR)
+#	@$(call PR_TASK_relPATH,"rm -rf",$(EXEC_DIR))
+#	@-rm -rf $(EXEC_DIR)
 	@$(call PR_TASK_relPATH,"rm -rf",$(auto_gen_c_file))
 	@-rm -rf $(auto_gen_c_file)
 # --> invoke submakes to clean dependency files:
