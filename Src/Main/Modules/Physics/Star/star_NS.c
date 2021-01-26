@@ -993,7 +993,9 @@ static void adjust_NS_center_Taylor_expansion(Physics_T *const phys)
       double y = patch->node[ijk]->x[1];
       double z = patch->node[ijk]->x[2];
       
-      enthalpy[ijk] += W*(-dh[0]*x-dh[1]*y-dh[2]*z);
+      enthalpy[ijk] -= W*(dh[0]*(x-NS_center[0])+
+                          dh[1]*(y-NS_center[1])+
+                          dh[2]*(z-NS_center[2]));
     }
     
     dField_di(denthalpy_D0);
