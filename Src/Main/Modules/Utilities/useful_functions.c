@@ -139,7 +139,8 @@ int IsOnEdge(const Uint *const n,const Uint p)
 // collocated as well.
 // ->return value: number of interface that found.
 */
-int IsOnFace(const double *const x, const Patch_T *const patch,Uint *const f)
+int IsOnFace(const double *const x, const Patch_T *const patch,
+             Uint *const f, const double precision_factor)
 {
   int u,c;
   double X[3];
@@ -148,7 +149,7 @@ int IsOnFace(const double *const x, const Patch_T *const patch,Uint *const f)
     f[u] = 0;
   
   c = 0;
-  if(X_of_x(X,x,patch))
+  if(X_of_x_precision(X,x,patch,precision_factor))
   {
     for (u = 0; u < TOT_FACE; u++)
     {
