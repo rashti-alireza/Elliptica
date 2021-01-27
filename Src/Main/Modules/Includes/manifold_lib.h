@@ -281,6 +281,8 @@ typedef struct JACOBIAN_EQ_T
 typedef struct NEEDLE_T
 {
   const double *x;/* Cartesian coords */
+  double precision_factor;/* precision factor for X_of_x_precision
+                          // default = 1. . */
   Grid_T *grid;/* the grid which is used */
   Uint *guess;/* these are guess patches searched firstly */
   Uint *in;/* force it to look only inside these patches. */

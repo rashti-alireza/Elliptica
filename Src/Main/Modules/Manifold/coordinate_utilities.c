@@ -189,7 +189,7 @@ static void find(Needle_T *const needle,Mode_T mode)
     Patch_T *patch = needle->grid->patch[p[i]];
     int a;
     
-    a = X_of_x(X,needle->x,patch);
+    a = X_of_x_precision(X,needle->x,patch,needle->precision_factor);
     
     if (a)
       needle_ans(needle,patch);
@@ -614,6 +614,7 @@ void *alloc_needle(void)
   needle = calloc(1,sizeof(*needle));
   IsNull(needle);
 
+  needle->precision_factor = 1.;
   return needle;
 }
 
