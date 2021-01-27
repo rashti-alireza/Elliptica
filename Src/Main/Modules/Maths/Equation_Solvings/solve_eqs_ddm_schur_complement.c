@@ -1864,7 +1864,7 @@ static void populate_pair(Sewing_T *const sewing,SubFace_T *const subface,const 
     for (i = 0; i < np; ++i)
     {
       double *x = subface->patch->node[node[i]]->x;
-      assert(X_of_x(X,x,adjPatch));
+      assert(X_of_x_precision(X,x,adjPatch,subface->precision_factor));
       
       pair->ip[i].X[0] = X[0];
       pair->ip[i].X[1] = X[1];
