@@ -46,7 +46,7 @@ Uint I(const Uint l, const Uint *const n);
 Uint J(const Uint l, const Uint *const n);
 Uint K(const Uint l, const Uint *const n);
 int IsOnEdge(const Uint *const n,const Uint p);
-int IsOnFace(const double *const x, const Patch_T *const patch,Uint *const f);
+int IsOnFace(const double *const x, const Patch_T *const patch,Uint *const f,const double precision_factor);
 SubFace_T *get_paired_subface(const SubFace_T *const sub);
 Uint total_nodes_grid(const Grid_T *const grid);
 Uint total_nodes_patch(const Patch_T *const patch);
