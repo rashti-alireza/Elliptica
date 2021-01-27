@@ -559,9 +559,12 @@ static double approx_inverse_r2_expmAr(struct Demand_S *const demand)
  const double Att   = 0.1;/* coming from experiment */
  double a,b,c;
  
- a = fr0 + (r0*(4*dfr0 + ddfr0*r0))/2.;
- b = -(Pow2(r0)*(3*dfr0 + ddfr0*r0));
- c = (Pow3(r0)*(2*dfr0 + ddfr0*r0))/2.;
+ a = (fr0*(2 + 4*Att*r0 + Pow2(Att)*Pow2(r0)) + 
+     r0*(ddfr0*r0 + 2*dfr0*(2 + Att*r0)))/2.;
+ b = -(Pow2(r0)*(3*Att*fr0 + ddfr0*r0 + Pow2(Att)*fr0*r0 + 
+       dfr0*(3 + 2*Att*r0)));
+ c = (Pow3(r0)*(2*Att*fr0 + ddfr0*r0 + Pow2(Att)*fr0*r0 + 
+       2*dfr0*(1 + Att*r0)))/2.;
  
  return (a+b/r+c/Pow2(r))*exp(-Att*(r-r0));
 }
