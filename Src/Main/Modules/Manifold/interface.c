@@ -3003,6 +3003,7 @@ find_adjacent_scs
     q[1] = centerx[1];
     q[2] = centerx[2];
     needle0 = alloc_needle();
+    needle0->precision_factor = PrecisionFactor;
     needle0->grid = grid;
     needle_ex(needle0,patch);
     needle0->x = q;
@@ -3018,6 +3019,7 @@ find_adjacent_scs
       q[2] = centerx[2]+eps*centerN[2];
       free_needle(needle0);
       needle0 = alloc_needle();
+      needle0->precision_factor = PrecisionFactor;
       needle0->grid = grid;
       needle_ex(needle0,patch);
       needle0->x = q;
@@ -3039,6 +3041,7 @@ find_adjacent_scs
       q[2] = centerx[2]+eps*centerN[2];
   
       Needle_T *needle1 = alloc_needle();
+      needle1->precision_factor = PrecisionFactor;
       needle1->grid = grid;
       needle_ex(needle1,patch);
       needle1->x = q;
@@ -3180,6 +3183,7 @@ find_adjacent_scs
               q[1] = pnt_x[1];
               q[2] = pnt_x[2];
               needle2 = alloc_needle();
+              needle2->precision_factor = PrecisionFactor;
               needle2->grid = grid;
               needle_ex(needle2,patch);
               needle_ex(needle2,center_adjpatch);
@@ -3193,6 +3197,7 @@ find_adjacent_scs
               q[1] = pnt_x[1];
               q[2] = pnt_x[2];
               needle2 = alloc_needle();
+              needle2->precision_factor = PrecisionFactor;
               needle2->grid = grid;
               needle_ex(needle2,patch);
               needle_ex(needle2,center_adjpatch);
@@ -3207,6 +3212,7 @@ find_adjacent_scs
                 q[1] = pnt_x[1]+eps*pnt[p]->N[1];
                 q[2] = pnt_x[2]+eps*pnt[p]->N[2];
                 needle2 = alloc_needle();
+                needle2->precision_factor = PrecisionFactor;
                 needle2->grid = grid;
                 needle_ex(needle2,patch);
                 needle_ex(needle2,center_adjpatch);
