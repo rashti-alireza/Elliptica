@@ -5,8 +5,9 @@
 
 #include "interface.h"
 
-static const double   Huge_Eps    = 2;
-static const double   ScaleFactor = 1E-5;/* scale factor */
+static const double   Huge_Eps        = 2;
+static const double   ScaleFactor     = 1E-5;/* scale factor */
+static const double   PrecisionFactor = 1E2;/* precision factor */
 static const Uint NFaces      = 6;/* total number of faces */
 /* schematic names for surfaces correspond to FACE_T enum. */
 static const char *FaceName[] = {"X == 0","X == 1","Y == 0","Y == 1",
@@ -930,6 +931,8 @@ static void add_to_subface_scs(Point_T *const pnt)
     subface->exterF    = pnt->exterF;
     subface->outerB    = pnt->outerB;
     subface->innerB    = pnt->innerB;
+    
+    subface->precision_factor = PrecisionFactor;
   }
   
   /* add this point to the subface */
@@ -2659,7 +2662,7 @@ static void fill_adjPnt(PointSet_T *const pnt,const Uint N)
   }
   
   /* find if it is on a face or not */  
-  if (IsOnFace(x,grid->patch[adjPnt->p],f))
+  if (IsOnFace(x,grid->patch[adjPnt->p],f,PrecisionFactor))
   {
     Point_T po;
     double *N2;
@@ -2693,7 +2696,7 @@ static void fill_adjPnt(PointSet_T *const pnt,const Uint N)
       else
         adjPnt->fs[i].on_f = 0;
     }
-  }/* if (IsOnFace(n,ind2,f)) */
+  }/* if (IsOnFace(...)) */
   
 }
 
@@ -3123,7 +3126,7 @@ find_adjacent_scs
           Flag_T iscp = NONE;
           
           /* first try to find this point on center adjpatch */
-          if (X_of_x(adjX,pnt_x,center_adjpatch))
+          if (X_of_x_precision(adjX,pnt_x,center_adjpatch,PrecisionFactor))
           {
             pnt[p]->touch    = 1;
             pnt[p]->adjPatch = center_adjpatch->pn;
@@ -3218,7 +3221,7 @@ find_adjacent_scs
             
               /* test why could not find the adjacent patch */
               double tt_X[3];
-              int tt_ret = X_of_x(tt_X,pnt_x,center_adjpatch);
+              int tt_ret = X_of_x_precision(tt_X,pnt_x,center_adjpatch,PrecisionFactor);
               printf("%s: [%g,%g]x[%g,%g]x[%g,%g]\n"
                      "%d <- X_of_x((%0.15f,%0.15f,%0.15f))\n",
               center_adjpatch->name,
@@ -3243,7 +3246,7 @@ find_adjacent_scs
               Uint adjfn;
               
               /* find the best adjface if it is on face at all */
-              if(IsOnFace(pnt_x,adjpatch,onface))
+              if(IsOnFace(pnt_x,adjpatch,onface,PrecisionFactor))
               for (adjfn = 0; adjfn < NFaces; ++adjfn)
               {
                 if (!onface[adjfn])
@@ -3268,7 +3271,7 @@ find_adjacent_scs
               fflush(stdout);
             }
             /* find this point on adjpatch */
-            if (X_of_x(adjX,pnt_x,pnt_adjpatch))
+            if (X_of_x_precision(adjX,pnt_x,pnt_adjpatch,PrecisionFactor))
             {
               pnt[p]->touch    = 1;
               pnt[p]->adjPatch = pnt_adjpatch->pn;
@@ -3311,7 +3314,7 @@ find_adjacent_scs
             {
               /* test why could not find the adjacent patch */
               double tt_X[3];
-              int tt_ret = X_of_x(tt_X,pnt_x,center_adjpatch);
+              int tt_ret = X_of_x_precision(tt_X,pnt_x,center_adjpatch,PrecisionFactor);
               printf("%s: [%g,%g]x[%g,%g]x[%g,%g]\n"
                      "%d <- X_of_x((%0.15f,%0.15f,%0.15f))\n",
               center_adjpatch->name,
