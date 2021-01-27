@@ -66,7 +66,6 @@ void populate_filling_box(Grid_T *const grid,const Uint pn);
 static void R1_derivative(Patch_T *const patch);
 static void R2_derivative(Patch_T *const patch);  
 double R_interpolation_CS(Field_T *const R,const double *const X);
-int x_of_X(double *const x,const double *const X,const Patch_T *const patch);
 void test_CubedSpherical_Coordinates(Grid_T *const grid);
 void alloc_patches_SNS_CubedSpherical_grid(Grid_T *const grid);
 void alloc_patches_Split_CubedSpherical_grid(Grid_T *const grid);

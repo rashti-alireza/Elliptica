@@ -87,7 +87,8 @@ void needle_in(Needle_T *const needle,const Patch_T *const patch);
 void needle_guess(Needle_T *const needle,const Patch_T *const patch);
 void needle_ans(Needle_T *const needle,const Patch_T *const patch);
 static void find(Needle_T *const needle,Mode_T mode);
-int X_of_x(double *const X,const double *const x,const Patch_T *const patch);
+int X_of_x_precision(double *const X,const double *const x,const Patch_T *const patch,const double precision_factor);
+int x_of_X_precision(double *const x,const double *const X,const Patch_T *const patch,const double precision_factor);
 Uint find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg);
 double x_coord(const Uint i,const Patch_T *const patch);
 double y_coord(const Uint i,const Patch_T *const patch);
@@ -95,9 +96,19 @@ double z_coord(const Uint i,const Patch_T *const patch);
 double X_coord(const Uint i,const Patch_T *const patch);
 double Y_coord(const Uint i,const Patch_T *const patch);
 double Z_coord(const Uint i,const Patch_T *const patch);
-int x_of_X(double *const x,const double *const X,const Patch_T *const patch);
-static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *const patch,const int check_flg);
-static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_T *const patch,const int check_flg);
+
+static int X_of_x_CS_coord(double *const X,
+                           const double *const x,
+                           const Patch_T *const patch,
+                           const double precision_factor,
+                           const int check_flg);
+
+static int x_of_X_CS_coord(double *const x,
+                           const double *const X,
+                           const Patch_T *const patch,
+                           const double precision_factor,
+                           const int check_flg);
+
 static int x_of_X_Cartesian_coord(double *const x,const double *const X,const Patch_T *const patch);
 static int X_of_x_Cartesian_coord(double *const X,const double *const x,const Patch_T *const patch);
 void free_needle(Needle_T *needle);

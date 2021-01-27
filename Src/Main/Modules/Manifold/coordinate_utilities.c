@@ -198,19 +198,18 @@ static void find(Needle_T *const needle,Mode_T mode)
 }
 
 /* find point X(general coords) correspond to x(Cartesian coords) 
-// in the given patch.
-// ->return value 1 if it is successful, otherwise 0.
-*/
-int X_of_x(double *const X,const double *const x,const Patch_T *const patch)
+// in the given patch. one can increase precision by the precision_factor.
+// ->return value 1 if it is successful, otherwise 0. */
+int X_of_x_precision(double *const X,const double *const x,const Patch_T *const patch,const double precision_factor)
 {
   int r = 0;
   
   if (patch->coordsys == Cartesian)
     r = X_of_x_Cartesian_coord(X,x,patch);
   else if (patch->coordsys == CubedSpherical)
-    r = X_of_x_CS_coord(X,x,patch,1);
+    r = X_of_x_CS_coord(X,x,patch,precision_factor,1);
   else
-      Error0("No finder for this coordinate.\n");
+    Error0("No finder for this coordinate.\n");
  
   return r;
 }
@@ -219,14 +218,14 @@ int X_of_x(double *const X,const double *const x,const Patch_T *const patch)
 // in the given patch.
 // ->return value 1 if it is successful, otherwise 0.
 */
-int x_of_X(double *const x,const double *const X,const Patch_T *const patch)
+int x_of_X_precision(double *const x,const double *const X,const Patch_T *const patch,const double precision_factor)
 {
   int ret = 0;
   
   if (patch->coordsys == Cartesian)
     ret = x_of_X_Cartesian_coord(x,X,patch);
   else if (patch->coordsys == CubedSpherical)
-    ret = x_of_X_CS_coord(x,X,patch,1);
+    ret = x_of_X_CS_coord(x,X,patch,precision_factor,1);
   else
       Error0(NO_JOB);
  
@@ -253,7 +252,7 @@ static int x_of_X_Cartesian_coord(double *const x,const double *const X,const Pa
 // for Cubed Spherical. Note: x reported with respect to the origin (0,0,0)
 // if check_flg = 1, it checks the solution.
 // ->return value 1 if it is successful, otherwise 0. */
-static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *const patch,const int check_flg)
+static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *const patch,const double precision_factor,const int check_flg)
 {
   const Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
   const Flag_T type = patch->CoordSysInfo->CubedSphericalCoord->type;
@@ -364,7 +363,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
     x_test[0] = x[0];
     x_test[1] = x[1];
     x_test[2] = x[2];
-    X_of_x_CS_coord(X_test,x_test,patch,0);
+    X_of_x_CS_coord(X_test,x_test,patch,precision_factor,0);
     dX = root_square(3,X,X_test);
     
     if (!EQL_coord(dX,0,EPS_coord_general))
@@ -394,7 +393,11 @@ static int X_of_x_Cartesian_coord(double *const X,const double *const x,const Pa
 // it's a general algorithm and for even if the point is not collocated.
 // if check_flg = 1, it checks the solution.
 // ->return value: 1 if it is successful, otherwise 0. */
-static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_T *const patch,const int check_flg)
+static int X_of_x_CS_coord(double *const X,
+                           const double *const cart,
+                           const Patch_T *const patch,
+                           const double precision_factor,
+                           const int check_flg)
 {
   const double *const C = patch->c;/* center of origine translated */
   const Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
@@ -499,6 +502,8 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
       Error0(NO_OPTION);
   }
   
+  eps *= precision_factor;
+  
   /* adujusting boundary number to avoid some unexpeted behavior
   // due to interpolation error. */
   if (EQL_coord(X[0],patch->max[0],eps))  X[0] = patch->max[0];
@@ -523,7 +528,7 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
     X_test[0] = X[0];
     X_test[1] = X[1];
     X_test[2] = X[2];
-    x_of_X_CS_coord(x_test,X_test,patch,0);
+    x_of_X_CS_coord(x_test,X_test,patch,precision_factor,0);
     dx = root_square(3,cart,x_test);
     double scale = MaxMag_d(root_square(3,cart,0),root_square(3,x_test,0));
     scale = scale < 1 ? 1 : scale;

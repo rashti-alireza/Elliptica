@@ -11,6 +11,11 @@
 /* for now only two objects */
 #define NPARAMS_GRID_CHAR (2)
 
+/* to keep the previous notation these macros defined 
+// with default precision factor 1. */
+#define X_of_x(XXX,xxx,ppp) (X_of_x_precision((XXX),(xxx),(ppp),1.0))
+#define x_of_X(xxx,XXX,ppp) (x_of_X_precision((xxx),(XXX),(ppp),1.0))
+
 /* forward declaration structures */
 struct FIELD_T;
 struct SOLVING_MAN_T;
@@ -313,8 +318,8 @@ void initialize_collocation_struct(const Patch_T *const patch,struct Collocation
 int make_patches(Grid_T *const grid);
 int realize_interfaces(Grid_T *const grid);
 int make_JacobianT(Grid_T *const grid);
-int X_of_x(double *const X,const double *const x,const Patch_T *const patch);
-int x_of_X(double *const x,const double *const X,const Patch_T *const patch);
+int X_of_x_precision(double *const X,const double *const x,const Patch_T *const patch,const double precision_factor);
+int x_of_X_precision(double *const x,const double *const X,const Patch_T *const patch,const double precision_factor);
 double x_coord(const Uint i,const Patch_T *const patch);
 double y_coord(const Uint i,const Patch_T *const patch);
 double z_coord(const Uint i,const Patch_T *const patch);
