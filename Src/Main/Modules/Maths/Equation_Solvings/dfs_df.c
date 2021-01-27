@@ -810,28 +810,16 @@ Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type)
 */
 double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c)
 {
-  double aij = 0;
-  const int *const Ap   = m->ccs->Ap;
-  const int *const Ai   = m->ccs->Ai;
+  const int *const Ap    = m->ccs->Ap;
+  const int *const Ai    = m->ccs->Ai;
   const double *const Ax = m->ccs->Ax;
-  int i;
   
-  /* moving along none zero entries of the matrix at column c */
-  for (i = Ap[c]; i < Ap[c+1]; ++i)
-  {
-    if (Ai[i] == r)
-    {
-      aij = Ax[i];
-      break;
-    }
-    /* it is supposed that the matrix m is in order in rows
-    // therefor, if the seeking row is passed, the entry is 0.
-    */
-    else if (Ai[i] > r)
-      break;
-  }
+  /* moving along none zero entries of the matrix at column c.
+  // Note: it should not pass the given row.  */
+  for (int i = Ap[c]; Ai[i] <= r && i < Ap[c+1]; ++i)
+    if (Ai[i] == r) return Ax[i];
     
-  return aij;
+  return 0.;
 }
 
 /* calculating the give ccs matirx size.
