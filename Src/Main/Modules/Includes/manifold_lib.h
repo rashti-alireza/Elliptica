@@ -155,6 +155,7 @@ typedef struct SUBFACE_T
                       // and needs boundary condition */
   Uint innerB : 1;/* if it is inner boundary of grid 
                       // and needs boundary condition */
+  double precision_factor;/* precision factor for X_of_x_precision */
 }SubFace_T;
 
 /* interface (face) */
