@@ -635,7 +635,7 @@ static double approx_inverse_r_expmAr(struct Demand_S *const demand)
  const double r     = demand->r;
  const double Att   = 10.;/* don't let a radius with length 10
                           // increases more than %1. */
- double a,b,c;
+ double a,b;
 
  a = fr0 + dfr0*r0 + Att*fr0*r0;
  b = -((dfr0 + Att*fr0)*Pow2(r0));
@@ -695,7 +695,7 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
   const Uint Ntheta = Ntheta_Ylm(lmax);
   const Uint Nphi   = Nphi_Ylm(lmax);
   const Uint Ntot   = Ntotal_Ylm(lmax);
-  const double RESIDUAL = sqrt(Getd("RootFinder_Tolerance"));
+  const double Residual     = sqrt(Getd("RootFinder_Tolerance"));
   const double max_h_L2_res = Getd("enthalpy_allowed_residual");
   const double NS_center[3] = {Getd("center_x"),
                                Getd("center_y"),
@@ -817,7 +817,7 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
         break;
       }
       /* if root finder is not OK for some reason */
-      if (GRT(root->residual,RESIDUAL))
+      if (GRT(root->residual,Residual))
       {
         printf(". Root finder for NS surface at %s:\n.. ",patch->name);
         print_root_finder_exit_status(root);
