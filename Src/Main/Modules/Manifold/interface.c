@@ -829,6 +829,8 @@ static void add_to_subface(const Point_T *const pnt,const char *const lead)
     subface->exterF    = pnt->exterF;
     subface->outerB    = pnt->outerB;
     subface->innerB    = pnt->innerB;
+    subface->precision_factor = PrecisionFactor;
+    
   }
   
   /* add this point to the subface */
