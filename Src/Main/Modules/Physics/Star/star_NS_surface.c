@@ -74,11 +74,53 @@ extrap_init
   extrap->grid = grid;
   sprintf(extrap->method,"%s",method);
   
-  if (strcmp_i(method,"poly2")             ||
-      strcmp_i(method,"exp2")              ||
-      strcmp_i(method,"inverse_r2")        ||
-      strcmp_i(method,"inverse_r2_expmr")  ||
-      strcmp_i(method,"inverse_r2_expmAr"))
+  if (strcmp_i(method,"inverse_r_expmAr"))
+  {
+    Uint nf,npo,npi;
+    
+    nf = 0;/* number of fields */
+    while(fields_name[nf]) ++nf;
+    
+    /* alloc */
+    extrap->nf = nf;
+    extrap->fld= calloc(nf,sizeof(*extrap->fld));IsNull(extrap->fld);
+    
+    /* collect names */
+    collect_names(extrap,fields_name,nf);
+    
+    if (grid->kind == Grid_SplitCubedSpherical_NSNS ||
+        grid->kind == Grid_SplitCubedSpherical_BHBH ||
+        grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_SBH  ||
+        grid->kind == Grid_SplitCubedSpherical_SNS  ||
+        grid->kind == Grid_CubedSpherical_BHNS      ||
+        grid->kind == Grid_CubedSpherical_NSNS
+       )
+    {
+     /* this function finds field values and its derivative
+     // on the surface with the known values of the field. */ 
+     extrap->fmain = fmain_f_df_ddf_CS;
+    }
+    else
+     Error0(NO_OPTION);
+    
+    /* set the function extrapolate and approximates the values */
+    if (strcmp_i(method,"inverse_r_expmAr"))
+      extrap->extrap = approx_inverse_r_expmAr;
+    else
+      Error0(NO_OPTION);
+    
+    extrap->patches_in  = collect_patches(phys->grid,Ftype("NS_OB"),&npi);
+    extrap->patches_out = collect_patches(phys->grid,Ftype("NS_around"),&npo);
+     
+    extrap->npo = npo;
+    extrap->npi = npi;
+  }
+  else if (strcmp_i(method,"poly2")             ||
+           strcmp_i(method,"exp2")              ||
+           strcmp_i(method,"inverse_r2")        ||
+           strcmp_i(method,"inverse_r2_expmr")  ||
+           strcmp_i(method,"inverse_r2_expmAr"))
   {
     Uint nf,npo,npi;
     
@@ -127,6 +169,8 @@ extrap_init
      
     extrap->npo = npo;
     extrap->npi = npi;
+    
+    extrap->C2  = 1;/* we need second oreder derivatives */
   }
   else if (strcmp_i(method,"expmr"))
   {
@@ -226,6 +270,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
         }
       }
       /* add ddfield if does not exist, dfield must exist already. */
+      if (extrap->C2)
       for (ii = 0; ii < 6; ++ii)
       {
         if (_Ind(extrap->fld[f]->ddf[ii]) < 0)
@@ -244,7 +289,8 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
       
       for (ii = 0; ii < 3; ++ii)
         make_coeffs_2d(patch->fields[Ind(extrap->fld[f]->df[ii])],0,1);
-        
+      
+      if (extrap->C2)  
       for (ii = 0; ii < 6; ++ii)
         make_coeffs_2d(patch->fields[Ind(extrap->fld[f]->ddf[ii])],0,1);
     }
@@ -338,6 +384,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
       }
       
       /* d^2f/dx^2 value */
+      if (extrap->C2)
       for (d1 = 0; d1 < 3; d1++)
       {
         for (d2 = d1; d2 < 3; d2++)
@@ -356,18 +403,20 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
       dfdr = (N[0]*df_dx[0]+N[1]*df_dx[1]+N[2]*df_dx[2]);
       
       ddfddr = 0;
-      _ddfddr[0] = _ddfddr[1] = _ddfddr[2] = 0;
-      /* d^2f/dr^2 */
-      for (int _i = 0; _i < 3; ++_i)
+      if (extrap->C2)
       {
-        for (int _j = 0; _j < 3; ++_j)
+        _ddfddr[0] = _ddfddr[1] = _ddfddr[2] = 0;
+        /* d^2f/dr^2 */
+        for (int _i = 0; _i < 3; ++_i)
         {
-          _ddfddr[_i] += (KD[_i==_j]/rSurf - x[_i]*x[_j]/rSurf3)*df_dx[_j];
-          _ddfddr[_i] += N[_j]*ddf_ddx[IJsymm3(_i,_j)];
+          for (int _j = 0; _j < 3; ++_j)
+          {
+            _ddfddr[_i] += (KD[_i==_j]/rSurf - x[_i]*x[_j]/rSurf3)*df_dx[_j];
+            _ddfddr[_i] += N[_j]*ddf_ddx[IJsymm3(_i,_j)];
+          }
+          ddfddr += _ddfddr[_i]*N[_i];
         }
-        ddfddr += _ddfddr[_i]*N[_i];
       }
-      
       /* extrap */
       demand->r     = r;
       demand->r0    = rSurf;
@@ -553,7 +602,7 @@ static double approx_inverse_r2_expmr(struct Demand_S *const demand)
  return (a+b/r+c/Pow2(r))*exp(-Att*r/r0);
 }
 
-/* ->: f(r) = (a+b/r+c/r^2)*exp(-Att*(r-r0)).
+/* ->: f(r) = (a+b/r+c/r^2)*exp(-Att*(r-r0)), for r >= r0.
 // conditions: f be C^2 continues across the surface. */
 static double approx_inverse_r2_expmAr(struct Demand_S *const demand)
 {
@@ -562,7 +611,8 @@ static double approx_inverse_r2_expmAr(struct Demand_S *const demand)
  const double dfr0  = demand->dfr0;
  const double ddfr0 = demand->ddfr0;
  const double r     = demand->r;
- const double Att   = 0.1;/* coming from experiment */
+ const double Att   = 10.;/* don't let a radius with length 10
+                          // increases more than %1. */
  double a,b,c;
  
  a = (fr0*(2 + 4*Att*r0 + Pow2(Att)*Pow2(r0)) + 
@@ -572,7 +622,25 @@ static double approx_inverse_r2_expmAr(struct Demand_S *const demand)
  c = (Pow3(r0)*(2*Att*fr0 + ddfr0*r0 + Pow2(Att)*fr0*r0 + 
        2*dfr0*(1 + Att*r0)))/2.;
  
- return (a+b/r+c/Pow2(r))*exp(-Att*(r-r0));
+ return (a+b/r+c/Pow2(r))*exp(-Att*fabs(r-r0));
+}
+
+/* ->: f(r) = (a+b/r)*exp(-Att*(r-r0)), for r >= r0.
+// conditions: f be C^1 continues across the surface. */
+static double approx_inverse_r_expmAr(struct Demand_S *const demand)
+{
+ const double r0    = demand->r0;
+ const double fr0   = demand->fr0;
+ const double dfr0  = demand->dfr0;
+ const double r     = demand->r;
+ const double Att   = 10.;/* don't let a radius with length 10
+                          // increases more than %1. */
+ double a,b,c;
+
+ a = fr0 + dfr0*r0 + Att*fr0*r0;
+ b = -((dfr0 + Att*fr0)*Pow2(r0));
+ 
+ return (a+b/r)*exp(-Att*fabs(r-r0));
 }
 
 

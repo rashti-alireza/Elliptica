@@ -58,6 +58,7 @@ struct Extrap_S
   Uint NCoeffs;/* number of coeffs for in extrapolant function */
   Uint nf;/* number of fields */
   char method[MAX_STR];/* the specified methods */
+  Uint C2: 1;/* if C2 == 1 means, second order derivatives needed */
   struct
   {
     char f[MAX_STR];/* f */
@@ -108,6 +109,8 @@ static double approx_inverse_r2(struct Demand_S *const demand);
 static double approx_inverse_r2_expmr(struct Demand_S *const demand);
 static double approx_inverse_r2_expmAr(struct Demand_S *const demand);
 static int extrapolate_expmr_C0_CS(struct Extrap_S *const extrap);
+static double approx_inverse_r_expmAr(struct Demand_S *const demand);
+
 
 
 
