@@ -9,21 +9,8 @@
 
 /* ->: EXIT_SUCCESS if succeeds, otherwise an error code
 // extrapolate given fields_name outside star surface.
-// mostly used for matter fields.
-//
-// method:
-// ========
-// note: r is coordinate distance to the center of patch covers the star
-//
-// poly2: 
-// f(r) = a+b*r+c*r^2.
-// conditions: f be C^2 continues across the surface.
-//
-// exp2:
-// f(r) = a+b*exp(c*r).
-// conditions: f be C^2 continues across the surface.
-//
-// */
+// mostly used for matter fields. 
+// more method see param "extrapolate_matter_fields". */
 int 
 star_NS_extrapolate
   (
@@ -38,7 +25,6 @@ star_NS_extrapolate
    Error0("Wrong physics!");
   
   int ret = -1;
-  
   
   printf(Pretty0"method = %s\n",method);
   
