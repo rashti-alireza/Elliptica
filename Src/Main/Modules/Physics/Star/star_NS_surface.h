@@ -110,6 +110,7 @@ static double approx_inverse_r2_expmr(struct Demand_S *const demand);
 static double approx_inverse_r2_expmAr(struct Demand_S *const demand);
 static int extrapolate_expmr_C0_CS(struct Extrap_S *const extrap);
 static double approx_inverse_r_expmAr(struct Demand_S *const demand);
+static double approx_inverse_r_expmr(struct Demand_S *const demand);
 
 
 

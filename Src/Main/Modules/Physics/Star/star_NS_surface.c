@@ -60,7 +60,8 @@ extrap_init
   extrap->grid = grid;
   sprintf(extrap->method,"%s",method);
   
-  if (strcmp_i(method,"inverse_r_expmAr"))
+  if (strcmp_i(method,"inverse_r_expmAr") ||
+      strcmp_i(method,"inverse_r_expmr"))
   {
     Uint nf,npo,npi;
     
@@ -93,6 +94,8 @@ extrap_init
     /* set the function extrapolate and approximates the values */
     if (strcmp_i(method,"inverse_r_expmAr"))
       extrap->extrap = approx_inverse_r_expmAr;
+    else if (strcmp_i(method,"inverse_r_expmr"))
+      extrap->extrap = approx_inverse_r_expmr;
     else
       Error0(NO_OPTION);
     
@@ -573,7 +576,7 @@ static double approx_inverse_r2_expmr(struct Demand_S *const demand)
  const double dfr0  = demand->dfr0;
  const double ddfr0 = demand->ddfr0;
  const double r     = demand->r;
- const double Att   = 1.;
+ const double Att   = 1E-2;/* came from experiment */
  double a,b,c;
  
  a = (pow(M_E,Att)*((2 + 4*Att + Pow2(Att))*fr0 + 
@@ -597,8 +600,7 @@ static double approx_inverse_r2_expmAr(struct Demand_S *const demand)
  const double dfr0  = demand->dfr0;
  const double ddfr0 = demand->ddfr0;
  const double r     = demand->r;
- const double Att   = 10.;/* don't let a radius with length 10
-                          // increases more than %1. */
+ const double Att   = 0.5;/* came from experiment */
  double a,b,c;
  
  a = (fr0*(2 + 4*Att*r0 + Pow2(Att)*Pow2(r0)) + 
@@ -619,14 +621,30 @@ static double approx_inverse_r_expmAr(struct Demand_S *const demand)
  const double fr0   = demand->fr0;
  const double dfr0  = demand->dfr0;
  const double r     = demand->r;
- const double Att   = 10.;/* don't let a radius with length 10
-                          // increases more than %1. */
+ const double Att   = 0.5;/* came from experiment */
  double a,b;
 
  a = fr0 + dfr0*r0 + Att*fr0*r0;
  b = -((dfr0 + Att*fr0)*Pow2(r0));
  
  return (a+b/r)*exp(-Att*fabs(r-r0));
+}
+
+/* ->: f(r) = (a+b/r)*exp(-Att*(r/r0)), for r >= r0.
+// conditions: f be C^1 continues across the surface. */
+static double approx_inverse_r_expmr(struct Demand_S *const demand)
+{
+ const double r0    = demand->r0;
+ const double fr0   = demand->fr0;
+ const double dfr0  = demand->dfr0;
+ const double r     = demand->r;
+ const double Att   = 1E-2;/* came from experiment */
+ double a,b;
+
+ a = pow(M_E,Att)*(fr0 + Att*fr0 + dfr0*r0);
+ b = -(pow(M_E,Att)*r0*(Att*fr0 + dfr0*r0));
+ 
+ return (a+b/r)*exp(-Att*r/r0);
 }
 
 
