@@ -49,6 +49,10 @@ def plot(directory_path,file_names,scalar_name,vector_name):
   SetWindowLayout(1)
   SetActiveWindow(1)
   
+  # use to activate or deactivate the relevant options
+  scalar_flg = 0
+  mesh_flg   = 0
+  
   for s in file_set:
     dbfile = directory_path + '/' + s + ' database'
     OpenDatabase(dbfile, 0)
@@ -56,10 +60,12 @@ def plot(directory_path,file_names,scalar_name,vector_name):
     # scalar
     if (scalar_name != ''):
       AddPlot("Pseudocolor", scalar_name, 1, 1)
+      scalar_flg = 1
     # patch
     else:
       mesh_name = re.sub(r'_xyz_.*\.silo','',s)
       AddPlot('Mesh',mesh_name, 1, 1)
+      mesh_flg = 1
     
     DrawPlots()
     # turn off annotation
@@ -480,7 +486,7 @@ def plot(directory_path,file_names,scalar_name,vector_name):
       AnnotationAtts.axesArray.axes.grid = 0
       SetAnnotationAttributes(AnnotationAtts)
     # set random color for coordinates lines
-    if (opt_random_mesh_color == 1):
+    if (mesh_flg == 1 and opt_random_mesh_color == 1):
       MeshAtts = MeshAttributes()
       MeshAtts.legendFlag = 1
       MeshAtts.lineWidth = 0
