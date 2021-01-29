@@ -7,6 +7,10 @@
 
 #include "star_NS_surface.h"
 
+/* make extrapolation weaker or stronger */
+static const double Attenuate_Factor0 = 0.5;/* came from experiment */ 
+static const double Attenuate_Factor1 = 1E-2;/* came from experiment */ 
+
 /* ->: EXIT_SUCCESS if succeeds, otherwise an error code
 // extrapolate given fields_name outside star surface.
 // mostly used for matter fields. 
@@ -576,7 +580,7 @@ static double approx_inverse_r2_expmr(struct Demand_S *const demand)
  const double dfr0  = demand->dfr0;
  const double ddfr0 = demand->ddfr0;
  const double r     = demand->r;
- const double Att   = 1E-2;/* came from experiment */
+ const double Att   = Attenuate_Factor1;
  double a,b,c;
  
  a = (pow(M_E,Att)*((2 + 4*Att + Pow2(Att))*fr0 + 
@@ -600,7 +604,7 @@ static double approx_inverse_r2_expmAr(struct Demand_S *const demand)
  const double dfr0  = demand->dfr0;
  const double ddfr0 = demand->ddfr0;
  const double r     = demand->r;
- const double Att   = 0.5;/* came from experiment */
+ const double Att   = Attenuate_Factor0;
  double a,b,c;
  
  a = (fr0*(2 + 4*Att*r0 + Pow2(Att)*Pow2(r0)) + 
@@ -621,7 +625,7 @@ static double approx_inverse_r_expmAr(struct Demand_S *const demand)
  const double fr0   = demand->fr0;
  const double dfr0  = demand->dfr0;
  const double r     = demand->r;
- const double Att   = 0.5;/* came from experiment */
+ const double Att   = Attenuate_Factor0;
  double a,b;
 
  a = fr0 + dfr0*r0 + Att*fr0*r0;
@@ -638,7 +642,7 @@ static double approx_inverse_r_expmr(struct Demand_S *const demand)
  const double fr0   = demand->fr0;
  const double dfr0  = demand->dfr0;
  const double r     = demand->r;
- const double Att   = 1E-2;/* came from experiment */
+ const double Att   = Attenuate_Factor1;
  double a,b;
 
  a = pow(M_E,Att)*(fr0 + Att*fr0 + dfr0*r0);
