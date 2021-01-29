@@ -28,32 +28,39 @@ def main():
 
   # get args
   directory_path,file_names,scalar_name,vector_name = pars_arguments()
-  
+
   # deleting all plots
   DeleteAllPlots()
   
-  plot(directory_path,file_names)
+  # plot
+  plot(directory_path,file_names,scalar_name,vector_name)
   
 ##} main
 
 ##{ plot: given object, data and the section of grid plot the object
-def plot(directory_path,file_names):
+def plot(directory_path,file_names,scalar_name,vector_name):
   
   # collecting all of the files name needed to load
-  files_name = collect_files(directory_path,file_names)
+  file_set = set_of_files(directory_path,file_names)
   
-  n = len(files_name)
-  
-  for i in range(n):
-    print('Openning data file: ' + files_name[i])
+  for s in file_set:
+    print('Openning data file: ' + s)
   
   SetWindowLayout(1)
-  
   SetActiveWindow(1)
-  for i in range(0,n):
-    OpenDatabase(files_name[i], 0)
-    mesh_name = re.sub(r'_xyz_.*\.silo','',files_name[i])
-    AddPlot('Mesh',mesh_name, 1, 1)
+  
+  for s in file_set:
+    dbfile = directory_path + '/' + s + ' database'
+    OpenDatabase(dbfile, 0)
+    
+    # scalar
+    if (scalar_name != ''):
+      AddPlot("Pseudocolor", scalar_name, 1, 1)
+    # patch
+    else:
+      mesh_name = re.sub(r'_xyz_.*\.silo','',s)
+      AddPlot('Mesh',mesh_name, 1, 1)
+    
     DrawPlots()
     # turn off annotation
     if (opt_annotation == 0):
@@ -509,28 +516,29 @@ def plot(directory_path,file_names):
       MeshAtts.opacity = 1
       SetPlotOptions(MeshAtts)
   # saving the session
-  SaveSession("{}/visit_plot_mesh{}.session".format(data_path,os.getpid()))
+  SaveSession("{}/visit_plot_mesh{}.session"
+             .format(directory_path,os.getpid()))
 
   
 ##} plot
 
-##{ collect_files to be loaded in visit
-def collect_files(data_path,regex):
+##{ set_of_files to be loaded in visit
+def set_of_files(data_path,regex):
   allfiles   = os.listdir(data_path)
-  files_name = set()
+  file_set = set()
   
   # get all files that match the regex,
   # note files which refer to a different time(cycle) grouped together.
   for f in allfiles:
     if re.search(r'{}\.{}'.format(regex,FILE_SUFFIX),f):
       stem = re.sub(r'\d+\.({})'.format(FILE_SUFFIX),'*.\\1',f)
-      files_name.add(stem)
+      file_set.add(stem)
   
-  if len(files_name) == 0:
+  if len(file_set) == 0:
     raise Exception("No data file yielded.")
     
-  return files_name
-##} collect_files
+  return file_set
+##} set_of_files
 
 ##{ pars_arguments
 def pars_arguments():
@@ -541,42 +549,46 @@ def pars_arguments():
   
   1. Usage patch example:
   =======================
-  visit -cli -s visit_plot.py -f "(left_central_box.*|left_NS_Up)_X.Y.Z.*"
+  visit -cli -s visit_plot.py -F "(left_central_box.*|left_NS_Up)_X.Y.Z.*"
   
   2. Usage scalar example:
   ========================
-  visit -cli -s visit_plot.py -s "enthalpy" -f "left_NS_.*_X.Y.Z.*"
+  visit -cli -s visit_plot.py -S "enthalpy" -F "left_NS_.*_X.Y.Z.*"
   
-  3. Usage patch example:
-  =======================
-  visit -cli -s visit_plot.py -v "beta_U" -f "left_NS_.*_X.Y.Z.*"
+  3. Usage vector example (not ready yet!):
+  ========================================
+  visit -cli -s visit_plot.py -V "beta_U" -F "left_NS_.*_X.Y.Z.*"
   
   4. Usage no window example:
   ===========================
-  visit -nowin -cli -s visit_plot.py -v "beta_U" -f "left_NS_.*_X.Y.Z.*"
+  visit -nowin -cli -s visit_plot.py -S "phi" -F "left_NS_.*_X.Y.Z.*"
+  
+  NOTE: flags are case sensitive!
           """
   
   parser = argparse.ArgumentParser(description=notes,
                                    formatter_class=RawTextHelpFormatter)
   
-  parser.add_argument('-d', action = 'store',default = os.getcwd(), 
+  parser.add_argument('-D', action = 'store',default = os.getcwd(), 
                       dest="directory_path", type=str, 
                       help = 'Default is .')
   
-  parser.add_argument('-f', action = 'store',default = '', 
+  parser.add_argument('-F', action = 'store',default = '', 
                       dest="file_names", type=str, 
                       help = 'Regex format file names.')
   
-  parser.add_argument('-s', action = 'store',default = '', 
+  parser.add_argument('-S', action = 'store',default = '', 
                       dest="scalar_name", type=str, 
                       help = 'The name of scalar field.')
   
-  parser.add_argument('-v', action = 'store',default = '', 
+  parser.add_argument('-V', action = 'store',default = '', 
                       dest="vector_name", type=str,
                       help = 'The anem of vector field.')
   
   args = parser.parse_args()
   
+  # remove / 
+  args.directory_path = re.sub('/$','',args.directory_path)
   return (str(args.directory_path), str(args.file_names),
           str(args.scalar_name),    str(args.vector_name))
   
