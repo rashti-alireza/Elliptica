@@ -522,7 +522,7 @@ def plot(directory_path,file_names,scalar_name,vector_name):
       MeshAtts.opacity = 1
       SetPlotOptions(MeshAtts)
   # saving the session
-  SaveSession("{}/visit_plot_mesh{}.session"
+  SaveSession("{}/visit_autosaved_{}.session"
              .format(directory_path,os.getpid()))
 
   
