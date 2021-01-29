@@ -1,15 +1,11 @@
-# A VisIt script to visualize patch/mesh in Elliptica:
+# Alireza Rashti
+# January 2021
 
+# A VisIt script to visualize patch, scalar, and vector in Elliptica.
 # How to invoke the script:
-#
-# 1. with windows:
-# $ visit -cli -s visit_plot_mesh.py "regex name of file name" --path .
-# ex: 
-# $ visit -cli -s visit_plot_mesh.py \
-#              "(left_central_box_left|left_NS_Up)_X.Y.Z.*"
-# 
-# 2. without windows: 
-# $ visit -nowin -cli -s visit_plot_mesh.py "regex name of file name" --path .
+# invoke:
+# $ visit_plot.py -h
+
 
 
 # import packages:
@@ -29,25 +25,25 @@ opt_annotation        = 1
 
 ##{ main
 def main():
-  # getting field name and type
-  regex,data_path = pars_arguments()
+
+  # get args
+  directory_path,file_names,scalar_name,vector_name = pars_arguments()
   
   # deleting all plots
   DeleteAllPlots()
   
-  plot(regex, data_path)
+  plot(directory_path,file_names)
   
 ##} main
 
 ##{ plot: given object, data and the section of grid plot the object
-def plot(regex,data_path):
+def plot(directory_path,file_names):
   
   # collecting all of the files name needed to load
-  files_name = collect_files(regex,data_path)
+  files_name = collect_files(directory_path,file_names)
   
   n = len(files_name)
   
-  print('Plotting: mesh')
   for i in range(n):
     print('Openning data file: ' + files_name[i])
   
@@ -519,17 +515,20 @@ def plot(regex,data_path):
 ##} plot
 
 ##{ collect_files to be loaded in visit
-def collect_files(regex,data_path):
+def collect_files(data_path,regex):
   allfiles   = os.listdir(data_path)
-  files_name = []
+  files_name = set()
   
+  # get all files that match the regex,
+  # note files which refer to a different time(cycle) grouped together.
   for f in allfiles:
     if re.search(r'{}\.{}'.format(regex,FILE_SUFFIX),f):
-      files_name.append(f)
+      stem = re.sub(r'\d+\.({})'.format(FILE_SUFFIX),'*.\\1',f)
+      files_name.add(stem)
   
   if len(files_name) == 0:
     raise Exception("No data file yielded.")
-  
+    
   return files_name
 ##} collect_files
 
@@ -557,11 +556,24 @@ def pars_arguments():
   visit -nowin -cli -s visit_plot.py -v "beta_U" -f "left_NS_.*_X.Y.Z.*"
           """
   
-  parser = argparse.ArgumentParser(description=notes,formatter_class=RawTextHelpFormatter)
-  parser.add_argument('-d', action = 'store',default = os.getcwd(),dest="directory_path", type=str, help = 'Default is .')
-  parser.add_argument('-f', action = 'store',default = os.getcwd(),dest="file_names", type=str,  help = 'Default is NA.')
-  parser.add_argument('-s', action = 'store',default = os.getcwd(),dest="scalar_name", type=str, help = 'Default is NA.')
-  parser.add_argument('-v', action = 'store',default = os.getcwd(),dest="vector_name", type=str, help = 'Default is NA.')
+  parser = argparse.ArgumentParser(description=notes,
+                                   formatter_class=RawTextHelpFormatter)
+  
+  parser.add_argument('-d', action = 'store',default = os.getcwd(), 
+                      dest="directory_path", type=str, 
+                      help = 'Default is .')
+  
+  parser.add_argument('-f', action = 'store',default = '', 
+                      dest="file_names", type=str, 
+                      help = 'Regex format file names.')
+  
+  parser.add_argument('-s', action = 'store',default = '', 
+                      dest="scalar_name", type=str, 
+                      help = 'The name of scalar field.')
+  
+  parser.add_argument('-v', action = 'store',default = '', 
+                      dest="vector_name", type=str,
+                      help = 'The anem of vector field.')
   
   args = parser.parse_args()
   
