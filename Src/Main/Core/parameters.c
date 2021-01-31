@@ -6,11 +6,14 @@
 #include "parameters.h"
 
 /* add or update a string value parameter */
-void update_parameter_string(const char *const lv, const char *const rv)
+void update_parameter_string(const char *const lv0, const char *const rv0)
 {
-  if (!lv || !rv)
+  if (!lv0 || !rv0)
     return;
-    
+  
+  char *lv = par_rule1_uppercase_lowercase(lv0);
+  char *rv = par_rule2_lowercase(rv0);
+  
   Parameter_T *par;
   
   par = get_parameter(lv);
@@ -23,6 +26,8 @@ void update_parameter_string(const char *const lv, const char *const rv)
   else/* since it does not exist */
     add_parameter(lv,rv);
   
+  Free(lv);
+  Free(rv);
 }
 
 /* add or update an integer value parameter */
@@ -963,3 +968,77 @@ update_iteration_params
   return 0;
 }
 
+/* ->: alloc memory and return ruled1 s, if s==0 returns 0.
+// the rule(s) for parameter name regarding lower case or upper case.
+// thus, there would be no convert to lower case to get parameter.
+//
+// rule1:
+// ======
+// if there is '_' in string s, then the first piece of str 
+// from begining to the first '_' become upper case 
+// and the rest lower case.
+// if there is no '_' in s, make it all lower case. */
+static char *par_rule1_uppercase_lowercase(const char *const s)
+{
+  if (!s) 
+    return 0;
+  
+  char *rule_s = dup_s(s);/* note: the last char is '\0' */
+  char *aux = 0;
+  Uint i    = 0;
+ 
+  aux = strchr(rule_s,'_');
+  if (aux)
+  {
+    /* make it upper case till '_' */
+    i = 0;
+    while(&rule_s[i] != aux && 
+           rule_s[i] != '\0')
+    {
+      rule_s[i] = (char)toupper(rule_s[i]);
+      i++;
+    }
+    /* the rest is lower case */
+    while(rule_s[i] != '\0')
+    {
+      rule_s[i] = (char)tolower(rule_s[i]);
+      i++;
+    }
+  }
+  else
+  {
+    i = 0;
+    while(rule_s[i] != '\0')
+    {
+      rule_s[i] = (char)tolower(rule_s[i]);
+      i++;
+    }
+  }
+  
+  return rule_s;
+}
+
+/* ->: alloc memory and return ruled2 string s, if s == 0 returns 0.
+// the rule(s) for parameter name regarding lower case or upper case.
+// thus, there would be no convert to lower case to get parameter.
+//
+// rule2:
+// ======
+// convert the whole string s to lowercase. */
+static char *par_rule2_lowercase(const char *const s)
+{
+  if (!s) 
+    return 0;
+  
+  char *const rule_s = dup_s(s);/* note: the last char is '\0'. */
+  Uint i = 0;
+  
+  i = 0;
+  while(rule_s[i] != '\0')
+  {
+    rule_s[i] = (char)tolower(rule_s[i]);
+    i++;
+  }
+  
+  return rule_s;
+}

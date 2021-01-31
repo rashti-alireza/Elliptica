@@ -57,6 +57,8 @@ update_iteration_params
    const char *const dir_name_format/* eg: "BHNS_%s_%ux%ux%u" */
   );
 
+static char *par_rule1_uppercase_lowercase(const char *const s);
+static char *par_rule2_lowercase(const char *const s);
 
 
 
