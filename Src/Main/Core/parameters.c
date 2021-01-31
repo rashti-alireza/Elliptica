@@ -75,7 +75,7 @@ void update_parameter_double_format(const char *const lv0, const double rv,const
       sprintf(pr_msg,PAR_FORMAT_PR,PAR_WIDTH_PR,lv,rv,diff_a,diff_r);
       printf(Pretty0"%s\n",pr_msg);
     }
-    sprintf(str_rv,"%.20f",rv);
+    sprintf(str_rv,"%.20e",rv);
     Free(par->rv);
     
     /* NOTE:crucial to write in str format for checkpoint file purposes */
@@ -103,7 +103,7 @@ void add_parameter_double(const char *const lv0, const double rv,const int print
   if (par)
     Errors("This parameter \"%s\" has already been added!\n",lv);
     
-  sprintf(str_rv,"%.20f",rv);
+  sprintf(str_rv,"%.20e",rv);
   par = alloc_parameter(&parameters_global);
   par->rv = dup_s(str_rv);
   par->lv = dup_s(lv);
