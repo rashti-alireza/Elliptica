@@ -9,6 +9,9 @@
 #define PAR_WIDTH_PR  (29)
 #define PAR_FORMAT_PR "%-*s = %+5.4e,|%+5.4e|,(%+08.3f%%)"
 
+/* string format for param's name */
+#define PAR_NAME_RULE(Xname) par_rule1_uppercase_lowercase(Xname)
+
 /* prefix the given string str with the given prefix pre and 
 // return string prepar.
 // NOTE: prepar must be defined. */
@@ -57,8 +60,8 @@ update_iteration_params
    const char *const dir_name_format/* eg: "BHNS_%s_%ux%ux%u" */
   );
 
-static char *par_rule1_uppercase_lowercase(const char *const s);
-static char *par_rule2_lowercase(const char *const s);
+static char *par_rule1_uppercase_lowercase(const char *const s) __attribute__ ((unused));
+static char *par_rule2_lowercase(const char *const s) __attribute__ ((unused));
 
 
 

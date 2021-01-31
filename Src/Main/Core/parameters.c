@@ -6,11 +6,10 @@
 #include "parameters.h"
 
 /* add or update a string value parameter */
-void update_parameter_string(const char *const lv0, const char *const rv0)
+void update_parameter_string(const char *const lv0, const char *const rv)
 {
   Parameter_T *par;
-  char *lv = par_rule1_uppercase_lowercase(lv0);
-  char *rv = par_rule2_lowercase(rv0);
+  char *lv = PAR_NAME_RULE(lv0);
   
   par = get_parameter(lv);
   if (par)/* if this parameter exists update it */
@@ -23,14 +22,13 @@ void update_parameter_string(const char *const lv0, const char *const rv0)
     add_parameter(lv,rv);
   
   Free(lv);
-  Free(rv);
 }
 
 /* add or update an integer value parameter */
 void update_parameter_integer(const char *const lv0, const int rv)
 {
   Parameter_T *par;
-  char *lv = par_rule1_uppercase_lowercase(lv0);
+  char *lv = PAR_NAME_RULE(lv0);
   char str_rv[100];
   sprintf(str_rv,"%d",rv);
   
@@ -54,7 +52,7 @@ void update_parameter_integer(const char *const lv0, const int rv)
 void update_parameter_double_format(const char *const lv0, const double rv,const int print_flg)
 {
   Parameter_T *par;
-  char *lv = par_rule1_uppercase_lowercase(lv0);
+  char *lv = PAR_NAME_RULE(lv0);
   char str_rv[100] = {'\0'};
   
   par = get_parameter(lv);
@@ -96,7 +94,7 @@ void update_parameter_double_format(const char *const lv0, const double rv,const
 void add_parameter_double(const char *const lv0, const double rv,const int print_flg)
 {
   Parameter_T *par;
-  char *lv = par_rule1_uppercase_lowercase(lv0);
+  char *lv = PAR_NAME_RULE(lv0);
   char str_rv[100] = {'\0'};
   
   par = get_parameter(lv);
@@ -127,7 +125,7 @@ void add_parameter_double(const char *const lv0, const double rv,const int print
 void add_parameter_array(const char *const lv0, const double *const rv,const Uint n)
 {
   Parameter_T *par;
-  char *lv = par_rule1_uppercase_lowercase(lv0);
+  char *lv = PAR_NAME_RULE(lv0);
   Uint i;
   
   par = get_parameter(lv);
@@ -149,7 +147,7 @@ void add_parameter_array(const char *const lv0, const double *const rv,const Uin
 void update_parameter_array(const char *const lv0, const double *const rv,const Uint n)
 {
   Parameter_T *par;
-  char *lv = par_rule1_uppercase_lowercase(lv0);
+  char *lv = PAR_NAME_RULE(lv0);
   Uint i;
   
   par = get_parameter(lv);
@@ -186,11 +184,10 @@ void add_parameter_string(const char *const lv, const char *const rv)
 
 /* adding left value and right value to parameter data base 
 // string format (the most common one) */
-void add_parameter(const char *const lv0, const char *const rv0)
+void add_parameter(const char *const lv0, const char *const rv)
 {
   Parameter_T *par;
-  char *lv = par_rule1_uppercase_lowercase(lv0);
-  char *rv = par_rule2_lowercase(rv0);
+  char *lv = PAR_NAME_RULE(lv0);
   
   par = get_parameter(lv);
   if (par)
@@ -227,7 +224,6 @@ void add_parameter(const char *const lv0, const char *const rv0)
   }
   
   Free(lv);
-  Free(rv);
 }
 
 /* some iterative parameter may have multiplicity with (x?), e.g:
@@ -326,7 +322,7 @@ static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
 */
 Parameter_T *get_parameter(const char *const par_name0)
 {
-  char *par_name = par_rule1_uppercase_lowercase(par_name0);
+  char *par_name = PAR_NAME_RULE(par_name0);
   int i;
   
   i = 0;
@@ -353,7 +349,7 @@ Parameter_T *get_parameter(const char *const par_name0)
 double get_parameter_double_format(const char *const par_name0,const char *const file, const int line,const Flag_T flg)
 {
   double v = DBL_MAX;
-  char *par_name = par_rule1_uppercase_lowercase(par_name0);
+  char *par_name = PAR_NAME_RULE(par_name0);
   int i;
   Flag_T f = NONE;
   
@@ -391,7 +387,7 @@ double get_parameter_double_format(const char *const par_name0,const char *const
 double *get_parameter_array_format(const char *const par_name0,const char *const file, const int line,const Flag_T flg)
 {
   double *v = 0;
-  char *par_name = par_rule1_uppercase_lowercase(par_name0);
+  char *par_name = PAR_NAME_RULE(par_name0);
   int i;
   Flag_T f = NONE;
   
@@ -426,7 +422,7 @@ double *get_parameter_array_format(const char *const par_name0,const char *const
 int get_parameter_value_I(const char *const par_name0,const char *const file, const int line,const Flag_T flg)
 {
   int v = INT_MAX;
-  char *par_name = par_rule1_uppercase_lowercase(par_name0);
+  char *par_name = PAR_NAME_RULE(par_name0);
   int i;
   Flag_T f = NONE;
   
@@ -459,7 +455,7 @@ int get_parameter_value_I(const char *const par_name0,const char *const file, co
 double get_parameter_value_D(const char *const par_name0,const char *const file, const int line,const Flag_T flg)
 {
   double v = DBL_MAX;
-  char *par_name = par_rule1_uppercase_lowercase(par_name0);
+  char *par_name = PAR_NAME_RULE(par_name0);
   int i;
   Flag_T f = NONE;
   
@@ -501,7 +497,7 @@ double get_parameter_value_D(const char *const par_name0,const char *const file,
 const char *get_parameter_value_S(const char *const par_name0,const char *const file, const int line,const Flag_T flg)
 {
   char *v = 0;
-  char *par_name = par_rule1_uppercase_lowercase(par_name0);
+  char *par_name = PAR_NAME_RULE(par_name0);
   int i;
   Flag_T f = NONE;
   
@@ -744,12 +740,11 @@ char *par_value_str_ip(const Uint n)
 }
 
 /* set the parameter unless it has already been set */
-void set_default_parameter(const char *const lhs0,const char *const rhs0)
+void set_default_parameter(const char *const lhs0,const char *const rhs)
 {
   const char *v;
   Parameter_T *par;
-  char *lhs = par_rule1_uppercase_lowercase(lhs0);
-  char *rhs = par_rule2_lowercase(rhs0);
+  char *lhs = PAR_NAME_RULE(lhs0);
 
   par = get_parameter(lhs);
   if (par == 0)
@@ -767,7 +762,6 @@ void set_default_parameter(const char *const lhs0,const char *const rhs0)
   }
   
   Free(lhs);
-  Free(rhs);
 }
 
 /* adding 2 block of memory for parameter data base 
@@ -797,7 +791,7 @@ void *alloc_parameter(Parameter_T ***const mem)
 void free_parameter(const char *const par_name0)
 {
   Parameter_T *last_par = 0;
-  char *par_name = par_rule1_uppercase_lowercase(par_name0);
+  char *par_name = PAR_NAME_RULE(par_name0);
   Uint np,i;
   
   /* count total number of parameters */
