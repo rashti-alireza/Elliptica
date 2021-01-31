@@ -257,7 +257,7 @@
 }
 
 /* free and set it to NULL. */
-#define Free(ptr) {if(ptr) free(ptr); ptr = NULL;}
+#define Free(ptr) {if(ptr){free(ptr);ptr = NULL;}}
 
 #endif
 
