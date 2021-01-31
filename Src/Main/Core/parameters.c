@@ -882,7 +882,8 @@ update_iteration_params
   char prepar[PAR_LEN] = {'\0'};
   const Uint total_iters = total_iterations_ip();
   const Uint total_ipars = total_iterative_parameters_ip();
-  const Uint iter_n = (Uint)Pgeti(PrefixIt(prefix,"iteration_number"));
+  const Uint iter_n     = (Uint)Pgeti(PrefixIt(prefix,"iteration"));
+  const Uint res_iter_n = (Uint)Pgeti(PrefixIt(prefix,"resolution_iteration"));
   Uint iter;/* number of iterations have been performed for the simulation */
   Uint n[3];/* number of points */
   char folder_name_next[STR_SIZE2] = {'\0'},
@@ -915,20 +916,20 @@ update_iteration_params
   {
     iter = iter_n;
     /* updating iterative parameters for the new round of iteration */
-    Pseti(PrefixIt(prefix,"iteration_number"),(int)iter+1);/* +1 is crucial */
+    Pseti(PrefixIt(prefix,"iteration"),(int)iter+1);/* +1 is crucial */
   }
   else
   {
     iter = main_loop_iter;
     /* updating iterative parameters for the new round of iteration */
-    Pseti(PrefixIt(prefix,"iteration_number"),(int)iter);
+    Pseti(PrefixIt(prefix,"iteration"),(int)iter);
   }
   
   /* if exceeds total iteration => stop */
   if (iter >= total_iters)
   {
     Pseti(PrefixIt(prefix,"STOP"),1);
-    Pseti(PrefixIt(prefix,"iteration_number"),(int)iter);
+    Pseti(PrefixIt(prefix,"iteration"),(int)iter);
     return 1;
   } 
   
@@ -957,12 +958,15 @@ update_iteration_params
   /* this parameter helps to use some of the previous grid data */
   Pseti(PrefixIt(prefix,"did_resolution_change?"),0);
   
+  /* update resolution iter. */
+  Pseti(PrefixIt(prefix,"resolution_iteration"),(int)(res_iter_n+1));
+  
   sprintf(folder_name_next,dir_name_format,parfile_stem,n[0],n[1],n[2]);
   /* if the resolution isn't the same or it is the first iteration */
   if (strcmp(folder_name_next,folder_name_prev) || iter == 0)/* if n is updated */
   {
     /* iteration number used in solving, reset this for each resolution */
-    Pseti(PrefixIt(prefix,"solve_iteration_number"),0);
+    Pseti(PrefixIt(prefix,"resolution_iteration"),0);
     sprintf(folder_name_next,dir_name_format,parfile_stem,n[0],n[1],n[2]);
     folder_path = make_directory(Pgets("top_directory"),folder_name_next);
     Psets(PrefixIt(prefix,"my_directory"),folder_path);
