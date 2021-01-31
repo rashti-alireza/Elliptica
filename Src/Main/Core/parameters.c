@@ -1006,8 +1006,7 @@ update_iteration_params
 // if there is no '_' in s, make it all lower case. */
 static char *par_rule1_uppercase_lowercase(const char *const s)
 {
-  if (!s) 
-    return 0;
+  assert(s);
   
   char *rule_s = dup_s(s);/* note: the last char is '\0' */
   char *aux = 0;
@@ -1053,8 +1052,7 @@ static char *par_rule1_uppercase_lowercase(const char *const s)
 // convert the whole string s to lowercase. */
 static char *par_rule2_lowercase(const char *const s)
 {
-  if (!s) 
-    return 0;
+  assert(s);
   
   char *const rule_s = dup_s(s);/* note: the last char is '\0'. */
   Uint i = 0;
