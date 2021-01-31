@@ -8,13 +8,9 @@
 /* add or update a string value parameter */
 void update_parameter_string(const char *const lv0, const char *const rv0)
 {
-  if (!lv0 || !rv0)
-    return;
-  
+  Parameter_T *par;
   char *lv = par_rule1_uppercase_lowercase(lv0);
   char *rv = par_rule2_lowercase(rv0);
-  
-  Parameter_T *par;
   
   par = get_parameter(lv);
   if (par)/* if this parameter exists update it */
@@ -31,12 +27,10 @@ void update_parameter_string(const char *const lv0, const char *const rv0)
 }
 
 /* add or update an integer value parameter */
-void update_parameter_integer(const char *const lv, const int rv)
+void update_parameter_integer(const char *const lv0, const int rv)
 {
-  if (!lv)
-    return;
-    
   Parameter_T *par;
+  char *lv = par_rule1_uppercase_lowercase(lv0);
   char str_rv[100];
   sprintf(str_rv,"%d",rv);
   
@@ -52,16 +46,15 @@ void update_parameter_integer(const char *const lv, const int rv)
     add_parameter(lv,str_rv);
   }
   
+  Free(lv);
 }
 
 /* add or update a double value parameter, 
 // if print_flg != 0 it prints the changes. */
-void update_parameter_double_format(const char *const lv, const double rv,const int print_flg)
+void update_parameter_double_format(const char *const lv0, const double rv,const int print_flg)
 {
-  if (!lv)
-    return;
-    
   Parameter_T *par;
+  char *lv = par_rule1_uppercase_lowercase(lv0);
   char str_rv[100] = {'\0'};
   
   par = get_parameter(lv);
@@ -82,7 +75,7 @@ void update_parameter_double_format(const char *const lv, const double rv,const 
       sprintf(pr_msg,PAR_FORMAT_PR,PAR_WIDTH_PR,lv,rv,diff_a,diff_r);
       printf(Pretty0"%s\n",pr_msg);
     }
-    sprintf(str_rv,"%15.18f",rv);
+    sprintf(str_rv,"%.20f",rv);
     Free(par->rv);
     
     /* NOTE:crucial to write in str format for checkpoint file purposes */
@@ -95,22 +88,22 @@ void update_parameter_double_format(const char *const lv, const double rv,const 
     add_parameter_double(lv,rv,print_flg);
   }
   
+  Free(lv);
 }
 
 /* adding left value and right value to parameter data base 
 // double format. */
-void add_parameter_double(const char *const lv, const double rv,const int print_flg)
+void add_parameter_double(const char *const lv0, const double rv,const int print_flg)
 {
-  IsNull(lv);
-  
   Parameter_T *par;
+  char *lv = par_rule1_uppercase_lowercase(lv0);
   char str_rv[100] = {'\0'};
   
   par = get_parameter(lv);
   if (par)
     Errors("This parameter \"%s\" has already been added!\n",lv);
     
-  sprintf(str_rv,"%15.18f",rv);
+  sprintf(str_rv,"%.20f",rv);
   par = alloc_parameter(&parameters_global);
   par->rv = dup_s(str_rv);
   par->lv = dup_s(lv);
@@ -125,16 +118,16 @@ void add_parameter_double(const char *const lv, const double rv,const int print_
     sprintf(pr_msg,PAR_FORMAT_PR,PAR_WIDTH_PR,lv,rv,diff,diff);
     printf(Pretty0"%s\n",pr_msg);
   }
+  
+  Free(lv);
 }
 
 /* adding left value and right value to parameter data base 
 // array format. */
-void add_parameter_array(const char *const lv, const double *const rv,const Uint n)
+void add_parameter_array(const char *const lv0, const double *const rv,const Uint n)
 {
-  IsNull(lv);
-  IsNull(rv);
-  
   Parameter_T *par;
+  char *lv = par_rule1_uppercase_lowercase(lv0);
   Uint i;
   
   par = get_parameter(lv);
@@ -149,15 +142,14 @@ void add_parameter_array(const char *const lv, const double *const rv,const Uint
   for (i = 0; i < n; ++i)
     par->rv_array[i] = rv[i];
   
+  Free(lv);
 }
 
 /* update parameter array format. */
-void update_parameter_array(const char *const lv, const double *const rv,const Uint n)
+void update_parameter_array(const char *const lv0, const double *const rv,const Uint n)
 {
-  IsNull(lv);
-  IsNull(rv);
-  
   Parameter_T *par;
+  char *lv = par_rule1_uppercase_lowercase(lv0);
   Uint i;
   
   par = get_parameter(lv);
@@ -181,6 +173,8 @@ void update_parameter_array(const char *const lv, const double *const rv,const U
   par->rv_n = n;
   for (i = 0; i < n; ++i)
     par->rv_array[i] = rv[i];
+
+  Free(lv);
 }
 
 /* adding left value and right value to parameter data base 
@@ -192,11 +186,11 @@ void add_parameter_string(const char *const lv, const char *const rv)
 
 /* adding left value and right value to parameter data base 
 // string format (the most common one) */
-void add_parameter(const char *const lv, const char *const rv)
+void add_parameter(const char *const lv0, const char *const rv0)
 {
-  IsNull(lv);
-  
   Parameter_T *par;
+  char *lv = par_rule1_uppercase_lowercase(lv0);
+  char *rv = par_rule2_lowercase(rv0);
   
   par = get_parameter(lv);
   if (par)
@@ -231,6 +225,9 @@ void add_parameter(const char *const lv, const char *const rv)
       par->rv = dup_s(rv);
     }
   }
+  
+  Free(lv);
+  Free(rv);
 }
 
 /* some iterative parameter may have multiplicity with (x?), e.g:
@@ -327,17 +324,23 @@ static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
 // the corresponding parameter.
 // ->return value: lhs=rhs of a parameter, 0 if not found
 */
-Parameter_T *get_parameter(const char *const par_name)
+Parameter_T *get_parameter(const char *const par_name0)
 {
+  char *par_name = par_rule1_uppercase_lowercase(par_name0);
   int i;
   
   i = 0;
   while (parameters_global != 0 && parameters_global[i] != 0)
   {
-    if (strcmp_i(parameters_global[i]->lv,par_name))
+    if (!strcmp(parameters_global[i]->lv,par_name))
+    {
+      Free(par_name);
       return parameters_global[i];
+    }
     i++;
   }
+  
+  Free(par_name);
   
   return 0;
 }
@@ -347,16 +350,17 @@ Parameter_T *get_parameter(const char *const par_name)
 // if flag == FATAL and couldn't find the par_name, gives error.
 // ->return value: double value of parameter.
 */
-double get_parameter_double_format(const char *const par_name,const char *const file, const int line,const Flag_T flg)
+double get_parameter_double_format(const char *const par_name0,const char *const file, const int line,const Flag_T flg)
 {
   double v = DBL_MAX;
+  char *par_name = par_rule1_uppercase_lowercase(par_name0);
   int i;
   Flag_T f = NONE;
   
   i = 0;
   while (parameters_global != 0 && parameters_global[i] != 0)
   {
-    if (strcmp_i(parameters_global[i]->lv,par_name))
+    if (!strcmp(parameters_global[i]->lv,par_name))
     {
       if (!parameters_global[i]->double_flg)
         Errors("Flag of parameter '%s' has not been set correctly.\n"
@@ -374,6 +378,8 @@ double get_parameter_double_format(const char *const par_name,const char *const 
     abort_error_string("Parameter '%s' couldn't be found.\n",par_name,file,line);
   }
 
+  Free(par_name);
+  
   return v;
 }
 
@@ -382,16 +388,17 @@ double get_parameter_double_format(const char *const par_name,const char *const 
 // if flag == FATAL and couldn't find the par_name, gives error.
 // ->return value: array value of parameter.
 */
-double *get_parameter_array_format(const char *const par_name,const char *const file, const int line,const Flag_T flg)
+double *get_parameter_array_format(const char *const par_name0,const char *const file, const int line,const Flag_T flg)
 {
   double *v = 0;
+  char *par_name = par_rule1_uppercase_lowercase(par_name0);
   int i;
   Flag_T f = NONE;
   
   i = 0;
   while (parameters_global != 0 && parameters_global[i] != 0)
   {
-    if (strcmp_i(parameters_global[i]->lv,par_name))
+    if (!strcmp(parameters_global[i]->lv,par_name))
     {
       v = parameters_global[i]->rv_array;
       f = FOUND;
@@ -405,6 +412,8 @@ double *get_parameter_array_format(const char *const par_name,const char *const 
     abort_error_string("Parameter '%s' couldn't be found.\n",par_name,file,line);
   }
 
+  Free(par_name);
+  
   return v;
 }
 
@@ -414,16 +423,17 @@ double *get_parameter_array_format(const char *const par_name,const char *const 
 // if flag == FATAL and couldn't find the par_name, gives error.
 // ->return value: integer value of parameter.
 */
-int get_parameter_value_I(const char *const par_name,const char *const file, const int line,const Flag_T flg)
+int get_parameter_value_I(const char *const par_name0,const char *const file, const int line,const Flag_T flg)
 {
   int v = INT_MAX;
+  char *par_name = par_rule1_uppercase_lowercase(par_name0);
   int i;
   Flag_T f = NONE;
   
   i = 0;
   while (parameters_global != 0 && parameters_global[i] != 0)
   {
-    if (strcmp_i(parameters_global[i]->lv,par_name))
+    if (!strcmp(parameters_global[i]->lv,par_name))
     {
       v = atoi(parameters_global[i]->rv);
       f = FOUND;
@@ -437,6 +447,7 @@ int get_parameter_value_I(const char *const par_name,const char *const file, con
     abort_error_string("Parameter '%s' couldn't be found.\n",par_name,file,line);
   }
 
+  Free(par_name);
   return v;
 }
 
@@ -445,16 +456,17 @@ int get_parameter_value_I(const char *const par_name,const char *const file, con
 // if flag == FATAL and couldn't find the par_name, gives error.
 // ->return value: double value of parameter.
 */
-double get_parameter_value_D(const char *const par_name,const char *const file, const int line,const Flag_T flg)
+double get_parameter_value_D(const char *const par_name0,const char *const file, const int line,const Flag_T flg)
 {
   double v = DBL_MAX;
+  char *par_name = par_rule1_uppercase_lowercase(par_name0);
   int i;
   Flag_T f = NONE;
   
   i = 0;
   while (parameters_global != 0 && parameters_global[i] != 0)
   {
-    if (strcmp_i(parameters_global[i]->lv,par_name))
+    if (!strcmp(parameters_global[i]->lv,par_name))
     {
       if (parameters_global[i]->double_flg)
       {
@@ -477,6 +489,7 @@ double get_parameter_value_D(const char *const par_name,const char *const file, 
     abort_error_string("Parameter '%s' couldn't be found.\n",par_name,file,line);
   }
 
+  Free(par_name);
   return v;
 }
 
@@ -485,16 +498,17 @@ double get_parameter_value_D(const char *const par_name,const char *const file, 
 // if flag == FATAL and couldn't find the par_name, gives error.
 // ->return value: string value of parameter.
 */
-const char *get_parameter_value_S(const char *const par_name,const char *const file, const int line,const Flag_T flg)
+const char *get_parameter_value_S(const char *const par_name0,const char *const file, const int line,const Flag_T flg)
 {
   char *v = 0;
+  char *par_name = par_rule1_uppercase_lowercase(par_name0);
   int i;
   Flag_T f = NONE;
   
   i = 0;
   while (parameters_global != 0 && parameters_global[i] != 0)
   {
-    if (strcmp_i(parameters_global[i]->lv,par_name))
+    if (!strcmp(parameters_global[i]->lv,par_name))
     {
       v = parameters_global[i]->rv;
       f = FOUND;
@@ -507,7 +521,9 @@ const char *get_parameter_value_S(const char *const par_name,const char *const f
   {
     abort_error_string("Parameter '%s' couldn't be found.\n",par_name,file,line);
   }
-      
+
+  Free(par_name);
+  
   return v;
 }
 
@@ -728,11 +744,13 @@ char *par_value_str_ip(const Uint n)
 }
 
 /* set the parameter unless it has already been set */
-void set_default_parameter(const char *const lhs,const char *const rhs)
+void set_default_parameter(const char *const lhs0,const char *const rhs0)
 {
   const char *v;
   Parameter_T *par;
-  
+  char *lhs = par_rule1_uppercase_lowercase(lhs0);
+  char *rhs = par_rule2_lowercase(rhs0);
+
   par = get_parameter(lhs);
   if (par == 0)
     add_parameter(lhs,rhs);
@@ -747,6 +765,9 @@ void set_default_parameter(const char *const lhs,const char *const rhs)
       par->rv = dup_s(rhs);
     }
   }
+  
+  Free(lhs);
+  Free(rhs);
 }
 
 /* adding 2 block of memory for parameter data base 
@@ -773,9 +794,10 @@ void *alloc_parameter(Parameter_T ***const mem)
 /* given the parameter name, free the parameter data base from it 
 // and shrink the data base and put the last parameter in place of
 // the deleted parameter. */
-void free_parameter(const char *const par_name)
+void free_parameter(const char *const par_name0)
 {
   Parameter_T *last_par = 0;
+  char *par_name = par_rule1_uppercase_lowercase(par_name0);
   Uint np,i;
   
   /* count total number of parameters */
@@ -784,11 +806,14 @@ void free_parameter(const char *const par_name)
     np++;
   
   if (np == 0)
+  {
+    Free(par_name);
     return;
+  }
     
   for (i = 0; i < np; ++i)
   {
-    if (strcmp_i(parameters_global[i]->lv,par_name))
+    if (!strcmp(parameters_global[i]->lv,par_name))
     {
       last_par = parameters_global[np-1];
       
@@ -809,6 +834,7 @@ void free_parameter(const char *const par_name)
     }
   }
   
+  Free(par_name);
 }
 
 /* given the parameter, free its content and itself. 
