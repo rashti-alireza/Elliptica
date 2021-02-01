@@ -62,6 +62,7 @@ update_iteration_params
 
 static char *par_rule1_uppercase_lowercase(const char *const s) __attribute__ ((unused));
 static char *par_rule2_lowercase(const char *const s) __attribute__ ((unused));
+char *par_name_rule(const char *const s);
 
 
 

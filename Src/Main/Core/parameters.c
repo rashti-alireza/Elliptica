@@ -1064,3 +1064,10 @@ static char *par_rule2_lowercase(const char *const s)
   
   return rule_s;
 }
+
+/* ->: casted parameter's name according to the rule */
+char *par_name_rule(const char *const s)
+{
+  return PAR_NAME_RULE(s);
+}
+

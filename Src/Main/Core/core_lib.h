@@ -68,6 +68,7 @@ update_iteration_params
    const char *const dir_name_format/* eg: "BHNS_%s_%ux%ux%u" */
   );
 
+char *par_name_rule(const char *const s);
 
 #endif
 
