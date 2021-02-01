@@ -370,18 +370,18 @@ void pr_interfaces(const Grid_T *const grid)
 void pr_parameters(void)
 {
   FILE *f;
-  char dir[MAXSTR]={'\0'};
-  const char *path;
+  char dir[MAXSTR] = {'\0'};
+  const char *path = 0;
   int i = 0;
   
   
   if (get_parameter("Diagnostics"))
     path = PgetsEZ("Diagnostics");
   else
-    path = PgetsEZ("top_directory");
+    path = Pgets("top_directory");
   
   sprintf(dir,"%s/parameters.out",path);
-  f = Fopen(dir,"w");
+  f = Fopen(dir,"a");
   
   fprintf(f,SECTION"Parameters"SECTION"\n");
   
