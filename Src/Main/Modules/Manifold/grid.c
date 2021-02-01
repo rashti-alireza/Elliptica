@@ -354,17 +354,19 @@ void free_grid_params(const Grid_T *const grid)
   if (!grid)
     return;
   
-  char suffix[STR_LEN1] = {'\0'};
+  char prefix0[STR_LEN1] = {'\0'};
+  char *prefix = 0;
   Uint i,np;
   
   np = 0;
   while (parameters_global != 0 && parameters_global[np] != 0)
     np++;
   
-  sprintf(suffix,PATCH_NAME_PRT_P_"",grid->gn);/* parameters related to this grid */
+  sprintf(prefix0,PATCH_NAME_PRT_P_,grid->gn);/* parameters related to this grid */
+  prefix = par_name_rule(prefix0);
   for (i = 0; i < np;)/* no increment */
   {
-    if (strstr(parameters_global[i]->lv,suffix))
+    if (strstr(parameters_global[i]->lv,prefix))
     {
       /* note: the last par is put in palce of removed par
       // so don't increment i */
@@ -374,6 +376,8 @@ void free_grid_params(const Grid_T *const grid)
     else
       i++;
   }
+  
+  Free(prefix);
 }
 
 
