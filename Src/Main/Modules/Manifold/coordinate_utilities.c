@@ -1210,7 +1210,8 @@ Patch_T *x_in_which_patch_force(const double x[3],Patch_T **const patches,
     double test_dx;
     x_of_X(test_x,X,patch);
     test_dx = L2_norm(3,test_x,x);
-    printf(Pretty0"forced found x difference = %e.\n",test_dx);
+    printf(Pretty0"Found x in '%s', displacement = %e.\n",
+           patch->name,test_dx);
   }
   
   return patch;
