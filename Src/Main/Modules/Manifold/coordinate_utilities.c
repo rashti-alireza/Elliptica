@@ -1167,7 +1167,7 @@ Patch_T *x_in_which_patch_force(const double x[3],Patch_T **const patches,
   if (!Np)
     return 0;
   
-  const double Eps = 1E-3;
+  const double Eps = 1E-4*root_square(3,x,0);
   Patch_T *patch   = 0;
   double min = DBL_MAX;
   Uint pmin  = UINT_MAX;/* patch with min dx */
@@ -1194,14 +1194,14 @@ Patch_T *x_in_which_patch_force(const double x[3],Patch_T **const patches,
   
   patch = patches[pmin];
   X_of_x(X,x,patch);
-  /* adujusting boundary number to avoid some unexpeted behavior
-  // due to interpolation error. */
-  if (EQL_coord(X[0],patch->max[0],Eps))  X[0] = patch->max[0];
-  if (EQL_coord(X[0],patch->min[0],Eps))  X[0] = patch->min[0];
-  if (EQL_coord(X[1],patch->max[1],Eps))  X[1] = patch->max[1];
-  if (EQL_coord(X[1],patch->min[1],Eps))  X[1] = patch->min[1];
-  if (EQL_coord(X[2],patch->max[2],Eps))  X[2] = patch->max[2];
-  if (EQL_coord(X[2],patch->min[2],Eps))  X[2] = patch->min[2];  
+  /* since we gonna pick this patch anyway let's adujust boundaries 
+  // to avoid some unexpeted behavior. for example at interpolation. */
+  if (GRTEQL(X[0],patch->max[0]))  X[0] = patch->max[0];
+  if (LSSEQL(X[0],patch->min[0]))  X[0] = patch->min[0];
+  if (GRTEQL(X[1],patch->max[1]))  X[1] = patch->max[1];
+  if (LSSEQL(X[1],patch->min[1]))  X[1] = patch->min[1];
+  if (GRTEQL(X[2],patch->max[2]))  X[2] = patch->max[2];
+  if (LSSEQL(X[2],patch->min[2]))  X[2] = patch->min[2];  
   
   /* test it */
   if(1)
@@ -1210,8 +1210,7 @@ Patch_T *x_in_which_patch_force(const double x[3],Patch_T **const patches,
     double test_dx;
     x_of_X(test_x,X,patch);
     test_dx = L2_norm(3,test_x,x);
-    printf(Pretty0"Found x in '%s', displacement = %e.\n",
-           patch->name,test_dx);
+    printf(Pretty0"'%s'|displacement = %e.\n",patch->name,test_dx);
   }
   
   return patch;
