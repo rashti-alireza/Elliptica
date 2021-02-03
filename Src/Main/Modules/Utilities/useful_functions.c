@@ -961,10 +961,14 @@ void interpolate_fields_from_old_grid_to_new_grid
         assert(fld_old->v);
         empty_field(fld_new);
         double *v = fld_new->v = alloc_double(patch->nn);
-        
+        const char *name_p1 = strchr(patch->name,'_'),
+                   *name_p2 = strchr(ogrid->patch[p]->name,'_');
         /* resolution must be equal */
         if(patch->nn != ogrid->patch[p]->nn)
           Error0("Resolution of patches are different for copy!\n");
+        /* same patch must be used */  
+        if (strcmp(name_p1,name_p2))
+          Error0("Patch names are different for copy!\n");
         
         FOR_ALL_ijk
           v[ijk] = fld_old->v[ijk];
