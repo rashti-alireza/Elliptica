@@ -382,6 +382,21 @@ static int X_of_x_Cartesian_coord(double *const X,const double *const x,const Pa
   X[1] = x[1];
   X[2] = x[2];
   
+  /* adujusting boundary number to avoid some unexpeted behavior
+  // for example at interpolation. */
+  if (EQL_coord(X[0],patch->max[0],EPS_coord_general))
+    X[0] = patch->max[0];
+  if (EQL_coord(X[0],patch->min[0],EPS_coord_general))
+    X[0] = patch->min[0];
+  if (EQL_coord(X[1],patch->max[1],EPS_coord_general))
+    X[1] = patch->max[1];
+  if (EQL_coord(X[1],patch->min[1],EPS_coord_general))
+    X[1] = patch->min[1];
+  if (EQL_coord(X[2],patch->max[2],EPS_coord_general))
+    X[2] = patch->max[2];
+  if (EQL_coord(X[2],patch->min[2],EPS_coord_general))
+    X[2] = patch->min[2];
+  
   /* test if this is a valid answer */
   if (IsInside(X,patch->min,patch->max,EPS_coord_general))
     return 1;
