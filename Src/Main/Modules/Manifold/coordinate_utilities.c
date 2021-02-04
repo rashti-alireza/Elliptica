@@ -1184,8 +1184,9 @@ Patch_T *x_in_which_patch_force(const double x[3],Patch_T **const patches,
   if (!Np)
     return 0;
   
-  const double Eps = 1E-4*root_square(3,x,0);
-  Patch_T *patch   = 0;
+  const double Scale = root_square(3,x,0);
+  const double Eps   = 1E-4*(Scale > 1. ? Scale : 0.5);
+  Patch_T *patch     = 0;
   double min = DBL_MAX;
   Uint pmin  = UINT_MAX;/* patch with min dx */
   Uint p;
