@@ -322,11 +322,14 @@ static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
 */
 Parameter_T *get_parameter(const char *const par_name0)
 {
+  if (!parameters_global)
+    return 0;
+    
   char *par_name = PAR_NAME_RULE(par_name0);
   int i;
   
   i = 0;
-  while (parameters_global != 0 && parameters_global[i] != 0)
+  while (parameters_global[i])
   {
     if (!strcmp(parameters_global[i]->lv,par_name))
     {
@@ -349,12 +352,16 @@ Parameter_T *get_parameter(const char *const par_name0)
 double get_parameter_double_format(const char *const par_name0,const char *const file, const int line,const Flag_T flg)
 {
   double v = DBL_MAX;
+  
+  if (!parameters_global)
+    return v;
+  
   char *par_name = PAR_NAME_RULE(par_name0);
   int i;
   Flag_T f = NONE;
   
   i = 0;
-  while (parameters_global != 0 && parameters_global[i] != 0)
+  while (parameters_global[i])
   {
     if (!strcmp(parameters_global[i]->lv,par_name))
     {
@@ -387,12 +394,16 @@ double get_parameter_double_format(const char *const par_name0,const char *const
 double *get_parameter_array_format(const char *const par_name0,const char *const file, const int line,const Flag_T flg)
 {
   double *v = 0;
+  
+  if (!parameters_global)
+    return v;
+  
   char *par_name = PAR_NAME_RULE(par_name0);
   int i;
   Flag_T f = NONE;
   
   i = 0;
-  while (parameters_global != 0 && parameters_global[i] != 0)
+  while (parameters_global[i])
   {
     if (!strcmp(parameters_global[i]->lv,par_name))
     {
@@ -422,12 +433,16 @@ double *get_parameter_array_format(const char *const par_name0,const char *const
 int get_parameter_value_I(const char *const par_name0,const char *const file, const int line,const Flag_T flg)
 {
   int v = INT_MAX;
+  
+  if (!parameters_global)
+    return v;
+  
   char *par_name = PAR_NAME_RULE(par_name0);
   int i;
   Flag_T f = NONE;
   
   i = 0;
-  while (parameters_global != 0 && parameters_global[i] != 0)
+  while (parameters_global[i])
   {
     if (!strcmp(parameters_global[i]->lv,par_name))
     {
@@ -455,12 +470,16 @@ int get_parameter_value_I(const char *const par_name0,const char *const file, co
 double get_parameter_value_D(const char *const par_name0,const char *const file, const int line,const Flag_T flg)
 {
   double v = DBL_MAX;
+  
+  if (!parameters_global)
+    return v;
+  
   char *par_name = PAR_NAME_RULE(par_name0);
   int i;
   Flag_T f = NONE;
   
   i = 0;
-  while (parameters_global != 0 && parameters_global[i] != 0)
+  while (parameters_global[i])
   {
     if (!strcmp(parameters_global[i]->lv,par_name))
     {
@@ -497,12 +516,16 @@ double get_parameter_value_D(const char *const par_name0,const char *const file,
 const char *get_parameter_value_S(const char *const par_name0,const char *const file, const int line,const Flag_T flg)
 {
   char *v = 0;
+  
+  if (!parameters_global)
+    return v;
+  
   char *par_name = PAR_NAME_RULE(par_name0);
   int i;
   Flag_T f = NONE;
   
   i = 0;
-  while (parameters_global != 0 && parameters_global[i] != 0)
+  while (parameters_global[i])
   {
     if (!strcmp(parameters_global[i]->lv,par_name))
     {
