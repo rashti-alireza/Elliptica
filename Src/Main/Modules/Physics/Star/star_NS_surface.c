@@ -943,7 +943,6 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
   Free(patches_h);
   Free(patches_ob);
   
-  UNUSED(NS_surface_denthalpy_dr_root_finder);
   FUNC_TOC
 }
 

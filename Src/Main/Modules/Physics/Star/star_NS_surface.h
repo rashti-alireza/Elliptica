@@ -100,7 +100,7 @@ static double approx_exp2(struct Demand_S *const demand);
 static double approx_poly2(struct Demand_S *const demand);
 static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys);
 static double NS_surface_enthalpy_root_finder_eq(void *params,const double *const x);
-static double NS_surface_denthalpy_dr_root_finder(void *params,const double *const x,const Uint dir);
+static double NS_surface_denthalpy_dr_root_finder(void *params,const double *const x,const Uint dir)  __attribute__((unused));
 static void find_NS_surface_perfect_s2(Physics_T *const phys);
 double star_NS_mass_shedding_indicator(Physics_T *const phys);
 int star_NS_find_star_surface(Physics_T *const phys);
