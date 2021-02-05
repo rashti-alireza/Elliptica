@@ -530,7 +530,9 @@ static int X_of_x_CS_coord(double *const X,
   if (EQL_coord(X[2],patch->max[2],eps))  X[2] = patch->max[2];
   if (EQL_coord(X[2],patch->min[2],eps))  X[2] = patch->min[2];  
   
-  /* test the solution */
+  /* test the solution
+  // NOTE: this must be the last step and X must remain intact regardless
+  // if returns 0 or 1. */
   if (check_flg)
   {
     Uint interval_test = 0;
