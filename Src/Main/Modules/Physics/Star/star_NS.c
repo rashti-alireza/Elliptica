@@ -253,7 +253,7 @@ int star_NS_ifluid_gConf_find_EulerC_fix_baryon_mass(Physics_T *const phys)
   const double W2  = 1-W1;
   double *Euler_const = 0;
   double guess[1] = {Getd("Euler_equation_constant")};
-  const double RESIDUAL = sqrt(Getd("RootFinder_Tolerance"));
+  const double Residual = sqrt(Getd("RootFinder_Tolerance"));
   struct NS_Euler_eq_const_RootFinder_S params[1] = {0};
   double bar_mass,adm_mass,Komar_mass;
   
@@ -284,7 +284,7 @@ int star_NS_ifluid_gConf_find_EulerC_fix_baryon_mass(Physics_T *const phys)
   
   printf(Pretty0"update weight = %e\n",W1);
   /* if root finder is not OK for some reason */
-  if (GRT(root->residual,RESIDUAL))
+  if (GRT(root->residual,Residual))
     Euler_const[0] = guess[0];/* don't update */
   else
     Euler_const[0] = W1*Euler_const[0]+W2*guess[0];
@@ -514,7 +514,7 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   const double NS_center[3] = {Getd("center_x"),
                                Getd("center_y"),
                                Getd("center_z")};
-  const double RESIDUAL     = sqrt(Getd("RootFinder_Tolerance"));
+  const double Residual     = sqrt(Getd("RootFinder_Tolerance"));
   const double Omega_sys    = sysGetd("angular_velocity");
   const double x_CM         = sysGetd("x_CM");
   const double y_CM         = sysGetd("y_CM");
@@ -612,7 +612,7 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   plan_root_finder(root);
   new_par = execute_root_finder(root);
   
-  if (root->exit_status != ROOT_FINDER_OK && GRT(root->residual,RESIDUAL))
+  if (root->exit_status != ROOT_FINDER_OK && GRT(root->residual,Residual))
   {
     print_root_finder_exit_status(root);
   }
@@ -834,7 +834,7 @@ void star_NS_find_where_denthalpy_is_0(Physics_T *const phys,double xdh0[3])
   Grid_T *const grid = mygrid(phys,"NS");
   double *NS_center;
   struct NC_Center_RootFinder_S params[1] = {0};
-  const double RESIDUAL = sqrt(Getd("RootFinder_Tolerance"));
+  const double Residual = sqrt(Getd("RootFinder_Tolerance"));
   double guess[3] = {Getd("center_x"),
                      Getd("center_y"),
                      Getd("center_z")};
@@ -857,7 +857,7 @@ void star_NS_find_where_denthalpy_is_0(Physics_T *const phys,double xdh0[3])
   NS_center = execute_root_finder(root);
     
   /* if root finder was successful */
-  if (root->exit_status == ROOT_FINDER_OK || LSS(root->residual,RESIDUAL))
+  if (root->exit_status == ROOT_FINDER_OK || LSS(root->residual,Residual))
   {
     xdh0[0] = NS_center[0];
     xdh0[1] = NS_center[1];
