@@ -108,40 +108,14 @@ int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys)
   FUNC_TIC
   
   Grid_T *const grid = mygrid(phys,"NS");
-  Patch_T *patch     = 0;
   const double NS_center[3] = {Getd("center_x"),
                                Getd("center_y"),
                                Getd("center_z")};
   const char *const par = Gets("force_balance_equation");
-  Interpolation_T *interp_s = init_interpolation();
-  char *adjust[3];
-  double dh1[3] = {0},dh2[3] = {0}, X[3] = {0};
-  
-  /* initial values before adjustments */
-  patch = x_in_which_patch(NS_center,grid->patch,grid->np);
-  assert(patch);
-  assert(X_of_x(X,NS_center,patch));
-  
-  DECLARE_FIELD(denthalpy_D0);
-  DECLARE_FIELD(denthalpy_D1);
-  DECLARE_FIELD(denthalpy_D2);
-  
-  interp_s->X = X[0];
-  interp_s->Y = X[1];
-  interp_s->Z = X[2];
-  interp_s->XYZ_dir_flag = 1;
-  
-  interp_s->field = denthalpy_D0;
-  plan_interpolation(interp_s);
-  dh1[0] = execute_interpolation(interp_s);
-  
-  interp_s->field = denthalpy_D1;
-  plan_interpolation(interp_s);
-  dh1[1] = execute_interpolation(interp_s);
-  
-  interp_s->field = denthalpy_D2;
-  plan_interpolation(interp_s);
-  dh1[2] = execute_interpolation(interp_s);
+  char *adjust[3] = {0};
+  double dh1[3] = {0};
+  double dh2[3] = {0}; 
+  double X[3]   = {0};
   
   /* show info */  
   printf(Pretty0"method        = %s\n",par);
@@ -160,6 +134,39 @@ int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys)
   void (*force_balance_2)(Physics_T *const phys) = 
             get_func_force_balance_adjustment(adjust[2]);
   
+  /* initial values before adjustments */
+  if (force_balance_0 || force_balance_1 || force_balance_2)
+  {
+    Interpolation_T *interp_s = init_interpolation();
+    Patch_T *patch = x_in_which_patch(NS_center,grid->patch,grid->np);
+    assert(patch);
+    assert(X_of_x(X,NS_center,patch));
+    
+    DECLARE_FIELD(denthalpy_D0);
+    DECLARE_FIELD(denthalpy_D1);
+    DECLARE_FIELD(denthalpy_D2);
+    
+    interp_s->X = X[0];
+    interp_s->Y = X[1];
+    interp_s->Z = X[2];
+    interp_s->XYZ_dir_flag = 1;
+    
+    interp_s->field = denthalpy_D0;
+    plan_interpolation(interp_s);
+    dh1[0] = execute_interpolation(interp_s);
+    
+    interp_s->field = denthalpy_D1;
+    plan_interpolation(interp_s);
+    dh1[1] = execute_interpolation(interp_s);
+    
+    interp_s->field = denthalpy_D2;
+    plan_interpolation(interp_s);
+    dh1[2] = execute_interpolation(interp_s);
+    
+    free_interpolation(interp_s);
+  }
+  
+  /* execute force balance */
   if (force_balance_0)
     force_balance_0(phys);
   
@@ -173,46 +180,64 @@ int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys)
   Free(adjust[1]);
   Free(adjust[2]);
   
-  /* update stress energy tensor and related */
-  Sets("enthalpy_neat","no");
-  physics(phys,STRESS_ENERGY_UPDATE);
-  
-  interp_s->field = denthalpy_D0;
-  plan_interpolation(interp_s);
-  dh2[0] = execute_interpolation(interp_s);
-  
-  interp_s->field = denthalpy_D1;
-  plan_interpolation(interp_s);
-  dh2[1] = execute_interpolation(interp_s);
-  
-  interp_s->field = denthalpy_D2;
-  plan_interpolation(interp_s);
-  dh2[2] = execute_interpolation(interp_s);
-  
-  /* print initial values before adjustments */
-  printf(Pretty0"Enthalpy derivatives at NS center before force balance eq.:\n");
-  printf(Pretty0"dh(%g,%g,%g)/dx = %+g\n",
-    NS_center[0],NS_center[1],NS_center[2],dh1[0]);
-  printf(Pretty0"dh(%g,%g,%g)/dy = %+g\n",
-    NS_center[0],NS_center[1],NS_center[2],dh1[1]);
-  printf(Pretty0"dh(%g,%g,%g)/dz = %+g\n",
-    NS_center[0],NS_center[1],NS_center[2],dh1[2]);
+  /* update stress energy tensor and related and show difference */
+  if (force_balance_0 || force_balance_1 || force_balance_2)
+  {
+    Sets("enthalpy_neat","no");
+    physics(phys,STRESS_ENERGY_UPDATE);
     
-  /* print initial values after adjustments */
-  printf(Pretty0"Enthalpy derivatives at NS center after force balance eq.:\n");
-  printf(Pretty0"dh(%g,%g,%g)/dx = %+g\n",
-    NS_center[0],NS_center[1],NS_center[2],dh2[0]);
-  printf(Pretty0"dh(%g,%g,%g)/dy = %+g\n",
-    NS_center[0],NS_center[1],NS_center[2],dh2[1]);
-  printf(Pretty0"dh(%g,%g,%g)/dz = %+g\n",
-    NS_center[0],NS_center[1],NS_center[2],dh2[2]);
+    Interpolation_T *interp_s = init_interpolation();
+    Patch_T *patch = x_in_which_patch(NS_center,grid->patch,grid->np);
+    assert(patch);
+    assert(X_of_x(X,NS_center,patch));
     
-  printf(Pretty0"Changes in enthalpy derivatives after force balance eq.:\n");
-  printf(Pretty0"dh2/dx-dh1/dx = %+g\n",dh2[0]-dh1[0]);
-  printf(Pretty0"dh2/dy-dh1/dy = %+g\n",dh2[1]-dh1[1]);
-  printf(Pretty0"dh2/dz-dh1/dz = %+g\n",dh2[2]-dh1[2]);
- 
-  free_interpolation(interp_s);
+    DECLARE_FIELD(denthalpy_D0);
+    DECLARE_FIELD(denthalpy_D1);
+    DECLARE_FIELD(denthalpy_D2);
+    
+    interp_s->X = X[0];
+    interp_s->Y = X[1];
+    interp_s->Z = X[2];
+    interp_s->XYZ_dir_flag = 1;
+    
+    interp_s->field = denthalpy_D0;
+    plan_interpolation(interp_s);
+    dh2[0] = execute_interpolation(interp_s);
+    
+    interp_s->field = denthalpy_D1;
+    plan_interpolation(interp_s);
+    dh2[1] = execute_interpolation(interp_s);
+    
+    interp_s->field = denthalpy_D2;
+    plan_interpolation(interp_s);
+    dh2[2] = execute_interpolation(interp_s);
+    
+    /* print initial values before adjustments */
+    printf(Pretty0"Enthalpy derivatives at NS center before "
+                  "force balance eq.:\n");
+    printf(Pretty0"dh(%g,%g,%g)/dx = %+g\n",
+      NS_center[0],NS_center[1],NS_center[2],dh1[0]);
+    printf(Pretty0"dh(%g,%g,%g)/dy = %+g\n",
+      NS_center[0],NS_center[1],NS_center[2],dh1[1]);
+    printf(Pretty0"dh(%g,%g,%g)/dz = %+g\n",
+      NS_center[0],NS_center[1],NS_center[2],dh1[2]);
+      
+    /* print initial values after adjustments */
+    printf(Pretty0"Enthalpy derivatives at NS center after force "
+                  "balance eq.:\n");
+    printf(Pretty0"dh(%g,%g,%g)/dx = %+g\n",
+      NS_center[0],NS_center[1],NS_center[2],dh2[0]);
+    printf(Pretty0"dh(%g,%g,%g)/dy = %+g\n",
+      NS_center[0],NS_center[1],NS_center[2],dh2[1]);
+    printf(Pretty0"dh(%g,%g,%g)/dz = %+g\n",
+      NS_center[0],NS_center[1],NS_center[2],dh2[2]);
+      
+    printf(Pretty0"Changes in enthalpy derivatives after "
+                  "force balance eq.:\n");
+    printf(Pretty0"dh2/dx-dh1/dx = %+g\n",dh2[0]-dh1[0]);
+    printf(Pretty0"dh2/dy-dh1/dy = %+g\n",dh2[1]-dh1[1]);
+    printf(Pretty0"dh2/dz-dh1/dz = %+g\n",dh2[2]-dh1[2]);
+  }
   
   FUNC_TOC
   return EXIT_SUCCESS;
