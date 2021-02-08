@@ -257,10 +257,11 @@ void bh_tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
   const double current_r_bh   = Getd("perfect_S2_radius");
   const double W              = Getd("radius_update_weight");
   const double dM_tolerance   = Getd("mass_tolerance");
-  double irr_mass;
-  double dr,r_bh,dM;
+  double obs_mass[2] = {0.};
+  double dr,r_bh,dM,irr_mass;
   
-  observe(phys,"Irreducible(M)",Gets("Observe_Irreducible_M"),&irr_mass);
+  observe(phys,"Irreducible(M)",Gets("Observe_Irreducible_M"),obs_mass);
+  irr_mass = obs_mass[0];
   Setd("irreducible_mass_current",irr_mass);
   
   printf(Pretty0"current BH irreducible mass = %e\n",irr_mass);
