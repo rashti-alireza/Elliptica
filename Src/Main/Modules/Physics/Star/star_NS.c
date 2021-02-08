@@ -135,7 +135,7 @@ int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys)
             get_func_force_balance_adjustment(adjust[2]);
   
   /* initial values before adjustments */
-  if (force_balance_0 || force_balance_1 || force_balance_2)
+  if (0)//force_balance_0 || force_balance_1 || force_balance_2)
   {
     Interpolation_T *interp_s = init_interpolation();
     Patch_T *patch = x_in_which_patch(NS_center,grid->patch,grid->np);
@@ -181,7 +181,7 @@ int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys)
   Free(adjust[2]);
   
   /* update stress energy tensor and related and show difference */
-  if (force_balance_0 || force_balance_1 || force_balance_2)
+  if (0)//force_balance_0 || force_balance_1 || force_balance_2)
   {
     Sets("enthalpy_neat","no");
     physics(phys,STRESS_ENERGY_UPDATE);
