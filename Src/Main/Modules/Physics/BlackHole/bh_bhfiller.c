@@ -232,6 +232,50 @@ bhf_init
     }/* for (f = 0; f < nf ++f) */
     
   }/* else if (strcmp_i(method,"ChebTn_general_s2")) */
+  else if (strcmp_i(method,"expmr_C0_perfect_s2"))
+  {
+    Uint npi;/* number of patches inside BH */
+    Uint npo;/* number of patches outside BH */
+    Uint nf;
+    
+    nf = 0;/* number of fields */
+    while(fields_name[nf]) ++nf;
+    
+    /* alloc */
+    bhf->nf = nf;
+    bhf->fld= calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
+    
+    if (grid->kind == Grid_SplitCubedSpherical_BHBH ||
+        grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_SBH  ||
+        grid->kind == Grid_CubedSpherical_BHNS
+       )
+    {
+     /* set the method function */
+     bhf->bhfiller = bhf_f_df_ddf_perfect_s2_CS;
+     
+     /* patches outside the BH */
+     bhf->patches_outBH = 
+      collect_patches(phys->grid,Ftype("BH_around_IB"),&npo);
+     IsNull(bhf->patches_outBH);
+     bhf->npo = npo;
+     /* patches inside the BH */
+     bhf->patches_inBH = 
+      collect_patches(phys->grid,Ftype("BH"),&npi);
+     IsNull(bhf->patches_inBH);
+     bhf->npi = npi;
+    }
+    else
+     Error0(NO_OPTION);
+    
+    /* expmr_C0_perfect_s2 */
+    bhf->extrap   = approx_expmr_C0;
+    bhf->C2       = 0;
+    bhf->C1       = 0;
+     
+    /* collect names */
+    collect_names(bhf,fields_name,nf);
+  }
   else
     Error0(NO_OPTION);
   
@@ -498,6 +542,227 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
     }/* for (f = 0; f < nf ++f) */
   }
     
+  return EXIT_SUCCESS;
+}
+
+/* ->: EXIT_SUCCESS if succeeds, otherwise an error code.
+// a various kind of extrapolations inside a perfect s2 BH.
+// note: it has some assumptions which are only true in cubed spherical
+// and only for perfect sphere. */
+static int bhf_f_df_ddf_perfect_s2_CS(struct BHFiller_S *const bhf)
+{
+  Physics_T *const phys  = bhf->phys;
+  const Uint npo = bhf->npo;
+  const Uint npi = bhf->npi;
+  const Uint nf  = bhf->nf;/* numebr of fields */
+  const double rSurf = Getd("perfect_S2_radius");
+  const double rSurf3= pow(rSurf,3);
+  const double BH_center[3] = {Getd("center_x"),
+                               Getd("center_y"),
+                               Getd("center_z")};
+  Uint p;
+
+  /* update all coeffs to avoid race condition */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < npo; p++)
+  {
+    Patch_T *patch = bhf->patches_outBH[p];
+    Uint f = 0;
+
+    /* make coeffs in  X and Y direction inside this patch */
+    for (f = 0; f < nf; ++f)
+    {
+      int ii;
+      
+      /* add dfield if does not exist, field must exist already. */
+      if (bhf->C1)
+      for (ii = 0; ii < 3; ++ii)
+      {
+        if (_Ind(bhf->fld[f]->df[ii]) < 0)
+        {
+          if(Verbose)
+            printf(Pretty0"compute %s in %s\n",
+                       bhf->fld[f]->df[ii],patch->name);
+          bhf->fld[f]->did_add_df = 1;
+          Field_T *df = add_field(bhf->fld[f]->df[ii],0,patch,NO);
+          partial_derivative(df);
+        }
+      }
+      /* add ddfield if does not exist, dfield must exist already. */
+      if (bhf->C2)
+      for (ii = 0; ii < 6; ++ii)
+      {
+        if (_Ind(bhf->fld[f]->ddf[ii]) < 0)
+        {
+          if(Verbose)
+            printf(Pretty0"compute %s in %s\n",
+                       bhf->fld[f]->ddf[ii],patch->name);
+          bhf->fld[f]->did_add_ddf = 1;
+          Field_T *ddf = add_field(bhf->fld[f]->ddf[ii],0,patch,NO);
+          partial_derivative(ddf);
+        }
+      }
+      /* Note: partial derivatives modify coeffs thus it is made here */
+      /* populate coeffs */
+      make_coeffs_2d(patch->fields[Ind(bhf->fld[f]->f)],0,1);
+      
+      if (bhf->C1)
+      for (ii = 0; ii < 3; ++ii)
+        make_coeffs_2d(patch->fields[Ind(bhf->fld[f]->df[ii])],0,1);
+      
+      if (bhf->C2)
+      for (ii = 0; ii < 6; ++ii)
+        make_coeffs_2d(patch->fields[Ind(bhf->fld[f]->ddf[ii])],0,1);
+    }
+  }
+
+  /* extrapolating inside */
+  OpenMP_1d_Pragma(omp parallel for)
+  for (p = 0; p < npi; p++)
+  {
+    Patch_T *ipatch = bhf->patches_inBH[p];
+    Uint f = 0;
+    
+    for (f = 0; f < nf; ++f)
+    {
+     struct Demand_S demand[1] = {0};
+     
+     Field_T *field = 
+       ipatch->fields[LookUpField_E(bhf->fld[f]->f,ipatch)];
+     empty_field(field);
+     field->v = alloc_double(ipatch->nn);
+     
+     for(Uint ijk = 0; ijk < ipatch->nn; ++ijk)
+     {
+      Patch_T *patch = 0;/* patch outside BH to be used for f,df,ddf */
+      double th = 0,ph = 0;
+      double X[3] = {0}, N[3] = {0}, x[3] = {0};
+      double KD[2]      = {0,1};
+      double df_dx[3]   = {0};
+      double ddf_ddx[6] = {0};
+      double ddfddr = 0,dfdr = 0,fr0 = 0;
+      double _ddfddr[3] = {0,0,0};
+      double r;
+      Uint d1,d2;/* derivative */
+
+      /* inside r,th,ph */
+      x[0]= ipatch->node[ijk]->x[0]-BH_center[0];
+      x[1]= ipatch->node[ijk]->x[1]-BH_center[1];
+      x[2]= ipatch->node[ijk]->x[2]-BH_center[2];
+      r   = sqrt(Pow2(x[0])+Pow2(x[1])+Pow2(x[2]));
+      th = acos(x[2]/r);
+      ph = arctan(x[1],x[0]);
+      
+      /* normal vector */
+      N[0]  = sin(th)*cos(ph);
+      N[1]  = sin(th)*sin(ph);
+      N[2]  = cos(th); 
+
+      X[2] = 0.;
+      find_XYZ_and_patch_of_theta_phi_CS
+        (X,&patch,BH_center,th,ph,bhf->patches_outBH,npo);
+      
+      /* find f(r0),df(r0),ddf(r0): */
+      /* 2d interpolate on the surface */
+      Interpolation_T *interp_s = init_interpolation();
+      interp_s->XY_dir_flag = 1;
+      interp_s->X = X[0];
+      interp_s->Y = X[1];
+      
+      if (patch->coordsys == CubedSpherical)
+      {
+        interp_s->K = 0;
+      }
+      else 
+        Error0(NO_OPTION);
+       
+      /* f value at r = r0 = rSurf*/
+      interp_s->field = patch->fields[Ind(bhf->fld[f]->f)];
+      plan_interpolation(interp_s);
+      fr0 = execute_interpolation(interp_s);
+       
+      /* df/dx value */
+      dfdr = 0.;
+      if (bhf->C1)
+      {
+        for (d1 = 0; d1 < 3; d1++)
+        {
+          interp_s->field = patch->fields[Ind(bhf->fld[f]->df[d1])];
+          plan_interpolation(interp_s);
+          df_dx[d1] = execute_interpolation(interp_s);
+        }
+        /* df/dr */
+        dfdr = (N[0]*df_dx[0]+N[1]*df_dx[1]+N[2]*df_dx[2]);
+      }
+      
+      /* d^2f/dx^2 value */
+      ddfddr = 0;
+      if (bhf->C2)
+      {
+        for (d1 = 0; d1 < 3; d1++)
+        {
+          for (d2 = d1; d2 < 3; d2++)
+          {
+            interp_s->field = 
+              patch->fields[Ind(bhf->fld[f]->ddf[IJsymm3(d1,d2)])];
+            plan_interpolation(interp_s);
+            ddf_ddx[IJsymm3(d1,d2)] = execute_interpolation(interp_s);
+          }
+        }
+        _ddfddr[0] = _ddfddr[1] = _ddfddr[2] = 0;
+        /* d^2f/dr^2 */
+        for (int _i = 0; _i < 3; ++_i)
+        {
+          for (int _j = 0; _j < 3; ++_j)
+          {
+            _ddfddr[_i] += (KD[_i==_j]/rSurf - x[_i]*x[_j]/rSurf3)*df_dx[_j];
+            _ddfddr[_i] += N[_j]*ddf_ddx[IJsymm3(_i,_j)];
+          }
+          ddfddr += _ddfddr[_i]*N[_i];
+        }
+      }
+      
+      /* free */
+      free_interpolation(interp_s);
+      
+      /* bhf */
+      demand->r     = r;
+      demand->r0    = rSurf;
+      demand->fr0   = fr0;
+      demand->dfr0  = dfdr;
+      demand->ddfr0 = ddfddr;
+      
+      field->v[ijk] = bhf->extrap(demand);
+     }
+    }
+  }
+  
+  /* remove automatically added fields */
+  for (p = 0; p < npo; p++)
+  {
+    Patch_T *patch = bhf->patches_outBH[p];
+    Uint f = 0;
+
+    for (f = 0; f < nf; ++f)
+    {
+      int ii;
+
+      if (bhf->fld[f]->did_add_df)
+      for (ii = 0; ii < 3; ++ii)
+      {
+         Field_T *df = patch->fields[Ind(bhf->fld[f]->df[ii])];
+         REMOVE_FIELD(df);
+      }
+
+      if (bhf->fld[f]->did_add_ddf)
+      for (ii = 0; ii < 6; ++ii)
+      {
+        Field_T *ddf = patch->fields[Ind(bhf->fld[f]->ddf[ii])];
+        REMOVE_FIELD(ddf);
+      }
+    }
+  }
+ 
   return EXIT_SUCCESS;
 }
 
@@ -1178,4 +1443,15 @@ bh_interpolating_fields_on_a_line
   FUNC_TOC
 }
 
+/* ->: f(r) = f(r0)*exp(Att*(r-r0)/r0), for r < r0.
+// conditions: f be C^0 continues across the surface. */
+static double approx_expmr_C0(struct Demand_S *const demand)
+{
+ const double r0    = demand->r0;
+ const double fr0   = demand->fr0;
+ const double r     = demand->r;
+ const double Att   = 1.;
+
+ return fr0*exp(Att*(r-r0)/r0);
+}
 

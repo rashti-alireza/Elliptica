@@ -32,6 +32,13 @@
 /* global variable for this file */
 static int Verbose = 0;
 
+/* struct for general purposes */
+struct Demand_S
+{
+ double r0,r1,r;/* for extrapolation. */
+ double fr0,fr1,dfr0,ddfr0;/* f(r0),f(r1), df(r0)/dr, d^2f(r0)/dr^2 */
+};
+
 /* all needed items for bhfiller function */
 struct BHFiller_S
 {
@@ -69,7 +76,11 @@ struct BHFiller_S
     Uint did_add_ddf:1;/* 1 if automatically adds required ddf fields, otherwise 0. */
   }**fld;/* field info */
   int (*bhfiller)(struct BHFiller_S *const bhf);/* the method to fill the BH */
+  double (*extrap)(struct Demand_S *const demand);/* the function used for extrapolation (approximation) */
+  Uint C1: 1;/* if C1 == 1 means, first order derivatives needed */
+  Uint C2: 1;/* if C2 == 1 means, second order derivatives needed */
 };
+
 
 /* parameters for func_r0 */
 struct Param_S
@@ -121,6 +132,9 @@ double bh_bhf_smoother(const double r, const double rmax,const double rmin);
 static void collect_names(struct BHFiller_S *const bhf,char **const fields_name,const Uint nf);
 static double polynomial5(const double r, const double rmax,const double rmin);
 static double polynomial7(const double r, const double rmax,const double rmin);
+static int bhf_f_df_ddf_perfect_s2_CS(struct BHFiller_S *const bhf);
+static double approx_expmr_C0(struct Demand_S *const demand);
+
 
 
 
