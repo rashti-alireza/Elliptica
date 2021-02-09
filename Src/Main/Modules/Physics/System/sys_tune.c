@@ -131,6 +131,7 @@ static void Px_ADM_is0_by_y_CM(Physics_T *const phys)
   const double px    = sysGetd("Px_ADM");
   const double W     = sysGetd("P_ADM_control_update_weight");
   const double dP    = sysGetd("P_ADM_control_tolerance");
+  const double P_thr = sysGetd("P_ADM_control_threshold");
   const double Omega = sysGetd("angular_velocity");
   const double y_CM0 = sysGetd("y_CM");
   const double admM  = sysGetd("ADM_mass");
@@ -142,7 +143,7 @@ static void Px_ADM_is0_by_y_CM(Physics_T *const phys)
   y_CM_new = y_CM0+dy_CM*W;
   
   /* having found new x_CM now update */
-  if (GRT(fabs(px),dP))
+  if (GRT(fabs(px),dP) && LSS(fabs(px),P_thr))
   {
     sysSetd("y_CM",y_CM_new);
   }
@@ -155,6 +156,7 @@ static void Py_ADM_is0_by_x_CM(Physics_T *const phys)
   const double py    = sysGetd("Py_ADM");
   const double W     = sysGetd("P_ADM_control_update_weight");
   const double dP    = sysGetd("P_ADM_control_tolerance");
+  const double P_thr = sysGetd("P_ADM_control_threshold");
   const double Omega = sysGetd("angular_velocity");
   const double x_CM0 = sysGetd("x_CM");
   const double admM  = sysGetd("ADM_mass");
@@ -166,7 +168,7 @@ static void Py_ADM_is0_by_x_CM(Physics_T *const phys)
   x_CM_new = x_CM0+dx_CM*W;
   
   /* having found new x_CM now update */
-  if (GRT(fabs(py),dP))
+  if (GRT(fabs(py),dP) && LSS(fabs(py),P_thr))
   {
     sysSetd("x_CM",x_CM_new);
   }
