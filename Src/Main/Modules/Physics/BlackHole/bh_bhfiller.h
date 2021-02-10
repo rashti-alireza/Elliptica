@@ -134,6 +134,7 @@ static double polynomial5(const double r, const double rmax,const double rmin);
 static double polynomial7(const double r, const double rmax,const double rmin);
 static int bhf_f_df_ddf_perfect_s2_CS(struct BHFiller_S *const bhf);
 static double approx_expmr_C0(struct Demand_S *const demand);
+static double approx_r_expmr_C1(struct Demand_S *const demand);
 
 
 

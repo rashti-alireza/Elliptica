@@ -6,6 +6,8 @@
 
 #include "bh_bhfiller.h"
 
+/* make extrapolation weaker or stronger */
+static const double Attenuate_Factor0 = 1;/* came from experiment */
 
 /* extrapolating inside the BH */
 int bh_fill_inside_black_hole(Physics_T *const phys)
@@ -232,7 +234,8 @@ bhf_init
     }/* for (f = 0; f < nf ++f) */
     
   }/* else if (strcmp_i(method,"ChebTn_general_s2")) */
-  else if (strcmp_i(method,"expmr_C0_perfect_s2"))
+  else if (strcmp_i(method,"expmr_C0_perfect_s2") ||
+           strcmp_i(method,"r_expmr_C1_perfect_s2"))
   {
     Uint npi;/* number of patches inside BH */
     Uint npo;/* number of patches outside BH */
@@ -268,11 +271,21 @@ bhf_init
     else
      Error0(NO_OPTION);
     
-    /* expmr_C0_perfect_s2 */
-    bhf->extrap   = approx_expmr_C0;
-    bhf->C2       = 0;
-    bhf->C1       = 0;
-     
+    if (strcmp_i(method,"expmr_C0_perfect_s2"))
+    {
+      bhf->extrap   = approx_expmr_C0;
+      bhf->C2       = 0;
+      bhf->C1       = 0;
+    }
+    else if (strcmp_i(method,"r_expmr_C1_perfect_s2")) 
+    {
+      bhf->extrap   = approx_r_expmr_C1;
+      bhf->C2       = 0;
+      bhf->C1       = 1;
+    }
+    else
+      Error0(NO_OPTION);
+      
     /* collect names */
     collect_names(bhf,fields_name,nf);
   }
@@ -1450,8 +1463,25 @@ static double approx_expmr_C0(struct Demand_S *const demand)
  const double r0    = demand->r0;
  const double fr0   = demand->fr0;
  const double r     = demand->r;
- const double Att   = 1.;
+ const double Att   = Attenuate_Factor0;
 
- return fr0*exp(Att*(r-r0)/r0);
+ return fr0*exp(Att*fabs(r-r0)/r0);
+}
+
+/* ->: f(r) = (a+b*r)*exp(Att*(r-r0)/r0), for r < r0.
+// conditions: f be C^1 continues across the surface. */
+static double approx_r_expmr_C1(struct Demand_S *const demand)
+{
+ const double r0    = demand->r0;
+ const double fr0   = demand->fr0;
+ const double dfr0  = demand->dfr0;
+ const double r     = demand->r;
+ const double Att   = Attenuate_Factor0;
+ double a,b;
+
+ a = fr0 + Att*fr0 - dfr0*r0;
+ b = dfr0 - (Att*fr0)/r0;
+ 
+ return (a+b*r)*exp(Att*fabs(r-r0)/r0);
 }
 
