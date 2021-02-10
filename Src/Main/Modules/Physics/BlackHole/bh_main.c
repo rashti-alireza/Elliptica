@@ -113,8 +113,24 @@ static int set_black_hole_params(Physics_T *const phys)
   // 	o. exact_KerrSchild: use analytic value of KerrSchild
   //
   //
-  //
-  // */
+  // filler_method: how to fill:
+  // 
+  // o. ChebTn_Ylm_perfect_s2:
+  //    fill PERFECT S2 surface excised BH with data 
+  //    demanding C2 continuity across horizon. extrapolant is:
+  //    f(r,th,ph) = C_{ilm}*ChebyshevT(i,r)*Ylm(th,ph). 
+  //    thie method is faster than ChebTn_general_s2.
+  // o. ChebTn_general_s2: 
+  //    fill a GENERAL S2 surface excised BH with data 
+  //    demanding C2 continuity across horizon. extrapolant is:
+  //    f(r) = C_{i}ChebyshevT(i,r) along radius. 
+  // o. None:
+  //    No filling. 
+  // o. expmr_C0_perfect_s2:
+  //    using f(r) = f(r0)e^-r (this is preferred during solve).
+  // o. r_expmr_C1_perfect_s2: 
+  //    using f(r) = (a+b*r)e^-r.
+  */
   
   
   UNUSED(phys);
