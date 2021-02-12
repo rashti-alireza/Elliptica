@@ -252,7 +252,7 @@ $(auto_gen_c_file): $(DEPENDENCY_FILES)
 	   rm -rf $(auto_gen_c_file); \
 	 fi
 # --> headers and declarations:
-	@echo "/* this is an generated code by make */" >> $(auto_gen_c_file)
+	@echo "/* this is a generated code by make */" >> $(auto_gen_c_file)
 	@echo "#include \"core_lib.h\"" >> $(auto_gen_c_file)
 	@echo "void add_project(ProjFunc *const projfunc, const char *const name, const char *const des);" >> $(auto_gen_c_file)
 	@echo "int create_db_projects(void);" >> $(auto_gen_c_file)
