@@ -352,7 +352,7 @@ void free_patch_SolMan_method_Schur(Patch_T *const patch);
     ijk = node[i];\
     for (j = 0; j < Nj; ++j)\
     {\
-      lmn = node[j];\
+      lmn = node[j];
 
 #define DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE \
     }/* end of for (i = 0; i < Ni; ++i) */\
@@ -398,7 +398,7 @@ void free_patch_SolMan_method_Schur(Patch_T *const patch);
     ijk = node[i];\
     for (j = 0; j < Nj; ++j)\
     {\
-      lmn = node[j];\
+      lmn = node[j];
 
 #define DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE \
     }/* end of for (i = I0; i < Ni; ++i) */\
