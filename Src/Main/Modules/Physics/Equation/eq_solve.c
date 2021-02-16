@@ -35,8 +35,8 @@ void eq_solve_elliptic_equation(Physics_T *const phys)
   /* set region of each equation */
   Grid_T **lgrid = set_equation_grid(phys,SolveEqs);
 
-  /* backup */
-  backup_fields(phys);  
+  /* populate backup fields */
+  backup_fields(phys);
 
   const int max_iter = Pgeti("solve_Max_Iteration");
   int iter = 0;
@@ -50,24 +50,28 @@ void eq_solve_elliptic_equation(Physics_T *const phys)
     /* solve equations */
     solve_eqs(SolveEqs);
     
+    /* updating the fields using relaxed scheme */
+    if (Pcmps(P_"update_method","relaxed_scheme"))
+      update_fields_relaxed_scheme(phys);
+    else
+      Error0(NO_OPTION);
+
+    /* if necessary update backup fields */
+    if (max_iter > 1)
+      backup_fields(phys);
+      
     /* study the solution */
     if (Pcmps(P_"elliptic_test","yes"))
     {
       calculate_equation_residual(SolveEqs);
-      if (eq_analyze_solution) eq_analyze_solution(phys,iter);
+      if (eq_analyze_solution) 
+        eq_analyze_solution(phys,iter);
     }
     
     ++iter;
   }
-
-  /* updating the fields using relaxed scheme */
-  if (Pcmps(P_"update_method","relaxed_scheme"))
-    update_fields_relaxed_scheme(phys);
-  else
-    Error0(NO_OPTION);
-    
+  
   /* calculate the field residual for diagnostic purposes */
-
   calculate_equation_residual(SolveEqs);
 
   /* free */
