@@ -56,7 +56,10 @@ void eq_solve_elliptic_equation(Physics_T *const phys)
     else
       Error0(NO_OPTION);
 
-    /* if necessary update backup fields */
+    /* update backup fields.
+    // for optimization purposes if it is only a single run, 
+    // don't need to backup. in fact, a single run is the most used 
+    // case in the initial data construction. */
     if (max_iter > 1)
       backup_fields(phys);
       
