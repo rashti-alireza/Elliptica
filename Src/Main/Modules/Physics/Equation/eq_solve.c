@@ -274,8 +274,12 @@ static void update_fields_relaxed_scheme(Physics_T *const phys)
     double W1  = Pgetd(par);
     double W2  = 1.-W1;
     
+    /* don't bother if w = 1. (optimize) */
     if (EQL(W1,1.))
+    {
+      f++;
       continue;
+    }
     
     OpenMP_Patch_Pragma(omp parallel for)
     for (Uint p = 0; p < npatch; ++p)
