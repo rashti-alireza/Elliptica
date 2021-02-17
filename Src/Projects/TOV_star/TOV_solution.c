@@ -29,6 +29,8 @@ TOV_T *TOV_solution(TOV_T *const TOV)
     printf(Pretty0"%s baryonic mass is zero => exiting ...\n",phys->stype);
     /* free global tov_eos */
     free_EoS(tov_eos);
+    
+    TOV->status = 1;
     return TOV;
   }
   
