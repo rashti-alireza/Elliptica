@@ -78,6 +78,9 @@ psi[ijk] - 1;
   {
   DDM_SCHUR_BC_OPEN
 
+  double psi3 = 
+pow(psi[ijk], 3);
+
   double _DiHSi = 
 ChrisConf_U0D0D0[ijk]*bh_sConf_U0[ijk] + ChrisConf_U0D0D1[ijk]*
 bh_sConf_U1[ijk] + ChrisConf_U0D0D2[ijk]*bh_sConf_U2[ijk] +
@@ -87,12 +90,9 @@ ChrisConf_U2D0D2[ijk]*bh_sConf_U0[ijk] + ChrisConf_U2D1D2[ijk]*
 bh_sConf_U1[ijk] + ChrisConf_U2D2D2[ijk]*bh_sConf_U2[ijk] +
 dbh_sConf_U0D0[ijk] + dbh_sConf_U1D1[ijk] + dbh_sConf_U2D2[ijk];
 
-  double innerB_F = 
-(1.0/4.0)*_DiHSi*psi[ijk] + bh_sConf_U0[ijk]*dpsi_D0[ijk] +
-bh_sConf_U1[ijk]*dpsi_D1[ijk] + bh_sConf_U2[ijk]*dpsi_D2[ijk] - 1.0/6.0*
-pow(psi[ijk], 3)*trK[ijk] + (1.0/4.0)*(AConfIJ_U0U0[ijk]*
-pow(bh_sConf_U0[ijk], 2)*pow(gConf_D0D0[ijk], 2) + 2.0*
-AConfIJ_U0U0[ijk]*bh_sConf_U0[ijk]*bh_sConf_U1[ijk]*gConf_D0D0[ijk]*
+  double _AIJsisj = 
+AConfIJ_U0U0[ijk]*pow(bh_sConf_U0[ijk], 2)*pow(gConf_D0D0[ijk], 2) +
+2.0*AConfIJ_U0U0[ijk]*bh_sConf_U0[ijk]*bh_sConf_U1[ijk]*gConf_D0D0[ijk]*
 gConf_D0D1[ijk] + 2.0*AConfIJ_U0U0[ijk]*bh_sConf_U0[ijk]*
 bh_sConf_U2[ijk]*gConf_D0D0[ijk]*gConf_D0D2[ijk] + AConfIJ_U0U0[ijk]*
 pow(bh_sConf_U1[ijk], 2)*pow(gConf_D0D1[ijk], 2) + 2.0*
@@ -151,9 +151,14 @@ bh_sConf_U2[ijk]*gConf_D0D2[ijk]*gConf_D2D2[ijk] + AConfIJ_U2U2[ijk]*
 pow(bh_sConf_U1[ijk], 2)*pow(gConf_D1D2[ijk], 2) + 2.0*
 AConfIJ_U2U2[ijk]*bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*gConf_D1D2[ijk]*
 gConf_D2D2[ijk] + AConfIJ_U2U2[ijk]*pow(bh_sConf_U2[ijk], 2)*
-pow(gConf_D2D2[ijk], 2))/pow(psi[ijk], 3);
+pow(gConf_D2D2[ijk], 2);
 
-  F[map[ijk]] = innerB_F;
+  double innerB_F = 
+(1.0/4.0)*_AIJsisj/psi3 + (1.0/4.0)*_DiHSi*psi[ijk] + bh_sConf_U0[ijk]*
+dpsi_D0[ijk] + bh_sConf_U1[ijk]*dpsi_D1[ijk] + bh_sConf_U2[ijk]*
+dpsi_D2[ijk] - 1.0/6.0*pow(psi[ijk], 3)*trK[ijk];
+
+  F[map[ijk]] = psi3*innerB_F;
 
   DDM_SCHUR_BC_CLOSE
   }/* end of else if (patch->innerB) */

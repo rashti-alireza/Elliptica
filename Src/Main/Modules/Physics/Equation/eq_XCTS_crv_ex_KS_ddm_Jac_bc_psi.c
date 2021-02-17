@@ -13,7 +13,6 @@ void *eq_XCTS_curve_exc_KS_ddm_jacobian_bc_psi(void *vp1,void *vp2)
   DDM_SCHUR_JACOBIAN_BC_DECLARE
   Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
   const double kd[2] = {0.,1.};/* Kronecker delta */
-  const double is_Aij_on = 1.;
 
 
   /* declaring: */
@@ -25,6 +24,9 @@ void *eq_XCTS_curve_exc_KS_ddm_jacobian_bc_psi(void *vp1,void *vp2)
   READ_v_UNUSED(AConfIJ_U2U2)
   READ_v_UNUSED(AConfIJ_U1U1)
   READ_v_UNUSED(AConfIJ_U1U2)
+  READ_v(dpsi_D0)
+  READ_v(dpsi_D1)
+  READ_v(dpsi_D2)
   READ_v_UNUSED(gConf_D0D2)
   READ_v_UNUSED(gConf_D0D0)
   READ_v_UNUSED(gConf_D0D1)
@@ -99,74 +101,18 @@ ChrisConf_U2D0D2[ijk]*bh_sConf_U0[ijk] + ChrisConf_U2D1D2[ijk]*
 bh_sConf_U1[ijk] + ChrisConf_U2D2D2[ijk]*bh_sConf_U2[ijk] +
 dbh_sConf_U0D0[ijk] + dbh_sConf_U1D1[ijk] + dbh_sConf_U2D2[ijk];
 
-  double B_t1 = 
-(0.75*AConfIJ_U0U0[ijk]*pow(bh_sConf_U0[ijk], 2)*pow(gConf_D0D0[ijk], 2) +
-1.5*AConfIJ_U0U0[ijk]*bh_sConf_U0[ijk]*bh_sConf_U1[ijk]*gConf_D0D0[ijk]*
-gConf_D0D1[ijk] + 1.5*AConfIJ_U0U0[ijk]*bh_sConf_U0[ijk]*
-bh_sConf_U2[ijk]*gConf_D0D0[ijk]*gConf_D0D2[ijk] + 0.75*
-AConfIJ_U0U0[ijk]*pow(bh_sConf_U1[ijk], 2)*pow(gConf_D0D1[ijk], 2) +
-1.5*AConfIJ_U0U0[ijk]*bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*gConf_D0D1[ijk]*
-gConf_D0D2[ijk] + 0.75*AConfIJ_U0U0[ijk]*pow(bh_sConf_U2[ijk], 2)*
-pow(gConf_D0D2[ijk], 2) + 1.5*AConfIJ_U0U1[ijk]*pow(bh_sConf_U0[ijk], 2)*
-gConf_D0D0[ijk]*gConf_D0D1[ijk] + 1.5*AConfIJ_U0U1[ijk]*
-bh_sConf_U0[ijk]*bh_sConf_U1[ijk]*gConf_D0D0[ijk]*gConf_D1D1[ijk] + 1.5*
-AConfIJ_U0U1[ijk]*bh_sConf_U0[ijk]*bh_sConf_U1[ijk]*
-pow(gConf_D0D1[ijk], 2) + 1.5*AConfIJ_U0U1[ijk]*bh_sConf_U0[ijk]*
-bh_sConf_U2[ijk]*gConf_D0D0[ijk]*gConf_D1D2[ijk] + 1.5*
-AConfIJ_U0U1[ijk]*bh_sConf_U0[ijk]*bh_sConf_U2[ijk]*gConf_D0D1[ijk]*
-gConf_D0D2[ijk] + 1.5*AConfIJ_U0U1[ijk]*pow(bh_sConf_U1[ijk], 2)*
-gConf_D0D1[ijk]*gConf_D1D1[ijk] + 1.5*AConfIJ_U0U1[ijk]*
-bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*gConf_D0D1[ijk]*gConf_D1D2[ijk] + 1.5*
-AConfIJ_U0U1[ijk]*bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*gConf_D0D2[ijk]*
-gConf_D1D1[ijk] + 1.5*AConfIJ_U0U1[ijk]*pow(bh_sConf_U2[ijk], 2)*
-gConf_D0D2[ijk]*gConf_D1D2[ijk] + 1.5*AConfIJ_U0U2[ijk]*
-pow(bh_sConf_U0[ijk], 2)*gConf_D0D0[ijk]*gConf_D0D2[ijk] + 1.5*
-AConfIJ_U0U2[ijk]*bh_sConf_U0[ijk]*bh_sConf_U1[ijk]*gConf_D0D0[ijk]*
-gConf_D1D2[ijk] + 1.5*AConfIJ_U0U2[ijk]*bh_sConf_U0[ijk]*
-bh_sConf_U1[ijk]*gConf_D0D1[ijk]*gConf_D0D2[ijk] + 1.5*
-AConfIJ_U0U2[ijk]*bh_sConf_U0[ijk]*bh_sConf_U2[ijk]*gConf_D0D0[ijk]*
-gConf_D2D2[ijk] + 1.5*AConfIJ_U0U2[ijk]*bh_sConf_U0[ijk]*
-bh_sConf_U2[ijk]*pow(gConf_D0D2[ijk], 2) + 1.5*AConfIJ_U0U2[ijk]*
-pow(bh_sConf_U1[ijk], 2)*gConf_D0D1[ijk]*gConf_D1D2[ijk] + 1.5*
-AConfIJ_U0U2[ijk]*bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*gConf_D0D1[ijk]*
-gConf_D2D2[ijk] + 1.5*AConfIJ_U0U2[ijk]*bh_sConf_U1[ijk]*
-bh_sConf_U2[ijk]*gConf_D0D2[ijk]*gConf_D1D2[ijk] + 1.5*
-AConfIJ_U0U2[ijk]*pow(bh_sConf_U2[ijk], 2)*gConf_D0D2[ijk]*
-gConf_D2D2[ijk] + 0.75*AConfIJ_U1U1[ijk]*pow(bh_sConf_U0[ijk], 2)*
-pow(gConf_D0D1[ijk], 2) + 1.5*AConfIJ_U1U1[ijk]*bh_sConf_U0[ijk]*
-bh_sConf_U1[ijk]*gConf_D0D1[ijk]*gConf_D1D1[ijk] + 1.5*
-AConfIJ_U1U1[ijk]*bh_sConf_U0[ijk]*bh_sConf_U2[ijk]*gConf_D0D1[ijk]*
-gConf_D1D2[ijk] + 0.75*AConfIJ_U1U1[ijk]*pow(bh_sConf_U1[ijk], 2)*
-pow(gConf_D1D1[ijk], 2) + 1.5*AConfIJ_U1U1[ijk]*bh_sConf_U1[ijk]*
-bh_sConf_U2[ijk]*gConf_D1D1[ijk]*gConf_D1D2[ijk] + 0.75*
-AConfIJ_U1U1[ijk]*pow(bh_sConf_U2[ijk], 2)*pow(gConf_D1D2[ijk], 2) +
-1.5*AConfIJ_U1U2[ijk]*pow(bh_sConf_U0[ijk], 2)*gConf_D0D1[ijk]*
-gConf_D0D2[ijk] + 1.5*AConfIJ_U1U2[ijk]*bh_sConf_U0[ijk]*
-bh_sConf_U1[ijk]*gConf_D0D1[ijk]*gConf_D1D2[ijk] + 1.5*
-AConfIJ_U1U2[ijk]*bh_sConf_U0[ijk]*bh_sConf_U1[ijk]*gConf_D0D2[ijk]*
-gConf_D1D1[ijk] + 1.5*AConfIJ_U1U2[ijk]*bh_sConf_U0[ijk]*
-bh_sConf_U2[ijk]*gConf_D0D1[ijk]*gConf_D2D2[ijk] + 1.5*
-AConfIJ_U1U2[ijk]*bh_sConf_U0[ijk]*bh_sConf_U2[ijk]*gConf_D0D2[ijk]*
-gConf_D1D2[ijk] + 1.5*AConfIJ_U1U2[ijk]*pow(bh_sConf_U1[ijk], 2)*
-gConf_D1D1[ijk]*gConf_D1D2[ijk] + 1.5*AConfIJ_U1U2[ijk]*
-bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*gConf_D1D1[ijk]*gConf_D2D2[ijk] + 1.5*
-AConfIJ_U1U2[ijk]*bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*
-pow(gConf_D1D2[ijk], 2) + 1.5*AConfIJ_U1U2[ijk]*pow(bh_sConf_U2[ijk], 2)*
-gConf_D1D2[ijk]*gConf_D2D2[ijk] + 0.75*AConfIJ_U2U2[ijk]*
-pow(bh_sConf_U0[ijk], 2)*pow(gConf_D0D2[ijk], 2) + 1.5*
-AConfIJ_U2U2[ijk]*bh_sConf_U0[ijk]*bh_sConf_U1[ijk]*gConf_D0D2[ijk]*
-gConf_D1D2[ijk] + 1.5*AConfIJ_U2U2[ijk]*bh_sConf_U0[ijk]*
-bh_sConf_U2[ijk]*gConf_D0D2[ijk]*gConf_D2D2[ijk] + 0.75*
-AConfIJ_U2U2[ijk]*pow(bh_sConf_U1[ijk], 2)*pow(gConf_D1D2[ijk], 2) +
-1.5*AConfIJ_U2U2[ijk]*bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*gConf_D1D2[ijk]*
-gConf_D2D2[ijk] + 0.75*AConfIJ_U2U2[ijk]*pow(bh_sConf_U2[ijk], 2)*
-pow(gConf_D2D2[ijk], 2))/pow(psi[ijk], 4);
+  double psi2 = 
+pow(psi[ijk], 2);
+
+  double psi3 = 
+pow(psi[ijk], 3);
 
   double innerB_Bpart = 
-Jpsi_D0(j_Jpsi_D0,ijk,lmn)*bh_sConf_U0[ijk] + Jpsi_D1(j_Jpsi_D1,ijk,lmn)*
-bh_sConf_U1[ijk] + Jpsi_D2(j_Jpsi_D2,ijk,lmn)*bh_sConf_U2[ijk] - 1.0/
-4.0*kd[ijk==lmn]*(4*B_t1*is_Aij_on - _DiHSi_b + 2*pow(psi[ijk], 2)*
-trK[ijk]);
+3.0*kd[ijk==lmn]*psi2*(bh_sConf_U0[ijk]*dpsi_D0[ijk] + bh_sConf_U1[ijk]*
+dpsi_D1[ijk] + bh_sConf_U2[ijk]*dpsi_D2[ijk]) + kd[ijk==lmn]*psi3*
+(_DiHSi_b - psi2*trK[ijk]) + psi3*(Jpsi_D0(j_Jpsi_D0,ijk,lmn)*
+bh_sConf_U0[ijk] + Jpsi_D1(j_Jpsi_D1,ijk,lmn)*bh_sConf_U1[ijk] +
+Jpsi_D2(j_Jpsi_D2,ijk,lmn)*bh_sConf_U2[ijk]);
 
   B[i][j] = innerB_Bpart;
 
@@ -183,74 +129,18 @@ ChrisConf_U2D0D2[ijk]*bh_sConf_U0[ijk] + ChrisConf_U2D1D2[ijk]*
 bh_sConf_U1[ijk] + ChrisConf_U2D2D2[ijk]*bh_sConf_U2[ijk] +
 dbh_sConf_U0D0[ijk] + dbh_sConf_U1D1[ijk] + dbh_sConf_U2D2[ijk];
 
-  double E_t1 = 
-(0.75*AConfIJ_U0U0[ijk]*pow(bh_sConf_U0[ijk], 2)*pow(gConf_D0D0[ijk], 2) +
-1.5*AConfIJ_U0U0[ijk]*bh_sConf_U0[ijk]*bh_sConf_U1[ijk]*gConf_D0D0[ijk]*
-gConf_D0D1[ijk] + 1.5*AConfIJ_U0U0[ijk]*bh_sConf_U0[ijk]*
-bh_sConf_U2[ijk]*gConf_D0D0[ijk]*gConf_D0D2[ijk] + 0.75*
-AConfIJ_U0U0[ijk]*pow(bh_sConf_U1[ijk], 2)*pow(gConf_D0D1[ijk], 2) +
-1.5*AConfIJ_U0U0[ijk]*bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*gConf_D0D1[ijk]*
-gConf_D0D2[ijk] + 0.75*AConfIJ_U0U0[ijk]*pow(bh_sConf_U2[ijk], 2)*
-pow(gConf_D0D2[ijk], 2) + 1.5*AConfIJ_U0U1[ijk]*pow(bh_sConf_U0[ijk], 2)*
-gConf_D0D0[ijk]*gConf_D0D1[ijk] + 1.5*AConfIJ_U0U1[ijk]*
-bh_sConf_U0[ijk]*bh_sConf_U1[ijk]*gConf_D0D0[ijk]*gConf_D1D1[ijk] + 1.5*
-AConfIJ_U0U1[ijk]*bh_sConf_U0[ijk]*bh_sConf_U1[ijk]*
-pow(gConf_D0D1[ijk], 2) + 1.5*AConfIJ_U0U1[ijk]*bh_sConf_U0[ijk]*
-bh_sConf_U2[ijk]*gConf_D0D0[ijk]*gConf_D1D2[ijk] + 1.5*
-AConfIJ_U0U1[ijk]*bh_sConf_U0[ijk]*bh_sConf_U2[ijk]*gConf_D0D1[ijk]*
-gConf_D0D2[ijk] + 1.5*AConfIJ_U0U1[ijk]*pow(bh_sConf_U1[ijk], 2)*
-gConf_D0D1[ijk]*gConf_D1D1[ijk] + 1.5*AConfIJ_U0U1[ijk]*
-bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*gConf_D0D1[ijk]*gConf_D1D2[ijk] + 1.5*
-AConfIJ_U0U1[ijk]*bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*gConf_D0D2[ijk]*
-gConf_D1D1[ijk] + 1.5*AConfIJ_U0U1[ijk]*pow(bh_sConf_U2[ijk], 2)*
-gConf_D0D2[ijk]*gConf_D1D2[ijk] + 1.5*AConfIJ_U0U2[ijk]*
-pow(bh_sConf_U0[ijk], 2)*gConf_D0D0[ijk]*gConf_D0D2[ijk] + 1.5*
-AConfIJ_U0U2[ijk]*bh_sConf_U0[ijk]*bh_sConf_U1[ijk]*gConf_D0D0[ijk]*
-gConf_D1D2[ijk] + 1.5*AConfIJ_U0U2[ijk]*bh_sConf_U0[ijk]*
-bh_sConf_U1[ijk]*gConf_D0D1[ijk]*gConf_D0D2[ijk] + 1.5*
-AConfIJ_U0U2[ijk]*bh_sConf_U0[ijk]*bh_sConf_U2[ijk]*gConf_D0D0[ijk]*
-gConf_D2D2[ijk] + 1.5*AConfIJ_U0U2[ijk]*bh_sConf_U0[ijk]*
-bh_sConf_U2[ijk]*pow(gConf_D0D2[ijk], 2) + 1.5*AConfIJ_U0U2[ijk]*
-pow(bh_sConf_U1[ijk], 2)*gConf_D0D1[ijk]*gConf_D1D2[ijk] + 1.5*
-AConfIJ_U0U2[ijk]*bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*gConf_D0D1[ijk]*
-gConf_D2D2[ijk] + 1.5*AConfIJ_U0U2[ijk]*bh_sConf_U1[ijk]*
-bh_sConf_U2[ijk]*gConf_D0D2[ijk]*gConf_D1D2[ijk] + 1.5*
-AConfIJ_U0U2[ijk]*pow(bh_sConf_U2[ijk], 2)*gConf_D0D2[ijk]*
-gConf_D2D2[ijk] + 0.75*AConfIJ_U1U1[ijk]*pow(bh_sConf_U0[ijk], 2)*
-pow(gConf_D0D1[ijk], 2) + 1.5*AConfIJ_U1U1[ijk]*bh_sConf_U0[ijk]*
-bh_sConf_U1[ijk]*gConf_D0D1[ijk]*gConf_D1D1[ijk] + 1.5*
-AConfIJ_U1U1[ijk]*bh_sConf_U0[ijk]*bh_sConf_U2[ijk]*gConf_D0D1[ijk]*
-gConf_D1D2[ijk] + 0.75*AConfIJ_U1U1[ijk]*pow(bh_sConf_U1[ijk], 2)*
-pow(gConf_D1D1[ijk], 2) + 1.5*AConfIJ_U1U1[ijk]*bh_sConf_U1[ijk]*
-bh_sConf_U2[ijk]*gConf_D1D1[ijk]*gConf_D1D2[ijk] + 0.75*
-AConfIJ_U1U1[ijk]*pow(bh_sConf_U2[ijk], 2)*pow(gConf_D1D2[ijk], 2) +
-1.5*AConfIJ_U1U2[ijk]*pow(bh_sConf_U0[ijk], 2)*gConf_D0D1[ijk]*
-gConf_D0D2[ijk] + 1.5*AConfIJ_U1U2[ijk]*bh_sConf_U0[ijk]*
-bh_sConf_U1[ijk]*gConf_D0D1[ijk]*gConf_D1D2[ijk] + 1.5*
-AConfIJ_U1U2[ijk]*bh_sConf_U0[ijk]*bh_sConf_U1[ijk]*gConf_D0D2[ijk]*
-gConf_D1D1[ijk] + 1.5*AConfIJ_U1U2[ijk]*bh_sConf_U0[ijk]*
-bh_sConf_U2[ijk]*gConf_D0D1[ijk]*gConf_D2D2[ijk] + 1.5*
-AConfIJ_U1U2[ijk]*bh_sConf_U0[ijk]*bh_sConf_U2[ijk]*gConf_D0D2[ijk]*
-gConf_D1D2[ijk] + 1.5*AConfIJ_U1U2[ijk]*pow(bh_sConf_U1[ijk], 2)*
-gConf_D1D1[ijk]*gConf_D1D2[ijk] + 1.5*AConfIJ_U1U2[ijk]*
-bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*gConf_D1D1[ijk]*gConf_D2D2[ijk] + 1.5*
-AConfIJ_U1U2[ijk]*bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*
-pow(gConf_D1D2[ijk], 2) + 1.5*AConfIJ_U1U2[ijk]*pow(bh_sConf_U2[ijk], 2)*
-gConf_D1D2[ijk]*gConf_D2D2[ijk] + 0.75*AConfIJ_U2U2[ijk]*
-pow(bh_sConf_U0[ijk], 2)*pow(gConf_D0D2[ijk], 2) + 1.5*
-AConfIJ_U2U2[ijk]*bh_sConf_U0[ijk]*bh_sConf_U1[ijk]*gConf_D0D2[ijk]*
-gConf_D1D2[ijk] + 1.5*AConfIJ_U2U2[ijk]*bh_sConf_U0[ijk]*
-bh_sConf_U2[ijk]*gConf_D0D2[ijk]*gConf_D2D2[ijk] + 0.75*
-AConfIJ_U2U2[ijk]*pow(bh_sConf_U1[ijk], 2)*pow(gConf_D1D2[ijk], 2) +
-1.5*AConfIJ_U2U2[ijk]*bh_sConf_U1[ijk]*bh_sConf_U2[ijk]*gConf_D1D2[ijk]*
-gConf_D2D2[ijk] + 0.75*AConfIJ_U2U2[ijk]*pow(bh_sConf_U2[ijk], 2)*
-pow(gConf_D2D2[ijk], 2))/pow(psi[ijk], 4);
+  double psi2_ = 
+pow(psi[ijk], 2);
+
+  double psi3_ = 
+pow(psi[ijk], 3);
 
   double innerB_Epart = 
-Jpsi_D0(j_Jpsi_D0,ijk,lmn)*bh_sConf_U0[ijk] + Jpsi_D1(j_Jpsi_D1,ijk,lmn)*
-bh_sConf_U1[ijk] + Jpsi_D2(j_Jpsi_D2,ijk,lmn)*bh_sConf_U2[ijk] - 1.0/
-4.0*kd[ijk==lmn]*(4*E_t1*is_Aij_on - _DiHSi_e + 2*pow(psi[ijk], 2)*
-trK[ijk]);
+3.0*kd[ijk==lmn]*psi2_*(bh_sConf_U0[ijk]*dpsi_D0[ijk] +
+bh_sConf_U1[ijk]*dpsi_D1[ijk] + bh_sConf_U2[ijk]*dpsi_D2[ijk]) +
+kd[ijk==lmn]*psi3_*(_DiHSi_e - psi2_*trK[ijk]) + psi3_*
+(Jpsi_D0(j_Jpsi_D0,ijk,lmn)*bh_sConf_U0[ijk] + Jpsi_D1(j_Jpsi_D1,ijk,lmn)*
+bh_sConf_U1[ijk] + Jpsi_D2(j_Jpsi_D2,ijk,lmn)*bh_sConf_U2[ijk]);
 
   E_Trans[j][i] = innerB_Epart;
 

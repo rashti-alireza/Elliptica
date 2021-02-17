@@ -29,7 +29,7 @@ C_arg2 = [ijk == lmn]; # for kd
 `  DDM_SCHUR_JACOBIAN_BC_DECLARE`;
 `  Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */`;
 `  const double kd[2] = {0.,1.};/* Kronecker delta */`;
-`  const double is_Aij_on = 1.;`
+#`  const double is_Aij_on = 1.;`
 ``
 # declare for Cpi
 Declare = 
@@ -47,7 +47,7 @@ Declare =
  (obj = Field,name = AConfIJ, rank = UU, C_macro4);
 
  # conformal factor first derivative 
- #(obj = Field,name = dpsi, rank = D, C_macro);
+ (obj = Field,name = dpsi, rank = D, C_macro);
 
  # conformal metric 
  (obj = Field,name = gConf, rank = DD, C_macro4);
@@ -143,13 +143,16 @@ outerB_Epart = 0;
 
 _DiHSi_b     = (dbh_sConf(j,i) + ChrisConf(j,i,l)*bh_sConf(-l))*KD(-j,-i);
 
-# with AConfIJ
-B_t1         = 3/4*(psi**-4)*AConfIJ(i,j)*gConf(-i,-l)*gConf(-j,-m)*bh_sConf(l)*bh_sConf(m);
+# with AConfIJsisj
+#B_t1         = 3/4*(psi**-4)*AConfIJ(i,j)*gConf(-i,-l)*gConf(-j,-m)*bh_sConf(l)*bh_sConf(m);
+#innerB_Bpart = bh_sConf(i)*Jpsi(-i) -kd*(-_DiHSi_b/4+trK*(psi**2)/2+is_Aij_on*B_t1);
 
-# with no AConfIJ
-#B_t1         = 0;
-
-innerB_Bpart = bh_sConf(i)*Jpsi(-i) -kd*(-_DiHSi_b/4+trK*(psi**2)/2+is_Aij_on*B_t1);
+# with no AConfIJsisj since it's multiplied by psi3:
+psi2         = psi**2;
+psi3         = psi**3;
+innerB_Bpart = psi3*bh_sConf(i)*Jpsi(-i)      + \
+               kd*3*psi2*bh_sConf(i)*dpsi(-i) + \
+	       kd*psi3*(_DiHSi_b-trK*(psi2));
 
 
 `  B[i][j] = innerB_Bpart;\n`;
@@ -164,13 +167,16 @@ innerB_Bpart = bh_sConf(i)*Jpsi(-i) -kd*(-_DiHSi_b/4+trK*(psi**2)/2+is_Aij_on*B_
 
 _DiHSi_e    = (dbh_sConf(j,i) + ChrisConf(j,i,l)*bh_sConf(-l))*KD(-j,-i);
 
-# with AConfIJ
-E_t1 = 3/4*(psi**-4)*AConfIJ(i,j)*gConf(-i,-l)*gConf(-j,-m)*bh_sConf(l)*bh_sConf(m);
+# with AConfIJsisj 
+#E_t1 = 3/4*(psi**-4)*AConfIJ(i,j)*gConf(-i,-l)*gConf(-j,-m)*bh_sConf(l)*bh_sConf(m);
+#innerB_Epart = bh_sConf(i)*Jpsi(-i) -kd*(-_DiHSi_e/4+trK*(psi**2)/2+is_Aij_on*E_t1);
 
-# with no AConfIJ
-#E_t1 = 0;
-
-innerB_Epart = bh_sConf(i)*Jpsi(-i) -kd*(-_DiHSi_e/4+trK*(psi**2)/2+is_Aij_on*E_t1);
+# with no AConfIJsisj since it's multiplied by psi3:
+psi2_         = psi**2;
+psi3_         = psi**3;
+innerB_Epart = psi3_*bh_sConf(i)*Jpsi(-i)      + \
+               kd*3*psi2_*bh_sConf(i)*dpsi(-i) + \
+	       kd*psi3_*(_DiHSi_e-trK*(psi2_));
 
 `  E_Trans[j][i] = innerB_Epart;\n`;
 `  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE\n`;
