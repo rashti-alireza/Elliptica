@@ -3466,7 +3466,83 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
     }
   }
   
-  /* set BC for the ones with the largest number of neighbors.
+  /* preconditioning BC to balance Neumann and Dirichlet.
+  // this is important to get converge elliptic solve. */
+  if (grid->kind == Grid_SplitCubedSpherical_BHNS)
+  FOR_ALL_PATCHES(p,grid)
+  {
+    patch = grid->patch[p];
+    
+    if (!IsItCovering(patch,"BH_around,NS_around")) 
+      continue;
+    
+    /* try to first set face Z = 1 to Dirichlet */
+    i = 5;
+    {
+      face  = patch->interface[i];
+      int Favor_Dirichlet = 1;
+      
+      if (face->df_dn_set) continue;
+      
+      /* test if we can favor Dirichlet: */
+      
+      /* if it has already Dirichlet */
+      if (isD[patch->pn]) bc = 1;
+      else                bc = 0;
+      
+      for (sf = 0; sf < face->ns; ++sf)
+      {
+        ssubf = face->subface[sf];
+        if (!ssubf->touch) continue;
+        
+        opatch = grid->patch[ssubf->adjPatch];
+        oface  = opatch->interface[ssubf->adjFace];
+        
+        /* if confilict => can't do Dirichlet */
+        if(oface->df_dn_set && oface->df_dn != (bc+1)%2)
+        {
+          Favor_Dirichlet = 0;
+          break;
+        }
+      }
+      
+      if (Favor_Dirichlet)
+      {
+        if (isD[patch->pn]) bc = 1;
+        else                bc = 0;
+      }
+      else/* favor Nuemann */
+      {
+        if (isD[patch->pn]) bc = 0;
+        else                bc = 1;
+      }
+      
+      face->df_dn = bc%2;
+      face->df_dn_set = 1;
+      
+      if (!face->df_dn) isD[patch->pn] = 1;
+      
+      for (sf = 0; sf < face->ns; ++sf)
+      {
+        ssubf = face->subface[sf];
+        if (!ssubf->touch) continue;
+        
+        opatch = grid->patch[ssubf->adjPatch];
+        oface  = opatch->interface[ssubf->adjFace];
+        
+        if(oface->df_dn_set && oface->df_dn != (bc+1)%2)
+          Error0("Wrong BC arrangement!");
+        
+        oface->df_dn = (bc+1)%2;
+        oface->df_dn_set = 1;
+        
+        if (!oface->df_dn) isD[opatch->pn] = 1;
+      }
+    }
+  }
+  
+  
+  /* set the other BC start with the largest number of neighbors.
   // start with Dirichlet since derivative might be not very accurate
   // in outermost which generally have the highest rank */
   for (i = 0; i < Nfrank; ++i)
@@ -3532,6 +3608,7 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
       if (!oface->df_dn) isD[opatch->pn] = 1;
     }
   }
+  
   /* set the subface flags correspondingly */
   FOR_ALL_PATCHES(p,grid)
   {
