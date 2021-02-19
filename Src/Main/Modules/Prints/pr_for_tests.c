@@ -303,7 +303,44 @@ void pr_interfaces(const Grid_T *const grid)
   if (flg == NONE)
     fprintf(f,"Nothing.\n");
   
-  Fclose(f); 
+  fprintf(f,"%s\n",PR_LINE);
+  /* count Neumann or Dirichlet for each patch
+  // note: it's supposed each interface has only one type of B.C. . */
+  int Neumann_tot   = 0;
+  int Dirichlet_tot = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    face = grid->patch[pa]->interface;
+    int Neumann_count   = 0;
+    int Dirichlet_count = 0;
+    
+    FOR_ALL(fc,face)
+    {
+      if (face[fc]->df_dn_set)
+      {
+        if (face[fc]->df_dn)
+          Neumann_count++;
+        else
+          Dirichlet_count++;
+      }
+    }
+    Neumann_tot  += Neumann_count;
+    Dirichlet_tot+= Dirichlet_count;
+    
+    if (1)
+    printf("%-43s = {Neumann = %d, Dirichlet = %d}\n",
+           grid->patch[pa]->name,Neumann_count,Dirichlet_count);
+    fprintf(f,"%-43s = {Neumann = %d, Dirichlet = %d}\n",
+           grid->patch[pa]->name,Neumann_count,Dirichlet_count);
+  
+  }
+  if(1)
+  printf("total Neumann = %d, total Dirichlet = %d\n",
+          Neumann_tot,Dirichlet_tot);
+  fprintf(f,"total Neumann = %d, total Dirichlet = %d\n",
+          Neumann_tot,Dirichlet_tot);
+
+  Fclose(f);
   
   /* printing interfacess */
   for (n = 0; n < TOT_ARCH; ++n)
