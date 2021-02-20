@@ -3586,6 +3586,7 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
       else                bc = 1;
     }
     
+    /* NOTE: innerB and outerB might considered as Neumann or Dirichlet. */
     face->df_dn = bc%2;
     face->df_dn_set = 1;
     
