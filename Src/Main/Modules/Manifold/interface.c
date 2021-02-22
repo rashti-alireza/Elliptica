@@ -3474,7 +3474,10 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
     patch = grid->patch[p];
     
     /* if condition number is high or elliptic solver fails
-    // you can remove comments and try them. */
+    // you can remove comments and try them. 
+    // the ideal case that found out in experiments is equality 
+    // in the number of Neuman and Drichlet bc for each "patch";
+    // thus in future if elliptic solvern fails you might try this. */
     //if (!IsItCovering(patch,"NS_around"))
     //if (!IsItCovering(patch,"BH_around"))
     if (!IsItCovering(patch,"BH_around,NS_around"))
