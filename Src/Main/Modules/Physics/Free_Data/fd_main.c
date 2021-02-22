@@ -84,8 +84,12 @@ static int set_free_data_params(Physics_T *const phys)
   // zero:       MConf^{ij} = 0. */
   Pset_default(P_"MConfIJ","zero");
   
-  /* roll off radius used for attenuation of metric, trK etc. */
-  Pset_default(P_"RollOff_radius","0.");
+  /* soft parameters:
+  // ================
+  //
+  // name: "RollOff_radius"
+  // roll off radius used for attenuation of metric, trK etc. 
+  */ 
   
   UNUSED(phys);
   FUNC_TOC

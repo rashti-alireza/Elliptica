@@ -410,7 +410,7 @@ fd_modify_gConf_igConf_dgConf_to_flat_expmr4KS
   const double BHx    = Getd("center_x");
   const double BHy    = Getd("center_y");
   const double BHz    = Getd("center_z");
-  const double R04    = pow(Pgetd(P_"RollOff_radius"),4.);
+  const double R04    = pow(Getd("RollOff_radius"),4.);
   
   /* superimpose */
   OpenMP_Patch_Pragma(omp parallel for)
@@ -509,7 +509,7 @@ fd_modify_trK_to_expmr4trK_compute_dtrK
   const double BHx    = Getd("center_x");
   const double BHy    = Getd("center_y");
   const double BHz    = Getd("center_z");
-  const double R04    = pow(Pgetd(P_"RollOff_radius"),4.);
+  const double R04    = pow(Getd("RollOff_radius"),4.);
   
   /* modify */
   OpenMP_Patch_Pragma(omp parallel for)
@@ -1027,7 +1027,7 @@ fd_populate_alpha_expmr4_KerrSchild
   const double BHx   = Getd("center_x");
   const double BHy   = Getd("center_y");
   const double BHz   = Getd("center_z");
-  const double R04   = pow(Pgetd(P_"RollOff_radius"),4.);
+  const double R04   = pow(Getd("RollOff_radius"),4.);
   
   fd_KerrSchild_set_params(phys);
   
