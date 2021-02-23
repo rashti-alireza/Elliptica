@@ -48,7 +48,7 @@ void run_func_PtoV(sFunc_PtoV_T **const func,const char *const task,Patch_T *con
 Collocation_T get_collocation(const char *const coll);
 Coord_T find_coord(const char *const coordsys);
 Basis_T get_basis(const char *const basis);
-void IJK(const Uint l, const Uint *const n, Uint *const i, Uint *const j, Uint *const k);
+void ijk_to_i_j_k_row_major_order(const Uint l, const Uint *const n, Uint *const i, Uint *const j, Uint *const k);
 Uint L(const Uint *const n, const Uint i, const Uint j, const Uint k);
 Uint I(const Uint l, const Uint *const n);
 Uint J(const Uint l, const Uint *const n);

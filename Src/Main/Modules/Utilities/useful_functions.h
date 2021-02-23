@@ -40,7 +40,7 @@ Basis_T get_basis(const char *const basis);
 int IsOnEdge(const Uint *const n,const Uint p);
 int IsOnFace(const double *const x, const Patch_T *const patch,Uint *const f,const double precision_factor);
 Uint node_onFace(const double *const x, const Uint f,const Patch_T *const patch);
-void IJK(const Uint l, const Uint *const n, Uint *const i, Uint *const j, Uint *const k);
+void ijk_to_i_j_k_row_major_order(const Uint l, const Uint *const n, Uint *const i, Uint *const j, Uint *const k);
 static Uint check_interface(const double *const X, const Patch_T *const patch, const int u);
 SubFace_T *get_paired_subface(const SubFace_T *const sub);
 Uint total_nodes_grid(const Grid_T *const grid);
