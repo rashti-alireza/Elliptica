@@ -34,7 +34,9 @@
 // free_PrField(pr);
 */
 
-/* row major to column major order */
+/* row major to column major order.
+// NOTE: silo using column major format thus if the fields saved in 
+// row major format, which is the default, one must convert them. */
 #define row2col(i,j,k) (i+n[0]*(j+n[1]*k))
 
 /* printing fields with HDF5 format using silo library.
