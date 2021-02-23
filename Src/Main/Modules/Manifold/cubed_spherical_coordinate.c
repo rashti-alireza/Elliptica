@@ -624,7 +624,7 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
         patch->node[l]->X = X;
         x1 = xc1;
-        x2 = S*R2_f->v[L(n,i,j,0)]/d;
+        x2 = S*R2_f->v[i_j_k_to_ijk(n,i,j,0)]/d;
         
         x[c] = x1+(x2-x1)*X[2];
         x[a] = S*x[c]*X[0];
@@ -649,7 +649,7 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
         patch->node[l]->X = X;
         x2 = xc2;
-        x1 = S*R1_f->v[L(n,i,j,0)]/d;
+        x1 = S*R1_f->v[i_j_k_to_ijk(n,i,j,0)]/d;
         
         x[c] = x1+(x2-x1)*X[2];
         x[a] = S*x[c]*X[0];
@@ -724,8 +724,8 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         X[2] = point_value(k,&coll_s[2]);
         d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
         patch->node[l]->X = X;
-        x1 = S*R1_f->v[L(n,i,j,0)]/d;
-        x2 = S*R2_f->v[L(n,i,j,0)]/d;
+        x1 = S*R1_f->v[i_j_k_to_ijk(n,i,j,0)]/d;
+        x2 = S*R2_f->v[i_j_k_to_ijk(n,i,j,0)]/d;
         
         x[c] = x1+(x2-x1)*X[2];
         x[a] = S*x[c]*X[0];
@@ -749,8 +749,8 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         X[2] = point_value(k,&coll_s[2]);
         d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
         patch->node[l]->X = X;
-        x1 = S*R1_f->v[L(n,i,j,0)]/d;
-        ratio  = 1.-R1_f->v[L(n,i,j,0)]/(R2_f->v[L(n,i,j,0)]);
+        x1 = S*R1_f->v[i_j_k_to_ijk(n,i,j,0)]/d;
+        ratio  = 1.-R1_f->v[i_j_k_to_ijk(n,i,j,0)]/(R2_f->v[i_j_k_to_ijk(n,i,j,0)]);
         
         x[c] = x1/(1.-ratio*X[2]);
         x[a] = S*x[c]*X[0];
@@ -3325,8 +3325,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   double r = interpolation_Ylm(reClm,imClm,lmax,th,ph);
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = r;
-                    rD[L(Nns,i,j,k)] = rdown;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = r;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = rdown;
                     assert(r>rdown);
                   }
                 }
@@ -3363,8 +3363,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   X[1] = point_value(j,&coll_s[1]);
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = rup;
-                    rD[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
                   }
                 }
               }
@@ -3402,8 +3402,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   double r = interpolation_Ylm(reClm,imClm,lmax,th,ph);
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = r;
-                    rD[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = r;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
                   }
                 }
               }
@@ -3426,8 +3426,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                 {
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = rup;
-                    rD[L(Nns,i,j,k)] = rdown;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = rdown;
                   }
                 }
               }
@@ -3694,8 +3694,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   X[1] = point_value(j,&coll_s[1]);
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
-                    rD[L(Nns,i,j,k)] = rdown;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = rdown;
                   }
                 }
               }
@@ -3723,8 +3723,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   double r = interpolation_Ylm(reClm,imClm,lmax,th,ph);
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = rup;
-                    rD[L(Nns,i,j,k)] = r;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = r;
                   }
                 }
               }
@@ -3762,8 +3762,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   double r = interpolation_Ylm(reClm,imClm,lmax,th,ph);
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rD[L(Nns,i,j,k)] = r;
-                    rU[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = r;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
                   }
                 }
               }
@@ -3786,8 +3786,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                 {
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = rup;
-                    rD[L(Nns,i,j,k)] = rdown;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = rdown;
                   }
                 }
               }
@@ -3948,8 +3948,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                 {
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = rup;
-                    rD[L(Nns,i,j,k)] = rdown;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = rdown;
                   }
                 }
               }
@@ -3985,8 +3985,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   X[1] = point_value(j,&coll_s[1]);
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = rup;
-                    rD[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));;
                   }
                 }
               }
@@ -4022,8 +4022,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   X[1] = point_value(j,&coll_s[1]);
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = rmax;
-                    rD[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = rmax;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
                   }
                 }
               }
@@ -4046,8 +4046,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                 {
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = rup;
-                    rD[L(Nns,i,j,k)] = rdown;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = rdown;
                   }
                 }
               }
@@ -4411,8 +4411,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   double r = interpolation_Ylm(reClm,imClm,lmax,th,ph);
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = r;
-                    rD[L(Nns,i,j,k)] = rdown;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = r;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = rdown;
                     assert(r>rdown);
                   }
                 }
@@ -4449,8 +4449,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   X[1] = point_value(j,&coll_s[1]);
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = rup;
-                    rD[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
                   }
                 }
               }
@@ -4488,8 +4488,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   double r = interpolation_Ylm(reClm,imClm,lmax,th,ph);
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = r;
-                    rD[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = r;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
                   }
                 }
               }
@@ -4512,8 +4512,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                 {
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = rup;
-                    rD[L(Nns,i,j,k)] = rdown;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = rdown;
                   }
                 }
               }
@@ -4743,8 +4743,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   X[1] = point_value(j,&coll_s[1]);
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
-                    rD[L(Nns,i,j,k)] = rdown;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = rdown;
                   }
                 }
               }
@@ -4772,8 +4772,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   double r = interpolation_Ylm(reClm,imClm,lmax,th,ph);
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = rup;
-                    rD[L(Nns,i,j,k)] = r;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = r;
                   }
                 }
               }
@@ -4811,8 +4811,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   double r = interpolation_Ylm(reClm,imClm,lmax,th,ph);
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rD[L(Nns,i,j,k)] = r;
-                    rU[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = r;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
                   }
                 }
               }
@@ -4835,8 +4835,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                 {
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = rup;
-                    rD[L(Nns,i,j,k)] = rdown;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = rdown;
                   }
                 }
               }
@@ -4992,8 +4992,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                 {
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = rup;
-                    rD[L(Nns,i,j,k)] = rdown;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = rdown;
                   }
                 }
               }
@@ -5029,8 +5029,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   X[1] = point_value(j,&coll_s[1]);
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = rup;
-                    rD[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));;
                   }
                 }
               }
@@ -5066,8 +5066,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   X[1] = point_value(j,&coll_s[1]);
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = rmax;
-                    rD[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = rmax;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
                   }
                 }
               }
@@ -5090,8 +5090,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                 {
                   for (k = 0; k < Nns[2]; ++k)
                   {
-                    rU[L(Nns,i,j,k)] = rup;
-                    rD[L(Nns,i,j,k)] = rdown;
+                    rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                    rD[i_j_k_to_ijk(Nns,i,j,k)] = rdown;
                   }
                 }
               }

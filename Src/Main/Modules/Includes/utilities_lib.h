@@ -5,6 +5,11 @@
 
 #include "manifold_lib.h"
 
+
+/* triple (i,j,k) format to linear format (row-major order). */
+#define i_j_k_to_ijk_row_major_order(n,i,j,k) \
+ ((k)+((n)[2])*((j)+((n)[1])*(i)))
+
 /* converting linear format ijk to tuple (i,j,k) format */
 #define ijk_to_i_j_k(ijk,n,i,j,k)  \
  (ijk_to_i_j_k_row_major_order((ijk),(n),(i),(j),(k)))
@@ -50,7 +55,6 @@ Collocation_T get_collocation(const char *const coll);
 Coord_T find_coord(const char *const coordsys);
 Basis_T get_basis(const char *const basis);
 INLINE void ijk_to_i_j_k_row_major_order(const Uint l, const Uint *const n, Uint *const i, Uint *const j, Uint *const k) INLINE_WARN_UNUSED_FUNC;
-Uint L(const Uint *const n, const Uint i, const Uint j, const Uint k);
 Uint ijk_to_i_row_major_order(const Uint l, const Uint *const n);
 Uint ijk_to_j_row_major_order(const Uint l, const Uint *const n);
 Uint ijk_to_k_row_major_order(const Uint l, const Uint *const n);

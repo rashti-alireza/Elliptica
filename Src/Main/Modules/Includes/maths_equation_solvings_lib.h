@@ -81,7 +81,7 @@ typedef struct SEWING_T
 typedef struct DDM_SCHUR_COMPLEMENT_T
 {
   struct PATCH_T *patch;/* refers to its patch itself */
-  /* regular means L(n,i,j,k) */
+  /* regular means i_j_k_to_ijk(n,i,j,k) */
   Uint *map;/* map: regular -> relabeled. ex: map[2] = 5 */
   Uint *inv;/* inv: relabeled -> regular. ex: inv[5] = 2 */
   Uint *Imap;/* interface point map, if it is given a point

@@ -33,8 +33,8 @@ void make_nodes_Spherical_coord(Patch_T *const patch)
     X[2] = point_value(k,&coll_s[2]);/* phi */
     patch->node[l]->X = X;
     
-    R1 = R1_field->v[L(n,0,j,k)];
-    R2 = R2_field->v[L(n,0,j,k)];
+    R1 = R1_field->v[i_j_k_to_ijk(n,0,j,k)];
+    R2 = R2_field->v[i_j_k_to_ijk(n,0,j,k)];
     r = X[0]*(R2-R1)+R1;
     
     x[0] = r*sin(X[1])*cos(X[2]);
@@ -138,7 +138,7 @@ static void populate_left_NS_sphere(Grid_T *const grid,const Uint pn)
   for (j = 0; j < patch->n[1]; ++j)
     for (k = 0; k < patch->n[2]; ++k)
     {
-      Uint ijk = L(patch->n,0,j,k);
+      Uint ijk = i_j_k_to_ijk(patch->n,0,j,k);
       R2->v[ijk] = R2_array[ijk];
       R1->v[ijk] = R1_array[ijk];
     }
@@ -270,7 +270,7 @@ static void populate_right_NS_sphere(Grid_T *const grid,const Uint pn)
   for (j = 0; j < patch->n[1]; ++j)
     for (k = 0; k < patch->n[2]; ++k)
     {
-      Uint ijk = L(patch->n,0,j,k);
+      Uint ijk = i_j_k_to_ijk(patch->n,0,j,k);
       R2->v[ijk] = R2_array[ijk];
       R1->v[ijk] = R1_array[ijk];
     }
@@ -402,7 +402,7 @@ static void populate_left_NS_around_sphere(Grid_T *const grid,const Uint pn)
   for (j = 0; j < patch->n[1]; ++j)
     for (k = 0; k < patch->n[2]; ++k)
     {
-      Uint ijk = L(patch->n,0,j,k);
+      Uint ijk = i_j_k_to_ijk(patch->n,0,j,k);
       R1->v[ijk] = R1_array[ijk];
       R2->v[ijk] = R2_const;
     }
@@ -534,7 +534,7 @@ static void populate_right_NS_around_sphere(Grid_T *const grid,const Uint pn)
   for (j = 0; j < patch->n[1]; ++j)
     for (k = 0; k < patch->n[2]; ++k)
     {
-      Uint ijk = L(patch->n,0,j,k);
+      Uint ijk = i_j_k_to_ijk(patch->n,0,j,k);
       R1->v[ijk] = R1_array[ijk];
       R2->v[ijk] = R2_const;
     }

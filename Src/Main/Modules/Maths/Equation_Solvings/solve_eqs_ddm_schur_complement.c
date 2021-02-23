@@ -2407,7 +2407,7 @@ static void fill_interpolation_flags(Interpolation_T *const it,Patch_T *const pa
 // it returns the coordinate index of the surface of neighbor patch 
 // in which this interface touches it.
 // e.g. if two patches are juxtapose at X[0] = 4.5 in patch A and in this patch
-// it is correspond to the index I in patch->node[L(n,I,*,*,)]->X[0] so this function
+// it is correspond to the index I in patch->node[i_j_k_to_ijk(n,I,*,*,)]->X[0] so this function
 // returns I in case the subface of patch B which touches the mentioned interface is give.
 // ->return value: coordinate index of plane X = const. if they won't touch it gives UINT_MAX. */
 // ->return value: constant index(coords) of a given face, if not found UINT_MAX. */

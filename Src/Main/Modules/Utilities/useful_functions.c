@@ -28,12 +28,6 @@ Uint countf(void *const p)
   return c;
 }
 
-/* triple (i,j,k) format to linear format (row-major order). */
-Uint L(const Uint *const n, const Uint i, const Uint j, const Uint k)
-{
-  return (k+n[2]*(j+n[1]*i));
-}
-
 /* linear format to i component (row major order) */
 Uint ijk_to_i_row_major_order(const Uint l, const Uint *const n)
 {
@@ -403,7 +397,7 @@ double spectral_expansion_truncation_error(Field_T *const f)
   const double *const Cijk = make_coeffs_3d(f);
   const Uint *const n  = f->patch->n;
   
-  return fabs(Cijk[L(n,n[0]-1,n[1]-1,n[2]-1)]);
+  return fabs(Cijk[i_j_k_to_ijk(n,n[0]-1,n[1]-1,n[2]-1)]);
 }
 
 /* go over all of the fields in the grid and print 
