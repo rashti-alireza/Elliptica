@@ -34,14 +34,14 @@ Uint L(const Uint *const n, const Uint i, const Uint j, const Uint k)
   return (k+n[2]*(j+n[1]*i));
 }
 
-/* linear format to i component */
-Uint I(const Uint l, const Uint *const n)
+/* linear format to i component (row major order) */
+Uint ijk_to_i_row_major_order(const Uint l, const Uint *const n)
 {
   return l / (n[2]*n[1]);
 }
 
-/* linear format to j component */
-Uint J(const Uint l, const Uint *const n)
+/* linear format to j component (row major order) */
+Uint ijk_to_j_row_major_order(const Uint l, const Uint *const n)
 {
   Uint tmp;
   
@@ -49,8 +49,8 @@ Uint J(const Uint l, const Uint *const n)
   return tmp / n[2];
 }
 
-/* linear format to k component */
-Uint K(const Uint l, const Uint *const n)
+/* linear format to k component (row major order) */
+Uint ijk_to_k_row_major_order(const Uint l, const Uint *const n)
 {
   Uint tmp;
   
