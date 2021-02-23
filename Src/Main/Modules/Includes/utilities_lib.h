@@ -5,6 +5,14 @@
 
 #include "manifold_lib.h"
 
+/* converting linear format ijk to tuple (i,j,k) format */
+#define ijk_to_i_j_k(ijk,n,i,j,k)  \
+ (ijk_to_i_j_k_row_major_order((ijk),(n),(i),(j),(k)))
+
+/* converting tuple (i,j,k) format to linear format ijk */
+#define i_j_k_to_ijk(n,i,j,k)  \
+ (i_j_k_to_ijk_row_major_order((n),(i),(j),(k)))
+
 #define TEST_START test_start(__FILE__,__LINE__);
 
 /* forward declaration structures */
