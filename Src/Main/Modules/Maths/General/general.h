@@ -13,8 +13,8 @@
 #define Log(a) log(a)
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
-#define Csc(a) 1/sin(a)
-#define Cot(a) 1/tan(a)
+#define Csc(a) (1./sin(a))
+#define Cot(a) (1./tan(a))
 
 double root_square(const Uint n, const double *const v2,const double *const v1);
 long double root_square_long(const long Uint n, const double *const v2, const double *const v1);
