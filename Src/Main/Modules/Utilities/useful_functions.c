@@ -29,7 +29,7 @@ Uint countf(void *const p)
 }
 
 /* linear format to triple (i,j,k) format (row-major order). */
-void ijk_to_i_j_k_row_major_order(const Uint l, const Uint *const n, Uint *const i, Uint *const j, Uint *const k)
+INLINE void ijk_to_i_j_k_row_major_order(const Uint l, const Uint *const n, Uint *const i, Uint *const j, Uint *const k)
 {
   Uint tmp;
   
