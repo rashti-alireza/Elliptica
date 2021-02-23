@@ -99,14 +99,6 @@ double dot(const Uint n, const double *const v2,const double *const v1)
   return d;
 }
 
-/* taking absolute value of v
-// ->return value: absolute(v)
-*/
-double ABSd(const double v)
-{
-  return (v > 0. ? v : -v);
-}
-
 /* finding summation of functional derivative of Chebyshev coefficients
 // multiply by derivative of Chebyshev bases. used for functional derivatives 
 // in Jacobian J at Jx=-F for Newton method.
