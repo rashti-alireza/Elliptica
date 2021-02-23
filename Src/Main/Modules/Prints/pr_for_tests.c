@@ -619,7 +619,7 @@ double pr_derivatives_DiffByNode(const double *const numc, const double *const a
     Uint i1,j1,k1;
     double diff = numc[p]-anac[p];
     double abs_diff = fabs(diff);
-    IJK(p,patch->n,&i1,&j1,&k1);
+    ijk_to_i_j_k(p,patch->n,&i1,&j1,&k1);
     fprintf(f,"%u %g %g %g %u %u %u %g %g %g\n",p,diff,numc[p],anac[p],i1,j1,k1,x_(p),y_(p),z_(p));
     
     if (GRT(abs_diff,max))

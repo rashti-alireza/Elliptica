@@ -480,7 +480,7 @@ void obsolete_fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *c
     Uint lmn;
     Uint i,j,k;
     
-    IJK(ijk,N,&i,&j,&k);
+    ijk_to_i_j_k(ijk,N,&i,&j,&k);
     x = ChebExtrema_1point(N[0],i);
     y = ChebExtrema_1point(N[1],j);
     z = ChebExtrema_1point(N[2],k);
@@ -490,7 +490,7 @@ void obsolete_fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *c
       double j0,j1,j2;
       Uint l,m,n,ip,jp,kp;
       
-      IJK(lmn,N,&l,&m,&n);
+      ijk_to_i_j_k(lmn,N,&l,&m,&n);
       j0 = 0;
       j1 = 0;
       j2 = 0;
@@ -563,7 +563,7 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
     double dN2_dq = dq2_dq1(patch,_N2_,q_dir,ijk);/* coordinate jacobian */
     double x,y,z;
     Uint i,j,k,l,m,n;
-    IJK(ijk,N,&i,&j,&k);
+    ijk_to_i_j_k(ijk,N,&i,&j,&k);
     
     x = ChebExtrema_1point(N[0],i);
     y = ChebExtrema_1point(N[1],j);
@@ -959,7 +959,7 @@ static double dInterp_x_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1029,7 +1029,7 @@ static double dInterp_y_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1099,7 +1099,7 @@ static double dInterp_z_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1167,7 +1167,7 @@ static double dInterp_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,con
   double q[3];/* normalized coords */
   Uint i,j,k;
   
-  IJK(df,n,&i,&j,&k);
+  ijk_to_i_j_k(df,n,&i,&j,&k);
   q[1] = General2ChebyshevExtrema(X[1],1,patch);
   q[2] = General2ChebyshevExtrema(X[2],2,patch);
   
@@ -1196,7 +1196,7 @@ static double dInterp_x_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1266,7 +1266,7 @@ static double dInterp_y_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1336,7 +1336,7 @@ static double dInterp_z_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1403,7 +1403,7 @@ static double dInterp_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,con
   double q[3];/* normalized coords */
   Uint i,j,k;
   
-  IJK(df,n,&i,&j,&k);
+  ijk_to_i_j_k(df,n,&i,&j,&k);
   q[0] = General2ChebyshevExtrema(X[0],0,patch);
   q[2] = General2ChebyshevExtrema(X[2],2,patch);
   
@@ -1433,7 +1433,7 @@ static double dInterp_x_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1503,7 +1503,7 @@ static double dInterp_y_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1573,7 +1573,7 @@ static double dInterp_z_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1641,7 +1641,7 @@ static double dInterp_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,con
   double q[3];/* normalized coords */
   Uint i,j,k;
   
-  IJK(df,n,&i,&j,&k);
+  ijk_to_i_j_k(df,n,&i,&j,&k);
   q[0] = General2ChebyshevExtrema(X[0],0,patch);
   q[1] = General2ChebyshevExtrema(X[1],1,patch);
   
@@ -1670,7 +1670,7 @@ static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   double sum = 0,s,qr;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1741,7 +1741,7 @@ static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   double sum = 0,s,qr;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1812,7 +1812,7 @@ static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   double sum = 0,s,qr;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1881,7 +1881,7 @@ static double dInterp_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,co
   double q[3];/* normalized coords */
   Uint i,j,k;
   
-  IJK(df,n,&i,&j,&k);
+  ijk_to_i_j_k(df,n,&i,&j,&k);
   q[0] = General2ChebyshevExtrema(X[0],0,patch);
   q[1] = General2ChebyshevExtrema(X[1],1,patch);
   q[2] = General2ChebyshevExtrema(X[2],2,patch);

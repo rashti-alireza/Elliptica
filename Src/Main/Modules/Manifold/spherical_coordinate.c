@@ -27,7 +27,7 @@ void make_nodes_Spherical_coord(Patch_T *const patch)
     double *x = patch->node[l]->x;
     double r;
     
-    IJK(l,n,&i,&j,&k);
+    ijk_to_i_j_k(l,n,&i,&j,&k);
     X[0] = point_value(i,&coll_s[0]);/* r */
     X[1] = point_value(j,&coll_s[1]);/* theta */
     X[2] = point_value(k,&coll_s[2]);/* phi */

@@ -474,7 +474,7 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
       data = alloc_double(nn);
       for (ijk = 0; ijk < nn; ++ijk)
       {
-        IJK(ijk,n,&i,&j,&k);
+        ijk_to_i_j_k(ijk,n,&i,&j,&k);
         data[row2col(i,j,k)] = patch->fields[fInd[f]]->v[ijk];
       }
        
@@ -505,7 +505,7 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
     data = alloc_double(nn);
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      IJK(ijk,n,&i,&j,&k);
+      ijk_to_i_j_k(ijk,n,&i,&j,&k);
       data[row2col(i,j,k)] = patch->fields[v_ind]->v[ijk];
     }
      
@@ -571,7 +571,7 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   /* change the order from row major to column major order */
   for (ijk = 0; ijk < nn; ++ijk)
   {
-    IJK(ijk,n,&i,&j,&k);
+    ijk_to_i_j_k(ijk,n,&i,&j,&k);
     comp[0][row2col(i,j,k)] = patch->fields[v_ind0]->v[ijk];
     comp[1][row2col(i,j,k)] = patch->fields[v_ind1]->v[ijk];
     comp[2][row2col(i,j,k)] = patch->fields[v_ind2]->v[ijk];
@@ -633,7 +633,7 @@ static void prepare_node_structured_mesh_3d_silo(const char *const type,const Pa
   {
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      IJK(ijk,patch->n,&i,&j,&k);
+      ijk_to_i_j_k(ijk,patch->n,&i,&j,&k);
       
       x[row2col(i,j,k)] = patch->node[ijk]->x[0];
       y[row2col(i,j,k)] = patch->node[ijk]->x[1];
@@ -644,7 +644,7 @@ static void prepare_node_structured_mesh_3d_silo(const char *const type,const Pa
   {
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      IJK(ijk,patch->n,&i,&j,&k);
+      ijk_to_i_j_k(ijk,patch->n,&i,&j,&k);
       
       x[row2col(i,j,k)] = patch->node[ijk]->X[0];
       y[row2col(i,j,k)] = patch->node[ijk]->X[1];

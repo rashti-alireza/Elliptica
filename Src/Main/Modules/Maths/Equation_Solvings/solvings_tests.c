@@ -273,7 +273,7 @@ static void test_dInterp_x_df_YZ_Tn_Ex(Field_T *const phi_field)
 
   phi_field_x->v = Partial_Derivative(phi_field,"x");
   l    = (Uint)floor(random_double(0,nn-1,0));
-  IJK(l,n,&plane,&a,&b);
+  ijk_to_i_j_k(l,n,&plane,&a,&b);
   X[0] = patch->node[l]->X[0];
   X[1] = random_double(patch->min[1],patch->max[1],1);
   X[2] = random_double(patch->min[2],patch->max[2],1);
@@ -338,7 +338,7 @@ static void test_dInterp_y_df_YZ_Tn_Ex(Field_T *const phi_field)
     
   phi_field_y->v = Partial_Derivative(phi_field,"y");
   l    = (Uint)floor(random_double(0,nn-1,0));
-  IJK(l,n,&plane,&a,&b);
+  ijk_to_i_j_k(l,n,&plane,&a,&b);
   X[0] = patch->node[l]->X[0];
   X[1] = random_double(patch->min[1],patch->max[1],1);
   X[2] = random_double(patch->min[2],patch->max[2],1);
@@ -403,7 +403,7 @@ static void test_dInterp_z_df_YZ_Tn_Ex(Field_T *const phi_field)
     
   phi_field_z->v = Partial_Derivative(phi_field,"z");
   l    = (Uint)floor(random_double(0,nn-1,0));
-  IJK(l,n,&plane,&a,&b);
+  ijk_to_i_j_k(l,n,&plane,&a,&b);
   X[0] = patch->node[l]->X[0];
   X[1] = random_double(patch->min[1],patch->max[1],1);
   X[2] = random_double(patch->min[2],patch->max[2],1);
@@ -526,7 +526,7 @@ static void test_dInterp_x_df_XZ_Tn_Ex(Field_T *const phi_field)
 
   phi_field_x->v = Partial_Derivative(phi_field,"x");
   l    = (Uint)floor(random_double(0,nn-1,0));
-  IJK(l,n,&a,&plane,&b);
+  ijk_to_i_j_k(l,n,&a,&plane,&b);
   X[1] = patch->node[l]->X[1];
   X[0] = random_double(patch->min[0],patch->max[0],1);
   X[2] = random_double(patch->min[2],patch->max[2],1);
@@ -591,7 +591,7 @@ static void test_dInterp_y_df_XZ_Tn_Ex(Field_T *const phi_field)
     
   phi_field_y->v = Partial_Derivative(phi_field,"y");
   l    = (Uint)floor(random_double(0,nn-1,0));
-  IJK(l,n,&a,&plane,&b);
+  ijk_to_i_j_k(l,n,&a,&plane,&b);
   X[1] = patch->node[l]->X[1];
   X[0] = random_double(patch->min[0],patch->max[0],1);
   X[2] = random_double(patch->min[2],patch->max[2],1);
@@ -656,7 +656,7 @@ static void test_dInterp_z_df_XZ_Tn_Ex(Field_T *const phi_field)
     
   phi_field_z->v = Partial_Derivative(phi_field,"z");
   l    = (Uint)floor(random_double(0,nn-1,0));
-  IJK(l,n,&a,&plane,&b);
+  ijk_to_i_j_k(l,n,&a,&plane,&b);
   X[1] = patch->node[l]->X[1];
   X[0] = random_double(patch->min[0],patch->max[0],1);
   X[2] = random_double(patch->min[2],patch->max[2],1);
@@ -779,7 +779,7 @@ static void test_dInterp_x_df_XY_Tn_Ex(Field_T *const phi_field)
 
   phi_field_x->v = Partial_Derivative(phi_field,"x");
   l    = (Uint)floor(random_double(0,nn-1,0));
-  IJK(l,n,&a,&b,&plane);
+  ijk_to_i_j_k(l,n,&a,&b,&plane);
   X[2] = patch->node[l]->X[2];
   X[1] = random_double(patch->min[1],patch->max[1],1);
   X[0] = random_double(patch->min[0],patch->max[0],1);
@@ -844,7 +844,7 @@ static void test_dInterp_y_df_XY_Tn_Ex(Field_T *const phi_field)
     
   phi_field_y->v = Partial_Derivative(phi_field,"y");
   l    = (Uint)floor(random_double(0,nn-1,0));
-  IJK(l,n,&a,&b,&plane);
+  ijk_to_i_j_k(l,n,&a,&b,&plane);
   X[2] = patch->node[l]->X[2];
   X[1] = random_double(patch->min[1],patch->max[1],1);
   X[0] = random_double(patch->min[0],patch->max[0],1);
@@ -909,7 +909,7 @@ static void test_dInterp_z_df_XY_Tn_Ex(Field_T *const phi_field)
     
   phi_field_z->v = Partial_Derivative(phi_field,"z");
   l    = (Uint)floor(random_double(0,nn-1,0));
-  IJK(l,n,&a,&b,&plane);
+  ijk_to_i_j_k(l,n,&a,&b,&plane);
   X[2] = patch->node[l]->X[2];
   X[1] = random_double(patch->min[1],patch->max[1],1);
   X[0] = random_double(patch->min[0],patch->max[0],1);

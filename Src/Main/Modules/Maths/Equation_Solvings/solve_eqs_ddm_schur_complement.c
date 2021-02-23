@@ -2642,7 +2642,7 @@ static Uint OnFace(const Uint *const n, const Uint p)
 {
   Uint i,j,k;
   
-  IJK(p,n,&i,&j,&k);
+  ijk_to_i_j_k(p,n,&i,&j,&k);
   
   if (i == n[0]-1 || i == 0)  return 1;
   if (j == n[1]-1 || j == 0)  return 1;

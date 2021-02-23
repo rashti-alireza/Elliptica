@@ -679,7 +679,7 @@ static double *derivative_ChebyshevExtrema_Tn_1stOrder(Field_T *const f,const Dd
       Uint i,j,k;
       Uint c;
       
-      IJK(l,n,&i,&j,&k);
+      ijk_to_i_j_k(l,n,&i,&j,&k);
       
       for (c = 1; c < B; ++c)
       {
@@ -698,7 +698,7 @@ static double *derivative_ChebyshevExtrema_Tn_1stOrder(Field_T *const f,const Dd
       Uint i,j,k;
       Uint c;
       
-      IJK(l,n,&i,&j,&k);
+      ijk_to_i_j_k(l,n,&i,&j,&k);
       
       for (c = 1; c < B; ++c)
       {
@@ -717,7 +717,7 @@ static double *derivative_ChebyshevExtrema_Tn_1stOrder(Field_T *const f,const Dd
       Uint i,j,k;
       Uint c;
       
-      IJK(l,n,&i,&j,&k);
+      ijk_to_i_j_k(l,n,&i,&j,&k);
       
       for (c = 1; c < B; ++c)
       {
@@ -760,7 +760,7 @@ static double *derivative_ChebyshevNodes_Tn_1stOrder(Field_T *const f,const Dd_T
       Uint i,j,k;
       Uint c;
       
-      IJK(l,n,&i,&j,&k);
+      ijk_to_i_j_k(l,n,&i,&j,&k);
       
       for (c = 1; c < B; ++c)
       {
@@ -778,7 +778,7 @@ static double *derivative_ChebyshevNodes_Tn_1stOrder(Field_T *const f,const Dd_T
       Uint i,j,k;
       Uint c;
       
-      IJK(l,n,&i,&j,&k);
+      ijk_to_i_j_k(l,n,&i,&j,&k);
       
       for (c = 1; c < B; ++c)
       {
@@ -796,7 +796,7 @@ static double *derivative_ChebyshevNodes_Tn_1stOrder(Field_T *const f,const Dd_T
       Uint i,j,k;
       Uint c;
       
-      IJK(l,n,&i,&j,&k);
+      ijk_to_i_j_k(l,n,&i,&j,&k);
       
       for (c = 1; c < B; ++c)
       {
@@ -838,7 +838,7 @@ static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd
       Uint i,j,k;
       Uint c;
       
-      IJK(l,n,&i,&j,&k);
+      ijk_to_i_j_k(l,n,&i,&j,&k);
       
       for (c = 2; c < B; ++c)
       {
@@ -857,7 +857,7 @@ static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd
       Uint i,j,k;
       Uint c;
       
-      IJK(l,n,&i,&j,&k);
+      ijk_to_i_j_k(l,n,&i,&j,&k);
       
       for (c = 2; c < B; ++c)
       {
@@ -876,7 +876,7 @@ static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd
       Uint i,j,k;
       Uint c;
       
-      IJK(l,n,&i,&j,&k);
+      ijk_to_i_j_k(l,n,&i,&j,&k);
       
       for (c = 2; c < B; ++c)
       {
@@ -919,7 +919,7 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
       Uint i,j,k;
       Uint c;
       
-      IJK(l,n,&i,&j,&k);
+      ijk_to_i_j_k(l,n,&i,&j,&k);
       
       for (c = 2; c < B; ++c)
       {
@@ -937,7 +937,7 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
       Uint i,j,k;
       Uint c;
       
-      IJK(l,n,&i,&j,&k);
+      ijk_to_i_j_k(l,n,&i,&j,&k);
       
       for (c = 2; c < B; ++c)
       {
@@ -955,7 +955,7 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
       Uint i,j,k;
       Uint c;
       
-      IJK(l,n,&i,&j,&k);
+      ijk_to_i_j_k(l,n,&i,&j,&k);
       
       for (c = 2; c < B; ++c)
       {

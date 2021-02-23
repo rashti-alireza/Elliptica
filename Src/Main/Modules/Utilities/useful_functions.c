@@ -116,7 +116,7 @@ int IsOnEdge(const Uint *const n,const Uint p)
   Uint i,j,k;
   int c;
   
-  IJK(p,n,&i,&j,&k);
+  ijk_to_i_j_k(p,n,&i,&j,&k);
   
   c = 0;
   if (i == n[0]-1 || i == 0)  c++;

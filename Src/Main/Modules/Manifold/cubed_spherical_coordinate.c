@@ -617,7 +617,7 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         double *x = patch->node[l]->x;
         double x1,x2,d;
         
-        IJK(l,n,&i,&j,&k);
+        ijk_to_i_j_k(l,n,&i,&j,&k);
         X[0] = point_value(i,&coll_s[0]);
         X[1] = point_value(j,&coll_s[1]);
         X[2] = point_value(k,&coll_s[2]);
@@ -642,7 +642,7 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         double *x = patch->node[l]->x;
         double x1,x2,d;
         
-        IJK(l,n,&i,&j,&k);
+        ijk_to_i_j_k(l,n,&i,&j,&k);
         X[0] = point_value(i,&coll_s[0]);
         X[1] = point_value(j,&coll_s[1]);
         X[2] = point_value(k,&coll_s[2]);
@@ -667,7 +667,7 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         double *x = patch->node[l]->x;
         double x1,ratio,d;
         
-        IJK(l,n,&i,&j,&k);
+        ijk_to_i_j_k(l,n,&i,&j,&k);
         X[0] = point_value(i,&coll_s[0]);
         X[1] = point_value(j,&coll_s[1]);
         X[2] = point_value(k,&coll_s[2]);
@@ -692,7 +692,7 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         double *x = patch->node[l]->x;
         double x1,ratio,d;
         
-        IJK(l,n,&i,&j,&k);
+        ijk_to_i_j_k(l,n,&i,&j,&k);
         X[0] = point_value(i,&coll_s[0]);
         X[1] = point_value(j,&coll_s[1]);
         X[2] = point_value(k,&coll_s[2]);
@@ -718,7 +718,7 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         double *x = patch->node[l]->x;
         double x1,x2,d;
         
-        IJK(l,n,&i,&j,&k);
+        ijk_to_i_j_k(l,n,&i,&j,&k);
         X[0] = point_value(i,&coll_s[0]);
         X[1] = point_value(j,&coll_s[1]);
         X[2] = point_value(k,&coll_s[2]);
@@ -743,7 +743,7 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         double *x = patch->node[l]->x;
         double x1,ratio,d;
         
-        IJK(l,n,&i,&j,&k);
+        ijk_to_i_j_k(l,n,&i,&j,&k);
         X[0] = point_value(i,&coll_s[0]);
         X[1] = point_value(j,&coll_s[1]);
         X[2] = point_value(k,&coll_s[2]);

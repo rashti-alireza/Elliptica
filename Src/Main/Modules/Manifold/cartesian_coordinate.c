@@ -21,7 +21,7 @@ void make_nodes_Cartesian_coord(Patch_T *const patch)
   {
     double *x = patch->node[l]->x;
     
-    IJK(l,n,&i,&j,&k);
+    ijk_to_i_j_k(l,n,&i,&j,&k);
     x[0] = point_value(i,&coll_s[0]);
     x[1] = point_value(j,&coll_s[1]);
     x[2] = point_value(k,&coll_s[2]);
