@@ -206,7 +206,7 @@ Matrix_T *CCSOpCCS(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op)
       for (r = 0; r < Nr; ++r)
       {
         ax = read_matrix_entry_ccs(ccs2,r,c)+read_matrix_entry_ccs(ccs1,r,c);
-        if (GRT(ABS(ax),DropLimit))
+        if (GRT(ABSd(ax),DropLimit))
         {
           Ai = realloc(Ai,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ai));
           IsNull(Ai);
@@ -230,7 +230,7 @@ Matrix_T *CCSOpCCS(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op)
       {
         
         ax = read_matrix_entry_ccs(ccs2,r,c)-read_matrix_entry_ccs(ccs1,r,c);
-        if (GRT(ABS(ax),DropLimit))
+        if (GRT(ABSd(ax),DropLimit))
         {
           Ai = realloc(Ai,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ai));
           IsNull(Ai);

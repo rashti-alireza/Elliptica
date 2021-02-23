@@ -220,7 +220,7 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
       {
         for (c = 0; c < nn; ++c)
         {
-          if (GRT(ABS(cmp[Spectral_e][r][c]-cmp[Direct_e][r][c]),Err))
+          if (GRT(ABSd(cmp[Spectral_e][r][c]-cmp[Direct_e][r][c]),Err))
             fprintf(file,"%3u %3u   %0.10f    %0.10f\n",
               r,c,cmp[Spectral_e][r][c],cmp[Direct_e][r][c]);
         }

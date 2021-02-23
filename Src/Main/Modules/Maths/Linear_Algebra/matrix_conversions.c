@@ -51,7 +51,7 @@ Matrix_T *compress_stack2ccs
         m = S[i]->reg->A;
         for (r = 0; r < nr[i]; ++r)
         {
-          if (GRT(ABS(m[r][c]),DropLimit))
+          if (GRT(ABSd(m[r][c]),DropLimit))
           {
             Ai = realloc(Ai,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ai));
             IsNull(Ai);
@@ -407,7 +407,7 @@ static void convert_reg2ccs(const Matrix_T *const reg,Matrix_T *const ccs,const 
     NN0 = 0;
     for (r = 0; r < Nr; ++r)
     {
-      if (GRT(ABS(m[r][c]),DropLimit))
+      if (GRT(ABSd(m[r][c]),DropLimit))
       {
         Ai = realloc(Ai,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ai));
         IsNull(Ai);
@@ -448,7 +448,7 @@ static void convert_reg2ccs_long(const Matrix_T *const reg,Matrix_T *const ccs_l
     NN0 = 0;
     for (r = 0; r < Nr; ++r)
     {
-      if (GRT(ABS(m[r][c]),DropLimit))
+      if (GRT(ABSd(m[r][c]),DropLimit))
       {
         Ai = realloc(Ai,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ai));
         IsNull(Ai);

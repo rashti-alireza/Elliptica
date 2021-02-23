@@ -2763,7 +2763,7 @@ static int compare_Js(Grid_T *const grid,const Matrix_T *const J_Reg,const Matri
   for (i = 0; i < dim; ++i)
   {
     for (j = 0; j < dim; ++j)
-      if (GRT(ABS(J_s[i][j]-J_r[i][j]),ERR))
+      if (GRT(ABSd(J_s[i][j]-J_r[i][j]),ERR))
       {
         printf("J_Schur = %g, J_Reg = %g, diff = %g\n",
                   J_s[i][j],J_r[i][j],J_s[i][j]-J_r[i][j]);
