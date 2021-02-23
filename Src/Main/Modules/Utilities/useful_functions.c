@@ -28,7 +28,7 @@ Uint countf(void *const p)
   return c;
 }
 
-/* linear format to triple (i,j,k) format */
+/* linear format to triple (i,j,k) format (row-major order). */
 void IJK(const Uint l, const Uint *const n, Uint *const i, Uint *const j, Uint *const k)
 {
   Uint tmp;
@@ -39,7 +39,7 @@ void IJK(const Uint l, const Uint *const n, Uint *const i, Uint *const j, Uint *
   *k  = tmp % n[2];
 }
 
-/* triple (i,j,k) format to linear format */
+/* triple (i,j,k) format to linear format (row-major order). */
 Uint L(const Uint *const n, const Uint i, const Uint j, const Uint k)
 {
   return (k+n[2]*(j+n[1]*i));
