@@ -81,8 +81,12 @@ OFLAGS += -fopenmp -O3
   -fshort-enums -fno-common -Dinline= 
 
 
-### define flags for compiler
+### define flags for compiler:
+### activate open-mp
 DFLAGS += -DPragma_OpenMP_2d -DPragma_OpenMP_1d -DPragma_OpenMP_Patch
+### activate inline calls
+DFLAGS += -DINLINE_FUNC
+
 ########################################################################
 ##################################
 ## special inlcudes and libraries:
