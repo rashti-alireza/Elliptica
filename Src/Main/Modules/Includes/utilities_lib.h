@@ -5,6 +5,8 @@
 
 #include "manifold_lib.h"
 
+/* tuple (i,j) format to linear format (row-major order). */
+#define i_j_to_ij_row_major_order(nj,i,j) ((j)+(nj)*(i))
 
 /* triple (i,j,k) format to linear format (row-major order). */
 #define i_j_k_to_ijk_row_major_order(n,i,j,k) \
@@ -17,6 +19,10 @@
 /* converting tuple (i,j,k) format to linear format ijk */
 #define i_j_k_to_ijk(n,i,j,k)  \
  (i_j_k_to_ijk_row_major_order((n),(i),(j),(k)))
+
+/* converting tuple (i,j) format to linear format ij */
+#define i_j_to_ij(nj,i,j)  \
+ (i_j_to_ij_row_major_order((nj),(i),(j)))
 
 #define TEST_START test_start(__FILE__,__LINE__);
 
