@@ -50,6 +50,14 @@ int matrix_by_vector(const Matrix_T *const m, const double *const v,double *cons
       for (c = 0; c < col; ++c)
         b[r] += M[r][c]*v[c];
   }
+  else if (m->rmo_f)
+  {
+    double *const M = m->rmo->A;
+    
+    for (r = 0; r < row; ++r)
+      for (c = 0; c < col; ++c)
+        b[r] += M[i_j_to_ij(col,r,c)]*v[c];
+  }
   else if (m->tri_f)
   {
     Error0(INCOMPLETE_FUNC);
