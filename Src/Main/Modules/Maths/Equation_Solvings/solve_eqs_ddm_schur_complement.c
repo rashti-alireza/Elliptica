@@ -431,7 +431,8 @@ static void compute_x(Patch_T *const patch)
   const Uint NS            = Schur->NS;
   const Uint NI            = Schur->NI;
   double *f_prime  = Schur->f_prime;
-  double **const E_Trans_prime = Schur->E_Trans_prime->reg->A;
+  const Uint ETp_ncol         = (Uint)Schur->E_Trans_prime->col;
+  double *const E_Trans_prime = Schur->E_Trans_prime->rmo->A;
   const double *const y = Schur->y;
   double *const x = alloc_double(NS);
   double Ey;/* E_Trans_prime by y */
@@ -441,7 +442,7 @@ static void compute_x(Patch_T *const patch)
   {
     Ey = 0;/* E_Trans_prime by y */
     for (i = 0; i < NI; ++i)
-      Ey += E_Trans_prime[i][s]*y[i];
+      Ey += E_Trans_prime[i_j_to_ij(ETp_ncol,i,s)]*y[i];
     x[s] = f_prime[s]-Ey;
   }
   free(Schur->f_prime);
