@@ -789,7 +789,7 @@ static char *making_F_by_E_prime(Patch_T *const patch)
     
     if (F)
     {
-      MxM = matrix_by_matrix(F,E_Trans_prime,"a*transpose(b)");
+      MxM = matrix_by_matrix(F,E_Trans_prime,0,"a*transpose(b)");
       free_matrix(F);
       FxEprime[p] = MxM;
     }
