@@ -525,7 +525,9 @@ static char *making_sub_S_matrix(Patch_T *const patch)
   Matrix_T ** FxE  = Schur->F_by_E_prime;
   Matrix_T ** C    = Schur->C;
   Matrix_T **stack = calloc(Np,sizeof(*stack)); IsNull(stack);
-  double **a,**b,**c;
+  double *a  = 0;
+  double **b = 0;
+  double **c = 0;
   long a_row,a_col,b_row,b_col;
   long row,col;
   Uint p;  
@@ -543,16 +545,16 @@ static char *making_sub_S_matrix(Patch_T *const patch)
       /* some checks */
       assert(a_row == b_row);
       assert(a_col == b_col);
-      assert(FxE[p]->reg_f && C[p]->reg_f);
+      assert(FxE[p]->rmo_f && C[p]->reg_f);
       
       stack[p] = alloc_matrix(REG_SF,a_row,a_col);
-      a = FxE[p]->reg->A;
+      a = FxE[p]->rmo->A;
       b = C[p]->reg->A;
       c = stack[p]->reg->A;
       
       for (row = 0; row < a_row; ++row)
         for (col = 0; col < a_col; ++col)
-          c[row][col] = b[row][col]-a[row][col];
+          c[row][col] = b[row][col]-a[i_j_to_ij(a_col,row,col)];
       
       free_matrix(C[p]);
       free_matrix(FxE[p]);
@@ -561,14 +563,14 @@ static char *making_sub_S_matrix(Patch_T *const patch)
     {
       a_row = FxE[p]->row;
       a_col = FxE[p]->col;
-      assert(FxE[p]->reg_f);
+      assert(FxE[p]->rmo_f);
       stack[p] = FxE[p];
-      a = FxE[p]->reg->A;
+      a = FxE[p]->rmo->A;
       c = stack[p]->reg->A;
       
       for (row = 0; row < a_row; ++row)
         for (col = 0; col < a_col; ++col)
-          c[row][col] = -a[row][col];
+          c[row][col] = -a[i_j_to_ij(a_col,row,col)];
       
       FxE[p] = 0;
     }
@@ -774,7 +776,6 @@ static char *making_F_by_E_prime(Patch_T *const patch)
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
   const Uint np = Schur->np;
   const Matrix_T *const E_Trans_prime = Schur->E_Trans_prime;
-  Matrix_T *MxM;
   Uint p;
   char *msg = calloc(MSG_SIZE1,1);
   IsNull(msg);
@@ -789,9 +790,9 @@ static char *making_F_by_E_prime(Patch_T *const patch)
     
     if (F)
     {
-      MxM = matrix_by_matrix(F,E_Trans_prime,0,"a*transpose(b)");
+      FxEprime[p] = alloc_matrix(RMO_SF,F->row,E_Trans_prime->row);
+      matrix_by_matrix(F,E_Trans_prime,FxEprime[p],"a*transpose(b)");
       free_matrix(F);
-      FxEprime[p] = MxM;
     }
   }
   free(Schur->F);
