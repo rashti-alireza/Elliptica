@@ -1291,7 +1291,6 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   Matrix_T *a  = 0;
   double *const f = S->f;
   double **xs = 0, **bs = 0;
-  Matrix_T *E_prime = 0;
   Umfpack_T *umfpack = init_umfpack();
   Uint ns = 1;
   Uint i;
@@ -1340,13 +1339,16 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
     direct_solver_series_umfpack_di(umfpack);
   
   S->f_prime = xs[ns-1];
-  E_prime = calloc(1,sizeof(*E_prime));
-  IsNull(E_prime);
-  E_prime->col = (long)S->E_Trans->col;
-  E_prime->row = (long)S->E_Trans->row;
-  E_prime->reg_f = 1;
-  E_prime->reg->A = xs;
-  S->E_Trans_prime = E_prime;
+  /* cast 2d array to row major order */
+  
+  /* this is an ad-hoc solution, later one can improve it */
+  Matrix_T *m_xs = calloc(1,sizeof(*m_xs));
+  m_xs->row      = (long)S->E_Trans->row;
+  m_xs->col      = (long)S->E_Trans->col;
+  m_xs->reg_f    = 1;
+  m_xs->reg->A   = xs;
+  S->E_Trans_prime = cast_matrix_rmo(m_xs);
+  free_matrix(m_xs);
   
   sprintf(msg,"{ Solve BE' = E and Bf' = f ...\n"
               "%s"
