@@ -1287,11 +1287,11 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   const double time1 = get_time_sec();
   const int LONG_VERSION = patch->solving_man->settings->umfpack_size;
   DDM_Schur_Complement_T *const S = patch->solving_man->method->SchurC;
-  double **E_Trans;
-  Matrix_T *a;
+  double **E_Trans = 0;
+  Matrix_T *a  = 0;
   double *const f = S->f;
-  double **xs,**bs;
-  Matrix_T *E_prime;
+  double **xs = 0, **bs = 0;
+  Matrix_T *E_prime = 0;
   Umfpack_T *umfpack = init_umfpack();
   Uint ns = 1;
   Uint i;
