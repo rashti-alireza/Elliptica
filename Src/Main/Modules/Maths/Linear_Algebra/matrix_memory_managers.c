@@ -71,7 +71,7 @@ void free_matrix(Matrix_T *m)
     if (m->reg->A)
       free_2d_mem(m->reg->A,(long Uint)m->row);
   }
-  if (m->rmo_f)
+  else if (m->rmo_f)
   {
     if (m->rmo->A)
       free(m->rmo->A);
