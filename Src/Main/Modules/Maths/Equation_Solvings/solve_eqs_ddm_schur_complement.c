@@ -791,7 +791,35 @@ static char *making_F_by_E_prime(Patch_T *const patch)
     if (F)
     {
       FxEprime[p] = alloc_matrix(RMO_SF,F->row,E_Trans_prime->row);
-      matrix_by_matrix(F,E_Trans_prime,FxEprime[p],"a*transpose(b)");
+      
+      #ifdef GSL_BLAS
+      
+        assert(F->rmo_f);
+        assert(E_Trans_prime->rmo_f);
+        assert(FxEprime[p]->rmo_f);
+        
+        gsl_matrix_view gslF    = gsl_matrix_view_array
+          (F->rmo->A, (Uint)F->row, (Uint)F->col);
+        
+        gsl_matrix_view gslEtp  = gsl_matrix_view_array
+          (E_Trans_prime->rmo->A, (Uint)E_Trans_prime->row, 
+                                  (Uint)E_Trans_prime->col);
+           
+        gsl_matrix_view gslFxEp = gsl_matrix_view_array
+          (FxEprime[p]->rmo->A, (Uint)FxEprime[p]->row, 
+                                (Uint)FxEprime[p]->col);
+        
+        /* Compute F[p][j]xE'[p] */
+        gsl_blas_dgemm (CblasNoTrans, CblasTrans,
+                  1.0, &gslF.matrix, &gslEtp.matrix,
+                  0.0, &gslFxEp.matrix);
+
+      #else
+      
+        matrix_by_matrix(F,E_Trans_prime,FxEprime[p],"a*transpose(b)");
+        
+      #endif
+      
       free_matrix(F);
     }
   }

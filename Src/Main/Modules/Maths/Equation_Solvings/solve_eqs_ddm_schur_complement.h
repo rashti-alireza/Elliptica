@@ -10,6 +10,10 @@
 #include "maths_equation_solvings_lib.h"
 #include "fields_lib.h"
 
+#ifdef GSL_BLAS
+# include <gsl/gsl_blas.h>
+#endif
+
 /* string size */
 #define MSG_SIZE1 (999)
 #define MSG_SIZE2 (9999)
