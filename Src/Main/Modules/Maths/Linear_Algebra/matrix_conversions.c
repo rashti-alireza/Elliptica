@@ -140,6 +140,38 @@ Matrix_T *cast_matrix_ccs(Matrix_T *const m)
   return ccs;
 }
 
+/* casting given matrix m to row major order Storage Format.
+// it keeps the given matrix and makes a new matrix with the specified
+// format.
+// note 1: if the given matrix is 0 by 0, it returns null.
+// ->return value: the matirx in rmo format. */
+Matrix_T *cast_matrix_rmo(Matrix_T *const m)
+{
+  Matrix_T *cast = 0;
+  
+  /* if empty, return null */
+  if (!m->row || !m->col)
+    return 0;
+  
+  if (m->reg_f)
+  {
+    cast                 = alloc_matrix(RMO_SF,m->row,m->col);
+    double *const rmo_a  = cast->rmo->A;
+    double **const reg_a = m->reg->A;
+    const long Nr        = m->row;
+    const long Nc        = m->col;
+    long r,c;
+  
+    for (r = 0; r < Nr; ++r)
+      for (c = 0; c < Nc; ++c)
+        rmo_a[i_j_to_ij(Nc,r,c)] = reg_a[r][c];
+  }
+  else
+    Error0(NO_OPTION);
+  
+  return cast;
+}
+
 /* casting given matrix m to Long Compressed Column Storage Format.
 // it keeps the given matrix and makes a new matrix with the specified
 // format.
