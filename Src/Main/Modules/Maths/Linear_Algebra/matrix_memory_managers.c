@@ -31,6 +31,10 @@ Matrix_T *alloc_matrix(const Matrix_SF_T type_e,const long row,const long col)
       m->reg_f = 1;
       m->reg->A = alloc_2D_double((long Uint)row,(long Uint)col);
       break;
+    case RMO_SF:
+      m->rmo_f  = 1;
+      m->rmo->A = alloc_double((Uint)(row*col));
+      break;
     case TRI_SF:
       m->tri_f = 1;
       break;
@@ -66,6 +70,11 @@ void free_matrix(Matrix_T *m)
   {
     if (m->reg->A)
       free_2d_mem(m->reg->A,(long Uint)m->row);
+  }
+  if (m->rmo_f)
+  {
+    if (m->rmo->A)
+      free(m->rmo->A);
   }
   else if (m->tri_f)
   {
