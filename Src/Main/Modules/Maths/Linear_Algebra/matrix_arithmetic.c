@@ -173,7 +173,7 @@ Matrix_T *matrix_by_matrix(const Matrix_T *const a,
       if (result)
         Error0(NO_OPTION);
       else 
-        d = alloc_matrix(REG_SF,a_row,b_col);
+        d = alloc_matrix(REG_SF,a_row,b_row);
       
       double **const A = a->reg->A;
       double **const B = b->reg->A;
@@ -208,7 +208,7 @@ Matrix_T *matrix_by_matrix(const Matrix_T *const a,
       }
       else
       {
-        d = alloc_matrix(REG_SF,a_row,b_col);
+        d = alloc_matrix(REG_SF,a_row,b_row);
 
         double *const A = a->rmo->A;
         double *const B = b->rmo->A;
