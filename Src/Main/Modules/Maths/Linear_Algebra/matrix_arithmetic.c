@@ -169,6 +169,17 @@ Matrix_T *matrix_by_matrix(const Matrix_T *const a, const Matrix_T *const b,cons
           for (i = 0; i < b_col; ++i)
               D[r][c] += A[r][i]*B[c][i];
     }
+    else if (a->rmo_f && b->rmo_f)
+    {
+      double *const A = a->rmo->A;
+      double *const B = b->rmo->A;
+      double **const D = d->reg->A;
+      
+      for (r = 0; r < a_row; ++r)
+        for (c = 0; c < b_row; ++c)
+          for (i = 0; i < b_col; ++i)
+              D[r][c] += A[i_j_to_ij(b_col,r,i)]*B[i_j_to_ij(b_col,c,i)];
+    }
     else
       Error0(INCOMPLETE_FUNC);
   }
