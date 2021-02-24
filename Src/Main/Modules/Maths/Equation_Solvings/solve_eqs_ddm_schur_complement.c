@@ -874,7 +874,7 @@ static char *making_F_and_C(Patch_T *const patch)
     colF = Schur->NS;/* must be number of subdomain point for patch */
     colC = Schur->NI;/* must be number of interface point for patch */
     
-    Schur->F[p] = alloc_matrix(REG_SF,rowF,colF);
+    Schur->F[p] = alloc_matrix(RMO_SF,rowF,colF);
     Schur->C[p] = alloc_matrix(REG_SF,rowC,colC);
     
     /* go thru all of pairs in each sewings */
@@ -1000,7 +1000,8 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
   const Uint NsubFP2    = subface->np;
   const Uint NsubM1     = Schur->NS;
   const Uint NinterFP1  = Schur->NI;
-  double **const F = Schur->F[ppn]->reg->A;
+  const Uint Fncol = (Uint)Schur->F[ppn]->col;
+  double *const F  = Schur->F[ppn]->rmo->A;
   double **const C = Schur->C[ppn]->reg->A;
   double *i2_point;
   double sign;
@@ -1044,7 +1045,7 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
         for (s1 = 0; s1 < NsubM1; ++s1)
         {
           s1_node = inv1[s1];
-          F[i1][s1] += sign*(
+          F[i_j_to_ij(Fncol,i1,s1)] += sign*(
                        N[0]*dfx_df(j0,i1_node,s1_node)
                        +
                        N[1]*dfy_df(j1,i1_node,s1_node)
@@ -1090,7 +1091,7 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
         for (s1 = 0; s1 < NsubM1; s1++)
         {
           s1_node = inv1[s1];
-          F[i2][s1] += sign*(
+          F[i_j_to_ij(Fncol,i2,s1)] += sign*(
                        N[0]*dInterp_df_x(patch,i2_point,s1_node,plane)
                        +
                        N[1]*dInterp_df_y(patch,i2_point,s1_node,plane)
@@ -1155,7 +1156,7 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
         for (s1 = 0; s1 < NsubM1; s1++)
         {
           s1_node = inv1[s1];
-          F[i2][s1] += sign*dInterp_df(patch,i2_point,s1_node,0);
+          F[i_j_to_ij(Fncol,i2,s1)] += sign*dInterp_df(patch,i2_point,s1_node,0);
         }
         /* C part */
         for (i1 = 0; i1 < NinterFP1; ++i1)
@@ -1190,7 +1191,8 @@ static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
   const Uint NsubM1 = Schur->NS;
   const Uint NinterFP1 = Schur->NI;
   const Uint *node1 = 0,*node2 = 0;
-  double **const F = Schur->F[ppn]->reg->A;
+  const Uint Fncol = (Uint)Schur->F[ppn]->col;
+  double *const F  = Schur->F[ppn]->rmo->A;
   double **const C = Schur->C[ppn]->reg->A;
   double sign;
   Uint subfp2,i1,i2,s1,s1_node,i1_node,i2_node;
@@ -1236,7 +1238,7 @@ static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
       for (s1 = 0; s1 < NsubM1; ++s1)
       {
         s1_node = inv1[s1];
-        F[i2][s1] += sign*(
+        F[i_j_to_ij(Fncol,i2,s1)] += sign*(
                      N[0]*dfx_df(j0,i2_node,s1_node)
                      +
                      N[1]*dfy_df(j1,i2_node,s1_node)
