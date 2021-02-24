@@ -163,12 +163,17 @@ Matrix_T *matrix_by_matrix(const Matrix_T *const a,
   else if (strcmp_i("a*Transpose(b)",dir))
   {
     if (a_col != b_col)
-      Error0("The dimensions of matrix a and Transpose(b) are not matched.\n");
+    {
+      Error0("The dimensions of matrix a and Transpose(b) "
+             "are not matched.\n");
+    }
       
     if (a->reg_f && b->reg_f)
     {
-      if (result)  Error0(NO_OPTION);
-      else         d = alloc_matrix(REG_SF,a_row,b_col);
+      if (result)
+        Error0(NO_OPTION);
+      else 
+        d = alloc_matrix(REG_SF,a_row,b_col);
       
       double **const A = a->reg->A;
       double **const B = b->reg->A;
@@ -197,7 +202,9 @@ Matrix_T *matrix_by_matrix(const Matrix_T *const a,
                   A[i_j_to_ij(b_col,r,i)]*B[i_j_to_ij(b_col,c,i)];
         }
         else
+        {
           Error0(NO_OPTION);
+        }
       }
       else
       {
