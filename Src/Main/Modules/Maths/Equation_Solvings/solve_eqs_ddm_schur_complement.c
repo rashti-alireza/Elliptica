@@ -792,7 +792,7 @@ static char *making_F_by_E_prime(Patch_T *const patch)
     {
       FxEprime[p] = alloc_matrix(RMO_SF,F->row,E_Trans_prime->row);
       
-      #ifdef GSL_BLAS
+      #if defined(MxM_GSL_BLAS)
       
         assert(F->rmo_f);
         assert(E_Trans_prime->rmo_f);
@@ -813,6 +813,27 @@ static char *making_F_by_E_prime(Patch_T *const patch)
         gsl_blas_dgemm (CblasNoTrans, CblasTrans,
                   1.0, &gslF.matrix, &gslEtp.matrix,
                   0.0, &gslFxEp.matrix);
+      
+      #elif defined(MxM_MKL_BLAS) || defined(MxM_C_BLAS)
+      
+        assert(F->rmo_f);
+        assert(E_Trans_prime->rmo_f);
+        assert(FxEprime[p]->rmo_f);
+        
+        /* Compute F[p][j]xE'[p]:
+        // for more info about syntax and documentations 
+        // see Math Kernel Library: 
+        // software.intel.com/content/www/us/en/develop/documentation/
+        //                    onemkl-developer-reference-c/top.html.
+        // notation: for row-major order we have a_{ij} = [j+ i*lda], 
+        // where lda is the leading dimension for the array. */
+        cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasTrans, 
+                F->row, E_Trans_prime->row, F->col,
+                1.0/* alpha */,
+                F->rmo->A, F->col/* lda */, 
+                E_Trans_prime->rmo->A, E_Trans_prime->col/* lda */, 
+                0.0/* beta */, 
+                FxEprime[p]->rmo->A, FxEprime[p]->col/* lda */);
 
       #else
       
