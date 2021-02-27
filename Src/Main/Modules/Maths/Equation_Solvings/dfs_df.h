@@ -9,7 +9,7 @@
 #include "fields_lib.h"
 #include "maths_equation_solvings_lib.h"
 
-#define _MAX_STR_ 400
+#define _MAX_STR_ (400)
 
 /* Jacobian type */
 typedef enum JTYPE_E
