@@ -93,6 +93,14 @@ void free_matrix(Matrix_T *m)
       free(m->ccs->Ai);
     if (m->ccs->Ax)
       free(m->ccs->Ax);
+    if (m->ccs->Aps)
+    {
+      for (int i = 0; i < m->ccs->Nslice; ++i)
+      {
+        free(m->ccs->Aps[i]);
+      }
+      free(m->ccs->Aps);
+    }
   }
   else if (m->crs_f)
   {
