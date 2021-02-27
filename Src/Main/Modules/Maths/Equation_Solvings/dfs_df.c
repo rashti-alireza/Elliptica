@@ -823,7 +823,7 @@ double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c)
   const double *const Ax = m->ccs->Ax;
   
   #if OPT_CSS_READER_ACTIVE == 1
-  {
+  
     const int *const Ap_cg = m->ccs->Ap_cg;
     const int *const i_cg  = m->ccs->i_cg;
     const int i_i_max      = Ap_cg[c+1]-1;
@@ -844,16 +844,13 @@ double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c)
     for (int i = i_cg[i_i]; i < i_max; ++i)
       if (Ai[i] == r) return Ax[i];
     
-  }
-  
   # else
-  {
-    const int *const Ap    = m->ccs->Ap;
+
+    const int *const Ap = m->ccs->Ap;
     /* moving along none zero entries of the matrix at column c.
     // Note: it should not pass the given row.  */
     for (int i = Ap[c]; Ai[i] <= r && i < Ap[c+1]; ++i)
       if (Ai[i] == r) return Ax[i];
-  }
   
   #endif
   
