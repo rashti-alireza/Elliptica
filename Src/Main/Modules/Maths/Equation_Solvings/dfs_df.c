@@ -78,7 +78,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     /* to optimize ccs reader */
     if (OPT_CSS_READER_ACTIVE)
     {
-      int Nslice = 5;
+      int Nslice = Pgeti("test");
       coarse_grain_Ap_ccs_matrix(sol_man->jacobian[c]->J,Nslice);
     }
     
@@ -827,12 +827,14 @@ double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c)
   {
     const int *const Ap_cg = m->ccs->Ap_cg;
     const int *const i_cg  = m->ccs->i_cg;
-    int i_i = Ap_cg[c];
+    int i_i     = Ap_cg[c];
+    int i_i_max = Ap_cg[c+1]-1;
     
     /* find the interval(slice) where given row resides */
-    while (i_i < Ap_cg[c+1]-1)
+    while (i_i < i_i_max)
     {
-      if (Ai[i_cg[i_i]] <= r && r <= Ai[i_cg[i_i+1]-1])
+      //if (Ai[i_cg[i_i]] <= r && r <= Ai[i_cg[i_i+1]-1])
+      if (r <= Ai[i_cg[i_i+1]-1])
         break;
       
       ++i_i;
