@@ -1974,8 +1974,9 @@ static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice)
   i_i = 0;
   for (c = 0; c < m->col; ++c)
   {
-    //printf("Ap[%ld+1] = %d, Ap[%ld] = %d\n",c,Ap[c+1],c,Ap[c]);
-    assert(Ap[c+1]-Ap[c] >= Nslice);
+    if (Ap[c+1]-Ap[c] < Nslice)
+      Error0("Number of slices are too large for this resolution!\n");
+
     int quotient = (Ap[c+1]-Ap[c])/(Nslice);
     
     Ap_cg[c] = i_i;
@@ -1987,6 +1988,4 @@ static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice)
   }
   i_cg[i_i] = Ap[c];
   Ap_cg[c]   = i_i;
-  
-  assert(i_i == (m->col*Nslice));
 }
