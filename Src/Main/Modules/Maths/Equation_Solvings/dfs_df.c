@@ -75,6 +75,12 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     sol_man->jacobian[c]->J = cast_matrix_ccs(J);
     free_matrix(J);
     
+    if (OPT_CSS_READER_ACTIVE)
+    {
+      int Npieces = 15;
+      s
+    }
+    
     if (GRT(J_sizeMb_ccs(sol_man->jacobian[i]->J),max_j_size))
       write_J_in_disk_ccs();
     
@@ -806,19 +812,52 @@ Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type)
 
 /* given matrix, row and column of a CCS format matrix,
 // it returns the corresponing enteries of matrix.
-// ->return value: m[i][j] in which m is in CCS format
-*/
+// NOTE: this function is heavily used and must be
+// super optimized.
+// ->return value: m[i][j] in which m is in CCS format. */
 double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c)
 {
   const int *const Ap    = m->ccs->Ap;
   const int *const Ai    = m->ccs->Ai;
   const double *const Ax = m->ccs->Ax;
   
-  /* moving along none zero entries of the matrix at column c.
-  // Note: it should not pass the given row.  */
-  for (int i = Ap[c]; Ai[i] <= r && i < Ap[c+1]; ++i)
-    if (Ai[i] == r) return Ax[i];
+  #if OPT_CSS_READER_ACTIVE == 1
+  {
+    const int *const Aps = m->ccs->Aps[c];
+    const int Nslices    = m->ccs->Nslices-1;
+    int slice = 0;
     
+    /* find the interval(slice) where give row resides */
+    while (slice < Nslices)
+    {
+      if (Ai[Aps[slice]] <= r && r < Ai[Aps[slice+1]])
+        break;
+        
+      ++slice;
+    }
+    
+    /* moving along none zero entries of the matrix at column c.
+    // Note: it should not pass the given row.  */
+    int i = Aps[slice];
+    while (Ai[i] <= r)
+    {
+      if (Ai[i] == r)
+        return Ax[i];
+
+      ++i;
+    }
+  }
+  
+  # else
+  {
+    /* moving along none zero entries of the matrix at column c.
+    // Note: it should not pass the given row.  */
+    for (int i = Ap[c]; Ai[i] <= r; ++i)
+      if (Ai[i] == r) return Ax[i];
+  }
+  
+  #endif
+  
   return 0.;
 }
 

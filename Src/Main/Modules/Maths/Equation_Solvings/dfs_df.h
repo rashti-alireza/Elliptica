@@ -11,6 +11,9 @@
 
 #define _MAX_STR_ (400)
 
+/* css optimization */
+#define OPT_CSS_READER_ACTIVE (1)
+
 /* Jacobian type */
 typedef enum JTYPE_E
 {
