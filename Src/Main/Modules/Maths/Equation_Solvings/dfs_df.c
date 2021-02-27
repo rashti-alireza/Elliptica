@@ -75,10 +75,11 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     sol_man->jacobian[c]->J = cast_matrix_ccs(J);
     free_matrix(J);
     
+    /* to optimize ccs reader */
     if (OPT_CSS_READER_ACTIVE)
     {
-      int Npieces = 15;
-      s
+      int Nslice = 1;
+      coarse_grain_Ap_ccs_matrix(sol_man->jacobian[c]->J,Nslice);
     }
     
     if (GRT(J_sizeMb_ccs(sol_man->jacobian[i]->J),max_j_size))
@@ -817,42 +818,35 @@ Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type)
 // ->return value: m[i][j] in which m is in CCS format. */
 double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c)
 {
-  const int *const Ap    = m->ccs->Ap;
+  //Warning("long conversion in argument?");
   const int *const Ai    = m->ccs->Ai;
+  const int *const Ap    = m->ccs->Ap;
   const double *const Ax = m->ccs->Ax;
   
   #if OPT_CSS_READER_ACTIVE == 1
   {
-    const int *const Aps = m->ccs->Aps[c];
-    const int Nslices    = m->ccs->Nslices-1;
-    int slice = 0;
+    const int *const Ap_cg = m->ccs->Ap_cg;
+    const int *const i_cg = m->ccs->i_cg;
+    int i_i = 0;
     
     /* find the interval(slice) where give row resides */
-    while (slice < Nslices)
-    {
-      if (Ai[Aps[slice]] <= r && r < Ai[Aps[slice+1]])
-        break;
-        
-      ++slice;
-    }
+    for (i_i = Ap_cg[c]; i_i < Ap_cg[c+1]; ++i_i)
+      /* the first interval which potentially has r */
+      if (Ai[i_cg[i_i]] <= r && r < Ai[i_cg[i_i+1]]) break;
     
-    /* moving along none zero entries of the matrix at column c.
-    // Note: it should not pass the given row.  */
-    int i = Aps[slice];
-    while (Ai[i] <= r)
-    {
-      if (Ai[i] == r)
-        return Ax[i];
-
-      ++i;
-    }
+    for (int i = i_cg[i_i]; Ai[i] <= r && i < Ap[c+1]; ++i)
+      if (Ai[i] == r) return Ax[i];
+    
   }
   
   # else
   {
+    //Warning("wrong!");
+    
+    //const int *const Ap    = m->ccs->Ap;
     /* moving along none zero entries of the matrix at column c.
     // Note: it should not pass the given row.  */
-    for (int i = Ap[c]; Ai[i] <= r; ++i)
+    for (int i = Ap[c]; Ai[i] <= r && i < Ap[c+1]; ++i)
       if (Ai[i] == r) return Ax[i];
   }
   
@@ -1952,4 +1946,41 @@ void free_patch_SolMan_jacobian(Patch_T *const patch)
   SolMan->nj       = 0;
 }
 
+/* slice Ap of ccs matrix to optimiza ccs reader.
+// see explanations at Matrix_T->ccs. */
+static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice)
+{
+  if (!Nslice)
+    return;
+  
+  /* alloc and init */
+  m->ccs->Nslice = Nslice;
+  m->ccs->Ap_cg   = calloc((Uint)m->col+1,sizeof(*m->ccs->Ap_cg));
+  IsNull(m->ccs->Ap_cg);
+  m->ccs->i_cg   = calloc((Uint)(m->col*Nslice),sizeof(*m->ccs->i_cg));
+  IsNull(m->ccs->i_cg);
+  
+  const int *const Ap = m->ccs->Ap;
+//  const int *const Ai = m->ccs->Ai;
+  int *const Ap_cg = m->ccs->Ap_cg;
+  int *const i_cg = m->ccs->i_cg;
+  int i_i;
+  long c;
+    
+  i_i = 0;
+  for (c = 0; c < m->col; ++c)
+  {
+    //printf("Ap[%ld+1] = %d, Ap[%ld] = %d\n",c,Ap[c+1],c,Ap[c]);
+    assert(Ap[c+1]-Ap[c] >= Nslice);
+    int quotient = (Ap[c+1]-Ap[c])/(Nslice);
+    
+    Ap_cg[c] = i_i;
+    for (int s = 0; s < Nslice; ++s)
+    {
+      i_cg[i_i] = Ap[c] + s*quotient;
+      i_i++;
+    }
+  }
+  Ap_cg[c] = i_i;  
 
+}

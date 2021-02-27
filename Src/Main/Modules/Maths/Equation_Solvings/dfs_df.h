@@ -57,6 +57,7 @@ static void JType_E2Dd_T(const JType_E jt_e, Dd_T *const q_dir);
 static void write_J_in_disk_ccs(void);
 static double J_sizeMb_ccs(const Matrix_T *const m);
 fJs_T *get_j_reader(const Matrix_T *const m);
+static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice);
 static double dInterp_x_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane);
 static double dInterp_y_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane);
 static double dInterp_z_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane);
@@ -73,3 +74,5 @@ static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
 static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane);
 static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane);
 static double dInterp_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane);
+
+
