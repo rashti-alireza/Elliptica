@@ -1953,8 +1953,7 @@ void free_patch_SolMan_jacobian(Patch_T *const patch)
 // see explanations at Matrix_T->ccs. */
 static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice)
 {
-  if (!Nslice)
-    return;
+  assert(Nslice);
   
   /* alloc and init */
   m->ccs->Nslice = Nslice;
