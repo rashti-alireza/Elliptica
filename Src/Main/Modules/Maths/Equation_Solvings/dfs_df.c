@@ -75,10 +75,11 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     sol_man->jacobian[c]->J = cast_matrix_ccs(J);
     free_matrix(J);
     
-    /* to optimize ccs reader */
-    if (OPT_CSS_READER_ACTIVE)
+    /* to optimize ccs reader if required */
+    if (CCS_READER_OPTIMIZE)
     {
-      int Nslice = Pgeti("test");
+      int Nslice = PgetiEZ("matrix_ccs_reader_split");
+      Nslice = (Nslice != INT_MAX ? Nslice : 1);
       coarse_grain_Ap_ccs_matrix(sol_man->jacobian[c]->J,Nslice);
     }
     
@@ -822,7 +823,7 @@ double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c)
   const int *const Ai    = m->ccs->Ai;
   const double *const Ax = m->ccs->Ax;
   
-  #if OPT_CSS_READER_ACTIVE == 1
+  #if CCS_READER_OPTIMIZE == 1
   
     const int *const Ap_cg = m->ccs->Ap_cg;
     const int *const i_cg  = m->ccs->i_cg;
@@ -1972,7 +1973,7 @@ static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice)
   for (c = 0; c < m->col; ++c)
   {
     if (Ap[c+1]-Ap[c] < Nslice)
-      Error0("Number of slices are too large for this resolution!\n");
+      Error0("Parameter 'matrix_ccs_reader_split' is too large!\n");
 
     int quotient = (Ap[c+1]-Ap[c])/(Nslice);
     
