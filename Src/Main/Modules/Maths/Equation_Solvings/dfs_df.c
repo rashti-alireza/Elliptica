@@ -820,36 +820,35 @@ double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c)
 {
   //Warning("long conversion in argument?");
   const int *const Ai    = m->ccs->Ai;
-  const int *const Ap    = m->ccs->Ap;
   const double *const Ax = m->ccs->Ax;
   
   #if OPT_CSS_READER_ACTIVE == 1
   {
     const int *const Ap_cg = m->ccs->Ap_cg;
     const int *const i_cg  = m->ccs->i_cg;
-    int i_i     = Ap_cg[c];
-    int i_i_max = Ap_cg[c+1]-1;
+    const int i_i_max      = Ap_cg[c+1]-1;
+    int i_i                = Ap_cg[c];/* i_{i} */
     
     /* find the interval(slice) where given row resides */
     while (i_i < i_i_max)
     {
-      //if (Ai[i_cg[i_i]] <= r && r <= Ai[i_cg[i_i+1]-1])
+      // if (Ai[i_cg[i_i]] <= r && r <= Ai[i_cg[i_i+1]-1])
       if (r <= Ai[i_cg[i_i+1]-1])
         break;
       
       ++i_i;
     }
     
-    for (int i = i_cg[i_i]; Ai[i] <= r && i < Ap[c+1]; ++i)
+    //for (int i = i_cg[i_i]; Ai[i] <= r && i < Ap[c+1]; ++i)
+    const int i_max = i_cg[i_i+1];
+    for (int i = i_cg[i_i]; i < i_max; ++i)
       if (Ai[i] == r) return Ax[i];
     
   }
   
   # else
   {
-    //Warning("wrong!");
-    
-    //const int *const Ap    = m->ccs->Ap;
+    const int *const Ap    = m->ccs->Ap;
     /* moving along none zero entries of the matrix at column c.
     // Note: it should not pass the given row.  */
     for (int i = Ap[c]; Ai[i] <= r && i < Ap[c+1]; ++i)
@@ -1963,11 +1962,10 @@ static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice)
   m->ccs->Nslice = Nslice;
   m->ccs->Ap_cg   = calloc((Uint)m->col+1,sizeof(*m->ccs->Ap_cg));
   IsNull(m->ccs->Ap_cg);
-  m->ccs->i_cg   = calloc((Uint)(m->col*Nslice),sizeof(*m->ccs->i_cg));
+  m->ccs->i_cg   = calloc((Uint)(m->col*Nslice+1),sizeof(*m->ccs->i_cg));
   IsNull(m->ccs->i_cg);
   
   const int *const Ap = m->ccs->Ap;
-//  const int *const Ai = m->ccs->Ai;
   int *const Ap_cg = m->ccs->Ap_cg;
   int *const i_cg = m->ccs->i_cg;
   int i_i;
@@ -1987,6 +1985,8 @@ static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice)
       i_i++;
     }
   }
-  Ap_cg[c] = i_i;  
-
+  i_cg[i_i] = Ap[c];
+  Ap_cg[c]   = i_i;
+  
+  assert(i_i == (m->col*Nslice));
 }
