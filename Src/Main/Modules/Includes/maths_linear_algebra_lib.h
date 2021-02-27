@@ -204,6 +204,16 @@ typedef struct MATRIX_T
     int *Ap;
     int *Ai;
     double *Ax;
+    /* for matrix read optimization */
+    int **Aps;/* slice each Ap[column] into equal pieces with known 
+    // value of Ai intervals thus for given row we know in which interval
+    // finding it, as apposed to just look for r linearly. 
+    // example: two slices for column c Aps[c]: 
+    // 0 <= Ai[Aps[c][0]]
+    // 5 <= Ai[Aps[c][1]]
+    // thus if given row is less than 5, it looks in first piece
+    // otherwise looks for the last piece. */
+    int Nslice;/* number of slices(pieces) */
   }ccs[1];
   
   struct/* compressed row storage format */
