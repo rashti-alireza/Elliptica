@@ -227,7 +227,7 @@ int x_of_X_precision(double *const x,const double *const X,const Patch_T *const 
   else if (patch->coordsys == CubedSpherical)
     ret = x_of_X_CS_coord(x,X,patch,precision_factor,1);
   else
-      Error0(NO_JOB);
+    Error0(NO_JOB);
  
   return ret;
 }
@@ -385,8 +385,9 @@ static int X_of_x_Cartesian_coord(double *const X,const double *const x,const Pa
   /* test if this is a valid answer */
   if (IsInside(X,patch->min,patch->max,EPS_coord_general))
   {
-    /* adujusting boundary number to avoid some unexpeted behavior
+    /* adjusting boundary values to avoid some unexpeted behavior
     // for example at interpolation. */
+    #if 0
     if (EQL_coord(X[0],patch->max[0],EPS_coord_general))
       X[0] = patch->max[0];
     if (EQL_coord(X[0],patch->min[0],EPS_coord_general))
@@ -399,6 +400,17 @@ static int X_of_x_Cartesian_coord(double *const X,const double *const x,const Pa
       X[2] = patch->max[2];
     if (EQL_coord(X[2],patch->min[2],EPS_coord_general))
       X[2] = patch->min[2];
+    #endif
+      
+    /* adjust X */
+    X[0] = (EQL(X[0],patch->max[0]) ? patch->max[0] : X[0]);
+    X[0] = (EQL(X[0],patch->min[0]) ? patch->min[0] : X[0]);
+
+    X[1] = (EQL(X[1],patch->max[1]) ? patch->max[1] : X[1]);
+    X[1] = (EQL(X[1],patch->min[1]) ? patch->min[1] : X[1]);
+
+    X[2] = (EQL(X[2],patch->max[2]) ? patch->max[2] : X[2]);
+    X[2] = (EQL(X[2],patch->min[2]) ? patch->min[2] : X[2]);
     
     return 1;
   }
@@ -551,6 +563,10 @@ static int X_of_x_CS_coord(double *const X,
     if (!EQL(dx/scale,0.))
       return 0;
   }
+  
+  /* extra care for patches with difficult X[2] like outermost patches. */
+  X[2] = (X[2] > patch->max[2] ? patch->max[2] : X[2]);
+  X[2] = (X[2] < patch->min[2] ? patch->min[2] : X[2]);
   
   return 1;
 }
