@@ -224,8 +224,8 @@ typedef struct PATCH_T
     struct FIELD_T *dR2_dz;/* dR2/dz */
     double R1;/* small radius of outermost patches. Note: it's always positive for all sides. */
     double R2;/* big radius of outermost patches. Note: it's always positive for all sides.*/
-    double xc1;/* const xc value for those patches that have square (small)*/
-    double xc2;/* const xc value for those patches that have square (big)*/
+    double xc1;/* const xc value for those patches that have cube (small)*/
+    double xc2;/* const xc value for those patches that have cube (big)*/
    }CubedSphericalCoord[1];
   }CoordSysInfo[1];
   Collocation_T collocation[3];/* type of collocation in each direction */
