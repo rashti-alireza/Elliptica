@@ -448,6 +448,7 @@ static int X_of_x_CS_coord(double *const X,
       x2   = S*(xc2 == DBL_MAX ? R_interpolation_CS(R2_f,X)/d : xc2);
       X[2] = (x[k]-x1)/(x2-x1);
       
+      #if 0
       /*  for interpolation error */
       n = patch->n;
       if (patch->nsplit[2] == 1)
@@ -464,6 +465,7 @@ static int X_of_x_CS_coord(double *const X,
         else
           eps = EPS_coord_OB_SCS2/(n[0]*n[1]*n[2]);
       }
+      #endif
       
     break;
     case OT_T_SCS:
@@ -474,6 +476,7 @@ static int X_of_x_CS_coord(double *const X,
       x1 = S*(xc1 == DBL_MAX ? R1/d : xc1);
       X[2] = (1-x1/x[k])/ratio;
       
+      #if 0
       /*  for interpolation error */
       n = patch->n;
       if (patch->nsplit[2] == 1)
@@ -490,7 +493,8 @@ static int X_of_x_CS_coord(double *const X,
         else
           eps = EPS_coord_OT_SCS2/(n[0]*n[1]*n[2]);
       }
-
+      #endif
+      
     break;
     case NS_T_CS:
       d = sqrt(1+Pow2(X[0])+Pow2(X[1]));

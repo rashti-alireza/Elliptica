@@ -10,13 +10,16 @@
 // the followings got from experiment. */
 #define EPS_collocation   (1E-8)
 #define EPS_coord_general (1E-8)
-#define EPS_coord_OB_SCS1 (1E-3)
-#define EPS_coord_OB_SCS2 (1E-5)
-#define EPS_coord_OT_SCS1 (1E-3)
-#define EPS_coord_OT_SCS2 (1E-5)
-#define EPS_coord_LOW_n1  (1E-2)
-#define EPS_coord_LOW_n2  (1E-3)
-#define LOW_n             (9)
+
+#if 0
+ #define EPS_coord_OB_SCS1 (1E-3)
+ #define EPS_coord_OB_SCS2 (1E-5)
+ #define EPS_coord_OT_SCS1 (1E-3)
+ #define EPS_coord_OT_SCS2 (1E-5)
+ #define EPS_coord_LOW_n1  (1E-2)
+ #define EPS_coord_LOW_n2  (1E-3)
+ #define LOW_n             (9)
+#endif
 
 /* h is an small distance, for instance grid space */
 #define LSS_coord(x,y,h)    ((x) < (y)-(h))
