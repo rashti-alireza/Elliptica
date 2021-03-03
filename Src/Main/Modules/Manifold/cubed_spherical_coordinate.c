@@ -3254,6 +3254,16 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           rup    = rmin + rstep*(d2+1);
           
           assert(rup > diag);
+          
+          /* set xc to default which is DBL_MAX.
+          // NOTE: it's important to set it as a double.
+          // since i don't know what happens if you set it as 
+          // a string par and convert it into double! */
+          SCS_par_box_length(par,"up_xc");
+          cs_Psetd(par,DBL_MAX);
+          SCS_par_box_length(par,"down_xc");
+          cs_Psetd(par,DBL_MAX);
+          
           /* set min and max parameters */
           for (p = 0; p < 6; ++p)
           {
@@ -3629,6 +3639,16 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           
           assert(rup < diag);
           
+          /* set xc to default which is DBL_MAX.
+          // NOTE: it's important to set it as a double.
+          // since i don't know what happens if you set it as 
+          // a string par and convert it into double! */
+          SCS_par_box_length(par,"up_xc");
+          cs_Psetd(par,DBL_MAX);
+          SCS_par_box_length(par,"down_xc");
+          cs_Psetd(par,DBL_MAX);
+
+          
           /* set min and max parameters */
           for (p = 0; p < 6; ++p)
           {
@@ -3909,6 +3929,15 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           rdown  = rmin + rstep*d2;
           rup    = rmin + rstep*(d2+1);
           
+          /* set xc to default which is DBL_MAX.
+          // NOTE: it's important to set it as a double.
+          // since i don't know what happens if you set it as 
+          // a string par and convert it into double! */
+          SCS_par_box_length(par,"up_xc");
+          cs_Psetd(par,DBL_MAX);
+          SCS_par_box_length(par,"down_xc");
+          cs_Psetd(par,DBL_MAX);
+
           /* set min and max parameters */
           for (p = 0; p < 6; ++p)
           {
@@ -4380,6 +4409,16 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           rup    = rmin + rstep*(d2+1);
           
           assert(rup > diag);
+          
+          /* set xc to default which is DBL_MAX.
+          // NOTE: it's important to set it as a double.
+          // since i don't know what happens if you set it as 
+          // a string par and convert it into double! */
+          SCS_par_box_length(par,"up_xc");
+          cs_Psetd(par,DBL_MAX);
+          SCS_par_box_length(par,"down_xc");
+          cs_Psetd(par,DBL_MAX);
+
           /* set min and max parameters */
           for (p = 0; p < 6; ++p)
           {
@@ -4716,6 +4755,16 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           
           assert(rup < diag);
           
+          /* set xc to default which is DBL_MAX.
+          // NOTE: it's important to set it as a double.
+          // since i don't know what happens if you set it as 
+          // a string par and convert it into double! */
+          SCS_par_box_length(par,"up_xc");
+          cs_Psetd(par,DBL_MAX);
+          SCS_par_box_length(par,"down_xc");
+          cs_Psetd(par,DBL_MAX);
+
+          
           /* set min and max parameters */
           for (p = 0; p < 6; ++p)
           {
@@ -4988,6 +5037,15 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           
           rdown  = rmin + rstep*d2;
           rup    = rmin + rstep*(d2+1);
+          
+          /* set xc to default which is DBL_MAX.
+          // NOTE: it's important to set it as a double.
+          // since i don't know what happens if you set it as 
+          // a string par and convert it into double! */
+          SCS_par_box_length(par,"up_xc");
+          cs_Psetd(par,DBL_MAX);
+          SCS_par_box_length(par,"down_xc");
+          cs_Psetd(par,DBL_MAX);
           
           /* set min and max parameters */
           for (p = 0; p < 6; ++p)
