@@ -7,7 +7,7 @@
 
 static const double   Huge_Eps        = 2;
 static const double   ScaleFactor     = 1E-5;/* scale factor */
-static const double   PrecisionFactor = 1E2;/* precision factor */
+static const double   PrecisionFactor = 1.0;/* precision factor */
 static const Uint NFaces      = 6;/* total number of faces */
 /* schematic names for surfaces correspond to FACE_T enum. */
 static const char *FaceName[] = {"X == 0","X == 1","Y == 0","Y == 1",
