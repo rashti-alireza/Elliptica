@@ -540,10 +540,10 @@ populate_CS_patch_SplitCS
           }
           
           /* set xc's */
-          SCS_par_box_length(par,"down_xc");
+          SCS_par_box_length(par,"xc1");
           patch->CoordSysInfo->CubedSphericalCoord->xc1 = Pgetd(par);
           
-          SCS_par_box_length(par,"up_xc");
+          SCS_par_box_length(par,"xc2");
           patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(par);
           
           /* filling center */
@@ -3266,10 +3266,13 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           // NOTE: it's important to set it as a double.
           // since i don't know what happens if you set it as 
           // a string par and convert it into double! */
-          SCS_par_box_length(par,"up_xc");
-          cs_Psetd(par,DBL_MAX);
-          SCS_par_box_length(par,"down_xc");
-          cs_Psetd(par,DBL_MAX);
+          for (p = 0; p < 6; ++p)
+          {
+            SCS_par_box_length(par,"xc2");
+            cs_Psetd(par,DBL_MAX);
+            SCS_par_box_length(par,"xc1");
+            cs_Psetd(par,DBL_MAX);
+          }
           
           /* set min and max parameters */
           for (p = 0; p < 6; ++p)
@@ -3388,10 +3391,10 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
               
-              /* set down xc (used in object) as opposed to up
+              /* set small xc (used in object) as opposed to up
               // (used in around) to increase accuracy in interpolations 
               // and derivatives. */
-              SCS_par_box_length(par,"down_xc");
+              SCS_par_box_length(par,"xc1");
               cs_Psetd(par,xc);
               
             }/* for (p = 0; p < 6; ++p) */
@@ -3434,10 +3437,10 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
               
-              /* set down xc (used in object) as opposed to up 
+              /* set small xc (used in object) as opposed to up 
               // (used in around) to increase accuracy in interpolations 
               // and derivatives. */
-              SCS_par_box_length(par,"down_xc");
+              SCS_par_box_length(par,"xc1");
               cs_Psetd(par,xc);
               
             }/* for (p = 0; p < 6; ++p) */
@@ -3650,11 +3653,14 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           // NOTE: it's important to set it as a double.
           // since i don't know what happens if you set it as 
           // a string par and convert it into double! */
-          SCS_par_box_length(par,"up_xc");
-          cs_Psetd(par,DBL_MAX);
-          SCS_par_box_length(par,"down_xc");
-          cs_Psetd(par,DBL_MAX);
-
+          for (p = 0; p < 6; ++p)
+          {
+            SCS_par_box_length(par,"xc2");
+            cs_Psetd(par,DBL_MAX);
+            SCS_par_box_length(par,"xc1");
+            cs_Psetd(par,DBL_MAX);
+          }
+          
           
           /* set min and max parameters */
           for (p = 0; p < 6; ++p)
@@ -3743,10 +3749,10 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
               
-              /* set up xc (used in around) as opposed to down
+              /* set large xc (used in around) as opposed to down
               // (used in object) to increase accuracy in interpolations 
               // and derivatives. */
-              SCS_par_box_length(par,"up_xc");
+              SCS_par_box_length(par,"xc2");
               cs_Psetd(par,xc);
               
             }/* for (p = 0; p < 6; ++p) */
@@ -3818,10 +3824,10 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
               
-              /* set up xc (used in around) as opposed to down
+              /* set large xc (used in around) as opposed to down
               // (used in object) to increase accuracy in interpolations 
               // and derivatives. */
-              SCS_par_box_length(par,"up_xc");
+              SCS_par_box_length(par,"xc2");
               cs_Psetd(par,xc);
               
             }/* for (p = 0; p < 6; ++p) */
@@ -3940,11 +3946,14 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           // NOTE: it's important to set it as a double.
           // since i don't know what happens if you set it as 
           // a string par and convert it into double! */
-          SCS_par_box_length(par,"up_xc");
-          cs_Psetd(par,DBL_MAX);
-          SCS_par_box_length(par,"down_xc");
-          cs_Psetd(par,DBL_MAX);
-
+          for (p = 0; p < 6; ++p)
+          {
+            SCS_par_box_length(par,"xc2");
+            cs_Psetd(par,DBL_MAX);
+            SCS_par_box_length(par,"xc1");
+            cs_Psetd(par,DBL_MAX);
+          }
+          
           /* set min and max parameters */
           for (p = 0; p < 6; ++p)
           {
@@ -4057,9 +4066,9 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
               
-              /* set down xc to increase accuracy in interpolations 
+              /* set small xc to increase accuracy in interpolations 
               // and derivatives. */
-              SCS_par_box_length(par,"down_xc");
+              SCS_par_box_length(par,"xc1");
               cs_Psetd(par,xc);
               
             }/* for (p = 0; p < 6; ++p) */
@@ -4100,9 +4109,9 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
               
-              /* set down xc to increase accuracy in interpolations 
+              /* set small xc to increase accuracy in interpolations 
               // and derivatives. */
-              SCS_par_box_length(par,"down_xc");
+              SCS_par_box_length(par,"xc1");
               cs_Psetd(par,xc);
 
             }/* for (p = 0; p < 6; ++p) */
@@ -4421,11 +4430,14 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           // NOTE: it's important to set it as a double.
           // since i don't know what happens if you set it as 
           // a string par and convert it into double! */
-          SCS_par_box_length(par,"up_xc");
-          cs_Psetd(par,DBL_MAX);
-          SCS_par_box_length(par,"down_xc");
-          cs_Psetd(par,DBL_MAX);
-
+          for (p = 0; p < 6; ++p)
+          {
+            SCS_par_box_length(par,"xc2");
+            cs_Psetd(par,DBL_MAX);
+            SCS_par_box_length(par,"xc1");
+            cs_Psetd(par,DBL_MAX);
+          }
+          
           /* set min and max parameters */
           for (p = 0; p < 6; ++p)
           {
@@ -4543,9 +4555,9 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
               
-              /* set down xc to increase accuracy in interpolations 
+              /* set small xc to increase accuracy in interpolations 
               // and derivatives. */
-              SCS_par_box_length(par,"down_xc");
+              SCS_par_box_length(par,"xc1");
               cs_Psetd(par,xc);
               
             }/* for (p = 0; p < 6; ++p) */
@@ -4588,9 +4600,9 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
               
-              /* set down xc to increase accuracy in interpolations 
+              /* set small xc to increase accuracy in interpolations 
               // and derivatives. */
-              SCS_par_box_length(par,"down_xc");
+              SCS_par_box_length(par,"xc1");
               cs_Psetd(par,xc);
               
             }/* for (p = 0; p < 6; ++p) */
@@ -4766,11 +4778,14 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           // NOTE: it's important to set it as a double.
           // since i don't know what happens if you set it as 
           // a string par and convert it into double! */
-          SCS_par_box_length(par,"up_xc");
-          cs_Psetd(par,DBL_MAX);
-          SCS_par_box_length(par,"down_xc");
-          cs_Psetd(par,DBL_MAX);
-
+          for (p = 0; p < 6; ++p)
+          {
+            SCS_par_box_length(par,"xc2");
+            cs_Psetd(par,DBL_MAX);
+            SCS_par_box_length(par,"xc1");
+            cs_Psetd(par,DBL_MAX);
+          }
+          
           
           /* set min and max parameters */
           for (p = 0; p < 6; ++p)
@@ -4859,9 +4874,9 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
               
-              /* set up xc to increase accuracy in interpolations 
+              /* set large xc to increase accuracy in interpolations 
               // and derivatives. */
-              SCS_par_box_length(par,"up_xc");
+              SCS_par_box_length(par,"xc2");
               cs_Psetd(par,xc);
               
             }/* for (p = 0; p < 6; ++p) */
@@ -4933,9 +4948,9 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
               
-              /* set up xc to increase accuracy in interpolations 
+              /* set large xc to increase accuracy in interpolations 
               // and derivatives. */
-              SCS_par_box_length(par,"up_xc");
+              SCS_par_box_length(par,"xc2");
               cs_Psetd(par,xc);
               
             }/* for (p = 0; p < 6; ++p) */
@@ -5049,11 +5064,14 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           // NOTE: it's important to set it as a double.
           // since i don't know what happens if you set it as 
           // a string par and convert it into double! */
-          SCS_par_box_length(par,"up_xc");
-          cs_Psetd(par,DBL_MAX);
-          SCS_par_box_length(par,"down_xc");
-          cs_Psetd(par,DBL_MAX);
-          
+          for (p = 0; p < 6; ++p)
+          {
+            SCS_par_box_length(par,"xc2");
+            cs_Psetd(par,DBL_MAX);
+            SCS_par_box_length(par,"xc1");
+            cs_Psetd(par,DBL_MAX);
+          }
+                    
           /* set min and max parameters */
           for (p = 0; p < 6; ++p)
           {
@@ -5166,9 +5184,9 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
               
-              /* set down xc to increase accuracy in interpolations 
+              /* set small xc to increase accuracy in interpolations 
               // and derivatives. */
-              SCS_par_box_length(par,"down_xc");
+              SCS_par_box_length(par,"xc1");
               cs_Psetd(par,xc);
               
             }/* for (p = 0; p < 6; ++p) */
@@ -5209,9 +5227,9 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
               
-              /* set down xc to increase accuracy in interpolations 
+              /* set small xc to increase accuracy in interpolations 
               // and derivatives. */
-              SCS_par_box_length(par,"down_xc");
+              SCS_par_box_length(par,"xc1");
               cs_Psetd(par,xc);
               
             }/* for (p = 0; p < 6; ++p) */
