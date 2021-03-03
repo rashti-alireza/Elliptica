@@ -3370,6 +3370,13 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               }
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
+              
+              /* set down xc (used in object) as opposed to up
+              // (used in around) to increase accuracy in interpolations 
+              // and derivatives. */
+              SCS_par_box_length(par,"down_xc");
+              cs_Psetd(par,xc);
+              
             }/* for (p = 0; p < 6; ++p) */
           }
           /* if only one level => one of them has flat surface */
@@ -3409,6 +3416,13 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               }
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
+              
+              /* set down xc (used in object) as opposed to up 
+              // (used in around) to increase accuracy in interpolations 
+              // and derivatives. */
+              SCS_par_box_length(par,"down_xc");
+              cs_Psetd(par,xc);
+              
             }/* for (p = 0; p < 6; ++p) */
           }
           /* between the above cases they have perfect S2 surface */
@@ -3701,6 +3715,13 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               }
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
+              
+              /* set up xc (used in around) as opposed to down
+              // (used in object) to increase accuracy in interpolations 
+              // and derivatives. */
+              SCS_par_box_length(par,"up_xc");
+              cs_Psetd(par,xc);
+              
             }/* for (p = 0; p < 6; ++p) */
           }
           /* if bottom level and more than 1 split. */
@@ -3769,6 +3790,13 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               }
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
+              
+              /* set up xc (used in around) as opposed to down
+              // (used in object) to increase accuracy in interpolations 
+              // and derivatives. */
+              SCS_par_box_length(par,"up_xc");
+              cs_Psetd(par,xc);
+              
             }/* for (p = 0; p < 6; ++p) */
           }
           /* between the above cases they have perfect S2 surface */
@@ -3992,6 +4020,12 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               }
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
+              
+              /* set down xc to increase accuracy in interpolations 
+              // and derivatives. */
+              SCS_par_box_length(par,"down_xc");
+              cs_Psetd(par,xc);
+              
             }/* for (p = 0; p < 6; ++p) */
           }
           /* if only one level one of them has flat surface */
@@ -4029,6 +4063,12 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               }
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
+              
+              /* set down xc to increase accuracy in interpolations 
+              // and derivatives. */
+              SCS_par_box_length(par,"down_xc");
+              cs_Psetd(par,xc);
+
             }/* for (p = 0; p < 6; ++p) */
           }
           /* between the above cases they have perfect S2 surface */
@@ -4456,6 +4496,12 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               }
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
+              
+              /* set down xc to increase accuracy in interpolations 
+              // and derivatives. */
+              SCS_par_box_length(par,"down_xc");
+              cs_Psetd(par,xc);
+              
             }/* for (p = 0; p < 6; ++p) */
           }
           /* if only one level => one of them has flat surface */
@@ -4495,6 +4541,12 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               }
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
+              
+              /* set down xc to increase accuracy in interpolations 
+              // and derivatives. */
+              SCS_par_box_length(par,"down_xc");
+              cs_Psetd(par,xc);
+              
             }/* for (p = 0; p < 6; ++p) */
           }
           /* between the above cases they have perfect S2 surface */
@@ -4750,6 +4802,12 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               }
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
+              
+              /* set up xc to increase accuracy in interpolations 
+              // and derivatives. */
+              SCS_par_box_length(par,"up_xc");
+              cs_Psetd(par,xc);
+              
             }/* for (p = 0; p < 6; ++p) */
           }
           /* if bottom level and more than 1 split. */
@@ -4818,6 +4876,12 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               }
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
+              
+              /* set up xc to increase accuracy in interpolations 
+              // and derivatives. */
+              SCS_par_box_length(par,"up_xc");
+              cs_Psetd(par,xc);
+              
             }/* for (p = 0; p < 6; ++p) */
           }
           /* between the above cases they have perfect S2 surface */
@@ -5036,6 +5100,12 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               }
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
+              
+              /* set down xc to increase accuracy in interpolations 
+              // and derivatives. */
+              SCS_par_box_length(par,"down_xc");
+              cs_Psetd(par,xc);
+              
             }/* for (p = 0; p < 6; ++p) */
           }
           /* if only one level one of them has flat surface */
@@ -5073,6 +5143,12 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
               }
               update_parameter_array(parU,rU,N_total);
               update_parameter_array(parD,rD,N_total);
+              
+              /* set down xc to increase accuracy in interpolations 
+              // and derivatives. */
+              SCS_par_box_length(par,"down_xc");
+              cs_Psetd(par,xc);
+              
             }/* for (p = 0; p < 6; ++p) */
           }
           /* between the above cases they have perfect S2 surface */
