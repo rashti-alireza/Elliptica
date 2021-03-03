@@ -274,8 +274,8 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
   {
     case OB_T_SCS:
       d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
-      x1 = S*R_interpolation_CS(R1_f,X)/d;
-      x2 = S*R_interpolation_CS(R2_f,X)/d;
+      x1   = S*(xc1 == DBL_MAX ? R_interpolation_CS(R1_f,X)/d : xc1);
+      x2   = S*(xc2 == DBL_MAX ? R_interpolation_CS(R2_f,X)/d : xc2);
       
       x[c] = x1+(x2-x1)*X[2];
       x[a] = S*x[c]*X[0];
@@ -291,7 +291,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
       R2 = R_interpolation_CS(R2_f,X);
       ratio = 1.-R1/R2;
       d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
-      x1 = S*R1/d;
+      x1 = S*(xc1 == DBL_MAX ? R1/d : xc1);
       x[c] = x1/(1.-ratio*X[2]);
       x[a] = S*x[c]*X[0];
       x[b] = S*x[c]*X[1];
@@ -444,8 +444,8 @@ static int X_of_x_CS_coord(double *const X,
   {
     case OB_T_SCS:
       d    = sqrt(1+Pow2(X[0])+Pow2(X[1]));
-      x1   = S*R_interpolation_CS(R1_f,X)/d;
-      x2   = S*R_interpolation_CS(R2_f,X)/d;
+      x1   = S*(xc1 == DBL_MAX ? R_interpolation_CS(R1_f,X)/d : xc1);
+      x2   = S*(xc2 == DBL_MAX ? R_interpolation_CS(R2_f,X)/d : xc2);
       X[2] = (x[k]-x1)/(x2-x1);
       
       /*  for interpolation error */
@@ -471,7 +471,7 @@ static int X_of_x_CS_coord(double *const X,
       R2 = R_interpolation_CS(R2_f,X);
       ratio = 1.-R1/R2;
       d  = sqrt(1+Pow2(X[0])+Pow2(X[1]));
-      x1 = S*R1/d;
+      x1 = S*(xc1 == DBL_MAX ? R1/d : xc1);
       X[2] = (1-x1/x[k])/ratio;
       
       /*  for interpolation error */
@@ -519,16 +519,16 @@ static int X_of_x_CS_coord(double *const X,
       Error0(NO_OPTION);
   }
   
-  eps *= precision_factor;
-  
+  //eps *= precision_factor*1E-2;
+  //eps = 1E-4;
   /* adujusting boundary number to avoid some unexpeted behavior
   // due to interpolation error. */
-  if (EQL_coord(X[0],patch->max[0],eps))  X[0] = patch->max[0];
+  /*if (EQL_coord(X[0],patch->max[0],eps))  X[0] = patch->max[0];
   if (EQL_coord(X[0],patch->min[0],eps))  X[0] = patch->min[0];
   if (EQL_coord(X[1],patch->max[1],eps))  X[1] = patch->max[1];
   if (EQL_coord(X[1],patch->min[1],eps))  X[1] = patch->min[1];
   if (EQL_coord(X[2],patch->max[2],eps))  X[2] = patch->max[2];
-  if (EQL_coord(X[2],patch->min[2],eps))  X[2] = patch->min[2];  
+  if (EQL_coord(X[2],patch->min[2],eps))  X[2] = patch->min[2];*/
   
   /* test the solution
   // NOTE: this must be the last step and X must remain intact regardless
@@ -538,7 +538,7 @@ static int X_of_x_CS_coord(double *const X,
     Uint interval_test = 0;
     
     if (IsInside(X,patch->min,patch->max,eps))
-       interval_test = 1;
+      interval_test = 1;
     
     if (!interval_test)
       return 0;
