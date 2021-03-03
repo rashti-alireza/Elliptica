@@ -539,6 +539,13 @@ populate_CS_patch_SplitCS
             R2->v[ijk] = rU[ijk];
           }
           
+          /* set xc's */
+          SCS_par_box_length(par,"down_xc");
+          patch->CoordSysInfo->CubedSphericalCoord->xc1 = Pgetd(par);
+          
+          SCS_par_box_length(par,"up_xc");
+          patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(par);
+          
           /* filling center */
           SCS_par_CS_center(par,"a");
           patch->c[0] = Pgetd(par);
