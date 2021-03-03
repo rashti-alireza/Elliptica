@@ -432,7 +432,7 @@ static int X_of_x_CS_coord(double *const X,
          R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
   double x1,x2,d,ratio;
   double x_test[3],X_test[3],dx;
-  double eps = EPS_coord_general;
+  double eps = EPS_coord_general*precision_factor;
   const Uint *n;
   
   SignAndIndex_permutation_CubedSphere(side,&i,&j,&k,&S);
