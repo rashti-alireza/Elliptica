@@ -519,6 +519,16 @@ static int X_of_x_CS_coord(double *const X,
       Error0(NO_OPTION);
   }
   
+  /* adjust X */
+  X[0] = (EQL(X[0],patch->max[0]) ? patch->max[0] : X[0]);
+  X[0] = (EQL(X[0],patch->min[0]) ? patch->min[0] : X[0]);
+
+  X[1] = (EQL(X[1],patch->max[1]) ? patch->max[1] : X[1]);
+  X[1] = (EQL(X[1],patch->min[1]) ? patch->min[1] : X[1]);
+
+  X[2] = (EQL(X[2],patch->max[2]) ? patch->max[2] : X[2]);
+  X[2] = (EQL(X[2],patch->min[2]) ? patch->min[2] : X[2]);  
+  
   /* test the solution, don't modify X. */
   if (check_flg)
   {
@@ -537,17 +547,6 @@ static int X_of_x_CS_coord(double *const X,
     if (!EQL_coord(dx/scale,0,eps))
       return 0;
   }
-  
-  /* since it reaches here => X is the correct answer, make sure it's
-  // in the interval. */
-  X[0] = (X[0] > patch->max[0] ? patch->max[0] : X[0]);
-  X[0] = (X[0] < patch->min[0] ? patch->min[0] : X[0]);
-
-  X[1] = (X[1] > patch->max[1] ? patch->max[1] : X[1]);
-  X[1] = (X[1] < patch->min[1] ? patch->min[1] : X[1]);
-
-  X[2] = (X[2] > patch->max[2] ? patch->max[2] : X[2]);
-  X[2] = (X[2] < patch->min[2] ? patch->min[2] : X[2]);  
   
   return 1;
 }
