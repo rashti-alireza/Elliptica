@@ -366,7 +366,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
     X_of_x_CS_coord(X_test,x_test,patch,precision_factor,0);
     dX = root_square(3,X,X_test);
     
-    if (!EQL_coord(dX,0,EPS_coord_general))
+    if (!EQL(dX,0))
       return 0;
   }
   
@@ -544,7 +544,7 @@ static int X_of_x_CS_coord(double *const X,
     dx = root_square(3,cart,x_test);
     double scale = MaxMag_d(root_square(3,cart,0),root_square(3,x_test,0));
     scale = scale < 1 ? 1 : scale;
-    if (!EQL_coord(dx/scale,0,eps))
+    if (!EQL(dx/scale,0.))
       return 0;
   }
   
