@@ -519,34 +519,17 @@ static int X_of_x_CS_coord(double *const X,
       Error0(NO_OPTION);
   }
   
-  //eps *= precision_factor*1E-2;
-  //eps = 1E-4;
-  /* adujusting boundary number to avoid some unexpeted behavior
-  // due to interpolation error. */
-  /*if (EQL_coord(X[0],patch->max[0],eps))  X[0] = patch->max[0];
-  if (EQL_coord(X[0],patch->min[0],eps))  X[0] = patch->min[0];
-  if (EQL_coord(X[1],patch->max[1],eps))  X[1] = patch->max[1];
-  if (EQL_coord(X[1],patch->min[1],eps))  X[1] = patch->min[1];
-  if (EQL_coord(X[2],patch->max[2],eps))  X[2] = patch->max[2];
-  if (EQL_coord(X[2],patch->min[2],eps))  X[2] = patch->min[2];*/
-  
-  /* test the solution
-  // NOTE: this must be the last step and X must remain intact regardless
-  // if returns 0 or 1. */
+  /* test the solution, don't modify X. */
   if (check_flg)
   {
-    Uint interval_test = 0;
-    
-    if (IsInside(X,patch->min,patch->max,eps))
-      interval_test = 1;
-    
-    if (!interval_test)
+    if (!IsInside(X,patch->min,patch->max,eps))
       return 0;
       
     /* test if it gives you the same x coords */
     X_test[0] = X[0];
     X_test[1] = X[1];
     X_test[2] = X[2];
+    
     x_of_X_CS_coord(x_test,X_test,patch,precision_factor,0);
     dx = root_square(3,cart,x_test);
     double scale = MaxMag_d(root_square(3,cart,0),root_square(3,x_test,0));
@@ -554,6 +537,17 @@ static int X_of_x_CS_coord(double *const X,
     if (!EQL_coord(dx/scale,0,eps))
       return 0;
   }
+  
+  /* since it reaches here => X is the correct answer, make sure it's
+  // in the interval. */
+  X[0] = (X[0] > patch->max[0] ? patch->max[0] : X[0]);
+  X[0] = (X[0] < patch->min[0] ? patch->min[0] : X[0]);
+
+  X[1] = (X[1] > patch->max[1] ? patch->max[1] : X[1]);
+  X[1] = (X[1] < patch->min[1] ? patch->min[1] : X[1]);
+
+  X[2] = (X[2] > patch->max[2] ? patch->max[2] : X[2]);
+  X[2] = (X[2] < patch->min[2] ? patch->min[2] : X[2]);  
   
   return 1;
 }
