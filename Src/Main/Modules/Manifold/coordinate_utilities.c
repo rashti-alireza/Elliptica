@@ -445,7 +445,6 @@ static int X_of_x_CS_coord(double *const X,
   double x1,x2,d,ratio;
   double x_test[3],X_test[3],dx;
   double eps = EPS_coord_general*precision_factor;
-  const Uint *n;
   
   SignAndIndex_permutation_CubedSphere(side,&i,&j,&k,&S);
   
@@ -461,6 +460,7 @@ static int X_of_x_CS_coord(double *const X,
       X[2] = (x[k]-x1)/(x2-x1);
       
       #if 0
+      const Uint *n;
       /*  for interpolation error */
       n = patch->n;
       if (patch->nsplit[2] == 1)
@@ -489,6 +489,7 @@ static int X_of_x_CS_coord(double *const X,
       X[2] = (1-x1/x[k])/ratio;
 
       #if 0
+      const Uint *n;
       /*  for interpolation error */
       n = patch->n;
       if (patch->nsplit[2] == 1)
