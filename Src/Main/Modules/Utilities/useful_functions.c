@@ -881,8 +881,8 @@ void interpolate_fields_from_old_grid_to_new_grid
           opatch = x_in_which_patch_force
             (patch->node[ijk]->x,ogrid->patch,ogrid->np,pnts[p][ijk].X);
           if(!opatch)
-            Error0("Could not find a patch!"
-                   "(probably too low resolution).");
+            Errors("I could not find a patch for %s.\nProbably too "
+                   "low resolution or strange configuration.",patch->name);
           pnts[p][ijk].patch = opatch;
           continue;
         }
