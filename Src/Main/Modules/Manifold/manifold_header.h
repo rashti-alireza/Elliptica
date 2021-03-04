@@ -60,7 +60,7 @@
 
 /* par format for xc lengths.
 // NOTE: d0,d1,d2,grid,dir,side and obj are required.
-// ex: grid1_right_BH_around_right_xc2_X0Y2Z3 */
+// ex: grid1_right_BH_around_up_xc2_X0Y2Z3 */
 #define SCS_par_xc_length(par,xc) \
   sprintf(par,PATCH_NAME_PRT_P_"%s_%s_%s_%s"SCS_suffix,\
   grid->gn,dir,obj,StrSide[side],xc,d0,d1,d2);
