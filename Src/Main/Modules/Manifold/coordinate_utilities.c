@@ -487,7 +487,7 @@ static int X_of_x_CS_coord(double *const X,
       d  = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = S*(xc1 == DBL_MAX ? R1/d : xc1);
       X[2] = (1-x1/x[k])/ratio;
-      
+
       #if 0
       /*  for interpolation error */
       n = patch->n;
@@ -1186,21 +1186,22 @@ Patch_T *x_in_which_patch(const double x[3],Patch_T **const patches,
   return 0;
 }
 
-/* ->: find forcefully patch that has the Cartesian point x; 
-// ->: null if failes. also find the corresponding X coordinates.
+/* ->: find forcefully the patch that has the Cartesian point x;
+// ->: null if failes. also finds the corresponding X coordinates.
 // get a Cartesian point x and collection of patches,
 // it returns the closest patch that has this point.
 // Np is the number of patches. 
-// Note: sometime x_in_which_patch may fail and we have to use
-// this function so ONLY use this if x_in_which_patch failed. */
+// Note: sometimes x_in_which_patch may fail and we have to use
+// this function; so ONLY use this if x_in_which_patch failes. it,
+// by and large, used for outermost patches when there is a big jump 
+// in resolution like 10->16. */
 Patch_T *x_in_which_patch_force(const double x[3],Patch_T **const patches,
                                 const Uint Np,double *const X)
 {
   if (!Np)
     return 0;
   
-  const double Scale = root_square(3,x,0);
-  const double Eps   = 1E-4*(Scale > 1. ? Scale : 0.5);
+  const double Eps   = EPS_coord_general*10.;/* from experiment */
   Patch_T *patch     = 0;
   double min = DBL_MAX;
   Uint pmin  = UINT_MAX;/* patch with min dx */
@@ -1213,12 +1214,25 @@ Patch_T *x_in_which_patch_force(const double x[3],Patch_T **const patches,
     double xp[3] = {0};
     double dx;
     X_of_x(Xp,x,patch);
-    x_of_X(xp,Xp,patch);
-    dx = L2_norm(3,x,xp);
-    if (dx < min && IsInside(Xp,patch->min,patch->max,Eps))
+    
+    /* only if it is inside count it */
+    if (IsInside(Xp,patch->min,patch->max,Eps))
     {
-      pmin = p;
-      min  = dx;
+      /* adjust */
+      Xp[0] = (Xp[0] > patch->max[0] ? patch->max[0] : Xp[0]);
+      Xp[0] = (Xp[0] < patch->min[0] ? patch->min[0] : Xp[0]);
+      Xp[1] = (Xp[1] > patch->max[1] ? patch->max[1] : Xp[1]);
+      Xp[1] = (Xp[1] < patch->min[1] ? patch->min[1] : Xp[1]);
+      Xp[2] = (Xp[2] > patch->max[2] ? patch->max[2] : Xp[2]);
+      Xp[2] = (Xp[2] < patch->min[2] ? patch->min[2] : Xp[2]);
+      
+      x_of_X(xp,Xp,patch);
+      dx = L2_norm(3,x,xp);
+      if (dx < min)
+      {
+        pmin = p;
+        min  = dx;
+      }
     }
   }
   
@@ -1227,23 +1241,23 @@ Patch_T *x_in_which_patch_force(const double x[3],Patch_T **const patches,
   
   patch = patches[pmin];
   X_of_x(X,x,patch);
-  /* since we gonna pick this patch anyway let's adujust boundaries 
+  /* since we gonna pick this patch anyway let's adjust boundaries 
   // to avoid some unexpeted behavior. for example at interpolation. */
-  if (GRTEQL(X[0],patch->max[0]))  X[0] = patch->max[0];
-  if (LSSEQL(X[0],patch->min[0]))  X[0] = patch->min[0];
-  if (GRTEQL(X[1],patch->max[1]))  X[1] = patch->max[1];
-  if (LSSEQL(X[1],patch->min[1]))  X[1] = patch->min[1];
-  if (GRTEQL(X[2],patch->max[2]))  X[2] = patch->max[2];
-  if (LSSEQL(X[2],patch->min[2]))  X[2] = patch->min[2];  
+  X[0] = (X[0] > patch->max[0] ? patch->max[0] : X[0]);
+  X[0] = (X[0] < patch->min[0] ? patch->min[0] : X[0]);
+  X[1] = (X[1] > patch->max[1] ? patch->max[1] : X[1]);
+  X[1] = (X[1] < patch->min[1] ? patch->min[1] : X[1]);
+  X[2] = (X[2] > patch->max[2] ? patch->max[2] : X[2]);
+  X[2] = (X[2] < patch->min[2] ? patch->min[2] : X[2]);  
   
   /* test it */
   if(1)
   {
     double test_x[3] = {0};
     double test_dx;
-    x_of_X(test_x,X,patch);
+    assert(x_of_X(test_x,X,patch));
     test_dx = L2_norm(3,test_x,x);
-    printf(Pretty0"'%s'|displacement = %e.\n",patch->name,test_dx);
+    printf(Pretty0"'%s'|displacement = %e\n",patch->name,test_dx);
   }
   
   return patch;
