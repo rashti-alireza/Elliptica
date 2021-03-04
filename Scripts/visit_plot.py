@@ -23,6 +23,9 @@ FILE_SUFFIX = "silo"
 opt_random_mesh_color = 1
 opt_annotation        = 1
 
+## global vars:
+glob_cycle_flg = 1
+
 ##{ main
 def main():
 
@@ -54,8 +57,13 @@ def plot(directory_path,file_names,scalar_name,vector_name):
   mesh_flg   = 0
   
   for s in file_set:
-    dbfile = directory_path + '/' + s + ' database'
-    OpenDatabase(dbfile, 0)
+    # if this dir has cycle files
+    if glob_cycle_flg == 1:
+      dbfile = directory_path + '/' + s + ' database'
+      OpenDatabase(dbfile, 0)
+    else:
+      dbfile = directory_path + '/' + s
+      OpenDatabase(dbfile, 0)
     
     # scalar
     if (scalar_name != ''):
@@ -530,15 +538,45 @@ def plot(directory_path,file_names,scalar_name,vector_name):
 
 ##{ set_of_files to be loaded in visit
 def set_of_files(data_path,regex):
-  allfiles   = os.listdir(data_path)
-  file_set = set()
+  global glob_cycle_flg
+  allfiles  = os.listdir(data_path)
+  file_set  = set()
+  
+  # check if this dir has time(cycle) for each file so set glob_cycle_flg = 1.
+  # it makes difference for OpenDatabase command.
+  # NOTE: it assumes all files are either with cycle or all are not.
+  glob_cycle_flg = 0
+  for f1 in allfiles:
+    
+    if glob_cycle_flg == 1:
+      break
+    
+    # if it's not a sile file
+    if not re.search(r'{}\.{}'.format(regex,FILE_SUFFIX),f1):
+      continue
+    
+    for f2 in allfiles:
+      # if it's not a sile file
+      if not re.search(r'{}\.{}'.format(regex,FILE_SUFFIX),f2):
+        continue
+      if (f1 == f2):
+        continue
+      
+      # compare stems
+      f1_stem = re.sub(r'\d+\.({})'.format(FILE_SUFFIX),'',f1)
+      if re.search(r'{}'.format(f1_stem),f2):
+        glob_cycle_flg = 1
+        break
   
   # get all files that match the regex,
   # note files which refer to a different time(cycle) grouped together.
   for f in allfiles:
     if re.search(r'{}\.{}'.format(regex,FILE_SUFFIX),f):
-      stem = re.sub(r'\d+\.({})'.format(FILE_SUFFIX),'*.\\1',f)
-      file_set.add(stem)
+      if glob_cycle_flg == 1:
+        stem = re.sub(r'\d+\.({})'.format(FILE_SUFFIX),'*.\\1',f)
+        file_set.add(stem)
+      else:
+        file_set.add(f)
   
   if len(file_set) == 0:
     raise Exception("No data file yielded.")
