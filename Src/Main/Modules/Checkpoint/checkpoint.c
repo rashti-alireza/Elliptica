@@ -558,9 +558,6 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
   
   /* free modified_checkpoint_par */
   free_modified_checkpoint_par();
-  
-  /* set the following parameters to default value */
-  Pseti("did_resolution_change?",1);
 }
 
 /* free modified_checkpoint_par */
