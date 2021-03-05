@@ -164,10 +164,13 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     
     /* boxes */ 
     populate_box_patch_SplitCS(grid,"central_box",ns_side,"NS");
+    
+    #if USE_SCS_FILLING_BOX == 1
     populate_box_patch_SplitCS(grid,"filling_box",UP,"filling_box");
     populate_box_patch_SplitCS(grid,"filling_box",DOWN,"filling_box");
     populate_box_patch_SplitCS(grid,"filling_box",BACK,"filling_box");
     populate_box_patch_SplitCS(grid,"filling_box",FRONT,"filling_box");
+    #endif
     
     /* cubed sphericals */
     populate_CS_patch_SplitCS(grid,"NS",ns_side);
@@ -219,11 +222,13 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     populate_box_patch_SplitCS(grid,"central_box",ns_side1 ,"NS1");
     populate_box_patch_SplitCS(grid,"central_box",ns_side2 ,"NS2");
     
+    #if USE_SCS_FILLING_BOX == 1
     populate_box_patch_SplitCS(grid,"filling_box",UP   ,"filling_box");
     populate_box_patch_SplitCS(grid,"filling_box",DOWN ,"filling_box");
     populate_box_patch_SplitCS(grid,"filling_box",BACK ,"filling_box");
     populate_box_patch_SplitCS(grid,"filling_box",FRONT,"filling_box");
-    
+    #endif
+
     /* cubed sphericals */
     populate_CS_patch_SplitCS(grid,"NS1",ns_side1);
     populate_CS_patch_SplitCS(grid,"NS1_around",ns_side1);
@@ -264,11 +269,13 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
       Error0(NO_OPTION);
     }
     
+    #if USE_SCS_FILLING_BOX == 1
     /* boxes */ 
     populate_box_patch_SplitCS(grid,"filling_box",UP   ,"filling_box");
     populate_box_patch_SplitCS(grid,"filling_box",DOWN ,"filling_box");
     populate_box_patch_SplitCS(grid,"filling_box",BACK ,"filling_box");
     populate_box_patch_SplitCS(grid,"filling_box",FRONT,"filling_box");
+    #endif
     
     /* cubed sphericals */
     populate_CS_patch_SplitCS(grid,"BH1_around",bh_side1);
@@ -4166,6 +4173,7 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
     }
   }
   
+  #if USE_SCS_FILLING_BOX == 1
   /* populate parameters for filling boxes */
   const Flag_T fbox[] = {UP,DOWN,BACK,FRONT,UNDEFINED};
   obj_n = 0;
@@ -4346,6 +4354,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
     }/* for (d0 = 0; d0 < Nsd[0]; d0++) */
     obj_n++;
   }
+  #endif
+  
   }/* binary */
   /* set parameters for all patches a single system */
   else if (Pcmps("grid_kind","SplitCubedSpherical(NS)") ||
