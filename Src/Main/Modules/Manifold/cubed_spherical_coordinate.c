@@ -3897,25 +3897,31 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
   if (!EQL(r_outermost,0))/* if there is any outermost patch */
   for (obj_n = 0; obj_n < 1; ++obj_n)
   {
+    const char *const dir = "NA";
+    char par[STR_SIZE3]  = {'\0'};
+    char obj[STR_SIZE1]  = {'\0'};
+    
+    for (Uint p = 0; p < 6; ++p)
+    {
+    Flag_T side = (Flag_T)(p);
+    
     /* note (X,Y,Z) in [-1,1]x[-1,1]x[0,1]. */
-    const double Xm = -1,XM = 1;
-    const double Ym = -1,YM = 1;
-    const double Zm = 0 ,ZM = 1;
+    double Xm = -1,XM = 1;
+    double Ym = -1,YM = 1;
+    double Zm = 0 ,ZM = 1;
     /* step in each direction, note X in [-1,1]x[-1,1]x[0,1]. 
     // also NOTE that Z min and max are 0 and 1 in cubed spherical. */
-    const double step[3] = {(XM-Xm)/Nsd[0],(YM-Ym)/Nsd[1],DBL_MAX};
+    double step[3] = {(XM-Xm)/Nsd[0],(YM-Ym)/Nsd[1],DBL_MAX};
     double min[3] = {0},max[3] = {0};
     double rup,rdown;
     double X[3] = {0};
     double *rU = 0, *rD = 0;
-    const char *const dir = "NA";
     Patch_T patch[1] = {0};
     struct Collocation_s coll_s[2] = {0};
     char parU[STR_SIZE3] = {'\0'};
     char parD[STR_SIZE3] = {'\0'};
-    char par[STR_SIZE3]  = {'\0'};
-    char obj[STR_SIZE1]  = {'\0'};
-    Uint N_total,p;
+    Uint N_total;
+    //Uint p;
     
     /* find r step */
     const char *obj0 = "outermost";
@@ -3955,9 +3961,9 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           // NOTE: it's important to set it as a double.
           // since i don't know what happens if you set it as 
           // a string par and convert it into double! */
-          for (p = 0; p < 6; ++p)
+         // for (p = 0; p < 6; ++p)
           {
-            Flag_T side = (Flag_T)(p);
+            //Flag_T side = (Flag_T)(p);
             SCS_par_xc_length(par,"xc2");
             cs_Psetd(par,DBL_MAX);
             SCS_par_xc_length(par,"xc1");
@@ -3965,9 +3971,9 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           }
           
           /* set min and max parameters */
-          for (p = 0; p < 6; ++p)
+          //for (p = 0; p < 6; ++p)
           {
-            Flag_T side = (Flag_T)(p);
+            //Flag_T side = (Flag_T)(p);
             SCS_par_min(par,0);
             cs_Psetd(par,min[0]);
             SCS_par_min(par,1);
@@ -4019,9 +4025,9 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           /* if top level and d2 > 0  */
           if ( d2 != 0 && d2 == Nsd[2]-1)
           {
-            for (p = 0; p < 6; ++p)
+            //for (p = 0; p < 6; ++p)
             {
-              Flag_T side = (Flag_T)(p);
+              //Flag_T side = (Flag_T)(p);
               SCS_par_sigma(parU,SigmaU)
               SCS_par_sigma(parD,SigmaD)              
               
@@ -4043,9 +4049,9 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           /* if bottom level and more than 1 split, flat surface */
           else if (d2 == 0 && Nsd[2] > 1)
           {
-            for (p = 0; p < 6; ++p)
+            //for (p = 0; p < 6; ++p)
             {
-              Flag_T side = (Flag_T)(p);
+              //Flag_T side = (Flag_T)(p);
               SCS_par_sigma(parU,SigmaU)
               SCS_par_sigma(parD,SigmaD)
               
@@ -4086,9 +4092,9 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           /* if only one level one of them has flat surface */
           else if (d2 == 0 && Nsd[2] == 1)
           {
-            for (p = 0; p < 6; ++p)
+            //for (p = 0; p < 6; ++p)
             {
-              Flag_T side = (Flag_T)(p);
+              //Flag_T side = (Flag_T)(p);
               SCS_par_sigma(parU,SigmaU)
               SCS_par_sigma(parD,SigmaD)
               
@@ -4129,9 +4135,9 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
           /* between the above cases they have perfect S2 surface */
           else
           {
-            for (p = 0; p < 6; ++p)
+            //for (p = 0; p < 6; ++p)
             {
-              Flag_T side = (Flag_T)(p);
+              //Flag_T side = (Flag_T)(p);
               SCS_par_sigma(parU,SigmaU)
               SCS_par_sigma(parD,SigmaD)
               
@@ -4155,8 +4161,9 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
         }/* for (d2 = 0; d2 <  Nsd[2]; d2++) */
       }/* for (d1 = 0; d1 <  Nsd[1]; d1++) */
     }/* for (d0 = 0; d0 < Nsd[0]; d0++) */
+    }/* for (p = 0; p < 6; ++p) */
     
-    for (p = 0; p < 6; ++p)
+    for (Uint p = 0; p < 6; ++p)
     {
       Flag_T side = (Flag_T)(p);
             
