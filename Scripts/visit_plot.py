@@ -38,6 +38,8 @@ def main():
   # plot
   plot(directory_path,file_names,scalar_name,vector_name)
   
+  exit(0)
+  
 ##} main
 
 ##{ plot: given object, data and the section of grid plot the object
