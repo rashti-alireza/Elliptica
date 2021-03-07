@@ -430,10 +430,12 @@ populate_CS_patch_SplitCS
   /* object name */
   set_object_name_split_CS(obj,obj0);
   
-  if (dir0 == NONE)
+  if (!strcmp(obj,"outermost"))
   {
-    assert(strcmp_i(obj0,"outermost"));
-    dir = "NA";
+    if (dir0 == NONE)/* for single objects */
+      dir = "NA";
+    else
+      dir = StrSide[dir0];
     type = OT_T_SCS;
   }
   else
@@ -455,11 +457,11 @@ populate_CS_patch_SplitCS
           Flag_T side = (Flag_T)(p);
           
           /* left outermost hemisphere, doesn't have right */
-          if (dir0 == LEFT && type == OB_T_SCS && side == RIGHT)
+          if (dir0 == LEFT && type == OT_T_SCS && side == RIGHT)
             continue;
           
           /* right outermost hemisphere, doesn't have left */
-          if (dir0 == RIGHT && type == OB_T_SCS && side == LEFT)
+          if (dir0 == RIGHT && type == OT_T_SCS && side == LEFT)
             continue;
           
           Patch_T *const patch = calloc(1,sizeof(*patch));
