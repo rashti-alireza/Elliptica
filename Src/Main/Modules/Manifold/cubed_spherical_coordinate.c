@@ -164,21 +164,25 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     
     /* boxes */ 
     populate_box_patch_SplitCS(grid,"central_box",ns_side,"NS");
+    /* cubed sphericals */
+    populate_CS_patch_SplitCS(grid,"NS",ns_side);
+    populate_CS_patch_SplitCS(grid,"NS_around",ns_side);
+    populate_CS_patch_SplitCS(grid,"BH_around",bh_side);
     
     #if USE_SCS_FILLING_BOX == 1
     populate_box_patch_SplitCS(grid,"filling_box",UP,"filling_box");
     populate_box_patch_SplitCS(grid,"filling_box",DOWN,"filling_box");
     populate_box_patch_SplitCS(grid,"filling_box",BACK,"filling_box");
     populate_box_patch_SplitCS(grid,"filling_box",FRONT,"filling_box");
-    #endif
-    
-    /* cubed sphericals */
-    populate_CS_patch_SplitCS(grid,"NS",ns_side);
-    populate_CS_patch_SplitCS(grid,"NS_around",ns_side);
-    populate_CS_patch_SplitCS(grid,"BH_around",bh_side);
-    
     if (!EQL(r_outermost,0))
       populate_CS_patch_SplitCS(grid,"outermost",NONE);
+    #endif
+    
+    if (!EQL(r_outermost,0))
+    {
+      populate_CS_patch_SplitCS(grid,"outermost",LEFT);
+      populate_CS_patch_SplitCS(grid,"outermost",RIGHT);
+    }
     
     /* NOTE: order matters */
     if (bh_filled == YES)
@@ -448,6 +452,16 @@ populate_CS_patch_SplitCS
       {
         for (p = 0; p < NUMBER_OF_SIDES; ++p)
         {
+          Flag_T side = (Flag_T)(p);
+          
+          /* left outermost hemisphere, doesn't have right */
+          if (dir0 == LEFT && type == OB_T_SCS && side == RIGHT)
+            continue;
+          
+          /* right outermost hemisphere, doesn't have left */
+          if (dir0 == RIGHT && type == OB_T_SCS && side == LEFT)
+            continue;
+          
           Patch_T *const patch = calloc(1,sizeof(*patch));
           IsNull(patch);
           grid->patch = 
@@ -464,7 +478,6 @@ populate_CS_patch_SplitCS
         
           grid->np += 1;
           
-          Flag_T side = (Flag_T)(p);
           Field_T *R1 = add_field(SigmaD,0,patch,NO);
           Field_T *R2 = add_field(SigmaU,0,patch,NO);
           double *rU = 0, *rD = 0;
@@ -3892,6 +3905,332 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
       cs_Psetd(par,0.0);
     }
   }
+  
+  /* populate parameters for hemisphere outermost patches
+  // notation: obj_n == 0 => "left" side and obj == 1 => "right" side. */
+  if (!EQL(r_outermost,0))/* if there is any outermost patch */
+  for (obj_n = 0; obj_n < 2; ++obj_n)
+  {
+    const char *dir = (obj_n == 0 ? "left" : "right");
+    char par[STR_SIZE3]  = {'\0'};
+    char obj[STR_SIZE1]  = {'\0'};
+    
+    for (Uint p = 0; p < 6; ++p)
+    {
+      Flag_T side = (Flag_T)(p);
+      
+      /* left outermost hemisphere, doesn't have right */
+      if (!strcmp(dir,"left") && side == RIGHT)
+        continue;
+      
+      /* right outermost hemisphere, doesn't have left */
+      if (!strcmp(dir,"right") && side == LEFT)
+        continue;
+      
+      /* setting intervals */  
+      /* note (X,Y,Z) in [?,?]x[?,?]x[0,1]. */
+      const double Zm = 0. ,ZM = 1.;
+      double Xm,XM;
+      double Ym,YM;
+      
+      switch(side)
+      {
+        case UP:
+          Xm = -1.;
+          XM = 1.;
+          Ym = so_ud_scale*(obj_n == 0 ? -1. : 0.);
+          YM = so_ud_scale*(obj_n == 0 ?  0. : 1.);
+        break;
+        case DOWN:
+          Ym = -1.;
+          YM = 1.;
+          Xm = so_ud_scale*(obj_n == 0 ? -1. : 0.);
+          XM = so_ud_scale*(obj_n == 0 ?  0. : 1.);
+        break;
+        
+        case LEFT:
+        case RIGHT:
+          Xm = -1.*so_lr_scale;
+          XM = 1.*so_lr_scale;
+          Ym = -1.*so_lr_scale;
+          YM = 1.*so_lr_scale;
+        break;
+        
+        case BACK:
+          Xm = -1.;
+          XM = 1.;
+          Ym = so_bf_scale*(obj_n == 0 ? -1. : 0.);
+          YM = so_bf_scale*(obj_n == 0 ?  0. : 1.);
+        break;
+        case FRONT:
+          Xm = so_bf_scale*(obj_n == 0 ? -1. : 0.);
+          XM = so_bf_scale*(obj_n == 0 ?  0. : 1.);
+          Ym = -1.;
+          YM = 1.;
+        break;
+        
+        default:
+        Error0(NO_OPTION);
+      }
+      
+      /* step in each direction.
+      // NOTE that Z min and max are 0 and 1 in cubed spherical. */
+      double step[3] = {(XM-Xm)/Nsd[0],(YM-Ym)/Nsd[1],DBL_MAX};
+      double min[3] = {0},max[3] = {0};
+      double rup,rdown;
+      double X[3] = {0};
+      double *rU = 0, *rD = 0;
+      Patch_T patch[1] = {0};
+      struct Collocation_s coll_s[2] = {0};
+      char parU[STR_SIZE3] = {'\0'};
+      char parD[STR_SIZE3] = {'\0'};
+      Uint N_total;
+      
+      /* find r step */
+      const char *obj0 = "outermost";
+      double l = S;
+      double w = S;
+      double h = S;
+      double rmin = sqrt(Pow2(l)+Pow2(w)+Pow2(h))/2.;
+      double rmax = Pgetd("grid_outermost_radius");
+      double rstep = (rmax-rmin)/Nsd[2];
+      
+      set_object_name_split_CS(obj,obj0);
+      /* some checks */
+      assert(l > 0 && w > 0 && h > 0);
+      if(S/2. > rmax)
+        Error0("Outermost radius is too small\n");
+      assert(rstep > 0);
+      
+      for (d0 = 0; d0 < Nsd[0]; d0++)
+      {
+        min[0] = Xm + step[0]*d0;
+        max[0] = Xm + step[0]*(d0+1);
+
+        for (d1 = 0; d1 <  Nsd[1]; d1++)
+        {
+          min[1] = Ym + step[1]*d1;
+          max[1] = Ym + step[1]*(d1+1);
+          
+          for (d2 = 0; d2 <  Nsd[2]; d2++)
+          {
+            min[2] = Zm;
+            max[2] = ZM;
+            
+            rdown  = rmin + rstep*d2;
+            rup    = rmin + rstep*(d2+1);
+            
+            /* set xc to default which is DBL_MAX.
+            // NOTE: it's important to set it as a double.
+            // since i don't know what happens if you set it as 
+            // a string par and convert it into double! */
+            {
+              SCS_par_xc_length(par,"xc2");
+              cs_Psetd(par,DBL_MAX);
+              SCS_par_xc_length(par,"xc1");
+              cs_Psetd(par,DBL_MAX);
+            }
+            
+            /* set min and max parameters */
+            {
+              SCS_par_min(par,0);
+              cs_Psetd(par,min[0]);
+              SCS_par_min(par,1);
+              cs_Psetd(par,min[1]);
+              SCS_par_min(par,2);
+              cs_Psetd(par,min[2]);
+              SCS_par_max(par,0);
+              cs_Psetd(par,max[0]);
+              SCS_par_max(par,1);
+              cs_Psetd(par,max[1]);
+              SCS_par_max(par,2);
+              cs_Psetd(par,max[2]);
+            }
+              
+            
+            /* filling min */
+            patch->min[0] = min[0];
+            patch->min[1] = min[1];
+            patch->min[2] = min[2];
+
+            /* filling max */
+            patch->max[0] = max[0];
+            patch->max[1] = max[1];
+            patch->max[2] = max[2];
+
+            /* collocation */
+            patch->collocation[0] = Chebyshev_Extrema;
+            patch->collocation[1] = Chebyshev_Extrema;
+            patch->collocation[2] = Chebyshev_Extrema;
+
+            /* basis */
+            patch->basis[0] = Chebyshev_Tn_BASIS;
+            patch->basis[1] = Chebyshev_Tn_BASIS;
+            patch->basis[2] = Chebyshev_Tn_BASIS;
+            
+            /* n */
+            patch->n[0] = Nns[0];
+            patch->n[1] = Nns[1];
+            patch->n[2] = Nns[2];
+            
+            initialize_collocation_struct(patch,&coll_s[0],0);
+            initialize_collocation_struct(patch,&coll_s[1],1);
+            
+            N_total = Nns[0]*Nns[1]*Nns[2];
+            rU = alloc_double(N_total);
+            rD = alloc_double(N_total);
+            
+            /* note: order matters */
+            /* if top level and d2 > 0  */
+            if ( d2 != 0 && d2 == Nsd[2]-1)
+            {
+              {
+                SCS_par_sigma(parU,SigmaU)
+                SCS_par_sigma(parD,SigmaD)              
+                
+                for (i = 0; i < Nns[0]; ++i)
+                {
+                  for (j = 0; j < Nns[1]; ++j)
+                  {
+                    for (k = 0; k < Nns[2]; ++k)
+                    {
+                      rU[L(Nns,i,j,k)] = rup;
+                      rD[L(Nns,i,j,k)] = rdown;
+                    }
+                  }
+                }
+                update_parameter_array(parU,rU,N_total);
+                update_parameter_array(parD,rD,N_total);
+              }/* for (p = 0; p < 6; ++p) */
+            }
+            /* if bottom level and more than 1 split, flat surface */
+            else if (d2 == 0 && Nsd[2] > 1)
+            {
+              {
+                SCS_par_sigma(parU,SigmaU)
+                SCS_par_sigma(parD,SigmaD)
+                
+                double xc;
+                if (side == UP || side == DOWN)
+                  xc = h/2.;
+                else if (side == LEFT || side == RIGHT)
+                  xc = w;
+                else if (side == BACK || side == FRONT)
+                  xc = l/2.;
+                else
+                  Error0(NO_OPTION);
+                
+                X[2] = DBL_MAX;/* catch error */
+                for (i = 0; i < Nns[0]; ++i)
+                {
+                  X[0] = point_value(i,&coll_s[0]);
+                  for (j = 0; j < Nns[1]; ++j)
+                  {
+                    X[1] = point_value(j,&coll_s[1]);
+                    for (k = 0; k < Nns[2]; ++k)
+                    {
+                      rU[L(Nns,i,j,k)] = rup;
+                      rD[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));;
+                    }
+                  }
+                }
+                update_parameter_array(parU,rU,N_total);
+                update_parameter_array(parD,rD,N_total);
+                
+                /* set small xc to increase accuracy in interpolations 
+                // and derivatives. */
+                SCS_par_xc_length(par,"xc1");
+                cs_Psetd(par,xc);
+                
+              }/* for (p = 0; p < 6; ++p) */
+            }
+            /* if only one level one of them has flat surface */
+            else if (d2 == 0 && Nsd[2] == 1)
+            {
+              {
+                SCS_par_sigma(parU,SigmaU)
+                SCS_par_sigma(parD,SigmaD)
+                
+                double xc;
+                if (side == UP || side == DOWN)
+                  xc = h/2.;
+                else if (side == LEFT || side == RIGHT)
+                  xc = w;
+                else if (side == BACK || side == FRONT)
+                  xc = l/2.;
+                else
+                  Error0(NO_OPTION);
+
+                X[2] = DBL_MAX;/* catch error */
+                for (i = 0; i < Nns[0]; ++i)
+                {
+                  X[0] = point_value(i,&coll_s[0]);
+                  for (j = 0; j < Nns[1]; ++j)
+                  {
+                    X[1] = point_value(j,&coll_s[1]);
+                    for (k = 0; k < Nns[2]; ++k)
+                    {
+                      rU[L(Nns,i,j,k)] = rmax;
+                      rD[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
+                    }
+                  }
+                }
+                update_parameter_array(parU,rU,N_total);
+                update_parameter_array(parD,rD,N_total);
+                
+                /* set small xc to increase accuracy in interpolations 
+                // and derivatives. */
+                SCS_par_xc_length(par,"xc1");
+                cs_Psetd(par,xc);
+
+              }
+            }
+            /* between the above cases they have perfect S2 surface */
+            else
+            {
+              {
+                SCS_par_sigma(parU,SigmaU)
+                SCS_par_sigma(parD,SigmaD)
+                
+                for (i = 0; i < Nns[0]; ++i)
+                {
+                  for (j = 0; j < Nns[1]; ++j)
+                  {
+                    for (k = 0; k < Nns[2]; ++k)
+                    {
+                      rU[L(Nns,i,j,k)] = rup;
+                      rD[L(Nns,i,j,k)] = rdown;
+                    }
+                  }
+                }
+                update_parameter_array(parU,rU,N_total);
+                update_parameter_array(parD,rD,N_total);
+              }
+            }
+            Free(rU);
+            Free(rD);
+          }/* for (d2 = 0; d2 <  Nsd[2]; d2++) */
+        }/* for (d1 = 0; d1 <  Nsd[1]; d1++) */
+      }/* for (d0 = 0; d0 < Nsd[0]; d0++) */
+    }/* for (p = 0; p < 6; ++p) */
+    
+    for (Uint p = 0; p < 6; ++p)
+    {
+      Flag_T side = (Flag_T)(p);
+            
+      /* set center of patch */
+      /* assuming objects are on y-axis */
+      SCS_par_CS_center(par,"a");
+      cs_Psetd(par,0.0);
+    
+      SCS_par_CS_center(par,"b");
+      cs_Psetd(par,0.0);
+      
+      SCS_par_CS_center(par,"c");
+      cs_Psetd(par,0.0);
+    }
+  }
+  
   
   #if USE_SCS_FILLING_BOX == 1
   /* populate parameters for outermost patches */

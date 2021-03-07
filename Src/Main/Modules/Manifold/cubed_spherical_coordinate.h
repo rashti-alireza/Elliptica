@@ -12,6 +12,13 @@
 /* should I use filling box for split cubed spherical? */
 #define USE_SCS_FILLING_BOX (0)
 
+/* set symmetric outermost (so) X range, 
+// notation: up(p), down(d), left(l), right(r), back(b) and front(f). */
+static const double so_ud_scale = 2.;
+static const double so_lr_scale = .5;
+static const double so_bf_scale = 2.;
+
+
 void populate_central_NS_central_box(Grid_T *const grid,const Uint pn);
 void populate_right_box_sns(Grid_T *const grid,const Uint pn); 
 void fill_patches_SBH_CubedSpherical_grid(Grid_T *const grid);
