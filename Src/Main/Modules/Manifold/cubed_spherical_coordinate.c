@@ -3893,6 +3893,7 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
     }
   }
   
+  #if USE_SCS_FILLING_BOX == 1
   /* populate parameters for outermost patches */
   if (!EQL(r_outermost,0))/* if there is any outermost patch */
   for (obj_n = 0; obj_n < 1; ++obj_n)
@@ -4180,7 +4181,6 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
     }
   }
   
-  #if USE_SCS_FILLING_BOX == 1
   /* populate parameters for filling boxes */
   const Flag_T fbox[] = {UP,DOWN,BACK,FRONT,UNDEFINED};
   obj_n = 0;
