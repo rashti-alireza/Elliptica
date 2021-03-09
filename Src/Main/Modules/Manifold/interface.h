@@ -83,6 +83,7 @@ typedef struct SUBF_T
   struct SUBF_T *prev;/* the previous subface in which itconnected to this subface */
 }Subf_T;
 
+void carryover_interfaces(Grid_T *const new_grid,Grid_T *const old_grid);
 static void fill_basics(Patch_T *const patch);
 static void fill_geometry(Grid_T * const grid,Uint **const point_flag);
 static void FindInnerB_Cartesian_coord(Patch_T *const patch);

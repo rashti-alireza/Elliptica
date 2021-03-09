@@ -432,6 +432,7 @@ collect_patches_with_regex
 void free_grid_params(const Grid_T *const grid);
 Patch_T *x_in_which_patch_force(const double x[3],Patch_T **const patches,
                                 const Uint Np,double *const X);
+void carryover_interfaces(Grid_T *const new_grid,Grid_T *const old_grid);
 
 
 #endif

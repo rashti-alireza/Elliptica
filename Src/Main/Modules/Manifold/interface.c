@@ -3691,4 +3691,71 @@ static Uint counter_n_adjacent_faces(const Interface_T *const face)
   return count;   
 }
 
+/* carry over the interfaces from old grid to the new one.
+// NOTE: it empties old interface, i.e. puts its interface pointer to 0. */
+void carryover_interfaces(Grid_T *const new_grid,Grid_T *const old_grid)
+{
+  FUNC_TIC
+  
+  /* some checks */
+  assert(new_grid && old_grid);
+  assert(new_grid->kind == Grid_SplitCubedSpherical_BHNS ||
+         new_grid->kind == Grid_SplitCubedSpherical_NSNS ||
+         new_grid->kind == Grid_SplitCubedSpherical_BHBH ||
+         new_grid->kind == Grid_SplitCubedSpherical_SNS  ||
+         new_grid->kind == Grid_SplitCubedSpherical_SBH);
+    
+  Uint p2,p1;
+  Uint f,sf;
+  
+  FOR_ALL_PATCHES(p2,new_grid)
+  {
+    Patch_T *patch1   = 0;/* old patch */
+    Patch_T *patch2   = new_grid->patch[p2];
+    const char *name2 = strstr(patch2->name,"_");
+    
+    /* find the corresponding patch */
+    FOR_ALL_PATCHES(p1,old_grid)
+    {
+      patch1             = old_grid->patch[p1];
+      const char *name1  = strstr(patch1->name,"_");
+  
+      if (!strcmp(name2,name1))
+        break;
+    }/* FOR_ALL_PATCHES(p2,old_grid) */
+    assert(patch1);
+    
+    /* move geometry */
+    patch2->interface   = patch1->interface;
+    patch2->innerB      = patch1->innerB;
+    patch2->outerB      = patch1->outerB;
+    patch2->is_a_closed = patch1->is_a_closed;
+    patch2->is_b_closed = patch1->is_b_closed;
+    patch2->is_c_closed = patch1->is_c_closed;
+    patch1->interface   = 0;
+                          
+    /* update the internal pointers */
+    Interface_T **face = patch2->interface;
+    
+    /* for all interfaces */
+    FOR_ALL(f,face)
+    {
+      face[f]->patch = patch2;
+      
+      /* why is it not empty??? */
+      assert(!face[f]->point);
+      assert(!face[f]->innerP);
+      assert(!face[f]->edgeP);
+      
+      /* for all subfaces */
+      for (sf = 0; sf < face[f]->ns; ++sf)
+      {
+        SubFace_T *subf = face[f]->subface[sf];
+        subf->patch = patch2;
+      }
+    }
 
+  }/* end of FOR_ALL_PATCHES(p2,new_grid) */
+  
+  FUNC_TOC
+}
