@@ -5808,16 +5808,26 @@ double JT_OJ_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const U
       R1  = patch->CoordSysInfo->CubedSphericalCoord->R1_f->v[p];
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2_f->v[p];
       
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
+      xc1 = S*(patch->CoordSysInfo->CubedSphericalCoord->xc1 == DBL_MAX ?
+               R1/d1 :
+               patch->CoordSysInfo->CubedSphericalCoord->xc1
+               );
+      xc2 = S*(patch->CoordSysInfo->CubedSphericalCoord->xc2 == DBL_MAX ?
+               R2/d1 :
+               patch->CoordSysInfo->CubedSphericalCoord->xc2
+               );
       
       dR1_dx = patch->CoordSysInfo->CubedSphericalCoord->dR1_dx->v[p];
       dR2_dx = patch->CoordSysInfo->CubedSphericalCoord->dR2_dx->v[p];
       
-      dxc1_dx  = dR1_dx/d1-R1*(X[0]*JT_OJ_T_SCS(patch,_a_,_x_,p)+X[1]*JT_OJ_T_SCS(patch,_b_,_x_,p))/d3;
+      dxc1_dx  = (patch->CoordSysInfo->CubedSphericalCoord->xc1 == DBL_MAX ?
+                  dR1_dx/d1-R1*(X[0]*JT_OJ_T_SCS(patch,_a_,_x_,p)+X[1]*JT_OJ_T_SCS(patch,_b_,_x_,p))/d3 :
+                  0.);
       dxc1_dx *= S;
       
-      dxc2_dx  = dR2_dx/d1-R2*(X[0]*JT_OJ_T_SCS(patch,_a_,_x_,p)+X[1]*JT_OJ_T_SCS(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = (patch->CoordSysInfo->CubedSphericalCoord->xc2 == DBL_MAX ?
+                  dR2_dx/d1-R2*(X[0]*JT_OJ_T_SCS(patch,_a_,_x_,p)+X[1]*JT_OJ_T_SCS(patch,_b_,_x_,p))/d3 :
+                  0.);
       dxc2_dx *= S;
       
       J = ((kd[k==l]-dxc1_dx)-(x[k]-xc1)*(dxc2_dx-dxc1_dx)/(xc2-xc1))/(xc2-xc1);
@@ -5830,16 +5840,26 @@ double JT_OJ_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const U
       R1  = patch->CoordSysInfo->CubedSphericalCoord->R1_f->v[p];
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2_f->v[p];
       
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
+      xc1 = S*(patch->CoordSysInfo->CubedSphericalCoord->xc1 == DBL_MAX ?
+               R1/d1 :
+               patch->CoordSysInfo->CubedSphericalCoord->xc1
+               );
+      xc2 = S*(patch->CoordSysInfo->CubedSphericalCoord->xc2 == DBL_MAX ?
+               R2/d1 :
+               patch->CoordSysInfo->CubedSphericalCoord->xc2
+               );
       
       dR1_dy = patch->CoordSysInfo->CubedSphericalCoord->dR1_dy->v[p];
       dR2_dy = patch->CoordSysInfo->CubedSphericalCoord->dR2_dy->v[p];
       
-      dxc1_dy  = dR1_dy/d1-R1*(X[0]*JT_OJ_T_SCS(patch,_a_,_y_,p)+X[1]*JT_OJ_T_SCS(patch,_b_,_y_,p))/d3;
+      dxc1_dy  = (patch->CoordSysInfo->CubedSphericalCoord->xc1 == DBL_MAX ?
+                  dR1_dy/d1-R1*(X[0]*JT_OJ_T_SCS(patch,_a_,_y_,p)+X[1]*JT_OJ_T_SCS(patch,_b_,_y_,p))/d3 :
+                  0.);
       dxc1_dy *= S;
       
-      dxc2_dy  = dR2_dy/d1-R2*(X[0]*JT_OJ_T_SCS(patch,_a_,_y_,p)+X[1]*JT_OJ_T_SCS(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = (patch->CoordSysInfo->CubedSphericalCoord->xc2 == DBL_MAX ?
+                  dR2_dy/d1-R2*(X[0]*JT_OJ_T_SCS(patch,_a_,_y_,p)+X[1]*JT_OJ_T_SCS(patch,_b_,_y_,p))/d3 :
+                  0.);
       dxc2_dy *= S;
       
       J = ((kd[k==l]-dxc1_dy)-(x[k]-xc1)*(dxc2_dy-dxc1_dy)/(xc2-xc1))/(xc2-xc1);
@@ -5852,16 +5872,24 @@ double JT_OJ_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const U
       R1  = patch->CoordSysInfo->CubedSphericalCoord->R1_f->v[p];
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2_f->v[p];
       
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
+      xc1 = S*(patch->CoordSysInfo->CubedSphericalCoord->xc1 == DBL_MAX ?
+               R1/d1 :
+               patch->CoordSysInfo->CubedSphericalCoord->xc1);
+      xc2 = S*(patch->CoordSysInfo->CubedSphericalCoord->xc2 == DBL_MAX ?
+               R2/d1 :
+               patch->CoordSysInfo->CubedSphericalCoord->xc2);
       
       dR1_dz = patch->CoordSysInfo->CubedSphericalCoord->dR1_dz->v[p];
       dR2_dz = patch->CoordSysInfo->CubedSphericalCoord->dR2_dz->v[p];
       
-      dxc1_dz  = dR1_dz/d1-R1*(X[0]*JT_OJ_T_SCS(patch,_a_,_z_,p)+X[1]*JT_OJ_T_SCS(patch,_b_,_z_,p))/d3;
+      dxc1_dz  = (patch->CoordSysInfo->CubedSphericalCoord->xc1 == DBL_MAX ?
+                  dR1_dz/d1-R1*(X[0]*JT_OJ_T_SCS(patch,_a_,_z_,p)+X[1]*JT_OJ_T_SCS(patch,_b_,_z_,p))/d3 :
+                  0.);
       dxc1_dz *= S;
       
-      dxc2_dz  = dR2_dz/d1-R2*(X[0]*JT_OJ_T_SCS(patch,_a_,_z_,p)+X[1]*JT_OJ_T_SCS(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = (patch->CoordSysInfo->CubedSphericalCoord->xc2 == DBL_MAX ?
+                  dR2_dz/d1-R2*(X[0]*JT_OJ_T_SCS(patch,_a_,_z_,p)+X[1]*JT_OJ_T_SCS(patch,_b_,_z_,p))/d3 :
+                  0.);
       dxc2_dz *= S;
       
       J = ((kd[k==l]-dxc1_dz)-(x[k]-xc1)*(dxc2_dz-dxc1_dz)/(xc2-xc1))/(xc2-xc1);
