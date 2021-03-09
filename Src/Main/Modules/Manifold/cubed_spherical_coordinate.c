@@ -5902,6 +5902,7 @@ double JT_OJ_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const U
 }
 
 /* Jacobian transformation for split cubed spherical patch.type: OT_T_SCS
+// NOTE: R2 is constant => dR2/d? = 0.
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
@@ -5968,8 +5969,14 @@ double JT_OT_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const U
       
       ratio = 1-R1/R2;
       
-      dR1_dx = patch->CoordSysInfo->CubedSphericalCoord->dR1_dx->v[p];
-      dR2_dx = patch->CoordSysInfo->CubedSphericalCoord->dR2_dx->v[p];
+      //dR1_dx = patch->CoordSysInfo->CubedSphericalCoord->dR1_dx->v[p];
+      //dR2_dx = patch->CoordSysInfo->CubedSphericalCoord->dR2_dx->v[p];
+      
+      dR1_dx = (patch->CoordSysInfo->CubedSphericalCoord->xc1 == DBL_MAX ?
+                0. :
+                patch->CoordSysInfo->CubedSphericalCoord->xc1 *
+                (X[0]*JT_OT_T_SCS(patch,_a_,_x_,p)+X[1]*JT_OT_T_SCS(patch,_b_,_x_,p))/d1);
+      dR2_dx = 0.;
       
       dratio_dx = (-dR1_dx+dR2_dx*R1/R2)/R2;
       
@@ -5990,8 +5997,14 @@ double JT_OT_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const U
       
       ratio = 1-R1/R2;
       
-      dR1_dy = patch->CoordSysInfo->CubedSphericalCoord->dR1_dy->v[p];
-      dR2_dy = patch->CoordSysInfo->CubedSphericalCoord->dR2_dy->v[p];
+      //dR1_dy = patch->CoordSysInfo->CubedSphericalCoord->dR1_dy->v[p];
+      //dR2_dy = patch->CoordSysInfo->CubedSphericalCoord->dR2_dy->v[p];
+      
+      dR1_dy = (patch->CoordSysInfo->CubedSphericalCoord->xc1 == DBL_MAX ? 
+                0. :
+                patch->CoordSysInfo->CubedSphericalCoord->xc1 *
+                (X[0]*JT_OT_T_SCS(patch,_a_,_y_,p)+X[1]*JT_OT_T_SCS(patch,_b_,_y_,p))/d1);
+      dR2_dy = 0.;
       
       dratio_dy = (-dR1_dy+dR2_dy*R1/R2)/R2;
       
@@ -6012,8 +6025,13 @@ double JT_OT_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const U
       
       ratio = 1-R1/R2;
       
-      dR1_dz = patch->CoordSysInfo->CubedSphericalCoord->dR1_dz->v[p];
-      dR2_dz = patch->CoordSysInfo->CubedSphericalCoord->dR2_dz->v[p];
+      //dR1_dz = patch->CoordSysInfo->CubedSphericalCoord->dR1_dz->v[p];
+      //dR2_dz = patch->CoordSysInfo->CubedSphericalCoord->dR2_dz->v[p];
+      dR1_dz = (patch->CoordSysInfo->CubedSphericalCoord->xc1 == DBL_MAX ? 
+                0. :
+                patch->CoordSysInfo->CubedSphericalCoord->xc1 *
+                (X[0]*JT_OT_T_SCS(patch,_a_,_z_,p)+X[1]*JT_OT_T_SCS(patch,_b_,_z_,p))/d1);
+      dR2_dz = 0.;
       
       dratio_dz = (-dR1_dz+dR2_dz*R1/R2)/R2;
       
