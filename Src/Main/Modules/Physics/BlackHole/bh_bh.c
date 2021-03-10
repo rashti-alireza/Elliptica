@@ -412,72 +412,149 @@ void bh_update_inner_BC(Physics_T *const phys)
 
 /* updating conformal normal vector and its derivatives on 
 // apparent horizon. 
-// NOTE: bh_sConf^i = psi^2 bh_s^i and bh_sConf_i = psi^-2 bh_s_i*/
+// NOTE: bh_sConf^i = psi^2 bh_s^i and bh_sConf_i = psi^-2 bh_s_i.
+// NOTE: it's difficult to resolve derivatives of normal vector in 
+// cubed spherical coords. , thus, one must to resolve this 
+// analytically or using another coords. system. */
 void bh_update_sConf_dsConf(Physics_T *const phys)
 {
+  /* it assumes perfect S2 to use analytic formulae */
+  if (!strcmp_i(Gets("surface_type"),"perfect_s2"))
+    Error0(NO_OPTION);
+  
   Grid_T *const grid = mygrid(phys,"BH_around_IB");
   const double BH_center_x = Getd("center_x");
   const double BH_center_y = Getd("center_y");
   const double BH_center_z = Getd("center_z");
-  const double kd[2]       = {0.,1.};
+  const double kd[2]       = {0.,1.};/* Kronecker Delta */
+  
+  add_aux_fields(grid,"bh__n,dbh__n_D0,dbh__n_D1,dbh__n_D2");
+  
   FOR_ALL_p(grid->np)
   {
     Patch_T *patch = grid->patch[p];
-    
-    /*READ_v(gConf_D2D2)
+    double n[3] = {0};/* normal of perfect sphere */
+    double dn[3][3] = {{0}};/* derivative of n, dn^i/dx^j */
+    double *const n_U0 = &n[0];
+    double *const n_U1 = &n[1];
+    double *const n_U2 = &n[2];
+      
+    /* conformal metric */
+    READ_v(gConf_D2D2)
     READ_v(gConf_D0D2)
     READ_v(gConf_D0D0)
     READ_v(gConf_D0D1)
     READ_v(gConf_D1D2)
-    READ_v(gConf_D1D1)*/
+    READ_v(gConf_D1D1)
     
     /* normal vector on horizon */
     REALLOC_v_WRITE_v(bh_sConf_U0);
     REALLOC_v_WRITE_v(bh_sConf_U1);
     REALLOC_v_WRITE_v(bh_sConf_U2);
     
+    /* derivatives of normal vector on horizon */
     REALLOC_v_WRITE_v(dbh_sConf_U0D0);
     REALLOC_v_WRITE_v(dbh_sConf_U0D1);
     REALLOC_v_WRITE_v(dbh_sConf_U0D2);
-    
     REALLOC_v_WRITE_v(dbh_sConf_U1D0);
     REALLOC_v_WRITE_v(dbh_sConf_U1D1);
     REALLOC_v_WRITE_v(dbh_sConf_U1D2);
-    
     REALLOC_v_WRITE_v(dbh_sConf_U2D0);
     REALLOC_v_WRITE_v(dbh_sConf_U2D1);
     REALLOC_v_WRITE_v(dbh_sConf_U2D2);
+    
+    /* norm */
+    REALLOC_v_WRITE_v(bh__n);
+    
+    /* populate norm */
     FOR_ALL_ijk
     {
-      double x=patch->node[ijk]->x[0]-BH_center_x;
-      double y=patch->node[ijk]->x[1]-BH_center_y;
-      double z=patch->node[ijk]->x[2]-BH_center_z;
-      DEF_RELATIVE_r
-      double n[3] = {0};
-      int ind;
+      double x = patch->node[ijk]->x[0]-BH_center_x;
+      double y = patch->node[ijk]->x[1]-BH_center_y;
+      double z = patch->node[ijk]->x[2]-BH_center_z;
+      double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
       
+      /* n = x^i/r */
+      n[0] = x/r;
+      n[1] = y/r;
+      n[2] = z/r;
+      
+      /* norm^2: used cpi: gConf(-i,-j)*n(i)*n(j); */  
+      double N2 = 
+ gConf_D0D0[ijk]*pow(n_U0[0], 2) + 2.0*gConf_D0D1[ijk]*n_U0[0]*n_U1[0] +
+ 2.0*gConf_D0D2[ijk]*n_U0[0]*n_U2[0] + gConf_D1D1[ijk]*pow(n_U1[0], 2) +
+ 2.0*gConf_D1D2[ijk]*n_U1[0]*n_U2[0] + gConf_D2D2[ijk]*
+ pow(n_U2[0], 2);
+
+      bh__n[ijk] = sqrt(N2);
+    }
+    
+    /* normal derivatives */
+    dField_di(dbh__n_D0);
+    dField_di(dbh__n_D1);
+    dField_di(dbh__n_D2);
+    
+    READ_v(dbh__n_D0);
+    READ_v(dbh__n_D1);
+    READ_v(dbh__n_D2);
+    
+    /* populate sConf and dsConf */
+    FOR_ALL_ijk
+    {
+      double x = patch->node[ijk]->x[0]-BH_center_x;
+      double y = patch->node[ijk]->x[1]-BH_center_y;
+      double z = patch->node[ijk]->x[2]-BH_center_z;
+      double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+      
+      /* n = x^i/r */
       n[0] = bh_sConf_U0[ijk] = x/r;
       n[1] = bh_sConf_U1[ijk] = y/r;
       n[2] = bh_sConf_U2[ijk] = z/r;
       
-      ind = 0;
-     (dbh_sConf_U0D0)[ijk] = (kd[ind==0]-n[0]*n[ind])/r;
-     (dbh_sConf_U0D1)[ijk] = (kd[ind==1]-n[1]*n[ind])/r;
-     (dbh_sConf_U0D2)[ijk] = (kd[ind==2]-n[2]*n[ind])/r;
-     
-      ind = 1;
-     (dbh_sConf_U1D0)[ijk] = (kd[ind==0]-n[0]*n[ind])/r;
-     (dbh_sConf_U1D1)[ijk] = (kd[ind==1]-n[1]*n[ind])/r;
-     (dbh_sConf_U1D2)[ijk] = (kd[ind==2]-n[2]*n[ind])/r;
-     
-      ind = 2;
-     (dbh_sConf_U2D0)[ijk] = (kd[ind==0]-n[0]*n[ind])/r;
-     (dbh_sConf_U2D1)[ijk] = (kd[ind==1]-n[1]*n[ind])/r;
-     (dbh_sConf_U2D2)[ijk] = (kd[ind==2]-n[2]*n[ind])/r;
-    }
+      /* dn^i/dx^j = (kd^{ij}-n^i n^j)/r */
+      for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 3; ++j)
+          dn[i][j] = (kd[i==j]-n[i]*n[j])/r;
+      
+      dbh_sConf_U0D0[ijk] = (dn[0][0] -
+                            n[0]*dbh__n_D0[ijk]/bh__n[ijk])/
+                            bh__n[ijk];
+      
+      dbh_sConf_U0D1[ijk] = (dn[0][1] -
+                            n[0]*dbh__n_D1[ijk]/bh__n[ijk])/
+                            bh__n[ijk];
+      
+      dbh_sConf_U0D2[ijk] = (dn[0][2] -
+                            n[0]*dbh__n_D2[ijk]/bh__n[ijk])/
+                            bh__n[ijk];
+      
+      dbh_sConf_U1D0[ijk] = (dn[1][0] -
+                            n[1]*dbh__n_D0[ijk]/bh__n[ijk])/
+                            bh__n[ijk];
+      
+      dbh_sConf_U1D1[ijk] = (dn[1][1] -
+                            n[1]*dbh__n_D1[ijk]/bh__n[ijk])/
+                            bh__n[ijk];
+      
+      dbh_sConf_U1D2[ijk] = (dn[1][2] -
+                            n[1]*dbh__n_D2[ijk]/bh__n[ijk])/
+                            bh__n[ijk];
     
+      dbh_sConf_U2D0[ijk] = (dn[2][0] -
+                            n[2]*dbh__n_D0[ijk]/bh__n[ijk])/
+                            bh__n[ijk];
+      
+      dbh_sConf_U2D1[ijk] = (dn[2][1] -
+                            n[2]*dbh__n_D1[ijk]/bh__n[ijk])/
+                            bh__n[ijk];
+      
+      dbh_sConf_U2D2[ijk] = (dn[2][2] -
+                            n[2]*dbh__n_D2[ijk]/bh__n[ijk])/
+                            bh__n[ijk];
+    }
   }
   
+  remove_aux_fields(grid,"bh__n,dbh__n_D0,dbh__n_D1,dbh__n_D2");
 }
 
 /* set inner BC for beta such that:
