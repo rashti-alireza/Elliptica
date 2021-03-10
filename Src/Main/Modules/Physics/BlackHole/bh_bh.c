@@ -419,7 +419,7 @@ void bh_update_sConf_dsConf(Physics_T *const phys)
   const double BH_center_x = Getd("center_x");
   const double BH_center_y = Getd("center_y");
   const double BH_center_z = Getd("center_z");
-  
+  const double kd[2]       = {0.,1.};
   FOR_ALL_p(grid->np)
   {
     Patch_T *patch = grid->patch[p];
@@ -436,30 +436,46 @@ void bh_update_sConf_dsConf(Physics_T *const phys)
     REALLOC_v_WRITE_v(bh_sConf_U1);
     REALLOC_v_WRITE_v(bh_sConf_U2);
     
+    REALLOC_v_WRITE_v(dbh_sConf_U0D0);
+    REALLOC_v_WRITE_v(dbh_sConf_U0D1);
+    REALLOC_v_WRITE_v(dbh_sConf_U0D2);
+    
+    REALLOC_v_WRITE_v(dbh_sConf_U1D0);
+    REALLOC_v_WRITE_v(dbh_sConf_U1D1);
+    REALLOC_v_WRITE_v(dbh_sConf_U1D2);
+    
+    REALLOC_v_WRITE_v(dbh_sConf_U2D0);
+    REALLOC_v_WRITE_v(dbh_sConf_U2D1);
+    REALLOC_v_WRITE_v(dbh_sConf_U2D2);
     FOR_ALL_ijk
     {
       double x=patch->node[ijk]->x[0]-BH_center_x;
       double y=patch->node[ijk]->x[1]-BH_center_y;
       double z=patch->node[ijk]->x[2]-BH_center_z;
       DEF_RELATIVE_r
+      double n[3] = {0};
+      int ind;
       
-      bh_sConf_U0[ijk] = x/r;
-      bh_sConf_U1[ijk] = y/r;
-      bh_sConf_U2[ijk] = z/r;
+      n[0] = bh_sConf_U0[ijk] = x/r;
+      n[1] = bh_sConf_U1[ijk] = y/r;
+      n[2] = bh_sConf_U2[ijk] = z/r;
       
+      ind = 0;
+     (dbh_sConf_U0D0)[ijk] = (kd[ind==0]-n[0]*n[ind])/r;
+     (dbh_sConf_U0D1)[ijk] = (kd[ind==1]-n[1]*n[ind])/r;
+     (dbh_sConf_U0D2)[ijk] = (kd[ind==2]-n[2]*n[ind])/r;
+     
+      ind = 1;
+     (dbh_sConf_U1D0)[ijk] = (kd[ind==0]-n[0]*n[ind])/r;
+     (dbh_sConf_U1D1)[ijk] = (kd[ind==1]-n[1]*n[ind])/r;
+     (dbh_sConf_U1D2)[ijk] = (kd[ind==2]-n[2]*n[ind])/r;
+     
+      ind = 2;
+     (dbh_sConf_U2D0)[ijk] = (kd[ind==0]-n[0]*n[ind])/r;
+     (dbh_sConf_U2D1)[ijk] = (kd[ind==1]-n[1]*n[ind])/r;
+     (dbh_sConf_U2D2)[ijk] = (kd[ind==2]-n[2]*n[ind])/r;
     }
     
-    dField_di(dbh_sConf_U0D0);
-    dField_di(dbh_sConf_U0D1);
-    dField_di(dbh_sConf_U0D2);
-    
-    dField_di(dbh_sConf_U1D0);
-    dField_di(dbh_sConf_U1D1);
-    dField_di(dbh_sConf_U1D2);
-    
-    dField_di(dbh_sConf_U2D0);
-    dField_di(dbh_sConf_U2D1);
-    dField_di(dbh_sConf_U2D2);
   }
   
 }
