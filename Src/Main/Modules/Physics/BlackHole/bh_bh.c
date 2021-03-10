@@ -413,6 +413,7 @@ void bh_update_inner_BC(Physics_T *const phys)
 /* updating conformal normal vector and its derivatives on 
 // apparent horizon. 
 // NOTE: bh_sConf^i = psi^2 bh_s^i and bh_sConf_i = psi^-2 bh_s_i.
+// NOTE: bh_sConf^i is independent of psi.
 // NOTE: it's difficult to resolve derivatives of normal vector in 
 // cubed spherical coords. , thus, one must to resolve this 
 // analytically or using another coords. system. */
@@ -468,8 +469,7 @@ void bh_update_sConf_dsConf(Physics_T *const phys)
       double N2 = 
  gConf_D0D0[ijk]*pow(n_U0[0], 2) + 2.0*gConf_D0D1[ijk]*n_U0[0]*n_U1[0] +
  2.0*gConf_D0D2[ijk]*n_U0[0]*n_U2[0] + gConf_D1D1[ijk]*pow(n_U1[0], 2) +
- 2.0*gConf_D1D2[ijk]*n_U1[0]*n_U2[0] + gConf_D2D2[ijk]*
- pow(n_U2[0], 2);
+ 2.0*gConf_D1D2[ijk]*n_U1[0]*n_U2[0] + gConf_D2D2[ijk]*pow(n_U2[0], 2);
 
       bh__n[ijk] = sqrt(N2);
     }
