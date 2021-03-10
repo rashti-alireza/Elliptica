@@ -439,6 +439,8 @@ void bh_update_sConf_dsConf(Physics_T *const phys)
     double *const n_U1 = &n[1];
     double *const n_U2 = &n[2];
       
+    /* populate norm: */  
+    
     /* conformal metric */
     READ_v(gConf_D2D2)
     READ_v(gConf_D0D2)
@@ -447,26 +449,9 @@ void bh_update_sConf_dsConf(Physics_T *const phys)
     READ_v(gConf_D1D2)
     READ_v(gConf_D1D1)
     
-    /* normal vector on horizon */
-    REALLOC_v_WRITE_v(bh_sConf_U0);
-    REALLOC_v_WRITE_v(bh_sConf_U1);
-    REALLOC_v_WRITE_v(bh_sConf_U2);
-    
-    /* derivatives of normal vector on horizon */
-    REALLOC_v_WRITE_v(dbh_sConf_U0D0);
-    REALLOC_v_WRITE_v(dbh_sConf_U0D1);
-    REALLOC_v_WRITE_v(dbh_sConf_U0D2);
-    REALLOC_v_WRITE_v(dbh_sConf_U1D0);
-    REALLOC_v_WRITE_v(dbh_sConf_U1D1);
-    REALLOC_v_WRITE_v(dbh_sConf_U1D2);
-    REALLOC_v_WRITE_v(dbh_sConf_U2D0);
-    REALLOC_v_WRITE_v(dbh_sConf_U2D1);
-    REALLOC_v_WRITE_v(dbh_sConf_U2D2);
-    
     /* norm */
     REALLOC_v_WRITE_v(bh__n);
     
-    /* populate norm */
     FOR_ALL_ijk
     {
       double x = patch->node[ijk]->x[0]-BH_center_x;
@@ -489,16 +474,32 @@ void bh_update_sConf_dsConf(Physics_T *const phys)
       bh__n[ijk] = sqrt(N2);
     }
     
+    /* populate sConf and dsConf: */
+    
     /* normal derivatives */
     dField_di(dbh__n_D0);
     dField_di(dbh__n_D1);
     dField_di(dbh__n_D2);
-    
     READ_v(dbh__n_D0);
     READ_v(dbh__n_D1);
     READ_v(dbh__n_D2);
     
-    /* populate sConf and dsConf */
+    /* normal vector on horizon */
+    REALLOC_v_WRITE_v(bh_sConf_U0);
+    REALLOC_v_WRITE_v(bh_sConf_U1);
+    REALLOC_v_WRITE_v(bh_sConf_U2);
+    
+    /* derivatives of normal vector on horizon */
+    REALLOC_v_WRITE_v(dbh_sConf_U0D0);
+    REALLOC_v_WRITE_v(dbh_sConf_U0D1);
+    REALLOC_v_WRITE_v(dbh_sConf_U0D2);
+    REALLOC_v_WRITE_v(dbh_sConf_U1D0);
+    REALLOC_v_WRITE_v(dbh_sConf_U1D1);
+    REALLOC_v_WRITE_v(dbh_sConf_U1D2);
+    REALLOC_v_WRITE_v(dbh_sConf_U2D0);
+    REALLOC_v_WRITE_v(dbh_sConf_U2D1);
+    REALLOC_v_WRITE_v(dbh_sConf_U2D2);
+    
     FOR_ALL_ijk
     {
       double x = patch->node[ijk]->x[0]-BH_center_x;
@@ -516,41 +517,17 @@ void bh_update_sConf_dsConf(Physics_T *const phys)
         for (int j = 0; j < 3; ++j)
           dn[i][j] = (kd[i==j]-n[i]*n[j])/r;
       
-      dbh_sConf_U0D0[ijk] = (dn[0][0] -
-                            n[0]*dbh__n_D0[ijk]/bh__n[ijk])/
-                            bh__n[ijk];
+      dbh_sConf_U0D0[ijk] = (dn[0][0] - n[0]*dbh__n_D0[ijk]/bh__n[ijk])/bh__n[ijk];
+      dbh_sConf_U0D1[ijk] = (dn[0][1] - n[0]*dbh__n_D1[ijk]/bh__n[ijk])/bh__n[ijk];
+      dbh_sConf_U0D2[ijk] = (dn[0][2] - n[0]*dbh__n_D2[ijk]/bh__n[ijk])/bh__n[ijk];
       
-      dbh_sConf_U0D1[ijk] = (dn[0][1] -
-                            n[0]*dbh__n_D1[ijk]/bh__n[ijk])/
-                            bh__n[ijk];
-      
-      dbh_sConf_U0D2[ijk] = (dn[0][2] -
-                            n[0]*dbh__n_D2[ijk]/bh__n[ijk])/
-                            bh__n[ijk];
-      
-      dbh_sConf_U1D0[ijk] = (dn[1][0] -
-                            n[1]*dbh__n_D0[ijk]/bh__n[ijk])/
-                            bh__n[ijk];
-      
-      dbh_sConf_U1D1[ijk] = (dn[1][1] -
-                            n[1]*dbh__n_D1[ijk]/bh__n[ijk])/
-                            bh__n[ijk];
-      
-      dbh_sConf_U1D2[ijk] = (dn[1][2] -
-                            n[1]*dbh__n_D2[ijk]/bh__n[ijk])/
-                            bh__n[ijk];
+      dbh_sConf_U1D0[ijk] = (dn[1][0] - n[1]*dbh__n_D0[ijk]/bh__n[ijk])/bh__n[ijk];
+      dbh_sConf_U1D1[ijk] = (dn[1][1] - n[1]*dbh__n_D1[ijk]/bh__n[ijk])/bh__n[ijk];
+      dbh_sConf_U1D2[ijk] = (dn[1][2] - n[1]*dbh__n_D2[ijk]/bh__n[ijk])/bh__n[ijk];
     
-      dbh_sConf_U2D0[ijk] = (dn[2][0] -
-                            n[2]*dbh__n_D0[ijk]/bh__n[ijk])/
-                            bh__n[ijk];
-      
-      dbh_sConf_U2D1[ijk] = (dn[2][1] -
-                            n[2]*dbh__n_D1[ijk]/bh__n[ijk])/
-                            bh__n[ijk];
-      
-      dbh_sConf_U2D2[ijk] = (dn[2][2] -
-                            n[2]*dbh__n_D2[ijk]/bh__n[ijk])/
-                            bh__n[ijk];
+      dbh_sConf_U2D0[ijk] = (dn[2][0] - n[2]*dbh__n_D0[ijk]/bh__n[ijk])/bh__n[ijk];
+      dbh_sConf_U2D1[ijk] = (dn[2][1] - n[2]*dbh__n_D1[ijk]/bh__n[ijk])/bh__n[ijk];
+      dbh_sConf_U2D2[ijk] = (dn[2][2] - n[2]*dbh__n_D2[ijk]/bh__n[ijk])/bh__n[ijk];
     }
   }
   
