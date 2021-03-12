@@ -508,9 +508,14 @@ void bh_update_sConf_dsConf(Physics_T *const phys)
       double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
       
       /* n = x^i/r */
-      n[0] = bh_sConf_U0[ijk] = x/r;
-      n[1] = bh_sConf_U1[ijk] = y/r;
-      n[2] = bh_sConf_U2[ijk] = z/r;
+      n[0] = x/r;
+      n[1] = y/r;
+      n[2] = z/r;
+      
+      /* normalize */
+      bh_sConf_U0[ijk] = n[0]/bh__n[ijk];
+      bh_sConf_U1[ijk] = n[1]/bh__n[ijk];
+      bh_sConf_U2[ijk] = n[2]/bh__n[ijk];
       
       /* dn^i/dx^j = (kd^{ij}-n^i n^j)/r */
       for (int i = 0; i < 3; ++i)
