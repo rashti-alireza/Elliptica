@@ -286,8 +286,8 @@ static int fdS_spectral(Grid_T *const grid)
     // testing outermost0 cube surface:
     printf(Pretty0"Integral{f(x)dS}|at plane surface of outermost0 section:\n");
     
-    r = 2*Pgetd("BHNS_separation");
-    analytic = 6*Pow2(r);
+    r = Pgetd("BHNS_separation");
+    analytic = 10.*Pow2(r);
     numeric  = 0;
     // go over all patches
     FOR_ALL_PATCHES(p,grid)
@@ -621,7 +621,7 @@ static int fdV_spectral(Grid_T *const grid)
     printf(Pretty0"Integral{f(x)dV}|at outermost0 section:\n");
     
     r = Pgetd("grid_outermost_radius");
-    analytic = 4./3.*M_PI*pow(r,3)-pow(2*Pgetd("BHNS_separation"),3);
+    analytic = 4./3.*M_PI*pow(r,3)-2.*pow(Pgetd("BHNS_separation"),3);
     numeric  = 0;
     
     // go over all patches 
@@ -675,8 +675,8 @@ static int fdV_spectral(Grid_T *const grid)
     }
     printf("=> numeric = %e, analytic = %e, diff. = %e\n",
            numeric,analytic,numeric-analytic);
-           
-    // testing NS: 
+    
+    // testing NS:
     printf(Pretty0"Integral{f(x)dV}|at NS section:\n");
     
     r = Pgetd("NS_radius");
