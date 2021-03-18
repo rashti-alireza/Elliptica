@@ -4098,8 +4098,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   {
                     for (k = 0; k < Nns[2]; ++k)
                     {
-                      rU[L(Nns,i,j,k)] = rup;
-                      rD[L(Nns,i,j,k)] = rdown;
+                      rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                      rD[i_j_k_to_ijk(Nns,i,j,k)] = rdown;
                     }
                   }
                 }
@@ -4133,8 +4133,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                     X[1] = point_value(j,&coll_s[1]);
                     for (k = 0; k < Nns[2]; ++k)
                     {
-                      rU[L(Nns,i,j,k)] = rup;
-                      rD[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));;
+                      rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                      rD[i_j_k_to_ijk(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));;
                     }
                   }
                 }
@@ -4174,8 +4174,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                     X[1] = point_value(j,&coll_s[1]);
                     for (k = 0; k < Nns[2]; ++k)
                     {
-                      rU[L(Nns,i,j,k)] = rmax;
-                      rD[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
+                      rU[i_j_k_to_ijk(Nns,i,j,k)] = rmax;
+                      rD[i_j_k_to_ijk(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
                     }
                   }
                 }
@@ -4202,8 +4202,8 @@ void set_params_of_split_cubed_spherical_grid(Grid_Char_T *const grid_char)
                   {
                     for (k = 0; k < Nns[2]; ++k)
                     {
-                      rU[L(Nns,i,j,k)] = rup;
-                      rD[L(Nns,i,j,k)] = rdown;
+                      rU[i_j_k_to_ijk(Nns,i,j,k)] = rup;
+                      rD[i_j_k_to_ijk(Nns,i,j,k)] = rdown;
                     }
                   }
                 }
