@@ -220,7 +220,7 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
       {
         for (c = 0; c < nn; ++c)
         {
-          if (GRT(ABS(cmp[Spectral_e][r][c]-cmp[Direct_e][r][c]),Err))
+          if (GRT(ABSd(cmp[Spectral_e][r][c]-cmp[Direct_e][r][c]),Err))
             fprintf(file,"%3u %3u   %0.10f    %0.10f\n",
               r,c,cmp[Spectral_e][r][c],cmp[Direct_e][r][c]);
         }
@@ -480,7 +480,7 @@ void obsolete_fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *c
     Uint lmn;
     Uint i,j,k;
     
-    IJK(ijk,N,&i,&j,&k);
+    ijk_to_i_j_k(ijk,N,&i,&j,&k);
     x = ChebExtrema_1point(N[0],i);
     y = ChebExtrema_1point(N[1],j);
     z = ChebExtrema_1point(N[2],k);
@@ -490,7 +490,7 @@ void obsolete_fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *c
       double j0,j1,j2;
       Uint l,m,n,ip,jp,kp;
       
-      IJK(lmn,N,&l,&m,&n);
+      ijk_to_i_j_k(lmn,N,&l,&m,&n);
       j0 = 0;
       j1 = 0;
       j2 = 0;
@@ -563,7 +563,7 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
     double dN2_dq = dq2_dq1(patch,_N2_,q_dir,ijk);/* coordinate jacobian */
     double x,y,z;
     Uint i,j,k,l,m,n;
-    IJK(ijk,N,&i,&j,&k);
+    ijk_to_i_j_k(ijk,N,&i,&j,&k);
     
     x = ChebExtrema_1point(N[0],i);
     y = ChebExtrema_1point(N[1],j);
@@ -572,17 +572,17 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
     if (!EQL(dN0_dq,0))
     {
       for (l = 0; l < N[0]; ++l)
-        J[ijk][L(N,l,j,k)] += dN0_dq*sum_0_N_dCi_dfj_by_dTi_dq(N[0],l,x);
+        J[ijk][i_j_k_to_ijk(N,l,j,k)] += dN0_dq*sum_0_N_dCi_dfj_by_dTi_dq(N[0],l,x);
     }
     if (!EQL(dN1_dq,0))
     {
       for (m = 0; m < N[1]; ++m)
-        J[ijk][L(N,i,m,k)] += dN1_dq*sum_0_N_dCi_dfj_by_dTi_dq(N[1],m,y);
+        J[ijk][i_j_k_to_ijk(N,i,m,k)] += dN1_dq*sum_0_N_dCi_dfj_by_dTi_dq(N[1],m,y);
     }
     if (!EQL(dN2_dq,0))
     {
       for (n = 0; n < N[2]; ++n)
-        J[ijk][L(N,i,j,n)] += dN2_dq*sum_0_N_dCi_dfj_by_dTi_dq(N[2],n,z);
+        J[ijk][i_j_k_to_ijk(N,i,j,n)] += dN2_dq*sum_0_N_dCi_dfj_by_dTi_dq(N[2],n,z);
     }
   }/* end of for (ijk = 0; ijk < nn; ++ijk) */
   
@@ -959,11 +959,11 @@ static double dInterp_x_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N0_,_x_,L(n,X0,b,c));
+  J = dq2_dq1(patch,_N0_,_x_,i_j_k_to_ijk(n,X0,b,c));
   
   if (!EQL(J,0))
   {
@@ -982,7 +982,7 @@ static double dInterp_x_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[1]; ++r)
     {
-      l = L(n,a,r,c);
+      l = i_j_k_to_ijk(n,a,r,c);
       qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
 
       s += dq2_dq1(patch,_N1_,_x_,l)
@@ -997,7 +997,7 @@ static double dInterp_x_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[2]; ++r)
     {
-      l = L(n,a,b,r);
+      l = i_j_k_to_ijk(n,a,b,r);
       qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
 
       s += dq2_dq1(patch,_N2_,_x_,l)
@@ -1029,11 +1029,11 @@ static double dInterp_y_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N0_,_y_,L(n,X0,b,c));
+  J = dq2_dq1(patch,_N0_,_y_,i_j_k_to_ijk(n,X0,b,c));
   
   if (!EQL(J,0))
   {
@@ -1052,7 +1052,7 @@ static double dInterp_y_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[1]; ++r)
     {
-      l = L(n,a,r,c);
+      l = i_j_k_to_ijk(n,a,r,c);
       qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
 
       s += dq2_dq1(patch,_N1_,_y_,l)
@@ -1067,7 +1067,7 @@ static double dInterp_y_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[2]; ++r)
     {
-      l = L(n,a,b,r);
+      l = i_j_k_to_ijk(n,a,b,r);
       qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
 
       s += dq2_dq1(patch,_N2_,_y_,l)
@@ -1099,11 +1099,11 @@ static double dInterp_z_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N0_,_z_,L(n,X0,b,c));
+  J = dq2_dq1(patch,_N0_,_z_,i_j_k_to_ijk(n,X0,b,c));
   
   if (!EQL(J,0))
   {
@@ -1122,7 +1122,7 @@ static double dInterp_z_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[1]; ++r)
     {
-      l = L(n,a,r,c);
+      l = i_j_k_to_ijk(n,a,r,c);
       qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
 
       s += dq2_dq1(patch,_N1_,_z_,l)
@@ -1137,7 +1137,7 @@ static double dInterp_z_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[2]; ++r)
     {
-      l = L(n,a,b,r);
+      l = i_j_k_to_ijk(n,a,b,r);
       qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
 
       s += dq2_dq1(patch,_N2_,_z_,l)
@@ -1167,7 +1167,7 @@ static double dInterp_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,con
   double q[3];/* normalized coords */
   Uint i,j,k;
   
-  IJK(df,n,&i,&j,&k);
+  ijk_to_i_j_k(df,n,&i,&j,&k);
   q[1] = General2ChebyshevExtrema(X[1],1,patch);
   q[2] = General2ChebyshevExtrema(X[2],2,patch);
   
@@ -1196,11 +1196,11 @@ static double dInterp_x_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N1_,_x_,L(n,a,Y0,c));
+  J = dq2_dq1(patch,_N1_,_x_,i_j_k_to_ijk(n,a,Y0,c));
   
   if (!EQL(J,0))
   {
@@ -1219,7 +1219,7 @@ static double dInterp_x_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[0]; ++r)
     {
-      l = L(n,r,b,c);
+      l = i_j_k_to_ijk(n,r,b,c);
       qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
 
       s += dq2_dq1(patch,_N0_,_x_,l)
@@ -1234,7 +1234,7 @@ static double dInterp_x_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[2]; ++r)
     {
-      l = L(n,a,b,r);
+      l = i_j_k_to_ijk(n,a,b,r);
       qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
 
       s += dq2_dq1(patch,_N2_,_x_,l)
@@ -1266,11 +1266,11 @@ static double dInterp_y_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N1_,_y_,L(n,a,Y0,c));
+  J = dq2_dq1(patch,_N1_,_y_,i_j_k_to_ijk(n,a,Y0,c));
   
   if (!EQL(J,0))
   {
@@ -1289,7 +1289,7 @@ static double dInterp_y_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[0]; ++r)
     {
-      l = L(n,r,b,c);
+      l = i_j_k_to_ijk(n,r,b,c);
       qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
 
       s += dq2_dq1(patch,_N0_,_y_,l)
@@ -1304,7 +1304,7 @@ static double dInterp_y_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[2]; ++r)
     {
-      l = L(n,a,b,r);
+      l = i_j_k_to_ijk(n,a,b,r);
       qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
 
       s += dq2_dq1(patch,_N2_,_y_,l)
@@ -1336,11 +1336,11 @@ static double dInterp_z_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N1_,_z_,L(n,a,Y0,c));
+  J = dq2_dq1(patch,_N1_,_z_,i_j_k_to_ijk(n,a,Y0,c));
   
   if (!EQL(J,0))
   {
@@ -1359,7 +1359,7 @@ static double dInterp_z_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[0]; ++r)
     {
-      l = L(n,r,b,c);
+      l = i_j_k_to_ijk(n,r,b,c);
       qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
 
       s += dq2_dq1(patch,_N0_,_z_,l)
@@ -1374,7 +1374,7 @@ static double dInterp_z_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[2]; ++r)
     {
-      l = L(n,a,b,r);
+      l = i_j_k_to_ijk(n,a,b,r);
       qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
 
       s += dq2_dq1(patch,_N2_,_z_,l)
@@ -1403,7 +1403,7 @@ static double dInterp_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,con
   double q[3];/* normalized coords */
   Uint i,j,k;
   
-  IJK(df,n,&i,&j,&k);
+  ijk_to_i_j_k(df,n,&i,&j,&k);
   q[0] = General2ChebyshevExtrema(X[0],0,patch);
   q[2] = General2ChebyshevExtrema(X[2],2,patch);
   
@@ -1433,11 +1433,11 @@ static double dInterp_x_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N2_,_x_,L(n,a,b,Z0));
+  J = dq2_dq1(patch,_N2_,_x_,i_j_k_to_ijk(n,a,b,Z0));
   
   if (!EQL(J,0))
   {
@@ -1456,7 +1456,7 @@ static double dInterp_x_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[0]; ++r)
     {
-      l = L(n,r,b,c);
+      l = i_j_k_to_ijk(n,r,b,c);
       qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
 
       s += dq2_dq1(patch,_N0_,_x_,l)
@@ -1471,7 +1471,7 @@ static double dInterp_x_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[1]; ++r)
     {
-      l = L(n,a,r,c);
+      l = i_j_k_to_ijk(n,a,r,c);
       qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
 
       s += dq2_dq1(patch,_N1_,_x_,l)
@@ -1503,11 +1503,11 @@ static double dInterp_y_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N2_,_y_,L(n,a,b,Z0));
+  J = dq2_dq1(patch,_N2_,_y_,i_j_k_to_ijk(n,a,b,Z0));
   
   if (!EQL(J,0))
   {
@@ -1526,7 +1526,7 @@ static double dInterp_y_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[0]; ++r)
     {
-      l = L(n,r,b,c);
+      l = i_j_k_to_ijk(n,r,b,c);
       qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
 
       s += dq2_dq1(patch,_N0_,_y_,l)
@@ -1541,7 +1541,7 @@ static double dInterp_y_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[1]; ++r)
     {
-      l = L(n,a,r,c);
+      l = i_j_k_to_ijk(n,a,r,c);
       qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
 
       s += dq2_dq1(patch,_N1_,_y_,l)
@@ -1573,11 +1573,11 @@ static double dInterp_z_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N2_,_z_,L(n,a,b,Z0));
+  J = dq2_dq1(patch,_N2_,_z_,i_j_k_to_ijk(n,a,b,Z0));
   
   if (!EQL(J,0))
   {
@@ -1596,7 +1596,7 @@ static double dInterp_z_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[0]; ++r)
     {
-      l = L(n,r,b,c);
+      l = i_j_k_to_ijk(n,r,b,c);
       qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
 
       s += dq2_dq1(patch,_N0_,_z_,l)
@@ -1611,7 +1611,7 @@ static double dInterp_z_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[1]; ++r)
     {
-      l = L(n,a,r,c);
+      l = i_j_k_to_ijk(n,a,r,c);
       qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
 
       s += dq2_dq1(patch,_N1_,_z_,l)
@@ -1641,7 +1641,7 @@ static double dInterp_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,con
   double q[3];/* normalized coords */
   Uint i,j,k;
   
-  IJK(df,n,&i,&j,&k);
+  ijk_to_i_j_k(df,n,&i,&j,&k);
   q[0] = General2ChebyshevExtrema(X[0],0,patch);
   q[1] = General2ChebyshevExtrema(X[1],1,patch);
   
@@ -1670,7 +1670,7 @@ static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   double sum = 0,s,qr;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1678,7 +1678,7 @@ static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[0]; ++r)
   {
-    l  = L(n,r,b,c);
+    l  = i_j_k_to_ijk(n,r,b,c);
     qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
     s += dq2_dq1(patch,_N0_,_x_,l)
          *
@@ -1694,7 +1694,7 @@ static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[1]; ++r)
   {
-    l  = L(n,a,r,c);
+    l  = i_j_k_to_ijk(n,a,r,c);
     qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
     s += dq2_dq1(patch,_N1_,_x_,l)
          *
@@ -1710,7 +1710,7 @@ static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[2]; ++r)
   {
-    l  = L(n,a,b,r);
+    l  = i_j_k_to_ijk(n,a,b,r);
     qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
     s += dq2_dq1(patch,_N2_,_x_,l)
          *
@@ -1741,7 +1741,7 @@ static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   double sum = 0,s,qr;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1749,7 +1749,7 @@ static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[0]; ++r)
   {
-    l  = L(n,r,b,c);
+    l  = i_j_k_to_ijk(n,r,b,c);
     qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
     s += dq2_dq1(patch,_N0_,_y_,l)
          *
@@ -1765,7 +1765,7 @@ static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[1]; ++r)
   {
-    l  = L(n,a,r,c);
+    l  = i_j_k_to_ijk(n,a,r,c);
     qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
     s += dq2_dq1(patch,_N1_,_y_,l)
          *
@@ -1781,7 +1781,7 @@ static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[2]; ++r)
   {
-    l  = L(n,a,b,r);
+    l  = i_j_k_to_ijk(n,a,b,r);
     qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
     s += dq2_dq1(patch,_N2_,_y_,l)
          *
@@ -1812,7 +1812,7 @@ static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   double sum = 0,s,qr;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1820,7 +1820,7 @@ static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[0]; ++r)
   {
-    l  = L(n,r,b,c);
+    l  = i_j_k_to_ijk(n,r,b,c);
     qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
     s += dq2_dq1(patch,_N0_,_z_,l)
          *
@@ -1836,7 +1836,7 @@ static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[1]; ++r)
   {
-    l  = L(n,a,r,c);
+    l  = i_j_k_to_ijk(n,a,r,c);
     qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
     s += dq2_dq1(patch,_N1_,_z_,l)
          *
@@ -1852,7 +1852,7 @@ static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[2]; ++r)
   {
-    l  = L(n,a,b,r);
+    l  = i_j_k_to_ijk(n,a,b,r);
     qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
     s += dq2_dq1(patch,_N2_,_z_,l)
          *
@@ -1881,7 +1881,7 @@ static double dInterp_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,co
   double q[3];/* normalized coords */
   Uint i,j,k;
   
-  IJK(df,n,&i,&j,&k);
+  ijk_to_i_j_k(df,n,&i,&j,&k);
   q[0] = General2ChebyshevExtrema(X[0],0,patch);
   q[1] = General2ChebyshevExtrema(X[1],1,patch);
   q[2] = General2ChebyshevExtrema(X[2],2,patch);

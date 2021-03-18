@@ -274,7 +274,7 @@ static int matrices_arithmetic_test(void)
     }
 
   /* test matrix_by_matrix function (regular*regular) and "a*b" */
-  numeric_C = matrix_by_matrix(M1,M2,"a*b");
+  numeric_C = matrix_by_matrix(M1,M2,0,"a*b");
   numeric_c = numeric_C->reg->A;
   flg_regxreg_ab = NONE;
   for (i = 0; i < Nr; ++i)
@@ -294,7 +294,7 @@ static int matrices_arithmetic_test(void)
   flg_ccsxccs_ab = NONE;
   Matrix_T *M1_ccs = cast_matrix_ccs(M1);
   Matrix_T *M2_ccs = cast_matrix_ccs(M2);
-  numeric_C = matrix_by_matrix(M1_ccs,M2_ccs,"a*b");
+  numeric_C = matrix_by_matrix(M1_ccs,M2_ccs,0,"a*b");
   numeric_c = numeric_C->reg->A;
   for (i = 0; i < Nr; ++i)
   {
@@ -332,7 +332,7 @@ static int matrices_arithmetic_test(void)
   c[3][2] = -38.412;
   c[3][3] = -425.1864;
   flg_ccsxccs_aTransB = NONE;
-  numeric_C = matrix_by_matrix(M1,M2,"a*Transpose(b)");
+  numeric_C = matrix_by_matrix(M1,M2,0,"a*Transpose(b)");
   numeric_c = numeric_C->reg->A;
   for (i = 0; i < Nr; ++i)
   {

@@ -77,7 +77,7 @@ double bh_calculate_expansion_on_AH(Physics_T *const phys)
  for (Uint i = 0; i < nX; ++i)
  for (Uint j = 0; j < nY; ++j)
  {
- Uint ijk = L(patch->n,i,j,k);
+ Uint ijk = i_j_k_to_ijk(patch->n,i,j,k);
 
   double DisConfI = 
 ChrisConf_U0D0D0[ijk]*bh_sConf_U0[ijk] + ChrisConf_U0D0D1[ijk]*

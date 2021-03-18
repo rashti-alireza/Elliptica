@@ -386,7 +386,7 @@ static double interpolation_Chebyshev_Tn_X(Interpolation_T *const interp_s)
   C = field->v2;
   
   for (i = 0; i < n[0]; ++i)
-    interp_v += C[L(n,i,J,K)]*Tx(i,X);
+    interp_v += C[i_j_k_to_ijk(n,i,J,K)]*Tx(i,X);
   
   return interp_v;
 }
@@ -409,7 +409,7 @@ static double interpolation_Chebyshev_Tn_Y(Interpolation_T *const interp_s)
   C = field->v2;
   
   for (j = 0; j < n[1]; ++j)
-    interp_v += C[L(n,I,j,K)]*Ty(j,Y);
+    interp_v += C[i_j_k_to_ijk(n,I,j,K)]*Ty(j,Y);
   
   return interp_v;
 }
@@ -432,7 +432,7 @@ static double interpolation_Chebyshev_Tn_Z(Interpolation_T *const interp_s)
   C = field->v2;
   
   for (k = 0; k < n[2]; ++k)
-    interp_v += C[L(n,I,J,k)]*Tz(k,Z);
+    interp_v += C[i_j_k_to_ijk(n,I,J,k)]*Tz(k,Z);
   
   return interp_v;
 }
@@ -456,7 +456,7 @@ static double interpolation_Chebyshev_Tn_XY(Interpolation_T *const interp_s)
   
   for(i = 0; i < n[0]; ++i)
     for (j = 0; j < n[1]; ++j)
-      interp_v += C[L(n,i,j,K)]*Tx(i,X)*Ty(j,Y);
+      interp_v += C[i_j_k_to_ijk(n,i,j,K)]*Tx(i,X)*Ty(j,Y);
       
   return interp_v;
 }
@@ -480,7 +480,7 @@ static double interpolation_Chebyshev_Tn_XZ(Interpolation_T *const interp_s)
   
   for(i = 0; i < n[0]; ++i)
     for (k = 0; k < n[2]; ++k)
-      interp_v += C[L(n,i,J,k)]*Tx(i,X)*Tz(k,Z);
+      interp_v += C[i_j_k_to_ijk(n,i,J,k)]*Tx(i,X)*Tz(k,Z);
       
   return interp_v;
 }
@@ -504,7 +504,7 @@ static double interpolation_Chebyshev_Tn_YZ(Interpolation_T *const interp_s)
   
   for(j = 0; j < n[1]; ++j)
     for (k = 0; k < n[2]; ++k)
-      interp_v += C[L(n,I,j,k)]*Ty(j,Y)*Tz(k,Z);
+      interp_v += C[i_j_k_to_ijk(n,I,j,k)]*Ty(j,Y)*Tz(k,Z);
       
   return interp_v;
 }
@@ -528,7 +528,7 @@ static double interpolation_Chebyshev_Tn_XYZ(Interpolation_T *const interp_s)
   for (i = 0; i < n[0]; ++i)
     for (j = 0; j < n[1]; ++j)
       for (k = 0; k < n[2]; ++k)
-        interp_v += C[L(n,i,j,k)]*Tx(i,X)*Ty(j,Y)*Tz(k,Z);
+        interp_v += C[i_j_k_to_ijk(n,i,j,k)]*Tx(i,X)*Ty(j,Y)*Tz(k,Z);
   
   return interp_v;
 }

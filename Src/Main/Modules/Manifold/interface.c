@@ -1923,7 +1923,7 @@ static void init_Points(const Interface_T *const interface,PointSet_T ***const i
   pnt_ed = 0;
   FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
   {
-    Uint l = L(n,i,j,k);
+    Uint l = i_j_k_to_ijk(n,i,j,k);
     Uint p = L2(n,f,i,j,k);
     
     if (IsOnEdge(n,l))
@@ -2240,22 +2240,22 @@ fill_N
     switch(f)
     {
       case I_0:
-        ijk = L(n,0,jh,kh);
+        ijk = i_j_k_to_ijk(n,0,jh,kh);
         break;
       case I_n0:
-        ijk = L(n,n[0]-1,jh,kh);
+        ijk = i_j_k_to_ijk(n,n[0]-1,jh,kh);
         break; 
       case J_0:
-        ijk = L(n,ih,0,kh);
+        ijk = i_j_k_to_ijk(n,ih,0,kh);
         break; 
       case J_n1:
-        ijk = L(n,ih,n[1]-1,kh);
+        ijk = i_j_k_to_ijk(n,ih,n[1]-1,kh);
         break; 
       case K_0:
-        ijk = L(n,ih,jh,0);
+        ijk = i_j_k_to_ijk(n,ih,jh,0);
         break; 
       case K_n2:
-        ijk = L(n,ih,jh,n[2]-1);
+        ijk = i_j_k_to_ijk(n,ih,jh,n[2]-1);
         break;
       default:
         Error0("There is not such interface.\n");
@@ -2303,7 +2303,7 @@ static void fill_basics(Patch_T *const patch)
     FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
     {
       Uint p = L2(n,f,i,j,k);
-      point[p]->ind = l = L(n,i,j,k);
+      point[p]->ind = l = i_j_k_to_ijk(n,i,j,k);
       point[p]->face = f;
       point[p]->patch = patch;
       point[p]->exterF= 1;
@@ -2724,7 +2724,7 @@ void tangent(const Point_T *const pnt,double *const N)
   
   FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
   {
-    Uint l = L(n,i,j,k);
+    Uint l = i_j_k_to_ijk(n,i,j,k);
     double nrm;
     
     if (!IsOnEdge(n,l))

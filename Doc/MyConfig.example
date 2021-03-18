@@ -64,25 +64,32 @@ MODULE += $(MODULE_DIR)/Physics/Equation
 ## compiler and its flags:
 ##########################
 
+## which compiler:
 #CC = clang
+#CC = icc
 CC = gcc
 
-### compiler flags:
-#OFLAGS += -fopenmp -g3
-OFLAGS += -fopenmp -O3
+### optimization
+#OFLAGS += -g3
+OFLAGS +=  -O3
 
-### warninng flags for the compiler
-#WARN +=# no warnings
-#WARN += -std=c11 -pedantic -Wextra -Werror -Wall -W \
-  -Wmissing-prototypes -Wstrict-prototypes\
-  -Wconversion -Wshadow -Wpointer-arith\
-  -Wcast-qual -Wcast-align\
-  -Wwrite-strings -Wnested-externs\
-  -fshort-enums -fno-common -Dinline= 
-
-
-### define flags for compiler
+### activate open-mp
+OFLAGS += -fopenmp
 DFLAGS += -DPragma_OpenMP_2d -DPragma_OpenMP_1d -DPragma_OpenMP_Patch
+
+### activate inline calls:
+DFLAGS += -DINLINE_FUNC
+
+### activate gsl blas matrix products, requires gsl libs
+#DFLAGS += -DMxM_GSL_BLAS
+
+### activate mkl blas matrix products, requires mkl libs
+#DFLAGS += -DMxM_MKL_BLAS
+
+### activate cblas matrix products, requires cblas libs
+#DFLAGS += -DMxM_C_BLAS
+
+
 ########################################################################
 ##################################
 ## special inlcudes and libraries:
@@ -94,12 +101,62 @@ DFLAGS += -DPragma_OpenMP_2d -DPragma_OpenMP_1d -DPragma_OpenMP_Patch
 
 # special includes for suit-sparse and related
 SPECIAL_INCS += -I/usr/include/suitesparse
-SPECIAL_LIBS += -lblas -lgfortran -llapack -lumfpack
+SPECIAL_LIBS += -lumfpack
+
+# special includes for gsl
+#SPECIAL_LIBS += -lgsl -lgslcblas
+
+# special includes for cblas
+#SPECIAL_LIBS += -lblas
+
+# special includes for mkl libs and headers
+# more info visit: https://software.intel.com
+#SPECIAL_INCS += -I/usr/include/mkl
+#SPECIAL_LIBS += -lmkl_intel_lp64 -lmkl_core -lmkl_gnu_thread -lpthread
 
 # special libraries for plotting and data file
-SPECIAL_LIBS += -lsiloh5
+#SPECIAL_LIBS += -lsiloh5
 
-# special libraries for koko regarding plot and print
-#SPECIAL_INCS += -I/cm/shared/apps/silo/4.10.2/silo/include
-#SPECIAL_LIBS += -L/cm/shared/apps/silo/4.10.2/silo/lib -lsiloh5
+##################
+## test and debug:
+##################
+
+### warninng flags for the compiler
+#WARN +=# no warnings
+
+#WARN += -Wfatal-errors
+
+#WARN += -std=c11 -pedantic -Wextra -Werror -Wall -W \
+  -Wmissing-prototypes -Wstrict-prototypes\
+  -Wconversion -Wshadow -Wpointer-arith\
+  -Wcast-qual -Wcast-align\
+  -Wwrite-strings -Wnested-externs\
+  -fshort-enums -fno-common 
+
+#WARN += -std=c11 -pedantic -Wextra -Wall -W -Werror
+
+#WARN += -std=c99 -Wall -Wcast-qual -Wconversion -W -Werror \
+        -Wextra -Wfloat-equal -Wformat=2 -Winit-self \
+        -Winvalid-pch -Wmissing-include-dirs -Wno-c++-compat \
+        -Wno-format-nonliteral -Wshadow -Wundef -Wwrite-strings \
+        -pedantic -Wbad-function-cast -Wcast-align \
+        -Wdeclaration-after-statement -Wdisabled-optimization \
+        -Wmissing-declarations -Wmissing-prototypes -Wnested-externs \
+        -Wold-style-definition -Wpacked -Wredundant-decls \
+        -Wstrict-prototypes -Wswitch-enum -Wswitch-default \
+        -Wunused-macros -Wunsafe-loop-optimizations -Wlogical-op \
+        -Wlarger-than=2560 -Wsync-nand -Wframe-larger-than=16384 \
+        -Wpacked-bitfield-compat -Wstrict-overflow=5 -Wjump-misses-init \
+        -Wunsuffixed-float-constants -Wdouble-promotion -Wtrampolines \
+        -Wstack-usage=8192 -Wvector-operation-performance \
+        -Wdate-time -Warray-bounds=2 -Wc99-c11-compat \
+        -Wnull-dereference -Wunused-const-variable -Wduplicated-cond \
+        -Whsa -Wnormalized -Walloc-zero -Walloca -Wduplicated-branches \
+        -Wformat-overflow=2 -Wformat-truncation=2 \
+        -Wimplicit-fallthrough=5 -Wrestrict -ftrapv -fno-common \
+        -g -fno-omit-frame-pointer -Wno-aggregate-return -Wno-inline \
+        -Wno-missing-format-attribute -Wno-missing-noreturn \
+        -Wno-suggest-attribute=const -Wno-suggest-attribute=pure \
+        -Wno-suggest-attribute=noreturn -Wno-suggest-attribute=format -Og
+
 ########################################################################

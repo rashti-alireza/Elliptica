@@ -10,6 +10,22 @@
 #include "maths_equation_solvings_lib.h"
 #include "fields_lib.h"
 
+/* how to perform matrix products.
+// depending on systems the performance might different. */
+#if defined(MxM_GSL_BLAS)
+
+# include "gsl/gsl_blas.h"
+
+#elif defined(MxM_MKL_BLAS)
+
+# include "mkl.h"
+
+#elif defined(MxM_C_BLAS)
+
+# include "cblas.h"
+
+#endif
+
 /* string size */
 #define MSG_SIZE1 (999)
 #define MSG_SIZE2 (9999)

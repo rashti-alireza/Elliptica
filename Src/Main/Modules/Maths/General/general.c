@@ -49,13 +49,13 @@ double L1_norm(const Uint n, const double *const v2,const double *const v1)
   if (v2 == 0 && v1 == 0) return 0;
   else if (v1 == 0)    	  
     for(i = 0; i < n; i++)
-      sum += ABS(v2[i]);
+      sum += ABSd(v2[i]);
   else if (v2 == 0)       
     for(i = 0; i < n; i++)
-      sum += ABS(v1[i]);
+      sum += ABSd(v1[i]);
   else
     for(i = 0; i < n; i++)
-      sum += ABS(v2[i]-v1[i]);
+      sum += ABSd(v2[i]-v1[i]);
     
   return sum/n;
 }
@@ -97,14 +97,6 @@ double dot(const Uint n, const double *const v2,const double *const v1)
     d += v2[i]*v1[i];
   
   return d;
-}
-
-/* taking absolute value of v
-// ->return value: absolute(v)
-*/
-double ABS(const double v)
-{
-  return (v > 0. ? v : -v);
 }
 
 /* finding summation of functional derivative of Chebyshev coefficients
@@ -335,7 +327,7 @@ double sum_1_N_cos_ia(const Uint N, const double a)
 */
 double MaxMag_d(const double a,const double b)
 {
-  return ABS(a) > ABS(b) ? ABS(a) : ABS(b);
+  return ABSd(a) > ABSd(b) ? ABSd(a) : ABSd(b);
 }
 
 /* given a double array and its dimension N, 
@@ -346,12 +338,12 @@ double L_inf(const Uint N,const double *const v)
   if (!v || !N)
     Error0("The given array is empty.");
   
-  double max = ABS(v[0]);
+  double max = ABSd(v[0]);
   Uint i;
   
   for (i = 1; i < N; ++i)
   {
-    double a = ABS(v[i]);
+    double a = ABSd(v[i]);
     
     //if (GRT(a,max))
     if (a > max)

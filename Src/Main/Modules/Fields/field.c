@@ -630,14 +630,14 @@ static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const Uint dir)
       
       for (i = 0; i < n[dir]; ++i)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         in[i] = values[l];
       }
       FourierTrans(in,out,n[dir]);
       
       for (i = 0; i < n[dir]; ++i)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         coeffs[l] = out[i];
       }
     }
@@ -653,14 +653,14 @@ static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const Uint dir)
       
       for (j = 0; j < n[dir]; ++j)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         in[j] = values[l];
       }
       FourierTrans(in,out,n[dir]);
       
       for (j = 0; j < n[dir]; ++j)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         coeffs[l] = out[j];
       }
     }
@@ -676,14 +676,14 @@ static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const Uint dir)
       
       for (k = 0; k < n[dir]; ++k)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         in[k] = values[l];
       }
       FourierTrans(in,out,n[dir]);
       
       for (k = 0; k < n[dir]; ++k)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         coeffs[l] = out[k];
       }
     }
@@ -727,14 +727,14 @@ static void coeffs_patch_Tn_Nodes_1d(Field_T *const f,const Uint dir)
       
       for (i = 0; i < n[dir]; ++i)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         in[i] = values[l];
       }
       FourierTrans(in,out,n[dir]);
       
       for (i = 0; i < n[dir]; ++i)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         coeffs[l] = out[i];
       }
     }
@@ -750,14 +750,14 @@ static void coeffs_patch_Tn_Nodes_1d(Field_T *const f,const Uint dir)
       
       for (j = 0; j < n[dir]; ++j)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         in[j] = values[l];
       }
       FourierTrans(in,out,n[dir]);
       
       for (j = 0; j < n[dir]; ++j)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         coeffs[l] = out[j];
       }
     }
@@ -773,14 +773,14 @@ static void coeffs_patch_Tn_Nodes_1d(Field_T *const f,const Uint dir)
       
       for (k = 0; k < n[dir]; ++k)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         in[k] = values[l];
       }
       FourierTrans(in,out,n[dir]);
       
       for (k = 0; k < n[dir]; ++k)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         coeffs[l] = out[k];
       }
     }

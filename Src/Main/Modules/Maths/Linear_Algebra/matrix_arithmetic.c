@@ -50,6 +50,14 @@ int matrix_by_vector(const Matrix_T *const m, const double *const v,double *cons
       for (c = 0; c < col; ++c)
         b[r] += M[r][c]*v[c];
   }
+  else if (m->rmo_f)
+  {
+    double *const M = m->rmo->A;
+    
+    for (r = 0; r < row; ++r)
+      for (c = 0; c < col; ++c)
+        b[r] += M[i_j_to_ij(col,r,c)]*v[c];
+  }
   else if (m->tri_f)
   {
     Error0(INCOMPLETE_FUNC);
@@ -81,14 +89,20 @@ int matrix_by_vector(const Matrix_T *const m, const double *const v,double *cons
 }
 
 /* get matrix a and multiply it by matrix b according to 
-// the directivce dir and allocate memory put the result to d.
+// the directivce dir.
+// if result == 0 it allocates memory for result in regular storage format
+// otherwise, it uses the given matrix result and save the resultant there
+// with the same storage format that matrix result has.
 //
 // directives:
 // 	1. a*b            # multiply a matrix by b matrix
 // 	2. a*Transpose(b) # multiply a matrix by Transpose(b)
 //
-// ->return value: a.b = d. */
-Matrix_T *matrix_by_matrix(const Matrix_T *const a, const Matrix_T *const b,const char *const dir)
+// ->return value: a.b = result. */
+Matrix_T *matrix_by_matrix(const Matrix_T *const a, 
+                           const Matrix_T *const b,
+                           Matrix_T *const result,
+                           const char *const dir)
 {
   /* some checks */
   if (!a)
@@ -113,8 +127,10 @@ Matrix_T *matrix_by_matrix(const Matrix_T *const a, const Matrix_T *const b,cons
   {
     if (a_col != b_row)
       Error0("The dimensions of matrix a and b are not matched.");
-      
-    d = alloc_matrix(REG_SF,a_row,b_col);
+    
+    if (result)  Error0(NO_OPTION);
+    else         d = alloc_matrix(REG_SF,a_row,b_col);
+    
     if (a->reg_f && b->reg_f)
     {
       double **const A = a->reg->A;
@@ -147,11 +163,18 @@ Matrix_T *matrix_by_matrix(const Matrix_T *const a, const Matrix_T *const b,cons
   else if (strcmp_i("a*Transpose(b)",dir))
   {
     if (a_col != b_col)
-      Error0("The dimensions of matrix a and Transpose(b) are not matched.\n");
+    {
+      Error0("The dimensions of matrix a and Transpose(b) "
+             "are not matched.\n");
+    }
       
-    d = alloc_matrix(REG_SF,a_row,b_row);
     if (a->reg_f && b->reg_f)
     {
+      if (result)
+        Error0(NO_OPTION);
+      else 
+        d = alloc_matrix(REG_SF,a_row,b_row);
+      
       double **const A = a->reg->A;
       double **const B = b->reg->A;
       double **const D = d->reg->A;
@@ -160,6 +183,42 @@ Matrix_T *matrix_by_matrix(const Matrix_T *const a, const Matrix_T *const b,cons
         for (c = 0; c < b_row; ++c)
           for (i = 0; i < b_col; ++i)
               D[r][c] += A[r][i]*B[c][i];
+    }
+    else if (a->rmo_f && b->rmo_f)
+    {
+      if (result)
+      {
+        if (result->rmo_f)
+        {
+          d = result;
+          double *const A = a->rmo->A;
+          double *const B = b->rmo->A;
+          double *const D = d->rmo->A;
+          
+          for (r = 0; r < a_row; ++r)
+            for (c = 0; c < b_row; ++c)
+              for (i = 0; i < b_col; ++i)
+                D[i_j_to_ij(b_row,r,c)] += 
+                  A[i_j_to_ij(b_col,r,i)]*B[i_j_to_ij(b_col,c,i)];
+        }
+        else
+        {
+          Error0(NO_OPTION);
+        }
+      }
+      else
+      {
+        d = alloc_matrix(REG_SF,a_row,b_row);
+
+        double *const A = a->rmo->A;
+        double *const B = b->rmo->A;
+        double **const D = d->reg->A;
+        
+        for (r = 0; r < a_row; ++r)
+          for (c = 0; c < b_row; ++c)
+            for (i = 0; i < b_col; ++i)
+              D[r][c] += A[i_j_to_ij(b_col,r,i)]*B[i_j_to_ij(b_col,c,i)];
+      }
     }
     else
       Error0(INCOMPLETE_FUNC);
@@ -206,7 +265,7 @@ Matrix_T *CCSOpCCS(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op)
       for (r = 0; r < Nr; ++r)
       {
         ax = read_matrix_entry_ccs(ccs2,r,c)+read_matrix_entry_ccs(ccs1,r,c);
-        if (GRT(ABS(ax),DropLimit))
+        if (GRT(ABSd(ax),DropLimit))
         {
           Ai = realloc(Ai,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ai));
           IsNull(Ai);
@@ -230,7 +289,7 @@ Matrix_T *CCSOpCCS(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op)
       {
         
         ax = read_matrix_entry_ccs(ccs2,r,c)-read_matrix_entry_ccs(ccs1,r,c);
-        if (GRT(ABS(ax),DropLimit))
+        if (GRT(ABSd(ax),DropLimit))
         {
           Ai = realloc(Ai,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ai));
           IsNull(Ai);
