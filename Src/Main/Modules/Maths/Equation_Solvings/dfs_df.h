@@ -11,9 +11,6 @@
 
 #define _MAX_STR_ (400)
 
-/* css optimization */
-#define CCS_READER_OPTIMIZE (1)
-
 /* Jacobian type */
 typedef enum JTYPE_E
 {
@@ -57,7 +54,7 @@ static void JType_E2Dd_T(const JType_E jt_e, Dd_T *const q_dir);
 static void write_J_in_disk_ccs(void);
 static double J_sizeMb_ccs(const Matrix_T *const m);
 fJs_T *get_j_reader(const Matrix_T *const m);
-static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice);
+static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice) __attribute__((unused)) ;
 static double dInterp_x_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane);
 static double dInterp_y_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane);
 static double dInterp_z_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const Uint df,const Uint plane);

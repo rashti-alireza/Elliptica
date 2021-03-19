@@ -76,12 +76,13 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     free_matrix(J);
     
     /* to optimize ccs reader if required */
-    if (CCS_READER_OPTIMIZE)
-    {
+    #ifdef CCS_READER_OPTIMIZE
+    
       int Nslice = PgetiEZ("matrix_ccs_reader_split");
       Nslice = (Nslice != INT_MAX ? Nslice : 1);
       coarse_grain_Ap_ccs_matrix(sol_man->jacobian[c]->J,Nslice);
-    }
+    
+    #endif
     
     if (GRT(J_sizeMb_ccs(sol_man->jacobian[i]->J),max_j_size))
       write_J_in_disk_ccs();
@@ -823,7 +824,7 @@ double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c)
   const int *const Ai    = m->ccs->Ai;
   const double *const Ax = m->ccs->Ax;
   
-  #if CCS_READER_OPTIMIZE == 1
+  #ifdef CCS_READER_OPTIMIZE
   
     const int *const Ap_cg = m->ccs->Ap_cg;
     const int *const i_cg  = m->ccs->i_cg;
