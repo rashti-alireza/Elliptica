@@ -93,6 +93,10 @@ void free_matrix(Matrix_T *m)
       free(m->ccs->Ai);
     if (m->ccs->Ax)
       free(m->ccs->Ax);
+    if (m->ccs->Ap_cg)
+      free(m->ccs->Ap_cg);
+    if (m->ccs->i_cg)
+      free(m->ccs->i_cg);
   }
   else if (m->crs_f)
   {

@@ -204,6 +204,24 @@ typedef struct MATRIX_T
     int *Ap;
     int *Ai;
     double *Ax;
+    /* coarse-graining for matrix read optimization */
+    int *Ap_cg;
+    int *i_cg;
+    /* slice each Ap[c+1]-Ap[c] into equal pieces with known 
+    // value of index for Ai intervals thus for given row r we know in 
+    // which interval r can be found as apposed to just look for r blindly.
+    // it's kind of coarse-graining over the value Ai's.
+    // the logic is:
+    // i = Ap_cg[c] => 0    <= Ai[i_cg[i]]   < row0
+    // i + 1        => row0 <= Ai[i_cg[i+1]] < row1
+    // .
+    // .
+    // .
+    // till (i < Ap_cg[c+1]) and naturally i < Ap[c+1].
+    // thus if given row r is between row0 and row1, 
+    // it looks in second piece and not other pieces.
+    // NOTE: the idea is pretty much like the CCS format itself. */
+    int Nslice;/* number of slices(pieces) */
   }ccs[1];
   
   struct/* compressed row storage format */
