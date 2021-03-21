@@ -7,6 +7,7 @@
 
 #include "fd_populate.h"
 
+
 /* compute K_{ij}, trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
 // for KerrSchild. */
 void fd_extrinsic_curvature_KerrSchild(Physics_T *const phys,
@@ -410,7 +411,8 @@ fd_modify_gConf_igConf_dgConf_to_flat_expmr4KS
   const double BHx    = Getd("center_x");
   const double BHy    = Getd("center_y");
   const double BHz    = Getd("center_z");
-  const double R04    = pow(Getd("RollOff_radius"),4.);
+  const double att_pow= Getd("RollOff_power");
+  const double R0P    = pow(Getd("RollOff_radius"),att_pow);
   
   /* superimpose */
   OpenMP_Patch_Pragma(omp parallel for)
@@ -440,7 +442,7 @@ fd_modify_gConf_igConf_dgConf_to_flat_expmr4KS
       double y   = patch->node[ijk]->x[1] - BHy;
       double z   = patch->node[ijk]->x[2] - BHz;
       double r2  = (Pow2(x)+Pow2(y)+Pow2(z));
-      double att = exp(-pow(r2,2.)/R04);
+      double att = exp(-pow(r2,att_pow/2.)/R0P);
       
       /* diagonal */
       gConf_D0D0[ijk] = 1.+att*(gKS_D0D0[ijk]-1.);
@@ -509,7 +511,8 @@ fd_modify_trK_to_expmr4trK_compute_dtrK
   const double BHx    = Getd("center_x");
   const double BHy    = Getd("center_y");
   const double BHz    = Getd("center_z");
-  const double R04    = pow(Getd("RollOff_radius"),4.);
+  const double att_pow= Getd("RollOff_power");
+  const double R0P    = pow(Getd("RollOff_radius"),att_pow);
   
   /* modify */
   OpenMP_Patch_Pragma(omp parallel for)
@@ -530,7 +533,7 @@ fd_modify_trK_to_expmr4trK_compute_dtrK
       double y   = patch->node[ijk]->x[1] - BHy;
       double z   = patch->node[ijk]->x[2] - BHz;
       double r2  = (Pow2(x)+Pow2(y)+Pow2(z));
-      double att = exp(-pow(r2,2.)/R04);
+      double att = exp(-pow(r2,att_pow/2.)/R0P);
       
       K_new[ijk] = att*K_old[ijk];
     }
@@ -1023,11 +1026,12 @@ fd_populate_alpha_expmr4_KerrSchild
   
   AssureType(phys->ctype == BH)
   
-  Grid_T *const grid = mygrid(phys,region);
-  const double BHx   = Getd("center_x");
-  const double BHy   = Getd("center_y");
-  const double BHz   = Getd("center_z");
-  const double R04   = pow(Getd("RollOff_radius"),4.);
+  Grid_T *const grid  = mygrid(phys,region);
+  const double BHx    = Getd("center_x");
+  const double BHy    = Getd("center_y");
+  const double BHz    = Getd("center_z");
+  const double att_pow= Getd("RollOff_power");
+  const double R0P    = pow(Getd("RollOff_radius"),att_pow);
   
   fd_KerrSchild_set_params(phys);
   
@@ -1048,7 +1052,7 @@ fd_populate_alpha_expmr4_KerrSchild
       z = patch->node[ijk]->x[2]-BHz;
       r2 = Pow2(x)+Pow2(y)+Pow2(z);
       
-      alpha[ijk] *= exp(-Pow2(r2)/R04);
+      alpha[ijk] *= exp(-pow(r2,att_pow/2.)/R0P);
     }
   }
   
