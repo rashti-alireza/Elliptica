@@ -572,6 +572,12 @@ static void calc_ADM_J(Observe_T *const obs)
         region   = "outermost_OB";
         patches2 = collect_patches(grid,region,&N2);
       }
+      else if (IsIt("S_obj1+S_obj2,default"))
+      {
+        /* surface part */
+        region   = "NS_OB,BH_around_IB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
       else
       {
         Error0(obs_err_msg);
@@ -792,6 +798,27 @@ static void calc_ADM_J(Observe_T *const obs)
           Set_outermost_integral_S_SplitCS(adm)
           n_physical_metric_around(adm[n],_c_);
         }
+        else if (IsIt("S_obj1+S_obj2,default"))
+        {
+          if (IsItCovering(patch,"BH_around_IB"))
+          {
+            adm[n]->surface_integration_flg = 1;
+            adm[n]->Z_surface = 1;
+            adm[n]->K = 0;
+            n_physical_metric_around(adm[n],_c_);
+          }
+          else if (IsItCovering(patch,"NS_OB"))
+          {
+            adm[n]->surface_integration_flg = 1;
+            adm[n]->Z_surface = 1;
+            adm[n]->K = patch->n[2]-1;
+            n_physical_metric_around(adm[n],_c_);
+          }
+          else
+          {
+            Error0(obs_err_msg);
+          }
+        }
         else
         {
           Error0(obs_err_msg);
@@ -941,6 +968,12 @@ static void calc_ADM_P(Observe_T *const obs)
         
         /* surface part */
         region   = "BH_around_IB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else if (IsIt("S_obj1+S_obj2,default"))
+      {
+        /* surface part */
+        region   = "NS_OB,BH_around_IB";
         patches2 = collect_patches(grid,region,&N2);
       }
       else
@@ -1170,6 +1203,27 @@ static void calc_ADM_P(Observe_T *const obs)
             adm[n]->surface_integration_flg = 1;
             adm[n]->Z_surface = 1;
             adm[n]->K = 0;
+            n_physical_metric_around(adm[n],_c_);
+          }
+          else
+          {
+            Error0(obs_err_msg);
+          }
+        }
+        else if (IsIt("S_obj1+S_obj2,default"))
+        {
+          if (IsItCovering(patch,"BH_around_IB"))
+          {
+            adm[n]->surface_integration_flg = 1;
+            adm[n]->Z_surface = 1;
+            adm[n]->K = 0;
+            n_physical_metric_around(adm[n],_c_);
+          }
+          else if (IsItCovering(patch,"NS_OB"))
+          {
+            adm[n]->surface_integration_flg = 1;
+            adm[n]->Z_surface = 1;
+            adm[n]->K = patch->n[2]-1;
             n_physical_metric_around(adm[n],_c_);
           }
           else
