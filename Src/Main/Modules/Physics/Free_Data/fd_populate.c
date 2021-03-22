@@ -388,13 +388,13 @@ fd_populate_gConf_igConf_dgConf_KerrSchild
 
 /* populate conformal metric, inverse of conformal metric 
 // and first order derivative of conformal metric for parameter
-// "flat + exp(-r^4)*(KerrSchild-flat)"  which is:
+// "flat + exp(-r^p)*(KerrSchild-flat)"  which is:
 // gConf_{ij} = delta_{ij} + atten * (gKS_{ij} - delta_{ij}).
 // this free data mainly is used for BHNS system.
 // the nomenclature of fields determined by the passed stems
 // NOTE: it assumes gConf has already been populated with KerrSchild metric */
 void 
-fd_modify_gConf_igConf_dgConf_to_flat_expmr4KS
+fd_modify_gConf_igConf_dgConf_to_flat_expmrpKS
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -490,12 +490,12 @@ fd_modify_gConf_igConf_dgConf_to_flat_expmr4KS
 }
 
 /* populate trK and dtrK such as:
-// trK|new = exp(-r^4)*trK|old
+// trK|new = exp(-r^p)*trK|old
 // this free data mainly is used for BHNS system.
 // the nomenclature of fields determined by the passed stems
 // NOTE: it assumes trK has already been populated. */
 void 
-fd_modify_trK_to_expmr4trK_compute_dtrK
+fd_modify_trK_to_expmrptrK_compute_dtrK
  (
  Physics_T *const phys,
  const char *const region,
@@ -1013,9 +1013,9 @@ fd_populate_alpha_KerrSchild
   FUNC_TOC
 }
 
-/* populate alpha of exp(-r^4)*KerrSchild value. */
+/* populate alpha of exp(-r^p)*KerrSchild value. */
 void 
-fd_populate_alpha_expmr4_KerrSchild
+fd_populate_alpha_expmrp_KerrSchild
  (
  Physics_T *const phys,
  const char *const region,
