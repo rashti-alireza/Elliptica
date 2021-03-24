@@ -813,6 +813,7 @@ Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type)
   return j;
 }
 
+#ifdef CCS_READER_OPTIMIZE
 /* given matrix, row and column of a CCS format matrix,
 // it returns the corresponing enteries of matrix.
 // NOTE: this function is heavily used and must be
@@ -820,45 +821,52 @@ Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type)
 // ->return value: m[i][j] in which m is in CCS format. */
 double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c)
 {
-  //Warning("long conversion in argument?");
   const int *const Ai    = m->ccs->Ai;
   const double *const Ax = m->ccs->Ax;
+  const int *const Ap_cg = m->ccs->Ap_cg;
+  const int *const i_cg  = m->ccs->i_cg;
+  const int i_i_max      = Ap_cg[c+1]-1;
+  int i_i                = Ap_cg[c];/* i_{i} */
+   
+  /* find the interval(slice) where given row resides */
+  while (i_i < i_i_max)
+  {
+    // if (Ai[i_cg[i_i]] <= r && r <= Ai[i_cg[i_i+1]-1])
+    if (r <= Ai[i_cg[i_i+1]-1])
+      break;
+    
+    ++i_i;
+  }
   
-  #ifdef CCS_READER_OPTIMIZE
-  
-    const int *const Ap_cg = m->ccs->Ap_cg;
-    const int *const i_cg  = m->ccs->i_cg;
-    const int i_i_max      = Ap_cg[c+1]-1;
-    int i_i                = Ap_cg[c];/* i_{i} */
-    
-    /* find the interval(slice) where given row resides */
-    while (i_i < i_i_max)
-    {
-      // if (Ai[i_cg[i_i]] <= r && r <= Ai[i_cg[i_i+1]-1])
-      if (r <= Ai[i_cg[i_i+1]-1])
-        break;
-      
-      ++i_i;
-    }
-    
-    //for (int i = i_cg[i_i]; Ai[i] <= r && i < Ap[c+1]; ++i)
-    const int i_max = i_cg[i_i+1];
-    for (int i = i_cg[i_i]; i < i_max; ++i)
-      if (Ai[i] == r) return Ax[i];
-    
-  # else
+  //for (int i = i_cg[i_i]; Ai[i] <= r && i < Ap[c+1]; ++i)
+  const int i_max = i_cg[i_i+1];
+  for (int i = i_cg[i_i]; i < i_max; ++i)
+    if (Ai[i] == r) return Ax[i];
+   
+  return 0.;
+}
 
-    const int *const Ap = m->ccs->Ap;
-    /* moving along none zero entries of the matrix at column c.
-    // Note: it should not pass the given row.  */
-    const int i_max = Ap[c+1];
-    for (int i = Ap[c]; Ai[i] <= r && i < i_max; ++i)
-      if (Ai[i] == r) return Ax[i];
-  
-  #endif
+#else
+/* given matrix, row and column of a CCS format matrix,
+// it returns the corresponing enteries of matrix.
+// NOTE: this function is heavily used and must be
+// super optimized.
+// ->return value: m[i][j] in which m is in CCS format. */
+double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c)
+{
+  const int *const Ai    = m->ccs->Ai;
+  const double *const Ax = m->ccs->Ax;
+  const int *const Ap    = m->ccs->Ap;
+  const int i_max        = Ap[c+1];
+  /* moving along none zero entries of the matrix at column c.
+  // Note: it should not pass the given row.  */
+  for (int i = Ap[c]; Ai[i] <= r && i < i_max; ++i)
+    if (Ai[i] == r) return Ax[i];
   
   return 0.;
 }
+#endif
+
 
 /* calculating the give ccs matirx size.
 // ->return value: size of matrix in Mb
