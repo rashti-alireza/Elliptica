@@ -75,6 +75,15 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     sol_man->jacobian[c]->J = cast_matrix_ccs(J);
     free_matrix(J);
     
+    /* to optimize ccs reader if required */
+    #ifdef CCS_READER_OPTIMIZE
+    
+      int Nslice = PgetiEZ("matrix_ccs_reader_split");
+      Nslice = (Nslice != INT_MAX ? Nslice : 1);
+      coarse_grain_Ap_ccs_matrix(sol_man->jacobian[c]->J,Nslice);
+    
+    #endif
+    
     if (GRT(J_sizeMb_ccs(sol_man->jacobian[i]->J),max_j_size))
       write_J_in_disk_ccs();
     
@@ -806,19 +815,48 @@ Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type)
 
 /* given matrix, row and column of a CCS format matrix,
 // it returns the corresponing enteries of matrix.
-// ->return value: m[i][j] in which m is in CCS format
-*/
+// NOTE: this function is heavily used and must be
+// super optimized.
+// ->return value: m[i][j] in which m is in CCS format. */
 double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c)
 {
-  const int *const Ap    = m->ccs->Ap;
+  //Warning("long conversion in argument?");
   const int *const Ai    = m->ccs->Ai;
   const double *const Ax = m->ccs->Ax;
   
-  /* moving along none zero entries of the matrix at column c.
-  // Note: it should not pass the given row.  */
-  for (int i = Ap[c]; Ai[i] <= r && i < Ap[c+1]; ++i)
-    if (Ai[i] == r) return Ax[i];
+  #ifdef CCS_READER_OPTIMIZE
+  
+    const int *const Ap_cg = m->ccs->Ap_cg;
+    const int *const i_cg  = m->ccs->i_cg;
+    const int i_i_max      = Ap_cg[c+1]-1;
+    int i_i                = Ap_cg[c];/* i_{i} */
     
+    /* find the interval(slice) where given row resides */
+    while (i_i < i_i_max)
+    {
+      // if (Ai[i_cg[i_i]] <= r && r <= Ai[i_cg[i_i+1]-1])
+      if (r <= Ai[i_cg[i_i+1]-1])
+        break;
+      
+      ++i_i;
+    }
+    
+    //for (int i = i_cg[i_i]; Ai[i] <= r && i < Ap[c+1]; ++i)
+    const int i_max = i_cg[i_i+1];
+    for (int i = i_cg[i_i]; i < i_max; ++i)
+      if (Ai[i] == r) return Ax[i];
+    
+  # else
+
+    const int *const Ap = m->ccs->Ap;
+    /* moving along none zero entries of the matrix at column c.
+    // Note: it should not pass the given row.  */
+    const int i_max = Ap[c+1];
+    for (int i = Ap[c]; Ai[i] <= r && i < i_max; ++i)
+      if (Ai[i] == r) return Ax[i];
+  
+  #endif
+  
   return 0.;
 }
 
@@ -1913,4 +1951,40 @@ void free_patch_SolMan_jacobian(Patch_T *const patch)
   SolMan->nj       = 0;
 }
 
+/* slice Ap of ccs matrix to optimiza ccs reader.
+// see explanations at Matrix_T->ccs. */
+static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice)
+{
+  assert(Nslice);
+  
+  /* alloc and init */
+  m->ccs->Nslice = Nslice;
+  m->ccs->Ap_cg   = calloc((Uint)m->col+1,sizeof(*m->ccs->Ap_cg));
+  IsNull(m->ccs->Ap_cg);
+  m->ccs->i_cg   = calloc((Uint)(m->col*Nslice+1),sizeof(*m->ccs->i_cg));
+  IsNull(m->ccs->i_cg);
+  
+  const int *const Ap = m->ccs->Ap;
+  int *const Ap_cg = m->ccs->Ap_cg;
+  int *const i_cg = m->ccs->i_cg;
+  int i_i;
+  long c;
+    
+  i_i = 0;
+  for (c = 0; c < m->col; ++c)
+  {
+    if (Ap[c+1]-Ap[c] < Nslice)
+      Error0("Parameter 'matrix_ccs_reader_split' is too large!\n");
 
+    int quotient = (Ap[c+1]-Ap[c])/(Nslice);
+    
+    Ap_cg[c] = i_i;
+    for (int s = 0; s < Nslice; ++s)
+    {
+      i_cg[i_i] = Ap[c] + s*quotient;
+      i_i++;
+    }
+  }
+  i_cg[i_i] = Ap[c];
+  Ap_cg[c]   = i_i;
+}
