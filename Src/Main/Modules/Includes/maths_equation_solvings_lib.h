@@ -328,7 +328,7 @@ Sewing_T *alloc_sewing(void);
 void free_db_eqs(sEquation_T **db);
 void free_patch_SolMan_jacobian(Patch_T *const patch);
 void free_patch_SolMan_method_Schur(Patch_T *const patch);
-
+void move_dfdu_jacobian_patch(Patch_T *const patch2,Patch_T *const patch1);
 
 /* defining some macros to improve the readability and simplicity */
 

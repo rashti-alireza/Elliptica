@@ -14,4 +14,5 @@ void add_special_grid_solve_equations(Grid_T *const grid,const char *const name,
 double get_relaxation_factor_solve_equations(Solve_Equations_T *const solve);
 void sync_patch_pools(const Grid_T*const latest_grid,Solve_Equations_T *const solve);
 static int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const name);
+void move_dfdu_jacobian_patch(Patch_T *const patch2,Patch_T *const patch1);
 

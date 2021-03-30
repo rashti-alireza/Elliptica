@@ -194,6 +194,27 @@ void add_special_grid_solve_equations(Grid_T *const grid,const char *const name,
   solve->Sgrid[N]->name  = dup_s(name);
 }
 
+/* move 
+// patch1->solving_man->jacobian to patch2->solving_man->jacobian 
+// and put patch1->solving_man->jacobian = 0. */
+void move_dfdu_jacobian_patch(Patch_T *const patch2,Patch_T *const patch1)
+{
+  /* some checks */
+  if(!patch2 || !patch1->solving_man)
+    return;
+  
+  if (!patch2->solving_man)
+  {
+    patch2->solving_man = calloc(1,sizeof(*patch2->solving_man));
+    IsNull(patch2->solving_man);
+  }
+  
+  patch2->solving_man->jacobian = patch1->solving_man->jacobian;
+  patch2->solving_man->nj       = patch1->solving_man->nj;
+  patch1->solving_man->jacobian = 0;
+  patch1->solving_man->nj       = 0;
+}
+
 /* sync fields and solving_man->jacobian of grid and special grid; THUS,
 // DON'T USED "free_patch_SolMan_jacobian" for special grid.
 // since each field might be solved in a special grid 
