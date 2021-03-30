@@ -3477,14 +3477,25 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
     // you can remove comments and try them. 
     // the ideal case that found out in experiments is equality 
     // in the number of Neuman and Drichlet bc for each "patch";
-    // thus in future if elliptic solvern fails you might try this. */
+    // thus in future if elliptic solver fails you might try this. */
     //if (!IsItCovering(patch,"NS_around"))
     //if (!IsItCovering(patch,"BH_around"))
-    if (!IsItCovering(patch,"BH_around,NS_around"))
+    if (IsItCovering(patch,"BH_around,NS_around"))
+    {
+      /* try to first set face Z = 1 to Dirichlet */
+      i = 5;
+    }
+    else if (IsItCovering(patch,"NS"))
+    {
+      /* try to first set face Y = 1 to Dirichlet */
+      i = 3;
+    }
+    else
+    {
       continue;
+    }
     
-    /* try to first set face Z = 1 to Dirichlet */
-    i = 5;
+    /* set Dirichlet */
     {
       face  = patch->interface[i];
       int Favor_Dirichlet = 1;
