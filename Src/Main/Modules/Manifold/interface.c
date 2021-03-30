@@ -3064,6 +3064,7 @@ find_adjacent_scs
             add_to_subface_scs(pnt[p]);
             point_flag[pnt[p]->ind] = 1;
           }
+          interface[f]->innerB = 1;
         } 
         else/* it must be outerB */
         {
@@ -3075,6 +3076,7 @@ find_adjacent_scs
             add_to_subface_scs(pnt[p]);
             point_flag[pnt[p]->ind] = 1;
           }
+          interface[f]->outerB = 1;
         }
       }
       else
@@ -3500,8 +3502,16 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
       face  = patch->interface[i];
       int Favor_Dirichlet = 1;
       
-      if (face->df_dn_set) continue;
-      
+      /* NOTE: an inner or outerB face is assumed to have ONE subface */
+      if (face->outerB || face->innerB)
+      {
+        assert(face->ns == 1);
+        continue;
+      }
+      if (face->df_dn_set)
+        continue;
+    
+        
       /* test if we can favor Dirichlet: */
       
       /* if it has already Dirichlet */
@@ -3569,7 +3579,14 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
     face  = patch->interface[frank[i].fn];
     int Favor_Dirichlet = 1;
     
-    if (face->df_dn_set) continue;
+    /* NOTE: an inner or outerB face is assumed to have ONE subface */
+    if (face->outerB || face->innerB)
+    {
+      assert(face->ns == 1);
+      continue;
+    }
+    if (face->df_dn_set)
+      continue;
     
     /* test if we can favor Dirichlet: */
     
