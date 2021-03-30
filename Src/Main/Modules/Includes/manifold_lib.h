@@ -173,6 +173,8 @@ typedef struct INTERFACE_T
   double centerx[3];/* x-coords of center of this face. */
   Uint df_dn:1;/* Drichlet = 0, Neumann = 1 */
   Uint df_dn_set:1;/* if df_dn is set = 1, otherwise 0. */
+  Uint innerB:1;/* if has innerB is 1, otherwise 0. */
+  Uint outerB:1;/* if has outerB is 1, otherwise 0. */
 }Interface_T;
 
 struct Collocation_s
