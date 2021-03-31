@@ -43,7 +43,6 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
   while (types[i] != 0)
   {
     jtype = interpret_type(types[i]);
-    
     /* check if this type has been already made then skip this */
     Flag_T flg = NONE;
     Uint c;
@@ -57,7 +56,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
           Matrix_T *J_reg         = sol_man->jacobian[c]->J;
           sol_man->jacobian[c]->J = cast_matrix_ccs(J_reg);
           free_matrix(J_reg);
-          
+           
           /* to optimize ccs reader if required */
           #ifdef CCS_READER_OPTIMIZE
           
@@ -646,8 +645,10 @@ static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *co
   Field_T *j_1st_deriv_field = 0;
   Patch_T temp_patch;
   JType_E deriv_1st = T_UNDEF,deriv_2nd = T_UNDEF;
-  char deriv_2nd_s[MAX_STR_LEN];
-  char deriv_1st_s[MAX_STR_LEN];
+  char deriv_2nd_s[MAX_STR_LEN/2];
+  char deriv_1st_s[MAX_STR_LEN/2];
+  char aux[MAX_STR_LEN] = {'\0'};
+  char *jtype_1st = 0;
   Uint lmn;
   Flag_T flg = NONE;
   Uint c;
@@ -655,12 +656,14 @@ static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *co
   read_1st_and_2nd_deriv(deriv_dir,&deriv_1st,&deriv_2nd);
   JType_E2str(deriv_2nd,deriv_2nd_s);
   JType_E2str(deriv_1st,deriv_1st_s);
+  sprintf(aux,"df%s_df",deriv_1st_s);
+  jtype_1st = interpret_type(aux);
   
   /* see if Jacobian exists in reg_f already so use this */
   flg = NONE;
   for (c = 0; c < sol_man->nj; ++c)
   {
-   if (strcmp_i(sol_man->jacobian[c]->type,deriv_1st_s))
+   if (strcmp_i(sol_man->jacobian[c]->type,jtype_1st))
    {
     if (sol_man->jacobian[c]->J->reg_f)
     {
@@ -689,7 +692,7 @@ static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *co
    IsNull(sol_man->jacobian);
    sol_man->jacobian[c] = calloc(1,sizeof(*sol_man->jacobian[c]));
    IsNull(sol_man->jacobian[c]);
-   sprintf(sol_man->jacobian[c]->type,deriv_1st_s);
+   sprintf(sol_man->jacobian[c]->type,jtype_1st);
    sol_man->jacobian[c]->J = Jm_1st;
    Jm_1st = 0;
    ++sol_man->nj;
@@ -736,6 +739,7 @@ static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *co
   Field_T *f = temp_patch.fields[LookUpField("j_1st_deriv_field",&temp_patch)];
   remove_field(f);
   free_temp_patch(&temp_patch);
+  Free(jtype_1st);
 }
 
 /* decomposing deriv_dir and finding 1st and 2nd direction for derivative */
