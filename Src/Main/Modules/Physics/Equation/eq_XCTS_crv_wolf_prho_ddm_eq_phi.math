@@ -1,5 +1,7 @@
 # equation: phi, irrational piece of fluid velocity
 # curve + Wolfgang's eq * p/rho
+# NOTE: compare this file with "eq_XCTS_crv_wolf_ddm_eq_phi.math"
+# NOTE: this eq assume same BC as "eq_XCTS_crv_wolf_ddm_bc_phi.math"
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -141,7 +143,7 @@ t3 = ((psi**-4)*igConf(-i,-l)*(ddphi(i,l)-ChrisConf(n,i,l)*dphi(-n)));
 t4 = (6*dpsi(i)*W(-i)/psi + ChrisConf(i,ip,l)*W(-l)*KD(-i,-ip));
 #t5 = -enthalpy*u0*(dLns1(i)*beta(-i)+alpha*trK);
 t5 = -enthalpy*u0*dLns1(i)*beta(-i);
-t6 = -enthalpy*u0*alpha*trK;
+t6 = -enthalpy*u0*alpha*trK; # already divided by rho0
 
 `double F_eq = p/rho0[ijk]*t1+p*(t2+t3+t4)+p/rho0[ijk]*t5+p*t6;`
 
