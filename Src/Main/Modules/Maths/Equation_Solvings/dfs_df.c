@@ -666,23 +666,24 @@ static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *co
     {
      flg   = FOUND;
      J_1st = sol_man->jacobian[c]->J->reg->A;
-     break;
     }
     else/* it has other format like ccs */
     {
      flg = INUSE;
-     break;
+     J_1st = 0;
     }
+    break;
    }
   }
-  /* if not found, calculate the Jacobian and save it */
+  /* if nothing, calculate the Jacobian and save it */
   if (flg == NONE)
   {
    Matrix_T *Jm_1st = alloc_matrix(REG_SF,nn,nn);
    J_1st            = Jm_1st->reg->A;
-   fill_jacobian_spectral_method_1stOrder(J_1st,patch,deriv_1st);/* -> J = d(df/d@)/df */
+   /* -> J = d(df/d@)/df */
+   fill_jacobian_spectral_method_1stOrder(J_1st,patch,deriv_1st);
    c = sol_man->nj;
-   /* add to struct */
+   /* add to struct in reg_f to be used potentially later */
    sol_man->jacobian = 
      realloc(sol_man->jacobian,(c+1)*sizeof(*sol_man->jacobian));
    IsNull(sol_man->jacobian);
@@ -697,7 +698,8 @@ static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *co
   else if (flg == INUSE)
   {
    J_1st = J;/* using the same give memory */
-   fill_jacobian_spectral_method_1stOrder(J_1st,patch,deriv_1st);/* -> J = d(df/d@)/df */
+   /* -> J = d(df/d@)/df */
+   fill_jacobian_spectral_method_1stOrder(J_1st,patch,deriv_1st);
   }
   /* do nothing */
   else if (flg == FOUND)
