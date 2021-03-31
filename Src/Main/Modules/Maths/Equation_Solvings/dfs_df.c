@@ -83,7 +83,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     J = alloc_matrix(REG_SF,nn,nn);
     Jacobian(J->reg->A,patch,jt_e);
     
-    /* saving jacobian elements */
+    /* saving jacobian elements in ccs */
     c = sol_man->nj;
     sol_man->jacobian = 
       realloc(sol_man->jacobian,(c+1)*sizeof(*sol_man->jacobian));
@@ -103,7 +103,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     
     #endif
     
-    if (GRT(J_sizeMb_ccs(sol_man->jacobian[i]->J),max_j_size))
+    if (GRT(J_sizeMb_ccs(sol_man->jacobian[c]->J),max_j_size))
       write_J_in_disk_ccs();
     
     free(jtype);
@@ -641,27 +641,81 @@ static void JType_E2Dd_T(const JType_E jt_e, Dd_T *const q_dir)
 static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *const patch,const JType_E deriv_dir)
 {
   const Uint nn = patch->nn;
+  Solving_Man_T *const sol_man = patch->solving_man;
+  double **J_1st = 0;
   Field_T *j_1st_deriv_field = 0;
   Patch_T temp_patch;
   JType_E deriv_1st = T_UNDEF,deriv_2nd = T_UNDEF;
   char deriv_2nd_s[MAX_STR_LEN];
+  char deriv_1st_s[MAX_STR_LEN];
   Uint lmn;
+  Flag_T flg = NONE;
+  Uint c;
   
   read_1st_and_2nd_deriv(deriv_dir,&deriv_1st,&deriv_2nd);
   JType_E2str(deriv_2nd,deriv_2nd_s);
+  JType_E2str(deriv_1st,deriv_1st_s);
+  
+  /* see if Jacobian exists in reg_f already so use this */
+  flg = NONE;
+  for (c = 0; c < sol_man->nj; ++c)
+  {
+   if (strcmp_i(sol_man->jacobian[c]->type,deriv_1st_s))
+   {
+    if (sol_man->jacobian[c]->J->reg_f)
+    {
+     flg   = FOUND;
+     J_1st = sol_man->jacobian[c]->J->reg->A;
+     break;
+    }
+    else/* it has other format like ccs */
+    {
+     flg = INUSE;
+     break;
+    }
+   }
+  }
+  /* if not found, calculate the Jacobian and save it */
+  if (flg == NONE)
+  {
+   Matrix_T *Jm_1st = alloc_matrix(REG_SF,nn,nn);
+   J_1st            = Jm_1st->reg->A;
+   fill_jacobian_spectral_method_1stOrder(J_1st,patch,deriv_1st);/* -> J = d(df/d@)/df */
+   c = sol_man->nj;
+   /* add to struct */
+   sol_man->jacobian = 
+     realloc(sol_man->jacobian,(c+1)*sizeof(*sol_man->jacobian));
+   IsNull(sol_man->jacobian);
+   sol_man->jacobian[c] = calloc(1,sizeof(*sol_man->jacobian[c]));
+   IsNull(sol_man->jacobian[c]);
+   sprintf(sol_man->jacobian[c]->type,deriv_1st_s);
+   sol_man->jacobian[c]->J = Jm_1st;
+   Jm_1st = 0;
+   ++sol_man->nj;
+  }
+  /* we need to construct again */
+  else if (flg == INUSE)
+  {
+   J_1st = J;/* using the same give memory */
+   fill_jacobian_spectral_method_1stOrder(J_1st,patch,deriv_1st);/* -> J = d(df/d@)/df */
+  }
+  /* do nothing */
+  else if (flg == FOUND)
+  {
+   ;
+  }
+  else
+   Error0(NO_OPTION);
   
   temp_patch = make_temp_patch(patch);
   j_1st_deriv_field = add_field("j_1st_deriv_field","(3dim)",&temp_patch,YES);
-  
-  fill_jacobian_spectral_method_1stOrder(J,patch,deriv_1st);/* -> J = d(df/d@)/df */
-  
   for (lmn = 0; lmn < nn; ++lmn)
   {
     Uint ijk;
     double *j_2nd_deriv_value = 0;
    
     for (ijk = 0; ijk < nn; ++ijk)
-      j_1st_deriv_field->v[ijk] = J[ijk][lmn];
+      j_1st_deriv_field->v[ijk] = J_1st[ijk][lmn];
       
     j_2nd_deriv_value = Partial_Derivative(j_1st_deriv_field,deriv_2nd_s);
     /* since it was added v2 and info in j_1st_deriv_field we clean them 
