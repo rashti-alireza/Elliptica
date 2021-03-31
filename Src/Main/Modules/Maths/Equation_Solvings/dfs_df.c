@@ -12,7 +12,9 @@ static const double CONST = 1.0;
 /* preparing J_* used in equations for each patch
 // according to given types. note: end of types pointer
 // must be marked with null pointer, e.g. *types[3] = {"dfxx_df","dfy_df",0}.
-*/
+// NOTE: to make this faster first call second order Jacobian
+// e.g. dfxy_df and then dfx_df. this is b/c second orders save 
+// first order too.  */
 void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
 {
   Js_Jacobian_eq_F *Jacobian = 0;
@@ -48,6 +50,23 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     for (c = 0; c < sol_man->nj; ++c)
       if (strcmp_i(sol_man->jacobian[c]->type,jtype))
       {
+        /* if regular cast to ccs, this happens when 
+        // second order called first */
+        if (sol_man->jacobian[c]->J->reg_f)
+        {
+          Matrix_T *J_reg         = sol_man->jacobian[c]->J;
+          sol_man->jacobian[c]->J = cast_matrix_ccs(J_reg);
+          free_matrix(J_reg);
+          
+          /* to optimize ccs reader if required */
+          #ifdef CCS_READER_OPTIMIZE
+          
+            int Nslice = PgetiEZ("matrix_ccs_reader_split");
+            Nslice = (Nslice != INT_MAX ? Nslice : 1);
+            coarse_grain_Ap_ccs_matrix(sol_man->jacobian[c]->J,Nslice);
+          
+          #endif
+        }
         flg = FOUND;
         break;
       }
