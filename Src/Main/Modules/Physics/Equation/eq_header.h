@@ -64,7 +64,15 @@ else \
 // EQ_Set_Prefix. */
 #define EQ_PrefixIt(X) \
   (sprintf(EQ__param,"%s_%s",EQ__param__prefix,X) ? EQ__param : NULL)
-  
+
+/* create relevant physics. requires a Physics_T and EQ__param__prefix.
+// used in case like init_EoS which needs a passed physics. */
+#define EQ_MyPhyiscs(EQ__phys) \
+  if (!strcmp(EQ__param__prefix,"NS"))       EQ__phys = init_physics(0,NS);\
+  else if (!strcmp(EQ__param__prefix,"NS1")) EQ__phys = init_physics(0,NS1);\
+  else if (!strcmp(EQ__param__prefix,"NS2")) EQ__phys = init_physics(0,NS2);\
+  else Error0(NO_OPTION);
+ 
 void eq_solve_elliptic_equation(Physics_T *const phys);
 
 
