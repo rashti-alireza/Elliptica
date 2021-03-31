@@ -153,14 +153,20 @@ static int set_equation_params(Physics_T *const phys)
   /* XCTS_curve_Wolf_prho_ddm_phi equations */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_Wolf_prho_ddm_eq_phi,
          "eq_XCTS_curve_Wolf_prho_ddm_phi");
-  
+  add_eq(&eq_global_bc_eq ,eq_XCTS_curve_Wolf_ddm_bc_phi,
+         "bc_XCTS_curve_Wolf_prho_ddm_phi");
+         
   /* XCTS_curve_Wolf_prho_ddm_phi1 equations */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_Wolf_prho_ddm_eq_phi,
          "eq_XCTS_curve_Wolf_prho_ddm_phi1");
+  add_eq(&eq_global_bc_eq ,eq_XCTS_curve_Wolf_ddm_bc_phi,
+         "bc_XCTS_curve_Wolf_prho_ddm_phi1");
   
   /* XCTS_curve_Wolf_prho_ddm_phi2 equations */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_Wolf_prho_ddm_eq_phi,
          "eq_XCTS_curve_Wolf_prho_ddm_phi2");
+  add_eq(&eq_global_bc_eq ,eq_XCTS_curve_Wolf_ddm_bc_phi,
+         "bc_XCTS_curve_Wolf_prho_ddm_phi2");
   
   /* XCTS_curve_excision_KerrSchild_ddm_psi equations */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_exc_KS_ddm_eq_psi,

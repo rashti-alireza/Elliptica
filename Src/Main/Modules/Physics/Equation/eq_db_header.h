@@ -36,9 +36,7 @@ void *eq_XCTS_curve_exc_KS_ddm_jacobian_eq_B0_U2(void *vp1,void *vp2);
 void *eq_XCTS_curve_exc_KS_ddm_jacobian_bc_B0_U2(void *vp1,void *vp2);
 
 void *eq_XCTS_curve_Wolf_prho_ddm_eq_phi(void *vp1,void *vp2);
-void *eq_XCTS_curve_Wolf_prho_ddm_bc_phi(void *vp1,void *vp2);
 void *eq_XCTS_curve_Wolf_prho_ddm_jacobian_eq_phi(void *vp1,void *vp2);
-void *eq_XCTS_curve_Wolf_prho_ddm_jacobian_bc_phi(void *vp1,void *vp2);
 
 
 
