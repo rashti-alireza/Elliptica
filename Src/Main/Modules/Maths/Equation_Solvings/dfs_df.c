@@ -47,6 +47,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     Flag_T flg = NONE;
     Uint c;
     for (c = 0; c < sol_man->nj; ++c)
+    {
       if (strcmp_i(sol_man->jacobian[c]->type,jtype))
       {
         /* if regular cast to ccs, this happens when 
@@ -69,7 +70,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
         flg = FOUND;
         break;
       }
-    
+    }
     if (flg == FOUND)
     {
       i++;
