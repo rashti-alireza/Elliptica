@@ -199,8 +199,8 @@ void add_special_grid_solve_equations(Grid_T *const grid,const char *const name,
 // and put patch1->solving_man->jacobian = 0. */
 void move_dfdu_jacobian_patch(Patch_T *const patch2,Patch_T *const patch1)
 {
-  /* some checks */
-  if(!patch2 || !patch1->solving_man)
+  /* if everything is OK. */
+  if(!patch2 || !patch1->solving_man || !patch1->solving_man->nj)
     return;
   
   if (!patch2->solving_man)
