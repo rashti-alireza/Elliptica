@@ -40,6 +40,8 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     Error0(INCOMPLETE_FUNC);
   
   i = 0;
+  /* IMPORTANT NOTE: ALWAYS use sol_man->nj for loop and count, 
+  // since it's varied in sub call function. */
   while (types[i] != 0)
   {
     jtype = interpret_type(types[i]);
