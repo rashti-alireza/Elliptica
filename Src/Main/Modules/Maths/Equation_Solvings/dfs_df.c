@@ -85,7 +85,11 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     J = alloc_matrix(REG_SF,nn,nn);
     Jacobian(J->reg->A,patch,jt_e);
     
-    /* saving jacobian elements in ccs */
+    /* saving jacobian elements in ccs but first check duplication. */
+    for (c = 0; c < sol_man->nj; ++c)
+     if (strcmp_i(sol_man->jacobian[c]->type,jtype))
+      Errors("duplicated type for '%s'!",jtype);
+    
     c = sol_man->nj;
     sol_man->jacobian = 
       realloc(sol_man->jacobian,(c+1)*sizeof(*sol_man->jacobian));
@@ -688,6 +692,12 @@ static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *co
    J_1st            = Jm_1st->reg->A;
    /* -> J = d(df/d@)/df */
    fill_jacobian_spectral_method_1stOrder(J_1st,patch,deriv_1st);
+   
+   /* saving jacobian elements in reg_f but first check duplication. */
+   for (c = 0; c < sol_man->nj; ++c)
+     if (strcmp_i(sol_man->jacobian[c]->type,jtype_1st))
+      Errors("duplicated type for '%s'!",jtype_1st);
+    
    c = sol_man->nj;
    /* add to struct in reg_f to be used potentially later */
    sol_man->jacobian = 
