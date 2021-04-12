@@ -197,8 +197,8 @@ void fd_extrinsic_curvature_PGSchild(Physics_T *const phys,
     dField_di_STEM(dtrK_D2,dtrK);
     
     /* clean up */
-    remove_field_with_regex(patch,"^pg__beta_U.$");
-    remove_field_with_regex(patch,"^dpg__beta_U.D.$");
+    remove_field_regex(patch,"^pg__beta_U.$");
+    remove_field_regex(patch,"^dpg__beta_U.D.$");
   }
     
   UNUSED(ig);
@@ -464,7 +464,7 @@ fd_modify_gConf_igConf_dgConf_to_flat_expmrpKS
     char regex[STR_LEN];
     
     sprintf(regex,"^%s_D.D.D.$",dgConf);
-    partial_derivative_with_regex(patch,regex);
+    partial_derivative_regex(patch,regex);
     
     READ_v_STEM(gConf_D2D2,gConf)
     READ_v_STEM(gConf_D0D2,gConf)
@@ -540,7 +540,7 @@ fd_modify_trK_to_expmrptrK_compute_dtrK
     
     /* derivatives */
     sprintf(regex,"^%s_D.$",dtrK);
-    partial_derivative_with_regex(patch,regex);
+    partial_derivative_regex(patch,regex);
   }
   
   FUNC_TOC
@@ -595,7 +595,7 @@ fd_populate_gConf_igConf_dgConf_ConfKerrSchild
     
     /* derivatives */
     sprintf(regex,"^%s_D.D.D.$",dgConf);
-    partial_derivative_with_regex(patch,regex);
+    partial_derivative_regex(patch,regex);
   }
   
   FUNC_TOC
@@ -704,7 +704,7 @@ fd_populate_gConf_igConf_dgConf_flat
     
     /* since gConf is constant dgConf is machine precision exact */
     sprintf(regex,"^%s_D.D.D.$",dgConf);
-    partial_derivative_with_regex(patch,regex);
+    partial_derivative_regex(patch,regex);
   }
   
   FUNC_TOC
@@ -780,8 +780,8 @@ fd_populate_psi_alphaPsi_beta_KerrSchild
      fd_psi_alphaPsi_beta_KerrSchild_patch(patch,BHx,BHy,BHz,
                                        "fd_ks__ig",Psi,AlphaPsi,Beta);
      /* remove redundant */
-     remove_field_with_regex(patch,"^fd_ks__g_D.+");
-     remove_field_with_regex(patch,"^fd_ks__ig_U.+");
+     remove_field_regex(patch,"^fd_ks__g_D.+");
+     remove_field_regex(patch,"^fd_ks__ig_U.+");
     }
     else
      fd_psi_alphaPsi_beta_KerrSchild_patch(patch,BHx,BHy,BHz,
@@ -871,8 +871,8 @@ fd_populate_beta_KerrSchild
     fd_beta_KerrSchild_patch(patch,BHx,BHy,BHz,"fd_ks__ig",Beta);
     
     /* remove redundant */
-    remove_field_with_regex(patch,"^fd_ks__g_D.+");
-    remove_field_with_regex(patch,"^fd_ks__ig_U.+");
+    remove_field_regex(patch,"^fd_ks__g_D.+");
+    remove_field_regex(patch,"^fd_ks__ig_U.+");
   }
   
   FUNC_TOC
@@ -960,9 +960,9 @@ fd_populate_psi_alphaPsi_beta_ConfKerrSchild
     }
     
     /* remove redundant */
-    remove_field_with_regex(patch,"^fd_ks__g_D.+");
-    remove_field_with_regex(patch,"^fd_ks__ig_U.+");
-    remove_field_with_regex(patch,"^fd_ks__psi$");
+    remove_field_regex(patch,"^fd_ks__g_D.+");
+    remove_field_regex(patch,"^fd_ks__ig_U.+");
+    remove_field_regex(patch,"^fd_ks__psi$");
   }
   
   FUNC_TOC

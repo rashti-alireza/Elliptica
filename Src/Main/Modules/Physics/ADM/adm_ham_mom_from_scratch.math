@@ -185,10 +185,10 @@ Mom_constraint(i) = DjKij(i)-adm_ig(i,j)*dtrK(-j)-8*pi*J(i);
 
 `}`
 ``
-`remove_field_with_regex(patch,"^adm_ig_U.+");`
-`remove_field_with_regex(patch,"^dadm_g_D.+");`
-`remove_field_with_regex(patch,"^dadm_KIJ_U.+");`
-`remove_field_with_regex(patch,"^Gamma_U.+");`
-`remove_field_with_regex(patch,"^dGamma_U.+");`
+`remove_field_regex(patch,"^adm_ig_U.+");`
+`remove_field_regex(patch,"^dadm_g_D.+");`
+`remove_field_regex(patch,"^dadm_KIJ_U.+");`
+`remove_field_regex(patch,"^Gamma_U.+");`
+`remove_field_regex(patch,"^dGamma_U.+");`
 `}`
 

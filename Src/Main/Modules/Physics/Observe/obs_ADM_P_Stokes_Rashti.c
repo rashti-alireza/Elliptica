@@ -374,8 +374,8 @@ G_U0*Pi__U0D1 + G_U1*Pi__U1D1 + G_U2*Pi__U2D1 + dPi_U1;
   for(p = 0; p < N; ++p)
   {
     Patch_T *patch = adm[p]->patch;
-    remove_field_with_regex(patch,"^obs__DPi_D.$");
-    remove_field_with_regex(patch,"^obs__Pin_D.$");
+    remove_field_regex(patch,"^obs__DPi_D.$");
+    remove_field_regex(patch,"^obs__Pin_D.$");
   }
 
 }

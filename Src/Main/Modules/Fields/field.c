@@ -123,7 +123,7 @@ void add_attribute(Field_T *const fld,const char *const attribute)
 
 /* ->: a list of fields index match with regex, null, if not found any.
 // the number of of matched is put in Nm. */
-Uint *find_field_index_with_regex(const Patch_T *const patch,const char *const regex,Uint *const Nm)
+Uint *find_field_index_regex(const Patch_T *const patch,const char *const regex,Uint *const Nm)
 {
   Uint *ind = 0;
   Uint nm   = 0;
@@ -878,7 +878,7 @@ void free_info(Field_T *f)
 
 /* removing all fields in the given patch whose name matches with 
 // the given regex pattern */
-void remove_field_with_regex(Patch_T *const patch,const char *const regex)
+void remove_field_regex(Patch_T *const patch,const char *const regex)
 {
   if (!patch)
     return;

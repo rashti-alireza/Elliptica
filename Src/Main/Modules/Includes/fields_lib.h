@@ -50,8 +50,8 @@ void free_info(Field_T *f);
 void free_field(Field_T *fld);
 void empty_field(Field_T *fld);
 int free_coeffs(Field_T *fld);
-void remove_field_with_regex(Patch_T *const patch,const char *const regex);
-Uint *find_field_index_with_regex(const Patch_T *const patch,const char *const regex,Uint *const Nm);
+void remove_field_regex(Patch_T *const patch,const char *const regex);
+Uint *find_field_index_regex(const Patch_T *const patch,const char *const regex,Uint *const Nm);
 void remove_aux_fields(struct GRID_T *const grid,const char *const aux_names);
 void add_aux_fields(struct GRID_T *const grid,const char *const aux_names);
 

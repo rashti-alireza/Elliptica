@@ -138,7 +138,7 @@ Symm[Chris(i,j,k) = Chris(i,k,j)];
      `trKij[ijk] = trk;`
 `}`
 
-`remove_field_with_regex(patch,"^KS__");`
-`remove_field_with_regex(patch,"^dKS__");`
+`remove_field_regex(patch,"^KS__");`
+`remove_field_regex(patch,"^dKS__");`
 
 `}`

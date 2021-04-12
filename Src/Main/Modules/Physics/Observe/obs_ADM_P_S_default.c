@@ -149,7 +149,7 @@ pow(gConf_D2D2[ijk], 2)));
   for(p = 0; p < N; ++p)
   {
     Patch_T *patch = adm[p]->patch;
-    remove_field_with_regex(patch,"^obs__Pn_D.$");
+    remove_field_regex(patch,"^obs__Pn_D.$");
   }
 
 }

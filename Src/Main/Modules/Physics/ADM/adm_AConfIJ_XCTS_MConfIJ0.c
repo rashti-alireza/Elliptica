@@ -449,6 +449,6 @@ alphaPsi[ijk];
   dAConfIJ_U1U1D0[ijk] = dlAij_U1U1D0;
   dAConfIJ_U1U1D1[ijk] = dlAij_U1U1D1;
 }
-remove_field_with_regex(patch,"^_LBij_U.+");
-remove_field_with_regex(patch,"^_dLBij_U.+");
+remove_field_regex(patch,"^_LBij_U.+");
+remove_field_regex(patch,"^_dLBij_U.+");
 }

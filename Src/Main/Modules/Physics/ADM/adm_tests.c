@@ -52,7 +52,7 @@ void adm_doctest_AConfIJ(Physics_T *const phys)
       FOR_ALL_p(grid->np)
       {
         Patch_T *patch = grid->patch[p];
-        remove_field_with_regex(patch,"^test_adm_Kij_D.*");
+        remove_field_regex(patch,"^test_adm_Kij_D.*");
       }
       free_physics(bh);
     }

@@ -470,7 +470,7 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   if (v_ind < 0)
   {
     Uint Nf   = 0;
-    Uint *fInd = find_field_index_with_regex(patch,subg->field,&Nf);
+    Uint *fInd = find_field_index_regex(patch,subg->field,&Nf);
     Uint f = 0;
     
     for (f = 0; f < Nf; ++f)

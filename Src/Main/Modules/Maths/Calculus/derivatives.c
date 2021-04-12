@@ -17,7 +17,7 @@
 // which one might not wanted to take second order derivative or
 // maybe the second order derivative matches earlier than
 // first one which causes problem, thus the correct regex is ^dpsi_D.+ */
-void partial_derivative_with_regex(Patch_T *const patch,
+void partial_derivative_regex(Patch_T *const patch,
                                    const char *const regex_list)
 {
   char **regex = read_separated_items_in_string(regex_list,',');
