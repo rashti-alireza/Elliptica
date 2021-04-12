@@ -12,7 +12,9 @@ static const double CONST = 1.0;
 /* preparing J_* used in equations for each patch
 // according to given types. note: end of types pointer
 // must be marked with null pointer, e.g. *types[3] = {"dfxx_df","dfy_df",0}.
-*/
+// NOTE: to make this faster first call second order Jacobian
+// e.g. dfxy_df and then dfx_df. this is b/c second orders save 
+// first order too.  */
 void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
 {
   Js_Jacobian_eq_F *Jacobian = 0;
@@ -38,20 +40,39 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     Error0(INCOMPLETE_FUNC);
   
   i = 0;
+  /* IMPORTANT NOTE: ALWAYS use sol_man->nj for loop and count, 
+  // since it's varied in sub call function. */
   while (types[i] != 0)
   {
     jtype = interpret_type(types[i]);
-    
     /* check if this type has been already made then skip this */
     Flag_T flg = NONE;
     Uint c;
     for (c = 0; c < sol_man->nj; ++c)
+    {
       if (strcmp_i(sol_man->jacobian[c]->type,jtype))
       {
+        /* if regular cast to ccs, this happens when 
+        // second order called first */
+        if (sol_man->jacobian[c]->J->reg_f)
+        {
+          Matrix_T *J_reg         = sol_man->jacobian[c]->J;
+          sol_man->jacobian[c]->J = cast_matrix_ccs(J_reg);
+          free_matrix(J_reg);
+           
+          /* to optimize ccs reader if required */
+          #ifdef CCS_READER_OPTIMIZE
+          
+            int Nslice = PgetiEZ("matrix_ccs_reader_split");
+            Nslice = (Nslice != INT_MAX ? Nslice : 1);
+            coarse_grain_Ap_ccs_matrix(sol_man->jacobian[c]->J,Nslice);
+          
+          #endif
+        }
         flg = FOUND;
         break;
       }
-    
+    }
     if (flg == FOUND)
     {
       i++;
@@ -64,7 +85,11 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     J = alloc_matrix(REG_SF,nn,nn);
     Jacobian(J->reg->A,patch,jt_e);
     
-    /* saving jacobian elements */
+    /* saving jacobian elements in ccs but first check duplication. */
+    for (c = 0; c < sol_man->nj; ++c)
+     if (strcmp_i(sol_man->jacobian[c]->type,jtype))
+      Errors("duplicated type for '%s'!",jtype);
+    
     c = sol_man->nj;
     sol_man->jacobian = 
       realloc(sol_man->jacobian,(c+1)*sizeof(*sol_man->jacobian));
@@ -75,7 +100,16 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     sol_man->jacobian[c]->J = cast_matrix_ccs(J);
     free_matrix(J);
     
-    if (GRT(J_sizeMb_ccs(sol_man->jacobian[i]->J),max_j_size))
+    /* to optimize ccs reader if required */
+    #ifdef CCS_READER_OPTIMIZE
+    
+      int Nslice = PgetiEZ("matrix_ccs_reader_split");
+      Nslice = (Nslice != INT_MAX ? Nslice : 1);
+      coarse_grain_Ap_ccs_matrix(sol_man->jacobian[c]->J,Nslice);
+    
+    #endif
+    
+    if (GRT(J_sizeMb_ccs(sol_man->jacobian[c]->J),max_j_size))
       write_J_in_disk_ccs();
     
     free(jtype);
@@ -220,7 +254,7 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
       {
         for (c = 0; c < nn; ++c)
         {
-          if (GRT(ABS(cmp[Spectral_e][r][c]-cmp[Direct_e][r][c]),Err))
+          if (GRT(ABSd(cmp[Spectral_e][r][c]-cmp[Direct_e][r][c]),Err))
             fprintf(file,"%3u %3u   %0.10f    %0.10f\n",
               r,c,cmp[Spectral_e][r][c],cmp[Direct_e][r][c]);
         }
@@ -480,7 +514,7 @@ void obsolete_fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *c
     Uint lmn;
     Uint i,j,k;
     
-    IJK(ijk,N,&i,&j,&k);
+    ijk_to_i_j_k(ijk,N,&i,&j,&k);
     x = ChebExtrema_1point(N[0],i);
     y = ChebExtrema_1point(N[1],j);
     z = ChebExtrema_1point(N[2],k);
@@ -490,7 +524,7 @@ void obsolete_fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *c
       double j0,j1,j2;
       Uint l,m,n,ip,jp,kp;
       
-      IJK(lmn,N,&l,&m,&n);
+      ijk_to_i_j_k(lmn,N,&l,&m,&n);
       j0 = 0;
       j1 = 0;
       j2 = 0;
@@ -563,7 +597,7 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
     double dN2_dq = dq2_dq1(patch,_N2_,q_dir,ijk);/* coordinate jacobian */
     double x,y,z;
     Uint i,j,k,l,m,n;
-    IJK(ijk,N,&i,&j,&k);
+    ijk_to_i_j_k(ijk,N,&i,&j,&k);
     
     x = ChebExtrema_1point(N[0],i);
     y = ChebExtrema_1point(N[1],j);
@@ -572,17 +606,17 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
     if (!EQL(dN0_dq,0))
     {
       for (l = 0; l < N[0]; ++l)
-        J[ijk][L(N,l,j,k)] += dN0_dq*sum_0_N_dCi_dfj_by_dTi_dq(N[0],l,x);
+        J[ijk][i_j_k_to_ijk(N,l,j,k)] += dN0_dq*sum_0_N_dCi_dfj_by_dTi_dq(N[0],l,x);
     }
     if (!EQL(dN1_dq,0))
     {
       for (m = 0; m < N[1]; ++m)
-        J[ijk][L(N,i,m,k)] += dN1_dq*sum_0_N_dCi_dfj_by_dTi_dq(N[1],m,y);
+        J[ijk][i_j_k_to_ijk(N,i,m,k)] += dN1_dq*sum_0_N_dCi_dfj_by_dTi_dq(N[1],m,y);
     }
     if (!EQL(dN2_dq,0))
     {
       for (n = 0; n < N[2]; ++n)
-        J[ijk][L(N,i,j,n)] += dN2_dq*sum_0_N_dCi_dfj_by_dTi_dq(N[2],n,z);
+        J[ijk][i_j_k_to_ijk(N,i,j,n)] += dN2_dq*sum_0_N_dCi_dfj_by_dTi_dq(N[2],n,z);
     }
   }/* end of for (ijk = 0; ijk < nn; ++ijk) */
   
@@ -613,27 +647,93 @@ static void JType_E2Dd_T(const JType_E jt_e, Dd_T *const q_dir)
 static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *const patch,const JType_E deriv_dir)
 {
   const Uint nn = patch->nn;
+  Solving_Man_T *const sol_man = patch->solving_man;
+  double **J_1st = 0;
   Field_T *j_1st_deriv_field = 0;
   Patch_T temp_patch;
   JType_E deriv_1st = T_UNDEF,deriv_2nd = T_UNDEF;
-  char deriv_2nd_s[MAX_STR_LEN];
+  char deriv_2nd_s[MAX_STR_LEN/2];
+  char deriv_1st_s[MAX_STR_LEN/2];
+  char aux[MAX_STR_LEN] = {'\0'};
+  char *jtype_1st = 0;
   Uint lmn;
+  Flag_T flg = NONE;
+  Uint c;
   
   read_1st_and_2nd_deriv(deriv_dir,&deriv_1st,&deriv_2nd);
   JType_E2str(deriv_2nd,deriv_2nd_s);
+  JType_E2str(deriv_1st,deriv_1st_s);
+  sprintf(aux,"df%s_df",deriv_1st_s);
+  jtype_1st = interpret_type(aux);
+  
+  /* see if Jacobian exists in reg_f already so use this */
+  flg = NONE;
+  for (c = 0; c < sol_man->nj; ++c)
+  {
+   if (strcmp_i(sol_man->jacobian[c]->type,jtype_1st))
+   {
+    if (sol_man->jacobian[c]->J->reg_f)
+    {
+     flg   = FOUND;
+     J_1st = sol_man->jacobian[c]->J->reg->A;
+    }
+    else/* it has other format like ccs */
+    {
+     flg = INUSE;
+     J_1st = 0;
+    }
+    break;
+   }
+  }
+  /* if nothing, calculate the Jacobian and save it */
+  if (flg == NONE)
+  {
+   Matrix_T *Jm_1st = alloc_matrix(REG_SF,nn,nn);
+   J_1st            = Jm_1st->reg->A;
+   /* -> J = d(df/d@)/df */
+   fill_jacobian_spectral_method_1stOrder(J_1st,patch,deriv_1st);
+   
+   /* saving jacobian elements in reg_f but first check duplication. */
+   for (c = 0; c < sol_man->nj; ++c)
+     if (strcmp_i(sol_man->jacobian[c]->type,jtype_1st))
+      Errors("duplicated type for '%s'!",jtype_1st);
+    
+   c = sol_man->nj;
+   /* add to struct in reg_f to be used potentially later */
+   sol_man->jacobian = 
+     realloc(sol_man->jacobian,(c+1)*sizeof(*sol_man->jacobian));
+   IsNull(sol_man->jacobian);
+   sol_man->jacobian[c] = calloc(1,sizeof(*sol_man->jacobian[c]));
+   IsNull(sol_man->jacobian[c]);
+   sprintf(sol_man->jacobian[c]->type,jtype_1st);
+   sol_man->jacobian[c]->J = Jm_1st;
+   Jm_1st = 0;
+   ++sol_man->nj;
+  }
+  /* we need to construct again */
+  else if (flg == INUSE)
+  {
+   J_1st = J;/* using the same give memory */
+   /* -> J = d(df/d@)/df */
+   fill_jacobian_spectral_method_1stOrder(J_1st,patch,deriv_1st);
+  }
+  /* do nothing */
+  else if (flg == FOUND)
+  {
+   ;
+  }
+  else
+   Error0(NO_OPTION);
   
   temp_patch = make_temp_patch(patch);
   j_1st_deriv_field = add_field("j_1st_deriv_field","(3dim)",&temp_patch,YES);
-  
-  fill_jacobian_spectral_method_1stOrder(J,patch,deriv_1st);/* -> J = d(df/d@)/df */
-  
   for (lmn = 0; lmn < nn; ++lmn)
   {
     Uint ijk;
     double *j_2nd_deriv_value = 0;
    
     for (ijk = 0; ijk < nn; ++ijk)
-      j_1st_deriv_field->v[ijk] = J[ijk][lmn];
+      j_1st_deriv_field->v[ijk] = J_1st[ijk][lmn];
       
     j_2nd_deriv_value = Partial_Derivative(j_1st_deriv_field,deriv_2nd_s);
     /* since it was added v2 and info in j_1st_deriv_field we clean them 
@@ -652,6 +752,7 @@ static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *co
   Field_T *f = temp_patch.fields[LookUpField("j_1st_deriv_field",&temp_patch)];
   remove_field(f);
   free_temp_patch(&temp_patch);
+  Free(jtype_1st);
 }
 
 /* decomposing deriv_dir and finding 1st and 2nd direction for derivative */
@@ -804,23 +905,60 @@ Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type)
   return j;
 }
 
+#ifdef CCS_READER_OPTIMIZE
 /* given matrix, row and column of a CCS format matrix,
 // it returns the corresponing enteries of matrix.
-// ->return value: m[i][j] in which m is in CCS format
-*/
+// NOTE: this function is heavily used and must be
+// super optimized.
+// ->return value: m[i][j] in which m is in CCS format. */
 double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c)
 {
-  const int *const Ap    = m->ccs->Ap;
   const int *const Ai    = m->ccs->Ai;
   const double *const Ax = m->ccs->Ax;
-  
-  /* moving along none zero entries of the matrix at column c.
-  // Note: it should not pass the given row.  */
-  for (int i = Ap[c]; Ai[i] <= r && i < Ap[c+1]; ++i)
-    if (Ai[i] == r) return Ax[i];
+  const int *const Ap_cg = m->ccs->Ap_cg;
+  const int *const i_cg  = m->ccs->i_cg;
+  const int i_i_max      = Ap_cg[c+1]-1;
+  int i_i                = Ap_cg[c];/* i_{i} */
+   
+  /* find the interval(slice) where given row resides */
+  while (i_i < i_i_max)
+  {
+    // if (Ai[i_cg[i_i]] <= r && r <= Ai[i_cg[i_i+1]-1])
+    if (r <= Ai[i_cg[i_i+1]-1])
+      break;
     
+    ++i_i;
+  }
+  
+  //for (int i = i_cg[i_i]; Ai[i] <= r && i < Ap[c+1]; ++i)
+  const int i_max = i_cg[i_i+1];
+  for (int i = i_cg[i_i]; i < i_max; ++i)
+    if (Ai[i] == r) return Ax[i];
+   
   return 0.;
 }
+
+#else
+/* given matrix, row and column of a CCS format matrix,
+// it returns the corresponing enteries of matrix.
+// NOTE: this function is heavily used and must be
+// super optimized.
+// ->return value: m[i][j] in which m is in CCS format. */
+double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c)
+{
+  const int *const Ai    = m->ccs->Ai;
+  const double *const Ax = m->ccs->Ax;
+  const int *const Ap    = m->ccs->Ap;
+  const int i_max        = Ap[c+1];
+  /* moving along none zero entries of the matrix at column c.
+  // Note: it should not pass the given row.  */
+  for (int i = Ap[c]; Ai[i] <= r && i < i_max; ++i)
+    if (Ai[i] == r) return Ax[i];
+  
+  return 0.;
+}
+#endif
+
 
 /* calculating the give ccs matirx size.
 // ->return value: size of matrix in Mb
@@ -959,11 +1097,11 @@ static double dInterp_x_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N0_,_x_,L(n,X0,b,c));
+  J = dq2_dq1(patch,_N0_,_x_,i_j_k_to_ijk(n,X0,b,c));
   
   if (!EQL(J,0))
   {
@@ -982,7 +1120,7 @@ static double dInterp_x_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[1]; ++r)
     {
-      l = L(n,a,r,c);
+      l = i_j_k_to_ijk(n,a,r,c);
       qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
 
       s += dq2_dq1(patch,_N1_,_x_,l)
@@ -997,7 +1135,7 @@ static double dInterp_x_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[2]; ++r)
     {
-      l = L(n,a,b,r);
+      l = i_j_k_to_ijk(n,a,b,r);
       qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
 
       s += dq2_dq1(patch,_N2_,_x_,l)
@@ -1029,11 +1167,11 @@ static double dInterp_y_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N0_,_y_,L(n,X0,b,c));
+  J = dq2_dq1(patch,_N0_,_y_,i_j_k_to_ijk(n,X0,b,c));
   
   if (!EQL(J,0))
   {
@@ -1052,7 +1190,7 @@ static double dInterp_y_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[1]; ++r)
     {
-      l = L(n,a,r,c);
+      l = i_j_k_to_ijk(n,a,r,c);
       qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
 
       s += dq2_dq1(patch,_N1_,_y_,l)
@@ -1067,7 +1205,7 @@ static double dInterp_y_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[2]; ++r)
     {
-      l = L(n,a,b,r);
+      l = i_j_k_to_ijk(n,a,b,r);
       qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
 
       s += dq2_dq1(patch,_N2_,_y_,l)
@@ -1099,11 +1237,11 @@ static double dInterp_z_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N0_,_z_,L(n,X0,b,c));
+  J = dq2_dq1(patch,_N0_,_z_,i_j_k_to_ijk(n,X0,b,c));
   
   if (!EQL(J,0))
   {
@@ -1122,7 +1260,7 @@ static double dInterp_z_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[1]; ++r)
     {
-      l = L(n,a,r,c);
+      l = i_j_k_to_ijk(n,a,r,c);
       qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
 
       s += dq2_dq1(patch,_N1_,_z_,l)
@@ -1137,7 +1275,7 @@ static double dInterp_z_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[2]; ++r)
     {
-      l = L(n,a,b,r);
+      l = i_j_k_to_ijk(n,a,b,r);
       qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
 
       s += dq2_dq1(patch,_N2_,_z_,l)
@@ -1167,7 +1305,7 @@ static double dInterp_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,con
   double q[3];/* normalized coords */
   Uint i,j,k;
   
-  IJK(df,n,&i,&j,&k);
+  ijk_to_i_j_k(df,n,&i,&j,&k);
   q[1] = General2ChebyshevExtrema(X[1],1,patch);
   q[2] = General2ChebyshevExtrema(X[2],2,patch);
   
@@ -1196,11 +1334,11 @@ static double dInterp_x_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N1_,_x_,L(n,a,Y0,c));
+  J = dq2_dq1(patch,_N1_,_x_,i_j_k_to_ijk(n,a,Y0,c));
   
   if (!EQL(J,0))
   {
@@ -1219,7 +1357,7 @@ static double dInterp_x_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[0]; ++r)
     {
-      l = L(n,r,b,c);
+      l = i_j_k_to_ijk(n,r,b,c);
       qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
 
       s += dq2_dq1(patch,_N0_,_x_,l)
@@ -1234,7 +1372,7 @@ static double dInterp_x_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[2]; ++r)
     {
-      l = L(n,a,b,r);
+      l = i_j_k_to_ijk(n,a,b,r);
       qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
 
       s += dq2_dq1(patch,_N2_,_x_,l)
@@ -1266,11 +1404,11 @@ static double dInterp_y_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N1_,_y_,L(n,a,Y0,c));
+  J = dq2_dq1(patch,_N1_,_y_,i_j_k_to_ijk(n,a,Y0,c));
   
   if (!EQL(J,0))
   {
@@ -1289,7 +1427,7 @@ static double dInterp_y_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[0]; ++r)
     {
-      l = L(n,r,b,c);
+      l = i_j_k_to_ijk(n,r,b,c);
       qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
 
       s += dq2_dq1(patch,_N0_,_y_,l)
@@ -1304,7 +1442,7 @@ static double dInterp_y_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[2]; ++r)
     {
-      l = L(n,a,b,r);
+      l = i_j_k_to_ijk(n,a,b,r);
       qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
 
       s += dq2_dq1(patch,_N2_,_y_,l)
@@ -1336,11 +1474,11 @@ static double dInterp_z_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N1_,_z_,L(n,a,Y0,c));
+  J = dq2_dq1(patch,_N1_,_z_,i_j_k_to_ijk(n,a,Y0,c));
   
   if (!EQL(J,0))
   {
@@ -1359,7 +1497,7 @@ static double dInterp_z_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[0]; ++r)
     {
-      l = L(n,r,b,c);
+      l = i_j_k_to_ijk(n,r,b,c);
       qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
 
       s += dq2_dq1(patch,_N0_,_z_,l)
@@ -1374,7 +1512,7 @@ static double dInterp_z_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[2]; ++r)
     {
-      l = L(n,a,b,r);
+      l = i_j_k_to_ijk(n,a,b,r);
       qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
 
       s += dq2_dq1(patch,_N2_,_z_,l)
@@ -1403,7 +1541,7 @@ static double dInterp_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,con
   double q[3];/* normalized coords */
   Uint i,j,k;
   
-  IJK(df,n,&i,&j,&k);
+  ijk_to_i_j_k(df,n,&i,&j,&k);
   q[0] = General2ChebyshevExtrema(X[0],0,patch);
   q[2] = General2ChebyshevExtrema(X[2],2,patch);
   
@@ -1433,11 +1571,11 @@ static double dInterp_x_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N2_,_x_,L(n,a,b,Z0));
+  J = dq2_dq1(patch,_N2_,_x_,i_j_k_to_ijk(n,a,b,Z0));
   
   if (!EQL(J,0))
   {
@@ -1456,7 +1594,7 @@ static double dInterp_x_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[0]; ++r)
     {
-      l = L(n,r,b,c);
+      l = i_j_k_to_ijk(n,r,b,c);
       qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
 
       s += dq2_dq1(patch,_N0_,_x_,l)
@@ -1471,7 +1609,7 @@ static double dInterp_x_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[1]; ++r)
     {
-      l = L(n,a,r,c);
+      l = i_j_k_to_ijk(n,a,r,c);
       qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
 
       s += dq2_dq1(patch,_N1_,_x_,l)
@@ -1503,11 +1641,11 @@ static double dInterp_y_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N2_,_y_,L(n,a,b,Z0));
+  J = dq2_dq1(patch,_N2_,_y_,i_j_k_to_ijk(n,a,b,Z0));
   
   if (!EQL(J,0))
   {
@@ -1526,7 +1664,7 @@ static double dInterp_y_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[0]; ++r)
     {
-      l = L(n,r,b,c);
+      l = i_j_k_to_ijk(n,r,b,c);
       qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
 
       s += dq2_dq1(patch,_N0_,_y_,l)
@@ -1541,7 +1679,7 @@ static double dInterp_y_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[1]; ++r)
     {
-      l = L(n,a,r,c);
+      l = i_j_k_to_ijk(n,a,r,c);
       qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
 
       s += dq2_dq1(patch,_N1_,_y_,l)
@@ -1573,11 +1711,11 @@ static double dInterp_z_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
   double J;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
-  J = dq2_dq1(patch,_N2_,_z_,L(n,a,b,Z0));
+  J = dq2_dq1(patch,_N2_,_z_,i_j_k_to_ijk(n,a,b,Z0));
   
   if (!EQL(J,0))
   {
@@ -1596,7 +1734,7 @@ static double dInterp_z_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[0]; ++r)
     {
-      l = L(n,r,b,c);
+      l = i_j_k_to_ijk(n,r,b,c);
       qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
 
       s += dq2_dq1(patch,_N0_,_z_,l)
@@ -1611,7 +1749,7 @@ static double dInterp_z_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
     s = 0;
     for (r = 0; r < n[1]; ++r)
     {
-      l = L(n,a,r,c);
+      l = i_j_k_to_ijk(n,a,r,c);
       qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
 
       s += dq2_dq1(patch,_N1_,_z_,l)
@@ -1641,7 +1779,7 @@ static double dInterp_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,con
   double q[3];/* normalized coords */
   Uint i,j,k;
   
-  IJK(df,n,&i,&j,&k);
+  ijk_to_i_j_k(df,n,&i,&j,&k);
   q[0] = General2ChebyshevExtrema(X[0],0,patch);
   q[1] = General2ChebyshevExtrema(X[1],1,patch);
   
@@ -1670,7 +1808,7 @@ static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   double sum = 0,s,qr;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1678,7 +1816,7 @@ static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[0]; ++r)
   {
-    l  = L(n,r,b,c);
+    l  = i_j_k_to_ijk(n,r,b,c);
     qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
     s += dq2_dq1(patch,_N0_,_x_,l)
          *
@@ -1694,7 +1832,7 @@ static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[1]; ++r)
   {
-    l  = L(n,a,r,c);
+    l  = i_j_k_to_ijk(n,a,r,c);
     qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
     s += dq2_dq1(patch,_N1_,_x_,l)
          *
@@ -1710,7 +1848,7 @@ static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[2]; ++r)
   {
-    l  = L(n,a,b,r);
+    l  = i_j_k_to_ijk(n,a,b,r);
     qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
     s += dq2_dq1(patch,_N2_,_x_,l)
          *
@@ -1741,7 +1879,7 @@ static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   double sum = 0,s,qr;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1749,7 +1887,7 @@ static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[0]; ++r)
   {
-    l  = L(n,r,b,c);
+    l  = i_j_k_to_ijk(n,r,b,c);
     qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
     s += dq2_dq1(patch,_N0_,_y_,l)
          *
@@ -1765,7 +1903,7 @@ static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[1]; ++r)
   {
-    l  = L(n,a,r,c);
+    l  = i_j_k_to_ijk(n,a,r,c);
     qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
     s += dq2_dq1(patch,_N1_,_y_,l)
          *
@@ -1781,7 +1919,7 @@ static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[2]; ++r)
   {
-    l  = L(n,a,b,r);
+    l  = i_j_k_to_ijk(n,a,b,r);
     qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
     s += dq2_dq1(patch,_N2_,_y_,l)
          *
@@ -1812,7 +1950,7 @@ static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   double sum = 0,s,qr;
   Uint a,b,c,r,l;
   
-  IJK(df,n,&a,&b,&c);
+  ijk_to_i_j_k(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
   q[1]   = General2ChebyshevExtrema(X[1],1,patch);
   q[2]   = General2ChebyshevExtrema(X[2],2,patch);
@@ -1820,7 +1958,7 @@ static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[0]; ++r)
   {
-    l  = L(n,r,b,c);
+    l  = i_j_k_to_ijk(n,r,b,c);
     qr = General2ChebyshevExtrema(node[l]->X[0],0,patch);
     s += dq2_dq1(patch,_N0_,_z_,l)
          *
@@ -1836,7 +1974,7 @@ static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[1]; ++r)
   {
-    l  = L(n,a,r,c);
+    l  = i_j_k_to_ijk(n,a,r,c);
     qr = General2ChebyshevExtrema(node[l]->X[1],1,patch);
     s += dq2_dq1(patch,_N1_,_z_,l)
          *
@@ -1852,7 +1990,7 @@ static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
   s = 0;
   for (r = 0; r < n[2]; ++r)
   {
-    l  = L(n,a,b,r);
+    l  = i_j_k_to_ijk(n,a,b,r);
     qr = General2ChebyshevExtrema(node[l]->X[2],2,patch);
     s += dq2_dq1(patch,_N2_,_z_,l)
          *
@@ -1881,7 +2019,7 @@ static double dInterp_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,co
   double q[3];/* normalized coords */
   Uint i,j,k;
   
-  IJK(df,n,&i,&j,&k);
+  ijk_to_i_j_k(df,n,&i,&j,&k);
   q[0] = General2ChebyshevExtrema(X[0],0,patch);
   q[1] = General2ChebyshevExtrema(X[1],1,patch);
   q[2] = General2ChebyshevExtrema(X[2],2,patch);
@@ -1913,4 +2051,40 @@ void free_patch_SolMan_jacobian(Patch_T *const patch)
   SolMan->nj       = 0;
 }
 
+/* slice Ap of ccs matrix to optimiza ccs reader.
+// see explanations at Matrix_T->ccs. */
+static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice)
+{
+  assert(Nslice);
+  
+  /* alloc and init */
+  m->ccs->Nslice = Nslice;
+  m->ccs->Ap_cg   = calloc((Uint)m->col+1,sizeof(*m->ccs->Ap_cg));
+  IsNull(m->ccs->Ap_cg);
+  m->ccs->i_cg   = calloc((Uint)(m->col*Nslice+1),sizeof(*m->ccs->i_cg));
+  IsNull(m->ccs->i_cg);
+  
+  const int *const Ap = m->ccs->Ap;
+  int *const Ap_cg = m->ccs->Ap_cg;
+  int *const i_cg = m->ccs->i_cg;
+  int i_i;
+  long c;
+    
+  i_i = 0;
+  for (c = 0; c < m->col; ++c)
+  {
+    if (Ap[c+1]-Ap[c] < Nslice)
+      Error0("Parameter 'matrix_ccs_reader_split' is too large!\n");
 
+    int quotient = (Ap[c+1]-Ap[c])/(Nslice);
+    
+    Ap_cg[c] = i_i;
+    for (int s = 0; s < Nslice; ++s)
+    {
+      i_cg[i_i] = Ap[c] + s*quotient;
+      i_i++;
+    }
+  }
+  i_cg[i_i] = Ap[c];
+  Ap_cg[c]   = i_i;
+}

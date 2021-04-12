@@ -209,7 +209,7 @@ double print_fields_1D(const Grid_T *const grid,const int iteration,
       /* if couldn't find, maybe its a regex. */
       if (field_ind < 0)
       {
-        fInd = find_field_index_with_regex(patch,f[i],&Nf);
+        fInd = find_field_index_regex(patch,f[i],&Nf);
         
         /* if nothing found. */
         if (!fInd)

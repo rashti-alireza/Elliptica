@@ -136,8 +136,8 @@ Cpopulate[dAConfIJ = dlAij];
 
 `}`
 
-`remove_field_with_regex(patch,"^_LBij_U.+");`
-`remove_field_with_regex(patch,"^_dLBij_U.+");`
+`remove_field_regex(patch,"^_LBij_U.+");`
+`remove_field_regex(patch,"^_dLBij_U.+");`
 
 `}`
 

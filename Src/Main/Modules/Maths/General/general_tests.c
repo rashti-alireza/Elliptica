@@ -91,7 +91,7 @@ static int various_sums_of_cos_test(void)
         
       sum_cal = d_dq_sum_1_N_cos_ixb_cos_ixa((int)N,b[j],a[i]);
       
-      if (!EQL(ABS(sum_real-sum_cal)/MaxMag_d(sum_real,sum_cal),0))
+      if (!EQL(ABSd(sum_real-sum_cal)/MaxMag_d(sum_real,sum_cal),0))
       {
         /* more details */
         printf("Discrepancy as follows:\n"

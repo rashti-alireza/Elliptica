@@ -1923,7 +1923,7 @@ static void init_Points(const Interface_T *const interface,PointSet_T ***const i
   pnt_ed = 0;
   FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
   {
-    Uint l = L(n,i,j,k);
+    Uint l = i_j_k_to_ijk(n,i,j,k);
     Uint p = L2(n,f,i,j,k);
     
     if (IsOnEdge(n,l))
@@ -2240,22 +2240,22 @@ fill_N
     switch(f)
     {
       case I_0:
-        ijk = L(n,0,jh,kh);
+        ijk = i_j_k_to_ijk(n,0,jh,kh);
         break;
       case I_n0:
-        ijk = L(n,n[0]-1,jh,kh);
+        ijk = i_j_k_to_ijk(n,n[0]-1,jh,kh);
         break; 
       case J_0:
-        ijk = L(n,ih,0,kh);
+        ijk = i_j_k_to_ijk(n,ih,0,kh);
         break; 
       case J_n1:
-        ijk = L(n,ih,n[1]-1,kh);
+        ijk = i_j_k_to_ijk(n,ih,n[1]-1,kh);
         break; 
       case K_0:
-        ijk = L(n,ih,jh,0);
+        ijk = i_j_k_to_ijk(n,ih,jh,0);
         break; 
       case K_n2:
-        ijk = L(n,ih,jh,n[2]-1);
+        ijk = i_j_k_to_ijk(n,ih,jh,n[2]-1);
         break;
       default:
         Error0("There is not such interface.\n");
@@ -2303,7 +2303,7 @@ static void fill_basics(Patch_T *const patch)
     FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
     {
       Uint p = L2(n,f,i,j,k);
-      point[p]->ind = l = L(n,i,j,k);
+      point[p]->ind = l = i_j_k_to_ijk(n,i,j,k);
       point[p]->face = f;
       point[p]->patch = patch;
       point[p]->exterF= 1;
@@ -2724,7 +2724,7 @@ void tangent(const Point_T *const pnt,double *const N)
   
   FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
   {
-    Uint l = L(n,i,j,k);
+    Uint l = i_j_k_to_ijk(n,i,j,k);
     double nrm;
     
     if (!IsOnEdge(n,l))
@@ -3064,6 +3064,7 @@ find_adjacent_scs
             add_to_subface_scs(pnt[p]);
             point_flag[pnt[p]->ind] = 1;
           }
+          interface[f]->innerB = 1;
         } 
         else/* it must be outerB */
         {
@@ -3075,6 +3076,7 @@ find_adjacent_scs
             add_to_subface_scs(pnt[p]);
             point_flag[pnt[p]->ind] = 1;
           }
+          interface[f]->outerB = 1;
         }
       }
       else
@@ -3477,20 +3479,39 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
     // you can remove comments and try them. 
     // the ideal case that found out in experiments is equality 
     // in the number of Neuman and Drichlet bc for each "patch";
-    // thus in future if elliptic solvern fails you might try this. */
+    // thus in future if elliptic solver fails you might try this. */
     //if (!IsItCovering(patch,"NS_around"))
     //if (!IsItCovering(patch,"BH_around"))
-    if (!IsItCovering(patch,"BH_around,NS_around"))
+    if (IsItCovering(patch,"BH_around,NS_around"))
+    {
+      /* try to first set face Z = 1 to Dirichlet */
+      i = 5;
+    }
+    else if (IsItCovering(patch,"NS"))
+    {
+      /* try to first set face Y = 1 to Dirichlet */
+      i = 3;
+    }
+    else
+    {
       continue;
+    }
     
-    /* try to first set face Z = 1 to Dirichlet */
-    i = 5;
+    /* set Dirichlet */
     {
       face  = patch->interface[i];
       int Favor_Dirichlet = 1;
       
-      if (face->df_dn_set) continue;
-      
+      /* NOTE: an inner or outerB face is assumed to have ONE subface */
+      if (face->outerB || face->innerB)
+      {
+        assert(face->ns == 1);
+        continue;
+      }
+      if (face->df_dn_set)
+        continue;
+    
+        
       /* test if we can favor Dirichlet: */
       
       /* if it has already Dirichlet */
@@ -3558,7 +3579,14 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
     face  = patch->interface[frank[i].fn];
     int Favor_Dirichlet = 1;
     
-    if (face->df_dn_set) continue;
+    /* NOTE: an inner or outerB face is assumed to have ONE subface */
+    if (face->outerB || face->innerB)
+    {
+      assert(face->ns == 1);
+      continue;
+    }
+    if (face->df_dn_set)
+      continue;
     
     /* test if we can favor Dirichlet: */
     

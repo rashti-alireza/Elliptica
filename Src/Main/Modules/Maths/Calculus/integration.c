@@ -400,7 +400,7 @@ static double f_xyz_whole_dV_Cheb_Ext_Spec(Integration_T *const I)
   for (i = 0; i < n[0]; i += 2)
     for (j = 0; j < n[1]; j += 2)
       for (k = 0; k < n[2]; k += 2)
-        sum += Fc[L(n,i,j,k)]*
+        sum += Fc[i_j_k_to_ijk(n,i,j,k)]*
                Int_ChebTn_OPTM(i,n[0])*
                Int_ChebTn_OPTM(j,n[1])*
                Int_ChebTn_OPTM(k,n[2]);
@@ -462,7 +462,7 @@ static double f_xyz_interval_dV_Cheb_Ext_Spec(Integration_T *const I)
     for (j = 0; j < n[1]; ++j)
       for (k = 0; k < n[2]; ++k)
       {
-        sum += Fc[L(n,i,j,k)]*
+        sum += Fc[i_j_k_to_ijk(n,i,j,k)]*
           integral_conventional_ChebTn(n[0],i,th0i,th0f)*
           integral_conventional_ChebTn(n[1],j,th1i,th1f)*
           integral_conventional_ChebTn(n[2],k,th2i,th2f);
@@ -498,7 +498,7 @@ static double f_xyz_dS_Cheb_Ext_Spec(Integration_T *const I)
     for (j = 0; j < n[1]; ++j)
       for (k = 0; k < n[2]; ++k)
       {
-        ijk     = L(n,i,j,k);
+        ijk     = i_j_k_to_ijk(n,i,j,k);
         Fv[ijk] = fv[ijk]*sqrt(det_h_xyzN1N2_Cheb_Ext(&patch,I,ijk));
       }
     
@@ -506,7 +506,7 @@ static double f_xyz_dS_Cheb_Ext_Spec(Integration_T *const I)
     /* note: if i,j or k is odd Int_ChebTn is 0, so it only loops over even numbers */
     for (j = 0; j < n[1]; j += 2)
       for (k = 0; k < n[2]; k += 2)
-        sum += Fc[L(n,i,j,k)]*
+        sum += Fc[i_j_k_to_ijk(n,i,j,k)]*
                Int_ChebTn_OPTM(j,n[1])*
                Int_ChebTn_OPTM(k,n[2]);
     
@@ -518,7 +518,7 @@ static double f_xyz_dS_Cheb_Ext_Spec(Integration_T *const I)
     for (i = 0; i < n[0]; ++i)
       for (k = 0; k < n[2]; ++k)
       {
-        ijk     = L(n,i,j,k);
+        ijk     = i_j_k_to_ijk(n,i,j,k);
         Fv[ijk] = fv[ijk]*sqrt(det_h_xyzN0N2_Cheb_Ext(&patch,I,ijk));
       }
     
@@ -526,7 +526,7 @@ static double f_xyz_dS_Cheb_Ext_Spec(Integration_T *const I)
     /* note: if i,j or k is odd Int_ChebTn is 0, so it only loops over even numbers */
     for (i = 0; i < n[0]; i += 2)
       for (k = 0; k < n[2]; k += 2)
-        sum += Fc[L(n,i,j,k)]*
+        sum += Fc[i_j_k_to_ijk(n,i,j,k)]*
                Int_ChebTn_OPTM(i,n[0])*
                Int_ChebTn_OPTM(k,n[2]);
   }
@@ -537,7 +537,7 @@ static double f_xyz_dS_Cheb_Ext_Spec(Integration_T *const I)
     for (i = 0; i < n[0]; ++i)
       for (j = 0; j < n[1]; ++j)
       {
-        ijk     = L(n,i,j,k);
+        ijk     = i_j_k_to_ijk(n,i,j,k);
         Fv[ijk] = fv[ijk]*sqrt(det_h_xyzN0N1_Cheb_Ext(&patch,I,ijk));
       }
     
@@ -545,7 +545,7 @@ static double f_xyz_dS_Cheb_Ext_Spec(Integration_T *const I)
     /* note: if i,j or k is odd Int_ChebTn is 0, so it only loops over even numbers */
     for (i = 0; i < n[0]; i += 2)
       for (j = 0; j < n[1]; j += 2)
-        sum += Fc[L(n,i,j,k)]*
+        sum += Fc[i_j_k_to_ijk(n,i,j,k)]*
                Int_ChebTn_OPTM(i,n[0])*
                Int_ChebTn_OPTM(j,n[1]);
   }

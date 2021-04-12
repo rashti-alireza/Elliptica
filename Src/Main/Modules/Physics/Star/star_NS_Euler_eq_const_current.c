@@ -22,7 +22,7 @@ double star_NS_current_Euler_eq_const(Physics_T *const phys)
   if (!IsItCovering(patch,cover))
     continue;
 
-  Uint ijk = L(patch->n,patch->n[0]/2,patch->n[1]/2,patch->n[2]/2);
+  Uint ijk = i_j_k_to_ijk(patch->n,patch->n[0]/2,patch->n[1]/2,patch->n[2]/2);
 
   Tij_NS_IF_XCTS_gConf_u0(patch);
 

@@ -431,7 +431,8 @@ static void compute_x(Patch_T *const patch)
   const Uint NS            = Schur->NS;
   const Uint NI            = Schur->NI;
   double *f_prime  = Schur->f_prime;
-  double **const E_Trans_prime = Schur->E_Trans_prime->reg->A;
+  const Uint ETp_ncol         = (Uint)Schur->E_Trans_prime->col;
+  double *const E_Trans_prime = Schur->E_Trans_prime->rmo->A;
   const double *const y = Schur->y;
   double *const x = alloc_double(NS);
   double Ey;/* E_Trans_prime by y */
@@ -441,7 +442,7 @@ static void compute_x(Patch_T *const patch)
   {
     Ey = 0;/* E_Trans_prime by y */
     for (i = 0; i < NI; ++i)
-      Ey += E_Trans_prime[i][s]*y[i];
+      Ey += E_Trans_prime[i_j_to_ij(ETp_ncol,i,s)]*y[i];
     x[s] = f_prime[s]-Ey;
   }
   free(Schur->f_prime);
@@ -524,7 +525,9 @@ static char *making_sub_S_matrix(Patch_T *const patch)
   Matrix_T ** FxE  = Schur->F_by_E_prime;
   Matrix_T ** C    = Schur->C;
   Matrix_T **stack = calloc(Np,sizeof(*stack)); IsNull(stack);
-  double **a,**b,**c;
+  double *a  = 0;
+  double **b = 0;
+  double **c = 0;
   long a_row,a_col,b_row,b_col;
   long row,col;
   Uint p;  
@@ -542,16 +545,16 @@ static char *making_sub_S_matrix(Patch_T *const patch)
       /* some checks */
       assert(a_row == b_row);
       assert(a_col == b_col);
-      assert(FxE[p]->reg_f && C[p]->reg_f);
+      assert(FxE[p]->rmo_f && C[p]->reg_f);
       
       stack[p] = alloc_matrix(REG_SF,a_row,a_col);
-      a = FxE[p]->reg->A;
+      a = FxE[p]->rmo->A;
       b = C[p]->reg->A;
       c = stack[p]->reg->A;
       
       for (row = 0; row < a_row; ++row)
         for (col = 0; col < a_col; ++col)
-          c[row][col] = b[row][col]-a[row][col];
+          c[row][col] = b[row][col]-a[i_j_to_ij(a_col,row,col)];
       
       free_matrix(C[p]);
       free_matrix(FxE[p]);
@@ -560,14 +563,14 @@ static char *making_sub_S_matrix(Patch_T *const patch)
     {
       a_row = FxE[p]->row;
       a_col = FxE[p]->col;
-      assert(FxE[p]->reg_f);
+      assert(FxE[p]->rmo_f);
       stack[p] = FxE[p];
-      a = FxE[p]->reg->A;
+      a = FxE[p]->rmo->A;
       c = stack[p]->reg->A;
       
       for (row = 0; row < a_row; ++row)
         for (col = 0; col < a_col; ++col)
-          c[row][col] = -a[row][col];
+          c[row][col] = -a[i_j_to_ij(a_col,row,col)];
       
       FxE[p] = 0;
     }
@@ -773,7 +776,6 @@ static char *making_F_by_E_prime(Patch_T *const patch)
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
   const Uint np = Schur->np;
   const Matrix_T *const E_Trans_prime = Schur->E_Trans_prime;
-  Matrix_T *MxM;
   Uint p;
   char *msg = calloc(MSG_SIZE1,1);
   IsNull(msg);
@@ -788,9 +790,58 @@ static char *making_F_by_E_prime(Patch_T *const patch)
     
     if (F)
     {
-      MxM = matrix_by_matrix(F,E_Trans_prime,"a*transpose(b)");
+      FxEprime[p] = alloc_matrix(RMO_SF,F->row,E_Trans_prime->row);
+      
+      #if defined(MxM_GSL_BLAS)
+      
+        assert(F->rmo_f);
+        assert(E_Trans_prime->rmo_f);
+        assert(FxEprime[p]->rmo_f);
+        
+        gsl_matrix_view gslF    = gsl_matrix_view_array
+          (F->rmo->A, (Uint)F->row, (Uint)F->col);
+        
+        gsl_matrix_view gslEtp  = gsl_matrix_view_array
+          (E_Trans_prime->rmo->A, (Uint)E_Trans_prime->row, 
+                                  (Uint)E_Trans_prime->col);
+           
+        gsl_matrix_view gslFxEp = gsl_matrix_view_array
+          (FxEprime[p]->rmo->A, (Uint)FxEprime[p]->row, 
+                                (Uint)FxEprime[p]->col);
+        
+        /* Compute F[p][j]xE'[p] */
+        gsl_blas_dgemm (CblasNoTrans, CblasTrans,
+                  1.0, &gslF.matrix, &gslEtp.matrix,
+                  0.0, &gslFxEp.matrix);
+      
+      #elif defined(MxM_MKL_BLAS) || defined(MxM_C_BLAS)
+      
+        assert(F->rmo_f);
+        assert(E_Trans_prime->rmo_f);
+        assert(FxEprime[p]->rmo_f);
+        
+        /* Compute F[p][j]xE'[p]:
+        // for more info about syntax and documentations 
+        // see Math Kernel Library: 
+        // software.intel.com/content/www/us/en/develop/documentation/
+        //                    onemkl-developer-reference-c/top.html.
+        // notation: for row-major order we have a_{ij} = [j+ i*lda], 
+        // where lda is the leading dimension for the array. */
+        cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasTrans, 
+                F->row, E_Trans_prime->row, F->col,
+                1.0/* alpha */,
+                F->rmo->A, F->col/* lda */, 
+                E_Trans_prime->rmo->A, E_Trans_prime->col/* lda */, 
+                0.0/* beta */, 
+                FxEprime[p]->rmo->A, FxEprime[p]->col/* lda */);
+
+      #else
+      
+        matrix_by_matrix(F,E_Trans_prime,FxEprime[p],"a*transpose(b)");
+        
+      #endif
+      
       free_matrix(F);
-      FxEprime[p] = MxM;
     }
   }
   free(Schur->F);
@@ -874,7 +925,7 @@ static char *making_F_and_C(Patch_T *const patch)
     colF = Schur->NS;/* must be number of subdomain point for patch */
     colC = Schur->NI;/* must be number of interface point for patch */
     
-    Schur->F[p] = alloc_matrix(REG_SF,rowF,colF);
+    Schur->F[p] = alloc_matrix(RMO_SF,rowF,colF);
     Schur->C[p] = alloc_matrix(REG_SF,rowC,colC);
     
     /* go thru all of pairs in each sewings */
@@ -1000,7 +1051,8 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
   const Uint NsubFP2    = subface->np;
   const Uint NsubM1     = Schur->NS;
   const Uint NinterFP1  = Schur->NI;
-  double **const F = Schur->F[ppn]->reg->A;
+  const Uint Fncol = (Uint)Schur->F[ppn]->col;
+  double *const F  = Schur->F[ppn]->rmo->A;
   double **const C = Schur->C[ppn]->reg->A;
   double *i2_point;
   double sign;
@@ -1044,7 +1096,7 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
         for (s1 = 0; s1 < NsubM1; ++s1)
         {
           s1_node = inv1[s1];
-          F[i1][s1] += sign*(
+          F[i_j_to_ij(Fncol,i1,s1)] += sign*(
                        N[0]*dfx_df(j0,i1_node,s1_node)
                        +
                        N[1]*dfy_df(j1,i1_node,s1_node)
@@ -1090,7 +1142,7 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
         for (s1 = 0; s1 < NsubM1; s1++)
         {
           s1_node = inv1[s1];
-          F[i2][s1] += sign*(
+          F[i_j_to_ij(Fncol,i2,s1)] += sign*(
                        N[0]*dInterp_df_x(patch,i2_point,s1_node,plane)
                        +
                        N[1]*dInterp_df_y(patch,i2_point,s1_node,plane)
@@ -1155,7 +1207,7 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
         for (s1 = 0; s1 < NsubM1; s1++)
         {
           s1_node = inv1[s1];
-          F[i2][s1] += sign*dInterp_df(patch,i2_point,s1_node,0);
+          F[i_j_to_ij(Fncol,i2,s1)] += sign*dInterp_df(patch,i2_point,s1_node,0);
         }
         /* C part */
         for (i1 = 0; i1 < NinterFP1; ++i1)
@@ -1190,7 +1242,8 @@ static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
   const Uint NsubM1 = Schur->NS;
   const Uint NinterFP1 = Schur->NI;
   const Uint *node1 = 0,*node2 = 0;
-  double **const F = Schur->F[ppn]->reg->A;
+  const Uint Fncol = (Uint)Schur->F[ppn]->col;
+  double *const F  = Schur->F[ppn]->rmo->A;
   double **const C = Schur->C[ppn]->reg->A;
   double sign;
   Uint subfp2,i1,i2,s1,s1_node,i1_node,i2_node;
@@ -1236,7 +1289,7 @@ static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
       for (s1 = 0; s1 < NsubM1; ++s1)
       {
         s1_node = inv1[s1];
-        F[i2][s1] += sign*(
+        F[i_j_to_ij(Fncol,i2,s1)] += sign*(
                      N[0]*dfx_df(j0,i2_node,s1_node)
                      +
                      N[1]*dfy_df(j1,i2_node,s1_node)
@@ -1285,11 +1338,10 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   const double time1 = get_time_sec();
   const int LONG_VERSION = patch->solving_man->settings->umfpack_size;
   DDM_Schur_Complement_T *const S = patch->solving_man->method->SchurC;
-  double **E_Trans;
-  Matrix_T *a;
+  double **E_Trans = 0;
+  Matrix_T *a  = 0;
   double *const f = S->f;
-  double **xs,**bs;
-  Matrix_T *E_prime;
+  double **xs = 0, **bs = 0;
   Umfpack_T *umfpack = init_umfpack();
   Uint ns = 1;
   Uint i;
@@ -1338,13 +1390,16 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
     direct_solver_series_umfpack_di(umfpack);
   
   S->f_prime = xs[ns-1];
-  E_prime = calloc(1,sizeof(*E_prime));
-  IsNull(E_prime);
-  E_prime->col = (long)S->E_Trans->col;
-  E_prime->row = (long)S->E_Trans->row;
-  E_prime->reg_f = 1;
-  E_prime->reg->A = xs;
-  S->E_Trans_prime = E_prime;
+  /* cast 2d array to row major order */
+  
+  /* this is an ad-hoc solution, later one can improve it */
+  Matrix_T *m_xs = calloc(1,sizeof(*m_xs));
+  m_xs->row      = (long)S->E_Trans->row;
+  m_xs->col      = (long)S->E_Trans->col;
+  m_xs->reg_f    = 1;
+  m_xs->reg->A   = xs;
+  S->E_Trans_prime = cast_matrix_rmo(m_xs);
+  free_matrix(m_xs);
   
   sprintf(msg,"{ Solve BE' = E and Bf' = f ...\n"
               "%s"
@@ -2407,7 +2462,7 @@ static void fill_interpolation_flags(Interpolation_T *const it,Patch_T *const pa
 // it returns the coordinate index of the surface of neighbor patch 
 // in which this interface touches it.
 // e.g. if two patches are juxtapose at X[0] = 4.5 in patch A and in this patch
-// it is correspond to the index I in patch->node[L(n,I,*,*,)]->X[0] so this function
+// it is correspond to the index I in patch->node[i_j_k_to_ijk(n,I,*,*,)]->X[0] so this function
 // returns I in case the subface of patch B which touches the mentioned interface is give.
 // ->return value: coordinate index of plane X = const. if they won't touch it gives UINT_MAX. */
 // ->return value: constant index(coords) of a given face, if not found UINT_MAX. */
@@ -2642,7 +2697,7 @@ static Uint OnFace(const Uint *const n, const Uint p)
 {
   Uint i,j,k;
   
-  IJK(p,n,&i,&j,&k);
+  ijk_to_i_j_k(p,n,&i,&j,&k);
   
   if (i == n[0]-1 || i == 0)  return 1;
   if (j == n[1]-1 || j == 0)  return 1;
@@ -2763,7 +2818,7 @@ static int compare_Js(Grid_T *const grid,const Matrix_T *const J_Reg,const Matri
   for (i = 0; i < dim; ++i)
   {
     for (j = 0; j < dim; ++j)
-      if (GRT(ABS(J_s[i][j]-J_r[i][j]),ERR))
+      if (GRT(ABSd(J_s[i][j]-J_r[i][j]),ERR))
       {
         printf("J_Schur = %g, J_Reg = %g, diff = %g\n",
                   J_s[i][j],J_r[i][j],J_s[i][j]-J_r[i][j]);

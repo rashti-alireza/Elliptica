@@ -1189,7 +1189,7 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
   for (i = 0; i < N[0]; ++i)
     for (j = 0; j < N[1]; ++j)
       for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = R_NS_l;
+        R[i_j_k_to_ijk(N,i,j,k)] = R_NS_l;
         
   sprintf(par,PATCH_NAME_PRT_P_"left_NS_surface_function_up",grid->gn);
   add_parameter_array(par,R,N_total);
@@ -1251,7 +1251,7 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
                ((Pow2(X[0])+Pow2(X[1]))/(Pow2(R_BH_r)+Pow2(a_BH)) + 1/Pow2(R_BH_r))
               );
       for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = r;
+        R[i_j_k_to_ijk(N,i,j,k)] = r;
     }
   }
   sprintf(par,PATCH_NAME_PRT_P_"right_BH_surface_function_up",grid->gn);
@@ -1271,7 +1271,7 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
                (((1+Pow2(X[1])))/(Pow2(R_BH_r)+Pow2(a_BH)) + Pow2(X[0])/Pow2(R_BH_r))
               );
       for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = r;
+        R[i_j_k_to_ijk(N,i,j,k)] = r;
     }
   }
   sprintf(par,PATCH_NAME_PRT_P_"right_BH_surface_function_back",grid->gn);
@@ -1289,7 +1289,7 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
                (((1+Pow2(X[0])))/(Pow2(R_BH_r)+Pow2(a_BH)) + Pow2(X[1])/Pow2(R_BH_r))
               );
       for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = r;
+        R[i_j_k_to_ijk(N,i,j,k)] = r;
     }
   }
   sprintf(par,PATCH_NAME_PRT_P_"right_BH_surface_function_front",grid->gn);
@@ -1307,7 +1307,7 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
                (((1+Pow2(X[0])))/(Pow2(R_BH_r)+Pow2(a_BH)) + Pow2(X[1])/Pow2(R_BH_r))
               );
       for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = r;
+        R[i_j_k_to_ijk(N,i,j,k)] = r;
     }
   }
   sprintf(par,PATCH_NAME_PRT_P_"right_BH_surface_function_left",grid->gn);
@@ -1325,7 +1325,7 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
                (((1+Pow2(X[1])))/(Pow2(R_BH_r)+Pow2(a_BH)) + Pow2(X[0])/Pow2(R_BH_r))
               );
       for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = r;
+        R[i_j_k_to_ijk(N,i,j,k)] = r;
     }
   }
   sprintf(par,PATCH_NAME_PRT_P_"right_BH_surface_function_right",grid->gn);
@@ -1761,7 +1761,7 @@ static void NS_surface_BNS_CS_grid_eg(Grid_T *const grid)
   for (i = 0; i < N[0]; ++i)
     for (j = 0; j < N[1]; ++j)
       for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = R_NS_l;
+        R[i_j_k_to_ijk(N,i,j,k)] = R_NS_l;
       
   sprintf(par,PATCH_NAME_PRT_P_"left_NS_surface_function_up",grid->gn);
   add_parameter_array(par,R,N_total);
@@ -1806,7 +1806,7 @@ static void NS_surface_BNS_CS_grid_eg(Grid_T *const grid)
   for (i = 0; i < N[0]; ++i)
     for (j = 0; j < N[1]; ++j)
       for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = R_NS_r;
+        R[i_j_k_to_ijk(N,i,j,k)] = R_NS_r;
       
   sprintf(par,PATCH_NAME_PRT_P_"right_NS_surface_function_up",grid->gn);
   add_parameter_array(par,R,N_total);

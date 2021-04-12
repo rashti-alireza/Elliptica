@@ -70,7 +70,7 @@ double Legendre_weight_function(const double x, const Uint N);
 double dLegendre_dx(const Uint n, const double x);
 void init_Legendre_root_function(void);
 void init_dLegendre_dx(void);
-void partial_derivative_with_regex(Patch_T *const patch,
+void partial_derivative_regex(Patch_T *const patch,
                                    const char *const regex_list);
 
 #endif

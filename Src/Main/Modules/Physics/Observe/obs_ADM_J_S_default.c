@@ -181,7 +181,7 @@ Pn_D0*xi_U2[ijk] - Pn_D2*xi_U0[ijk];
   for(p = 0; p < N; ++p)
   {
     Patch_T *patch = adm[p]->patch;
-    remove_field_with_regex(patch,"^obs__Jn_D.$");
+    remove_field_regex(patch,"^obs__Jn_D.$");
   }
 
 }

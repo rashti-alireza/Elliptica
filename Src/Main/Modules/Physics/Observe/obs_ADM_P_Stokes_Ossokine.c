@@ -296,8 +296,8 @@ att*(G1_U2 + G2_U2);
   for(p = 0; p < N; ++p)
   {
     Patch_T *patch = adm[p]->patch;
-    remove_field_with_regex(patch,"^obs__P_U.$");
-    remove_field_with_regex(patch,"^obs__G_U.$");
+    remove_field_regex(patch,"^obs__P_U.$");
+    remove_field_regex(patch,"^obs__G_U.$");
   }
 
 }

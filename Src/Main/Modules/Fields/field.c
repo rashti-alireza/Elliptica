@@ -123,7 +123,7 @@ void add_attribute(Field_T *const fld,const char *const attribute)
 
 /* ->: a list of fields index match with regex, null, if not found any.
 // the number of of matched is put in Nm. */
-Uint *find_field_index_with_regex(const Patch_T *const patch,const char *const regex,Uint *const Nm)
+Uint *find_field_index_regex(const Patch_T *const patch,const char *const regex,Uint *const Nm)
 {
   Uint *ind = 0;
   Uint nm   = 0;
@@ -630,14 +630,14 @@ static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const Uint dir)
       
       for (i = 0; i < n[dir]; ++i)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         in[i] = values[l];
       }
       FourierTrans(in,out,n[dir]);
       
       for (i = 0; i < n[dir]; ++i)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         coeffs[l] = out[i];
       }
     }
@@ -653,14 +653,14 @@ static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const Uint dir)
       
       for (j = 0; j < n[dir]; ++j)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         in[j] = values[l];
       }
       FourierTrans(in,out,n[dir]);
       
       for (j = 0; j < n[dir]; ++j)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         coeffs[l] = out[j];
       }
     }
@@ -676,14 +676,14 @@ static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const Uint dir)
       
       for (k = 0; k < n[dir]; ++k)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         in[k] = values[l];
       }
       FourierTrans(in,out,n[dir]);
       
       for (k = 0; k < n[dir]; ++k)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         coeffs[l] = out[k];
       }
     }
@@ -727,14 +727,14 @@ static void coeffs_patch_Tn_Nodes_1d(Field_T *const f,const Uint dir)
       
       for (i = 0; i < n[dir]; ++i)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         in[i] = values[l];
       }
       FourierTrans(in,out,n[dir]);
       
       for (i = 0; i < n[dir]; ++i)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         coeffs[l] = out[i];
       }
     }
@@ -750,14 +750,14 @@ static void coeffs_patch_Tn_Nodes_1d(Field_T *const f,const Uint dir)
       
       for (j = 0; j < n[dir]; ++j)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         in[j] = values[l];
       }
       FourierTrans(in,out,n[dir]);
       
       for (j = 0; j < n[dir]; ++j)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         coeffs[l] = out[j];
       }
     }
@@ -773,14 +773,14 @@ static void coeffs_patch_Tn_Nodes_1d(Field_T *const f,const Uint dir)
       
       for (k = 0; k < n[dir]; ++k)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         in[k] = values[l];
       }
       FourierTrans(in,out,n[dir]);
       
       for (k = 0; k < n[dir]; ++k)
       {
-        l = L(n,i,j,k);
+        l = i_j_k_to_ijk(n,i,j,k);
         coeffs[l] = out[k];
       }
     }
@@ -878,7 +878,7 @@ void free_info(Field_T *f)
 
 /* removing all fields in the given patch whose name matches with 
 // the given regex pattern */
-void remove_field_with_regex(Patch_T *const patch,const char *const regex)
+void remove_field_regex(Patch_T *const patch,const char *const regex)
 {
   if (!patch)
     return;

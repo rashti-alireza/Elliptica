@@ -163,6 +163,7 @@ typedef enum MATRIX_SF_T
 {
   UNDEF_SF = 0/* undefined */,
   REG_SF/* regular storage format */,
+  RMO_SF/* row major order format */,
   CCS_SF/* compressed column storage format */,
   CRS_SF/* compressed row storage format */,
   TRI_SF/* triplet storage format */,
@@ -175,66 +176,100 @@ typedef enum MATRIX_SF_T
 typedef struct MATRIX_T
 {
   Uint reg_f: 1;/* regular format */
+  Uint rmo_f: 1;/* row major order format */
   Uint tri_f: 1;/* 1 if tripet storage format, 0 otherwise*/
   Uint ccs_f: 1;/* 1 if compressed column storage format, 0 otherwise */
   Uint crs_f: 1;/* 1 if compressed row storage format,0 otherwise */
   Uint tri_l_f: 1;/* 1 if long tripet storage format, 0 otherwise*/
   Uint ccs_l_f: 1;/* 1 if long compressed column storage format, 0 otherwise */
   Uint crs_l_f: 1;/* 1 if long compressed row storage format,0 otherwise */
-  long row;
-  long col;
+  
+  long row;/* number of rows */
+  long col;/* number of columns */
+  
   struct/* triplet storage format */
   {
     int *row;
     int *col;
     double *a;
   }tri[1];
+  
+  struct/* row major order format */
+  {
+    double *A;
+  }rmo[1];
+  
   struct/* compressed column storage format */
   {
     int *Ap;
     int *Ai;
     double *Ax;
+    /* coarse-graining for matrix read optimization */
+    int *Ap_cg;
+    int *i_cg;
+    /* slice each Ap[c+1]-Ap[c] into equal pieces with known 
+    // value of index for Ai intervals thus for given row r we know in 
+    // which interval r can be found as apposed to just look for r blindly.
+    // it's kind of coarse-graining over the value Ai's.
+    // the logic is:
+    // i = Ap_cg[c] => 0    <= Ai[i_cg[i]]   < row0
+    // i + 1        => row0 <= Ai[i_cg[i+1]] < row1
+    // .
+    // .
+    // .
+    // till (i < Ap_cg[c+1]) and naturally i < Ap[c+1].
+    // thus if given row r is between row0 and row1, 
+    // it looks in second piece and not other pieces.
+    // NOTE: the idea is pretty much like the CCS format itself. */
+    int Nslice;/* number of slices(pieces) */
   }ccs[1];
+  
   struct/* compressed row storage format */
   {
     int *Ap;
     int *Aj;
     double *Ax;
   }crs[1];
+  
   struct/* regular storage format */
   {
     double **A;
   }reg[1];
+  
   struct/* triplet storage format */
   {
     long *row;
     long *col;
     double *a;
   }tri_long[1];
+  
   struct/* compressed column storage format */
   {
     long *Ap;
     long *Ai;
     double *Ax;
   }ccs_long[1];
+  
   struct/* compressed row storage format */
   {
     long *Ap;
     long *Aj;
     double *Ax;
   }crs_long[1];
+  
 }Matrix_T;
 
 
 Matrix_T *cast_matrix_ccs(Matrix_T *const m);
 Matrix_T *cast_matrix_reg(Matrix_T *const m);
+Matrix_T *cast_matrix_rmo(Matrix_T *const m);
 void copy_reg2reg(const Matrix_T *const reg1,Matrix_T *const reg2);
 void copy_ccs2ccs(const Matrix_T *const ccs1,Matrix_T *const ccs2);
 void matrix_tests(void);
 void precondition(Matrix_T *const a,double *const b);
 Matrix_T *invert_matrix(Matrix_T *const M);
 int matrix_by_vector(const Matrix_T *const m, const double *const v,double *const b,const Flag_T flag);
-Matrix_T *matrix_by_matrix(const Matrix_T *const a, const Matrix_T *const b,const char *const dir);
+Matrix_T *matrix_by_matrix(const Matrix_T *const a, const Matrix_T *const b,Matrix_T *const result,const char *const dir);
 Matrix_T *cast_matrix_ccs_long(Matrix_T *const m);
 void copy_ccs_long2ccs_long(const Matrix_T *const ccs_l1,Matrix_T *const ccs_l2);
 Matrix_T *compress_stack2ccs(Matrix_T **const S,const Uint nm,const Uint *const nr,const Uint Nrow,const Uint Ncol,const Flag_T flg);

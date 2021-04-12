@@ -430,5 +430,5 @@ dtrK_D1[ijk]*igConf_U1U1[ijk] + dtrK_D2[ijk]*igConf_U1U2[ijk]);
   mom_U2[ijk] = Mom_constraint_U2;
   ham[ijk] = Ham_Constraint;
 }
-remove_field_with_regex(patch,"^digConf_U.+");
+remove_field_regex(patch,"^digConf_U.+");
 }

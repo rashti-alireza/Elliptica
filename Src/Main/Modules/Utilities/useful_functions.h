@@ -31,16 +31,14 @@
 
 void test_start(const char *const file,const int line);
 Uint countf(void *const p);
-Uint L(const Uint *const n, const Uint i, const Uint j, const Uint k);
-Uint I(const Uint l, const Uint *const n);
-Uint J(const Uint l, const Uint *const n);
-Uint K(const Uint l, const Uint *const n);
+Uint ijk_to_i_row_major_order(const Uint l, const Uint *const n);
+Uint ijk_to_j_row_major_order(const Uint l, const Uint *const n);
+Uint ijk_to_k_row_major_order(const Uint l, const Uint *const n);
 Collocation_T get_collocation(const char *const coll);
 Basis_T get_basis(const char *const basis);
 int IsOnEdge(const Uint *const n,const Uint p);
 int IsOnFace(const double *const x, const Patch_T *const patch,Uint *const f,const double precision_factor);
 Uint node_onFace(const double *const x, const Uint f,const Patch_T *const patch);
-void IJK(const Uint l, const Uint *const n, Uint *const i, Uint *const j, Uint *const k);
 static Uint check_interface(const double *const X, const Patch_T *const patch, const int u);
 SubFace_T *get_paired_subface(const SubFace_T *const sub);
 Uint total_nodes_grid(const Grid_T *const grid);

@@ -7,6 +7,7 @@
 
 #include "fd_populate.h"
 
+
 /* compute K_{ij}, trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
 // for KerrSchild. */
 void fd_extrinsic_curvature_KerrSchild(Physics_T *const phys,
@@ -196,8 +197,8 @@ void fd_extrinsic_curvature_PGSchild(Physics_T *const phys,
     dField_di_STEM(dtrK_D2,dtrK);
     
     /* clean up */
-    remove_field_with_regex(patch,"^pg__beta_U.$");
-    remove_field_with_regex(patch,"^dpg__beta_U.D.$");
+    remove_field_regex(patch,"^pg__beta_U.$");
+    remove_field_regex(patch,"^dpg__beta_U.D.$");
   }
     
   UNUSED(ig);
@@ -387,13 +388,13 @@ fd_populate_gConf_igConf_dgConf_KerrSchild
 
 /* populate conformal metric, inverse of conformal metric 
 // and first order derivative of conformal metric for parameter
-// "flat + exp(-r^4)*(KerrSchild-flat)"  which is:
+// "flat + exp(-r^p)*(KerrSchild-flat)"  which is:
 // gConf_{ij} = delta_{ij} + atten * (gKS_{ij} - delta_{ij}).
 // this free data mainly is used for BHNS system.
 // the nomenclature of fields determined by the passed stems
 // NOTE: it assumes gConf has already been populated with KerrSchild metric */
 void 
-fd_modify_gConf_igConf_dgConf_to_flat_expmr4KS
+fd_modify_gConf_igConf_dgConf_to_flat_expmrpKS
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -410,7 +411,8 @@ fd_modify_gConf_igConf_dgConf_to_flat_expmr4KS
   const double BHx    = Getd("center_x");
   const double BHy    = Getd("center_y");
   const double BHz    = Getd("center_z");
-  const double R04    = pow(Getd("RollOff_radius"),4.);
+  const double att_pow= Getd("RollOff_power");
+  const double R0P    = pow(Getd("RollOff_radius"),att_pow);
   
   /* superimpose */
   OpenMP_Patch_Pragma(omp parallel for)
@@ -440,7 +442,7 @@ fd_modify_gConf_igConf_dgConf_to_flat_expmr4KS
       double y   = patch->node[ijk]->x[1] - BHy;
       double z   = patch->node[ijk]->x[2] - BHz;
       double r2  = (Pow2(x)+Pow2(y)+Pow2(z));
-      double att = exp(-pow(r2,2.)/R04);
+      double att = exp(-pow(r2,att_pow/2.)/R0P);
       
       /* diagonal */
       gConf_D0D0[ijk] = 1.+att*(gKS_D0D0[ijk]-1.);
@@ -462,7 +464,7 @@ fd_modify_gConf_igConf_dgConf_to_flat_expmr4KS
     char regex[STR_LEN];
     
     sprintf(regex,"^%s_D.D.D.$",dgConf);
-    partial_derivative_with_regex(patch,regex);
+    partial_derivative_regex(patch,regex);
     
     READ_v_STEM(gConf_D2D2,gConf)
     READ_v_STEM(gConf_D0D2,gConf)
@@ -488,12 +490,12 @@ fd_modify_gConf_igConf_dgConf_to_flat_expmr4KS
 }
 
 /* populate trK and dtrK such as:
-// trK|new = exp(-r^4)*trK|old
+// trK|new = exp(-r^p)*trK|old
 // this free data mainly is used for BHNS system.
 // the nomenclature of fields determined by the passed stems
 // NOTE: it assumes trK has already been populated. */
 void 
-fd_modify_trK_to_expmr4trK_compute_dtrK
+fd_modify_trK_to_expmrptrK_compute_dtrK
  (
  Physics_T *const phys,
  const char *const region,
@@ -509,7 +511,8 @@ fd_modify_trK_to_expmr4trK_compute_dtrK
   const double BHx    = Getd("center_x");
   const double BHy    = Getd("center_y");
   const double BHz    = Getd("center_z");
-  const double R04    = pow(Getd("RollOff_radius"),4.);
+  const double att_pow= Getd("RollOff_power");
+  const double R0P    = pow(Getd("RollOff_radius"),att_pow);
   
   /* modify */
   OpenMP_Patch_Pragma(omp parallel for)
@@ -530,14 +533,14 @@ fd_modify_trK_to_expmr4trK_compute_dtrK
       double y   = patch->node[ijk]->x[1] - BHy;
       double z   = patch->node[ijk]->x[2] - BHz;
       double r2  = (Pow2(x)+Pow2(y)+Pow2(z));
-      double att = exp(-pow(r2,2.)/R04);
+      double att = exp(-pow(r2,att_pow/2.)/R0P);
       
       K_new[ijk] = att*K_old[ijk];
     }
     
     /* derivatives */
     sprintf(regex,"^%s_D.$",dtrK);
-    partial_derivative_with_regex(patch,regex);
+    partial_derivative_regex(patch,regex);
   }
   
   FUNC_TOC
@@ -592,7 +595,7 @@ fd_populate_gConf_igConf_dgConf_ConfKerrSchild
     
     /* derivatives */
     sprintf(regex,"^%s_D.D.D.$",dgConf);
-    partial_derivative_with_regex(patch,regex);
+    partial_derivative_regex(patch,regex);
   }
   
   FUNC_TOC
@@ -701,7 +704,7 @@ fd_populate_gConf_igConf_dgConf_flat
     
     /* since gConf is constant dgConf is machine precision exact */
     sprintf(regex,"^%s_D.D.D.$",dgConf);
-    partial_derivative_with_regex(patch,regex);
+    partial_derivative_regex(patch,regex);
   }
   
   FUNC_TOC
@@ -777,8 +780,8 @@ fd_populate_psi_alphaPsi_beta_KerrSchild
      fd_psi_alphaPsi_beta_KerrSchild_patch(patch,BHx,BHy,BHz,
                                        "fd_ks__ig",Psi,AlphaPsi,Beta);
      /* remove redundant */
-     remove_field_with_regex(patch,"^fd_ks__g_D.+");
-     remove_field_with_regex(patch,"^fd_ks__ig_U.+");
+     remove_field_regex(patch,"^fd_ks__g_D.+");
+     remove_field_regex(patch,"^fd_ks__ig_U.+");
     }
     else
      fd_psi_alphaPsi_beta_KerrSchild_patch(patch,BHx,BHy,BHz,
@@ -868,8 +871,8 @@ fd_populate_beta_KerrSchild
     fd_beta_KerrSchild_patch(patch,BHx,BHy,BHz,"fd_ks__ig",Beta);
     
     /* remove redundant */
-    remove_field_with_regex(patch,"^fd_ks__g_D.+");
-    remove_field_with_regex(patch,"^fd_ks__ig_U.+");
+    remove_field_regex(patch,"^fd_ks__g_D.+");
+    remove_field_regex(patch,"^fd_ks__ig_U.+");
   }
   
   FUNC_TOC
@@ -957,9 +960,9 @@ fd_populate_psi_alphaPsi_beta_ConfKerrSchild
     }
     
     /* remove redundant */
-    remove_field_with_regex(patch,"^fd_ks__g_D.+");
-    remove_field_with_regex(patch,"^fd_ks__ig_U.+");
-    remove_field_with_regex(patch,"^fd_ks__psi$");
+    remove_field_regex(patch,"^fd_ks__g_D.+");
+    remove_field_regex(patch,"^fd_ks__ig_U.+");
+    remove_field_regex(patch,"^fd_ks__psi$");
   }
   
   FUNC_TOC
@@ -1010,9 +1013,9 @@ fd_populate_alpha_KerrSchild
   FUNC_TOC
 }
 
-/* populate alpha of exp(-r^4)*KerrSchild value. */
+/* populate alpha of exp(-r^p)*KerrSchild value. */
 void 
-fd_populate_alpha_expmr4_KerrSchild
+fd_populate_alpha_expmrp_KerrSchild
  (
  Physics_T *const phys,
  const char *const region,
@@ -1023,11 +1026,12 @@ fd_populate_alpha_expmr4_KerrSchild
   
   AssureType(phys->ctype == BH)
   
-  Grid_T *const grid = mygrid(phys,region);
-  const double BHx   = Getd("center_x");
-  const double BHy   = Getd("center_y");
-  const double BHz   = Getd("center_z");
-  const double R04   = pow(Getd("RollOff_radius"),4.);
+  Grid_T *const grid  = mygrid(phys,region);
+  const double BHx    = Getd("center_x");
+  const double BHy    = Getd("center_y");
+  const double BHz    = Getd("center_z");
+  const double att_pow= Getd("RollOff_power");
+  const double R0P    = pow(Getd("RollOff_radius"),att_pow);
   
   fd_KerrSchild_set_params(phys);
   
@@ -1048,7 +1052,7 @@ fd_populate_alpha_expmr4_KerrSchild
       z = patch->node[ijk]->x[2]-BHz;
       r2 = Pow2(x)+Pow2(y)+Pow2(z);
       
-      alpha[ijk] *= exp(-Pow2(r2)/R04);
+      alpha[ijk] *= exp(-pow(r2,att_pow/2.)/R0P);
     }
   }
   

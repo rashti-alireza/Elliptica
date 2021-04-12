@@ -27,8 +27,9 @@ sprintf(s,\
    sprintf(s,"~> Warning!\nfor '%s' on %s and \nadjacent '%s' on %s:\n"\
    "normal vectors are not align: angle = %g degree(s).\n"\
    "Please consider to increase the resolution.",\
-   patch->name,FaceName[f],adj_patch->name,\
-   FaceName[adj_face],acos(N1dotN2)*180/M_PI);
+   patch->name,FaceName[f],(adj_patch ? adj_patch->name : "?"),\
+   (adj_face < NFaces ? FaceName[adj_face]: "?"), \
+    acos(N1dotN2)*180/M_PI);
 
 /* type point */
 enum Type

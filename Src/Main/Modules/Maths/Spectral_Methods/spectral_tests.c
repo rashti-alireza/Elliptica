@@ -891,8 +891,8 @@ static int interpolation_tests_X(Field_T *const field,const double *const X,cons
     interp_s->J = (Uint) floor(random_double(0,n[1],j));
     interp_s->K = (Uint) floor(random_double(0,n[2],1));
     
-    Y = node[L(n,0,interp_s->J,0)]->X[1];
-    Z = node[L(n,0,0,interp_s->K)]->X[2];
+    Y = node[i_j_k_to_ijk(n,0,interp_s->J,0)]->X[1];
+    Z = node[i_j_k_to_ijk(n,0,0,interp_s->K)]->X[2];
     Xc[1] = Y;
     Xc[2] = Z;
     
@@ -949,8 +949,8 @@ static int interpolation_tests_Y(Field_T *const field,const double *const Y,cons
     interp_s->I = (Uint) floor(random_double(0,n[0],j));
     interp_s->K = (Uint) floor(random_double(0,n[2],1));
     
-    X = node[L(n,interp_s->I,0,0)]->X[0];
-    Z = node[L(n,0,0,interp_s->K)]->X[2];
+    X = node[i_j_k_to_ijk(n,interp_s->I,0,0)]->X[0];
+    Z = node[i_j_k_to_ijk(n,0,0,interp_s->K)]->X[2];
     Xc[0] = X;
     Xc[2] = Z;
     for (i = 0; i < N; ++i)
@@ -1008,8 +1008,8 @@ static int interpolation_tests_Z(Field_T *const field,const double *const Z,cons
     interp_s->J = (Uint) floor(random_double(0,n[1],j));
     interp_s->I = (Uint) floor(random_double(0,n[0],1));
     
-    Y = node[L(n,0,interp_s->J,0)]->X[1];
-    X = node[L(n,interp_s->I,0,0)]->X[0];
+    Y = node[i_j_k_to_ijk(n,0,interp_s->J,0)]->X[1];
+    X = node[i_j_k_to_ijk(n,interp_s->I,0,0)]->X[0];
     Xc[0] = X;
     Xc[1] = Y;
     for (i = 0; i < N; ++i)
@@ -1065,7 +1065,7 @@ static int interpolation_tests_XY(Field_T *const field,const double *const X,con
   {
     interp_s->K = (Uint) floor(random_double(0,n[2],a));
     
-    Z = node[L(n,0,0,interp_s->K)]->X[2];
+    Z = node[i_j_k_to_ijk(n,0,0,interp_s->K)]->X[2];
     Xc[2] = Z;
     for (b = 0; b < Nx; ++b)
     {
@@ -1125,7 +1125,7 @@ static int interpolation_tests_XZ(Field_T *const field,const double *const X,con
   {
     interp_s->J = (Uint) floor(random_double(0,n[1],a));
     
-    Y = node[L(n,0,interp_s->J,0)]->X[1];
+    Y = node[i_j_k_to_ijk(n,0,interp_s->J,0)]->X[1];
     Xc[1] = Y;
 
     for (b = 0; b < Nx; ++b)
@@ -1186,7 +1186,7 @@ static int interpolation_tests_YZ(Field_T *const field,const double *const Y,con
   {
     interp_s->I = (Uint) floor(random_double(0,n[0],a));
     
-    X = node[L(n,interp_s->I,0,0)]->X[0];
+    X = node[i_j_k_to_ijk(n,interp_s->I,0,0)]->X[0];
     Xc[0] = X;
     
     for (b = 0; b < Ny; ++b)

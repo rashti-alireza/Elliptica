@@ -26,11 +26,11 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   /* some checks */
   if (EQL(TOV->bar_m,0.))
   {
+    TOV->status = 1;
     printf(Pretty0"%s baryonic mass is zero => exiting ...\n",phys->stype);
     /* free global tov_eos */
     free_EoS(tov_eos);
     
-    TOV->status = 1;
     return TOV;
   }
   
@@ -105,6 +105,9 @@ TOV_T *TOV_solution(TOV_T *const TOV)
     else
     {
       fprintf(stderr,Pretty0"TOV solution failed! Exiting ...\n");
+      /* free global tov_eos */
+      free_EoS(tov_eos);
+      
       return TOV;
     }
   }
@@ -146,9 +149,6 @@ TOV_T *TOV_solution(TOV_T *const TOV)
     printf("--> central rest_mass_density         = %+e\n",tov_eos->rest_mass_density(tov_eos));
   }
   
-  /* free global tov_eos */
-  free_EoS(tov_eos);
-  
   /* some checks */
   if (
       !isfinite(TOV->r[TOV->N-1])    ||
@@ -168,9 +168,15 @@ TOV_T *TOV_solution(TOV_T *const TOV)
     else
     {
       fprintf(stderr,Pretty0"TOV solution failed! Exiting ...\n");
+      /* free global tov_eos */
+      free_EoS(tov_eos);
+
       return TOV;
     }
   }
+  
+  /* free global tov_eos */
+  free_EoS(tov_eos);
   
   return TOV;
 }

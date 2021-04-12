@@ -28,31 +28,14 @@ Uint countf(void *const p)
   return c;
 }
 
-/* linear format to triple (i,j,k) format */
-void IJK(const Uint l, const Uint *const n, Uint *const i, Uint *const j, Uint *const k)
-{
-  Uint tmp;
-  
-  tmp = l % (n[2]*n[1]);
-  *i  = l / (n[2]*n[1]);
-  *j  = tmp / n[2];
-  *k  = tmp % n[2];
-}
-
-/* triple (i,j,k) format to linear format */
-Uint L(const Uint *const n, const Uint i, const Uint j, const Uint k)
-{
-  return (k+n[2]*(j+n[1]*i));
-}
-
-/* linear format to i component */
-Uint I(const Uint l, const Uint *const n)
+/* linear format to i component (row major order) */
+Uint ijk_to_i_row_major_order(const Uint l, const Uint *const n)
 {
   return l / (n[2]*n[1]);
 }
 
-/* linear format to j component */
-Uint J(const Uint l, const Uint *const n)
+/* linear format to j component (row major order) */
+Uint ijk_to_j_row_major_order(const Uint l, const Uint *const n)
 {
   Uint tmp;
   
@@ -60,8 +43,8 @@ Uint J(const Uint l, const Uint *const n)
   return tmp / n[2];
 }
 
-/* linear format to k component */
-Uint K(const Uint l, const Uint *const n)
+/* linear format to k component (row major order) */
+Uint ijk_to_k_row_major_order(const Uint l, const Uint *const n)
 {
   Uint tmp;
   
@@ -116,7 +99,7 @@ int IsOnEdge(const Uint *const n,const Uint p)
   Uint i,j,k;
   int c;
   
-  IJK(p,n,&i,&j,&k);
+  ijk_to_i_j_k(p,n,&i,&j,&k);
   
   c = 0;
   if (i == n[0]-1 || i == 0)  c++;
@@ -178,22 +161,22 @@ static Uint check_interface(const double *const X, const Patch_T *const patch, c
   switch (u)
   {
     case I_0:
-      if (LSSEQL(ABS(Y[0]-X[0]),res)) return 1;
+      if (LSSEQL(ABSd(Y[0]-X[0]),res)) return 1;
       break;
     case I_n0:
-      if (LSSEQL(ABS(Y[0]-X[0]),res)) return 1;
+      if (LSSEQL(ABSd(Y[0]-X[0]),res)) return 1;
       break;
     case J_0:
-      if (LSSEQL(ABS(Y[1]-X[1]),res)) return 1;
+      if (LSSEQL(ABSd(Y[1]-X[1]),res)) return 1;
       break;
     case J_n1:
-      if (LSSEQL(ABS(Y[1]-X[1]),res)) return 1;
+      if (LSSEQL(ABSd(Y[1]-X[1]),res)) return 1;
       break;
     case K_0:
-      if (LSSEQL(ABS(Y[2]-X[2]),res)) return 1;
+      if (LSSEQL(ABSd(Y[2]-X[2]),res)) return 1;
       break;
     case K_n2:
-      if (LSSEQL(ABS(Y[2]-X[2]),res)) return 1;
+      if (LSSEQL(ABSd(Y[2]-X[2]),res)) return 1;
       break;
     default:
       Error0("No such interface was defined for this function.\n");
@@ -414,7 +397,7 @@ double spectral_expansion_truncation_error(Field_T *const f)
   const double *const Cijk = make_coeffs_3d(f);
   const Uint *const n  = f->patch->n;
   
-  return fabs(Cijk[L(n,n[0]-1,n[1]-1,n[2]-1)]);
+  return fabs(Cijk[i_j_k_to_ijk(n,n[0]-1,n[1]-1,n[2]-1)]);
 }
 
 /* go over all of the fields in the grid and print 

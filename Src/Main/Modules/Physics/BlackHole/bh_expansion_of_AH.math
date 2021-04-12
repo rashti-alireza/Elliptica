@@ -63,7 +63,7 @@ Symm[gConf(i,j)       = gConf(j,i)];
 ` for (Uint i = 0; i < nX; ++i)`
 ` for (Uint j = 0; j < nY; ++j)`
 ` {`
-` Uint ijk = L(patch->n,i,j,k);`
+` Uint ijk = i_j_k_to_ijk(patch->n,i,j,k);`
 ``
 DisConfI = (dbh_sConf(j,i) + ChrisConf(j,i,l)*bh_sConf(-l))*KD(-j,-i);
 

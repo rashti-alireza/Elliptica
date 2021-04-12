@@ -141,5 +141,5 @@ Cpopulate[mom = Mom_constraint];
 
 `}`
 
-`remove_field_with_regex(patch,"^digConf_U.+");`
+`remove_field_regex(patch,"^digConf_U.+");`
 `}`

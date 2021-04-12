@@ -2,9 +2,13 @@
 #define maths_general_LIB_H
 #include "elliptica_system_lib.h"
 
-
+/* x^2 */
 #define Pow2(x) ((x)*(x))
+/* x^3 */
 #define Pow3(x) ((x)*(x)*(x))
+
+/* absolute value for double data type */
+#define ABSd(x) ((x) > 0. ? (x) : -(x))
 
 #ifndef M_PI
 #define M_PI (3.141592653589793)
@@ -18,7 +22,6 @@
 long double rms_l(const long Uint n, const double *v2, const double *v1);
 double root_square(const Uint n, const double *const v2, const double *const v1);
 double dot(const Uint n, const double *const v2, const double *const v1);
-double ABS(const double v);
 double Cheb_Tn(const int n, const double x);
 double Cheb_Un(const int n, const double x);
 double d2T_dx2(const int n, const double x);

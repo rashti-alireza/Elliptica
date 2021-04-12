@@ -34,7 +34,9 @@
 // free_PrField(pr);
 */
 
-/* row major to column major order */
+/* row major to column major order.
+// NOTE: silo using column major format thus if the fields saved in 
+// row major format, which is the default, one must convert them. */
 #define row2col(i,j,k) (i+n[0]*(j+n[1]*k))
 
 /* printing fields with HDF5 format using silo library.
@@ -151,7 +153,9 @@ static void write_multi_mesh(const Pr_Field_T *const pr)
             "Master file composed of all patches path",DB_HDF5);
   IsNull(grid_file_xyz);
   sprintf(grid_name,"grid%d_xyz",pr->grid->gn);
-  DB_ret = DBPutMultimesh(grid_file_xyz,grid_name,npatch,patch_names_xyz,patch_types,0);
+  DB_ret = DBPutMultimesh
+    (grid_file_xyz,grid_name,npatch,
+    (char const * const *)patch_names_xyz,patch_types,0);
   if (DB_ret == -1)
     Error0("Silo library failed to make multi-mesh.\n");
     
@@ -185,7 +189,9 @@ static void write_multi_mesh(const Pr_Field_T *const pr)
               "Master file composed of all patches path",DB_HDF5);
     IsNull(grid_file_abc);
     sprintf(grid_name,"grid%d_abc",pr->grid->gn);
-    DB_ret = DBPutMultimesh(grid_file_abc,grid_name,npatch,patch_names_abc,patch_types,0);
+    DB_ret = DBPutMultimesh
+      (grid_file_abc,grid_name,npatch,
+      (char const * const *)patch_names_abc,patch_types,0);
     if (DB_ret == -1)
       Error0("Silo library failed to make multi-mesh.\n");
       
@@ -263,7 +269,9 @@ static void make_multi_var(const Pr_Field_T *const pr,const char *const var)
             "Master file composed of all fields path",DB_HDF5);
   IsNull(var_file_xyz);
   sprintf(var_name,"%s_xyz",var);
-  DB_ret = DBPutMultivar(var_file_xyz,var_name,npatch,var_names_xyz,var_types,0);
+  DB_ret = DBPutMultivar
+    (var_file_xyz,var_name,npatch,
+    (char const * const *)var_names_xyz,var_types,0);
   if (DB_ret == -1)
     Error0("Silo library failed to make multi-var.\n");
     
@@ -303,7 +311,9 @@ static void make_multi_var(const Pr_Field_T *const pr,const char *const var)
               "Master file composed of all fields path",DB_HDF5);
     IsNull(var_file_abc);
     sprintf(var_name,"%s_abc",var);
-    DB_ret = DBPutMultivar(var_file_abc,var_name,npatch,var_names_abc,var_types,0);
+    DB_ret = DBPutMultivar
+      (var_file_abc,var_name,npatch,
+      (char const * const *)var_names_abc,var_types,0);
     if (DB_ret == -1)
       Error0("Silo library failed to make multivar.\n");
       
@@ -460,7 +470,7 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   if (v_ind < 0)
   {
     Uint Nf   = 0;
-    Uint *fInd = find_field_index_with_regex(patch,subg->field,&Nf);
+    Uint *fInd = find_field_index_regex(patch,subg->field,&Nf);
     Uint f = 0;
     
     for (f = 0; f < Nf; ++f)
@@ -472,7 +482,7 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
       data = alloc_double(nn);
       for (ijk = 0; ijk < nn; ++ijk)
       {
-        IJK(ijk,n,&i,&j,&k);
+        ijk_to_i_j_k(ijk,n,&i,&j,&k);
         data[row2col(i,j,k)] = patch->fields[fInd[f]]->v[ijk];
       }
        
@@ -503,7 +513,7 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
     data = alloc_double(nn);
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      IJK(ijk,n,&i,&j,&k);
+      ijk_to_i_j_k(ijk,n,&i,&j,&k);
       data[row2col(i,j,k)] = patch->fields[v_ind]->v[ijk];
     }
      
@@ -569,7 +579,7 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   /* change the order from row major to column major order */
   for (ijk = 0; ijk < nn; ++ijk)
   {
-    IJK(ijk,n,&i,&j,&k);
+    ijk_to_i_j_k(ijk,n,&i,&j,&k);
     comp[0][row2col(i,j,k)] = patch->fields[v_ind0]->v[ijk];
     comp[1][row2col(i,j,k)] = patch->fields[v_ind1]->v[ijk];
     comp[2][row2col(i,j,k)] = patch->fields[v_ind2]->v[ijk];
@@ -578,16 +588,18 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   sprintf(desc,"Vector_%s_%s_%s",
     subg->comp[0],subg->comp[1],subg->comp[2]);
   
-  DB_ret = DBPutQuadvar(dbfile,desc,mesh_name,3,
-    varnames,comp,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
+  DB_ret = DBPutQuadvar
+    (dbfile,desc,mesh_name,3,(char const * const *)varnames,
+    comp,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
   if (DB_ret == -1)
     Error0("Silo library failed to print.\n");
     
   /* if there is another file that the field needs to be printed */
   if (pr->file2)
   {
-    DB_ret = DBPutQuadvar(pr->file2,desc,mesh_name,3,
-      varnames,comp,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
+    DB_ret = DBPutQuadvar
+      (pr->file2,desc,mesh_name,3,(char const * const *)varnames,
+       comp,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
     if (DB_ret == -1)
       Error0("Silo library failed to print.\n");
   }
@@ -631,7 +643,7 @@ static void prepare_node_structured_mesh_3d_silo(const char *const type,const Pa
   {
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      IJK(ijk,patch->n,&i,&j,&k);
+      ijk_to_i_j_k(ijk,patch->n,&i,&j,&k);
       
       x[row2col(i,j,k)] = patch->node[ijk]->x[0];
       y[row2col(i,j,k)] = patch->node[ijk]->x[1];
@@ -642,7 +654,7 @@ static void prepare_node_structured_mesh_3d_silo(const char *const type,const Pa
   {
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      IJK(ijk,patch->n,&i,&j,&k);
+      ijk_to_i_j_k(ijk,patch->n,&i,&j,&k);
       
       x[row2col(i,j,k)] = patch->node[ijk]->X[0];
       y[row2col(i,j,k)] = patch->node[ijk]->X[1];

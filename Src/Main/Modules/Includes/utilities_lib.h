@@ -5,7 +5,27 @@
 
 #include "manifold_lib.h"
 
+/* tuple (i,j) format to linear format (row-major order). */
+#define i_j_to_ij_row_major_order(nj,i,j) ((j)+(nj)*(i))
+
+/* triple (i,j,k) format to linear format (row-major order). */
+#define i_j_k_to_ijk_row_major_order(n,i,j,k) \
+ ((k)+((n)[2])*((j)+((n)[1])*(i)))
+
+/* converting linear format ijk to tuple (i,j,k) format */
+#define ijk_to_i_j_k(ijk,n,i,j,k)  \
+ (ijk_to_i_j_k_row_major_order((ijk),(n),(i),(j),(k)))
+
+/* converting tuple (i,j,k) format to linear format ijk */
+#define i_j_k_to_ijk(n,i,j,k)  \
+ (i_j_k_to_ijk_row_major_order((n),(i),(j),(k)))
+
+/* converting tuple (i,j) format to linear format ij */
+#define i_j_to_ij(nj,i,j)  \
+ (i_j_to_ij_row_major_order((nj),(i),(j)))
+
 #define TEST_START test_start(__FILE__,__LINE__);
+
 
 /* forward declaration structures */
 struct FIELD_T;
@@ -40,11 +60,10 @@ void run_func_PtoV(sFunc_PtoV_T **const func,const char *const task,Patch_T *con
 Collocation_T get_collocation(const char *const coll);
 Coord_T find_coord(const char *const coordsys);
 Basis_T get_basis(const char *const basis);
-void IJK(const Uint l, const Uint *const n, Uint *const i, Uint *const j, Uint *const k);
-Uint L(const Uint *const n, const Uint i, const Uint j, const Uint k);
-Uint I(const Uint l, const Uint *const n);
-Uint J(const Uint l, const Uint *const n);
-Uint K(const Uint l, const Uint *const n);
+INLINE void ijk_to_i_j_k_row_major_order(const Uint l, const Uint *const n, Uint *const i, Uint *const j, Uint *const k) INLINE_WARN_UNUSED_FUNC;
+Uint ijk_to_i_row_major_order(const Uint l, const Uint *const n);
+Uint ijk_to_j_row_major_order(const Uint l, const Uint *const n);
+Uint ijk_to_k_row_major_order(const Uint l, const Uint *const n);
 int IsOnEdge(const Uint *const n,const Uint p);
 int IsOnFace(const double *const x, const Patch_T *const patch,Uint *const f,const double precision_factor);
 SubFace_T *get_paired_subface(const SubFace_T *const sub);
@@ -103,6 +122,21 @@ void interpolate_fields_from_old_grid_to_new_grid
      (Grid_T *const ogrid/* old */,Grid_T *const ngrid/* new */,
      const char *const field_names/* comma separated field names */,
      const int copy/* if 1 only copy, if 0 only 3d interpolation */);
+
+/* inline function definitions */
+
+/* linear format to triple (i,j,k) format (row-major order). */
+INLINE void ijk_to_i_j_k_row_major_order(const Uint l, const Uint *const n, Uint *const i, Uint *const j, Uint *const k)
+{
+  Uint tmp;
+  
+  tmp = l % (n[2]*n[1]);
+  *i  = l / (n[2]*n[1]);
+  *j  = tmp / n[2];
+  *k  = tmp % n[2];
+}
+
+
 
 #endif
 

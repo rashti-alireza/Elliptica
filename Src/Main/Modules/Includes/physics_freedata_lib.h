@@ -119,7 +119,7 @@ fd_populate_beta_KerrSchild
  );
 
 void 
-fd_populate_alpha_expmr4_KerrSchild
+fd_populate_alpha_expmrp_KerrSchild
  (
  Physics_T *const phys,
  const char *const region,

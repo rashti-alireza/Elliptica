@@ -206,6 +206,6 @@ ksKij_D1D2 + ig_U2U2[ijk]*ksKij_D2D2;
   Kij_D1D2[ijk] = ksKij_D1D2;
 trKij[ijk] = trk;
 }
-remove_field_with_regex(patch,"^KS__");
-remove_field_with_regex(patch,"^dKS__");
+remove_field_regex(patch,"^KS__");
+remove_field_regex(patch,"^dKS__");
 }
