@@ -253,8 +253,8 @@ static int populate_free_data(Physics_T *const phys)
     fd_extrinsic_curvature_KerrSchild(bh,".*","igConf","ChrisConf",
                                       "adm_Kij","trK",0);
     
-    /* modify metric to be "flat+exp(-r^p)*(KerrSchild-flat)" */
-    fd_modify_gConf_igConf_dgConf_to_flat_expmrpKS(bh,".*","gConf",
+    /* modify metric to be "w1*flat+w2*BoostedKerrSchild" */
+    fd_modify_gConf_igConf_dgConf_to_w1flat_w2bKS(bh,".*","gConf",
                                                  "igConf","dgConf");
     
     fd_compatible_Christoffel_symbol(phys,".*","igConf",
@@ -264,8 +264,8 @@ static int populate_free_data(Physics_T *const phys)
     fd_conformal_Ricci(phys,".*","igConf","ChrisConf","dChrisConf",
                        "RicciConf","trRicciConf");
     
-    /* modify trK to exp(-r^p)*trK and computer its derivatives */
-    fd_modify_trK_to_expmrptrK_compute_dtrK(bh,".*","trK","dtrK");
+    /* modify trK to w*trK and computer its derivatives */
+    fd_modify_trK_to_wtrK_compute_dtrK(bh,".*","trK","dtrK");
 
     free_physics(bh);
   }
