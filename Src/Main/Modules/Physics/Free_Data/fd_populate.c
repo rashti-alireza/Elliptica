@@ -518,8 +518,8 @@ fd_modify_trK_to_wtrK_compute_dtrK
   const double BHx    = Getd("center_x");
   const double BHy    = Getd("center_y");
   const double BHz    = Getd("center_z");
-  const double att_pow= Getd("RollOff_power");
-  const double R0P    = pow(Getd("RollOff_radius"),att_pow);
+  
+  SET_TRANSITION_FUNC_BH_TYPE0
   
   /* modify */
   OpenMP_Patch_Pragma(omp parallel for)
@@ -527,6 +527,11 @@ fd_modify_trK_to_wtrK_compute_dtrK
   {
     Patch_T *patch = grid->patch[p];
     char regex[STR_LEN];
+    struct Transition_S ts[1] = {0};
+    ts->rmin   = r_min;
+    ts->rmax   = r_max;
+    ts->p      = p_att;
+    ts->lambda = lambda;
     
     /* since K has value */
     READ_v_STEM(K_old,trK)
@@ -539,8 +544,9 @@ fd_modify_trK_to_wtrK_compute_dtrK
       double x   = patch->node[ijk]->x[0] - BHx;
       double y   = patch->node[ijk]->x[1] - BHy;
       double z   = patch->node[ijk]->x[2] - BHz;
-      double r2  = (Pow2(x)+Pow2(y)+Pow2(z));
-      double att = exp(-pow(r2,att_pow/2.)/R0P);
+      double r  = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+      ts->r      = r;
+      double att = transit(ts);
       
       K_new[ijk] = att*K_old[ijk];
     }
