@@ -25,6 +25,16 @@ struct Analytic_Func_Arg_S
   double dZ_D0,dZ_D1,dZ_D2;
 };
 
+/* struct for transition functions */
+struct Transition_S
+{
+ double r;/* independent variable */
+ double rmin;/* constant r, like AH radius */
+ double rmax;/* constant r, like roll-off radius */
+ double p;/* for example: rolloff power */
+ double (*lambda)(struct Transition_S *const ts);/* if need more function */
+};
+
 int fd_main(Physics_T *const phys);
 void fd_add_fields_gConf_igConf_dgConf(Grid_T *const grid);
 void fd_add_fields_ChrisConf_dChrisConf(Grid_T *const grid);
