@@ -7,12 +7,12 @@
 /* handy macro for transition function */
 #define SET_TRANSITION_FUNC_BH_TYPE0  \
   const double r_min = Getd("min_radius");\
-  const double r_max = Getd("RollOff_radius");\
+  const double r_max = Getd("RollOff_rmax");\
   const double p_att = Getd("RollOff_power");\
   double (*transit)(struct Transition_S *const ts)  = 0;\
   double (*lambda)(struct Transition_S *const ts)   = 0;\
   \
-  IF_sval("RollOff_function","exp(-lambda*(r/r0)^p)")\
+  IF_sval("RollOff_function","exp(-lambda*(r/rmax)^p)")\
    {transit = f_exp_type1;}\
   else\
    {Error0("No such option for RollOff_function.");}\

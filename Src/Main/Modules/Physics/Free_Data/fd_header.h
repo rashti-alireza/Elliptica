@@ -30,7 +30,7 @@ struct Transition_S
 {
  double r;/* independent variable */
  double rmin;/* constant r, like AH radius */
- double rmax;/* constant r, like roll-off radius */
+ double rmax;/* constant r, like roll-off rmax */
  double p;/* for example: rolloff power */
  double (*lambda)(struct Transition_S *const ts);/* if need more function */
 };

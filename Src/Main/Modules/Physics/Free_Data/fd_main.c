@@ -91,7 +91,7 @@ static int set_free_data_params(Physics_T *const phys)
   // name: "RollOff_function"
   // the transition function to stich free data (same as w1 and w2).
   // options:
-  // o.  exp(-lambda*(r/r0)^p).
+  // o.  exp(-lambda*(r/rmax)^p).
   //
   //
   // name "RollOff_lambda"
@@ -101,8 +101,12 @@ static int set_free_data_params(Physics_T *const phys)
   //                         # roll-off radii, respectively.
   // o. constant_1. # a constant function
   //
-  // name: "RollOff_radius"
+  // name: "RollOff_rmax"
   // rmax in "RollOff_function".
+  //
+  //
+  // name: "RollOff_power"
+  // p in "RollOff_function".
   //
   //
   //
