@@ -97,8 +97,9 @@ static int set_free_data_params(Physics_T *const phys)
   // name "RollOff_lambda"
   // lambda in "RollOff_function".
   // options: 
-  // o. |(r-rh)/(r0-r)|. # rh,r0 are apparent horizon and roll-off radii.
-  // o. 1. # a constant function
+  // o. |(r-rmin)/(rmax-r)|. # rmin,rmax are apparent horizon and 
+  //                         # roll-off radii, respectively.
+  // o. constant_1. # a constant function
   //
   // name: "RollOff_radius"
   // r0 in "RollOff_function".
