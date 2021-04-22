@@ -388,11 +388,12 @@ fd_populate_gConf_igConf_dgConf_KerrSchild
 
 /* populate conformal metric, inverse of conformal metric 
 // and first order derivative of conformal metric for parameter
-// "flat + exp(-r^p)*(KerrSchild-flat)"  which is:
-// gConf_{ij} = delta_{ij} + atten * (gKS_{ij} - delta_{ij}).
+// "w1*flat + w2*BoostedKerrSchild"  which is:
+// gConf_{ij} = w1*delta_{ij} + w2*gBKS_{ij}.
 // this free data mainly is used for BHNS system.
 // the nomenclature of fields determined by the passed stems
-// NOTE: it assumes gConf has already been populated with KerrSchild metric */
+// NOTE: it assumes gConf has already been populated with 
+// BoostedKerrSchild metric */
 void 
 fd_modify_gConf_igConf_dgConf_to_w1flat_w2bKS
  (
@@ -411,14 +412,19 @@ fd_modify_gConf_igConf_dgConf_to_w1flat_w2bKS
   const double BHx    = Getd("center_x");
   const double BHy    = Getd("center_y");
   const double BHz    = Getd("center_z");
-  const double att_pow= Getd("RollOff_power");
-  const double R0P    = pow(Getd("RollOff_radius"),att_pow);
+  
+  SET_TRANSITION_FUNC_BH_TYPE0
   
   /* superimpose */
   OpenMP_Patch_Pragma(omp parallel for)
   for (Uint p = 0; p < grid->np; ++p)
   {
     Patch_T *patch = grid->patch[p];
+    struct Transition_S ts[1] = {0};
+    ts->rmin   = r_min;
+    ts->rmax   = r_max;
+    ts->p      = p_att;
+    ts->lambda = lambda;
     
     /* since gConf has KS values */
     READ_v_STEM(gKS_D2D2,gConf)
@@ -435,14 +441,15 @@ fd_modify_gConf_igConf_dgConf_to_w1flat_w2bKS
     WRITE_v_STEM(gConf_D1D2,gConf)
     WRITE_v_STEM(gConf_D1D1,gConf)
     
-    /* g = delta_{ij} + atten * (gKS_{ij} - delta_{ij}) */
+    /* g = delta_{ij} + att * (gbKS_{ij} - delta_{ij}) */
     FOR_ALL_ijk
     {
       double x   = patch->node[ijk]->x[0] - BHx;
       double y   = patch->node[ijk]->x[1] - BHy;
       double z   = patch->node[ijk]->x[2] - BHz;
-      double r2  = (Pow2(x)+Pow2(y)+Pow2(z));
-      double att = exp(-pow(r2,att_pow/2.)/R0P);
+      double r   = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+      ts->r      = r;
+      double att = transit(ts);
       
       /* diagonal */
       gConf_D0D0[ijk] = 1.+att*(gKS_D0D0[ijk]-1.);
@@ -1158,3 +1165,33 @@ fd_populate_psi_alphaPsi_beta_PGSchild
   FUNC_TOC
   
 }
+
+/* ->: f(r) = 1. */
+static double f_constant_1(struct Transition_S *const ts)
+{
+  return 1.;
+  UNUSED(ts);
+}
+
+/* ->: f(r) = (r-rmin)/(rmax-r) if rmax > r; otherwise 0. */
+static double f_ratio_type1(struct Transition_S *const ts)
+{
+  if (ts->r < ts->rmax)
+    return fabs(ts->r - ts->rmin)/(ts->rmax - ts->r);
+  else /* at r = rmax becomes inf. NOTE: it should not reach here */
+    Error0("It's infinite here!");
+    
+  return 0;
+}
+
+/* ->: f(r) =  exp(-lambda(r)*(r/r0)^p) if rmax > r; otherwise 0. */
+static double f_exp_type1(struct Transition_S *const ts)
+{
+  if (LSS(ts->r,ts->rmax))
+    return exp(- ts->lambda(ts) * pow( ts->r / ts->rmax,ts->p) );
+  else 
+    return 0;
+    
+  return 0;
+}
+
