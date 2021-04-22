@@ -1026,7 +1026,7 @@ fd_populate_alpha_KerrSchild
   FUNC_TOC
 }
 
-/* populate alpha of exp(-r^p)*KerrSchild value. */
+/* populate alpha of w*KerrSchild value. */
 void 
 fd_populate_alpha_wKerrSchild
  (
@@ -1043,8 +1043,8 @@ fd_populate_alpha_wKerrSchild
   const double BHx    = Getd("center_x");
   const double BHy    = Getd("center_y");
   const double BHz    = Getd("center_z");
-  const double att_pow= Getd("RollOff_power");
-  const double R0P    = pow(Getd("RollOff_radius"),att_pow);
+  
+  SET_TRANSITION_FUNC_BH_TYPE0
   
   fd_KerrSchild_set_params(phys);
   
@@ -1052,20 +1052,28 @@ fd_populate_alpha_wKerrSchild
   FOR_ALL_p(grid->np)
   {
     Patch_T *patch = grid->patch[p];
+    struct Transition_S ts[1] = {0};
+    ts->rmin   = r_min;
+    ts->rmax   = r_max;
+    ts->p      = p_att;
+    ts->lambda = lambda;
+    
     fd_alpha_KerrSchild_patch(patch,BHx,BHy,BHz,Alpha);
     
     WRITE_v_STEM(alpha,Alpha);
     
     FOR_ALL_ijk
     {
-      double x,y,z,r2;
+      double x,y,z,r;
       
       x = patch->node[ijk]->x[0]-BHx;
       y = patch->node[ijk]->x[1]-BHy;
       z = patch->node[ijk]->x[2]-BHz;
-      r2 = Pow2(x)+Pow2(y)+Pow2(z);
+      r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+      ts->r      = r;
+      double att = transit(ts);
       
-      alpha[ijk] *= exp(-pow(r2,att_pow/2.)/R0P);
+      alpha[ijk] *= att;
     }
   }
   
