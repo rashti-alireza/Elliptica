@@ -378,7 +378,7 @@ void bh_update_inner_BC(Physics_T *const phys)
     }
     else IF_sval("Eq_inner_BC_alpha","exp(-r^p)*KerrSchild")
     {
-      fd_populate_alpha_expmrp_KerrSchild(phys,"BH_around_IB","ibc_alpha");
+      fd_populate_alpha_wKerrSchild(phys,"BH_around_IB","ibc_alpha");
     }
     else
     {

@@ -220,7 +220,7 @@ fd_modify_trK_to_wtrK_compute_dtrK
  );
 
 void 
-fd_populate_alpha_expmrp_KerrSchild
+fd_populate_alpha_wKerrSchild
  (
  Physics_T *const phys,
  const char *const region,
