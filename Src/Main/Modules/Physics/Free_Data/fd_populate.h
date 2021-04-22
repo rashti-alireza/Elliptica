@@ -4,6 +4,27 @@
 
 #define STR_LEN (99)
 
+/* handy macro for transition function */
+#define SET_TRANSITION_FUNC_BH_TYPE0  \
+  const double r_min = Getd("min_radius");\
+  const double r_max = Getd("RollOff_radius");\
+  const double p_att = Getd("RollOff_power");\
+  double (*transit)(struct Transition_S *const ts)  = 0;\
+  double (*lambda)(struct Transition_S *const ts)   = 0;\
+  \
+  IF_sval("RollOff_function","exp(-lambda*(r/r0)^p)")\
+   {transit = f_exp_type1;}\
+  else\
+   {Error0("No such option for RollOff_function.");}\
+  \
+  IF_sval("RollOff_lambda","|(r-rmin)/(rmax-r)|")\
+   {lambda = f_ratio_type1;}\
+  else IF_sval("RollOff_lambda","constant_1")\
+   {lambda = f_constant_1;}\
+  else\
+   {Error0("No such option for RollOff_lambda.");}
+  
+
 void 
 fd_populate_gConf_igConf_dgConf_KerrSchild
  (
@@ -205,4 +226,8 @@ fd_populate_alpha_expmrp_KerrSchild
  const char *const region,
  const char *const Alpha
  );
+
+static double f_constant_1(struct Transition_S *const ts);
+static double f_ratio_type1(struct Transition_S *const ts);
+static double f_exp_type1(struct Transition_S *const ts);
 
