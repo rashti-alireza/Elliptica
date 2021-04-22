@@ -62,7 +62,7 @@ static int set_free_data_params(Physics_T *const phys)
   
   /* how to set trK = Tr(K_{ij})
   // options:
-  // maximal:    trK = 0.
+  // zero:       trK = 0.
   // KerrSchild: trK = trK of Kerr-Schild black hole K_{ij}.
   // IsoSchild:  trK = 0 for Schwarzchild in isotropic coordinates.
   // PGSchild:   trK for Schwarzchild in Painleve-Gullstrand coords.
@@ -240,12 +240,12 @@ static int populate_free_data(Physics_T *const phys)
     free_physics(bh);
   }
   else if 
-   (phys->sys                             == BHNS                         && 
+   (phys->sys                             == BHNS                  && 
    Pcmps(P_"conformal_metric"            ,"w1*flat+w2*KerrSchild") &&
    Pcmps(P_"conformal_Christoffel_symbol","w1*flat+w2*KerrSchild") &&
    Pcmps(P_"conformal_Ricci"             ,"w1*flat+w2*KerrSchild") &&
    Pcmps(P_"trK"                         ,"w*KerrSchild")          &&
-   Pcmps(P_"MConfIJ"                     ,"zero")                          )
+   Pcmps(P_"MConfIJ"                     ,"zero")                   )
   {
     /* important to have dedicated BH physics to read correct parameters */
     Physics_T *const bh = init_physics(phys,BH);
@@ -273,6 +273,26 @@ static int populate_free_data(Physics_T *const phys)
     fd_modify_trK_to_wtrK_compute_dtrK(bh,".*","trK","dtrK");
 
     free_physics(bh);
+  }
+  else if 
+   (
+   Pcmps(P_"conformal_metric"            ,"flat") &&
+   Pcmps(P_"conformal_Christoffel_symbol","flat") &&
+   Pcmps(P_"conformal_Ricci"             ,"flat") &&
+   Pcmps(P_"trK"                         ,"zero") &&
+   Pcmps(P_"MConfIJ"                     ,"zero")
+   )
+  {
+    fd_populate_gConf_igConf_dgConf_flat(phys,".*","gConf",
+                                              "igConf","dgConf");
+    fd_compatible_Christoffel_symbol(phys,".*","igConf",
+                                     "dgConf","ChrisConf");
+    fd_1st_derivative_Christoffel_symbol(phys,".*","dChrisConf");
+
+    fd_conformal_Ricci(phys,".*","igConf","ChrisConf","dChrisConf",
+                       "RicciConf","trRicciConf");
+
+    fd_trace_extrinsic_curvature_zero(phys,".*","trK","dtrK");
   }
   else
     Error0(NO_OPTION);

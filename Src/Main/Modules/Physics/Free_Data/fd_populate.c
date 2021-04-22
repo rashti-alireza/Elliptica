@@ -45,6 +45,38 @@ void fd_extrinsic_curvature_KerrSchild(Physics_T *const phys,
   FUNC_TOC
 }
 
+/* trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
+// for maximal slice i.e K = 0. */
+void fd_trace_extrinsic_curvature_zero(Physics_T *const phys,
+                                       const char *const region,
+                                       const char *const trK,
+                                       const char *const dtrK)
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,region);
+  Uint p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    /* set to zero */
+    REALLOC_v_WRITE_v_STEM(traceK,trK);
+    UNUSED(traceK);
+    
+    if (dtrK)
+    {
+     dField_di_STEM(dtrK_D0,dtrK);
+     dField_di_STEM(dtrK_D1,dtrK);
+     dField_di_STEM(dtrK_D2,dtrK);
+    }
+  }
+  
+  FUNC_TOC
+}
+
 /* compute K_{ij}, trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
 // for Schwarzchild in isotropic coords. */
 void fd_extrinsic_curvature_IsoSchild(Physics_T *const phys,

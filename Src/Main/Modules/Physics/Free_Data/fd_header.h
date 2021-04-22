@@ -276,5 +276,10 @@ fd_modify_trK_to_wtrK_compute_dtrK
  const char *const dtrK
  );
 
+void fd_trace_extrinsic_curvature_zero(Physics_T *const phys,
+                                       const char *const region,
+                                       const char *const trK,
+                                       const char *const dtrK);
+
 #endif
 

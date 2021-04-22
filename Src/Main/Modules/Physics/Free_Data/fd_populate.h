@@ -232,4 +232,8 @@ fd_populate_alpha_wKerrSchild
 static double f_constant_1(struct Transition_S *const ts);
 static double f_ratio_type1(struct Transition_S *const ts);
 static double f_exp_type1(struct Transition_S *const ts);
+void fd_trace_extrinsic_curvature_zero(Physics_T *const phys,
+                                       const char *const region,
+                                       const char *const trK,
+                                       const char *const dtrK);
 
