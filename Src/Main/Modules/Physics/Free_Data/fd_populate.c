@@ -1187,25 +1187,26 @@ static double f_constant_1(struct Transition_S *const ts)
   UNUSED(ts);
 }
 
-/* ->: f(r) = (r-rmin)/(rmax-r) if rmax > r; otherwise 0. */
+/* ->: f(r) = (r-rmin)/(rmax-r) if rmax > r; otherwise 0.
+// NOTE: it assumes rmin <= r < rmax ==> f(r) >= 0. */
 static double f_ratio_type1(struct Transition_S *const ts)
 {
   if (ts->r < ts->rmax)
     return fabs(ts->r - ts->rmin)/(ts->rmax - ts->r);
   else /* at r = rmax becomes inf. NOTE: it should not reach here */
-    Error0("It's infinite here!");
+    Error0("It's not defined here!");
     
-  return 0;
+  return 0.;
 }
 
-/* ->: f(r) =  exp(-lambda(r)*(r/r0)^p) if rmax > r; otherwise 0. */
+/* ->: f(r) =  exp(-lambda(r)*(r/rmax)^p) if r < rmax; otherwise 0. */
 static double f_exp_type1(struct Transition_S *const ts)
 {
   if (LSS(ts->r,ts->rmax))
     return exp(- ts->lambda(ts) * pow( ts->r / ts->rmax,ts->p) );
   else 
-    return 0;
+    return 0.;
     
-  return 0;
+  return 0.;
 }
 

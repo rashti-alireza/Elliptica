@@ -12,6 +12,8 @@
   double (*transit)(struct Transition_S *const ts)  = 0;\
   double (*lambda)(struct Transition_S *const ts)   = 0;\
   \
+  assert(r_min > 0); assert(r_max > 0);\
+  \
   IF_sval("RollOff_function","exp(-lambda*(r/rmax)^p)")\
    {transit = f_exp_type1;}\
   else\
