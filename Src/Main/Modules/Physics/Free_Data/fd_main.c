@@ -102,7 +102,7 @@ static int set_free_data_params(Physics_T *const phys)
   // o. constant_1. # a constant function
   //
   // name: "RollOff_radius"
-  // r0 in "RollOff_function".
+  // rmax in "RollOff_function".
   //
   //
   //

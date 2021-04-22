@@ -497,7 +497,7 @@ fd_modify_gConf_igConf_dgConf_to_w1flat_w2KS
 }
 
 /* populate trK and dtrK such as:
-// trK|new = exp(-r^p)*trK|old
+// trK|new = w*trK|old
 // this free data mainly is used for BHNS system.
 // the nomenclature of fields determined by the passed stems
 // NOTE: it assumes trK has already been populated. */
