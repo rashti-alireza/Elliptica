@@ -388,14 +388,14 @@ fd_populate_gConf_igConf_dgConf_KerrSchild
 
 /* populate conformal metric, inverse of conformal metric 
 // and first order derivative of conformal metric for parameter
-// "w1*flat + w2*BoostedKerrSchild"  which is:
-// gConf_{ij} = w1*delta_{ij} + w2*gBKS_{ij}.
+// "w1*flat + w2*KerrSchild"  which is:
+// gConf_{ij} = w1*delta_{ij} + w2*gKS_{ij}.
 // this free data mainly is used for BHNS system.
 // the nomenclature of fields determined by the passed stems
 // NOTE: it assumes gConf has already been populated with 
-// BoostedKerrSchild metric */
+// KerrSchild metric */
 void 
-fd_modify_gConf_igConf_dgConf_to_w1flat_w2bKS
+fd_modify_gConf_igConf_dgConf_to_w1flat_w2KS
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -441,7 +441,7 @@ fd_modify_gConf_igConf_dgConf_to_w1flat_w2bKS
     WRITE_v_STEM(gConf_D1D2,gConf)
     WRITE_v_STEM(gConf_D1D1,gConf)
     
-    /* g = delta_{ij} + att * (gbKS_{ij} - delta_{ij}) */
+    /* g = delta_{ij} + att * (gKS_{ij} - delta_{ij}) */
     FOR_ALL_ijk
     {
       double x   = patch->node[ijk]->x[0] - BHx;

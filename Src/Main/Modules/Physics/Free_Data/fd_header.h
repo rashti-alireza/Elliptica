@@ -258,7 +258,7 @@ fd_populate_beta_ConfKerrSchild
  );
 
 void 
-fd_modify_gConf_igConf_dgConf_to_w1flat_w2bKS
+fd_modify_gConf_igConf_dgConf_to_w1flat_w2KS
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,

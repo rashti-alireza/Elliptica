@@ -376,7 +376,7 @@ void bh_update_inner_BC(Physics_T *const phys)
     {
       fd_populate_alpha_KerrSchild(phys,"BH_around_IB","ibc_alpha");
     }
-    else IF_sval("Eq_inner_BC_alpha","w*BoostedKerrSchild")
+    else IF_sval("Eq_inner_BC_alpha","w*KerrSchild")
     {
       fd_populate_alpha_wKerrSchild(phys,"BH_around_IB","ibc_alpha");
     }

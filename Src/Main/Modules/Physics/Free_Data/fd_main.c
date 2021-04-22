@@ -47,7 +47,7 @@ static int set_free_data_params(Physics_T *const phys)
   // ConfKerrSchild: gConf = Kerr-Schild black hole which decomposed conformally so det(gConf) = 1.
   // IsoSchild:  gConf = delta_{ij} for Schwarzchild in isotropic coords.
   // PGSchild:   gConf = delta_{ij} for Schwarzchild in Painleve-Gullstrand coords.
-  // w1*flat+w2*BoostedKerrSchild: gConf_{ij} = w1*delta_{ij} + w2*gBKS_{ij}. */
+  // w1*flat+w2*KerrSchild: gConf_{ij} = w1*delta_{ij} + w2*gKS_{ij}. */
   Pset_default(P_"conformal_metric","KerrSchild");
   
   /* how to set Christoffel symbol:
@@ -57,7 +57,7 @@ static int set_free_data_params(Physics_T *const phys)
   // ConfKerrSchild: ChrisConf made of gConf of ConfKerrSchild black hole.
   // IsoSchild:  ChrisConf = 0 for Schwarzchild in isotropic coords.
   // PGSchild:   ChrisConf = 0 for Schwarzchild in Painleve-Gullstrand coords.
-  // w1*flat+w2*BoostedKerrSchild: for gConf_{ij} = w1*delta_{ij} + w2*gBKS_{ij}. */
+  // w1*flat+w2*KerrSchild: for gConf_{ij} = w1*delta_{ij} + w2*gKS_{ij}. */
   Pset_default(P_"conformal_Christoffel_symbol","KerrSchild");
   
   /* how to set trK = Tr(K_{ij})
@@ -66,7 +66,7 @@ static int set_free_data_params(Physics_T *const phys)
   // KerrSchild: trK = trK of Kerr-Schild black hole K_{ij}.
   // IsoSchild:  trK = 0 for Schwarzchild in isotropic coordinates.
   // PGSchild:   trK for Schwarzchild in Painleve-Gullstrand coords.
-  // w*BoostedKerrSchild: trK = w*(BoostedKerrSchild trK). */
+  // w*KerrSchild: trK = w*(KerrSchild trK). */
   Pset_default(P_"trK","KerrSchild");
   
   /* how to set conformal Ricci tensor
@@ -76,7 +76,7 @@ static int set_free_data_params(Physics_T *const phys)
   // ConfKerrSchild: use ConfKerrSchild black hole metric .
   // IsoSchild:  use Schwarzchild in isotropic coordinates.
   // PGSchild:   RicciConf_{ij} = 0 for Schwarzchild in Painleve-Gullstrand coords.
-  // w1*flat+w2*BoostedKerrSchild: for gConf_{ij} = w1*delta_{ij} + w2*gBKS_{ij}. */
+  // w1*flat+w2*KerrSchild: for gConf_{ij} = w1*delta_{ij} + w2*gKS_{ij}. */
   Pset_default(P_"conformal_Ricci","KerrSchild");
   
   /* how to set MConf^{ij} in AConf^{ij} = 1/sigma (LConf W)^{ij} + MConf^{ij}
@@ -237,10 +237,10 @@ static int populate_free_data(Physics_T *const phys)
   }
   else if 
    (phys->sys                             == BHNS                         && 
-   Pcmps(P_"conformal_metric"            ,"w1*flat+w2*BoostedKerrSchild") &&
-   Pcmps(P_"conformal_Christoffel_symbol","w1*flat+w2*BoostedKerrSchild") &&
-   Pcmps(P_"conformal_Ricci"             ,"w1*flat+w2*BoostedKerrSchild") &&
-   Pcmps(P_"trK"                         ,"w*BoostedKerrSchild")          &&
+   Pcmps(P_"conformal_metric"            ,"w1*flat+w2*KerrSchild") &&
+   Pcmps(P_"conformal_Christoffel_symbol","w1*flat+w2*KerrSchild") &&
+   Pcmps(P_"conformal_Ricci"             ,"w1*flat+w2*KerrSchild") &&
+   Pcmps(P_"trK"                         ,"w*KerrSchild")          &&
    Pcmps(P_"MConfIJ"                     ,"zero")                          )
   {
     /* important to have dedicated BH physics to read correct parameters */
@@ -254,8 +254,8 @@ static int populate_free_data(Physics_T *const phys)
     fd_extrinsic_curvature_KerrSchild(bh,".*","igConf","ChrisConf",
                                       "adm_Kij","trK",0);
     
-    /* modify metric to be "w1*flat+w2*BoostedKerrSchild" */
-    fd_modify_gConf_igConf_dgConf_to_w1flat_w2bKS(bh,".*","gConf",
+    /* modify metric to be "w1*flat+w2*KerrSchild" */
+    fd_modify_gConf_igConf_dgConf_to_w1flat_w2KS(bh,".*","gConf",
                                                  "igConf","dgConf");
     
     fd_compatible_Christoffel_symbol(phys,".*","igConf",
