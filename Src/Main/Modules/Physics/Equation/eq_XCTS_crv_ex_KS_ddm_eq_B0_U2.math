@@ -14,8 +14,8 @@ C_macro4 = READ_v_UNUSED(name);
 `#include "eq_header.h"`;
 `#include "maths_equation_solvings_lib.h"`;
 ``
-`void *eq_XCTS_curve_exc_KS_ddm_eq_B0_U2(void *vp1,void *vp2);`;
-`void *eq_XCTS_curve_exc_KS_ddm_eq_B0_U2(void *vp1,void *vp2)\n{`;
+`void *eq_XCTS_curve_exc_T1_ddm_eq_B0_U2(void *vp1,void *vp2);`;
+`void *eq_XCTS_curve_exc_T1_ddm_eq_B0_U2(void *vp1,void *vp2)\n{`;
 
 # NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
 # patch, S, F, node, N, n.
