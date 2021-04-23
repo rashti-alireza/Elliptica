@@ -201,6 +201,16 @@ static int set_equation_params(Physics_T *const phys)
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_bc_alphaPsi,
         "jacobian_bc_XCTS_curve_excision_KerrSchild_ddm_alphaPsi");
   
+  /* XCTS_curve_excision_ddm_alphaPsi equation with Neumann BC */
+  add_eq(&eq_global_field_eq,eq_XCTS_curve_exc_KS_ddm_eq_alphaPsi,
+         "eq_XCTS_curve_excision_Neumann_ddm_alphaPsi");
+  add_eq(&eq_global_bc_eq,eq_XCTS_curve_exc_Nmnn_ddm_bc_alphaPsi,
+        "bc_XCTS_curve_excision_Neumann_ddm_alphaPsi");
+  add_eq(&eq_global_jacobian_field_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_eq_alphaPsi,
+        "jacobian_eq_XCTS_curve_excision_Neumann_ddm_alphaPsi");
+  add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_exc_Nmnn_ddm_jacobian_bc_alphaPsi,
+        "jacobian_bc_XCTS_curve_excision_Neumann_ddm_alphaPsi");
+  
   /* XCTS_curve_excision_KerrSchild_ddm_B0_U0 equations */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_exc_KS_ddm_eq_B0_U0,
          "eq_XCTS_curve_excision_KerrSchild_ddm_B0_U0");
