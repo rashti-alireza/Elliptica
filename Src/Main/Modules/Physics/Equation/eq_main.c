@@ -87,14 +87,14 @@ static int set_equation_params(Physics_T *const phys)
   // DDM          : DDM_Schur_Complement method for solve.
   // Type1(for NS): arXiv:1910.09690 [gr-qc] on NS's surface
   // Type2(for NS): multiply Type1 eq with p/rho.
-  // Type1(for BH): arXiv:1607.07962 [gr-qc] on AH
+  // Type1(for BH): arXiv:1607.07962 [gr-qc] on AH.
   // Type2(for BH): set dalpha/dr = 0 on AH.
   // .*           : everywhere
   // NS?          : only for patches covering NS? */
   
-  Pset_default(P_"phi","XCTS_curve_Wolf_DDM,NS");
-  Pset_default(P_"phi1","XCTS_curve_Wolf_DDM,NS1");
-  Pset_default(P_"phi2","XCTS_curve_Wolf_DDM,NS2");
+  Pset_default(P_"phi","XCTS_curve_Type1_DDM,NS");
+  Pset_default(P_"phi1","XCTS_curve_Type1_DDM,NS1");
+  Pset_default(P_"phi2","XCTS_curve_Type1_DDM,NS2");
   Pset_default(P_"psi","XCTS_curve_excision_Type1_DDM,.*");
   Pset_default(P_"alphaPsi","XCTS_curve_excision_Type1_DDM,.*");
   Pset_default(P_"B0_U0","XCTS_curve_excision_Type1_DDM,.*");
@@ -125,63 +125,63 @@ static int set_equation_params(Physics_T *const phys)
   
   /* XCTS_curve_T1_ddm_phi equations */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_T1_ddm_eq_phi,
-         "eq_XCTS_curve_T1_ddm_phi");
+         "eq_XCTS_curve_Type1_ddm_phi");
   add_eq(&eq_global_bc_eq ,eq_XCTS_curve_T1_ddm_bc_phi,
-         "bc_XCTS_curve_T1_ddm_phi");
+         "bc_XCTS_curve_Type1_ddm_phi");
   add_eq(&eq_global_jacobian_field_eq,eq_XCTS_curve_T1_ddm_jacobian_eq_phi,
-         "jacobian_eq_XCTS_curve_T1_ddm_phi");
+         "jacobian_eq_XCTS_curve_Type1_ddm_phi");
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_T1_ddm_jacobian_bc_phi,
-         "jacobian_bc_XCTS_curve_T1_ddm_phi");
+         "jacobian_bc_XCTS_curve_Type1_ddm_phi");
   
   /* XCTS_curve_T1_ddm_phi1 equations */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_T1_ddm_eq_phi,
-         "eq_XCTS_curve_T1_ddm_phi1");
+         "eq_XCTS_curve_Type1_ddm_phi1");
   add_eq(&eq_global_bc_eq,eq_XCTS_curve_T1_ddm_bc_phi,
-         "bc_XCTS_curve_T1_ddm_phi1");
+         "bc_XCTS_curve_Type1_ddm_phi1");
   add_eq(&eq_global_jacobian_field_eq,eq_XCTS_curve_T1_ddm_jacobian_eq_phi,
-         "jacobian_eq_XCTS_curve_T1_ddm_phi1");
+         "jacobian_eq_XCTS_curve_Type1_ddm_phi1");
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_T1_ddm_jacobian_bc_phi,
-         "jacobian_bc_XCTS_curve_T1_ddm_phi1");
+         "jacobian_bc_XCTS_curve_Type1_ddm_phi1");
   
   /* XCTS_curve_T1_ddm_phi2 equations */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_T1_ddm_eq_phi,
-         "eq_XCTS_curve_T1_ddm_phi2");
+         "eq_XCTS_curve_Type1_ddm_phi2");
   add_eq(&eq_global_bc_eq,eq_XCTS_curve_T1_ddm_bc_phi,
-         "bc_XCTS_curve_T1_ddm_phi2");
+         "bc_XCTS_curve_Type1_ddm_phi2");
   add_eq(&eq_global_jacobian_field_eq,eq_XCTS_curve_T1_ddm_jacobian_eq_phi,
-         "jacobian_eq_XCTS_curve_T1_ddm_phi2");
+         "jacobian_eq_XCTS_curve_Type1_ddm_phi2");
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_T1_ddm_jacobian_bc_phi,
-         "jacobian_bc_XCTS_curve_T1_ddm_phi2");
+         "jacobian_bc_XCTS_curve_Type1_ddm_phi2");
   
   /* XCTS_curve_T2_ddm_phi equations NOTE:assumed same bc */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_T2_ddm_eq_phi,
-         "eq_XCTS_curve_T2_ddm_phi");
+         "eq_XCTS_curve_Type2_ddm_phi");
   add_eq(&eq_global_bc_eq ,eq_XCTS_curve_T1_ddm_bc_phi,
-         "bc_XCTS_curve_T2_ddm_phi");
+         "bc_XCTS_curve_Type2_ddm_phi");
   add_eq(&eq_global_jacobian_field_eq,eq_XCTS_curve_T2_ddm_jacobian_eq_phi,
-         "jacobian_eq_XCTS_curve_T2_ddm_phi");
+         "jacobian_eq_XCTS_curve_Type2_ddm_phi");
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_T1_ddm_jacobian_bc_phi,
-         "jacobian_bc_XCTS_curve_T2_ddm_phi");
+         "jacobian_bc_XCTS_curve_Type2_ddm_phi");
          
   /* XCTS_curve_T2_ddm_phi1 equations NOTE:assumed same bc */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_T2_ddm_eq_phi,
-         "eq_XCTS_curve_T2_ddm_phi1");
+         "eq_XCTS_curve_Type2_ddm_phi1");
   add_eq(&eq_global_bc_eq ,eq_XCTS_curve_T1_ddm_bc_phi,
-         "bc_XCTS_curve_T2_ddm_phi1");
+         "bc_XCTS_curve_Type2_ddm_phi1");
   add_eq(&eq_global_jacobian_field_eq,eq_XCTS_curve_T2_ddm_jacobian_eq_phi,
-         "jacobian_eq_XCTS_curve_T2_ddm_phi1");
+         "jacobian_eq_XCTS_curve_Type2_ddm_phi1");
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_T1_ddm_jacobian_bc_phi,
-         "jacobian_bc_XCTS_curve_T2_ddm_phi1");
+         "jacobian_bc_XCTS_curve_Type2_ddm_phi1");
   
   /* XCTS_curve_T2_ddm_phi2 equations NOTE:assumed same bc */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_T2_ddm_eq_phi,
-         "eq_XCTS_curve_T2_ddm_phi2");
+         "eq_XCTS_curve_Type2_ddm_phi2");
   add_eq(&eq_global_bc_eq ,eq_XCTS_curve_T1_ddm_bc_phi,
-         "bc_XCTS_curve_T2_ddm_phi2");
+         "bc_XCTS_curve_Type2_ddm_phi2");
   add_eq(&eq_global_jacobian_field_eq,eq_XCTS_curve_T2_ddm_jacobian_eq_phi,
-         "jacobian_eq_XCTS_curve_T2_ddm_phi2");
+         "jacobian_eq_XCTS_curve_Type2_ddm_phi2");
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_T1_ddm_jacobian_bc_phi,
-         "jacobian_bc_XCTS_curve_T2_ddm_phi2");
+         "jacobian_bc_XCTS_curve_Type2_ddm_phi2");
   
   /* XCTS_curve_excision_Type1_ddm_psi equations */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_exc_T1_ddm_eq_psi,
@@ -203,15 +203,15 @@ static int set_equation_params(Physics_T *const phys)
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_exc_T1_ddm_jacobian_bc_alphaPsi,
         "jacobian_bc_XCTS_curve_excision_Type1_ddm_alphaPsi");
   
-  /* XCTS_curve_excision_ddm_alphaPsi equation with Neumann BC */
+  /* XCTS_curve_excision_Type2_ddm_alphaPsi equations(only AH bc changed) */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_exc_T1_ddm_eq_alphaPsi,
-         "eq_XCTS_curve_excision_Neumann_ddm_alphaPsi");
+         "eq_XCTS_curve_excision_Type2_ddm_alphaPsi");
   add_eq(&eq_global_bc_eq,eq_XCTS_curve_exc_T2_ddm_bc_alphaPsi,
-        "bc_XCTS_curve_excision_Neumann_ddm_alphaPsi");
+        "bc_XCTS_curve_excision_Type2_ddm_alphaPsi");
   add_eq(&eq_global_jacobian_field_eq,eq_XCTS_curve_exc_T1_ddm_jacobian_eq_alphaPsi,
-        "jacobian_eq_XCTS_curve_excision_Neumann_ddm_alphaPsi");
+        "jacobian_eq_XCTS_curve_excision_Type2_ddm_alphaPsi");
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_exc_T2_ddm_jacobian_bc_alphaPsi,
-        "jacobian_bc_XCTS_curve_excision_Neumann_ddm_alphaPsi");
+        "jacobian_bc_XCTS_curve_excision_Type2_ddm_alphaPsi");
   
   /* XCTS_curve_excision_Type1_ddm_B0_U0 equations */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_exc_T1_ddm_eq_B0_U0,
