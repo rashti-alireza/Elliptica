@@ -69,8 +69,8 @@ static int set_equation_params(Physics_T *const phys)
   
   /* equation name and region to be solved
   // format: par_name = equation_name,region.
-  // for instance, Eq_psi=XCTS_curve_excision_KerrSchild_DDM, .*
-  // which shows Eq_psi is "XCTS_curve_excision_KerrSchild_DDM" and
+  // for instance, Eq_psi=XCTS_curve_excision_Type1_DDM, .*
+  // which shows Eq_psi is "XCTS_curve_excision_Type1_DDM" and
   // it is supposed to be solved everywhere. */
   
   /* params:
@@ -94,11 +94,11 @@ static int set_equation_params(Physics_T *const phys)
   Pset_default(P_"phi","XCTS_curve_Wolf_DDM,NS");
   Pset_default(P_"phi1","XCTS_curve_Wolf_DDM,NS1");
   Pset_default(P_"phi2","XCTS_curve_Wolf_DDM,NS2");
-  Pset_default(P_"psi","XCTS_curve_excision_KerrSchild_DDM,.*");
-  Pset_default(P_"alphaPsi","XCTS_curve_excision_KerrSchild_DDM,.*");
-  Pset_default(P_"B0_U0","XCTS_curve_excision_KerrSchild_DDM,.*");
-  Pset_default(P_"B0_U1","XCTS_curve_excision_KerrSchild_DDM,.*");
-  Pset_default(P_"B0_U2","XCTS_curve_excision_KerrSchild_DDM,.*");
+  Pset_default(P_"psi","XCTS_curve_excision_Type1_DDM,.*");
+  Pset_default(P_"alphaPsi","XCTS_curve_excision_Type1_DDM,.*");
+  Pset_default(P_"B0_U0","XCTS_curve_excision_Type1_DDM,.*");
+  Pset_default(P_"B0_U1","XCTS_curve_excision_Type1_DDM,.*");
+  Pset_default(P_"B0_U2","XCTS_curve_excision_Type1_DDM,.*");
   
   /* external functions */
   eq_field_update  = 0;
@@ -182,25 +182,25 @@ static int set_equation_params(Physics_T *const phys)
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_Wolf_ddm_jacobian_bc_phi,
          "jacobian_bc_XCTS_curve_Wolf_prho_ddm_phi2");
   
-  /* XCTS_curve_excision_KerrSchild_ddm_psi equations */
+  /* XCTS_curve_excision_Type1_ddm_psi equations */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_exc_KS_ddm_eq_psi,
-         "eq_XCTS_curve_excision_KerrSchild_ddm_psi");
+         "eq_XCTS_curve_excision_Type1_ddm_psi");
   add_eq(&eq_global_bc_eq,eq_XCTS_curve_exc_KS_ddm_bc_psi,
-         "bc_XCTS_curve_excision_KerrSchild_ddm_psi");
+         "bc_XCTS_curve_excision_Type1_ddm_psi");
   add_eq(&eq_global_jacobian_field_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_eq_psi,
-         "jacobian_eq_XCTS_curve_excision_KerrSchild_ddm_psi");
+         "jacobian_eq_XCTS_curve_excision_Type1_ddm_psi");
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_bc_psi,
-         "jacobian_bc_XCTS_curve_excision_KerrSchild_ddm_psi");
+         "jacobian_bc_XCTS_curve_excision_Type1_ddm_psi");
 
-  /* XCTS_curve_excision_KerrSchild_ddm_alphaPsi equations */
+  /* XCTS_curve_excision_Type1_ddm_alphaPsi equations */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_exc_KS_ddm_eq_alphaPsi,
-         "eq_XCTS_curve_excision_KerrSchild_ddm_alphaPsi");
+         "eq_XCTS_curve_excision_Type1_ddm_alphaPsi");
   add_eq(&eq_global_bc_eq,eq_XCTS_curve_exc_KS_ddm_bc_alphaPsi,
-        "bc_XCTS_curve_excision_KerrSchild_ddm_alphaPsi");
+        "bc_XCTS_curve_excision_Type1_ddm_alphaPsi");
   add_eq(&eq_global_jacobian_field_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_eq_alphaPsi,
-        "jacobian_eq_XCTS_curve_excision_KerrSchild_ddm_alphaPsi");
+        "jacobian_eq_XCTS_curve_excision_Type1_ddm_alphaPsi");
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_bc_alphaPsi,
-        "jacobian_bc_XCTS_curve_excision_KerrSchild_ddm_alphaPsi");
+        "jacobian_bc_XCTS_curve_excision_Type1_ddm_alphaPsi");
   
   /* XCTS_curve_excision_ddm_alphaPsi equation with Neumann BC */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_exc_KS_ddm_eq_alphaPsi,
@@ -212,35 +212,35 @@ static int set_equation_params(Physics_T *const phys)
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_exc_Nmnn_ddm_jacobian_bc_alphaPsi,
         "jacobian_bc_XCTS_curve_excision_Neumann_ddm_alphaPsi");
   
-  /* XCTS_curve_excision_KerrSchild_ddm_B0_U0 equations */
+  /* XCTS_curve_excision_Type1_ddm_B0_U0 equations */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_exc_KS_ddm_eq_B0_U0,
-         "eq_XCTS_curve_excision_KerrSchild_ddm_B0_U0");
+         "eq_XCTS_curve_excision_Type1_ddm_B0_U0");
   add_eq(&eq_global_bc_eq ,eq_XCTS_curve_exc_KS_ddm_bc_B0_U0,
-         "bc_XCTS_curve_excision_KerrSchild_ddm_B0_U0");
+         "bc_XCTS_curve_excision_Type1_ddm_B0_U0");
   add_eq(&eq_global_jacobian_field_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_eq_B0_U0,
-         "jacobian_eq_XCTS_curve_excision_KerrSchild_ddm_B0_U0");
+         "jacobian_eq_XCTS_curve_excision_Type1_ddm_B0_U0");
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_bc_B0_U0,
-         "jacobian_bc_XCTS_curve_excision_KerrSchild_ddm_B0_U0");
+         "jacobian_bc_XCTS_curve_excision_Type1_ddm_B0_U0");
 
-  /* XCTS_curve_excision_KerrSchild_ddm_B0_U1 equations */
+  /* XCTS_curve_excision_Type1_ddm_B0_U1 equations */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_exc_KS_ddm_eq_B0_U1,
-         "eq_XCTS_curve_excision_KerrSchild_ddm_B0_U1");
+         "eq_XCTS_curve_excision_Type1_ddm_B0_U1");
   add_eq(&eq_global_bc_eq,eq_XCTS_curve_exc_KS_ddm_bc_B0_U1,
-         "bc_XCTS_curve_excision_KerrSchild_ddm_B0_U1");
+         "bc_XCTS_curve_excision_Type1_ddm_B0_U1");
   add_eq(&eq_global_jacobian_field_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_eq_B0_U1,
-         "jacobian_eq_XCTS_curve_excision_KerrSchild_ddm_B0_U1");
+         "jacobian_eq_XCTS_curve_excision_Type1_ddm_B0_U1");
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_bc_B0_U1,
-         "jacobian_bc_XCTS_curve_excision_KerrSchild_ddm_B0_U1");
+         "jacobian_bc_XCTS_curve_excision_Type1_ddm_B0_U1");
 
-  /* XCTS_curve_excision_KerrSchild_ddm_B0_U2 equations */
+  /* XCTS_curve_excision_Type1_ddm_B0_U2 equations */
   add_eq(&eq_global_field_eq,eq_XCTS_curve_exc_KS_ddm_eq_B0_U2,
-         "eq_XCTS_curve_excision_KerrSchild_ddm_B0_U2");
+         "eq_XCTS_curve_excision_Type1_ddm_B0_U2");
   add_eq(&eq_global_bc_eq,eq_XCTS_curve_exc_KS_ddm_bc_B0_U2,
-         "bc_XCTS_curve_excision_KerrSchild_ddm_B0_U2");
+         "bc_XCTS_curve_excision_Type1_ddm_B0_U2");
   add_eq(&eq_global_jacobian_field_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_eq_B0_U2,
-         "jacobian_eq_XCTS_curve_excision_KerrSchild_ddm_B0_U2");
+         "jacobian_eq_XCTS_curve_excision_Type1_ddm_B0_U2");
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_exc_KS_ddm_jacobian_bc_B0_U2,
-         "jacobian_bc_XCTS_curve_excision_KerrSchild_ddm_B0_U2");
+         "jacobian_bc_XCTS_curve_excision_Type1_ddm_B0_U2");
   
 
   FUNC_TOC
