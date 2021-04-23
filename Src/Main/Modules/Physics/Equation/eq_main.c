@@ -81,13 +81,14 @@ static int set_equation_params(Physics_T *const phys)
   // beta_?      : shifts
   //
   // options:
-  // XCTS        : extended conformal thin sandwich method
-  // curve       : metric is not flat
-  // excision    : BH is excised so we have B.C on AH
-  // DDM         : DDM_Schur_Complement method for solve.
-  // Wolf        : Wolfgang Tichy's formalism
-  // KerrSchild  : Using KerrSchild values for BC
-  // .*          : everywhere
+  // XCTS         : extended conformal thin sandwich method
+  // curve        : metric is not flat
+  // excision     : BH is excised so we have B.C on AH
+  // DDM          : DDM_Schur_Complement method for solve.
+  // Type1(for NS): arXiv:1910.09690 [gr-qc] on NS's surface
+  // Type1(for BH): arXiv:1607.07962 [gr-qc] on AH
+  // Type2(for BH): set dalpha/dr = 0 on AH.
+  // .*           : everywhere
   // NS?          : only for patches covering NS? */
   
   Pset_default(P_"phi","XCTS_curve_Wolf_DDM,NS");
