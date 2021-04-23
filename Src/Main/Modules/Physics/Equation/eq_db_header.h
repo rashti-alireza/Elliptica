@@ -16,8 +16,8 @@ void *eq_XCTS_curve_exc_T1_ddm_eq_alphaPsi(void *vp1,void *vp2);
 void *eq_XCTS_curve_exc_T1_ddm_bc_alphaPsi(void *vp1,void *vp2);
 void *eq_XCTS_curve_exc_T1_ddm_jacobian_eq_alphaPsi(void *vp1,void *vp2);
 void *eq_XCTS_curve_exc_T1_ddm_jacobian_bc_alphaPsi(void *vp1,void *vp2);
-void *eq_XCTS_curve_exc_Nmnn_ddm_bc_alphaPsi(void *vp1,void *vp2);
-void *eq_XCTS_curve_exc_Nmnn_ddm_jacobian_bc_alphaPsi(void *vp1,void *vp2);
+void *eq_XCTS_curve_exc_T2_ddm_bc_alphaPsi(void *vp1,void *vp2);
+void *eq_XCTS_curve_exc_T2_ddm_jacobian_bc_alphaPsi(void *vp1,void *vp2);
 
 void *eq_XCTS_curve_exc_T1_ddm_eq_B0_U0(void *vp1,void *vp2);
 void *eq_XCTS_curve_exc_T1_ddm_bc_B0_U0(void *vp1,void *vp2);
