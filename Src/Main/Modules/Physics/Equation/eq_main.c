@@ -86,6 +86,7 @@ static int set_equation_params(Physics_T *const phys)
   // excision     : BH is excised so we have B.C on AH
   // DDM          : DDM_Schur_Complement method for solve.
   // Type1(for NS): arXiv:1910.09690 [gr-qc] on NS's surface
+  // Type2(for NS): multiply Type1 eq with p/rho.
   // Type1(for BH): arXiv:1607.07962 [gr-qc] on AH
   // Type2(for BH): set dalpha/dr = 0 on AH.
   // .*           : everywhere
