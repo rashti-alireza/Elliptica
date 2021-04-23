@@ -380,6 +380,10 @@ void bh_update_inner_BC(Physics_T *const phys)
     {
       fd_populate_alpha_wKerrSchild(phys,"BH_around_IB","ibc_alpha");
     }
+    else IF_sval("Eq_inner_BC_alpha","none")
+    {
+      ;
+    }
     else
     {
       Error0(NO_OPTION);
@@ -397,6 +401,10 @@ void bh_update_inner_BC(Physics_T *const phys)
     else IF_sval("Eq_inner_BC_beta","alpha+Omega*r")
     {
       set_beta_inner_bc_alpha_omegaXr(phys,"BH_around_IB","ibc_beta");
+    }
+    else IF_sval("Eq_inner_BC_beta","none")
+    {
+      ;
     }
     else
     {
