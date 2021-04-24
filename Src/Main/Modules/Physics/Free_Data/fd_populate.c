@@ -1231,14 +1231,24 @@ static double f_ratio_type1(struct Transition_S *const ts)
   return 0.;
 }
 
-/* ->: f(r) =  exp(-lambda(r)*(r/rmax)^p) if r < rmax; otherwise 0. */
+/* ->: f(r) =  exp(-lambda(r)*(r/rmax)^p) if r < rmax; otherwise 0. 
+// NOTE: for r >= rmax f(r) = 0, so even if lambda = 1, it's still 0. */
 static double f_exp_type1(struct Transition_S *const ts)
 {
+  
   if (LSS(ts->r,ts->rmax))
     return exp(- ts->lambda(ts) * pow( ts->r / ts->rmax,ts->p) );
   else 
     return 0.;
     
   return 0.;
+}
+
+/* ->: f(r) =  exp(-lambda(r)*(r/rmax)^p) 
+// NOTE: no condition on r as opposed to f_exp_type1, thus be careful
+// when using. */
+static double f_exp_type2(struct Transition_S *const ts)
+{
+  return exp(- ts->lambda(ts) * pow( ts->r / ts->rmax,ts->p) );
 }
 

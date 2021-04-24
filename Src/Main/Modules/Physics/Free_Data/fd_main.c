@@ -91,15 +91,16 @@ static int set_free_data_params(Physics_T *const phys)
   // name: "RollOff_function"
   // the transition function to stich free data (same as w1 and w2).
   // options:
-  // o.  exp(-lambda*(r/rmax)^p).
+  // o.  "exp(-lambda*(r/rmax)^p):r<rmax". # 0 for r >= rmax.
+  // o.  "exp(-lambda*(r/rmax)^p)". # no condition on r.
   //
   //
   // name "RollOff_lambda"
   // lambda in "RollOff_function".
   // options: 
-  // o. |(r-rmin)/(rmax-r)|. # rmin,rmax are apparent horizon and 
-  //                         # roll-off radii, respectively.
-  // o. constant_1. # a constant function
+  // o. "|(r-rmin)/(rmax-r)|". # rmin,rmax are apparent horizon and 
+  //                           # roll-off radii, respectively.
+  // o. "constant_1". # a constant function
   //
   // name: "RollOff_rmax"
   // rmax in "RollOff_function".
