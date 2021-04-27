@@ -18,10 +18,6 @@ void *eq_XCTS_curve_exc_T2_ddm_jacobian_bc_alphaPsi(void *vp1,void *vp2)
   JACOBIAN_DERIVATIVE(JalphaPsi_D1)
   JACOBIAN_DERIVATIVE(JalphaPsi_D0)
   JACOBIAN_DERIVATIVE(JalphaPsi_D2)
-  READ_v(psi)
-  READ_v(dpsi_D0)
-  READ_v(dpsi_D1)
-  READ_v(dpsi_D2)
 
 
   if (patch->outerB)
@@ -57,11 +53,15 @@ kd[ijk==lmn];
  double x_U0 = patch->node[ijk]->x[0] - BH_center[0];
  double x_U1 = patch->node[ijk]->x[1] - BH_center[1];
  double x_U2 = patch->node[ijk]->x[2] - BH_center[2];
+ double r2_b = 
+pow(x_U0, 2) + pow(x_U1, 2) + pow(x_U2, 2);
+
+ double r_b = 
+sqrt(r2_b);
+
  double innerB_Bpart = 
-x_U0*(JalphaPsi_D0(j_JalphaPsi_D0,ijk,lmn)*psi[ijk] - dpsi_D0[ijk]*
-kd[ijk==lmn]) + x_U1*(JalphaPsi_D1(j_JalphaPsi_D1,ijk,lmn)*psi[ijk] -
-dpsi_D1[ijk]*kd[ijk==lmn]) + x_U2*(JalphaPsi_D2(j_JalphaPsi_D2,ijk,lmn)*
-psi[ijk] - dpsi_D2[ijk]*kd[ijk==lmn]);
+1.0*(JalphaPsi_D0(j_JalphaPsi_D0,ijk,lmn)*x_U0 + JalphaPsi_D1(j_JalphaPsi_D1,ijk,lmn)*
+x_U1 + JalphaPsi_D2(j_JalphaPsi_D2,ijk,lmn)*x_U2)/r_b;
 
   B[i][j] = innerB_Bpart;
 
@@ -72,11 +72,15 @@ psi[ijk] - dpsi_D2[ijk]*kd[ijk==lmn]);
  double x_U0 = patch->node[ijk]->x[0] - BH_center[0];
  double x_U1 = patch->node[ijk]->x[1] - BH_center[1];
  double x_U2 = patch->node[ijk]->x[2] - BH_center[2];
+ double r2_e = 
+pow(x_U0, 2) + pow(x_U1, 2) + pow(x_U2, 2);
+
+ double r_e = 
+sqrt(r2_e);
+
  double innerB_Epart = 
-x_U0*(JalphaPsi_D0(j_JalphaPsi_D0,ijk,lmn)*psi[ijk] - dpsi_D0[ijk]*
-kd[ijk==lmn]) + x_U1*(JalphaPsi_D1(j_JalphaPsi_D1,ijk,lmn)*psi[ijk] -
-dpsi_D1[ijk]*kd[ijk==lmn]) + x_U2*(JalphaPsi_D2(j_JalphaPsi_D2,ijk,lmn)*
-psi[ijk] - dpsi_D2[ijk]*kd[ijk==lmn]);
+1.0*(JalphaPsi_D0(j_JalphaPsi_D0,ijk,lmn)*x_U0 + JalphaPsi_D1(j_JalphaPsi_D1,ijk,lmn)*
+x_U1 + JalphaPsi_D2(j_JalphaPsi_D2,ijk,lmn)*x_U2)/r_e;
 
   E_Trans[j][i] = innerB_Epart;
 

@@ -40,10 +40,10 @@ Declare =
  (obj = Field,name = JalphaPsi, rank = D, C_arg,C_macro3);
 
   # conformal factor
- (obj = Field,name = psi, rank = 0, C_macro);
+ #(obj = Field,name = psi, rank = 0, C_macro);
 
  # dconformal factor
- (obj = Field,name = dpsi, rank = D, C_macro);
+ #(obj = Field,name = dpsi, rank = D, C_macro);
 
  # coords from BH's center
  (obj = Field,name = x, rank = U, none,C_arg1);
@@ -133,8 +133,11 @@ outerB_Epart = 0;
 ` double x_U1 = patch->node[ijk]->x[1] - BH_center[1];`
 ` double x_U2 = patch->node[ijk]->x[2] - BH_center[2];`
 
+r2_b = x(i)*x(-i);
 
-innerB_Bpart = x(i)*(psi*JalphaPsi(-i)-kd*dpsi(-i));
+r_b  = r2_b**0.5;
+
+innerB_Bpart = x(i)*JalphaPsi(-i)/r_b;
 
 
 `  B[i][j] = innerB_Bpart;\n`;
@@ -151,7 +154,11 @@ innerB_Bpart = x(i)*(psi*JalphaPsi(-i)-kd*dpsi(-i));
 ` double x_U1 = patch->node[ijk]->x[1] - BH_center[1];`
 ` double x_U2 = patch->node[ijk]->x[2] - BH_center[2];`
 
-innerB_Epart = x(i)*(psi*JalphaPsi(-i)-kd*dpsi(-i));
+r2_e = x(i)*x(-i);
+
+r_e  = r2_e**0.5;
+
+innerB_Epart = x(i)*JalphaPsi(-i)/r_e;
 
 
 `  E_Trans[j][i] = innerB_Epart;\n`;
