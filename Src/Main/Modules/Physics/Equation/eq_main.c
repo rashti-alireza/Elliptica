@@ -244,6 +244,36 @@ static int set_equation_params(Physics_T *const phys)
   add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_exc_T1_ddm_jacobian_bc_B0_U2,
          "jacobian_bc_XCTS_curve_excision_Type1_ddm_B0_U2");
   
+  /* XCTS_flat_excision_Type1_ddm_B0_U0 equations(only Jacobian is different) */
+  add_eq(&eq_global_field_eq,eq_XCTS_curve_exc_T1_ddm_eq_B0_U0,
+         "eq_XCTS_flat_excision_Type1_ddm_B0_U0");
+  add_eq(&eq_global_bc_eq ,eq_XCTS_curve_exc_T1_ddm_bc_B0_U0,
+         "bc_XCTS_flat_excision_Type1_ddm_B0_U0");
+  add_eq(&eq_global_jacobian_field_eq,eq_XCTS_flat_exc_T1_ddm_jacobian_eq_B0_U0,
+         "jacobian_eq_XCTS_flat_excision_Type1_ddm_B0_U0");
+  add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_exc_T1_ddm_jacobian_bc_B0_U0,
+         "jacobian_bc_XCTS_flat_excision_Type1_ddm_B0_U0");
+
+  /* XCTS_flat_excision_Type1_ddm_B0_U1 equations(only Jacobian is different) */
+  add_eq(&eq_global_field_eq,eq_XCTS_curve_exc_T1_ddm_eq_B0_U1,
+         "eq_XCTS_flat_excision_Type1_ddm_B0_U1");
+  add_eq(&eq_global_bc_eq,eq_XCTS_curve_exc_T1_ddm_bc_B0_U1,
+         "bc_XCTS_flat_excision_Type1_ddm_B0_U1");
+  add_eq(&eq_global_jacobian_field_eq,eq_XCTS_flat_exc_T1_ddm_jacobian_eq_B0_U1,
+         "jacobian_eq_XCTS_flat_excision_Type1_ddm_B0_U1");
+  add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_exc_T1_ddm_jacobian_bc_B0_U1,
+         "jacobian_bc_XCTS_flat_excision_Type1_ddm_B0_U1");
+
+  /* XCTS_flat_excision_Type1_ddm_B0_U2 equations(only Jacobian is different) */
+  add_eq(&eq_global_field_eq,eq_XCTS_curve_exc_T1_ddm_eq_B0_U2,
+         "eq_XCTS_flat_excision_Type1_ddm_B0_U2");
+  add_eq(&eq_global_bc_eq,eq_XCTS_curve_exc_T1_ddm_bc_B0_U2,
+         "bc_XCTS_flat_excision_Type1_ddm_B0_U2");
+  add_eq(&eq_global_jacobian_field_eq,eq_XCTS_flat_exc_T1_ddm_jacobian_eq_B0_U2,
+         "jacobian_eq_XCTS_flat_excision_Type1_ddm_B0_U2");
+  add_eq(&eq_global_jacobian_bc_eq,eq_XCTS_curve_exc_T1_ddm_jacobian_bc_B0_U2,
+         "jacobian_bc_XCTS_flat_excision_Type1_ddm_B0_U2");
+  
 
   FUNC_TOC
   return EXIT_SUCCESS;
