@@ -1,7 +1,5 @@
 # equation: phi, irrational piece of fluid velocity
-# curve + Wolfgang's eq * p/rho
-# NOTE: compare this file with "eq_XCTS_crv_wolf_ddm_eq_phi.math"
-# NOTE: this eq assume same BC as "eq_XCTS_crv_wolf_ddm_bc_phi.math"
+# curve + Wolfgang's eq.
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -27,10 +25,6 @@ C_macro  = READ_v(name);
 ## define prefix for parameter
 `  EQ_Def_Param_Prefix_Char`
 `  EQ_Set_Prefix("NS")`
-## set the physics and eos
-`  Physics_T *ns = 0;`
-`  EQ_MyPhyiscs(ns);`
-`  EoS_T *eos = init_EoS(ns);`
 ``
 # declare for Cpi:
 Declare = 
@@ -84,6 +78,9 @@ Declare =
  # shifts
  (obj = Field,name = beta, rank = U, C_macro);
 
+ # dshifts
+ (obj = Field,name = dbeta, rank = UD, C_macro);
+
  # conformal metric inverse
  (obj = Field,name = igConf, rank = UU, C_macro);
 
@@ -91,16 +88,13 @@ Declare =
  (obj = Field,name = ChrisConf, rank = UDD, C_macro);
 
  # rho_center
- #(obj = variable,name = rhoc, rank = 0, none);
- 
- # pressure
- (obj = variable,name = p, rank = 0, none);
+ (obj = variable,name = rhoc, rank = 0, none);
 
  # small factor
- #(obj = variable,name = e, rank = 0, none);
+ (obj = variable,name = e, rank = 0, none);
 
  # small factor2
- #(obj = variable,name = att, rank = 0, none);
+ (obj = variable,name = att, rank = 0, none);
 
 }
 
@@ -109,9 +103,9 @@ Symm[igConf(i,j)      = igConf(j,i)];
 Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 Symm[ddphi(i,j)       = ddphi(j,i)];
 
-#`  const double rhoc = Pgetd(EQ_PrefixIt("rho_center"));`
-#`  const double e    = Pgetd(EQ_PrefixIt("Eq_phi_polish"));`
-#`  const double att  = e*rhoc;`
+`  const double rhoc = Pgetd(EQ_PrefixIt("rho_center"));`
+`  const double e    = Pgetd(EQ_PrefixIt("Eq_phi_polish"));`
+`  const double att  = e*rhoc;`
 
 ##########################################################################
 # NOTE: In domain decomposition method n is relabed from point ijk.
@@ -124,28 +118,41 @@ Symm[ddphi(i,j)       = ddphi(j,i)];
 `  DDM_SCHUR_EQ_OPEN\n`;
 
 # write the equation below at ijk point:
-`  eos->h   = enthalpy[ijk];`
-`  double p = eos->pressure(eos);`
 
-dLn_of_alpha(i) = dalphaPsi(i)/alphaPsi - dpsi(i)/psi;
-#dLn_of_rho0(i)  = drho0(i)/rho0;
+dLn_of_psi(i)       = dpsi(i)/psi;
+
+dLn_of_alpha(i)     = dalphaPsi(i)/alphaPsi - dLn_of_psi(i);
+
 dLn_of_enthalpy(i)  = denthalpy(i)/enthalpy;
-dLn_of_u0(i)  = du0(i)/u0;
-#dLns0(i) = dLn_of_alpha(i) + dLn_of_rho0(i) - dLn_of_enthalpy(i);
-#dLns1(i) = dLn_of_alpha(i) + dLn_of_rho0(i) + dLn_of_u0(i);
-dLns0(i) = drho0(i)+rho0*(dLn_of_alpha(i)- dLn_of_enthalpy(i));
-dLns1(i) = drho0(i)+rho0*(dLn_of_alpha(i) + dLn_of_u0(i));
-alpha = alphaPsi/psi;
 
-t1 = dLns0(-i)*((psi**-4)*igConf(i,l)*dphi(-l)+W(i));
-t2 = (2*(psi**-5)*dpsi(-i)*igConf(i,l)*dphi(-l));
-t3 = ((psi**-4)*igConf(-i,-l)*(ddphi(i,l)-ChrisConf(n,i,l)*dphi(-n)));
-t4 = (6*dpsi(i)*W(-i)/psi + ChrisConf(i,ip,l)*W(-l)*KD(-i,-ip));
-#t5 = -enthalpy*u0*(dLns1(i)*beta(-i)+alpha*trK);
-t5 = -enthalpy*u0*dLns1(i)*beta(-i);
-t6 = -enthalpy*u0*alpha*trK; # already divided by rho0
+dLn_of_u0(i)        = du0(i)/u0;
 
-`double F_eq = p/rho0[ijk]*t1+p*(t2+t3+t4)+p/rho0[ijk]*t5+p*t6;`
+psi4                = psi**4;
+
+alpha               = alphaPsi/psi;
+
+polish              = att*((1-rho0/rhoc)**4);
+
+hxu0xpsi4           = enthalpy * u0 * psi4;
+
+
+DiBi = 6*dLn_of_psi(i)*beta(-i)+dbeta(i,-i)+ChrisConf(i,ip,l)*KD(-i,-ip)*beta(-l);
+
+
+t1    = igConf(-i,-l)*(ddphi(i,l)-ChrisConf(n,i,l)*dphi(-n));
+
+t2    = (2*dLn_of_psi(-i)+dLn_of_alpha(-i)-dLn_of_enthalpy(-i))*igConf(i,l)*dphi(-l);
+
+t3    = (6*dLn_of_psi(i)+dLn_of_alpha(i)-dLn_of_enthalpy(i)+ChrisConf(l,lp,i)*KD(-l,-lp))*psi4*W(-i);
+
+t4    = -hxu0xpsi4 * (dLn_of_alpha(i)+dLn_of_u0(i))*beta(-i);
+
+t5    = -hxu0xpsi4 * (DiBi);
+
+t6(i) = (igConf(i,l)*dphi(-l)+psi4*W(i)-hxu0xpsi4*beta(i));
+
+F_eq  = polish*t1+rho0*(t1+t2+t3+t4+t5)+drho0(-i)*t6(i);
+
 
 `  F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
 `  DDM_SCHUR_EQ_CLOSE\n`;
@@ -184,9 +191,7 @@ t6 = -enthalpy*u0*alpha*trK; # already divided by rho0
 `   }`
 `   `
 `  }`
-`  free_physics(ns);`
-`  free_EoS(eos);`
-``
+
 `  return 0;`;
 `}`;
 
