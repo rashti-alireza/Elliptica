@@ -93,9 +93,9 @@ static int set_equation_params(Physics_T *const phys)
   // .*           : everywhere
   // NS?          : only for patches covering NS? */
   
-  Pset_default(P_"phi","XCTS_curve_Type1_DDM,NS");
-  Pset_default(P_"phi1","XCTS_curve_Type1_DDM,NS1");
-  Pset_default(P_"phi2","XCTS_curve_Type1_DDM,NS2");
+  Pset_default(P_"phi","XCTS_curve_Type2_DDM,NS");
+  Pset_default(P_"phi1","XCTS_curve_Type2_DDM,NS1");
+  Pset_default(P_"phi2","XCTS_curve_Type2_DDM,NS2");
   Pset_default(P_"psi","XCTS_curve_excision_Type1_DDM,.*");
   Pset_default(P_"alphaPsi","XCTS_curve_excision_Type1_DDM,.*");
   Pset_default(P_"B0_U0","XCTS_curve_excision_Type1_DDM,.*");
