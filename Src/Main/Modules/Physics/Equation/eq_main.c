@@ -85,8 +85,8 @@ static int set_equation_params(Physics_T *const phys)
   // curve        : metric is not flat
   // excision     : BH is excised so we have B.C on AH
   // DDM          : DDM_Schur_Complement method for solve.
-  // Type1(for phi eq)    : arXiv:1910.09690 [gr-qc], modify eq
-  // Type2(for phi eq)    : arXiv:0804.3787v3[gr-qc], exact helical
+  // Type1(for phi eq)    : arXiv:1910.09690 [gr-qc]+arXiv:0804.3787v3[gr-qc], modify eq+exact helical
+  // Type2(for phi eq)    : arXiv:1910.09690 [gr-qc], modify eq
   // Type1(for metric eqs): arXiv:1607.07962 [gr-qc] on AH.
   // Type2(for alphaPsi)  : set dalpha/dr = 0 on AH.
   // .*           : everywhere

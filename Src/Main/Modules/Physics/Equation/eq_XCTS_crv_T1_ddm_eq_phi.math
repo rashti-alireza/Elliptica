@@ -132,11 +132,8 @@ polish              = att*((1-rho0/rhoc)**4);
 
 hxu0xpsi4           = enthalpy * u0 * psi4;
 
-# using helocoidal Killing vector: arXiv:0804.3787v3[gr-qc]
+# using helical Killing vector: arXiv:0804.3787v3[gr-qc]
 DiBi = alpha *trK;
-
-
-#DiBi = 6*dLn_of_psi(i)+dbeta(i,-i)+ChrisConf(i,ip,l)*KD(-i,-ip)*beta(-l);
 
 
 t1    = igConf(-i,-l)*(ddphi(i,l)-ChrisConf(n,i,l)*dphi(-n));
