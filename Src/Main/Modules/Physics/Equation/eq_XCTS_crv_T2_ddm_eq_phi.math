@@ -8,10 +8,16 @@ Dimension = 3;
 Point = ijk;
 
 C_macro  = READ_v(name);
+C_macro2 = read_v_unused(name);
 
 # main function:
 `#include "eq_header.h"`;
 `#include "maths_equation_solvings_lib.h"`;
+``
+``
+`#define read_v_unused(name) \`
+`  const double *const name = patch->fields[Ind(#name)]->v; UNUSED(name);`
+``
 ``
 `void *eq_XCTS_curve_T2_ddm_eq_phi(void *vp1,void *vp2);`;
 `void *eq_XCTS_curve_T2_ddm_eq_phi(void *vp1,void *vp2)\n{`;
@@ -73,13 +79,13 @@ Declare =
  (obj = Field,name = dpsi, rank = D, C_macro);
 
  # trKij
- (obj = Field,name = trK, rank = 0, C_macro);
+ #(obj = Field,name = trK, rank = 0, C_macro);
 
  # shifts
  (obj = Field,name = beta, rank = U, C_macro);
 
  # dshifts
- (obj = Field,name = dbeta, rank = UD, C_macro);
+ (obj = Field,name = dbeta, rank = UD, C_macro2);
 
  # conformal metric inverse
  (obj = Field,name = igConf, rank = UU, C_macro);
@@ -128,8 +134,6 @@ dLn_of_enthalpy(i)  = denthalpy(i)/enthalpy;
 dLn_of_u0(i)        = du0(i)/u0;
 
 psi4                = psi**4;
-
-alpha               = alphaPsi/psi;
 
 polish              = att*((1-rho0/rhoc)**4);
 

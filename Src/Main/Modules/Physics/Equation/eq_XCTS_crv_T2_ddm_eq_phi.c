@@ -7,6 +7,11 @@
 #include "eq_header.h"
 #include "maths_equation_solvings_lib.h"
 
+
+#define read_v_unused(name) \
+  const double *const name = patch->fields[Ind(#name)]->v; UNUSED(name);
+
+
 void *eq_XCTS_curve_T2_ddm_eq_phi(void *vp1,void *vp2);
 void *eq_XCTS_curve_T2_ddm_eq_phi(void *vp1,void *vp2)
 {
@@ -50,19 +55,18 @@ void *eq_XCTS_curve_T2_ddm_eq_phi(void *vp1,void *vp2)
   READ_v(dpsi_D0)
   READ_v(dpsi_D1)
   READ_v(dpsi_D2)
-  READ_v(trK)
   READ_v(beta_U1)
   READ_v(beta_U0)
   READ_v(beta_U2)
-  READ_v(dbeta_U1D0)
-  READ_v(dbeta_U2D2)
-  READ_v(dbeta_U2D0)
-  READ_v(dbeta_U2D1)
-  READ_v(dbeta_U0D0)
-  READ_v(dbeta_U1D1)
-  READ_v(dbeta_U0D1)
-  READ_v(dbeta_U0D2)
-  READ_v(dbeta_U1D2)
+  read_v_unused(dbeta_U1D0)
+  read_v_unused(dbeta_U2D2)
+  read_v_unused(dbeta_U2D0)
+  read_v_unused(dbeta_U2D1)
+  read_v_unused(dbeta_U0D0)
+  read_v_unused(dbeta_U1D1)
+  read_v_unused(dbeta_U0D1)
+  read_v_unused(dbeta_U0D2)
+  read_v_unused(dbeta_U1D2)
   READ_v(igConf_U2U2)
   READ_v(igConf_U1U2)
   READ_v(igConf_U1U1)
@@ -132,9 +136,6 @@ du0_D1[ijk]/u0[ijk];
 
   double psi4 = 
 pow(psi[ijk], 4);
-
-  double alpha = 
-alphaPsi[ijk]/psi[ijk];
 
   double polish = 
 att*pow(rho0[ijk]/rhoc - 1, 4);
