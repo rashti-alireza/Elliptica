@@ -124,17 +124,23 @@ Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 ###############################################
 
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n`;
-dLn_of_alpha_b_(i) = dalphaPsi(i)/alphaPsi - dpsi(i)/psi;
-#dLn_of_rho0_b(i)  = drho0(i)/rho0;
-dLn_of_enthalpy_b_(i)  = denthalpy(i)/enthalpy;
-#dLns0_b(i) = dLn_of_alpha_b_(i) + dLn_of_rho0_b(i) - dLn_of_enthalpy_b_(i);
-dLns0_b_(i) = drho0(i)+rho0*(dLn_of_alpha_b_(i) - dLn_of_enthalpy_b_(i));
 
-t1_b_ = dLns0_b_(-i)*(psi**-4)*igConf(i,l)*Jphi(-l);
-t2_b_ = 2*(psi**-5)*dpsi(-i)*igConf(i,l)*Jphi(-l);
-t3_b_ = (psi**-4)*igConf(-i,-l)*(JJphi(i,l)-ChrisConf(n,i,l)*Jphi(-n));
+###
+dLn_of_psi_b(i)       = dpsi(i)/psi;
 
-Bpart_ = t1_b_+rho0*(t2_b_+t3_b_)+att*((1-rho0/rhoc)**4)*t3_b_;
+dLn_of_alpha_b(i)     = dalphaPsi(i)/alphaPsi - dLn_of_psi_b(i);
+
+dLn_of_enthalpy_b(i)  = denthalpy(i)/enthalpy;
+
+polish_b              = att*((1-rho0/rhoc)**4);
+
+t1_b = (rho0+polish_b)*igConf(-i,-l)*(JJphi(i,l)-ChrisConf(n,i,l)*Jphi(-n));
+
+t2_b = igConf(-i,l)*Jphi(-l)*(drho0(i) + rho0*\
+         (2*dLn_of_psi_b(i)+dLn_of_alpha_b(i)-dLn_of_enthalpy_b(i)));
+
+
+Bpart_ = t1_b+t2_b;
 
 `  B[i][j] = Bpart_;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE\n`;
@@ -144,17 +150,22 @@ Bpart_ = t1_b_+rho0*(t2_b_+t3_b_)+att*((1-rho0/rhoc)**4)*t3_b_;
 ###############################################
 
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
-dLn_of_alpha_e_(i) = dalphaPsi(i)/alphaPsi - dpsi(i)/psi;
-#dLn_of_rho0_e(i)  = drho0(i)/rho0;
-dLn_of_enthalpy_e_(i)  = denthalpy(i)/enthalpy;
-#dLns0_e(i) = dLn_of_alpha_e_(i) + dLn_of_rho0_e(i) - dLn_of_enthalpy_e_(i);
-dLns0_e_(i) = drho0(i)+rho0*(dLn_of_alpha_e_(i) - dLn_of_enthalpy_e_(i));
 
-t1_e_ = dLns0_e_(-i)*(psi**-4)*igConf(i,l)*Jphi(-l);
-t2_e_ = 2*(psi**-5)*dpsi(-i)*igConf(i,l)*Jphi(-l);
-t3_e_ = (psi**-4)*igConf(-i,-l)*(JJphi(i,l)-ChrisConf(n,i,l)*Jphi(-n));
+dLn_of_psi_e(i)       = dpsi(i)/psi;
 
-Epart_ = t1_e_+rho0*(t2_e_+t3_e_)+att*((1-rho0/rhoc)**4)*t3_e_;
+dLn_of_alpha_e(i)     = dalphaPsi(i)/alphaPsi - dLn_of_psi_e(i);
+
+dLn_of_enthalpy_e(i)  = denthalpy(i)/enthalpy;
+
+polish_e              = att*((1-rho0/rhoc)**4);
+
+t1_e = (rho0+polish_e)*igConf(-i,-l)*(JJphi(i,l)-ChrisConf(n,i,l)*Jphi(-n));
+
+t2_e = igConf(-i,l)*Jphi(-l)*(drho0(i) + rho0*\
+         (2*dLn_of_psi_e(i)+dLn_of_alpha_e(i)-dLn_of_enthalpy_e(i)));
+
+Epart_ = t1_e+t2_e;
+
 
 `  E_Trans[j][i] = Epart_;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE\n`;

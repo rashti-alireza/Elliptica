@@ -74,62 +74,41 @@ void *eq_XCTS_curve_T1_ddm_jacobian_eq_phi(void *vp1,void *vp2)
   const double att  = e*rhoc;
   DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN
 
-  double dLn_of_alpha_b__U2 = 
--dpsi_D2[ijk]/psi[ijk] + dalphaPsi_D2[ijk]/alphaPsi[ijk];
+  double dLn_of_psi_b_U2 = 
+dpsi_D2[ijk]/psi[ijk];
 
-  double dLn_of_alpha_b__U1 = 
--dpsi_D1[ijk]/psi[ijk] + dalphaPsi_D1[ijk]/alphaPsi[ijk];
+  double dLn_of_psi_b_U1 = 
+dpsi_D1[ijk]/psi[ijk];
 
-  double dLn_of_alpha_b__U0 = 
--dpsi_D0[ijk]/psi[ijk] + dalphaPsi_D0[ijk]/alphaPsi[ijk];
+  double dLn_of_psi_b_U0 = 
+dpsi_D0[ijk]/psi[ijk];
 
-  double dLn_of_enthalpy_b__U1 = 
-denthalpy_D1[ijk]/enthalpy[ijk];
+  double dLn_of_alpha_b_U1 = 
+-dLn_of_psi_b_U1 + dalphaPsi_D1[ijk]/alphaPsi[ijk];
 
-  double dLn_of_enthalpy_b__U0 = 
-denthalpy_D0[ijk]/enthalpy[ijk];
+  double dLn_of_alpha_b_U0 = 
+-dLn_of_psi_b_U0 + dalphaPsi_D0[ijk]/alphaPsi[ijk];
 
-  double dLn_of_enthalpy_b__U2 = 
+  double dLn_of_alpha_b_U2 = 
+-dLn_of_psi_b_U2 + dalphaPsi_D2[ijk]/alphaPsi[ijk];
+
+  double dLn_of_enthalpy_b_U2 = 
 denthalpy_D2[ijk]/enthalpy[ijk];
 
-  double dLns0_b__U2 = 
-drho0_D2[ijk] + rho0[ijk]*(dLn_of_alpha_b__U2 - dLn_of_enthalpy_b__U2);
+  double dLn_of_enthalpy_b_U1 = 
+denthalpy_D1[ijk]/enthalpy[ijk];
 
-  double dLns0_b__U0 = 
-drho0_D0[ijk] + rho0[ijk]*(dLn_of_alpha_b__U0 - dLn_of_enthalpy_b__U0);
+  double dLn_of_enthalpy_b_U0 = 
+denthalpy_D0[ijk]/enthalpy[ijk];
 
-  double dLns0_b__U1 = 
-drho0_D1[ijk] + rho0[ijk]*(dLn_of_alpha_b__U1 - dLn_of_enthalpy_b__U1);
+  double polish_b = 
+att*pow(rho0[ijk]/rhoc - 1, 4);
 
-  double t1_b_ = 
-1.0*(Jphi_D0(j_Jphi_D0,ijk,lmn)*dLns0_b__U0*igConf_U0U0[ijk] +
-Jphi_D0(j_Jphi_D0,ijk,lmn)*dLns0_b__U1*igConf_U0U1[ijk] +
-Jphi_D0(j_Jphi_D0,ijk,lmn)*dLns0_b__U2*igConf_U0U2[ijk] +
-Jphi_D1(j_Jphi_D1,ijk,lmn)*dLns0_b__U0*igConf_U0U1[ijk] +
-Jphi_D1(j_Jphi_D1,ijk,lmn)*dLns0_b__U1*igConf_U1U1[ijk] +
-Jphi_D1(j_Jphi_D1,ijk,lmn)*dLns0_b__U2*igConf_U1U2[ijk] +
-Jphi_D2(j_Jphi_D2,ijk,lmn)*dLns0_b__U0*igConf_U0U2[ijk] +
-Jphi_D2(j_Jphi_D2,ijk,lmn)*dLns0_b__U1*igConf_U1U2[ijk] +
-Jphi_D2(j_Jphi_D2,ijk,lmn)*dLns0_b__U2*igConf_U2U2[ijk])/
-pow(psi[ijk], 4);
-
-  double t2_b_ = 
-2.0*(Jphi_D0(j_Jphi_D0,ijk,lmn)*dpsi_D0[ijk]*igConf_U0U0[ijk] +
-Jphi_D0(j_Jphi_D0,ijk,lmn)*dpsi_D1[ijk]*igConf_U0U1[ijk] +
-Jphi_D0(j_Jphi_D0,ijk,lmn)*dpsi_D2[ijk]*igConf_U0U2[ijk] +
-Jphi_D1(j_Jphi_D1,ijk,lmn)*dpsi_D0[ijk]*igConf_U0U1[ijk] +
-Jphi_D1(j_Jphi_D1,ijk,lmn)*dpsi_D1[ijk]*igConf_U1U1[ijk] +
-Jphi_D1(j_Jphi_D1,ijk,lmn)*dpsi_D2[ijk]*igConf_U1U2[ijk] +
-Jphi_D2(j_Jphi_D2,ijk,lmn)*dpsi_D0[ijk]*igConf_U0U2[ijk] +
-Jphi_D2(j_Jphi_D2,ijk,lmn)*dpsi_D1[ijk]*igConf_U1U2[ijk] +
-Jphi_D2(j_Jphi_D2,ijk,lmn)*dpsi_D2[ijk]*igConf_U2U2[ijk])/
-pow(psi[ijk], 5);
-
-  double t3_b_ = 
--(igConf_U0U0[ijk]*(ChrisConf_U0D0D0[ijk]*Jphi_D0(j_Jphi_D0,ijk,lmn) +
-ChrisConf_U1D0D0[ijk]*Jphi_D1(j_Jphi_D1,ijk,lmn) + ChrisConf_U2D0D0[ijk]*
-Jphi_D2(j_Jphi_D2,ijk,lmn) - JJphi_D0D0(j_JJphi_D0D0,ijk,lmn)) + 2.0*
-igConf_U0U1[ijk]*(ChrisConf_U0D0D1[ijk]*Jphi_D0(j_Jphi_D0,ijk,lmn) +
+  double t1_b = 
+-(polish_b + rho0[ijk])*(igConf_U0U0[ijk]*(ChrisConf_U0D0D0[ijk]*
+Jphi_D0(j_Jphi_D0,ijk,lmn) + ChrisConf_U1D0D0[ijk]*Jphi_D1(j_Jphi_D1,ijk,lmn) +
+ChrisConf_U2D0D0[ijk]*Jphi_D2(j_Jphi_D2,ijk,lmn) - JJphi_D0D0(j_JJphi_D0D0,ijk,lmn)) +
+2.0*igConf_U0U1[ijk]*(ChrisConf_U0D0D1[ijk]*Jphi_D0(j_Jphi_D0,ijk,lmn) +
 ChrisConf_U1D0D1[ijk]*Jphi_D1(j_Jphi_D1,ijk,lmn) + ChrisConf_U2D0D1[ijk]*
 Jphi_D2(j_Jphi_D2,ijk,lmn) - JJphi_D0D1(j_JJphi_D0D1,ijk,lmn)) + 2.0*
 igConf_U0U2[ijk]*(ChrisConf_U0D0D2[ijk]*Jphi_D0(j_Jphi_D0,ijk,lmn) +
@@ -143,12 +122,30 @@ ChrisConf_U1D1D2[ijk]*Jphi_D1(j_Jphi_D1,ijk,lmn) + ChrisConf_U2D1D2[ijk]*
 Jphi_D2(j_Jphi_D2,ijk,lmn) - JJphi_D1D2(j_JJphi_D1D2,ijk,lmn)) +
 igConf_U2U2[ijk]*(ChrisConf_U0D2D2[ijk]*Jphi_D0(j_Jphi_D0,ijk,lmn) +
 ChrisConf_U1D2D2[ijk]*Jphi_D1(j_Jphi_D1,ijk,lmn) + ChrisConf_U2D2D2[ijk]*
-Jphi_D2(j_Jphi_D2,ijk,lmn) - JJphi_D2D2(j_JJphi_D2D2,ijk,lmn)))/
-pow(psi[ijk], 4);
+Jphi_D2(j_Jphi_D2,ijk,lmn) - JJphi_D2D2(j_JJphi_D2D2,ijk,lmn)));
+
+  double t2_b = 
+Jphi_D0(j_Jphi_D0,ijk,lmn)*igConf_U0U0[ijk]*(drho0_D0[ijk] + rho0[ijk]*
+(dLn_of_alpha_b_U0 - dLn_of_enthalpy_b_U0 + 2*dLn_of_psi_b_U0)) +
+Jphi_D0(j_Jphi_D0,ijk,lmn)*igConf_U0U1[ijk]*(drho0_D1[ijk] + rho0[ijk]*
+(dLn_of_alpha_b_U1 - dLn_of_enthalpy_b_U1 + 2*dLn_of_psi_b_U1)) +
+Jphi_D0(j_Jphi_D0,ijk,lmn)*igConf_U0U2[ijk]*(drho0_D2[ijk] + rho0[ijk]*
+(dLn_of_alpha_b_U2 - dLn_of_enthalpy_b_U2 + 2*dLn_of_psi_b_U2)) +
+Jphi_D1(j_Jphi_D1,ijk,lmn)*igConf_U0U1[ijk]*(drho0_D0[ijk] + rho0[ijk]*
+(dLn_of_alpha_b_U0 - dLn_of_enthalpy_b_U0 + 2*dLn_of_psi_b_U0)) +
+Jphi_D1(j_Jphi_D1,ijk,lmn)*igConf_U1U1[ijk]*(drho0_D1[ijk] + rho0[ijk]*
+(dLn_of_alpha_b_U1 - dLn_of_enthalpy_b_U1 + 2*dLn_of_psi_b_U1)) +
+Jphi_D1(j_Jphi_D1,ijk,lmn)*igConf_U1U2[ijk]*(drho0_D2[ijk] + rho0[ijk]*
+(dLn_of_alpha_b_U2 - dLn_of_enthalpy_b_U2 + 2*dLn_of_psi_b_U2)) +
+Jphi_D2(j_Jphi_D2,ijk,lmn)*igConf_U0U2[ijk]*(drho0_D0[ijk] + rho0[ijk]*
+(dLn_of_alpha_b_U0 - dLn_of_enthalpy_b_U0 + 2*dLn_of_psi_b_U0)) +
+Jphi_D2(j_Jphi_D2,ijk,lmn)*igConf_U1U2[ijk]*(drho0_D1[ijk] + rho0[ijk]*
+(dLn_of_alpha_b_U1 - dLn_of_enthalpy_b_U1 + 2*dLn_of_psi_b_U1)) +
+Jphi_D2(j_Jphi_D2,ijk,lmn)*igConf_U2U2[ijk]*(drho0_D2[ijk] + rho0[ijk]*
+(dLn_of_alpha_b_U2 - dLn_of_enthalpy_b_U2 + 2*dLn_of_psi_b_U2));
 
   double Bpart_ = 
-att*t3_b_*pow(rho0[ijk]/rhoc - 1, 4) + rho0[ijk]*(t2_b_ + t3_b_) +
-t1_b_;
+t1_b + t2_b;
 
   B[i][j] = Bpart_;
 
@@ -156,62 +153,41 @@ t1_b_;
 
   DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN
 
-  double dLn_of_alpha_e__U0 = 
--dpsi_D0[ijk]/psi[ijk] + dalphaPsi_D0[ijk]/alphaPsi[ijk];
+  double dLn_of_psi_e_U2 = 
+dpsi_D2[ijk]/psi[ijk];
 
-  double dLn_of_alpha_e__U1 = 
--dpsi_D1[ijk]/psi[ijk] + dalphaPsi_D1[ijk]/alphaPsi[ijk];
+  double dLn_of_psi_e_U0 = 
+dpsi_D0[ijk]/psi[ijk];
 
-  double dLn_of_alpha_e__U2 = 
--dpsi_D2[ijk]/psi[ijk] + dalphaPsi_D2[ijk]/alphaPsi[ijk];
+  double dLn_of_psi_e_U1 = 
+dpsi_D1[ijk]/psi[ijk];
 
-  double dLn_of_enthalpy_e__U2 = 
+  double dLn_of_alpha_e_U0 = 
+-dLn_of_psi_e_U0 + dalphaPsi_D0[ijk]/alphaPsi[ijk];
+
+  double dLn_of_alpha_e_U1 = 
+-dLn_of_psi_e_U1 + dalphaPsi_D1[ijk]/alphaPsi[ijk];
+
+  double dLn_of_alpha_e_U2 = 
+-dLn_of_psi_e_U2 + dalphaPsi_D2[ijk]/alphaPsi[ijk];
+
+  double dLn_of_enthalpy_e_U2 = 
 denthalpy_D2[ijk]/enthalpy[ijk];
 
-  double dLn_of_enthalpy_e__U0 = 
+  double dLn_of_enthalpy_e_U0 = 
 denthalpy_D0[ijk]/enthalpy[ijk];
 
-  double dLn_of_enthalpy_e__U1 = 
+  double dLn_of_enthalpy_e_U1 = 
 denthalpy_D1[ijk]/enthalpy[ijk];
 
-  double dLns0_e__U1 = 
-drho0_D1[ijk] + rho0[ijk]*(dLn_of_alpha_e__U1 - dLn_of_enthalpy_e__U1);
+  double polish_e = 
+att*pow(rho0[ijk]/rhoc - 1, 4);
 
-  double dLns0_e__U0 = 
-drho0_D0[ijk] + rho0[ijk]*(dLn_of_alpha_e__U0 - dLn_of_enthalpy_e__U0);
-
-  double dLns0_e__U2 = 
-drho0_D2[ijk] + rho0[ijk]*(dLn_of_alpha_e__U2 - dLn_of_enthalpy_e__U2);
-
-  double t1_e_ = 
-1.0*(Jphi_D0(j_Jphi_D0,ijk,lmn)*dLns0_e__U0*igConf_U0U0[ijk] +
-Jphi_D0(j_Jphi_D0,ijk,lmn)*dLns0_e__U1*igConf_U0U1[ijk] +
-Jphi_D0(j_Jphi_D0,ijk,lmn)*dLns0_e__U2*igConf_U0U2[ijk] +
-Jphi_D1(j_Jphi_D1,ijk,lmn)*dLns0_e__U0*igConf_U0U1[ijk] +
-Jphi_D1(j_Jphi_D1,ijk,lmn)*dLns0_e__U1*igConf_U1U1[ijk] +
-Jphi_D1(j_Jphi_D1,ijk,lmn)*dLns0_e__U2*igConf_U1U2[ijk] +
-Jphi_D2(j_Jphi_D2,ijk,lmn)*dLns0_e__U0*igConf_U0U2[ijk] +
-Jphi_D2(j_Jphi_D2,ijk,lmn)*dLns0_e__U1*igConf_U1U2[ijk] +
-Jphi_D2(j_Jphi_D2,ijk,lmn)*dLns0_e__U2*igConf_U2U2[ijk])/
-pow(psi[ijk], 4);
-
-  double t2_e_ = 
-2.0*(Jphi_D0(j_Jphi_D0,ijk,lmn)*dpsi_D0[ijk]*igConf_U0U0[ijk] +
-Jphi_D0(j_Jphi_D0,ijk,lmn)*dpsi_D1[ijk]*igConf_U0U1[ijk] +
-Jphi_D0(j_Jphi_D0,ijk,lmn)*dpsi_D2[ijk]*igConf_U0U2[ijk] +
-Jphi_D1(j_Jphi_D1,ijk,lmn)*dpsi_D0[ijk]*igConf_U0U1[ijk] +
-Jphi_D1(j_Jphi_D1,ijk,lmn)*dpsi_D1[ijk]*igConf_U1U1[ijk] +
-Jphi_D1(j_Jphi_D1,ijk,lmn)*dpsi_D2[ijk]*igConf_U1U2[ijk] +
-Jphi_D2(j_Jphi_D2,ijk,lmn)*dpsi_D0[ijk]*igConf_U0U2[ijk] +
-Jphi_D2(j_Jphi_D2,ijk,lmn)*dpsi_D1[ijk]*igConf_U1U2[ijk] +
-Jphi_D2(j_Jphi_D2,ijk,lmn)*dpsi_D2[ijk]*igConf_U2U2[ijk])/
-pow(psi[ijk], 5);
-
-  double t3_e_ = 
--(igConf_U0U0[ijk]*(ChrisConf_U0D0D0[ijk]*Jphi_D0(j_Jphi_D0,ijk,lmn) +
-ChrisConf_U1D0D0[ijk]*Jphi_D1(j_Jphi_D1,ijk,lmn) + ChrisConf_U2D0D0[ijk]*
-Jphi_D2(j_Jphi_D2,ijk,lmn) - JJphi_D0D0(j_JJphi_D0D0,ijk,lmn)) + 2.0*
-igConf_U0U1[ijk]*(ChrisConf_U0D0D1[ijk]*Jphi_D0(j_Jphi_D0,ijk,lmn) +
+  double t1_e = 
+-(polish_e + rho0[ijk])*(igConf_U0U0[ijk]*(ChrisConf_U0D0D0[ijk]*
+Jphi_D0(j_Jphi_D0,ijk,lmn) + ChrisConf_U1D0D0[ijk]*Jphi_D1(j_Jphi_D1,ijk,lmn) +
+ChrisConf_U2D0D0[ijk]*Jphi_D2(j_Jphi_D2,ijk,lmn) - JJphi_D0D0(j_JJphi_D0D0,ijk,lmn)) +
+2.0*igConf_U0U1[ijk]*(ChrisConf_U0D0D1[ijk]*Jphi_D0(j_Jphi_D0,ijk,lmn) +
 ChrisConf_U1D0D1[ijk]*Jphi_D1(j_Jphi_D1,ijk,lmn) + ChrisConf_U2D0D1[ijk]*
 Jphi_D2(j_Jphi_D2,ijk,lmn) - JJphi_D0D1(j_JJphi_D0D1,ijk,lmn)) + 2.0*
 igConf_U0U2[ijk]*(ChrisConf_U0D0D2[ijk]*Jphi_D0(j_Jphi_D0,ijk,lmn) +
@@ -225,12 +201,30 @@ ChrisConf_U1D1D2[ijk]*Jphi_D1(j_Jphi_D1,ijk,lmn) + ChrisConf_U2D1D2[ijk]*
 Jphi_D2(j_Jphi_D2,ijk,lmn) - JJphi_D1D2(j_JJphi_D1D2,ijk,lmn)) +
 igConf_U2U2[ijk]*(ChrisConf_U0D2D2[ijk]*Jphi_D0(j_Jphi_D0,ijk,lmn) +
 ChrisConf_U1D2D2[ijk]*Jphi_D1(j_Jphi_D1,ijk,lmn) + ChrisConf_U2D2D2[ijk]*
-Jphi_D2(j_Jphi_D2,ijk,lmn) - JJphi_D2D2(j_JJphi_D2D2,ijk,lmn)))/
-pow(psi[ijk], 4);
+Jphi_D2(j_Jphi_D2,ijk,lmn) - JJphi_D2D2(j_JJphi_D2D2,ijk,lmn)));
+
+  double t2_e = 
+Jphi_D0(j_Jphi_D0,ijk,lmn)*igConf_U0U0[ijk]*(drho0_D0[ijk] + rho0[ijk]*
+(dLn_of_alpha_e_U0 - dLn_of_enthalpy_e_U0 + 2*dLn_of_psi_e_U0)) +
+Jphi_D0(j_Jphi_D0,ijk,lmn)*igConf_U0U1[ijk]*(drho0_D1[ijk] + rho0[ijk]*
+(dLn_of_alpha_e_U1 - dLn_of_enthalpy_e_U1 + 2*dLn_of_psi_e_U1)) +
+Jphi_D0(j_Jphi_D0,ijk,lmn)*igConf_U0U2[ijk]*(drho0_D2[ijk] + rho0[ijk]*
+(dLn_of_alpha_e_U2 - dLn_of_enthalpy_e_U2 + 2*dLn_of_psi_e_U2)) +
+Jphi_D1(j_Jphi_D1,ijk,lmn)*igConf_U0U1[ijk]*(drho0_D0[ijk] + rho0[ijk]*
+(dLn_of_alpha_e_U0 - dLn_of_enthalpy_e_U0 + 2*dLn_of_psi_e_U0)) +
+Jphi_D1(j_Jphi_D1,ijk,lmn)*igConf_U1U1[ijk]*(drho0_D1[ijk] + rho0[ijk]*
+(dLn_of_alpha_e_U1 - dLn_of_enthalpy_e_U1 + 2*dLn_of_psi_e_U1)) +
+Jphi_D1(j_Jphi_D1,ijk,lmn)*igConf_U1U2[ijk]*(drho0_D2[ijk] + rho0[ijk]*
+(dLn_of_alpha_e_U2 - dLn_of_enthalpy_e_U2 + 2*dLn_of_psi_e_U2)) +
+Jphi_D2(j_Jphi_D2,ijk,lmn)*igConf_U0U2[ijk]*(drho0_D0[ijk] + rho0[ijk]*
+(dLn_of_alpha_e_U0 - dLn_of_enthalpy_e_U0 + 2*dLn_of_psi_e_U0)) +
+Jphi_D2(j_Jphi_D2,ijk,lmn)*igConf_U1U2[ijk]*(drho0_D1[ijk] + rho0[ijk]*
+(dLn_of_alpha_e_U1 - dLn_of_enthalpy_e_U1 + 2*dLn_of_psi_e_U1)) +
+Jphi_D2(j_Jphi_D2,ijk,lmn)*igConf_U2U2[ijk]*(drho0_D2[ijk] + rho0[ijk]*
+(dLn_of_alpha_e_U2 - dLn_of_enthalpy_e_U2 + 2*dLn_of_psi_e_U2));
 
   double Epart_ = 
-att*t3_e_*pow(rho0[ijk]/rhoc - 1, 4) + rho0[ijk]*(t2_e_ + t3_e_) +
-t1_e_;
+t1_e + t2_e;
 
   E_Trans[j][i] = Epart_;
 

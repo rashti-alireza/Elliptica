@@ -116,25 +116,43 @@ Symm[ddphi(i,j)       = ddphi(j,i)];
 
 # write the equation below at ijk point:
 
-dLn_of_alpha(i) = dalphaPsi(i)/alphaPsi - dpsi(i)/psi;
-#dLn_of_rho0(i)  = drho0(i)/rho0;
+dLn_of_psi(i)       = dpsi(i)/psi;
+
+dLn_of_alpha(i)     = dalphaPsi(i)/alphaPsi - dLn_of_psi(i);
+
 dLn_of_enthalpy(i)  = denthalpy(i)/enthalpy;
-dLn_of_u0(i)  = du0(i)/u0;
-#dLns0(i) = dLn_of_alpha(i) + dLn_of_rho0(i) - dLn_of_enthalpy(i);
-#dLns1(i) = dLn_of_alpha(i) + dLn_of_rho0(i) + dLn_of_u0(i);
-dLns0(i) = drho0(i)+rho0*(dLn_of_alpha(i)- dLn_of_enthalpy(i));
-dLns1(i) = drho0(i)+rho0*(dLn_of_alpha(i) + dLn_of_u0(i));
-alpha = alphaPsi/psi;
 
-t1 = dLns0(-i)*((psi**-4)*igConf(i,l)*dphi(-l)+W(i));
-t2 = (2*(psi**-5)*dpsi(-i)*igConf(i,l)*dphi(-l));
-t3 = ((psi**-4)*igConf(-i,-l)*(ddphi(i,l)-ChrisConf(n,i,l)*dphi(-n)));
-t4 = (6*dpsi(i)*W(-i)/psi + ChrisConf(i,ip,l)*W(-l)*KD(-i,-ip));
-#t5 = -enthalpy*u0*(dLns1(i)*beta(-i)+alpha*trK);
-t5 = -enthalpy*u0*dLns1(i)*beta(-i);
-t6 = -rho0*enthalpy*u0*alpha*trK;
+dLn_of_u0(i)        = du0(i)/u0;
 
-F_eq = t1+rho0*(t2+t3+t4)+t5+t6+att*((1-rho0/rhoc)**4)*t3;
+psi4                = psi**4;
+
+alpha               = alphaPsi/psi;
+
+polish              = att*((1-rho0/rhoc)**4);
+
+hxu0xpsi4           = enthalpy * u0 * psi4;
+
+# using helocoidal Killing vector: arXiv:0804.3787v3[gr-qc]
+DiBi = alpha *trK;
+
+
+#DiBi = 6*dLn_of_psi(i)+dbeta(i,-i)+ChrisConf(i,ip,l)*KD(-i,-ip)*beta(-l);
+
+
+t1    = igConf(-i,-l)*(ddphi(i,l)-ChrisConf(n,i,l)*dphi(-n));
+
+t2    = (2*dLn_of_psi(-i)+dLn_of_alpha(-i)-dLn_of_enthalpy(-i))*igConf(i,l)*dphi(-l);
+
+t3    = (6*dLn_of_psi(i)+dLn_of_alpha(i)-dLn_of_enthalpy(i)+ChrisConf(l,lp,i)*KD(-l,-lp))*psi4*W(-i);
+
+t4    = -hxu0xpsi4 * (dLn_of_alpha(i)+dLn_of_u0(i))*beta(-i);
+
+t5    = -hxu0xpsi4 * (DiBi);
+
+t6(i) = (igConf(i,l)*dphi(-l)+psi4*W(i)-hxu0xpsi4*beta(i));
+
+F_eq  = polish*t1+rho0*(t1+t2+t3+t4+t5)+drho0(-i)*t6(i);
+
 
 `  F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
 `  DDM_SCHUR_EQ_CLOSE\n`;
