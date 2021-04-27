@@ -80,15 +80,15 @@ static int set_equation_params(Physics_T *const phys)
   // alphaPsi:   : lapse * psi
   // beta_?      : shifts
   //
-  // options:
+  // options:(explained)
   // XCTS         : extended conformal thin sandwich method
   // curve        : metric is not flat
   // excision     : BH is excised so we have B.C on AH
   // DDM          : DDM_Schur_Complement method for solve.
-  // Type1(for NS): arXiv:1910.09690 [gr-qc] on NS's surface
-  // Type2(for NS): multiply Type1 eq with p/rho.
-  // Type1(for BH): arXiv:1607.07962 [gr-qc] on AH.
-  // Type2(for BH): set dalpha/dr = 0 on AH.
+  // Type1(for phi eq)    : arXiv:1910.09690 [gr-qc], modify eq
+  // Type2(for phi eq)    : arXiv:0804.3787v3[gr-qc], exact helical
+  // Type1(for metric eqs): arXiv:1607.07962 [gr-qc] on AH.
+  // Type2(for alphaPsi)  : set dalpha/dr = 0 on AH.
   // .*           : everywhere
   // NS?          : only for patches covering NS? */
   
