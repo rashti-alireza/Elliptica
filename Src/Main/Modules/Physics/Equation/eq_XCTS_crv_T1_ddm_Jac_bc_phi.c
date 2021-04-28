@@ -20,7 +20,6 @@ void *eq_XCTS_curve_T1_ddm_jacobian_bc_phi(void *vp1,void *vp2)
   READ_v(drho0_D2)
   READ_v(drho0_D0)
   READ_v(drho0_D1)
-  READ_v(psi)
   READ_v(igConf_U2U2)
   READ_v(igConf_U1U2)
   READ_v(igConf_U1U1)
@@ -34,7 +33,7 @@ void *eq_XCTS_curve_T1_ddm_jacobian_bc_phi(void *vp1,void *vp2)
   DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN
 
   double outerB_Bpart = 
-1.0*(Jphi_D0(j_Jphi_D0,ijk,lmn)*drho0_D0[ijk]*igConf_U0U0[ijk] +
+Jphi_D0(j_Jphi_D0,ijk,lmn)*drho0_D0[ijk]*igConf_U0U0[ijk] +
 Jphi_D0(j_Jphi_D0,ijk,lmn)*drho0_D1[ijk]*igConf_U0U1[ijk] +
 Jphi_D0(j_Jphi_D0,ijk,lmn)*drho0_D2[ijk]*igConf_U0U2[ijk] +
 Jphi_D1(j_Jphi_D1,ijk,lmn)*drho0_D0[ijk]*igConf_U0U1[ijk] +
@@ -42,8 +41,7 @@ Jphi_D1(j_Jphi_D1,ijk,lmn)*drho0_D1[ijk]*igConf_U1U1[ijk] +
 Jphi_D1(j_Jphi_D1,ijk,lmn)*drho0_D2[ijk]*igConf_U1U2[ijk] +
 Jphi_D2(j_Jphi_D2,ijk,lmn)*drho0_D0[ijk]*igConf_U0U2[ijk] +
 Jphi_D2(j_Jphi_D2,ijk,lmn)*drho0_D1[ijk]*igConf_U1U2[ijk] +
-Jphi_D2(j_Jphi_D2,ijk,lmn)*drho0_D2[ijk]*igConf_U2U2[ijk])/
-pow(psi[ijk], 4);
+Jphi_D2(j_Jphi_D2,ijk,lmn)*drho0_D2[ijk]*igConf_U2U2[ijk];
 
   B[i][j] = outerB_Bpart;
 
@@ -52,7 +50,7 @@ pow(psi[ijk], 4);
   DDM_SCHUR_JACOBIAN_BC_Epart_OPEN
 
   double outerB_Epart = 
-1.0*(Jphi_D0(j_Jphi_D0,ijk,lmn)*drho0_D0[ijk]*igConf_U0U0[ijk] +
+Jphi_D0(j_Jphi_D0,ijk,lmn)*drho0_D0[ijk]*igConf_U0U0[ijk] +
 Jphi_D0(j_Jphi_D0,ijk,lmn)*drho0_D1[ijk]*igConf_U0U1[ijk] +
 Jphi_D0(j_Jphi_D0,ijk,lmn)*drho0_D2[ijk]*igConf_U0U2[ijk] +
 Jphi_D1(j_Jphi_D1,ijk,lmn)*drho0_D0[ijk]*igConf_U0U1[ijk] +
@@ -60,8 +58,7 @@ Jphi_D1(j_Jphi_D1,ijk,lmn)*drho0_D1[ijk]*igConf_U1U1[ijk] +
 Jphi_D1(j_Jphi_D1,ijk,lmn)*drho0_D2[ijk]*igConf_U1U2[ijk] +
 Jphi_D2(j_Jphi_D2,ijk,lmn)*drho0_D0[ijk]*igConf_U0U2[ijk] +
 Jphi_D2(j_Jphi_D2,ijk,lmn)*drho0_D1[ijk]*igConf_U1U2[ijk] +
-Jphi_D2(j_Jphi_D2,ijk,lmn)*drho0_D2[ijk]*igConf_U2U2[ijk])/
-pow(psi[ijk], 4);
+Jphi_D2(j_Jphi_D2,ijk,lmn)*drho0_D2[ijk]*igConf_U2U2[ijk];
 
   E_Trans[j][i] = outerB_Epart;
 

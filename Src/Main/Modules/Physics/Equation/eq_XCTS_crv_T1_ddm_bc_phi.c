@@ -41,18 +41,20 @@ void *eq_XCTS_curve_T1_ddm_bc_phi(void *vp1,void *vp2)
   {
   DDM_SCHUR_BC_OPEN
 
+  double psi4 = 
+pow(psi[ijk], 4);
+
   double outerB_F = 
-1.0*(dphi_D0[ijk]*drho0_D0[ijk]*igConf_U0U0[ijk] + dphi_D0[ijk]*
+dphi_D0[ijk]*drho0_D0[ijk]*igConf_U0U0[ijk] + dphi_D0[ijk]*
 drho0_D1[ijk]*igConf_U0U1[ijk] + dphi_D0[ijk]*drho0_D2[ijk]*
 igConf_U0U2[ijk] + dphi_D1[ijk]*drho0_D0[ijk]*igConf_U0U1[ijk] +
 dphi_D1[ijk]*drho0_D1[ijk]*igConf_U1U1[ijk] + dphi_D1[ijk]*
 drho0_D2[ijk]*igConf_U1U2[ijk] + dphi_D2[ijk]*drho0_D0[ijk]*
 igConf_U0U2[ijk] + dphi_D2[ijk]*drho0_D1[ijk]*igConf_U1U2[ijk] +
-dphi_D2[ijk]*drho0_D2[ijk]*igConf_U2U2[ijk] + pow(psi[ijk], 4)*
-(W_U0[ijk]*drho0_D0[ijk] + W_U1[ijk]*drho0_D1[ijk] + W_U2[ijk]*
-drho0_D2[ijk] - enthalpy[ijk]*u0[ijk]*(beta_U0[ijk]*drho0_D0[ijk] +
-beta_U1[ijk]*drho0_D1[ijk] + beta_U2[ijk]*drho0_D2[ijk])))/
-pow(psi[ijk], 4);
+dphi_D2[ijk]*drho0_D2[ijk]*igConf_U2U2[ijk] + psi4*(drho0_D0[ijk]*
+(W_U0[ijk] - beta_U0[ijk]*enthalpy[ijk]*u0[ijk]) + drho0_D1[ijk]*
+(W_U1[ijk] - beta_U1[ijk]*enthalpy[ijk]*u0[ijk]) + drho0_D2[ijk]*
+(W_U2[ijk] - beta_U2[ijk]*enthalpy[ijk]*u0[ijk]));
 
   F[map[ijk]] = outerB_F;
 
