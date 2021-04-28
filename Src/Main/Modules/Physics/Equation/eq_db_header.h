@@ -43,4 +43,6 @@ void *eq_XCTS_flat_exc_T1_ddm_jacobian_eq_B0_U0(void *vp1,void *vp2);
 void *eq_XCTS_flat_exc_T1_ddm_jacobian_eq_B0_U1(void *vp1,void *vp2);
 void *eq_XCTS_flat_exc_T1_ddm_jacobian_eq_B0_U2(void *vp1,void *vp2);
 
+void *eq_XCTS_curve_T3_ddm_jacobian_bc_phi(void *vp1,void *vp2);
+void *eq_XCTS_curve_T3_ddm_bc_phi(void *vp1,void *vp2);
 
