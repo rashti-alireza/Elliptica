@@ -82,7 +82,8 @@ static int set_equation_params(Physics_T *const phys)
   //
   // options:(explained)
   // XCTS         : extended conformal thin sandwich method
-  // curve        : metric is not flat
+  // curve        : metric is not flat,
+  //                it can be used when the metric is flat too.
   // excision     : BH is excised so we have B.C on AH
   // DDM          : DDM_Schur_Complement method for solve.
   // Type1(for phi eq)    : arXiv:1910.09690 [gr-qc]+arXiv:0804.3787v3[gr-qc], 
