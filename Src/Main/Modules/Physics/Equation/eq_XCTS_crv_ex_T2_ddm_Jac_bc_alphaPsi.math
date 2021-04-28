@@ -46,10 +46,14 @@ Declare =
  #(obj = Field,name = dpsi, rank = D, C_macro);
 
  # coords from BH's center
- (obj = Field,name = x, rank = U, none,C_arg1);
+ #(obj = Field,name = x, rank = U, none,C_arg1);
 
  # Kroneker delta
  (obj = field, name = kd, rank = 0, none,C_arg2);
+
+ # normal vector at the horizon
+ (obj = Field,name = bh_sConf, rank = U, C_macro);
+
 }
 
 # symmetries for Cpi
@@ -116,28 +120,12 @@ outerB_Epart = 0;
 `  else if (patch->innerB)`;
 `  {`;
 
-## define prefix for parameter
-`  EQ_Def_Param_Prefix_Char`
-`  EQ_Set_Prefix("BH")`
-`  const double BH_center[3] = {Pgetd(EQ_PrefixIt("center_x")),`
-`                               Pgetd(EQ_PrefixIt("center_y")),`
-`                               Pgetd(EQ_PrefixIt("center_z"))};`
-``
-
 ###############################################
 ####### B matrix: J[ijk][lmn] in Jx = -F ###### 
 ###############################################
 `  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN\n`;
 
-` double x_U0 = patch->node[ijk]->x[0] - BH_center[0];`
-` double x_U1 = patch->node[ijk]->x[1] - BH_center[1];`
-` double x_U2 = patch->node[ijk]->x[2] - BH_center[2];`
-
-r2_b = x(i)*x(-i);
-
-r_b  = r2_b**0.5;
-
-innerB_Bpart = x(i)*JalphaPsi(-i)/r_b;
+innerB_Bpart = bh_sConf(i)*JalphaPsi(-i);
 
 
 `  B[i][j] = innerB_Bpart;\n`;
@@ -150,15 +138,7 @@ innerB_Bpart = x(i)*JalphaPsi(-i)/r_b;
 ###############################################
 `  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN\n`;
 
-` double x_U0 = patch->node[ijk]->x[0] - BH_center[0];`
-` double x_U1 = patch->node[ijk]->x[1] - BH_center[1];`
-` double x_U2 = patch->node[ijk]->x[2] - BH_center[2];`
-
-r2_e = x(i)*x(-i);
-
-r_e  = r2_e**0.5;
-
-innerB_Epart = x(i)*JalphaPsi(-i)/r_e;
+innerB_Epart = bh_sConf(i)*JalphaPsi(-i);
 
 
 `  E_Trans[j][i] = innerB_Epart;\n`;

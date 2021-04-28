@@ -18,6 +18,9 @@ void *eq_XCTS_curve_exc_T2_ddm_bc_alphaPsi(void *vp1,void *vp2)
   READ_v(dalphaPsi_D2)
   READ_v(dalphaPsi_D1)
   READ_v(dalphaPsi_D0)
+  READ_v(bh_sConf_U1)
+  READ_v(bh_sConf_U0)
+  READ_v(bh_sConf_U2)
 
 
   if (patch->outerB)/* at outer boundary */
@@ -33,27 +36,12 @@ alphaPsi[ijk] - 1;
   }/* end of if (patch->outerB) */
   else if (patch->innerB)/* at inner boundary */
   {
-  EQ_Def_Param_Prefix_Char
-  EQ_Set_Prefix("BH")
-  const double BH_center[3] = {Pgetd(EQ_PrefixIt("center_x")),
-                               Pgetd(EQ_PrefixIt("center_y")),
-                               Pgetd(EQ_PrefixIt("center_z"))};
-
   DDM_SCHUR_BC_OPEN
 
 
- double x_U0 = patch->node[ijk]->x[0] - BH_center[0];
- double x_U1 = patch->node[ijk]->x[1] - BH_center[1];
- double x_U2 = patch->node[ijk]->x[2] - BH_center[2];
- double r2 = 
-pow(x_U0, 2) + pow(x_U1, 2) + pow(x_U2, 2);
-
- double r = 
-sqrt(r2);
-
- double innerB_F = 
-1.0*(dalphaPsi_D0[ijk]*x_U0 + dalphaPsi_D1[ijk]*x_U1 +
-dalphaPsi_D2[ijk]*x_U2)/r;
+  double innerB_F = 
+bh_sConf_U0[ijk]*dalphaPsi_D0[ijk] + bh_sConf_U1[ijk]*
+dalphaPsi_D1[ijk] + bh_sConf_U2[ijk]*dalphaPsi_D2[ijk];
 
   F[map[ijk]] = innerB_F;
 

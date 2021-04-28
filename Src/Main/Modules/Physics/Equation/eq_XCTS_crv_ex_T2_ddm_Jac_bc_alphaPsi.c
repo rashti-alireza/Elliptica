@@ -18,6 +18,9 @@ void *eq_XCTS_curve_exc_T2_ddm_jacobian_bc_alphaPsi(void *vp1,void *vp2)
   JACOBIAN_DERIVATIVE(JalphaPsi_D1)
   JACOBIAN_DERIVATIVE(JalphaPsi_D0)
   JACOBIAN_DERIVATIVE(JalphaPsi_D2)
+  READ_v(bh_sConf_U1)
+  READ_v(bh_sConf_U0)
+  READ_v(bh_sConf_U2)
 
 
   if (patch->outerB)
@@ -42,26 +45,12 @@ kd[ijk==lmn];
   }/* end of if (patch->outerB) */
   else if (patch->innerB)
   {
-  EQ_Def_Param_Prefix_Char
-  EQ_Set_Prefix("BH")
-  const double BH_center[3] = {Pgetd(EQ_PrefixIt("center_x")),
-                               Pgetd(EQ_PrefixIt("center_y")),
-                               Pgetd(EQ_PrefixIt("center_z"))};
-
   DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN
 
- double x_U0 = patch->node[ijk]->x[0] - BH_center[0];
- double x_U1 = patch->node[ijk]->x[1] - BH_center[1];
- double x_U2 = patch->node[ijk]->x[2] - BH_center[2];
- double r2_b = 
-pow(x_U0, 2) + pow(x_U1, 2) + pow(x_U2, 2);
-
- double r_b = 
-sqrt(r2_b);
-
- double innerB_Bpart = 
-1.0*(JalphaPsi_D0(j_JalphaPsi_D0,ijk,lmn)*x_U0 + JalphaPsi_D1(j_JalphaPsi_D1,ijk,lmn)*
-x_U1 + JalphaPsi_D2(j_JalphaPsi_D2,ijk,lmn)*x_U2)/r_b;
+  double innerB_Bpart = 
+JalphaPsi_D0(j_JalphaPsi_D0,ijk,lmn)*bh_sConf_U0[ijk] +
+JalphaPsi_D1(j_JalphaPsi_D1,ijk,lmn)*bh_sConf_U1[ijk] +
+JalphaPsi_D2(j_JalphaPsi_D2,ijk,lmn)*bh_sConf_U2[ijk];
 
   B[i][j] = innerB_Bpart;
 
@@ -69,18 +58,10 @@ x_U1 + JalphaPsi_D2(j_JalphaPsi_D2,ijk,lmn)*x_U2)/r_b;
 
   DDM_SCHUR_JACOBIAN_BC_Epart_OPEN
 
- double x_U0 = patch->node[ijk]->x[0] - BH_center[0];
- double x_U1 = patch->node[ijk]->x[1] - BH_center[1];
- double x_U2 = patch->node[ijk]->x[2] - BH_center[2];
- double r2_e = 
-pow(x_U0, 2) + pow(x_U1, 2) + pow(x_U2, 2);
-
- double r_e = 
-sqrt(r2_e);
-
- double innerB_Epart = 
-1.0*(JalphaPsi_D0(j_JalphaPsi_D0,ijk,lmn)*x_U0 + JalphaPsi_D1(j_JalphaPsi_D1,ijk,lmn)*
-x_U1 + JalphaPsi_D2(j_JalphaPsi_D2,ijk,lmn)*x_U2)/r_e;
+  double innerB_Epart = 
+JalphaPsi_D0(j_JalphaPsi_D0,ijk,lmn)*bh_sConf_U0[ijk] +
+JalphaPsi_D1(j_JalphaPsi_D1,ijk,lmn)*bh_sConf_U1[ijk] +
+JalphaPsi_D2(j_JalphaPsi_D2,ijk,lmn)*bh_sConf_U2[ijk];
 
   E_Trans[j][i] = innerB_Epart;
 
