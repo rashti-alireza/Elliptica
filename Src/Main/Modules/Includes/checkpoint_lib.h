@@ -2,6 +2,9 @@
 #define checkpoint_LIB_H
 #include "elliptica_system_lib.h"
 
+/* the name of checkpoint file */
+#define CHECKPOINT_FILE_NAME "checkpoint.dat"
+
 /* to modify or set a parameter in checkpoint file data */
 #define CHECKPOINT_SET_PARAM_ "modify:"
 
