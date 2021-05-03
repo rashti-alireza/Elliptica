@@ -16,9 +16,9 @@
 // if you wanna change the output directories after loading from
 // a checkpoint file change the following in parameter files
 // and note that the folders must be made already:
-// `CHECKPOINT_SET_PARAM_` `P_`my_directory  = path1
-// `CHECKPOINT_SET_PARAM_` `P_`top_directory = path2
-// `CHECKPOINT_SET_PARAM_` `P_`Diagnostics   = path3
+// `CHECKPOINT_SET_PARAM_`      top_directory = path1
+// `CHECKPOINT_SET_PARAM_` `P_` my_directory  = path2
+// `CHECKPOINT_SET_PARAM_` `P_` Diagnostics   = path3
 //
 // where `CHECKPOINT_SET_PARAM_` is the macro to instruct the 
 // checkpoint param to change and `P_` is the prefix of the project. */
