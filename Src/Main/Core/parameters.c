@@ -919,11 +919,11 @@ update_iteration_params
   Uint i;
   
   /* if the start is from checkpoint_file do nothing */
-  if (Pcmps(PrefixIt(prefix,"start_off"),"checkpoint_file"))
-  {
-    Pset_default("top_directory","NOT_SPECIFIED_YET");
-    return 0;
-  }
+  //if (Pcmps(PrefixIt(prefix,"start_off"),"checkpoint_file"))
+  //{
+    //Pset_default("top_directory","NOT_SPECIFIED_YET");
+    //return 0;
+  //}
   
   /* if top directory is not set */
   if (!PgetsEZ("top_directory"))
