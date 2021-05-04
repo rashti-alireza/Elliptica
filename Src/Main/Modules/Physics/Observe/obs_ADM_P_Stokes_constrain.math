@@ -61,11 +61,11 @@ Declare =
  # normal vector components
  (obj = Field,name = n, rank = U, none);
 
- # integrand P
- (obj = Field,name = obs__Px, rank = D, C_macro2);
+ # integrand P for S integral
+ (obj = Field,name = obs__Ps, rank = D, C_macro2);
 
- # integrand V
- (obj = Field,name = obs__Jx, rank = D, C_macro2);
+ # integrand P for V integral
+ (obj = Field,name = obs__Pv, rank = D, C_macro2);
 
 
 }
@@ -92,10 +92,10 @@ psi4   = psi**4;
 psim2  = psi**-2;
 
 # (K_ij - K g_ij)*n^j
-Px(-i) = n(-j)*\
+Ps(-i) = n(-j)*\
 (psim2*AConfIJ(ip,jp)*gConf(i,-ip)*gConf(j,-jp)-(2/3)*trK*psi4*gConf(i,j));
 
-Cpopulate[obs__Px = Px];
+Cpopulate[obs__Ps = Ps];
 
 `      }`
 `  }`
@@ -128,10 +128,10 @@ mom(i,j) = \
 psim2_*AConfIJ(ip,jp)*gConf(i,-ip)*gConf(j,-jp)-(2/3)*trK*psi4_*gConf(i,j);
 Symm[mom(i,j)= mom(j,i)];
 
-Jx(-m)   = psim4_*igConf(j,-k)*Gamma(i,k,m)*mom(-i,-j);
+Pv(-m)   = psim4_*igConf(j,-k)*Gamma(i,k,m)*mom(-i,-j);
 
 
-Cpopulate[obs__Jx = Jx];
+Cpopulate[obs__Pv = Pv];
 
 `      }`
 `  }`
@@ -140,20 +140,20 @@ Cpopulate[obs__Jx = Jx];
 ``
 ## carry out the integration:
 `  obs->ret[0] = obs_integral_SV`
-`                 (obs,"obs__Px_D0","obs__Jx_D0",'+','+')/(8*M_PI);`
+`                 (obs,"obs__Ps_D0","obs__Pv_D0",'+','+')/(8*M_PI);`
 
 `  obs->ret[1] = obs_integral_SV`
-`                 (obs,"obs__Px_D1","obs__Jx_D1",'+','+')/(8*M_PI);`
+`                 (obs,"obs__Ps_D1","obs__Pv_D1",'+','+')/(8*M_PI);`
 
 `  obs->ret[2] = obs_integral_SV`
-`                 (obs,"obs__Px_D2","obs__Jx_D2",'+','+')/(8*M_PI);`
+`                 (obs,"obs__Ps_D2","obs__Pv_D2",'+','+')/(8*M_PI);`
 ``
 ## remove fields
 `  for(p = 0; p < N; ++p)`
 `  {`
 `    Patch_T *patch = adm[p]->patch;`
-`    remove_field_regex(patch,"^obs__Px_D.$");`
-`    remove_field_regex(patch,"^obs__Jx_D.$");`
+`    remove_field_regex(patch,"^obs__Ps_D.$");`
+`    remove_field_regex(patch,"^obs__Pv_D.$");`
 `  }`
 ``
 `}`

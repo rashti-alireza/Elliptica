@@ -68,12 +68,12 @@ void obs_ADM_P_Stokes_SV_constrain(Observe_T *const obs)
   READ_v(dpsi_D1)
   READ_v(dpsi_D2)
   READ_v(trK)
-  add_and_get_field(obs__Px_D1)
-  add_and_get_field(obs__Px_D0)
-  add_and_get_field(obs__Px_D2)
-  add_and_get_field(obs__Jx_D2)
-  add_and_get_field(obs__Jx_D1)
-  add_and_get_field(obs__Jx_D0)
+  add_and_get_field(obs__Ps_D0)
+  add_and_get_field(obs__Ps_D1)
+  add_and_get_field(obs__Ps_D2)
+  add_and_get_field(obs__Pv_D2)
+  add_and_get_field(obs__Pv_D1)
+  add_and_get_field(obs__Pv_D0)
 
 
   if (adm[p]->surface_integration_flg)
@@ -91,7 +91,7 @@ pow(psi[ijk], 4);
       double psim2 = 
 pow(psi[ijk], -2);
 
-      double Px_D2 = 
+      double Ps_D2 = 
 -n_U0[ijk]*(0.66666666666666663*gConf_D0D2[ijk]*psi4*trK[ijk] - psim2*
 (AConfIJ_U0U0[ijk]*gConf_D0D0[ijk]*gConf_D0D2[ijk] + AConfIJ_U0U1[ijk]*
 gConf_D0D0[ijk]*gConf_D1D2[ijk] + AConfIJ_U0U1[ijk]*gConf_D0D1[ijk]*
@@ -115,31 +115,7 @@ gConf_D2D2[ijk] + AConfIJ_U1U1[ijk]*pow(gConf_D1D2[ijk], 2) + 2.0*
 AConfIJ_U1U2[ijk]*gConf_D1D2[ijk]*gConf_D2D2[ijk] + AConfIJ_U2U2[ijk]*
 pow(gConf_D2D2[ijk], 2)));
 
-      double Px_D0 = 
--n_U0[ijk]*(0.66666666666666663*gConf_D0D0[ijk]*psi4*trK[ijk] - psim2*
-(AConfIJ_U0U0[ijk]*pow(gConf_D0D0[ijk], 2) + 2.0*AConfIJ_U0U1[ijk]*
-gConf_D0D0[ijk]*gConf_D0D1[ijk] + 2.0*AConfIJ_U0U2[ijk]*gConf_D0D0[ijk]*
-gConf_D0D2[ijk] + AConfIJ_U1U1[ijk]*pow(gConf_D0D1[ijk], 2) + 2.0*
-AConfIJ_U1U2[ijk]*gConf_D0D1[ijk]*gConf_D0D2[ijk] + AConfIJ_U2U2[ijk]*
-pow(gConf_D0D2[ijk], 2))) - n_U1[ijk]*(0.66666666666666663*
-gConf_D0D1[ijk]*psi4*trK[ijk] - psim2*(AConfIJ_U0U0[ijk]*
-gConf_D0D0[ijk]*gConf_D0D1[ijk] + AConfIJ_U0U1[ijk]*gConf_D0D0[ijk]*
-gConf_D1D1[ijk] + AConfIJ_U0U1[ijk]*pow(gConf_D0D1[ijk], 2) + 
-AConfIJ_U0U2[ijk]*gConf_D0D0[ijk]*gConf_D1D2[ijk] + AConfIJ_U0U2[ijk]*
-gConf_D0D1[ijk]*gConf_D0D2[ijk] + AConfIJ_U1U1[ijk]*gConf_D0D1[ijk]*
-gConf_D1D1[ijk] + AConfIJ_U1U2[ijk]*gConf_D0D1[ijk]*gConf_D1D2[ijk] + 
-AConfIJ_U1U2[ijk]*gConf_D0D2[ijk]*gConf_D1D1[ijk] + AConfIJ_U2U2[ijk]*
-gConf_D0D2[ijk]*gConf_D1D2[ijk])) - n_U2[ijk]*(0.66666666666666663*
-gConf_D0D2[ijk]*psi4*trK[ijk] - psim2*(AConfIJ_U0U0[ijk]*
-gConf_D0D0[ijk]*gConf_D0D2[ijk] + AConfIJ_U0U1[ijk]*gConf_D0D0[ijk]*
-gConf_D1D2[ijk] + AConfIJ_U0U1[ijk]*gConf_D0D1[ijk]*gConf_D0D2[ijk] + 
-AConfIJ_U0U2[ijk]*gConf_D0D0[ijk]*gConf_D2D2[ijk] + AConfIJ_U0U2[ijk]*
-pow(gConf_D0D2[ijk], 2) + AConfIJ_U1U1[ijk]*gConf_D0D1[ijk]*
-gConf_D1D2[ijk] + AConfIJ_U1U2[ijk]*gConf_D0D1[ijk]*gConf_D2D2[ijk] + 
-AConfIJ_U1U2[ijk]*gConf_D0D2[ijk]*gConf_D1D2[ijk] + AConfIJ_U2U2[ijk]*
-gConf_D0D2[ijk]*gConf_D2D2[ijk]));
-
-      double Px_D1 = 
+      double Ps_D1 = 
 -n_U0[ijk]*(0.66666666666666663*gConf_D0D1[ijk]*psi4*trK[ijk] - psim2*
 (AConfIJ_U0U0[ijk]*gConf_D0D0[ijk]*gConf_D0D1[ijk] + AConfIJ_U0U1[ijk]*
 gConf_D0D0[ijk]*gConf_D1D1[ijk] + AConfIJ_U0U1[ijk]*
@@ -163,11 +139,35 @@ gConf_D1D2[ijk] + AConfIJ_U1U2[ijk]*gConf_D1D1[ijk]*gConf_D2D2[ijk] +
 AConfIJ_U1U2[ijk]*pow(gConf_D1D2[ijk], 2) + AConfIJ_U2U2[ijk]*
 gConf_D1D2[ijk]*gConf_D2D2[ijk]));
 
+      double Ps_D0 = 
+-n_U0[ijk]*(0.66666666666666663*gConf_D0D0[ijk]*psi4*trK[ijk] - psim2*
+(AConfIJ_U0U0[ijk]*pow(gConf_D0D0[ijk], 2) + 2.0*AConfIJ_U0U1[ijk]*
+gConf_D0D0[ijk]*gConf_D0D1[ijk] + 2.0*AConfIJ_U0U2[ijk]*gConf_D0D0[ijk]*
+gConf_D0D2[ijk] + AConfIJ_U1U1[ijk]*pow(gConf_D0D1[ijk], 2) + 2.0*
+AConfIJ_U1U2[ijk]*gConf_D0D1[ijk]*gConf_D0D2[ijk] + AConfIJ_U2U2[ijk]*
+pow(gConf_D0D2[ijk], 2))) - n_U1[ijk]*(0.66666666666666663*
+gConf_D0D1[ijk]*psi4*trK[ijk] - psim2*(AConfIJ_U0U0[ijk]*
+gConf_D0D0[ijk]*gConf_D0D1[ijk] + AConfIJ_U0U1[ijk]*gConf_D0D0[ijk]*
+gConf_D1D1[ijk] + AConfIJ_U0U1[ijk]*pow(gConf_D0D1[ijk], 2) + 
+AConfIJ_U0U2[ijk]*gConf_D0D0[ijk]*gConf_D1D2[ijk] + AConfIJ_U0U2[ijk]*
+gConf_D0D1[ijk]*gConf_D0D2[ijk] + AConfIJ_U1U1[ijk]*gConf_D0D1[ijk]*
+gConf_D1D1[ijk] + AConfIJ_U1U2[ijk]*gConf_D0D1[ijk]*gConf_D1D2[ijk] + 
+AConfIJ_U1U2[ijk]*gConf_D0D2[ijk]*gConf_D1D1[ijk] + AConfIJ_U2U2[ijk]*
+gConf_D0D2[ijk]*gConf_D1D2[ijk])) - n_U2[ijk]*(0.66666666666666663*
+gConf_D0D2[ijk]*psi4*trK[ijk] - psim2*(AConfIJ_U0U0[ijk]*
+gConf_D0D0[ijk]*gConf_D0D2[ijk] + AConfIJ_U0U1[ijk]*gConf_D0D0[ijk]*
+gConf_D1D2[ijk] + AConfIJ_U0U1[ijk]*gConf_D0D1[ijk]*gConf_D0D2[ijk] + 
+AConfIJ_U0U2[ijk]*gConf_D0D0[ijk]*gConf_D2D2[ijk] + AConfIJ_U0U2[ijk]*
+pow(gConf_D0D2[ijk], 2) + AConfIJ_U1U1[ijk]*gConf_D0D1[ijk]*
+gConf_D1D2[ijk] + AConfIJ_U1U2[ijk]*gConf_D0D1[ijk]*gConf_D2D2[ijk] + 
+AConfIJ_U1U2[ijk]*gConf_D0D2[ijk]*gConf_D1D2[ijk] + AConfIJ_U2U2[ijk]*
+gConf_D0D2[ijk]*gConf_D2D2[ijk]));
+
 
       /* populating: */
-      obs__Px_D1[ijk] = Px_D1;
-      obs__Px_D0[ijk] = Px_D0;
-      obs__Px_D2[ijk] = Px_D2;
+      obs__Ps_D0[ijk] = Ps_D0;
+      obs__Ps_D1[ijk] = Ps_D1;
+      obs__Ps_D2[ijk] = Ps_D2;
       }
   }
   else
@@ -382,7 +382,7 @@ gConf_D0D1[ijk]*gConf_D1D2[ijk] + AConfIJ_U1U2[ijk]*gConf_D0D1[ijk]*
 gConf_D2D2[ijk] + AConfIJ_U1U2[ijk]*gConf_D0D2[ijk]*gConf_D1D2[ijk] + 
 AConfIJ_U2U2[ijk]*gConf_D0D2[ijk]*gConf_D2D2[ijk]);
 
-      double Jx_D0 = 
+      double Pv_D0 = 
 psim4_*(Gamma_U0D0D0*igConf_U0U0[ijk]*mom_U0U0 + Gamma_U0D0D0*
 igConf_U0U1[ijk]*mom_U0U1 + Gamma_U0D0D0*igConf_U0U2[ijk]*mom_U0U2 + 
 Gamma_U0D0D1*igConf_U0U1[ijk]*mom_U0U0 + Gamma_U0D0D1*igConf_U1U1[ijk]*
@@ -401,7 +401,7 @@ Gamma_U2D0D1*igConf_U1U2[ijk]*mom_U2U2 + Gamma_U2D0D2*igConf_U0U2[ijk]*
 mom_U0U2 + Gamma_U2D0D2*igConf_U1U2[ijk]*mom_U1U2 + Gamma_U2D0D2*
 igConf_U2U2[ijk]*mom_U2U2);
 
-      double Jx_D1 = 
+      double Pv_D1 = 
 psim4_*(Gamma_U0D0D1*igConf_U0U0[ijk]*mom_U0U0 + Gamma_U0D0D1*
 igConf_U0U1[ijk]*mom_U0U1 + Gamma_U0D0D1*igConf_U0U2[ijk]*mom_U0U2 + 
 Gamma_U0D1D1*igConf_U0U1[ijk]*mom_U0U0 + Gamma_U0D1D1*igConf_U1U1[ijk]*
@@ -420,7 +420,7 @@ Gamma_U2D1D1*igConf_U1U2[ijk]*mom_U2U2 + Gamma_U2D1D2*igConf_U0U2[ijk]*
 mom_U0U2 + Gamma_U2D1D2*igConf_U1U2[ijk]*mom_U1U2 + Gamma_U2D1D2*
 igConf_U2U2[ijk]*mom_U2U2);
 
-      double Jx_D2 = 
+      double Pv_D2 = 
 psim4_*(Gamma_U0D0D2*igConf_U0U0[ijk]*mom_U0U0 + Gamma_U0D0D2*
 igConf_U0U1[ijk]*mom_U0U1 + Gamma_U0D0D2*igConf_U0U2[ijk]*mom_U0U2 + 
 Gamma_U0D1D2*igConf_U0U1[ijk]*mom_U0U0 + Gamma_U0D1D2*igConf_U1U1[ijk]*
@@ -441,25 +441,25 @@ igConf_U2U2[ijk]*mom_U2U2);
 
 
       /* populating: */
-      obs__Jx_D2[ijk] = Jx_D2;
-      obs__Jx_D1[ijk] = Jx_D1;
-      obs__Jx_D0[ijk] = Jx_D0;
+      obs__Pv_D2[ijk] = Pv_D2;
+      obs__Pv_D1[ijk] = Pv_D1;
+      obs__Pv_D0[ijk] = Pv_D0;
       }
   }
   }
 
   obs->ret[0] = obs_integral_SV
-                 (obs,"obs__Px_D0","obs__Jx_D0",'+','+')/(8*M_PI);
+                 (obs,"obs__Ps_D0","obs__Pv_D0",'+','+')/(8*M_PI);
   obs->ret[1] = obs_integral_SV
-                 (obs,"obs__Px_D1","obs__Jx_D1",'+','+')/(8*M_PI);
+                 (obs,"obs__Ps_D1","obs__Pv_D1",'+','+')/(8*M_PI);
   obs->ret[2] = obs_integral_SV
-                 (obs,"obs__Px_D2","obs__Jx_D2",'+','+')/(8*M_PI);
+                 (obs,"obs__Ps_D2","obs__Pv_D2",'+','+')/(8*M_PI);
 
   for(p = 0; p < N; ++p)
   {
     Patch_T *patch = adm[p]->patch;
-    remove_field_regex(patch,"^obs__Px_D.$");
-    remove_field_regex(patch,"^obs__Jx_D.$");
+    remove_field_regex(patch,"^obs__Ps_D.$");
+    remove_field_regex(patch,"^obs__Pv_D.$");
   }
 
 }
