@@ -572,6 +572,16 @@ static void calc_ADM_J(Observe_T *const obs)
         region   = "outermost_OB";
         patches2 = collect_patches(grid,region,&N2);
       }
+      else if (IsIt("S+V,constrain"))
+      {
+        /* volume part */
+        region   = "outermost,filling_box,NS_around,BH_around";
+        patches1 = collect_patches(grid,region,&N1);
+        
+        /* surface part */
+        region   = "NS_around_IB,BH_around_IB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
       else if (IsIt("S_obj1+S_obj2,default"))
       {
         /* surface part */
@@ -798,6 +808,20 @@ static void calc_ADM_J(Observe_T *const obs)
           Set_outermost_integral_S_SplitCS(adm)
           n_physical_metric_around(adm[n],_c_);
         }
+        else if (IsIt("S+V,constrain"))
+        {
+          if (IsItCovering(patch,"NS_around_IB,BH_around_IB"))
+          {
+            adm[n]->surface_integration_flg = 1;
+            adm[n]->Z_surface = 1;
+            adm[n]->K = 0;
+            n_physical_metric_around(adm[n],_c_);
+          }
+          else
+          {
+            Error0(obs_err_msg);
+          }
+        }
         else if (IsIt("S_obj1+S_obj2,default"))
         {
           if (IsItCovering(patch,"BH_around_IB"))
@@ -916,6 +940,10 @@ static void calc_ADM_J(Observe_T *const obs)
     else if (IsIt("S+V,Ossokine"))
     {
       obs_ADM_J_Stokes_SV_Ossokine(obs);
+    }
+    else if (IsIt("S+V,constrain"))
+    {
+      obs_ADM_J_Stokes_SV_constrain(obs);
     }
     else
     {
