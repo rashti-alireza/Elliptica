@@ -254,9 +254,9 @@ static int set_observe_params(Physics_T *const phys)
   //
   // methods:
   // ========
-  // default  : used arXiv:gr-qc/0703035v1
-  // Ossokine : used arXiv:1506.01689
-  // constrain: used Stokes and assuming momentum constrains are met.
+  // default    : used arXiv:gr-qc/0703035v1
+  // Ossokine   : used arXiv:1506.01689
+  // constraint : used Stokes and assuming momentum constraints are met.
   //
   // options:
   // ========
@@ -271,10 +271,10 @@ static int set_observe_params(Physics_T *const phys)
   //
   // methods:
   // ========
-  // default  : used arXiv:gr-qc/0703035v1
-  // Ossokine : used arXiv:1506.01689
-  // Rashti   : used full Stokes theorem
-  // constrain: used Stokes and assuming momentum constrains are met.
+  // default    : used arXiv:gr-qc/0703035v1
+  // Ossokine   : used arXiv:1506.01689
+  // Rashti     : used full Stokes theorem
+  // constraint : used Stokes and assuming momentum constraints are met.
   //
   // options:
   // ========

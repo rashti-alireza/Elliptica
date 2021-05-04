@@ -1,5 +1,5 @@
 # use the definition of P ADM at S infinite then use Stokes theorem 
-# and momentum constrains to cast the integration over S and V.
+# and momentum constraints to cast the integration over S and V.
 # note: integraion must not include matter.
 
 # Manifold or grid Dimension
@@ -22,8 +22,8 @@ C_macro2 = add_and_get_field(name);
          `  WRITE_v(name);`
 ``
 ``
-`void obs_ADM_P_Stokes_SV_constrain(Observe_T *const obs);`
-`void obs_ADM_P_Stokes_SV_constrain(Observe_T *const obs)`
+`void obs_ADM_P_Stokes_SV_constraint(Observe_T *const obs);`
+`void obs_ADM_P_Stokes_SV_constraint(Observe_T *const obs)`
 `{`
 `  struct items_S **adm = obs->items;`
 `  const Uint N = obs->Nitems;`

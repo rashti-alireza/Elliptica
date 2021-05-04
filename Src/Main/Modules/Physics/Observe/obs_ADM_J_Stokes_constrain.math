@@ -1,5 +1,5 @@
 # use the definition of J ADM at S infinite then use Stokes theorem 
-# and momentum constrains to cast the integration over S and V.
+# and momentum constraints to cast the integration over S and V.
 # note: integraion must not include matter.
 
 # Manifold or grid Dimension
@@ -24,8 +24,8 @@ C_arg1   = ;
          `  WRITE_v(name);`
 ``
 ``
-`void obs_ADM_J_Stokes_SV_constrain(Observe_T *const obs);`
-`void obs_ADM_J_Stokes_SV_constrain(Observe_T *const obs)`
+`void obs_ADM_J_Stokes_SV_constraint(Observe_T *const obs);`
+`void obs_ADM_J_Stokes_SV_constraint(Observe_T *const obs)`
 `{`
 `  Physics_T *const phys = obs->phys;`
 `  struct items_S **adm  = obs->items;`

@@ -13,8 +13,8 @@
   WRITE_v(name);
 
 
-void obs_ADM_P_Stokes_SV_constrain(Observe_T *const obs);
-void obs_ADM_P_Stokes_SV_constrain(Observe_T *const obs)
+void obs_ADM_P_Stokes_SV_constraint(Observe_T *const obs);
+void obs_ADM_P_Stokes_SV_constraint(Observe_T *const obs)
 {
   struct items_S **adm = obs->items;
   const Uint N = obs->Nitems;

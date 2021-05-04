@@ -13,8 +13,8 @@
   WRITE_v(name);
 
 
-void obs_ADM_J_Stokes_SV_constrain(Observe_T *const obs);
-void obs_ADM_J_Stokes_SV_constrain(Observe_T *const obs)
+void obs_ADM_J_Stokes_SV_constraint(Observe_T *const obs);
+void obs_ADM_J_Stokes_SV_constraint(Observe_T *const obs)
 {
   Physics_T *const phys = obs->phys;
   struct items_S **adm  = obs->items;
