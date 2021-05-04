@@ -107,10 +107,13 @@ psi4   = psi**4;
 psim2  = psi**-2;
 
 # (K_ij - K g_ij)*n^j
-Ps(-i) = n(-j)*\
+Pn(-i) = n(-j)*\
 (psim2*AConfIJ(ip,jp)*gConf(i,-ip)*gConf(j,-jp)-(2/3)*trK*psi4*gConf(i,j));
 
-Js(-i) = EIJK(i,j,k)*x_xCM(-j)*Ps(-k);
+# rotational Killing vector at inf, note A is not a tonsorial index
+Phi_(i,-A) = -EIJK(i,j,A)*x_xCM(-j);
+
+Js(-A) = Phi_(i,-A)*Pn(-i);
 
 Cpopulate[obs__Js = Js];
 
@@ -147,16 +150,18 @@ Symm[c(i,j,k) = c(i,k,j)];
 Gamma(i,-j,-K) = c(i,j,k)+ChrisConf(i,j,k);
 Symm[Gamma(i,j,k) = Gamma(i,k,j)];
 
-# (K_i^k - K g_i^k)*Gamma^i_{kl}\delta^l_m =
-# K_{ij} - K g_{ij})*gamma^{jk}*Gamma^i_{kl}\delta^l_m
-mom(i,j) = \
+# NOTE:
+# (K_i^k - K g_i^k)*D_k phi^i_A =
+# (K_{ij} - K g_{ij})*gamma^{jk}*D_k phi^i_A
+
+mom(-i,-j) = \
 psim2_*AConfIJ(ip,jp)*gConf(i,-ip)*gConf(j,-jp)-(2/3)*trK*psi4_*gConf(i,j);
 Symm[mom(i,j)= mom(j,i)];
 
-# rotational Killing vector at inf, not A is not tonsorial index
-Phi(i,-A)    = EIJK(i,j,A)*x_xCM(-j);
+# rotational Killing vector at inf, note A is not a tonsorial index
+Phi(i,-A)    = -EIJK(i,j,A)*x_xCM(-j);
 
-dPhi(i,-A,l) =  EIJK(i,j,A)*KD(-j,l);
+dPhi(i,-A,l) = -EIJK(i,j,A)*KD(-j,l);
 
 Dphi(i,-A,j) = dPhi(i,A,j)+Gamma(i,j,l)*Phi(-l,A);
 
