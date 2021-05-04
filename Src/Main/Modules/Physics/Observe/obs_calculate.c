@@ -1703,7 +1703,11 @@ static void calc_ADM_mass(Observe_T *const obs)
   SET_MSG
   
   /* in these cases use gConf and not g */
-  const int IsConf   = (IsIt("S+V,default")||IsIt("V_obj,default"));
+  const int IsConf   = (
+                        IsIt("S+V,default")   ||
+                        IsIt("V_obj,default") ||
+                        IsIt("S+V,conformal")
+                       );
   Grid_T *const grid = obs->grid;
   Patch_T **patches1 = 0;/* for volume integrals */
   Patch_T **patches2 = 0;/* for surface integrals */
@@ -1720,6 +1724,15 @@ static void calc_ADM_mass(Observe_T *const obs)
     IFsc("ADM(M)|BHNS")
     {
       if (IsIt("S+V,default"))
+      {
+        /* volume part */
+        region   = "outermost,filling_box,NS,NS_around,BH_around";
+        patches1 = collect_patches(grid,region,&N1);
+        /* surface part */
+        region   = "BH_around_IB";
+        patches2 = collect_patches(grid,region,&N2); 
+      }
+      else if (IsIt("S+V,conformal"))
       {
         /* volume part */
         region   = "outermost,filling_box,NS,NS_around,BH_around";
@@ -1887,6 +1900,13 @@ static void calc_ADM_mass(Observe_T *const obs)
           adm[n]->K = 0;
           n_conformal_metric_around(adm[n],_c_);
         }
+        else if (IsIt("S+V,conformal"))
+        {
+          adm[n]->surface_integration_flg = 1;
+          adm[n]->Z_surface = 1;
+          adm[n]->K = 0;
+          n_conformal_metric_around(adm[n],_c_);
+        }
         else if (IsIt("S_inf,default"))
         {
           /* surface integral */
@@ -1949,6 +1969,10 @@ static void calc_ADM_mass(Observe_T *const obs)
     if (IsIt("S+V,default"))
     {
       obs->ret[0] = obs_ADM_mass_SV_isotropic(obs);
+    }
+    else if (IsIt("S+V,conformal"))
+    {
+      obs->ret[0] = obs_ADM_mass_SV_conformal(obs);
     }
     else if (IsIt("S_inf,default"))
     {
