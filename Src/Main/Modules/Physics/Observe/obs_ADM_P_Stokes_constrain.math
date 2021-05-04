@@ -122,14 +122,14 @@ Symm[c(i,j,k) = c(i,k,j)];
 Gamma(i,-j,-K) = c(i,j,k)+ChrisConf(i,j,k);
 Symm[Gamma(i,j,k) = Gamma(i,k,j)];
 
-# (K_i^k - K g_i^k)*Gamma^i_{kl}\delta^l_m =
-# K_{ij} - K g_{ij})*gamma^{jk}*Gamma^i_{kl}\delta^l_m
-mom(i,j) = \
+# NOTE:
+# (K_i^k - K g_i^k)*Gamma^i_{kl}*Kronecker_delta^l_m =
+# K_{ij} - K g_{ij})*gamma^{jk}*Gamma^i_{kl}*Kronecker_delta^l_m
+mom(-i,-j) = \
 psim2_*AConfIJ(ip,jp)*gConf(i,-ip)*gConf(j,-jp)-(2/3)*trK*psi4_*gConf(i,j);
 Symm[mom(i,j)= mom(j,i)];
 
-Pv(-m)   = psim4_*igConf(j,-k)*Gamma(i,k,m)*mom(-i,-j);
-
+Pv(-m) = mom(-i,-j)*psim4_*igConf(j,-k)*Gamma(i,k,m);
 
 Cpopulate[obs__Pv = Pv];
 

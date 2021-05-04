@@ -327,7 +327,15 @@ ChrisConf_U1D1D2[ijk] + c_U1D1D2;
       double Gamma_U2D1D1 = 
 ChrisConf_U2D1D1[ijk] + c_U2D1D1;
 
-      double mom_U1U1 = 
+      double mom_D2D2 = 
+-0.66666666666666663*gConf_D2D2[ijk]*psi4_*trK[ijk] + psim2_*
+(AConfIJ_U0U0[ijk]*pow(gConf_D0D2[ijk], 2) + 2.0*AConfIJ_U0U1[ijk]*
+gConf_D0D2[ijk]*gConf_D1D2[ijk] + 2.0*AConfIJ_U0U2[ijk]*gConf_D0D2[ijk]*
+gConf_D2D2[ijk] + AConfIJ_U1U1[ijk]*pow(gConf_D1D2[ijk], 2) + 2.0*
+AConfIJ_U1U2[ijk]*gConf_D1D2[ijk]*gConf_D2D2[ijk] + AConfIJ_U2U2[ijk]*
+pow(gConf_D2D2[ijk], 2));
+
+      double mom_D1D1 = 
 -0.66666666666666663*gConf_D1D1[ijk]*psi4_*trK[ijk] + psim2_*
 (AConfIJ_U0U0[ijk]*pow(gConf_D0D1[ijk], 2) + 2.0*AConfIJ_U0U1[ijk]*
 gConf_D0D1[ijk]*gConf_D1D1[ijk] + 2.0*AConfIJ_U0U2[ijk]*gConf_D0D1[ijk]*
@@ -335,7 +343,7 @@ gConf_D1D2[ijk] + AConfIJ_U1U1[ijk]*pow(gConf_D1D1[ijk], 2) + 2.0*
 AConfIJ_U1U2[ijk]*gConf_D1D1[ijk]*gConf_D1D2[ijk] + AConfIJ_U2U2[ijk]*
 pow(gConf_D1D2[ijk], 2));
 
-      double mom_U1U2 = 
+      double mom_D1D2 = 
 -0.66666666666666663*gConf_D1D2[ijk]*psi4_*trK[ijk] + psim2_*
 (AConfIJ_U0U0[ijk]*gConf_D0D1[ijk]*gConf_D0D2[ijk] + AConfIJ_U0U1[ijk]*
 gConf_D0D1[ijk]*gConf_D1D2[ijk] + AConfIJ_U0U1[ijk]*gConf_D0D2[ijk]*
@@ -345,15 +353,7 @@ gConf_D1D1[ijk]*gConf_D1D2[ijk] + AConfIJ_U1U2[ijk]*gConf_D1D1[ijk]*
 gConf_D2D2[ijk] + AConfIJ_U1U2[ijk]*pow(gConf_D1D2[ijk], 2) + 
 AConfIJ_U2U2[ijk]*gConf_D1D2[ijk]*gConf_D2D2[ijk]);
 
-      double mom_U2U2 = 
--0.66666666666666663*gConf_D2D2[ijk]*psi4_*trK[ijk] + psim2_*
-(AConfIJ_U0U0[ijk]*pow(gConf_D0D2[ijk], 2) + 2.0*AConfIJ_U0U1[ijk]*
-gConf_D0D2[ijk]*gConf_D1D2[ijk] + 2.0*AConfIJ_U0U2[ijk]*gConf_D0D2[ijk]*
-gConf_D2D2[ijk] + AConfIJ_U1U1[ijk]*pow(gConf_D1D2[ijk], 2) + 2.0*
-AConfIJ_U1U2[ijk]*gConf_D1D2[ijk]*gConf_D2D2[ijk] + AConfIJ_U2U2[ijk]*
-pow(gConf_D2D2[ijk], 2));
-
-      double mom_U0U0 = 
+      double mom_D0D0 = 
 -0.66666666666666663*gConf_D0D0[ijk]*psi4_*trK[ijk] + psim2_*
 (AConfIJ_U0U0[ijk]*pow(gConf_D0D0[ijk], 2) + 2.0*AConfIJ_U0U1[ijk]*
 gConf_D0D0[ijk]*gConf_D0D1[ijk] + 2.0*AConfIJ_U0U2[ijk]*gConf_D0D0[ijk]*
@@ -361,7 +361,7 @@ gConf_D0D2[ijk] + AConfIJ_U1U1[ijk]*pow(gConf_D0D1[ijk], 2) + 2.0*
 AConfIJ_U1U2[ijk]*gConf_D0D1[ijk]*gConf_D0D2[ijk] + AConfIJ_U2U2[ijk]*
 pow(gConf_D0D2[ijk], 2));
 
-      double mom_U0U1 = 
+      double mom_D0D1 = 
 -0.66666666666666663*gConf_D0D1[ijk]*psi4_*trK[ijk] + psim2_*
 (AConfIJ_U0U0[ijk]*gConf_D0D0[ijk]*gConf_D0D1[ijk] + AConfIJ_U0U1[ijk]*
 gConf_D0D0[ijk]*gConf_D1D1[ijk] + AConfIJ_U0U1[ijk]*
@@ -372,7 +372,7 @@ gConf_D0D1[ijk]*gConf_D1D2[ijk] + AConfIJ_U1U2[ijk]*gConf_D0D2[ijk]*
 gConf_D1D1[ijk] + AConfIJ_U2U2[ijk]*gConf_D0D2[ijk]*
 gConf_D1D2[ijk]);
 
-      double mom_U0U2 = 
+      double mom_D0D2 = 
 -0.66666666666666663*gConf_D0D2[ijk]*psi4_*trK[ijk] + psim2_*
 (AConfIJ_U0U0[ijk]*gConf_D0D0[ijk]*gConf_D0D2[ijk] + AConfIJ_U0U1[ijk]*
 gConf_D0D0[ijk]*gConf_D1D2[ijk] + AConfIJ_U0U1[ijk]*gConf_D0D1[ijk]*
@@ -383,61 +383,61 @@ gConf_D2D2[ijk] + AConfIJ_U1U2[ijk]*gConf_D0D2[ijk]*gConf_D1D2[ijk] +
 AConfIJ_U2U2[ijk]*gConf_D0D2[ijk]*gConf_D2D2[ijk]);
 
       double Pv_D0 = 
-psim4_*(Gamma_U0D0D0*igConf_U0U0[ijk]*mom_U0U0 + Gamma_U0D0D0*
-igConf_U0U1[ijk]*mom_U0U1 + Gamma_U0D0D0*igConf_U0U2[ijk]*mom_U0U2 + 
-Gamma_U0D0D1*igConf_U0U1[ijk]*mom_U0U0 + Gamma_U0D0D1*igConf_U1U1[ijk]*
-mom_U0U1 + Gamma_U0D0D1*igConf_U1U2[ijk]*mom_U0U2 + Gamma_U0D0D2*
-igConf_U0U2[ijk]*mom_U0U0 + Gamma_U0D0D2*igConf_U1U2[ijk]*mom_U0U1 + 
-Gamma_U0D0D2*igConf_U2U2[ijk]*mom_U0U2 + Gamma_U1D0D0*igConf_U0U0[ijk]*
-mom_U0U1 + Gamma_U1D0D0*igConf_U0U1[ijk]*mom_U1U1 + Gamma_U1D0D0*
-igConf_U0U2[ijk]*mom_U1U2 + Gamma_U1D0D1*igConf_U0U1[ijk]*mom_U0U1 + 
-Gamma_U1D0D1*igConf_U1U1[ijk]*mom_U1U1 + Gamma_U1D0D1*igConf_U1U2[ijk]*
-mom_U1U2 + Gamma_U1D0D2*igConf_U0U2[ijk]*mom_U0U1 + Gamma_U1D0D2*
-igConf_U1U2[ijk]*mom_U1U1 + Gamma_U1D0D2*igConf_U2U2[ijk]*mom_U1U2 + 
-Gamma_U2D0D0*igConf_U0U0[ijk]*mom_U0U2 + Gamma_U2D0D0*igConf_U0U1[ijk]*
-mom_U1U2 + Gamma_U2D0D0*igConf_U0U2[ijk]*mom_U2U2 + Gamma_U2D0D1*
-igConf_U0U1[ijk]*mom_U0U2 + Gamma_U2D0D1*igConf_U1U1[ijk]*mom_U1U2 + 
-Gamma_U2D0D1*igConf_U1U2[ijk]*mom_U2U2 + Gamma_U2D0D2*igConf_U0U2[ijk]*
-mom_U0U2 + Gamma_U2D0D2*igConf_U1U2[ijk]*mom_U1U2 + Gamma_U2D0D2*
-igConf_U2U2[ijk]*mom_U2U2);
+psim4_*(Gamma_U0D0D0*igConf_U0U0[ijk]*mom_D0D0 + Gamma_U0D0D0*
+igConf_U0U1[ijk]*mom_D0D1 + Gamma_U0D0D0*igConf_U0U2[ijk]*mom_D0D2 + 
+Gamma_U0D0D1*igConf_U0U1[ijk]*mom_D0D0 + Gamma_U0D0D1*igConf_U1U1[ijk]*
+mom_D0D1 + Gamma_U0D0D1*igConf_U1U2[ijk]*mom_D0D2 + Gamma_U0D0D2*
+igConf_U0U2[ijk]*mom_D0D0 + Gamma_U0D0D2*igConf_U1U2[ijk]*mom_D0D1 + 
+Gamma_U0D0D2*igConf_U2U2[ijk]*mom_D0D2 + Gamma_U1D0D0*igConf_U0U0[ijk]*
+mom_D0D1 + Gamma_U1D0D0*igConf_U0U1[ijk]*mom_D1D1 + Gamma_U1D0D0*
+igConf_U0U2[ijk]*mom_D1D2 + Gamma_U1D0D1*igConf_U0U1[ijk]*mom_D0D1 + 
+Gamma_U1D0D1*igConf_U1U1[ijk]*mom_D1D1 + Gamma_U1D0D1*igConf_U1U2[ijk]*
+mom_D1D2 + Gamma_U1D0D2*igConf_U0U2[ijk]*mom_D0D1 + Gamma_U1D0D2*
+igConf_U1U2[ijk]*mom_D1D1 + Gamma_U1D0D2*igConf_U2U2[ijk]*mom_D1D2 + 
+Gamma_U2D0D0*igConf_U0U0[ijk]*mom_D0D2 + Gamma_U2D0D0*igConf_U0U1[ijk]*
+mom_D1D2 + Gamma_U2D0D0*igConf_U0U2[ijk]*mom_D2D2 + Gamma_U2D0D1*
+igConf_U0U1[ijk]*mom_D0D2 + Gamma_U2D0D1*igConf_U1U1[ijk]*mom_D1D2 + 
+Gamma_U2D0D1*igConf_U1U2[ijk]*mom_D2D2 + Gamma_U2D0D2*igConf_U0U2[ijk]*
+mom_D0D2 + Gamma_U2D0D2*igConf_U1U2[ijk]*mom_D1D2 + Gamma_U2D0D2*
+igConf_U2U2[ijk]*mom_D2D2);
 
       double Pv_D1 = 
-psim4_*(Gamma_U0D0D1*igConf_U0U0[ijk]*mom_U0U0 + Gamma_U0D0D1*
-igConf_U0U1[ijk]*mom_U0U1 + Gamma_U0D0D1*igConf_U0U2[ijk]*mom_U0U2 + 
-Gamma_U0D1D1*igConf_U0U1[ijk]*mom_U0U0 + Gamma_U0D1D1*igConf_U1U1[ijk]*
-mom_U0U1 + Gamma_U0D1D1*igConf_U1U2[ijk]*mom_U0U2 + Gamma_U0D1D2*
-igConf_U0U2[ijk]*mom_U0U0 + Gamma_U0D1D2*igConf_U1U2[ijk]*mom_U0U1 + 
-Gamma_U0D1D2*igConf_U2U2[ijk]*mom_U0U2 + Gamma_U1D0D1*igConf_U0U0[ijk]*
-mom_U0U1 + Gamma_U1D0D1*igConf_U0U1[ijk]*mom_U1U1 + Gamma_U1D0D1*
-igConf_U0U2[ijk]*mom_U1U2 + Gamma_U1D1D1*igConf_U0U1[ijk]*mom_U0U1 + 
-Gamma_U1D1D1*igConf_U1U1[ijk]*mom_U1U1 + Gamma_U1D1D1*igConf_U1U2[ijk]*
-mom_U1U2 + Gamma_U1D1D2*igConf_U0U2[ijk]*mom_U0U1 + Gamma_U1D1D2*
-igConf_U1U2[ijk]*mom_U1U1 + Gamma_U1D1D2*igConf_U2U2[ijk]*mom_U1U2 + 
-Gamma_U2D0D1*igConf_U0U0[ijk]*mom_U0U2 + Gamma_U2D0D1*igConf_U0U1[ijk]*
-mom_U1U2 + Gamma_U2D0D1*igConf_U0U2[ijk]*mom_U2U2 + Gamma_U2D1D1*
-igConf_U0U1[ijk]*mom_U0U2 + Gamma_U2D1D1*igConf_U1U1[ijk]*mom_U1U2 + 
-Gamma_U2D1D1*igConf_U1U2[ijk]*mom_U2U2 + Gamma_U2D1D2*igConf_U0U2[ijk]*
-mom_U0U2 + Gamma_U2D1D2*igConf_U1U2[ijk]*mom_U1U2 + Gamma_U2D1D2*
-igConf_U2U2[ijk]*mom_U2U2);
+psim4_*(Gamma_U0D0D1*igConf_U0U0[ijk]*mom_D0D0 + Gamma_U0D0D1*
+igConf_U0U1[ijk]*mom_D0D1 + Gamma_U0D0D1*igConf_U0U2[ijk]*mom_D0D2 + 
+Gamma_U0D1D1*igConf_U0U1[ijk]*mom_D0D0 + Gamma_U0D1D1*igConf_U1U1[ijk]*
+mom_D0D1 + Gamma_U0D1D1*igConf_U1U2[ijk]*mom_D0D2 + Gamma_U0D1D2*
+igConf_U0U2[ijk]*mom_D0D0 + Gamma_U0D1D2*igConf_U1U2[ijk]*mom_D0D1 + 
+Gamma_U0D1D2*igConf_U2U2[ijk]*mom_D0D2 + Gamma_U1D0D1*igConf_U0U0[ijk]*
+mom_D0D1 + Gamma_U1D0D1*igConf_U0U1[ijk]*mom_D1D1 + Gamma_U1D0D1*
+igConf_U0U2[ijk]*mom_D1D2 + Gamma_U1D1D1*igConf_U0U1[ijk]*mom_D0D1 + 
+Gamma_U1D1D1*igConf_U1U1[ijk]*mom_D1D1 + Gamma_U1D1D1*igConf_U1U2[ijk]*
+mom_D1D2 + Gamma_U1D1D2*igConf_U0U2[ijk]*mom_D0D1 + Gamma_U1D1D2*
+igConf_U1U2[ijk]*mom_D1D1 + Gamma_U1D1D2*igConf_U2U2[ijk]*mom_D1D2 + 
+Gamma_U2D0D1*igConf_U0U0[ijk]*mom_D0D2 + Gamma_U2D0D1*igConf_U0U1[ijk]*
+mom_D1D2 + Gamma_U2D0D1*igConf_U0U2[ijk]*mom_D2D2 + Gamma_U2D1D1*
+igConf_U0U1[ijk]*mom_D0D2 + Gamma_U2D1D1*igConf_U1U1[ijk]*mom_D1D2 + 
+Gamma_U2D1D1*igConf_U1U2[ijk]*mom_D2D2 + Gamma_U2D1D2*igConf_U0U2[ijk]*
+mom_D0D2 + Gamma_U2D1D2*igConf_U1U2[ijk]*mom_D1D2 + Gamma_U2D1D2*
+igConf_U2U2[ijk]*mom_D2D2);
 
       double Pv_D2 = 
-psim4_*(Gamma_U0D0D2*igConf_U0U0[ijk]*mom_U0U0 + Gamma_U0D0D2*
-igConf_U0U1[ijk]*mom_U0U1 + Gamma_U0D0D2*igConf_U0U2[ijk]*mom_U0U2 + 
-Gamma_U0D1D2*igConf_U0U1[ijk]*mom_U0U0 + Gamma_U0D1D2*igConf_U1U1[ijk]*
-mom_U0U1 + Gamma_U0D1D2*igConf_U1U2[ijk]*mom_U0U2 + Gamma_U0D2D2*
-igConf_U0U2[ijk]*mom_U0U0 + Gamma_U0D2D2*igConf_U1U2[ijk]*mom_U0U1 + 
-Gamma_U0D2D2*igConf_U2U2[ijk]*mom_U0U2 + Gamma_U1D0D2*igConf_U0U0[ijk]*
-mom_U0U1 + Gamma_U1D0D2*igConf_U0U1[ijk]*mom_U1U1 + Gamma_U1D0D2*
-igConf_U0U2[ijk]*mom_U1U2 + Gamma_U1D1D2*igConf_U0U1[ijk]*mom_U0U1 + 
-Gamma_U1D1D2*igConf_U1U1[ijk]*mom_U1U1 + Gamma_U1D1D2*igConf_U1U2[ijk]*
-mom_U1U2 + Gamma_U1D2D2*igConf_U0U2[ijk]*mom_U0U1 + Gamma_U1D2D2*
-igConf_U1U2[ijk]*mom_U1U1 + Gamma_U1D2D2*igConf_U2U2[ijk]*mom_U1U2 + 
-Gamma_U2D0D2*igConf_U0U0[ijk]*mom_U0U2 + Gamma_U2D0D2*igConf_U0U1[ijk]*
-mom_U1U2 + Gamma_U2D0D2*igConf_U0U2[ijk]*mom_U2U2 + Gamma_U2D1D2*
-igConf_U0U1[ijk]*mom_U0U2 + Gamma_U2D1D2*igConf_U1U1[ijk]*mom_U1U2 + 
-Gamma_U2D1D2*igConf_U1U2[ijk]*mom_U2U2 + Gamma_U2D2D2*igConf_U0U2[ijk]*
-mom_U0U2 + Gamma_U2D2D2*igConf_U1U2[ijk]*mom_U1U2 + Gamma_U2D2D2*
-igConf_U2U2[ijk]*mom_U2U2);
+psim4_*(Gamma_U0D0D2*igConf_U0U0[ijk]*mom_D0D0 + Gamma_U0D0D2*
+igConf_U0U1[ijk]*mom_D0D1 + Gamma_U0D0D2*igConf_U0U2[ijk]*mom_D0D2 + 
+Gamma_U0D1D2*igConf_U0U1[ijk]*mom_D0D0 + Gamma_U0D1D2*igConf_U1U1[ijk]*
+mom_D0D1 + Gamma_U0D1D2*igConf_U1U2[ijk]*mom_D0D2 + Gamma_U0D2D2*
+igConf_U0U2[ijk]*mom_D0D0 + Gamma_U0D2D2*igConf_U1U2[ijk]*mom_D0D1 + 
+Gamma_U0D2D2*igConf_U2U2[ijk]*mom_D0D2 + Gamma_U1D0D2*igConf_U0U0[ijk]*
+mom_D0D1 + Gamma_U1D0D2*igConf_U0U1[ijk]*mom_D1D1 + Gamma_U1D0D2*
+igConf_U0U2[ijk]*mom_D1D2 + Gamma_U1D1D2*igConf_U0U1[ijk]*mom_D0D1 + 
+Gamma_U1D1D2*igConf_U1U1[ijk]*mom_D1D1 + Gamma_U1D1D2*igConf_U1U2[ijk]*
+mom_D1D2 + Gamma_U1D2D2*igConf_U0U2[ijk]*mom_D0D1 + Gamma_U1D2D2*
+igConf_U1U2[ijk]*mom_D1D1 + Gamma_U1D2D2*igConf_U2U2[ijk]*mom_D1D2 + 
+Gamma_U2D0D2*igConf_U0U0[ijk]*mom_D0D2 + Gamma_U2D0D2*igConf_U0U1[ijk]*
+mom_D1D2 + Gamma_U2D0D2*igConf_U0U2[ijk]*mom_D2D2 + Gamma_U2D1D2*
+igConf_U0U1[ijk]*mom_D0D2 + Gamma_U2D1D2*igConf_U1U1[ijk]*mom_D1D2 + 
+Gamma_U2D1D2*igConf_U1U2[ijk]*mom_D2D2 + Gamma_U2D2D2*igConf_U0U2[ijk]*
+mom_D0D2 + Gamma_U2D2D2*igConf_U1U2[ijk]*mom_D1D2 + Gamma_U2D2D2*
+igConf_U2U2[ijk]*mom_D2D2);
 
 
       /* populating: */
