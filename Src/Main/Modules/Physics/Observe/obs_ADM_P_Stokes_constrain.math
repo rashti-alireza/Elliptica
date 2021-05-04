@@ -1,0 +1,162 @@
+# use the definition of P ADM at S infinite then use Stokes theorem 
+# and momentum constrains to cast the integration over S and V.
+# note: integraion must not include matter.
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = add_and_get_field(name);
+
+`#include "obs_header.h"`
+``
+``
+## note: surface patches and volume patches might have overlap
+## thus, don't remove field if exists.
+`#define add_and_get_field(name) \`
+         `  if (_Ind(#name) < 0) \`
+         `  {ADD_AND_ALLOC_FIELD(name);} \`
+         `  WRITE_v(name);`
+``
+``
+`void obs_ADM_P_Stokes_SV_constrain(Observe_T *const obs);`
+`void obs_ADM_P_Stokes_SV_constrain(Observe_T *const obs)`
+`{`
+`  struct items_S **adm = obs->items;`
+`  const Uint N = obs->Nitems;`
+`  Uint p;`
+``
+`  for(p = 0; p < N; ++p)`
+`  {`
+`  Patch_T *patch = adm[p]->patch;`
+`  Uint nn = patch->nn;`
+`  Uint ijk;`
+
+Declare = 
+{
+  # AConf^{ij}
+ (obj = Field,name = AConfIJ, rank = UU, C_macro);
+
+ # conformal metric 
+ (obj = Field,name = gConf, rank = DD, C_macro);
+
+ # inverse conformal metric 
+ (obj = Field,name = igConf, rank = UU, C_macro);
+
+ # conformal Christoffer symbol value
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+ 
+ # conformal factor first derivative 
+ (obj = Field,name = dpsi, rank = D, C_macro);
+
+ # trKij
+ (obj = Field,name = trK, rank = 0, C_macro);
+
+ # normal vector components
+ (obj = Field,name = n, rank = U, none);
+
+ # integrand P
+ (obj = Field,name = obs__Px, rank = D, C_macro2);
+
+ # integrand V
+ (obj = Field,name = obs__Jx, rank = D, C_macro2);
+
+
+}
+# symmetries:
+Symm[AConfIJ(i,j)     = AConfIJ(j,i)];
+Symm[gConf(i,j)       = gConf(j,i)];
+Symm[igConf(i,j)      = igConf(j,i)];
+Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
+
+# if S integral:
+`  if (adm[p]->surface_integration_flg)`
+`  {`
+``
+# populating the integrands:
+`      const double *n_U0 = adm[p]->n_U0;`
+`      const double *n_U1 = adm[p]->n_U1;`
+`      const double *n_U2 = adm[p]->n_U2;`
+``
+`      for (ijk = 0; ijk < nn; ++ijk)`
+`      {`
+
+psi4   = psi**4;
+
+psim2  = psi**-2;
+
+# (K_ij - K g_ij)*n^j
+Px(-i) = n(-j)*\
+(psim2*AConfIJ(ip,jp)*gConf(i,-ip)*gConf(j,-jp)-(2/3)*trK*psi4*gConf(i,j));
+
+Cpopulate[obs__Px = Px];
+
+`      }`
+`  }`
+
+# if vol inegral:
+`  else`
+`  {`
+# suffix '_' is added to prevent cpi error for duplicate variables
+`      for (ijk = 0; ijk < nn; ++ijk)`
+`      {`
+
+psim2_     = psi**-2;
+psi4_      = psi**4;
+psim4_     = 1/psi4_;
+
+dLnpsi(-i) = dpsi(i)/psi;
+
+
+# \Gamma = \bar\Gamma + C
+c(i,-j,-k)    = \
+2*(dLnpsi(k)*KD(i,j)+dLnpsi(j)*KD(i,k)-dLnpsi(-l)*igConf(i,l)*gConf(j,k));
+Symm[c(i,j,k) = c(i,k,j)];
+
+Gamma(i,-j,-K) = c(i,j,k)+ChrisConf(i,j,k);
+Symm[Gamma(i,j,k) = Gamma(i,k,j)];
+
+# (K_i^k - K g_i^k)*Gamma^i_{kl}\delta^l_m =
+# K_{ij} - K g_{ij})*gamma^{jk}*Gamma^i_{kl}\delta^l_m
+mom(i,j) = \
+psim2_*AConfIJ(ip,jp)*gConf(i,-ip)*gConf(j,-jp)-(2/3)*trK*psi4_*gConf(i,j);
+Symm[mom(i,j)= mom(j,i)];
+
+Jx(-m)   = psim4_*igConf(j,-k)*Gamma(i,k,m)*mom(-i,-j);
+
+
+Cpopulate[obs__Jx = Jx];
+
+`      }`
+`  }`
+
+`  }` # end of for(p = 0; p < N; ++p)
+``
+## carry out the integration:
+`  obs->ret[0] = obs_integral_SV`
+`                 (obs,"obs__Px_D0","obs__Jx_D0",'+','+')/(8*M_PI);`
+
+`  obs->ret[1] = obs_integral_SV`
+`                 (obs,"obs__Px_D1","obs__Jx_D1",'+','+')/(8*M_PI);`
+
+`  obs->ret[2] = obs_integral_SV`
+`                 (obs,"obs__Px_D2","obs__Jx_D2",'+','+')/(8*M_PI);`
+``
+## remove fields
+`  for(p = 0; p < N; ++p)`
+`  {`
+`    Patch_T *patch = adm[p]->patch;`
+`    remove_field_regex(patch,"^obs__Px_D.$");`
+`    remove_field_regex(patch,"^obs__Jx_D.$");`
+`  }`
+``
+`}`
+
+
+
