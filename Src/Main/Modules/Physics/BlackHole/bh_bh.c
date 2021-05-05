@@ -308,6 +308,7 @@ void bh_tune_BH_chi_simple(Physics_T *const phys)
   const double omega_x   = Getd("Omega_x");
   const double omega_y   = Getd("Omega_y");
   const double omega_z   = Getd("Omega_z");
+  const double omega_s   = fabs(sysGetd("angular_velocity"));/* scale */
   double omega[3]        = {0.};
   double s[3]            = {0.};
   double chi_current[3]  = {0.};
@@ -342,17 +343,17 @@ void bh_tune_BH_chi_simple(Physics_T *const phys)
   }
   if (GRT(fabs(dchi[0]),dchi_tol))
   {
-    omega[0] = W2*omega_x-W1*dchi[0];
+    omega[0] = W2*omega_x+W1*dchi[0]*omega_s;
     Setd("Omega_x",omega[0]);
   }
   if (GRT(fabs(dchi[1]),dchi_tol))
   {
-    omega[1] = W2*omega_y-W1*dchi[1];
+    omega[1] = W2*omega_y+W1*dchi[1]*omega_s;
     Setd("Omega_y",omega[1]);
   }
   if (GRT(fabs(dchi[2]),dchi_tol))
   {
-    omega[2] = W2*omega_z-W1*dchi[2];
+    omega[2] = W2*omega_z+W1*dchi[2]*omega_s;
     Setd("Omega_z",omega[2]);
   }
 }
