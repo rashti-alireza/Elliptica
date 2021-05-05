@@ -1,0 +1,113 @@
+############################################
+## The configurations is used by Makefile ##
+############################################
+
+####################
+## name conventions:
+####################
+
+## program name exe:
+EXEC := elliptica
+
+## exe directory:
+EXEC_DIR := $(TOP)/Exe
+
+#######################################################################
+##########################
+## modules to be compiled:
+##########################
+
+## we need all of the the following modules:
+MODULE += $(MODULE_DIR)/Manifold
+MODULE += $(MODULE_DIR)/Fields
+MODULE += $(MODULE_DIR)/Error_Handlings
+MODULE += $(MODULE_DIR)/Text_and_File_Tools
+MODULE += $(MODULE_DIR)/Prints
+MODULE += $(MODULE_DIR)/Utilities
+MODULE += $(MODULE_DIR)/Checkpoint
+MODULE += $(MODULE_DIR)/Maths/Linear_Algebra
+MODULE += $(MODULE_DIR)/Maths/Field_Analysis
+MODULE += $(MODULE_DIR)/Maths/Equation_Solvings
+MODULE += $(MODULE_DIR)/Maths/Matrix_Solvers
+MODULE += $(MODULE_DIR)/Maths/General
+MODULE += $(MODULE_DIR)/Maths/Spectral_Methods
+MODULE += $(MODULE_DIR)/Maths/Special_Functions
+MODULE += $(MODULE_DIR)/Maths/Calculus
+MODULE += $(MODULE_DIR)/Maths/Complex
+MODULE += $(MODULE_DIR)/Maths/Diff_Geom
+MODULE += $(MODULE_DIR)/Physics
+MODULE += $(MODULE_DIR)/Physics/StressEnergy_Tensor
+MODULE += $(MODULE_DIR)/Physics/EoS
+MODULE += $(MODULE_DIR)/Physics/Observe
+MODULE += $(MODULE_DIR)/Physics/Transformation
+MODULE += $(MODULE_DIR)/Physics/Star
+MODULE += $(MODULE_DIR)/Physics/BlackHole
+MODULE += $(MODULE_DIR)/Physics/System
+MODULE += $(MODULE_DIR)/Physics/Free_Data
+MODULE += $(MODULE_DIR)/Physics/ADM
+MODULE += $(MODULE_DIR)/Physics/Equation
+
+# one can comment out these module(s):
+#MODULE += $(MODULE_DIR)/Prints/pr_hdf5_silo
+
+########################################################################
+###########################
+## Projects to be compiled:
+###########################
+
+PROJECT += $(PROJECT_DIR)/TOV_star
+PROJECT += $(PROJECT_DIR)/BH_NS_Binary_Initial_Data
+#PROJECT += $(PROJECT_DIR)/Poissons/Poisson0
+#PROJECT += $(PROJECT_DIR)/Tests/Modules_Test
+#PROJECT += $(PROJECT_DIR)/Approximate_Killing_Vector
+#PROJECT += $(PROJECT_DIR)/Single_BH_Initial_Data
+
+########################################################################
+##########################
+## compiler and its flags:
+##########################
+
+### which compiler:
+#CC = clang
+#CC = gcc
+CC = icc
+
+### compiler flags:
+OFLAGS += -O3
+#OFLAGS += -fopenmp -g3
+#OFLAGS += -fopenmp -O3 -pg
+#OFLAGS += -fopenmp -Ofast
+
+### define flags for compiler:
+### activate open-mp
+OFLAGS += -fopenmp
+DFLAGS += -DPragma_OpenMP_2d -DPragma_OpenMP_1d -DPragma_OpenMP_Patch
+
+### matrix ccs reader optimizer
+DFLAGS += -DCCS_READER_OPTIMIZE
+
+### activate inline calls
+DFLAGS += -DINLINE_FUNC
+
+########################################################################
+##################################
+## special inlcudes and libraries:
+##################################
+
+# special includes for suit-sparse and related (IMPORTANT)
+SPECIAL_INCS += -I/usr/include/suitesparse
+SPECIAL_LIBS += -lumfpack
+
+# for omp for clang
+#SPECIAL_INCS += -I/usr/lib/gcc/x86_64-linux-gnu
+#SPECIAL_LIBS += -L/usr/lib/gcc/x86_64-linux-gnu
+
+# special includes for gsl
+#SPECIAL_LIBS += -lgsl -lgslcblas
+#SPECIAL_LIBS += -lblas
+
+# special libraries for koko regarding plot and print
+#SPECIAL_INCS += -I/cm/shared/apps/silo/4.10.2/silo/include
+#SPECIAL_LIBS += -L/cm/shared/apps/silo/4.10.2/silo/lib -lsiloh5
+
+########################################################################
