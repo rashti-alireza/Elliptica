@@ -1,0 +1,135 @@
+# computing ADM Mass using (1) Gauss theorem, 
+# and (2) \nebla^2 \psi eq to write the integrand in terms of matter
+# where there is any and also (2) assuming dgConf/dx^i = O(r^-3) at inf.
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = add_and_get_field(name);
+
+`#include "obs_header.h"`
+``
+## NOTE: surface patches and volume patches might have overlap
+## thus, don't remove field if exists.
+`#define add_and_get_field(name) \`
+         `  if (_Ind(#name) < 0) \`
+         `  {ADD_AND_ALLOC_FIELD(name);} \`
+         `  WRITE_v(name);`
+``
+``
+`double obs_ADM_mass_SV_conformal(Observe_T *const obs);`
+`double obs_ADM_mass_SV_conformal(Observe_T *const obs)`
+`{`
+`  double adm_mass = 0;`
+`  struct items_S **adm = obs->items;`
+`  const Uint N = obs->Nitems;`
+`  Uint p;`
+``
+`  for(p = 0; p < N; ++p)`
+`  {`
+`  Patch_T *patch = adm[p]->patch;`
+``
+Declare = 
+{
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # derivative of conformal factor
+ (obj = Field,name = dpsi, rank = D, C_macro);
+
+ # conformal metric 
+ (obj = Field,name = gConf, rank = DD, C_macro);
+
+ # AConf^{ij}
+ (obj = Field,name = AConfIJ, rank = UU, C_macro); 
+
+ # trKij
+ (obj = Field,name = trK, rank = 0, C_macro);
+
+ # normal vector components
+ (obj = Field,name = n, rank = U, none);
+
+ # EConf
+ (obj = Field,name = EConf, rank = 0, C_macro);
+
+ # tr(RConf)
+ (obj = Field,name = trRicciConf, rank = 0, C_macro);
+
+ # integrand S part
+ (obj = Field,name = obs__Ms, rank = 0, C_macro2);
+
+ # integrand V part
+ (obj = Field,name = obs__Mv, rank = 0, C_macro2);
+
+}
+# symmetries:
+Symm[AConfIJ(i,j)  = AConfIJ(j,i)];
+Symm[gConf(i,j)    = gConf(j,i)];
+
+`    Uint nn = patch->nn;`
+`    Uint ijk;`
+``
+# populating the integrands:
+
+# if this is surface integral.
+`    if (adm[p]->surface_integration_flg)`
+`    {`
+
+`      const double *n_U0 = adm[p]->n_U0;`
+`      const double *n_U1 = adm[p]->n_U1;`
+`      const double *n_U2 = adm[p]->n_U2;`
+
+`      for (ijk = 0; ijk < nn; ++ijk)`
+`      {`
+
+Ms = n(i)*dpsi(-i);
+
+`obs__Ms[ijk] = -Ms/(2.*M_PI);`
+
+`      }`
+`    }`
+
+# if this is volume integral.
+
+`    else`
+`    {`
+`      for (ijk = 0; ijk < nn; ++ijk)`
+`      {`
+
+psi5   = psi**5;
+
+psim6  = psi**-6;
+
+psim7  = psim6/psi;
+
+E      = psim6*EConf;
+
+A2     = AConfIJ(i,j)*AConfIJ(ip,jp)*gConf(-i,-ip)*gConf(-j,-jp);
+
+Mv     = psi5*E + (A2*psim7 - trRicciConf*psi - 2*psi5/3*trK**2)/(16*pi);
+
+`obs__Mv[ijk] = Mv;`
+
+`      }`
+`    }`
+``
+`  }`# end of for(p = 0; p < N; ++p)
+``
+## carry out the integration:
+`  adm_mass = obs_integral_SV(obs,"obs__Ms","obs__Mv",'+','+');`
+``
+## remove fields
+`  for(p = 0; p < N; ++p)`
+`  {`
+`    Patch_T *patch = adm[p]->patch;`
+`    remove_field_regex(patch,"^obs__Ms$");`
+`    remove_field_regex(patch,"^obs__Mv$");`
+`  }`
+``
+
+`  return adm_mass;`
+`}`

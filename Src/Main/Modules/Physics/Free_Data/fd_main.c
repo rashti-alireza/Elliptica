@@ -47,7 +47,7 @@ static int set_free_data_params(Physics_T *const phys)
   // ConfKerrSchild: gConf = Kerr-Schild black hole which decomposed conformally so det(gConf) = 1.
   // IsoSchild:  gConf = delta_{ij} for Schwarzchild in isotropic coords.
   // PGSchild:   gConf = delta_{ij} for Schwarzchild in Painleve-Gullstrand coords.
-  // flat+exp(-r^p)*(KerrSchild-flat): gConf_{ij} = delta_{ij} + atten * (gKS_{ij} - delta_{ij}). */
+  // w1*flat+w2*KerrSchild: gConf_{ij} = w1*delta_{ij} + w2*gKS_{ij}. */
   Pset_default(P_"conformal_metric","KerrSchild");
   
   /* how to set Christoffel symbol:
@@ -57,16 +57,16 @@ static int set_free_data_params(Physics_T *const phys)
   // ConfKerrSchild: ChrisConf made of gConf of ConfKerrSchild black hole.
   // IsoSchild:  ChrisConf = 0 for Schwarzchild in isotropic coords.
   // PGSchild:   ChrisConf = 0 for Schwarzchild in Painleve-Gullstrand coords.
-  // flat+exp(-r^p)*(KerrSchild-flat): for gConf_{ij} = delta_{ij} + atten * (gKS_{ij} - delta_{ij}). */
+  // w1*flat+w2*KerrSchild: for gConf_{ij} = w1*delta_{ij} + w2*gKS_{ij}. */
   Pset_default(P_"conformal_Christoffel_symbol","KerrSchild");
   
   /* how to set trK = Tr(K_{ij})
   // options:
-  // maximal:    trK = 0.
+  // zero:       trK = 0.
   // KerrSchild: trK = trK of Kerr-Schild black hole K_{ij}.
   // IsoSchild:  trK = 0 for Schwarzchild in isotropic coordinates.
   // PGSchild:   trK for Schwarzchild in Painleve-Gullstrand coords.
-  // exp(-r^p)*KerrSchild: trK = exp(-r^p)*(KerrSchild trK). */
+  // w*KerrSchild: trK = w*(KerrSchild trK). */
   Pset_default(P_"trK","KerrSchild");
   
   /* how to set conformal Ricci tensor
@@ -76,7 +76,7 @@ static int set_free_data_params(Physics_T *const phys)
   // ConfKerrSchild: use ConfKerrSchild black hole metric .
   // IsoSchild:  use Schwarzchild in isotropic coordinates.
   // PGSchild:   RicciConf_{ij} = 0 for Schwarzchild in Painleve-Gullstrand coords.
-  // flat+exp(-r^p)*(KerrSchild-flat): for gConf_{ij} = delta_{ij} + atten * (gKS_{ij} - delta_{ij}). */
+  // w1*flat+w2*KerrSchild: for gConf_{ij} = w1*delta_{ij} + w2*gKS_{ij}. */
   Pset_default(P_"conformal_Ricci","KerrSchild");
   
   /* how to set MConf^{ij} in AConf^{ij} = 1/sigma (LConf W)^{ij} + MConf^{ij}
@@ -87,8 +87,30 @@ static int set_free_data_params(Physics_T *const phys)
   /* soft parameters:
   // ================
   //
-  // name: "RollOff_radius"
-  // roll off radius used for attenuation of metric, trK etc. 
+  // 
+  // name: "RollOff_function"
+  // the transition function to stich free data (same as w1 and w2).
+  // options:
+  // o.  "exp(-lambda*(r/rmax)^p):r<rmax". # 0 for r >= rmax.
+  // o.  "exp(-lambda*(r/rmax)^p)". # no condition on r.
+  //
+  //
+  // name "RollOff_lambda"
+  // lambda in "RollOff_function".
+  // options: 
+  // o. "|(r-rmin)/(rmax-r)|". # rmin,rmax are apparent horizon and 
+  //                           # roll-off radii, respectively.
+  // o. "constant_1". # a constant function
+  //
+  // name: "RollOff_rmax"
+  // rmax in "RollOff_function".
+  //
+  //
+  // name: "RollOff_power"
+  // p in "RollOff_function".
+  //
+  //
+  //
   */ 
   
   UNUSED(phys);
@@ -219,12 +241,12 @@ static int populate_free_data(Physics_T *const phys)
     free_physics(bh);
   }
   else if 
-   (phys->sys                             == BHNS                             && 
-   Pcmps(P_"conformal_metric"            ,"flat+exp(-r^p)*(KerrSchild-flat)") &&
-   Pcmps(P_"conformal_Christoffel_symbol","flat+exp(-r^p)*(KerrSchild-flat)") &&
-   Pcmps(P_"conformal_Ricci"             ,"flat+exp(-r^p)*(KerrSchild-flat)") &&
-   Pcmps(P_"trK"                         ,"exp(-r^p)*KerrSchild")             &&
-   Pcmps(P_"MConfIJ"                     ,"zero")                              )
+   (phys->sys                             == BHNS                  && 
+   Pcmps(P_"conformal_metric"            ,"w1*flat+w2*KerrSchild") &&
+   Pcmps(P_"conformal_Christoffel_symbol","w1*flat+w2*KerrSchild") &&
+   Pcmps(P_"conformal_Ricci"             ,"w1*flat+w2*KerrSchild") &&
+   Pcmps(P_"trK"                         ,"w*KerrSchild")          &&
+   Pcmps(P_"MConfIJ"                     ,"zero")                   )
   {
     /* important to have dedicated BH physics to read correct parameters */
     Physics_T *const bh = init_physics(phys,BH);
@@ -237,8 +259,8 @@ static int populate_free_data(Physics_T *const phys)
     fd_extrinsic_curvature_KerrSchild(bh,".*","igConf","ChrisConf",
                                       "adm_Kij","trK",0);
     
-    /* modify metric to be "flat+exp(-r^p)*(KerrSchild-flat)" */
-    fd_modify_gConf_igConf_dgConf_to_flat_expmrpKS(bh,".*","gConf",
+    /* modify metric to be "w1*flat+w2*KerrSchild" */
+    fd_modify_gConf_igConf_dgConf_to_w1flat_w2KS(bh,".*","gConf",
                                                  "igConf","dgConf");
     
     fd_compatible_Christoffel_symbol(phys,".*","igConf",
@@ -248,10 +270,30 @@ static int populate_free_data(Physics_T *const phys)
     fd_conformal_Ricci(phys,".*","igConf","ChrisConf","dChrisConf",
                        "RicciConf","trRicciConf");
     
-    /* modify trK to exp(-r^p)*trK and computer its derivatives */
-    fd_modify_trK_to_expmrptrK_compute_dtrK(bh,".*","trK","dtrK");
+    /* modify trK to w*trK and computer its derivatives */
+    fd_modify_trK_to_wtrK_compute_dtrK(bh,".*","trK","dtrK");
 
     free_physics(bh);
+  }
+  else if 
+   (
+   Pcmps(P_"conformal_metric"            ,"flat") &&
+   Pcmps(P_"conformal_Christoffel_symbol","flat") &&
+   Pcmps(P_"conformal_Ricci"             ,"flat") &&
+   Pcmps(P_"trK"                         ,"zero") &&
+   Pcmps(P_"MConfIJ"                     ,"zero")
+   )
+  {
+    fd_populate_gConf_igConf_dgConf_flat(phys,".*","gConf",
+                                              "igConf","dgConf");
+    fd_compatible_Christoffel_symbol(phys,".*","igConf",
+                                     "dgConf","ChrisConf");
+    fd_1st_derivative_Christoffel_symbol(phys,".*","dChrisConf");
+
+    fd_conformal_Ricci(phys,".*","igConf","ChrisConf","dChrisConf",
+                       "RicciConf","trRicciConf");
+
+    fd_trace_extrinsic_curvature_zero(phys,".*","trK","dtrK");
   }
   else
     Error0(NO_OPTION);

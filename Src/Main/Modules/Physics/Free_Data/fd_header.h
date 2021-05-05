@@ -25,6 +25,16 @@ struct Analytic_Func_Arg_S
   double dZ_D0,dZ_D1,dZ_D2;
 };
 
+/* struct for transition functions */
+struct Transition_S
+{
+ double r;/* independent variable */
+ double rmin;/* constant r, like AH radius */
+ double rmax;/* constant r, like roll-off rmax */
+ double p;/* for example: rolloff power */
+ double (*lambda)(struct Transition_S *const ts);/* if need more function */
+};
+
 int fd_main(Physics_T *const phys);
 void fd_add_fields_gConf_igConf_dgConf(Grid_T *const grid);
 void fd_add_fields_ChrisConf_dChrisConf(Grid_T *const grid);
@@ -248,7 +258,7 @@ fd_populate_beta_ConfKerrSchild
  );
 
 void 
-fd_modify_gConf_igConf_dgConf_to_flat_expmrpKS
+fd_modify_gConf_igConf_dgConf_to_w1flat_w2KS
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -258,13 +268,18 @@ fd_modify_gConf_igConf_dgConf_to_flat_expmrpKS
  );
 
 void 
-fd_modify_trK_to_expmrptrK_compute_dtrK
+fd_modify_trK_to_wtrK_compute_dtrK
  (
  Physics_T *const phys,
  const char *const region,
  const char *const trK,
  const char *const dtrK
  );
+
+void fd_trace_extrinsic_curvature_zero(Physics_T *const phys,
+                                       const char *const region,
+                                       const char *const trK,
+                                       const char *const dtrK);
 
 #endif
 

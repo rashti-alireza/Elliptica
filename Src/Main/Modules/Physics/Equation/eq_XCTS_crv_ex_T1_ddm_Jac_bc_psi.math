@@ -1,0 +1,190 @@
+# Jacobian for psi (conformal factor) BC equation:
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+# C macors
+C_macro  = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
+C_macro3 = JACOBIAN_DERIVATIVE(name);
+C_macro4 = READ_v_UNUSED(name);
+
+# C arguments for jacobian of derivatives
+C_arg = (j_name,ijk,lmn);
+C_arg2 = [ijk == lmn]; # for kd
+
+# main function:
+`#include "eq_header.h"`;
+`#include "maths_equation_solvings_lib.h"`;
+``
+`void *eq_XCTS_curve_exc_T1_ddm_jacobian_bc_psi(void *vp1,void *vp2);`;
+`void *eq_XCTS_curve_exc_T1_ddm_jacobian_bc_psi(void *vp1,void *vp2)\n{`;
+
+# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
+# patch, S, B, E_Trans, node, I0, Ni, Nj, K0, Nk, i,j,k.
+# THUS, DO NOT DEFINE THEM AGAIN.
+`  DDM_SCHUR_JACOBIAN_BC_DECLARE`;
+`  Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */`;
+`  const double kd[2] = {0.,1.};/* Kronecker delta */`;
+#`  const double is_Aij_on = 1.;`
+``
+# declare for Cpi
+Declare = 
+{
+ # Kroneker delta
+ (obj = field, name = kd, rank = 0, none,C_arg2);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # trKij
+ (obj = Field,name = trK, rank = 0, C_macro);
+
+ # _A^{ij}
+ (obj = Field,name = AConfIJ, rank = UU, C_macro4);
+
+ # conformal factor first derivative 
+ (obj = Field,name = dpsi, rank = D, C_macro);
+
+ # conformal metric 
+ (obj = Field,name = gConf, rank = DD, C_macro4);
+
+ # normal vector at the horizon
+ (obj = Field,name = bh_sConf, rank = U, C_macro);
+
+ # first derivative of normal vector at the horizon
+ (obj = Field,name = dbh_sConf, rank = UD, C_macro4);
+
+ # jacobian derivative 1st order :
+ (obj = Field,name = Jpsi, rank = D, C_macro3,C_arg);
+
+ # conformal connections
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro4);
+
+ # variable
+ (obj = Variable,name = is_Aij_on, none);
+}
+
+# symmetries for Cpi
+Symm[AConfIJ(i,j)   = AConfIJ(j,i)];
+Symm[gConf(i,j)    = gConf(j,i)];
+Symm[ChrisConf(i,j,k)  = ChrisConf(i,k,j)];
+
+
+###########################################################################
+#    NOTE1: There are different calculation parts, in each part use 
+# different name for new variables.
+#    NOTE2: In Schur domain decomposition method we need two types of
+# matrices for Jacobian of Newton-Raphson scheme, matrix B and matrix E. 
+# Let's say Jx = -F in Newton-Raphson scheme; then,
+# B[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# ijk takes their values ON BOUNDARY POINTS of a patch, 
+# and lmn runs over ALL BUT the interface points (interface
+# points are those located between two patches).
+# E[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# ijk takes their values ON BOUNDARY POINTS and lmn runs over INTERFACE points.
+#
+#    PRAGMATICALLY:
+#  If you have Dirichlet B.C. for outer-boundary (inner-boundary), 
+# only fill B matrix with the jacobian of the B.C. equation, 
+# and for E matrix put outerB_Epart = 0 (innerB_Epart = 0).
+#  If you have Neumann B.C. or any B.C. that has derivative in it
+# fill both B matrix and E matrix part WITH THE SAME EQUATION, you just
+# need to write two duplicated equations for each part, 
+# and if you're using interim variables use different names for each part.
+#
+#    NOTE3: For each part which doesn't exist, let it be 0.
+###########################################################################
+
+
+# OUTER BOUNDARY LIKE INFINITY
+`  if (patch->outerB)`;
+`  {`;
+
+
+###############################################
+####### B matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+`  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN\n`;
+outerB_Bpart = kd;
+
+
+`  B[i][j] = outerB_Bpart;\n`;
+`  DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE\n`;
+###############################################
+
+
+###############################################
+###### E matrix: J[ijk][lmn] in Jx = -F #######
+###############################################
+`  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN\n`;
+outerB_Epart = 0;
+
+
+`  E_Trans[j][i] = outerB_Epart;\n`;
+`  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE`;
+###############################################
+
+
+`  }/* end of if (patch->outerB) */`;
+
+# INNER BOUNDARY LIKE BLACK HOLE HORIZON #
+`  else if (patch->innerB)`;
+`  {`;
+
+
+###############################################
+####### B matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+`  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN\n`;
+
+_DiHSi_b     = (dbh_sConf(j,i) + ChrisConf(j,i,l)*bh_sConf(-l))*KD(-j,-i);
+
+# with AConfIJsisj
+#B_t1         = 3/4*(psi**-4)*AConfIJ(i,j)*gConf(-i,-l)*gConf(-j,-m)*bh_sConf(l)*bh_sConf(m);
+#innerB_Bpart = bh_sConf(i)*Jpsi(-i) -kd*(-_DiHSi_b/4+trK*(psi**2)/2+is_Aij_on*B_t1);
+
+# with no AConfIJsisj since it's multiplied by psi3:
+psi2         = psi**2;
+psi3         = psi**3;
+innerB_Bpart = psi3*bh_sConf(i)*Jpsi(-i)      + \
+               kd*3*psi2*bh_sConf(i)*dpsi(-i) + \
+	       kd*psi3*(_DiHSi_b-trK*(psi2));
+
+
+`  B[i][j] = innerB_Bpart;\n`;
+`  DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE\n`;
+###############################################
+
+
+###############################################
+####### E matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+`  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN\n`;
+
+_DiHSi_e    = (dbh_sConf(j,i) + ChrisConf(j,i,l)*bh_sConf(-l))*KD(-j,-i);
+
+# with AConfIJsisj 
+#E_t1 = 3/4*(psi**-4)*AConfIJ(i,j)*gConf(-i,-l)*gConf(-j,-m)*bh_sConf(l)*bh_sConf(m);
+#innerB_Epart = bh_sConf(i)*Jpsi(-i) -kd*(-_DiHSi_e/4+trK*(psi**2)/2+is_Aij_on*E_t1);
+
+# with no AConfIJsisj since it's multiplied by psi3:
+psi2_         = psi**2;
+psi3_         = psi**3;
+innerB_Epart = psi3_*bh_sConf(i)*Jpsi(-i)      + \
+               kd*3*psi2_*bh_sConf(i)*dpsi(-i) + \
+	       kd*psi3_*(_DiHSi_e-trK*(psi2_));
+
+`  E_Trans[j][i] = innerB_Epart;\n`;
+`  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE\n`;
+###############################################
+
+
+`  }/* end of else if (patch->innerB) */\n`;
+
+`  return 0;`;
+`}`;
+

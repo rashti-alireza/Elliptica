@@ -5,6 +5,8 @@
 #include "core_lib.h"
 #include "fields_lib.h"
 #include "physics_lib.h"
+#include "checkpoint_lib.h"
+
 
 #define MAX_ARR   (400)
 #define MAX_ARRx2 (2*MAX_ARR)

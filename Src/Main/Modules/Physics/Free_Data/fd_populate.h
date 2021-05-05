@@ -4,6 +4,31 @@
 
 #define STR_LEN (99)
 
+/* handy macro for transition function */
+#define SET_TRANSITION_FUNC_BH_TYPE0  \
+  const double r_min = Getd("min_radius");\
+  const double r_max = Getd("RollOff_rmax");\
+  const double p_att = Getd("RollOff_power");\
+  double (*transit)(struct Transition_S *const ts)  = 0;\
+  double (*lambda)(struct Transition_S *const ts)   = 0;\
+  \
+  assert(r_min > 0); assert(r_max > 0);\
+  \
+  IF_sval("RollOff_function","exp(-lambda*(r/rmax)^p):r<rmax")\
+   {transit = f_exp_type1;}\
+  else IF_sval("RollOff_function","exp(-lambda*(r/rmax)^p)")\
+   {transit = f_exp_type2;}\
+  else\
+   {Error0("No such option for RollOff_function.");}\
+  \
+  IF_sval("RollOff_lambda","|(r-rmin)/(rmax-r)|")\
+   {lambda = f_ratio_type1;}\
+  else IF_sval("RollOff_lambda","constant_1")\
+   {lambda = f_constant_1;}\
+  else\
+   {Error0("No such option for RollOff_lambda.");}
+  
+
 void 
 fd_populate_gConf_igConf_dgConf_KerrSchild
  (
@@ -180,7 +205,7 @@ fd_populate_beta_ConfKerrSchild
  );
 
 void 
-fd_modify_gConf_igConf_dgConf_to_flat_expmrpKS
+fd_modify_gConf_igConf_dgConf_to_w1flat_w2KS
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -190,7 +215,7 @@ fd_modify_gConf_igConf_dgConf_to_flat_expmrpKS
  );
 
 void 
-fd_modify_trK_to_expmrptrK_compute_dtrK
+fd_modify_trK_to_wtrK_compute_dtrK
  (
  Physics_T *const phys,
  const char *const region,
@@ -199,10 +224,19 @@ fd_modify_trK_to_expmrptrK_compute_dtrK
  );
 
 void 
-fd_populate_alpha_expmrp_KerrSchild
+fd_populate_alpha_wKerrSchild
  (
  Physics_T *const phys,
  const char *const region,
  const char *const Alpha
  );
+
+static double f_constant_1(struct Transition_S *const ts);
+static double f_ratio_type1(struct Transition_S *const ts);
+static double f_exp_type1(struct Transition_S *const ts);
+static double f_exp_type2(struct Transition_S *const ts);
+void fd_trace_extrinsic_curvature_zero(Physics_T *const phys,
+                                       const char *const region,
+                                       const char *const trK,
+                                       const char *const dtrK);
 

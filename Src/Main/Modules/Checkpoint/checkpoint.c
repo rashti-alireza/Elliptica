@@ -10,18 +10,21 @@
 // and disregards its value obtained from the checkpoint and if
 // the parameter does not exist it is added:
 // e.g.
-// modify_checkpoint_par: n_a = 4(x6)
-// modify_checkpoint_par: Solving_Max_Number_of_Iteration = 0 
+// `CHECKPOINT_SET_PARAM_` n_a = 4(x6)
+// `CHECKPOINT_SET_PARAM_` Solving_Max_Number_of_Iteration = 0 
 // 
 // if you wanna change the output directories after loading from
 // a checkpoint file change the following in parameter files
 // and note that the folders must be made already:
-// modify_checkpoint_par:`P_`my_directory      = path1
-// modify_checkpoint_par:`P_`top_directory = path2
-// modify_checkpoint_par:`P_`Diagnostics           = path3
-// 
-// where `P_` is the prefix of the project. */
-static Uint n_modified_checkpoint_par;/* number of modify_checkpoint_par */
+// `CHECKPOINT_SET_PARAM_`      top_directory = path1
+// `CHECKPOINT_SET_PARAM_` `P_` my_directory  = path2
+// `CHECKPOINT_SET_PARAM_` `P_` Diagnostics   = path3
+//
+// where `CHECKPOINT_SET_PARAM_` is the macro to instruct the 
+// checkpoint param to change and `P_` is the prefix of the project. */
+
+
+static Uint n_modified_checkpoint_par;/* number of modified checkpoint par */
 static Parameter_T **modified_checkpoint_par;/* modified pars in par file
                                            // to be used after loading of
                                            // the checkpoint file. */
@@ -347,7 +350,7 @@ static void find_and_save_modified_checkpoint_pars(void)
 {
   modified_checkpoint_par   = 0;/* global var in this file */
   n_modified_checkpoint_par = 0;/* global var in this file */
-  const char *const keyword_prefix = "modify_checkpoint_par:";
+  const char *const keyword_prefix = CHECKPOINT_SET_PARAM_ ;
   char str[MAX_ARR],*pstr;
   Uint np,nmpar;
   

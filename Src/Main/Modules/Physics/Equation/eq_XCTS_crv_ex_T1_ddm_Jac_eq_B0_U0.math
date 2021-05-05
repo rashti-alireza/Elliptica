@@ -1,0 +1,202 @@
+# Jacobian equation for B0_U0
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+# C macors
+C_macro  = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
+C_macro3 = JACOBIAN_DERIVATIVE(name);
+C_macro4 = READ_v_UNUSED(name);
+
+# C arguments for jacobian of derivative
+C_arg = (j_name,ijk,lmn);
+C_arg2 = [ijk == lmn]; # for kd
+C_arg3 =;# no argument for U
+
+# main function:
+`#include "eq_header.h"`;
+`#include "maths_equation_solvings_lib.h"`;
+``
+`void *eq_XCTS_curve_exc_T1_ddm_jacobian_eq_B0_U0(void *vp1,void *vp2);`;
+`void *eq_XCTS_curve_exc_T1_ddm_jacobian_eq_B0_U0(void *vp1,void *vp2)\n{`;
+
+# NOTE: THE FOLLOWING MACRO DECLARES OR DEFINES THE FOLLOWING VARIABLES:
+# patch, S, B, E_Trans, node, Ni, Nj, K0, Nk, i,j,k
+# THUS, DO NOT DEFINE THEM AGAIN.
+`  DDM_SCHUR_JACOBIAN_EQ_DECLARE`;
+`  Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */`;
+`  const double kd[2]   = {0.,1.};/* Kronecker delta */`;
+
+# declare for cpi
+Declare = 
+{
+ # Kroneker delta
+ (obj = field, name = kd, rank = 0, none,C_arg2); 
+
+ # Jacobian: 1st derivative
+ (obj = Field,name = JB0, rank = D, C_macro3,C_arg);
+ 
+ # Jacobian: 2nd derivative
+ (obj = Field,name = JJB0, rank = DD, C_macro3,C_arg);
+ 
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+ 
+ # conformal factor pd
+ (obj = Field,name = dpsi, rank = D, C_macro4);
+ 
+ # alphaPsi = alpha*psi
+ (obj = Field,name = alphaPsi, rank = 0, C_macro);
+
+ # alphaPsi pd
+ (obj = Field,name = dalphaPsi, rank = D, C_macro4);
+
+ # Ricc
+ (obj = Field,name = RicciConf, rank = DD, C_macro4);
+
+ # conformal metric inverse
+ (obj = Field,name = igConf, rank = UU, C_macro4);
+
+ # conformal connections
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro4);
+
+ # conformal connections 1st derivative
+ (obj = Field,name = dChrisConf, rank = UDDD, C_macro4);
+
+}
+
+# symmetries for Cpi:
+Symm[JJB0(j,k)         = JJB0(k,j)];
+Symm[igConf(i,j)      = igConf(j,i)];
+Symm[RicciConf(i,j)         = RicciConf(j,i)];
+Symm[ChrisConf(i,j,k)     = ChrisConf(i,k,j)];
+Symm[dChrisConf(i,j,k,l)  = dChrisConf(i,k,j,l)];
+
+##########################################################################
+#    NOTE1: There are different calculation parts, in each part use 
+# different names for new variables.
+#
+#    NOTE2: In Schur domain decomposition method we need two types of
+# matrices for Jacobian of Newton-Raphson scheme, matrix B and matrix E. 
+# Let's say Jx = -F in Newton-Raphson scheme; then,
+# B[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# ijk takes their values ON INNER POINTS
+# of a patch, namley those collocated points that don't reach boundary of
+# the patch, and lmn runs over ALL BUT the interface points (interface
+# points are those located between two patches).
+# E[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# ijk takes their values ON INNER POINTS and lmn runs over INTERFACE points.
+#
+#    PRAGMATICALLY:
+# Fill both B matrix and E matrix part WITH THE SAME EQUATION, you just
+# need to write two duplicated equations for each part, 
+# and if you're using interim variables use different names for each part.
+#
+#    NOTE3: For each part which doesn't exist, let it be 0.
+##########################################################################
+
+
+###############################################
+####### B matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+`  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n`;
+
+# for AConfIJ
+dLnOf_alpha_B(i) = dalphaPsi(i)/alphaPsi -7*dpsi(i)/psi;
+
+t1_B(i) =  igConf(-j,-m)*(KD0i(i)*JJB0(j,m) + dChrisConf(i,m,l,j)*kd*KD0i(-l));
+
+t2_B(i) =  igConf(-j,-m)*( ChrisConf(i,m,l)*KD0i(-l)*JB0(j) + ChrisConf(i,j,n)*KD0i(-n)*JB0(m));
+
+t3_B(i) =  igConf(-j,-m)*ChrisConf(i,j,n)*KD(-n,-np)*ChrisConf(np,m,l)*KD0i(-l)*kd;
+ 
+t4_B(i) = -igConf(-j,-m)*(ChrisConf(n,m,j)*KD0i(i)*JB0(-n)+ChrisConf(n,m,j)*KD(-n,-np)*ChrisConf(i,np,l)*KD0i(-l)*kd);
+
+t5_B(i) =  1/3*igConf(i,-m)*(KD0i(-j)*JJB0(j,m) + KD(-jp,-j)*dChrisConf(jp,j,l,m)*KD0i(-l)*kd);
+
+t6_B(i) =  1/3*igConf(i,-m)*(ChrisConf(j,m,l)*KD0i(-l)*JB0(-j) + KD(-jp,-j)*ChrisConf(jp,j,n)*KD0i(-n)*JB0(m));
+
+t7_B(i) =  1/3*igConf(i,-m)*KD(-j,-jp)*KD(-l,-lp)*ChrisConf(j,m,l)*ChrisConf(lp,jp,n)*KD0i(-n)*kd;
+
+t8_B(i) = -1/3*igConf(i,-m)*(ChrisConf(n,m,j)*KD0i(-j)*JB0(-n)+KD(-l,-lp)*KD(-j,-jp)*ChrisConf(l,m,j)*ChrisConf(jp,lp,n)*KD0i(-n)*kd);
+
+t9_B(i) = igConf(i,-m)*RicciConf(m,l)*KD0i(-l)*kd;
+
+# for AConfIJ
+contB      = KD0i(-m)*JB0(m)+KD(-mp,-m)*ChrisConf(mp,m,l)*KD0i(-l)*kd;
+t1p10_B(i) = dLnOf_alpha_B(-j)*contB*2/3*igConf(i,j);
+t2p10_B(i) = -dLnOf_alpha_B(-j)*igConf(j,-m)*(KD0i(i)*JB0(m)+ChrisConf(i,m,l)*KD0i(-l)*kd);
+t3p10_B(i) = -dLnOf_alpha_B(-j)*igConf(i,-m)*(KD0i(j)*JB0(m)+ChrisConf(j,m,l)*KD0i(-l)*kd);
+t10_B(i)   = t1p10_B(i)+t2p10_B(i)+t3p10_B(i);
+
+# with AConfIJ and RicciConf
+Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(i)+t10_B(i);
+
+# with Aij and no RicciConf
+#Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t10_B(i);
+
+# with RicciConf and no AConfIJ 
+# Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(i);
+
+
+`  B[i][j] = Bpart_U0;\n`;
+`  DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE\n`;
+###############################################
+
+
+###############################################
+###### E matrix: J[ijk][lmn] in Jx = -F #######
+###############################################
+`  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
+
+# for AConfIJ
+dLnOf_alpha_E(i) = dalphaPsi(i)/alphaPsi -7*dpsi(i)/psi;
+
+t1_E(i) =  igConf(-j,-m)*(KD0i(i)*JJB0(j,m) + dChrisConf(i,m,l,j)*kd*KD0i(-l));
+
+t2_E(i) =  igConf(-j,-m)*( ChrisConf(i,m,l)*KD0i(-l)*JB0(j)+ChrisConf(i,j,n)*KD0i(-n)*JB0(m));
+
+t3_E(i) =  igConf(-j,-m)*ChrisConf(i,j,n)*KD(-n,-np)*ChrisConf(np,m,l)*KD0i(-l)*kd;
+ 
+t4_E(i) = -igConf(-j,-m)*(ChrisConf(n,m,j)*KD0i(i)*JB0(-n)+ChrisConf(n,m,j)*KD(-n,-np)*ChrisConf(i,np,l)*KD0i(-l)*kd);
+
+t5_E(i) =  1/3*igConf(i,-m)*(KD0i(-j)*JJB0(j,m) + KD(-jp,-j)*dChrisConf(jp,j,l,m)*KD0i(-l)*kd);
+
+t6_E(i) =  1/3*igConf(i,-m)*(ChrisConf(j,m,l)*KD0i(-l)*JB0(-j) + KD(-jp,-j)*ChrisConf(jp,j,n)*KD0i(-n)*JB0(m));
+
+t7_E(i) =  1/3*igConf(i,-m)*KD(-j,-jp)*KD(-l,-lp)*ChrisConf(j,m,l)*ChrisConf(lp,jp,n)*KD0i(-n)*kd;
+
+t8_E(i) = -1/3*igConf(i,-m)*(ChrisConf(n,m,j)*KD0i(-j)*JB0(-n)+KD(-l,-lp)*KD(-j,-jp)*ChrisConf(l,m,j)*ChrisConf(jp,lp,n)*KD0i(-n)*kd);
+
+t9_E(i) = igConf(i,-m)*RicciConf(m,l)*KD0i(-l)*kd;
+
+# for AConfIJ
+contE      = KD0i(-m)*JB0(m)+KD(-mp,-m)*ChrisConf(mp,m,l)*KD0i(-l)*kd;
+t1p10_E(i) = dLnOf_alpha_E(-j)*contE*2/3*igConf(i,j);
+t2p10_E(i) = -dLnOf_alpha_E(-j)*igConf(j,-m)*(KD0i(i)*JB0(m)+ChrisConf(i,m,l)*KD0i(-l)*kd);
+t3p10_E(i) = -dLnOf_alpha_E(-j)*igConf(i,-m)*(KD0i(j)*JB0(m)+ChrisConf(j,m,l)*KD0i(-l)*kd);
+t10_E(i)   = t1p10_E(i)+t2p10_E(i)+t3p10_E(i);
+
+# with AConfIJ and RicciConf
+Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t9_E(i)+t10_E(i);
+
+# with Aij and no RicciConf
+#Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t10_E(i);
+
+# with RicciConf and no AConfIJ
+# Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t9_E(i);
+
+
+`  E_Trans[j][i] = Epart_U0;\n`;
+`  DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE\n`;
+###############################################
+
+`  return 0;`;
+`}`;
+
+# TO OPTIMIZE the function one can trim off all redunted components:
+Command["sed -i -E '/^\s{2}double [^(dLnOf_alpha)]\w+_U[12] =/,/;$/d'"];

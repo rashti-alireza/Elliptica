@@ -141,9 +141,11 @@ TOV_T *TOV_solution(TOV_T *const TOV)
     printf("--> NS radius (Isotropic Coords.)     = %+e\n",TOV->rbar[TOV->N-1]);
     printf("--> ADM mass                          = %+e\n",TOV->ADM_m);
     printf("--> baryonic mass                     = %+e\n",TOV->bar_m);
+    printf("--> compactness                       = %+e\n",TOV->ADM_m/TOV->rbar[TOV->N-1]);
     printf("--> psi at the center                 = %+e\n",TOV->psi[0]);
     printf("--> central enthalpy                  = %+e\n",TOV->h[0]);
     printf("--> central pressure                  = %+e\n",TOV->p[0]);
+    
     tov_eos->h = TOV->h_cent;
     printf("--> central energy density            = %+e\n",tov_eos->energy_density(tov_eos));
     printf("--> central rest_mass_density         = %+e\n",tov_eos->rest_mass_density(tov_eos));

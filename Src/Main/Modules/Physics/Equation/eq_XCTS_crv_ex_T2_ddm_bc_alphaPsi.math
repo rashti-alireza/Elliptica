@@ -1,0 +1,88 @@
+# alphaPsi BC equation: 
+# Neumann B.C. :
+# \frac{\partial \alpha}{\partial r} = 0.
+
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
+C_arg1   = ;
+
+# main function:
+`#include "eq_header.h"`;
+`#include "maths_equation_solvings_lib.h"`;
+``
+`void *eq_XCTS_curve_exc_T2_ddm_bc_alphaPsi(void *vp1,void *vp2);`;
+`void *eq_XCTS_curve_exc_T2_ddm_bc_alphaPsi(void *vp1,void *vp2)\n{`;
+
+# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
+# patch, S, map, F, node, N, n.
+# THUS, DO NOT DEFINE THEM AGAIN.
+`  DDM_SCHUR_BC_DECLARE`;
+`  Uint ijk;/* node index */`;
+
+# declare for Cpi
+Declare = 
+{
+ # alphaPsi
+ (obj = Field,name = alphaPsi, rank = 0, C_macro);
+
+ # dalphaPsi
+ (obj = Field,name = dalphaPsi, rank = D, C_macro);
+
+ # conformal factor
+ #(obj = Field,name = psi, rank = 0, C_macro);
+
+ # dconformal factor
+ #(obj = Field,name = dpsi, rank = D, C_macro);
+
+ # coords from BH's center
+ #(obj = Field,name = x, rank = U, none,C_arg1);
+
+ # normal vector at the horizon
+ (obj = Field,name = bh_sConf, rank = U, C_macro);
+
+}
+# symmetries for Cpi
+# no symmetry
+
+
+# NOTE: write each equation in terms of ijk point, and if there is no
+# outer boundary or inner boundary equation, let it be 0.
+
+# OUTER BOUNDARY LIKE INFINITY #
+`  if (patch->outerB)/* at outer boundary */`;
+`  {`;
+`  DDM_SCHUR_BC_OPEN\n`;
+
+# bc equation for outer boundary at ijk point:
+outerB_F = alphaPsi - 1;
+
+
+`  F[map[ijk]] = outerB_F;\n`;
+`  DDM_SCHUR_BC_CLOSE`;
+`  }/* end of if (patch->outerB) */`;
+
+# INNER BOUNDARY LIKE BLACK HOLE HORIZON #
+`  else if (patch->innerB)/* at inner boundary */`;
+`  {`
+
+`  DDM_SCHUR_BC_OPEN\n`;
+``
+
+# dalphaPsi/dr = 0.
+innerB_F = bh_sConf(i)*dalphaPsi(-i);
+
+`  F[map[ijk]] = innerB_F;\n`;
+`  DDM_SCHUR_BC_CLOSE`;
+
+`  }/* end of else if (patch->innerB) */`;
+
+`  return 0;`;
+`}`;
+

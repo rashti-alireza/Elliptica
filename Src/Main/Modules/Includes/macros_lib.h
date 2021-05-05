@@ -20,7 +20,6 @@
 
 /* some general macros */
 #define FOLDER_AFFIX "_%02d"/* that's how folders are named */
-#define CHECKPOINT_FILE_NAME "checkpoint.dat"
 
 /* some useful functions and commands */
 #define UNUSED(x) (void)(x);

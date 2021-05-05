@@ -300,7 +300,6 @@ void bh_tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
 void bh_tune_BH_chi_simple(Physics_T *const phys)
 {
   const double W1        = Getd("spin_update_weight");
-  const double W2        = 1.-W1;
   const double dchi_tol  = Getd("spin_tolerance");
   const double chi_x     = Getd("chi_x");
   const double chi_y     = Getd("chi_y");
@@ -308,6 +307,7 @@ void bh_tune_BH_chi_simple(Physics_T *const phys)
   const double omega_x   = Getd("Omega_x");
   const double omega_y   = Getd("Omega_y");
   const double omega_z   = Getd("Omega_z");
+  const double omega_s   = fabs(sysGetd("angular_velocity"));/* scale */
   double omega[3]        = {0.};
   double s[3]            = {0.};
   double chi_current[3]  = {0.};
@@ -342,17 +342,17 @@ void bh_tune_BH_chi_simple(Physics_T *const phys)
   }
   if (GRT(fabs(dchi[0]),dchi_tol))
   {
-    omega[0] = W2*omega_x-W1*dchi[0];
+    omega[0] = omega_x+W1*dchi[0]*omega_s;
     Setd("Omega_x",omega[0]);
   }
   if (GRT(fabs(dchi[1]),dchi_tol))
   {
-    omega[1] = W2*omega_y-W1*dchi[1];
+    omega[1] = omega_y+W1*dchi[1]*omega_s;
     Setd("Omega_y",omega[1]);
   }
   if (GRT(fabs(dchi[2]),dchi_tol))
   {
-    omega[2] = W2*omega_z-W1*dchi[2];
+    omega[2] = omega_z+W1*dchi[2]*omega_s;
     Setd("Omega_z",omega[2]);
   }
 }
@@ -376,9 +376,13 @@ void bh_update_inner_BC(Physics_T *const phys)
     {
       fd_populate_alpha_KerrSchild(phys,"BH_around_IB","ibc_alpha");
     }
-    else IF_sval("Eq_inner_BC_alpha","exp(-r^p)*KerrSchild")
+    else IF_sval("Eq_inner_BC_alpha","w*KerrSchild")
     {
-      fd_populate_alpha_expmrp_KerrSchild(phys,"BH_around_IB","ibc_alpha");
+      fd_populate_alpha_wKerrSchild(phys,"BH_around_IB","ibc_alpha");
+    }
+    else IF_sval("Eq_inner_BC_alpha","none")
+    {
+      ;
     }
     else
     {
@@ -397,6 +401,10 @@ void bh_update_inner_BC(Physics_T *const phys)
     else IF_sval("Eq_inner_BC_beta","alpha+Omega*r")
     {
       set_beta_inner_bc_alpha_omegaXr(phys,"BH_around_IB","ibc_beta");
+    }
+    else IF_sval("Eq_inner_BC_beta","none")
+    {
+      ;
     }
     else
     {

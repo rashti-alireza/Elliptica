@@ -1,0 +1,72 @@
+# alphaPsi BC equation:
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
+
+# main function:
+`#include "eq_header.h"`;
+`#include "maths_equation_solvings_lib.h"`;
+``
+`void *eq_XCTS_curve_exc_T1_ddm_bc_alphaPsi(void *vp1,void *vp2);`;
+`void *eq_XCTS_curve_exc_T1_ddm_bc_alphaPsi(void *vp1,void *vp2)\n{`;
+
+# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
+# patch, S, map, F, node, N, n.
+# THUS, DO NOT DEFINE THEM AGAIN.
+`  DDM_SCHUR_BC_DECLARE`;
+`  Uint ijk;/* node index */`;
+
+# declare for Cpi
+Declare = 
+{
+ # alphaPsi
+ (obj = Field,name = alphaPsi, rank = 0, C_macro);
+
+ #  conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # inner BC value for lapse
+ (obj = Field,name = ibc_alpha, rank = 0, C_macro);
+
+}
+
+# symmetries for Cpi
+# no symmetry
+
+# NOTE: write each equation in terms of ijk point, and if there is no
+# outer boundary or inner boundary equation, let it be 0.
+
+# OUTER BOUNDARY LIKE INFINITY #
+`  if (patch->outerB)/* at outer boundary */`;
+`  {`;
+`  DDM_SCHUR_BC_OPEN\n`;
+
+# bc equation for outer boundary at ijk point:
+outerB_F = alphaPsi - 1;
+
+
+`  F[map[ijk]] = outerB_F;\n`;
+`  DDM_SCHUR_BC_CLOSE`;
+`  }/* end of if (patch->outerB) */`;
+
+# INNER BOUNDARY LIKE BLACK HOLE HORIZON #
+`  else if (patch->innerB)/* at inner boundary */`;
+`  {`;
+`  DDM_SCHUR_BC_OPEN\n`;
+``
+innerB_F = alphaPsi - ibc_alpha*psi;
+
+`  F[map[ijk]] = innerB_F;\n`;
+`  DDM_SCHUR_BC_CLOSE`;
+
+`  }/* end of else if (patch->innerB) */`;
+
+`  return 0;`;
+`}`;
+

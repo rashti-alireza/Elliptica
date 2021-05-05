@@ -1,0 +1,143 @@
+# Jacobian for phi BC equation:
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+# C macors
+C_macro  = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
+C_macro3 = JACOBIAN_DERIVATIVE(name);
+
+# C arguments for jacobian of derivatives
+C_arg = (j_name,ijk,lmn);
+C_arg2 = [ijk == lmn]; # for kd
+
+# main function:
+`#include "eq_header.h"`;
+`#include "maths_equation_solvings_lib.h"`;
+``
+`void *eq_XCTS_curve_T1_ddm_jacobian_bc_phi(void *vp1,void *vp2);`;
+`void *eq_XCTS_curve_T1_ddm_jacobian_bc_phi(void *vp1,void *vp2)\n{`;
+
+# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
+# patch, S, B, E_Trans, node, I0, Ni, Nj, K0, Nk, i,j,k.
+# THUS, DO NOT DEFINE THEM AGAIN.
+`  DDM_SCHUR_JACOBIAN_BC_DECLARE`;
+`  Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */`;
+
+# declare for Cpi
+Declare = 
+{
+
+ # dphi 1st derivative Jacobian
+ (obj = Field,name = Jphi, rank = D, C_macro3,C_arg);
+
+ # rest mass density 1st derivative
+ (obj = Field,name = drho0, rank = D, C_macro);
+
+ # conformal factor
+ #(obj = Field,name = psi, rank = 0, C_macro);
+
+ # conformal metric inverse
+ (obj = Field,name = igConf, rank = UU, C_macro);
+
+}
+
+# symmetries for Cpi
+Symm[igConf(i,j)   = igConf(j,i)];
+
+
+###########################################################################
+#    NOTE1: There are different calculation parts, in each part use 
+# different name for new variables.
+#    NOTE2: In Schur domain decomposition method we need two types of
+# matrices for Jacobian of Newton-Raphson scheme, matrix B and matrix E. 
+# Let's say Jx = -F in Newton-Raphson scheme; then,
+# B[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# ijk takes their values ON BOUNDARY POINTS of a patch, 
+# and lmn runs over ALL BUT the interface points (interface
+# points are those located between two patches).
+# E[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# ijk takes their values ON BOUNDARY POINTS and lmn runs over INTERFACE points.
+#
+#    PRAGMATICALLY:
+#  If you have Dirichlet B.C. for outer-boundary (inner-boundary), 
+# only fill B matrix with the jacobian of the B.C. equation, 
+# and for E matrix put outerB_Epart = 0 (innerB_Epart = 0).
+#  If you have Neumann B.C. or any B.C. that has derivative in it
+# fill both B matrix and E matrix part WITH THE SAME EQUATION, you just
+# need to write two duplicated equations for each part, 
+# and if you're using interim variables use different names for each part.
+#
+#    NOTE3: For each part which doesn't exist, let it be 0.
+###########################################################################
+
+
+# OUTER BOUNDARY LIKE INFINITY
+`  if (patch->outerB)`;
+`  {`;
+
+
+###############################################
+####### B matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+`  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN\n`;
+outerB_Bpart = igConf(i,l)*Jphi(-l)*drho0(-i);
+
+
+`  B[i][j] = outerB_Bpart;\n`;
+`  DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE\n`;
+###############################################
+
+
+###############################################
+###### E matrix: J[ijk][lmn] in Jx = -F #######
+###############################################
+`  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN\n`;
+outerB_Epart = igConf(i,l)*Jphi(-l)*drho0(-i);
+
+
+`  E_Trans[j][i] = outerB_Epart;\n`;
+`  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE`;
+###############################################
+
+
+`  }/* end of if (patch->outerB) */`;
+
+# INNER BOUNDARY LIKE BLACK HOLE HORIZON #
+`  else if (patch->innerB)`;
+`  {`;
+
+
+###############################################
+####### B matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+`  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN\n`;
+innerB_Bpart = 0;
+
+
+`  B[i][j] = innerB_Bpart;\n`;
+`  DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE\n`;
+###############################################
+
+
+###############################################
+####### E matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+`  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN\n`;
+innerB_Epart = 0;
+
+
+`  E_Trans[j][i] = innerB_Epart;\n`;
+`  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE\n`;
+###############################################
+
+
+`  }/* end of else if (patch->innerB) */\n`;
+
+`  return 0;`;
+`}`;
+

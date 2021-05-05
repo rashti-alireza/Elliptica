@@ -1,0 +1,85 @@
+# B0_U0 BC equation:
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
+
+# main function:
+`#include "eq_header.h"`;
+`#include "maths_equation_solvings_lib.h"`;
+``
+`void *eq_XCTS_curve_exc_T1_ddm_bc_B0_U0(void *vp1,void *vp2);`;
+`void *eq_XCTS_curve_exc_T1_ddm_bc_B0_U0(void *vp1,void *vp2)\n{`;
+
+# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
+# patch, S, map, F, node, N, n.
+# THUS, DO NOT DEFINE THEM AGAIN.
+`  DDM_SCHUR_BC_DECLARE`;
+`  Uint ijk;/* node index */`;
+
+``
+# declare for Cpi
+Declare = 
+{
+ # B0 in beta^i = B0^i+B1^i
+ (obj = Field,name = B0_U0, rank = 0, C_macro);
+
+ # B1 in beta^i = B0^i+B1^i
+ (obj = Field,name = B1_U0, rank = 0, C_macro);
+
+ # inner BC
+ (obj = Field,name = ibc_beta_U0, rank = 0, C_macro);
+
+ # boost velocity
+ (obj = variable,name = v0_boost,none);
+ #(obj = variable,name = v1_boost,none);
+ #(obj = variable,name = v2_boost,none);
+}
+
+# symmetries for Cpi
+# no symmetry
+
+
+# NOTE: write each equation in terms of ijk point, and if there is no
+# outer boundary or inner boundary equation, let it be 0.
+
+# OUTER BOUNDARY LIKE INFINITY #
+`  if (patch->outerB)/* at outer boundary */`;
+`  {`;
+## define prefix for parameter
+`  EQ_Def_Param_Prefix_Char`
+`  EQ_Set_Prefix("system")`
+``
+`  const double v0_boost = Pgetd(EQ_PrefixIt("boost_Vx"));`
+`  DDM_SCHUR_BC_OPEN\n`;
+
+
+# bc equation for outer boundary at ijk point:
+outerB_F = B0_U0-v0_boost;
+
+
+`  F[map[ijk]] = outerB_F;\n`;
+`  DDM_SCHUR_BC_CLOSE`;
+`  }/* end of if (patch->outerB) */`;
+
+# INNER BOUNDARY LIKE BLACK HOLE HORIZON #
+`  else if (patch->innerB)/* at inner boundary */`;
+`  {`;
+
+`  DDM_SCHUR_BC_OPEN\n`;
+
+# bc equation for inner boundary at ijk point:
+innerB_F = B0_U0+B1_U0 - ibc_beta_U0;
+
+`  F[map[ijk]] = innerB_F;\n`;
+`  DDM_SCHUR_BC_CLOSE`;
+`  }/* end of else if (patch->innerB) */`;
+
+`  return 0;`;
+`}`;
+

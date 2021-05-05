@@ -45,6 +45,38 @@ void fd_extrinsic_curvature_KerrSchild(Physics_T *const phys,
   FUNC_TOC
 }
 
+/* trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
+// for maximal slice i.e K = 0. */
+void fd_trace_extrinsic_curvature_zero(Physics_T *const phys,
+                                       const char *const region,
+                                       const char *const trK,
+                                       const char *const dtrK)
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,region);
+  Uint p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    /* set to zero */
+    REALLOC_v_WRITE_v_STEM(traceK,trK);
+    UNUSED(traceK);
+    
+    if (dtrK)
+    {
+     dField_di_STEM(dtrK_D0,dtrK);
+     dField_di_STEM(dtrK_D1,dtrK);
+     dField_di_STEM(dtrK_D2,dtrK);
+    }
+  }
+  
+  FUNC_TOC
+}
+
 /* compute K_{ij}, trK = ig^{ij} K_{ij} and its partial derivatives dtrK 
 // for Schwarzchild in isotropic coords. */
 void fd_extrinsic_curvature_IsoSchild(Physics_T *const phys,
@@ -388,13 +420,14 @@ fd_populate_gConf_igConf_dgConf_KerrSchild
 
 /* populate conformal metric, inverse of conformal metric 
 // and first order derivative of conformal metric for parameter
-// "flat + exp(-r^p)*(KerrSchild-flat)"  which is:
-// gConf_{ij} = delta_{ij} + atten * (gKS_{ij} - delta_{ij}).
+// "w1*flat + w2*KerrSchild"  which is:
+// gConf_{ij} = w1*delta_{ij} + w2*gKS_{ij}.
 // this free data mainly is used for BHNS system.
 // the nomenclature of fields determined by the passed stems
-// NOTE: it assumes gConf has already been populated with KerrSchild metric */
+// NOTE: it assumes gConf has already been populated with 
+// KerrSchild metric */
 void 
-fd_modify_gConf_igConf_dgConf_to_flat_expmrpKS
+fd_modify_gConf_igConf_dgConf_to_w1flat_w2KS
  (
  Physics_T *const phys,
  const char *const region/* where computations take place */,
@@ -411,14 +444,19 @@ fd_modify_gConf_igConf_dgConf_to_flat_expmrpKS
   const double BHx    = Getd("center_x");
   const double BHy    = Getd("center_y");
   const double BHz    = Getd("center_z");
-  const double att_pow= Getd("RollOff_power");
-  const double R0P    = pow(Getd("RollOff_radius"),att_pow);
+  
+  SET_TRANSITION_FUNC_BH_TYPE0
   
   /* superimpose */
   OpenMP_Patch_Pragma(omp parallel for)
   for (Uint p = 0; p < grid->np; ++p)
   {
     Patch_T *patch = grid->patch[p];
+    struct Transition_S ts[1] = {0};
+    ts->rmin   = r_min;
+    ts->rmax   = r_max;
+    ts->p      = p_att;
+    ts->lambda = lambda;
     
     /* since gConf has KS values */
     READ_v_STEM(gKS_D2D2,gConf)
@@ -435,14 +473,15 @@ fd_modify_gConf_igConf_dgConf_to_flat_expmrpKS
     WRITE_v_STEM(gConf_D1D2,gConf)
     WRITE_v_STEM(gConf_D1D1,gConf)
     
-    /* g = delta_{ij} + atten * (gKS_{ij} - delta_{ij}) */
+    /* g = delta_{ij} + att * (gKS_{ij} - delta_{ij}) */
     FOR_ALL_ijk
     {
       double x   = patch->node[ijk]->x[0] - BHx;
       double y   = patch->node[ijk]->x[1] - BHy;
       double z   = patch->node[ijk]->x[2] - BHz;
-      double r2  = (Pow2(x)+Pow2(y)+Pow2(z));
-      double att = exp(-pow(r2,att_pow/2.)/R0P);
+      double r   = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+      ts->r      = r;
+      double att = transit(ts);
       
       /* diagonal */
       gConf_D0D0[ijk] = 1.+att*(gKS_D0D0[ijk]-1.);
@@ -490,12 +529,12 @@ fd_modify_gConf_igConf_dgConf_to_flat_expmrpKS
 }
 
 /* populate trK and dtrK such as:
-// trK|new = exp(-r^p)*trK|old
+// trK|new = w*trK|old
 // this free data mainly is used for BHNS system.
 // the nomenclature of fields determined by the passed stems
 // NOTE: it assumes trK has already been populated. */
 void 
-fd_modify_trK_to_expmrptrK_compute_dtrK
+fd_modify_trK_to_wtrK_compute_dtrK
  (
  Physics_T *const phys,
  const char *const region,
@@ -511,8 +550,8 @@ fd_modify_trK_to_expmrptrK_compute_dtrK
   const double BHx    = Getd("center_x");
   const double BHy    = Getd("center_y");
   const double BHz    = Getd("center_z");
-  const double att_pow= Getd("RollOff_power");
-  const double R0P    = pow(Getd("RollOff_radius"),att_pow);
+  
+  SET_TRANSITION_FUNC_BH_TYPE0
   
   /* modify */
   OpenMP_Patch_Pragma(omp parallel for)
@@ -520,6 +559,11 @@ fd_modify_trK_to_expmrptrK_compute_dtrK
   {
     Patch_T *patch = grid->patch[p];
     char regex[STR_LEN];
+    struct Transition_S ts[1] = {0};
+    ts->rmin   = r_min;
+    ts->rmax   = r_max;
+    ts->p      = p_att;
+    ts->lambda = lambda;
     
     /* since K has value */
     READ_v_STEM(K_old,trK)
@@ -532,8 +576,9 @@ fd_modify_trK_to_expmrptrK_compute_dtrK
       double x   = patch->node[ijk]->x[0] - BHx;
       double y   = patch->node[ijk]->x[1] - BHy;
       double z   = patch->node[ijk]->x[2] - BHz;
-      double r2  = (Pow2(x)+Pow2(y)+Pow2(z));
-      double att = exp(-pow(r2,att_pow/2.)/R0P);
+      double r  = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+      ts->r      = r;
+      double att = transit(ts);
       
       K_new[ijk] = att*K_old[ijk];
     }
@@ -1013,9 +1058,9 @@ fd_populate_alpha_KerrSchild
   FUNC_TOC
 }
 
-/* populate alpha of exp(-r^p)*KerrSchild value. */
+/* populate alpha of w*KerrSchild value. */
 void 
-fd_populate_alpha_expmrp_KerrSchild
+fd_populate_alpha_wKerrSchild
  (
  Physics_T *const phys,
  const char *const region,
@@ -1030,8 +1075,8 @@ fd_populate_alpha_expmrp_KerrSchild
   const double BHx    = Getd("center_x");
   const double BHy    = Getd("center_y");
   const double BHz    = Getd("center_z");
-  const double att_pow= Getd("RollOff_power");
-  const double R0P    = pow(Getd("RollOff_radius"),att_pow);
+  
+  SET_TRANSITION_FUNC_BH_TYPE0
   
   fd_KerrSchild_set_params(phys);
   
@@ -1039,20 +1084,28 @@ fd_populate_alpha_expmrp_KerrSchild
   FOR_ALL_p(grid->np)
   {
     Patch_T *patch = grid->patch[p];
+    struct Transition_S ts[1] = {0};
+    ts->rmin   = r_min;
+    ts->rmax   = r_max;
+    ts->p      = p_att;
+    ts->lambda = lambda;
+    
     fd_alpha_KerrSchild_patch(patch,BHx,BHy,BHz,Alpha);
     
     WRITE_v_STEM(alpha,Alpha);
     
     FOR_ALL_ijk
     {
-      double x,y,z,r2;
+      double x,y,z,r;
       
       x = patch->node[ijk]->x[0]-BHx;
       y = patch->node[ijk]->x[1]-BHy;
       z = patch->node[ijk]->x[2]-BHz;
-      r2 = Pow2(x)+Pow2(y)+Pow2(z);
+      r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+      ts->r      = r;
+      double att = transit(ts);
       
-      alpha[ijk] *= exp(-pow(r2,att_pow/2.)/R0P);
+      alpha[ijk] *= att;
     }
   }
   
@@ -1158,3 +1211,44 @@ fd_populate_psi_alphaPsi_beta_PGSchild
   FUNC_TOC
   
 }
+
+/* ->: f(r) = 1. */
+static double f_constant_1(struct Transition_S *const ts)
+{
+  return 1.;
+  UNUSED(ts);
+}
+
+/* ->: f(r) = (r-rmin)/(rmax-r) if rmax > r; otherwise 0.
+// NOTE: it assumes rmin <= r < rmax ==> f(r) >= 0. */
+static double f_ratio_type1(struct Transition_S *const ts)
+{
+  if (ts->r < ts->rmax)
+    return fabs(ts->r - ts->rmin)/(ts->rmax - ts->r);
+  else /* at r = rmax becomes inf. NOTE: it should not reach here */
+    Error0("It's not defined here!");
+    
+  return 0.;
+}
+
+/* ->: f(r) =  exp(-lambda(r)*(r/rmax)^p) if r < rmax; otherwise 0. 
+// NOTE: for r >= rmax f(r) = 0, so even if lambda = 1, it's still 0. */
+static double f_exp_type1(struct Transition_S *const ts)
+{
+  
+  if (LSS(ts->r,ts->rmax))
+    return exp(- ts->lambda(ts) * pow( ts->r / ts->rmax,ts->p) );
+  else 
+    return 0.;
+    
+  return 0.;
+}
+
+/* ->: f(r) =  exp(-lambda(r)*(r/rmax)^p) 
+// NOTE: no condition on r as opposed to f_exp_type1, thus be careful
+// when using. */
+static double f_exp_type2(struct Transition_S *const ts)
+{
+  return exp(- ts->lambda(ts) * pow( ts->r / ts->rmax,ts->p) );
+}
+

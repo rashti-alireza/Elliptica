@@ -150,6 +150,44 @@ static int initialize_fields(Physics_T *const phys)
       
     }
     else
+        Error0(NO_OPTION);
+      
+  }
+  else if(phys->sys == BHNS                    &&
+          Pcmps(P_"initialize","TOV+IsoSchild"))
+  {
+    if(Pcmps(P_"initialize_fields","XCTS"))
+    {
+      /* add some auxiliary fields */
+      add_aux_fields(mygrid(phys,".*"),
+        "psi_is,alphaPsi_is,psi_tov,alphaPsi_tov");
+      
+      /* important to have dedicated BH physics to read correct parameters */
+      Physics_T *const bh = init_physics(phys,BH);
+      fd_populate_psi_alphaPsi_beta_IsoSchild
+        (bh,".*","psi_is","alphaPsi_is","beta",0);
+      free_physics(bh);
+      
+      /* important to have dedicated NS physics to read correct parameters */
+      Physics_T *const ns = init_physics(phys,NS);
+      star_populate_psi_alphaPsi_matter_fields_TOV
+        (ns,".*","psi_tov","alphaPsi_tov","enthalpy","rho0","phi","W");
+      /* alse we need NS spin vector */
+      star_W_spin_vector_idealfluid_update(ns,"NS");
+      free_physics(ns);
+      
+      /* beta, phi,W and rho0 remain intact */
+      /* superimpose add f = f1 + f2 -1. */
+      superimpose_simple(mygrid(phys,".*"),
+                         "psi","psi_tov","psi_is",-1.);
+      superimpose_simple(mygrid(phys,".*"),
+                        "alphaPsi","alphaPsi_tov","alphaPsi_is",-1.);
+      
+      /* remove auxiliary fields */
+      remove_aux_fields(mygrid(phys,".*"),
+        "psi_is,alphaPsi_is,psi_tov,alphaPsi_tov");
+    }
+    else
       Error0(NO_OPTION);
   }
   else
@@ -175,6 +213,8 @@ static int set_system_params(Physics_T *const phys)
   // one_exact_KerrSchild: use analytic values of KerrSchild BH
   // one_exact_IsoSchild : use analytic values of Schawrzchild in isotropic coords.
   // one_exact_PGSchild  : use analytic values of Schawrzchild in Painleve-Gullstrand coords.
+  // TOV+KerrSchild      : superpose TOV solution + KerrSchild solution.
+  // TOV+IsoSchild       : superpose TOV solution + IsoSchild solution.
   */
   Pset_default(P_"initialize","one_exact_KerrSchild");
 

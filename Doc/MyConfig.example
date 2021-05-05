@@ -80,6 +80,9 @@ DFLAGS += -DPragma_OpenMP_2d -DPragma_OpenMP_1d -DPragma_OpenMP_Patch
 ### activate inline calls:
 DFLAGS += -DINLINE_FUNC
 
+### matrix ccs reader optimizer
+DFLAGS += -DCCS_READER_OPTIMIZE
+
 ### activate gsl blas matrix products, requires gsl libs
 #DFLAGS += -DMxM_GSL_BLAS
 
