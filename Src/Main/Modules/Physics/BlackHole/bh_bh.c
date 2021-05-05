@@ -300,7 +300,6 @@ void bh_tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
 void bh_tune_BH_chi_simple(Physics_T *const phys)
 {
   const double W1        = Getd("spin_update_weight");
-  const double W2        = 1.-W1;
   const double dchi_tol  = Getd("spin_tolerance");
   const double chi_x     = Getd("chi_x");
   const double chi_y     = Getd("chi_y");
@@ -343,17 +342,17 @@ void bh_tune_BH_chi_simple(Physics_T *const phys)
   }
   if (GRT(fabs(dchi[0]),dchi_tol))
   {
-    omega[0] = W2*omega_x+W1*dchi[0]*omega_s;
+    omega[0] = omega_x+W1*dchi[0]*omega_s;
     Setd("Omega_x",omega[0]);
   }
   if (GRT(fabs(dchi[1]),dchi_tol))
   {
-    omega[1] = W2*omega_y+W1*dchi[1]*omega_s;
+    omega[1] = omega_y+W1*dchi[1]*omega_s;
     Setd("Omega_y",omega[1]);
   }
   if (GRT(fabs(dchi[2]),dchi_tol))
   {
-    omega[2] = W2*omega_z+W1*dchi[2]*omega_s;
+    omega[2] = omega_z+W1*dchi[2]*omega_s;
     Setd("Omega_z",omega[2]);
   }
 }
