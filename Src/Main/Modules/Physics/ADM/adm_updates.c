@@ -304,7 +304,7 @@ void adm_update_adm_B1I(Physics_T *const phys,const char *const region)
   
 }
 
-/* B1^i = omega * (r-r_CM) + Vr/D*(r-r_CM) */
+/* B1^i = omega x (r-r_CM) + Vr/D*(r-r_CM) */
 void adm_update_B1I_inspiral(Patch_T *const patch,void *params)
 {
   const struct General_Arg_S *const par = params;
