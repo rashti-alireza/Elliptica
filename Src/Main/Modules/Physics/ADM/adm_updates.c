@@ -304,7 +304,7 @@ void adm_update_adm_B1I(Physics_T *const phys,const char *const region)
   
 }
 
-/* B1^i = omega * (r-r_CM) + Vr/D*(r-r_CM) */
+/* B1^i = omega x (r-r_CM) + Vr/D*(r-r_CM) */
 void adm_update_B1I_inspiral(Patch_T *const patch,void *params)
 {
   const struct General_Arg_S *const par = params;
@@ -313,6 +313,7 @@ void adm_update_B1I_inspiral(Patch_T *const patch,void *params)
   const double D     = par->D;
   const double x_CM  = par->CM[0];
   const double y_CM  = par->CM[1];
+  const double z_CM  = par->CM[2];
 
   /* B^1 */
   REALLOC_v_WRITE_v(B1_U0)
@@ -323,10 +324,11 @@ void adm_update_B1I_inspiral(Patch_T *const patch,void *params)
   {
     double x     = patch->node[ijk]->x[0];
     double y     = patch->node[ijk]->x[1];
+    double z     = patch->node[ijk]->x[2];
 
     B1_U0[ijk] = Omega*(-y+y_CM)+Vr*(x-x_CM)/D;
     B1_U1[ijk] = Omega*(x-x_CM) +Vr*(y-y_CM)/D;
-    B1_U2[ijk] = 0;
+    B1_U2[ijk] =                 Vr*(z-z_CM)/D;
   }
 
   /* 1st derivatives */
@@ -338,7 +340,7 @@ void adm_update_B1I_inspiral(Patch_T *const patch,void *params)
   REALLOC_v_WRITE_v(dB1_U1D1)
   REALLOC_v_WRITE_v(dB1_U1D0)
   
-  set_field_to_zero(dB1_U2D2)
+  REALLOC_v_WRITE_v(dB1_U2D2)
   set_field_to_zero(dB1_U2D1)
   set_field_to_zero(dB1_U2D0)
   
@@ -352,7 +354,8 @@ void adm_update_B1I_inspiral(Patch_T *const patch,void *params)
     dB1_U1D1[ijk] = Vr/D;
     dB1_U1D0[ijk] = Omega;
     
-    /* dB1_U2U? is zero. */
+    /* dB1_U2U[01] is zero. */
+    dB1_U2D2[ijk] = Vr/D;
   }
 
   /* 2nd derivatives => all zero. */
