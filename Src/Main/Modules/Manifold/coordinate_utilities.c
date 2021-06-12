@@ -1252,7 +1252,7 @@ Patch_T *x_in_which_patch_force(const double x[3],Patch_T **const patches,
   X[2] = (X[2] < patch->min[2] ? patch->min[2] : X[2]);  
   
   /* test it */
-  if(1)
+  if(0)
   {
     double test_x[3] = {0};
     double test_dx;
