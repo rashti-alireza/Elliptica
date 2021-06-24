@@ -1219,32 +1219,32 @@ static void find_NS_surface_perfect_s2(Physics_T *const phys)
   const Uint Ntheta = Ntheta_Ylm(lmax);
   const Uint Nphi   = Nphi_Ylm(lmax);
   const Uint Ntot   = Ntotal_Ylm(lmax);
-  const double R_BH = Getd("perfect_S2_radius");
-  double *rbh = alloc_double(Ntot);/* surface function r = r(th,ph). */
-  double *reClm_rbh = alloc_ClmYlm(lmax),
-         *imClm_rbh = alloc_ClmYlm(lmax);
+  const double R_NS = Getd("perfect_S2_radius");
+  double *rns = alloc_double(Ntot);/* surface function r = r(th,ph). */
+  double *reClm_rns = alloc_ClmYlm(lmax),
+         *imClm_rns = alloc_ClmYlm(lmax);
   Uint ij;
   
   init_Legendre_root_function();
   for (ij = 0; ij < Ntot; ++ij)
   {
-    rbh[ij] = R_BH;
+    rns[ij] = R_NS;
   }
   /* calculating coeffs */
-  get_Ylm_coeffs(reClm_rbh,imClm_rbh,rbh,Ntheta,Nphi,lmax);
+  get_Ylm_coeffs(reClm_rns,imClm_rns,rns,Ntheta,Nphi,lmax);
   
   assert(!grid_char->params[phys->igc]->occupied);
   grid_char->params[phys->igc]->obj    = phys->stype;
   grid_char->params[phys->igc]->dir    = phys->spos;
-  grid_char->params[phys->igc]->relClm = reClm_rbh;
-  grid_char->params[phys->igc]->imgClm = imClm_rbh;
+  grid_char->params[phys->igc]->relClm = reClm_rns;
+  grid_char->params[phys->igc]->imgClm = imClm_rns;
   grid_char->params[phys->igc]->r_min  = Getd("min_radius");
   grid_char->params[phys->igc]->r_max  = Getd("max_radius");
   grid_char->params[phys->igc]->lmax   = lmax;
   grid_char->params[phys->igc]->occupied = 1;
   Seti("did_NS_surface_finder_work?",1);
   
-  Free(rbh);
+  Free(rns);
   
   FUNC_TOC
 }
