@@ -5,7 +5,7 @@
 
 #include "interface.h"
 
-static const double   Huge_Eps        = 2;
+static const double   Huge_Eps        = 1;
 static const double   ScaleFactor     = 1E-5;/* scale factor */
 static const double   PrecisionFactor = 1.0;/* precision factor */
 static const Uint NFaces      = 6;/* total number of faces */

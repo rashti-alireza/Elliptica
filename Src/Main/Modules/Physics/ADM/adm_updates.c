@@ -354,7 +354,7 @@ void adm_update_B1I_inspiral(Patch_T *const patch,void *params)
     dB1_U1D1[ijk] = Vr/D;
     dB1_U1D0[ijk] = Omega;
     
-    /* dB1_U2U[01] is zero. */
+    /* dB1_U2D[01] is zero. */
     dB1_U2D2[ijk] = Vr/D;
   }
 
