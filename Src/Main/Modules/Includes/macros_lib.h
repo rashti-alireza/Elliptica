@@ -116,7 +116,7 @@
  else {sprintf(field__name__##xNAME,"%s"  ,stem);}\
  const double *const xNAME = patch->fields[Ind(field__name__##xNAME)]->v;
 
-/* it empty_field and alloc memory for v with specified stem => so the indices are adjusted.
+/* empty_field and alloc memory for v with specified stem => so the indices are adjusted.
 // note: stem is a pointer to char. */
 #define REALLOC_v_WRITE_v_STEM(xNAME,stem) \
  char field__name__##xNAME[MACRO__STR__LEN1] = {'\0'};\
@@ -132,7 +132,7 @@
  patch->fields[_field_index_of_##xNAME]->v = alloc_double(patch->nn);\
  double *const xNAME = patch->fields[_field_index_of_##xNAME]->v;
 
-/* it empty_field and alloc memory for v */
+/* empty_field and alloc memory for v */
 #define REALLOC_v_WRITE_v(xNAME)   const int _field_index_of_##xNAME = Ind(#xNAME);\
                                    Field_T *const _F_##xNAME         = patch->fields[_field_index_of_##xNAME];\
                                    empty_field(_F_##xNAME);\

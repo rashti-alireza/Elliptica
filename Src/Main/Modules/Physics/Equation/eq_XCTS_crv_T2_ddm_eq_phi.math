@@ -93,7 +93,7 @@ Declare =
  # conformal connections
  (obj = Field,name = ChrisConf, rank = UDD, C_macro);
 
- # rho_center
+ # rho0_center
  (obj = variable,name = rhoc, rank = 0, none);
 
  # small factor
@@ -109,7 +109,7 @@ Symm[igConf(i,j)      = igConf(j,i)];
 Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 Symm[ddphi(i,j)       = ddphi(j,i)];
 
-`  const double rhoc = Pgetd(EQ_PrefixIt("rho_center"));`
+`  const double rhoc = Pgetd(EQ_PrefixIt("rho0_center"));`
 `  const double e    = Pgetd(EQ_PrefixIt("Eq_phi_polish"));`
 `  const double att  = e*rhoc;`
 

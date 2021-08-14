@@ -15,7 +15,7 @@ typedef struct EquationOfState_T
  char type[EOS_MAX_STR];
  char unit[EOS_MAX_STR];
  double *K;/* polytropic constant */
- double *rho_th;/* thresholds of rest mass density */
+ double *rho0_th;/* thresholds of rest mass density */
  double *h_th;/* enthalpy thresholds */
  double *n;/* polytropic index n = 1/(gamma-1)*/
  double *gamma;/* polytropic index */
@@ -30,7 +30,7 @@ typedef struct EquationOfState_T
  double (*energy_density)(struct EquationOfState_T *const eos);/* total energy density */
  double (*rest_mass_density)(struct EquationOfState_T *const eos);
  double (*de_dh)(struct EquationOfState_T *const eos);/* d(energy_density)/dh */
- double (*drho_dh)(struct EquationOfState_T *const eos);/* d(rest_mass_density)/dh */
+ double (*drho0_dh)(struct EquationOfState_T *const eos);/* d(rest_mass_density)/dh */
 }EoS_T;
 #undef EOS_MAX_STR
 

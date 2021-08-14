@@ -30,7 +30,7 @@ double EoS_p_h_pwp(EoS_T *const eos)
 
 /* calculate rest mass density in terms of h for pwp
 // ->return value: rho(h) */
-double EoS_rho_h_pwp(EoS_T *const eos)
+double EoS_rho0_h_pwp(EoS_T *const eos)
 {
   if (EQL(eos->h,1)) eos->h = 1;
   
@@ -45,7 +45,7 @@ double EoS_rho_h_pwp(EoS_T *const eos)
 
 /* calculate d(rest mass density)/dh in terms of h for pwp
 // ->return value: d(rho(h))/dh */
-double EoS_drho_dh_h_pwp(EoS_T *const eos)
+double EoS_drho0_dh_h_pwp(EoS_T *const eos)
 {
   if (EQL(eos->h,1)) eos->h = 1;
   
@@ -60,7 +60,7 @@ double EoS_drho_dh_h_pwp(EoS_T *const eos)
 
 /* calculate d(rest mass density)/dh in terms of h for polytrop
 // ->return value: d(rho(h))/dh */
-double EoS_drho_dh_h_p(EoS_T *const eos)
+double EoS_drho0_dh_h_p(EoS_T *const eos)
 {
   if (EQL(eos->h,1)) eos->h = 1;
   
@@ -82,7 +82,7 @@ double EoS_e_h_pwp(EoS_T *const eos)
   const double a = eos->a[i];
   const double n = eos->n[i];
   
-  return EoS_rho_h_pwp(eos)*(1+(a+n*(h-1))/(n+1));
+  return EoS_rho0_h_pwp(eos)*(1+(a+n*(h-1))/(n+1));
 }
 
 /* calculate d(total energy density)/dh in terms of h for pwd
@@ -96,7 +96,7 @@ double EoS_de_dh_h_pwp(EoS_T *const eos)
   const double a = eos->a[i];
   const double n = eos->n[i];
   
-  return EoS_drho_dh_h_pwp(eos)*(1+(a+n*(h-1))/(n+1))+EoS_rho_h_pwp(eos)*n/(n+1);
+  return EoS_drho0_dh_h_pwp(eos)*(1+(a+n*(h-1))/(n+1))+EoS_rho0_h_pwp(eos)*n/(n+1);
 }
 
 /* calculate d(total energy density)/dh in terms of h for polytropic
@@ -108,7 +108,7 @@ double EoS_de_dh_h_p(EoS_T *const eos)
   const double h = eos->h;
   const double n = eos->n[0];
   
-  return EoS_drho_dh_h_p(eos)*(1+n*(h-1)/(n+1))+EoS_rho_h_p(eos)*n/(n+1);
+  return EoS_drho0_dh_h_p(eos)*(1+n*(h-1)/(n+1))+EoS_rho0_h_p(eos)*n/(n+1);
 }
 
 /* calculate pressure in terms of h for polytropic
@@ -126,7 +126,7 @@ double EoS_p_h_p(EoS_T *const eos)
 
 /* calculate rest mass density in terms of h for polytropic
 // ->return value: rho(h) */
-double EoS_rho_h_p(EoS_T *const eos)
+double EoS_rho0_h_p(EoS_T *const eos)
 {
   if (EQL(eos->h,1)) eos->h = 1;
   
@@ -147,12 +147,12 @@ double EoS_e_h_p(EoS_T *const eos)
   const double h = eos->h;
   const double n = eos->n[0];
   
-  return EoS_rho_h_p(eos)*(1+n*(h-1)/(n+1));
+  return EoS_rho0_h_p(eos)*(1+n*(h-1)/(n+1));
 }
 
 /* given eos->h it finds this enthalpy takes place in which intervale.
 // if it could not find this it gives error.
-// note: since it is required that rho_th be written increasingly
+// note: since it is required that rho0_th be written increasingly
 // then h is also comes out increasingly thus:
 // 1 < h[0] < h[1] < h[2] < ... < h[n]
 // ->return value: the threshold number which h is falls in. */
