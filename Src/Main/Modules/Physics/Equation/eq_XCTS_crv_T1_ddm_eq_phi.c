@@ -80,7 +80,7 @@ void *eq_XCTS_curve_T1_ddm_eq_phi(void *vp1,void *vp2)
   READ_v(ChrisConf_U1D0D1)
 
 
-  const double rhoc = Pgetd(EQ_PrefixIt("rho_center"));
+  const double rhoc = Pgetd(EQ_PrefixIt("rho0_center"));
   const double e    = Pgetd(EQ_PrefixIt("Eq_phi_polish"));
   const double att  = e*rhoc;
   DDM_SCHUR_EQ_OPEN

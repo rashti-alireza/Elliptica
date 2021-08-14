@@ -46,7 +46,7 @@ void free_EoS(EoS_T *s)
     return;
     
   if (s->K)      free(s->K);
-  if (s->rho_th) free(s->rho_th);
+  if (s->rho0_th) free(s->rho0_th);
   if (s->h_th)   free(s->h_th);
   if (s->n)      free(s->n);
   if (s->a)      free(s->a);
@@ -58,7 +58,7 @@ void free_EoS(EoS_T *s)
 static void populate_EoS(EoS_T *const eos)
 {
   Physics_T *const phys = eos->phys;
-  double *K,*rho_th,*gamma;/* quantities in polytropic EoS */
+  double *K,*rho0_th,*gamma;/* quantities in polytropic EoS */
   Uint N;/* number of pieces in case of pwp */
   Uint i;
   
@@ -70,12 +70,12 @@ static void populate_EoS(EoS_T *const eos)
   K      = read_EoS_in_parameter_file(Gets(P_"K"),&N);
   gamma  = read_EoS_in_parameter_file(Gets(P_"Gamma"),0);
   
-  /* if we have a single polytropic eos, then we don't have rho_th  */
+  /* if we have a single polytropic eos, then we don't have rho0_th  */
   if (!strcmp_i(eos->type,"polytropic") &&
       !strcmp_i(eos->type,"polytrop"))
-    rho_th = read_EoS_in_parameter_file(Gets(P_"rho_th"),0);   
+    rho0_th = read_EoS_in_parameter_file(Gets(P_"rho0_th"),0);   
   else
-    rho_th = 0;
+    rho0_th = 0;
     
   /* if the units are geometrised units */
   if (strcmp_i(eos->unit,"geo"))
@@ -85,24 +85,24 @@ static void populate_EoS(EoS_T *const eos)
         strcmp_i(eos->type,"pwp"))
     {    
       /* check if rho is in increasing order. */
-      if (!rho_th)
+      if (!rho0_th)
         Error0("rho threshold must be specified.\n");
         
       for (i = 1; i < N-1; ++i)
-        if (GRT(rho_th[i-1],rho_th[i]))
-          Error0("rho_th for piecewise polytropic EoS "
+        if (GRT(rho0_th[i-1],rho0_th[i]))
+          Error0("rho0_th for piecewise polytropic EoS "
                   "must be written in increasing order.\n");
     
       eos->N      = N;
       eos->K      = K;
-      eos->rho_th = rho_th;
+      eos->rho0_th = rho0_th;
       eos->gamma = gamma;
       fill_n(eos);
       fill_a(eos);
       fill_h_th(eos);/* this depends on a, so put it in the last */
       eos->pressure          = EoS_p_h_pwp;
       eos->energy_density    = EoS_e_h_pwp;
-      eos->rest_mass_density = EoS_rho_h_pwp;
+      eos->rest_mass_density = EoS_rho0_h_pwp;
       eos->de_dh             = EoS_de_dh_h_pwp;
       eos->drho0_dh	     = EoS_drho0_dh_h_pwp;
     }
@@ -119,7 +119,7 @@ static void populate_EoS(EoS_T *const eos)
       fill_a(eos);
       eos->pressure          = EoS_p_h_p;
       eos->energy_density    = EoS_e_h_p;
-      eos->rest_mass_density = EoS_rho_h_p;
+      eos->rest_mass_density = EoS_rho0_h_p;
       eos->de_dh             = EoS_de_dh_h_p;
       eos->drho0_dh	     = EoS_drho0_dh_h_p;
     }
@@ -152,14 +152,14 @@ static void fill_a(EoS_T *const eos)
   double *const a = eos->a,
          *const K = eos->K,
          *const gamma = eos->gamma,
-         *const rho_th = eos->rho_th;
+         *const rho0_th = eos->rho0_th;
   Uint i;
          
   a[0] = 0;
   for (i = 1; i < eos->N; ++i)
     a[i] = a[i-1] + 
-           K[i-1]*pow(rho_th[i],gamma[i-1]-1)/(gamma[i-1]-1) -
-           K[i]*pow(rho_th[i],gamma[i]-1)/(gamma[i]-1);
+           K[i-1]*pow(rho0_th[i],gamma[i-1]-1)/(gamma[i-1]-1) -
+           K[i]*pow(rho0_th[i],gamma[i]-1)/(gamma[i]-1);
            
 }
 
@@ -172,14 +172,14 @@ static void fill_h_th(EoS_T *const eos)
   double *const a = eos->a,
          *const K = eos->K,
          *const gamma = eos->gamma,
-         *const rho_th = eos->rho_th,
+         *const rho0_th = eos->rho0_th,
          *const h_th = eos->h_th;
   Uint i;
   
   h_th[0] = 1;
   
   for (i = 1; i < eos->N; ++i)
-    h_th[i] = 1+a[i]+(gamma[i]/(gamma[i]-1))*K[i]*pow(rho_th[i],gamma[i]-1);
+    h_th[i] = 1+a[i]+(gamma[i]/(gamma[i]-1))*K[i]*pow(rho0_th[i],gamma[i]-1);
 }
 
 
@@ -200,7 +200,7 @@ static double *read_EoS_in_parameter_file(const char *const par,Uint *const N)
   Uint i = 0;
   
   if (!check_format_s(par,"[?]"))
-    Error0("K, rho_th and Gamma in EoS must be written in square brackets.\n"
+    Error0("K, rho0_th and Gamma in EoS must be written in square brackets.\n"
     "If there are multivalues, as in piecewise polytropic EoS, the values\n"
     "must be separated by a comma ','\n");
   

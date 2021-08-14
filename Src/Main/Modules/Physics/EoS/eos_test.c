@@ -30,7 +30,7 @@ void test_EoS(Physics_T *const phys)
     
     fprintf(file,"piece  Kappa         rho           gamma         a             h-1\n");
     for (i = 0; i < eos->N; ++i)  
-      fprintf(file,"%u      %e  %e  %e  %e  %e\n",i,eos->K[i],eos->rho_th[i],eos->gamma[i],eos->a[i],eos->h_th[i]-1);
+      fprintf(file,"%u      %e  %e  %e  %e  %e\n",i,eos->K[i],eos->rho0_th[i],eos->gamma[i],eos->a[i],eos->h_th[i]-1);
     Fclose(file);
   }
     

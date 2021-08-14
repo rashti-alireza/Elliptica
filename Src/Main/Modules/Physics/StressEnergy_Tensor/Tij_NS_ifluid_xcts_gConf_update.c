@@ -98,7 +98,7 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
   eos->h = execute_interpolation(interp_s);
   free_interpolation(interp_s);
   
-  Setd("rho_center",eos->rest_mass_density(eos));
+  Setd("rho0_center",eos->rest_mass_density(eos));
   Setd("pressure_center",eos->pressure(eos));
   Setd("energy_density_center",eos->energy_density(eos));
   
