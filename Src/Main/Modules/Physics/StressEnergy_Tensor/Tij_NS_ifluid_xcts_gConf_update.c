@@ -32,6 +32,7 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
   {
     patch = grid->patch[p];
     
+    /* update values */
     if (!EQL(W,0.))
       RELAX_UPDATE_FUNC(Tij_NS_IF_XCTS_gConf_enthalpy(patch,Euler_const),
                         patch,enthalpy,W);
@@ -41,7 +42,42 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
     
     Tij_NS_eos_update_rho0(patch,eos);
     Tij_NS_IF_XCTS_gConf_u0(patch);
-    Tij_NS_IF_XCTS_gConf_derives(patch);
+    
+    /* update derivatives */
+    if (1)
+    {
+      dField_di(denthalpy_D0);
+      dField_di(denthalpy_D1);
+      dField_di(denthalpy_D2);
+      dField_di(du0_D0);
+      dField_di(du0_D1);
+      dField_di(du0_D2);
+      /* NOTE: rho0 for pwp eos is C^1 so it is prone to Gibbs phenomenon
+      // specially where h ~ 1, close to NS's surface. 
+      // thus, drho0 must be calculated using chain rule. */
+      READ_v(enthalpy)
+      READ_v(denthalpy_D0)
+      READ_v(denthalpy_D1)
+      READ_v(denthalpy_D2)
+      
+      REALLOC_v_WRITE_v(drho0_D0)
+      REALLOC_v_WRITE_v(drho0_D1)
+      REALLOC_v_WRITE_v(drho0_D2)
+      
+      FOR_ALL_ijk
+      {
+        eos->h          = enthalpy[ijk];
+        double drho0_dh = eos->drho_dh(eos);
+        drho0_D0[ijk] = drho0_dh*denthalpy_D0[ijk];
+        drho0_D1[ijk] = drho0_dh*denthalpy_D1[ijk];
+        drho0_D2[ijk] = drho0_dh*denthalpy_D2[ijk];
+      }
+    }
+    else/* the following not using change rule for rho0 */
+    {
+      Tij_NS_IF_XCTS_gConf_derives(patch);
+    }
+    
     /* sources */
     Tij_NS_IF_XCTS_gConf_psi6J_Ui(patch);
     Tij_NS_IF_XCTS_gConf_psi6E(patch,eos);
