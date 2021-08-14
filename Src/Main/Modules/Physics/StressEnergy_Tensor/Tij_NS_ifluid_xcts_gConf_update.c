@@ -67,7 +67,7 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
       FOR_ALL_ijk
       {
         eos->h          = enthalpy[ijk];
-        double drho0_dh = eos->drho_dh(eos);
+        double drho0_dh = eos->drho0_dh(eos);
         drho0_D0[ijk] = drho0_dh*denthalpy_D0[ijk];
         drho0_D1[ijk] = drho0_dh*denthalpy_D1[ijk];
         drho0_D2[ijk] = drho0_dh*denthalpy_D2[ijk];

@@ -45,7 +45,7 @@ double EoS_rho_h_pwp(EoS_T *const eos)
 
 /* calculate d(rest mass density)/dh in terms of h for pwp
 // ->return value: d(rho(h))/dh */
-double EoS_drho_dh_h_pwp(EoS_T *const eos)
+double EoS_drho0_dh_h_pwp(EoS_T *const eos)
 {
   if (EQL(eos->h,1)) eos->h = 1;
   
@@ -60,7 +60,7 @@ double EoS_drho_dh_h_pwp(EoS_T *const eos)
 
 /* calculate d(rest mass density)/dh in terms of h for polytrop
 // ->return value: d(rho(h))/dh */
-double EoS_drho_dh_h_p(EoS_T *const eos)
+double EoS_drho0_dh_h_p(EoS_T *const eos)
 {
   if (EQL(eos->h,1)) eos->h = 1;
   
@@ -96,7 +96,7 @@ double EoS_de_dh_h_pwp(EoS_T *const eos)
   const double a = eos->a[i];
   const double n = eos->n[i];
   
-  return EoS_drho_dh_h_pwp(eos)*(1+(a+n*(h-1))/(n+1))+EoS_rho_h_pwp(eos)*n/(n+1);
+  return EoS_drho0_dh_h_pwp(eos)*(1+(a+n*(h-1))/(n+1))+EoS_rho_h_pwp(eos)*n/(n+1);
 }
 
 /* calculate d(total energy density)/dh in terms of h for polytropic
@@ -108,7 +108,7 @@ double EoS_de_dh_h_p(EoS_T *const eos)
   const double h = eos->h;
   const double n = eos->n[0];
   
-  return EoS_drho_dh_h_p(eos)*(1+n*(h-1)/(n+1))+EoS_rho_h_p(eos)*n/(n+1);
+  return EoS_drho0_dh_h_p(eos)*(1+n*(h-1)/(n+1))+EoS_rho_h_p(eos)*n/(n+1);
 }
 
 /* calculate pressure in terms of h for polytropic
