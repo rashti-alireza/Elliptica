@@ -45,7 +45,7 @@
 //            lapse -> 1 and shift -> 0 at spatial infinity in the foliation.
 //
 // ----------------------------------------------------------------------
-// "ADM(M)"   #=> compute Komar ADM for the given physics
+// "ADM(M)"   #=> compute ADM mass for the given physics
 //        NOTE: definition of ADM quantities are only held when
 //        asymptotic flat gauge conditions are satisfied.
 //        (arXiv:gr-qc/0703035v1) a counter example is Painleve-Gullstrand.
