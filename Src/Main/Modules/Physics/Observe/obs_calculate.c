@@ -60,7 +60,7 @@ void obs_calculate(Observe_T *const obs)
 }
 
 /* populating normal outward vector for around patches according to the given dir 
-// NOTE: the normaliztion is respect to the physical metric gamma_{ij} */
+// NOTE: the normalization is respect to the physical metric gamma_{ij} */
 static void n_physical_metric_around(struct items_S *const adm,const Dd_T dir)
 {
   Patch_T *const patch = adm->patch;
@@ -105,7 +105,7 @@ n_U2[ijk] + gConf_D2D2[ijk]*pow(n_U2[ijk], 2));
 }
 
 /* populating normal outward vector for around patches according to the given dir 
-// NOTE: the normaliztion is respect to the conformal metric gamma_{ij} */
+// NOTE: the normalization is respect to the conformal metric gamma_{ij} */
 static void n_conformal_metric_around(struct items_S *const adm,const Dd_T dir)
 {
   Patch_T *const patch = adm->patch;
