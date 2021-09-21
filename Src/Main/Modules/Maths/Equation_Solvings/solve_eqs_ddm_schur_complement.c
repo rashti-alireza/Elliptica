@@ -775,7 +775,8 @@ static char *making_F_by_E_prime(Patch_T *const patch)
   const double time1 = get_time_sec();
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
   const Uint np = Schur->np;
-  const Matrix_T *const E_Trans_prime = Schur->E_Trans_prime;
+  Matrix_T *const E_Trans_prime = Schur->E_Trans_prime;
+  Matrix_T *ETp_ccs = 0;/* must be initialized */
   Uint p;
   char *msg = calloc(MSG_SIZE1,1);
   IsNull(msg);
@@ -790,10 +791,9 @@ static char *making_F_by_E_prime(Patch_T *const patch)
     
     if (F)
     {
-      FxEprime[p] = alloc_matrix(RMO_SF,F->row,E_Trans_prime->row);
-      
       #if defined(MxM_GSL_BLAS)
       
+        FxEprime[p] = alloc_matrix(RMO_SF,F->row,E_Trans_prime->row);
         assert(F->rmo_f);
         assert(E_Trans_prime->rmo_f);
         assert(FxEprime[p]->rmo_f);
@@ -815,7 +815,8 @@ static char *making_F_by_E_prime(Patch_T *const patch)
                   0.0, &gslFxEp.matrix);
       
       #elif defined(MxM_MKL_BLAS) || defined(MxM_C_BLAS)
-      
+
+        FxEprime[p] = alloc_matrix(RMO_SF,F->row,E_Trans_prime->row);
         assert(F->rmo_f);
         assert(E_Trans_prime->rmo_f);
         assert(FxEprime[p]->rmo_f);
@@ -837,7 +838,15 @@ static char *making_F_by_E_prime(Patch_T *const patch)
 
       #else
       
-        matrix_by_matrix(F,E_Trans_prime,FxEprime[p],"a*transpose(b)");
+        /* cast to ccs format */
+        Matrix_T* F_ccs  = cast_matrix_ccs(F);
+        /* ETp_css only one time must be cast */
+        if(!ETp_ccs) ETp_ccs = cast_matrix_ccs(E_Trans_prime);
+        /* only if has any non zero entries */
+        if (F_ccs->ccs->Ap[F_ccs->col] && ETp_ccs->ccs->Ap[ETp_ccs->col])
+          FxEprime[p] =
+            matrix_by_matrix(F_ccs,ETp_ccs,FxEprime[p],"a*transpose(b)");
+        free_matrix(F_ccs);
         
       #endif
       
@@ -845,6 +854,7 @@ static char *making_F_by_E_prime(Patch_T *const patch)
     }
   }
   free(Schur->F);
+  free_matrix(ETp_ccs);
   
   sprintf(msg,"{ Make F*E' ...\n"
               "} Make F*E' --> Done. ( Wall-Clock = %.0fs )\n",
