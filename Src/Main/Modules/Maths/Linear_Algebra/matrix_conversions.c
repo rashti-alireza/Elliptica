@@ -122,6 +122,14 @@ Matrix_T *cast_matrix_ccs(Matrix_T *const m)
   {
     Error0(INCOMPLETE_FUNC);
   }
+  else if (m->rmo_f)
+  {
+    double DropLimit = 0;
+    if (get_parameter("matrix_ccs_drop_below"))	
+      DropLimit = PgetdEZ("matrix_ccs_drop_below");
+      
+    convert_rmo2ccs(m,ccs,DropLimit);
+  }
   else if (m->tri_l_f)
   {
     Error0(INCOMPLETE_FUNC);
@@ -502,3 +510,44 @@ static void convert_reg2ccs_long(const Matrix_T *const reg,Matrix_T *const ccs_l
   ccs_l->ccs_long->Ax = Ax;
 }
 
+/* converting a rmo format to ccs format.
+// note: the matrix will be made in CCS such that be in order in row. */
+static void convert_rmo2ccs(const Matrix_T *const rmo,Matrix_T *const ccs,const double DropLimit)
+{
+  const long Nr = rmo->row;
+  const long Nc = rmo->col;
+  const double *const m = rmo->rmo->A;
+  int *Ap   = calloc((long Uint)Nc+1,sizeof(*Ap));
+  int *Ai   = 0;
+  double *Ax = 0;
+  long tNN0 = 0;/* total number of none zero entries */
+  long NN0;/* number of none zero entries in each column */
+  long r,c;/* row and column */
+  
+  for (c = 0; c < Nc; ++c)
+  {
+    NN0 = 0;
+    for (r = 0; r < Nr; ++r)
+    {
+      double mx = m[i_j_to_ij(Nc,r,c)];
+      if (GRT(ABSd(mx),DropLimit))
+      {
+        Ai = realloc(Ai,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ai));
+        IsNull(Ai);
+        Ax = realloc(Ax,(long Uint)(Ap[c]+NN0+1)*sizeof(*Ax));
+        IsNull(Ax);
+        Ai[Ap[c]+NN0] = (int)r;
+        Ax[Ap[c]+NN0] = mx;
+        NN0++;
+        tNN0++;
+      }
+    }
+    Ap[c+1] = (int)tNN0;
+  }
+  
+  ccs->row = rmo->row;
+  ccs->col = rmo->col;
+  ccs->ccs->Ap = Ap;
+  ccs->ccs->Ai = Ai;
+  ccs->ccs->Ax = Ax;
+}
