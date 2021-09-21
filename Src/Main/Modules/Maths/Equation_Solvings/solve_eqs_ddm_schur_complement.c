@@ -844,8 +844,10 @@ static char *making_F_by_E_prime(Patch_T *const patch)
         if(!ETp_ccs) ETp_ccs = cast_matrix_ccs(E_Trans_prime);
         /* only if has any non zero entries */
         if (F_ccs->ccs->Ap[F_ccs->col] && ETp_ccs->ccs->Ap[ETp_ccs->col])
-          FxEprime[p] =
-            matrix_by_matrix(F_ccs,ETp_ccs,FxEprime[p],"a*transpose(b)");
+        {
+          FxEprime[p] = alloc_matrix(RMO_SF,F_ccs->row,ETp_ccs->row);
+          matrix_by_matrix(F_ccs,ETp_ccs,FxEprime[p],"a*transpose(b)");
+        }
         free_matrix(F_ccs);
         
       #endif
