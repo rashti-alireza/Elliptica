@@ -428,14 +428,16 @@ static void free_E_Trans_prime(Patch_T *const patch)
 static void compute_x(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
-  const Uint NS            = Schur->NS;
-  const Uint NI            = Schur->NI;
+  const Uint NS = Schur->NS;
   double *f_prime  = Schur->f_prime;
-  const Uint ETp_ncol         = (Uint)Schur->E_Trans_prime->col;
-  double *const E_Trans_prime = Schur->E_Trans_prime->rmo->A;
   const double *const y = Schur->y;
   double *const x = alloc_double(NS);
   double Ey;/* E_Trans_prime by y */
+
+# if E_Trans_prime_IS_RMO_FORMAT
+  const Uint NI = Schur->NI;
+  double *const E_Trans_prime = Schur->E_Trans_prime->rmo->A;
+  const Uint ETp_ncol         = (Uint)Schur->E_Trans_prime->col;
   Uint i,s;
   
   for(s = 0; s < NS; ++s)
@@ -445,6 +447,23 @@ static void compute_x(Patch_T *const patch)
       Ey += E_Trans_prime[i_j_to_ij(ETp_ncol,i,s)]*y[i];
     x[s] = f_prime[s]-Ey;
   }
+
+# elif E_Trans_prime_IS_CCS_FORMAT
+  double *const E_Ax = Schur->E_Trans_prime->ccs->Ax;
+  int *const E_Ap = Schur->E_Trans_prime->ccs->Ap;
+  int *const E_Ai = Schur->E_Trans_prime->ccs->Ai;
+  const int Nc    = (int)Schur->E_Trans_prime->col;/* == NS */
+  
+  for(int c = 0; c < Nc; ++c)
+  {
+    Ey = 0;/* E_Trans_prime by y */
+    for (int i = E_Ap[c]; i < E_Ap[c+1]; ++i)
+      Ey += E_Ax[i]*y[E_Ai[i]];
+    x[c] = f_prime[c]-Ey;
+  }
+
+# endif
+
   free(Schur->f_prime);
   Schur->x = x;
 }
@@ -775,7 +794,16 @@ static char *making_F_by_E_prime(Patch_T *const patch)
   const double time1 = get_time_sec();
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
   const Uint np = Schur->np;
-  const Matrix_T *const E_Trans_prime = Schur->E_Trans_prime;
+  Matrix_T *const E_Trans_prime = Schur->E_Trans_prime;
+  
+# if E_Trans_prime_IS_RMO_FORMAT  
+  Matrix_T *ETp_ccs = cast_matrix_ccs(E_Trans_prime);
+  
+# elif E_Trans_prime_IS_CCS_FORMAT
+  Matrix_T *const ETp_ccs = E_Trans_prime;
+  
+# endif
+
   Uint p;
   char *msg = calloc(MSG_SIZE1,1);
   IsNull(msg);
@@ -790,10 +818,9 @@ static char *making_F_by_E_prime(Patch_T *const patch)
     
     if (F)
     {
-      FxEprime[p] = alloc_matrix(RMO_SF,F->row,E_Trans_prime->row);
-      
       #if defined(MxM_GSL_BLAS)
       
+        FxEprime[p] = alloc_matrix(RMO_SF,F->row,E_Trans_prime->row);
         assert(F->rmo_f);
         assert(E_Trans_prime->rmo_f);
         assert(FxEprime[p]->rmo_f);
@@ -815,7 +842,8 @@ static char *making_F_by_E_prime(Patch_T *const patch)
                   0.0, &gslFxEp.matrix);
       
       #elif defined(MxM_MKL_BLAS) || defined(MxM_C_BLAS)
-      
+
+        FxEprime[p] = alloc_matrix(RMO_SF,F->row,E_Trans_prime->row);
         assert(F->rmo_f);
         assert(E_Trans_prime->rmo_f);
         assert(FxEprime[p]->rmo_f);
@@ -837,7 +865,16 @@ static char *making_F_by_E_prime(Patch_T *const patch)
 
       #else
       
-        matrix_by_matrix(F,E_Trans_prime,FxEprime[p],"a*transpose(b)");
+        /* cast to ccs format */
+        Matrix_T* F_ccs  = cast_matrix_ccs(F);
+        
+        /* only if has any non zero entries */
+        if (F_ccs->ccs->Ap[F_ccs->col] && ETp_ccs->ccs->Ap[ETp_ccs->col])
+        {
+          FxEprime[p] = alloc_matrix(RMO_SF,F_ccs->row,ETp_ccs->row);
+          matrix_by_matrix(F_ccs,ETp_ccs,FxEprime[p],"a*transpose(b)");
+        }
+        free_matrix(F_ccs);
         
       #endif
       
@@ -846,6 +883,10 @@ static char *making_F_by_E_prime(Patch_T *const patch)
   }
   free(Schur->F);
   
+# if E_Trans_prime_IS_RMO_FORMAT
+  free_matrix(ETp_ccs);
+# endif
+
   sprintf(msg,"{ Make F*E' ...\n"
               "} Make F*E' --> Done. ( Wall-Clock = %.0fs )\n",
               get_time_sec()-time1);
@@ -1398,7 +1439,15 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   m_xs->col      = (long)S->E_Trans->col;
   m_xs->reg_f    = 1;
   m_xs->reg->A   = xs;
+
+# if E_Trans_prime_IS_RMO_FORMAT
   S->E_Trans_prime = cast_matrix_rmo(m_xs);
+  
+# elif E_Trans_prime_IS_CCS_FORMAT
+  S->E_Trans_prime = cast_matrix_ccs(m_xs);
+  
+# endif
+
   free_matrix(m_xs);
   
   sprintf(msg,"{ Solve BE' = E and Bf' = f ...\n"

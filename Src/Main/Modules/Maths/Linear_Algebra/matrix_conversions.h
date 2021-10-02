@@ -15,3 +15,5 @@ static void convert_reg2ccs(const Matrix_T *const reg,Matrix_T *const ccs,const 
 static void convert_ccs2reg(const Matrix_T *const ccs,Matrix_T *const reg);
 static void convert_ccs_long2reg(const Matrix_T *const ccs,Matrix_T *const reg);
 static void convert_reg2ccs_long(const Matrix_T *const reg,Matrix_T *const ccs_l,const double DropLimit);
+static void convert_rmo2ccs(const Matrix_T *const rmo,Matrix_T *const ccs,const double DropLimit);
+

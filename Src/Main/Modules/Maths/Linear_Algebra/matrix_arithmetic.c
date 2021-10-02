@@ -220,6 +220,34 @@ Matrix_T *matrix_by_matrix(const Matrix_T *const a,
               D[r][c] += A[i_j_to_ij(b_col,r,i)]*B[i_j_to_ij(b_col,c,i)];
       }
     }
+    else if (a->ccs_f && b->ccs_f)
+    {
+      if (result && result->rmo_f)
+      {
+        d = result;
+        double *const a_Ax = a->ccs->Ax;
+        int *const a_Ai    = a->ccs->Ai;
+        int *const a_Ap    = a->ccs->Ap;
+        double *const b_Ax = b->ccs->Ax;
+        int *const b_Ai    = b->ccs->Ai;
+        int *const b_Ap    = b->ccs->Ap;
+        double *const D = d->rmo->A;
+        
+        for (c = 0; c < a_col; ++c)
+        {
+          for(int l1 = a_Ap[c]; l1 < a_Ap[c+1]; ++l1)
+          {
+            r = a_Ai[l1];
+            for (int l2 = b_Ap[c]; l2 < b_Ap[c+1]; ++l2)
+              D[i_j_to_ij(b_row,r,b_Ai[l2])] += a_Ax[l1]*b_Ax[l2];
+          }
+        }
+      }
+      else
+      {
+        Error0(NO_OPTION);
+      }
+    }
     else
       Error0(INCOMPLETE_FUNC);
   }

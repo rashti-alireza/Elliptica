@@ -26,6 +26,11 @@
 
 #endif
 
+/* NOTE: E_Trans_prime_IS_RMO_FORMAT and E_Trans_prime_IS_CCS_FORMAT 
+// MUST be mutually exclusive. */
+#define E_Trans_prime_IS_RMO_FORMAT (0)
+#define E_Trans_prime_IS_CCS_FORMAT (1)
+
 /* string size */
 #define MSG_SIZE1 (999)
 #define MSG_SIZE2 (9999)
