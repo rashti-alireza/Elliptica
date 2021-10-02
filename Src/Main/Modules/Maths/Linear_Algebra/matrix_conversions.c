@@ -500,8 +500,7 @@ static void convert_reg2ccs_long(const Matrix_T *const reg,Matrix_T *const ccs_l
   ccs_l->ccs_long->Ax = Ax;
 }
 
-/* converting a rmo format to ccs format.
-// note: the matrix will be made in CCS such that be in order in row. */
+/* converting a rmo format to ccs format. */
 static void convert_rmo2ccs(const Matrix_T *const rmo,Matrix_T *const ccs,const double DropLimit)
 {
   const long Nr = rmo->row;
