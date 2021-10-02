@@ -51,9 +51,9 @@ Matrix_T *compress_stack2ccs
           if (GRT(ABSd(m[r][c]),DropLimit))
           {
             Ai = realloc(Ai,(long Uint)(tNN0+1)*sizeof(*Ai));
-            IsNull(Ai);
+            assert(Ai);
             Ax = realloc(Ax,(long Uint)(tNN0+1)*sizeof(*Ax));
-            IsNull(Ax);
+            assert(Ax);
             Ai[tNN0] = (int)(r+R);
             Ax[tNN0] = m[r][c];
             tNN0++;
@@ -444,9 +444,9 @@ static void convert_reg2ccs(const Matrix_T *const reg,Matrix_T *const ccs,const 
       if (GRT(ABSd(m[r][c]),DropLimit))
       {
         Ai = realloc(Ai,(long Uint)(tNN0+1)*sizeof(*Ai));
-        IsNull(Ai);
+        assert(Ai);
         Ax = realloc(Ax,(long Uint)(tNN0+1)*sizeof(*Ax));
-        IsNull(Ax);
+        assert(Ax);
         Ai[tNN0] = (int)r;
         Ax[tNN0] = m[r][c];
         tNN0++;
@@ -482,9 +482,9 @@ static void convert_reg2ccs_long(const Matrix_T *const reg,Matrix_T *const ccs_l
       if (GRT(ABSd(m[r][c]),DropLimit))
       {
         Ai = realloc(Ai,(long Uint)(tNN0+1)*sizeof(*Ai));
-        IsNull(Ai);
+        assert(Ai);
         Ax = realloc(Ax,(long Uint)(tNN0+1)*sizeof(*Ax));
-        IsNull(Ax);
+        assert(Ax);
         Ai[tNN0] = r;
         Ax[tNN0] = m[r][c];
         tNN0++;
@@ -521,9 +521,9 @@ static void convert_rmo2ccs(const Matrix_T *const rmo,Matrix_T *const ccs,const 
       if (GRT(ABSd(mx),DropLimit))
       {
         Ai = realloc(Ai,(long Uint)(tNN0+1)*sizeof(*Ai));
-        IsNull(Ai);
+        assert(Ai);
         Ax = realloc(Ax,(long Uint)(tNN0+1)*sizeof(*Ax));
-        IsNull(Ax);
+        assert(Ax);
         Ai[tNN0] = (int)r;
         Ax[tNN0] = mx;
         tNN0++;
