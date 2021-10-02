@@ -428,14 +428,35 @@ static void free_E_Trans_prime(Patch_T *const patch)
 static void compute_x(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
-  const Uint NS            = Schur->NS;
-  const Uint NI            = Schur->NI;
+  const Uint NS = Schur->NS;
   double *f_prime  = Schur->f_prime;
-  const Uint ETp_ncol         = (Uint)Schur->E_Trans_prime->col;
-  double *const E_Trans_prime = Schur->E_Trans_prime->rmo->A;
   const double *const y = Schur->y;
   double *const x = alloc_double(NS);
   double Ey;/* E_Trans_prime by y */
+
+
+/* when E is stored in ccs format */
+# if 0
+  double *const E_Ax = Schur->E_Trans_prime->ccs->Ax;
+  int *const E_Ap = Schur->E_Trans_prime->ccs->Ap;
+  int *const E_Ai = Schur->E_Trans_prime->ccs->Ai;
+  const int Nc    = (int)Schur->E_Trans_prime->col;/* == NS */
+  
+  for(int c = 0; c < Nc; ++c)
+  {
+    Ey = 0;/* E_Trans_prime by y */
+    for (int i = E_Ap[c]; i < E_Ap[c+1]; ++i)
+      Ey += E_Ax[i]*y[E_Ai[i]];
+    x[c] = f_prime[c]-Ey;
+  }
+# endif
+
+
+/* when E is stored in row order format */
+# if 1
+  const Uint NI = Schur->NI;
+  double *const E_Trans_prime = Schur->E_Trans_prime->rmo->A;
+  const Uint ETp_ncol         = (Uint)Schur->E_Trans_prime->col;
   Uint i,s;
   
   for(s = 0; s < NS; ++s)
@@ -445,6 +466,9 @@ static void compute_x(Patch_T *const patch)
       Ey += E_Trans_prime[i_j_to_ij(ETp_ncol,i,s)]*y[i];
     x[s] = f_prime[s]-Ey;
   }
+# endif
+
+
   free(Schur->f_prime);
   Schur->x = x;
 }
