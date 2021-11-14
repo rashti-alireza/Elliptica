@@ -11,6 +11,83 @@
 
 #define _MAX_STR_ (400)
 
+/* basic math */
+#define Cos(a) cos((a))
+#define Sin(a) sin((a))
+#define Csc(a) (1./sin((a)))
+#define Cot(a) (1./tan((a)))
+
+
+/* macro for resultant of:
+// g_ijn(X) = eta_i (sum_{l=0}^{n-1} eta_l T_i(X_l) * T_l(X))|X_j,
+// X = arccos(th).
+// NOTE: the following summation should be treated carefully 
+// when th_i = th_j or th_i+th_j = 0 */
+#define Jacobian_g(i,j,n) \
+  (\
+    (\
+      sin((n-3./2.)(th[i]+th[j]))/(2.*sin((th[i]+th[j])/2.)) +\
+      sin((n-3./2.)(th[i]-th[j]))/(2.*sin((th[i]-th[j])/2.)) -\
+      minus1_to_i[i%2]*cos((n-1)*th[j])\
+    )*eta(i)\
+  )
+
+
+
+
+/* sum_{n=0}^{N} cos(n lambda) = 
+// 0.5 + 0.5*( sin( (N+0.5)*(lambda) ) ) / ( sin( 0.5*(lambda) ) ),
+// N0 = N+0.5. */
+#define sum_0_N_cos_nlambda(N0,lambda) \
+  ( \
+    0.5 + 0.5*( sin( (N0)*(lambda) ) ) / ( sin( 0.5*(lambda) ) ) \
+  )
+
+/* d/dlambda sum_{n=0}^{N} cos(n lambda) (when lambda != 0,pi) */
+#define d_dlambda_sum_0_N_cos_nlambda(N0,lambda) \
+  (\
+    ( \
+      Csc(0.5*(lambda))*(2.*(N0)*Cos((lambda)*(N0)) - \
+      Cot(0.5*(lambda))*Sin((lambda)*(N0)))\
+    )*0.25\
+  )
+
+/* d^2/dlambda^2 sum_{n=0}^{N} cos(n lambda) (when lambda != 0,pi) */
+#define d2_dlambda2_sum_0_N_cos_nlambda(N0,lambda) \
+  (\
+    (\
+      Csc(0.5*(lambda))*(-4.*(N0)*Cos((lambda)*(N0))*Cot(0.5*(lambda)) + \
+      (-1. - 4.*Pow2(N0) + 2.*Pow2(Csc(0.5*(lambda))))*Sin((lambda)*(N0)))\
+    )*0.125\
+  )
+
+/* d^3/dlambda^3 sum_{n=0}^{N} cos(n lambda) (when lambda != 0,pi) */
+#define d3_dlambda3_sum_0_N_cos_nlambda(N0,lambda) \
+  (\
+    (\
+      pow(Csc((lambda)/2.,3))*(2*(N0)*\
+        (9 - 4*Pow2((N0)) + (3 + 4*Pow2((N0)))*Cos((lambda)))*\
+        Cos((lambda)*(N0)) - (11 - 12*Pow2((N0)) + Cos((lambda)) + \
+          12*Pow2((N0))*Cos((lambda)))*Cot((lambda)/2.)*Sin((lambda)*(N0)))\
+    )/32.\
+  )
+
+/* d^4/dlambda^4 sum_{n=0}^{N} cos(n lambda) (when lambda != 0,pi) */
+#define d4_dlambda4_sum_0_N_cos_nlambda(N0,lambda) \
+  (\
+    (\
+      pow(Csc((lambda)/2.),5)*(-16*(N0)*\
+        (11 - 4*Pow2((N0)) + Cos((lambda)) + \
+          4*Pow2((N0))*Cos((lambda)))*Cos((lambda)*(N0))*Sin((lambda)) + \
+       (115 - 120*Pow2((N0)) + 48*Pow4((N0)) + \
+          (76 + 96*Pow2((N0)) - 64*Pow4((N0)))*Cos((lambda)) + \
+          (1 + 24*Pow2((N0)) + 16*Pow4((N0)))*Cos(2*(lambda)))*\
+        Sin((lambda)*(N0)))\
+    )/256.\
+  )
+
+
+
 /* Jacobian type */
 typedef enum JTYPE_E
 {
