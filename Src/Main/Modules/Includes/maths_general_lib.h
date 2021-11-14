@@ -6,6 +6,8 @@
 #define Pow2(x) ((x)*(x))
 /* x^3 */
 #define Pow3(x) ((x)*(x)*(x))
+/* x^4 */
+#define Pow4(x) ((x)*(x)*(x)*(x))
 
 /* absolute value for double data type */
 #define ABSd(x) ((x) > 0. ? (x) : -(x))
