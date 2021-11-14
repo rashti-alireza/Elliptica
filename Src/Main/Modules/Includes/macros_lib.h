@@ -155,13 +155,6 @@
  sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);\
  partial_derivative(patch->fields[Ind(field__name__##xNAME)]);
 
-
-/* it compactifies the prepration of Jacobian of derivatives */
-#define JACOBIAN_DERIVATIVE(xNAME) const char *types_##xNAME[] = {#xNAME,0};\
-                                   prepare_Js_jacobian_eq(patch,types_##xNAME);\
-                                   Matrix_T *j_##xNAME = get_j_matrix(patch,#xNAME);\
-                                   fJs_T *xNAME        = get_j_reader(j_##xNAME);
-
 /* add a general parameter */
 #define Paddg(x,y) add_parameter(x,y)
 
