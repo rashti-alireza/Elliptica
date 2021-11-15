@@ -2093,9 +2093,9 @@ static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice)
 /* d/dX 2*sum_0^N (Tn(Xj) Tn(X))| X = Xi.
 // X = cos(th) */
 double
-d_2sum_0_N_TnjTni_dXi(double thi/* X_i = cos(theta_i) */,
-                      double thj/* X_i = cos(theta_i) */,
-                      Uint N/* the sum upper limit */)
+d_dXi_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
+                        double thj/* X_i = cos(theta_i) */,
+                        Uint N/* the sum upper limit */)
 {
   double sum = 0.;
   double N0 = N-0.5;
@@ -2139,9 +2139,9 @@ d_2sum_0_N_TnjTni_dXi(double thi/* X_i = cos(theta_i) */,
 /* d^2/dX^2 2*sum_0^N (Tn(Xj) Tn(X))| X = Xi.
 // X = cos(th) */
 double
-d2_2sum_0_N_TnjTni_dXi(double thi/* X_i = cos(theta_i) */,
-                       double thj/* X_i = cos(theta_i) */,
-                       Uint N/* the sum upper limit */)
+d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
+                          double thj/* X_i = cos(theta_i) */,
+                          Uint N/* the sum upper limit */)
 {
   double sum = 0.;
   double N0 = N-0.5;
