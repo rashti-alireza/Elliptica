@@ -2088,3 +2088,98 @@ static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice)
   i_cg[i_i] = Ap[c];
   Ap_cg[c]   = i_i;
 }
+
+
+/* d/dX 2*sum_0^N (Tn(Xj) Tn(X))| X = Xi.
+// X = cos(th) */
+double
+d_2sum_0_N_TnjTni_dXi(double thi/* X_i = cos(theta_i) */,
+                      double thj/* X_i = cos(theta_i) */,
+                      Uint N/* the sum upper limit */)
+{
+  double sum = 0.;
+  double N0 = N-0.5;
+  
+  if (EQL(thi,0.))
+  {
+    sum = 
+      d2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj) +
+      d_dlambda_sum_0_N_cos_nlambda(N,N0,thj);
+    sum *= 2.;
+    
+  }
+  else if (EQL(thi,M_PI))
+  {
+    double lambda = thj+M_PI;
+    sum = 
+      d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda) +
+      d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda);
+
+    lambda = thj-M_PI;
+    sum += 
+      d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda) +
+      d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda);
+  }
+  else
+  {
+    double lambda = thi+thj;
+    double dthi_dX   = -1./sin(thi);
+    
+    sum = d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda);
+    
+    lambda = thi-thj;
+    sum += d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda);
+    
+    sum *= dthi_dX;
+  }
+  
+  return sum;
+}
+
+/* d^2/dX^2 2*sum_0^N (Tn(Xj) Tn(X))| X = Xi.
+// X = cos(th) */
+double
+d2_2sum_0_N_TnjTni_dXi(double thi/* X_i = cos(theta_i) */,
+                       double thj/* X_i = cos(theta_i) */,
+                       Uint N/* the sum upper limit */)
+{
+  double sum = 0.;
+  double N0 = N-0.5;
+  
+  if (EQL(thi,0.))
+  {
+    sum = 
+      d4_dlambda4_sum_0_N_cos_nlambda(N,N0,thj) -
+      d2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj);
+    sum *= 2./3.;
+    
+  }
+  else if (EQL(thi,M_PI))
+  {
+    double lambda = thj+M_PI;
+    sum = 
+      d4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) -
+      d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+    
+    lambda = thj-M_PI;
+    sum += 
+      d4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) -
+      d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+      
+    sum /= 3.;
+  }
+  else
+  {
+    double sin_thi   = sin(thi);
+    double d2thi_dX2 = -cos(thi)/(Pow3(sin_thi));
+    double dthi_dX   = -1./sin_thi;
+    double lambda    = thi+thj;
+    
+    sum = d2thi_dX2*d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda);
+    
+    lambda = thi-thj;
+    sum += Pow2(dthi_dX)*d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+  }
+  
+  return sum;
+}
