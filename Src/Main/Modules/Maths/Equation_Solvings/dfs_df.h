@@ -11,26 +11,11 @@
 
 #define _MAX_STR_ (400)
 
-/* basic math */
+/* basic trig math */
 #define Cos(a) cos((a))
 #define Sin(a) sin((a))
 #define Csc(a) (1./sin((a)))
 #define Cot(a) (1./tan((a)))
-
-
-/* macro for resultant of:
-// g_ijn(X) = eta_i (sum_{l=0}^{n-1} eta_l T_i(X_l) * T_l(X))|X_j,
-// X = arccos(th).
-// NOTE: the following summation should be treated carefully 
-// when th_i = th_j or th_i+th_j = 0 */
-#define Jacobian_g(i,j,n) \
-  (\
-    (\
-      sin((n-3./2.)(th[i]+th[j]))/(2.*sin((th[i]+th[j])/2.)) +\
-      sin((n-3./2.)(th[i]-th[j]))/(2.*sin((th[i]-th[j])/2.)) -\
-      minus1_to_i[i%2]*cos((n-1)*th[j])\
-    )*eta(i)\
-  )
 
 
 /* (-1)^n */
@@ -95,6 +80,16 @@
     )/256.\
   )
 
+
+/* -> d/dX(df/du)=d/dX (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N-1}(X)),
+// NOTE: X = cos(th) */
+#define JACOBIAN_d_dX_df_du(thi,thj,N,j,X) \
+   ( d_dXi_2xsum_0_N_Tnj_Tni(thi,thj,N) - SING(j)*dT_dx((N)-1,(X)) )
+
+/* -> d2/dX^2(df/du)=d2/dX^2 (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N-1}(X)),
+// NOTE: X = cos(th)). */
+#define JACOBIAN_d2_dX2_df_du(thi,thj,N,j,X) \
+   ( d2_dXi2_2xsum_0_N_Tnj_Tni(thi,thj,N) - SING(j)*d2T_dx2((N)-1,(X)) )
 
 
 /* Jacobian type */

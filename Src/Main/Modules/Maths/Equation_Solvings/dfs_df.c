@@ -2089,8 +2089,8 @@ static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice)
 }
 
 
-/* d/dX 2*sum_0^N (Tn(Xj) Tn(X))| X = Xi.
-// X = cos(th) */
+/* -> d/dX 2*sum_0^N (Tn(Xj) Tn(X))| X = Xi.
+// X = cos(th). */
 double
 d_dXi_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
                         double thj/* X_i = cos(theta_i) */,
@@ -2135,8 +2135,8 @@ d_dXi_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
   return sum;
 }
 
-/* d^2/dX^2 2*sum_0^N (Tn(Xj) Tn(X))| X = Xi.
-// X = cos(th) */
+/* -> d^2/dX^2 2*sum_0^N (Tn(Xj) Tn(X))| X = Xi.
+// X = cos(th). */
 double
 d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
                           double thj/* X_i = cos(theta_i) */,
