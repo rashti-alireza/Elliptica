@@ -58,7 +58,7 @@
 // N0 = N+0.5. */
 #define d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda) \
   ( EQL((lambda),0.) ?\
-    (-(2.*Pow3(N)+3.*Pow2(N)+N)/6.) :\
+    -(Pow3(N)/3.+Pow2(N)/2.+N/6.)/* simplified, don't forget - sign! */ :\
     (\
       Csc(0.5*(lambda))*(-4.*(N0)*Cos((lambda)*(N0))*Cot(0.5*(lambda)) + \
       (-1. - 4.*Pow2(N0) + 2.*Pow2(Csc(0.5*(lambda))))*Sin((lambda)*(N0)))\
@@ -82,7 +82,7 @@
 // N0 = N+0.5. */
 #define d4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) \
   ( EQL((lambda),0.) ?\
-    ((Pow4(N)*(6.*N+15.)+10.*Pow3(N)-N)/30.):\
+    (Pow4(N)*(N/5.+0.5)+Pow3(N)/3.-N/30.)/* simplified */:\
     (\
       pow(Csc((lambda)/2.),5)*(-16*(N0)*\
         (11 - 4*Pow2((N0)) + Cos((lambda)) + \
