@@ -38,32 +38,38 @@
 /* sum_{n=0}^{N} cos(n lambda) = 
 // 0.5 + 0.5*( sin( (N+0.5)*(lambda) ) ) / ( sin( 0.5*(lambda) ) ),
 // N0 = N+0.5. */
-#define sum_0_N_cos_nlambda(N0,lambda) \
+#define sum_0_N_cos_nlambda(N,N0,lambda) \
   ( \
     0.5 + 0.5*( sin( (N0)*(lambda) ) ) / ( sin( 0.5*(lambda) ) ) \
   )
 
-/* d/dlambda sum_{n=0}^{N} cos(n lambda) (when lambda != 0,pi) */
-#define d_dlambda_sum_0_N_cos_nlambda(N0,lambda) \
-  (\
+/* d/dlambda sum_{n=0}^{N} cos(n lambda).
+// N0 = N+0.5. */
+#define d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda) \
+  ( EQL((lambda),0.) ?\
+    (0.0):\
     ( \
       Csc(0.5*(lambda))*(2.*(N0)*Cos((lambda)*(N0)) - \
       Cot(0.5*(lambda))*Sin((lambda)*(N0)))\
     )*0.25\
   )
 
-/* d^2/dlambda^2 sum_{n=0}^{N} cos(n lambda) (when lambda != 0,pi) */
-#define d2_dlambda2_sum_0_N_cos_nlambda(N0,lambda) \
-  (\
+/* d^2/dlambda^2 sum_{n=0}^{N} cos(n lambda).
+// N0 = N+0.5. */
+#define d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda) \
+  ( EQL((lambda),0.) ?\
+    (-(2.*Pow3(N)+3.*Pow2(N)+N)/6.) :\
     (\
       Csc(0.5*(lambda))*(-4.*(N0)*Cos((lambda)*(N0))*Cot(0.5*(lambda)) + \
       (-1. - 4.*Pow2(N0) + 2.*Pow2(Csc(0.5*(lambda))))*Sin((lambda)*(N0)))\
     )*0.125\
   )
 
-/* d^3/dlambda^3 sum_{n=0}^{N} cos(n lambda) (when lambda != 0,pi) */
-#define d3_dlambda3_sum_0_N_cos_nlambda(N0,lambda) \
-  (\
+/* d^3/dlambda^3 sum_{n=0}^{N} cos(n lambda).
+// N0 = N+0.5. */
+#define d3_dlambda3_sum_0_N_cos_nlambda(N,N0,lambda) \
+  ( EQL((lambda),0.) ?\
+    (0.0):\
     (\
       pow(Csc((lambda)/2.,3))*(2*(N0)*\
         (9 - 4*Pow2((N0)) + (3 + 4*Pow2((N0)))*Cos((lambda)))*\
@@ -72,9 +78,11 @@
     )/32.\
   )
 
-/* d^4/dlambda^4 sum_{n=0}^{N} cos(n lambda) (when lambda != 0,pi) */
-#define d4_dlambda4_sum_0_N_cos_nlambda(N0,lambda) \
-  (\
+/* d^4/dlambda^4 sum_{n=0}^{N} cos(n lambda).
+// N0 = N+0.5. */
+#define d4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) \
+  ( EQL((lambda),0.) ?\
+    ((Pow4(N)*(6.*N+15.)+10.*Pow3(N)-N)/30.):\
     (\
       pow(Csc((lambda)/2.),5)*(-16*(N0)*\
         (11 - 4*Pow2((N0)) + Cos((lambda)) + \
