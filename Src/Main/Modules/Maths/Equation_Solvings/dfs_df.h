@@ -33,7 +33,8 @@
   )
 
 
-
+/* (-1)^n */
+#define SIGN(n) (((n)%2) ? -1. : 1.)
 
 /* sum_{n=0}^{N} cos(n lambda) = 
 // 0.5 + 0.5*( sin( (N+0.5)*(lambda) ) ) / ( sin( 0.5*(lambda) ) ),
