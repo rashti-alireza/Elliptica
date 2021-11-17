@@ -305,7 +305,7 @@ void free_grid(Grid_T *grid)
 /* free the patch completely */
 void free_patch(Patch_T *patch)
 {
-  Uint ijk,nn,f;
+  Uint ijk,nn,f,i,j;
   
   if (!patch)
     return;
@@ -329,7 +329,19 @@ void free_patch(Patch_T *patch)
     free_field(field);
   }
   Free(patch->fields);
+  
+  if (patch->JacobianT)
+  {
+    for (i = 0; i < 3; ++i)
+      for (j = 0; j < 3; ++j)
+        Free(patch->JacobianT->dX_dx[i][j]);
+    
+    for (i = 0; i < 3; ++i)
+      for (j = 0; j < 6; ++j)
+        Free(patch->JacobianT->d2X_dxdy[i][j]);
+  }
   Free(patch->JacobianT);
+  
   free_patch_interface(patch);
   if (patch->solving_man)
   {
