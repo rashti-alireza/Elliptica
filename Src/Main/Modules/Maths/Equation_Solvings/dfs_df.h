@@ -17,9 +17,14 @@
 #define Csc(a) (1./sin((a)))
 #define Cot(a) (1./tan((a)))
 
+/* Kronecker Delta */
+#define K__D(i,j)  ( (i)==(j) ? 1. : 0.)
 
 /* (-1)^n */
 #define SIGN(n) (((n)%2) ? -1. : 1.)
+
+/* quick theta */
+#define THETA(axis,ijk) (patch->node[(ijk)]->theta[(axis)])
 
 /* sum_{n=0}^{N} cos(n lambda) = 
 // 0.5 + 0.5*( sin( (N+0.5)*(lambda) ) ) / ( sin( 0.5*(lambda) ) ),
@@ -83,13 +88,13 @@
 
 /* -> d/dX(df/du)=d/dX (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N-1}(X)),
 // NOTE: X = cos(th) */
-#define JACOBIAN_d_dX_df_du(thi,thj,N,j,X) \
-   ( d_dXi_2xsum_0_N_Tnj_Tni(thi,thj,N) - SING(j)*dT_dx((N)-1,(X)) )
+#define JACOBIAN_d_dX_df_du(thi,thj,N,j) \
+   ( d_dXi_2xsum_0_N_Tnj_Tni(thi,thj,N) - SIGN(j)*dT_dx((int)(N)-1,cos(thi)) )
 
 /* -> d2/dX^2(df/du)=d2/dX^2 (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N-1}(X)),
 // NOTE: X = cos(th)). */
-#define JACOBIAN_d2_dX2_df_du(thi,thj,N,j,X) \
-   ( d2_dXi2_2xsum_0_N_Tnj_Tni(thi,thj,N) - SING(j)*d2T_dx2((N)-1,(X)) )
+#define JACOBIAN_d2_dX2_df_du(thi,thj,N,j) \
+   ( d2_dXi2_2xsum_0_N_Tnj_Tni(thi,thj,N) - SIGN(j)*d2T_dx2((int)(N)-1,cos(thi)) )
 
 
 /* Jacobian type */
