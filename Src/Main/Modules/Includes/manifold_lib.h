@@ -197,7 +197,7 @@ typedef struct JACOBIAN_TRANS_T
   double (*j)(struct PATCH_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p);/* function for transformation */
   double (*dX_dx)[3][3];/* coords Jacobian for dX[ijk][0...2]/dx[0...2]. 
                         // notation: 0 = x/X, 1 = y/Y, and 2 = z/Z. */
-  double (*d2X_dx2)[3][6];/* coords Jacobian for d^2X[ijk][0...2]/dx^2[0...5].
+  double (*d2X_dxdy)[3][6];/* coords Jacobian for d^2X[ijk][0...2]/dxdy[0...5].
                           // notation: 0 = x/X, 1 = y/Y, and 2 = z/Z.
                           // for [0...5] => xx, xy, xz, yy, yz, and zz. */
   double dN_dX[3];/* coords Jacobian for dN/dX, where N is the normalized coords, 
