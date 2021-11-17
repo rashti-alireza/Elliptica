@@ -29,6 +29,20 @@
 /* normalization */
 #define NORMALIZATION(n) ( 1./( 2.*((n)-1.) ) )
 
+/* dX/dx */
+#define dX__dx(patch,ijk,dX_axis,dx_axis) \
+  ( (patch)->JacobianT->dX_dx[(ijk)][(dX_axis)][(dx_axis)] )
+
+
+/* d2X__dxdy */
+#define d2X__dxdy(patch,ijk,dX_axis,dxdy_axis) \
+  ( (patch)->JacobianT->d2X_dxdy[(ijk)][(dX_axis)][(dxdy_axis)] )
+
+/* dN/dX */
+#define dN__dX(patch,dX_axis) \
+  ( (patch)->JacobianT->dN_dX[(dX_axis)] )
+
+
 /* sum_{n=0}^{N} cos(n lambda) = 
 // 0.5 + 0.5*( sin( (N+0.5)*(lambda) ) ) / ( sin( 0.5*(lambda) ) ),
 // N0 = N+0.5. */
@@ -101,16 +115,16 @@
 
 /* normalization * coords jacobian * JACOBIAN_d_dX_df_du */
 #define JACOBIAN_dX_dx_d_dX_df_du(patch, dx_axis, X_axis, ijk, lmn, pn/* 1-d point number */) \
-  ( NORMALIZATION(patch->n[X_axis])*dX_dx[ijk][X_axis][dx_axis]*dN_dX[X_axis]*\
+  ( NORMALIZATION(patch->n[X_axis])*dX__dx(patch,ijk,X_axis,dx_axis)*dN__dX(patch,X_axis)*\
     JACOBIAN_d_dX_df_du(THETA(X_axis,ijk),THETA(X_axis,lmn),patch->n[X_axis]-1,pn) )
 
 /* normalization * coords jacobian * JACOBIAN_d2_dX2_df_du */
-#define JACOBIAN_d2X_dxdy_d2_dX2_df_du(patch, dx_axis, dy_axis, xy_axis,X_axis, ijk, lmn, pn/* 1-d point number */) \
+#define JACOBIAN_d2X_dxdy_d2_dX2_df_du(patch, dx_axis, dy_axis, dxdy_axis,X_axis, ijk, lmn, pn/* 1-d point number */) \
   ( \
     ( \
-      d2X_dx2[ijk][X_axis][xy_axis]*dN_dX[X_axis]*\
+      d2X__dxdy(patch,ijk,X_axis,dxdy_axis)*dN__dX(patch,X_axis)*\
       JACOBIAN_d_dX_df_du(THETA(X_axis,ijk),THETA(X_axis,lmn),patch->n[X_axis]-1,pn) +     \
-      dX_dx[ijk][X_axis][dx_axis]*dN_dX[X_axis] * dX_dx[ijk][X_axis][dy_axis]*dN_dX[X_axis]* \
+      dX__dx(patch,ijk,X_axis,dx_axis)*dN__dX(patch,X_axis) * dX__dx(patch,ijk,X_axis,dy_axis)*dN__dX(patch,X_axis)* \
       JACOBIAN_d2_dX2_df_du(THETA(X_axis,ijk),THETA(X_axis,lmn),patch->n[X_axis]-1,pn)     \
     )*NORMALIZATION(patch->n[X_axis])\
   )
