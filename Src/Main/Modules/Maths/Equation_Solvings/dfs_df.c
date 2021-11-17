@@ -2193,9 +2193,9 @@ INLINE double
   ijk_to_i_j_k(lmn,patch->n,&l,&m,&n);
   
   return
-    JACOBIAN_dX_dx_d_dX_df_du(patch,dx_axis,0,ijk,lmn,l)*K__D(j,m)*K__D(k,n)+
-    JACOBIAN_dX_dx_d_dX_df_du(patch,dx_axis,1,ijk,lmn,m)*K__D(i,l)*K__D(k,n)+
-    JACOBIAN_dX_dx_d_dX_df_du(patch,dx_axis,2,ijk,lmn,n)*K__D(i,l)*K__D(j,m);
+    JACOBIAN_dX_dx_d_dX_df_du(patch,dx_axis,0,ijk,lmn,i,l)*K__D(j,m)*K__D(k,n)+
+    JACOBIAN_dX_dx_d_dX_df_du(patch,dx_axis,1,ijk,lmn,j,m)*K__D(i,l)*K__D(k,n)+
+    JACOBIAN_dX_dx_d_dX_df_du(patch,dx_axis,2,ijk,lmn,k,n)*K__D(i,l)*K__D(j,m);
 }
 
 
@@ -2223,24 +2223,24 @@ INLINE double
   ijk_to_i_j_k(lmn,patch->n,&l,&m,&n);
   
   return
-    JACOBIAN_d2X_dxdy_d2_dX2_df_du(patch,dx_axis,dy_axis,dxdy_axis,0,ijk,lmn,i)*K__D(j,m)*K__D(k,n) +
-    JACOBIAN_dX_dx_d_dX_df_du(patch,dx_axis,0,ijk,lmn,i)*
+    JACOBIAN_d2X_dxdy_d2_dX2_df_du(patch,dx_axis,dy_axis,dxdy_axis,0,ijk,lmn,i,l)*K__D(j,m)*K__D(k,n) +
+    JACOBIAN_dX_dx_d_dX_df_du(patch,dx_axis,0,ijk,lmn,i,l)*
       (
-        K__D(k,n)*JACOBIAN_dX_dx_d_dX_df_du(patch,dy_axis,1,ijk,lmn,j) +
-        K__D(j,m)*JACOBIAN_dX_dx_d_dX_df_du(patch,dy_axis,2,ijk,lmn,j)
+        K__D(k,n)*JACOBIAN_dX_dx_d_dX_df_du(patch,dy_axis,1,ijk,lmn,j,m) +
+        K__D(j,m)*JACOBIAN_dX_dx_d_dX_df_du(patch,dy_axis,2,ijk,lmn,k,n)
       ) +
     
-    JACOBIAN_d2X_dxdy_d2_dX2_df_du(patch,dx_axis,dy_axis,dxdy_axis,1,ijk,lmn,j)*K__D(i,l)*K__D(k,n) +
-    JACOBIAN_dX_dx_d_dX_df_du(patch,dx_axis,1,ijk,lmn,j)*
+    JACOBIAN_d2X_dxdy_d2_dX2_df_du(patch,dx_axis,dy_axis,dxdy_axis,1,ijk,lmn,j,m)*K__D(i,l)*K__D(k,n) +
+    JACOBIAN_dX_dx_d_dX_df_du(patch,dx_axis,1,ijk,lmn,j,m)*
       (
-        K__D(k,n)*JACOBIAN_dX_dx_d_dX_df_du(patch,dy_axis,0,ijk,lmn,i) +
-        K__D(i,l)*JACOBIAN_dX_dx_d_dX_df_du(patch,dy_axis,2,ijk,lmn,k)
+        K__D(k,n)*JACOBIAN_dX_dx_d_dX_df_du(patch,dy_axis,0,ijk,lmn,i,l) +
+        K__D(i,l)*JACOBIAN_dX_dx_d_dX_df_du(patch,dy_axis,2,ijk,lmn,k,n)
       ) +
       
-    JACOBIAN_d2X_dxdy_d2_dX2_df_du(patch,dx_axis,dy_axis,dxdy_axis,2,ijk,lmn,k)*K__D(j,m)*K__D(i,l) +
-    JACOBIAN_dX_dx_d_dX_df_du(patch,dx_axis,2,ijk,lmn,k)*
+    JACOBIAN_d2X_dxdy_d2_dX2_df_du(patch,dx_axis,dy_axis,dxdy_axis,2,ijk,lmn,k,n)*K__D(j,m)*K__D(i,l) +
+    JACOBIAN_dX_dx_d_dX_df_du(patch,dx_axis,2,ijk,lmn,k,n)*
       (
-        K__D(i,l)*JACOBIAN_dX_dx_d_dX_df_du(patch,dy_axis,1,ijk,lmn,j) +
-        K__D(j,m)*JACOBIAN_dX_dx_d_dX_df_du(patch,dy_axis,0,ijk,lmn,i)
+        K__D(i,l)*JACOBIAN_dX_dx_d_dX_df_du(patch,dy_axis,1,ijk,lmn,j,m) +
+        K__D(j,m)*JACOBIAN_dX_dx_d_dX_df_du(patch,dy_axis,0,ijk,lmn,i,l)
       );
 }

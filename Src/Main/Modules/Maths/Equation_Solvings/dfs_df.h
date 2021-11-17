@@ -23,8 +23,10 @@
 /* (-1)^n */
 #define SIGN(n) (((n)%2) ? -1. : 1.)
 
-/* quick theta */
-#define THETA(axis,ijk) (patch->node[(ijk)]->theta[(axis)])
+/* quick theta: 
+// NOTE1: assuming Chebyshev Extrema points.
+// NOTE2: assuming patch is defined. */
+#define THETA(i,X_axis) ( i*M_PI/((patch->n[(X_axis)])-1.) )
 
 /* normalization */
 #define NORMALIZATION(n) ( 1./( 2.*((n)-1.) ) )
@@ -114,18 +116,18 @@
    ( d2_dXi2_2xsum_0_N_Tnj_Tni(thi,thj,N) - SIGN(j)*d2T_dx2((int)(N)-1,cos(thi)) )
 
 /* normalization * coords jacobian * JACOBIAN_d_dX_df_du */
-#define JACOBIAN_dX_dx_d_dX_df_du(patch, dx_axis, X_axis, ijk, lmn, pn/* 1-d point number */) \
+#define JACOBIAN_dX_dx_d_dX_df_du(patch, dx_axis, X_axis, ijk, lmn, qi,qj) \
   ( NORMALIZATION(patch->n[X_axis])*dX__dx(patch,ijk,X_axis,dx_axis)*dN__dX(patch,X_axis)*\
-    JACOBIAN_d_dX_df_du(THETA(X_axis,ijk),THETA(X_axis,lmn),patch->n[X_axis]-1,pn) )
+    JACOBIAN_d_dX_df_du(THETA(qi,X_axis),THETA(qj,X_axis),patch->n[X_axis]-1,qj) )
 
 /* normalization * coords jacobian * JACOBIAN_d2_dX2_df_du */
-#define JACOBIAN_d2X_dxdy_d2_dX2_df_du(patch, dx_axis, dy_axis, dxdy_axis,X_axis, ijk, lmn, pn/* 1-d point number */) \
+#define JACOBIAN_d2X_dxdy_d2_dX2_df_du(patch, dx_axis, dy_axis, dxdy_axis,X_axis, ijk, lmn, qi,qj) \
   ( \
     ( \
       d2X__dxdy(patch,ijk,X_axis,dxdy_axis)*dN__dX(patch,X_axis)*\
-      JACOBIAN_d_dX_df_du(THETA(X_axis,ijk),THETA(X_axis,lmn),patch->n[X_axis]-1,pn) +     \
+      JACOBIAN_d_dX_df_du(THETA(qi,X_axis),THETA(qj,X_axis),patch->n[X_axis]-1,qj) +     \
       dX__dx(patch,ijk,X_axis,dx_axis)*dN__dX(patch,X_axis) * dX__dx(patch,ijk,X_axis,dy_axis)*dN__dX(patch,X_axis)* \
-      JACOBIAN_d2_dX2_df_du(THETA(X_axis,ijk),THETA(X_axis,lmn),patch->n[X_axis]-1,pn)     \
+      JACOBIAN_d2_dX2_df_du(THETA(qi,X_axis),THETA(qj,X_axis),patch->n[X_axis]-1,qj)     \
     )*NORMALIZATION(patch->n[X_axis])\
   )
 
