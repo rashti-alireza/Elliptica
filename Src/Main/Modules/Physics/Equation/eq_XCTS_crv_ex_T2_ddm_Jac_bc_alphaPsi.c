@@ -15,9 +15,9 @@ void *eq_XCTS_curve_exc_T2_ddm_jacobian_bc_alphaPsi(void *vp1,void *vp2)
   const double kd[2] = {0.,1.};/* Kronecker delta */
 
   /* declaring: */
-  JACOBIAN_DERIVATIVE(JalphaPsi_D1)
-  JACOBIAN_DERIVATIVE(JalphaPsi_D0)
-  JACOBIAN_DERIVATIVE(JalphaPsi_D2)
+  Init_Jacobian(JalphaPsi_D1)
+  Init_Jacobian(JalphaPsi_D0)
+  Init_Jacobian(JalphaPsi_D2)
   READ_v(bh_sConf_U1)
   READ_v(bh_sConf_U0)
   READ_v(bh_sConf_U2)

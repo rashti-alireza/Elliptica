@@ -7,10 +7,11 @@
 #define MAX_STR_MATH_EQ_SOLVE_LIB (400)
 
 /* it compactifies the prepration of Jacobian of derivatives */
-#define JACOBIAN_DERIVATIVE(xNAME) const char *types_##xNAME[] = {#xNAME,0};\
-                                   prepare_Js_jacobian_eq(patch,types_##xNAME);\
-                                   Matrix_T *j_##xNAME = get_j_matrix(patch,#xNAME);\
-                                   fJs_T *xNAME        = get_j_reader(j_##xNAME);
+#define Init_Jacobian(xNAME) \
+  const char *types_##xNAME[] = {#xNAME,0};\
+  prepare_Js_jacobian_eq(patch,types_##xNAME);\
+  Matrix_T *j_##xNAME = get_j_matrix(patch,#xNAME);\
+  fJs_T *xNAME        = get_j_reader(j_##xNAME);
 
 /* forward declaration structures */
 struct FIELD_T;

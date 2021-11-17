@@ -14,9 +14,9 @@ void *eq_XCTS_curve_T1_ddm_jacobian_bc_phi(void *vp1,void *vp2)
   Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
 
   /* declaring: */
-  JACOBIAN_DERIVATIVE(Jphi_D1)
-  JACOBIAN_DERIVATIVE(Jphi_D0)
-  JACOBIAN_DERIVATIVE(Jphi_D2)
+  Init_Jacobian(Jphi_D1)
+  Init_Jacobian(Jphi_D0)
+  Init_Jacobian(Jphi_D2)
   READ_v(drho0_D2)
   READ_v(drho0_D0)
   READ_v(drho0_D1)

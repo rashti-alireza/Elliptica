@@ -12,7 +12,7 @@ Point = ijk;
 # C macors
 C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
-C_macro3 = JACOBIAN_DERIVATIVE(name);
+C_macro3 = Init_Jacobian(name);
 
 # C arguments for jacobian of derivatives
 C_arg  = (j_name,ijk,lmn);
