@@ -98,6 +98,9 @@ typedef struct NODE_T
   double x[3];/* for Cartesian value x,y,z */
   double *X;/* for general curvilinear value a,b,c 
             // it's the coordinate the patch uses. */
+  double *theta;/* theta[i] = acos(N[i]), N is the normalized coords
+                // this is used for fast access to theta needed in 
+                // jacobian of d^nf/dx^n. */
 }Node_T;
 
 /* point */
@@ -192,8 +195,15 @@ struct Collocation_s
 typedef struct JACOBIAN_TRANS_T
 {
   double (*j)(struct PATCH_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const Uint p);/* function for transformation */
-  double *dX_dx[3][3];/* saving some transformation to save time for dX[0..2]/dx[0..2] */
-  double *dx_dX[3][3];/* saving some transformation to save time dx[0..2]/dX[0..2] */
+  double (*dX_dx)[3][3];/* coords Jacobian for dX[ijk][0...2]/dx[0...2]. 
+                        // notation: 0 = x/X, 1 = y/Y, and 2 = z/Z. */
+  double (*d2X_dx2)[3][6];/* coords Jacobian for d^2X[ijk][0...2]/dx^2[0...5].
+                          // notation: 0 = x/X, 1 = y/Y, and 2 = z/Z.
+                          // for [0...5] => xx, xy, xz, yy, yz, and zz. */
+  double dN_dX[3];/* coords Jacobian for dN/dX, where N is the normalized coords, 
+                  // i.e., [-1,1]. Since we ASSUMED dN/dX = constant then 
+                  // for example dN_dX[1]= dN^1/dY. 
+                  // notation: 0 = X, 1 = Y, 2 = Z. */
   /* split cubed spherical stuffs */
   struct
   {
