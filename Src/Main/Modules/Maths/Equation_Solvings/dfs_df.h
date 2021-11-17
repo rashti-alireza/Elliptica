@@ -100,9 +100,21 @@
    ( d2_dXi2_2xsum_0_N_Tnj_Tni(thi,thj,N) - SIGN(j)*d2T_dx2((int)(N)-1,cos(thi)) )
 
 /* normalization * coords jacobian * JACOBIAN_d_dX_df_du */
-#define JACOBIAN_dX_dx_d_dX_df_du(patch, x_axis, X_axis, ijk, lmn, pn/* 1-d point number */) \
-  ( NORMALIZATION(patch->n[X_axis])*dX_dx[ijk][X_axis][x_axis]*dN_dX[X_axis]*\
+#define JACOBIAN_dX_dx_d_dX_df_du(patch, dx_axis, X_axis, ijk, lmn, pn/* 1-d point number */) \
+  ( NORMALIZATION(patch->n[X_axis])*dX_dx[ijk][X_axis][dx_axis]*dN_dX[X_axis]*\
     JACOBIAN_d_dX_df_du(THETA(X_axis,ijk),THETA(X_axis,lmn),patch->n[X_axis]-1,pn) )
+
+/* normalization * coords jacobian * JACOBIAN_d2_dX2_df_du */
+#define JACOBIAN_d2X_dxdy_d2_dX2_df_du(patch, dx_axis, dy_axis, xy_axis,X_axis, ijk, lmn, pn/* 1-d point number */) \
+  ( \
+    ( \
+      d2X_dx2[ijk][X_axis][xy_axis]*dN_dX[X_axis]*\
+      JACOBIAN_d_dX_df_du(THETA(X_axis,ijk),THETA(X_axis,lmn),patch->n[X_axis]-1,pn) +     \
+      dX_dx[ijk][X_axis][dx_axis]*dN_dX[X_axis] * dX_dx[ijk][X_axis][dy_axis]*dN_dX[X_axis]* \
+      JACOBIAN_d2_dX2_df_du(THETA(X_axis,ijk),THETA(X_axis,lmn),patch->n[X_axis]-1,pn)     \
+    )*NORMALIZATION(patch->n[X_axis])\
+  )
+
 
 /* Jacobian type */
 typedef enum JTYPE_E
