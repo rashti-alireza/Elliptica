@@ -26,6 +26,9 @@
 /* quick theta */
 #define THETA(axis,ijk) (patch->node[(ijk)]->theta[(axis)])
 
+/* normalization */
+#define NORMALIZE(n) ( 1./( 2.*((n)-1.) ) )
+
 /* sum_{n=0}^{N} cos(n lambda) = 
 // 0.5 + 0.5*( sin( (N+0.5)*(lambda) ) ) / ( sin( 0.5*(lambda) ) ),
 // N0 = N+0.5. */
