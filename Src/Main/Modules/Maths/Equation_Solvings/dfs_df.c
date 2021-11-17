@@ -2091,7 +2091,7 @@ static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice)
 
 /* -> d/dX 2*sum_0^N (Tn(Xj) Tn(X))| X = Xi.
 // X = cos(th). */
-double
+static double
 d_dXi_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
                         double thj/* X_i = cos(theta_i) */,
                         Uint N/* the sum upper limit */)
@@ -2137,7 +2137,7 @@ d_dXi_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
 
 /* -> d^2/dX^2 2*sum_0^N (Tn(Xj) Tn(X))| X = Xi.
 // X = cos(th). */
-double
+static double
 d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
                           double thj/* X_i = cos(theta_i) */,
                           Uint N/* the sum upper limit */)
@@ -2181,4 +2181,24 @@ d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
   }
   
   return sum;
+}
+
+INLINE double
+  d2f_dxdu_Jacobian_pointwise(Patch_T *const patch,const int x_axis, const Uint ijk,const Uint lmn)
+{
+  double (*dX_dx)[3][3]     = patch->JacobianT->dX_dx;
+  const double *const dN_dX = patch->JacobianT->dN_dX;
+  Uint i,j,k,l,m,n;
+  
+  ijk_to_i_j_k(ijk,patch->n,&i,&j,&k);
+  ijk_to_i_j_k(lmn,patch->n,&l,&m,&n);
+  
+  return K__D(j,m)*K__D(k,n)*dX_dx[ijk][0][x_axis]*dN_dX[0]*
+         JACOBIAN_d_dX_df_du(THETA(0,ijk),THETA(0,lmn),patch->n[0]-1,l) +
+         
+         K__D(i,l)*K__D(k,n)*dX_dx[ijk][1][x_axis]*dN_dX[1]*
+         JACOBIAN_d_dX_df_du(THETA(1,ijk),THETA(1,lmn),patch->n[1]-1,m) +
+         
+         K__D(i,l)*K__D(j,m)*dX_dx[ijk][2][x_axis]*dN_dX[2]*
+         JACOBIAN_d_dX_df_du(THETA(2,ijk),THETA(2,lmn),patch->n[2]-1,n);
 }
