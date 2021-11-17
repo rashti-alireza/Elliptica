@@ -33,12 +33,12 @@
 
 /* dX/dx */
 #define dX__dx(patch,ijk,dX_axis,dx_axis) \
-  ( (patch)->JacobianT->dX_dx[(ijk)][(dX_axis)][(dx_axis)] )
+  ( (patch)->JacobianT->dX_dx[(dX_axis)][(dx_axis)][(ijk)] )
 
 
 /* d2X__dxdy */
 #define d2X__dxdy(patch,ijk,dX_axis,dxdy_axis) \
-  ( (patch)->JacobianT->d2X_dxdy[(ijk)][(dX_axis)][(dxdy_axis)] )
+  ( (patch)->JacobianT->d2X_dxdy[(dX_axis)][(dxdy_axis)][(ijk)] )
 
 /* dN/dX */
 #define dN__dX(patch,dX_axis) \
