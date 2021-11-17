@@ -2193,12 +2193,8 @@ INLINE double
   ijk_to_i_j_k(ijk,patch->n,&i,&j,&k);
   ijk_to_i_j_k(lmn,patch->n,&l,&m,&n);
   
-  return NORMALIZE(n[0])*K__D(j,m)*K__D(k,n)*dX_dx[ijk][0][x_axis]*dN_dX[0]*
-         JACOBIAN_d_dX_df_du(THETA(0,ijk),THETA(0,lmn),patch->n[0]-1,l) +
-         
-         NORMALIZE(n[1])*K__D(i,l)*K__D(k,n)*dX_dx[ijk][1][x_axis]*dN_dX[1]*
-         JACOBIAN_d_dX_df_du(THETA(1,ijk),THETA(1,lmn),patch->n[1]-1,m) +
-         
-         NORMALIZE(n[2])*K__D(i,l)*K__D(j,m)*dX_dx[ijk][2][x_axis]*dN_dX[2]*
-         JACOBIAN_d_dX_df_du(THETA(2,ijk),THETA(2,lmn),patch->n[2]-1,n);
+  return
+    JACOBIAN_dX_dx_d_dX_df_du(patch,x_axis,0,ijk,lmn,l)*K__D(j,m)*K__D(k,n)+
+    JACOBIAN_dX_dx_d_dX_df_du(patch,x_axis,1,ijk,lmn,m)*K__D(i,l)*K__D(k,n)+
+    JACOBIAN_dX_dx_d_dX_df_du(patch,x_axis,2,ijk,lmn,n)*K__D(i,l)*K__D(j,m);
 }

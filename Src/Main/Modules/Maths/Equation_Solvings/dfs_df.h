@@ -27,7 +27,7 @@
 #define THETA(axis,ijk) (patch->node[(ijk)]->theta[(axis)])
 
 /* normalization */
-#define NORMALIZE(n) ( 1./( 2.*((n)-1.) ) )
+#define NORMALIZATION(n) ( 1./( 2.*((n)-1.) ) )
 
 /* sum_{n=0}^{N} cos(n lambda) = 
 // 0.5 + 0.5*( sin( (N+0.5)*(lambda) ) ) / ( sin( 0.5*(lambda) ) ),
@@ -99,6 +99,10 @@
 #define JACOBIAN_d2_dX2_df_du(thi,thj,N,j) \
    ( d2_dXi2_2xsum_0_N_Tnj_Tni(thi,thj,N) - SIGN(j)*d2T_dx2((int)(N)-1,cos(thi)) )
 
+/* normalization * coords jacobian * JACOBIAN_d_dX_df_du */
+#define JACOBIAN_dX_dx_d_dX_df_du(patch, x_axis, X_axis, ijk, lmn, pn/* 1-d point number */) \
+  ( NORMALIZATION(patch->n[X_axis])*dX_dx[ijk][X_axis][x_axis]*dN_dX[X_axis]*\
+    JACOBIAN_d_dX_df_du(THETA(X_axis,ijk),THETA(X_axis,lmn),patch->n[X_axis]-1,pn) )
 
 /* Jacobian type */
 typedef enum JTYPE_E
