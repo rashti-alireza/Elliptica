@@ -2186,8 +2186,6 @@ d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
 INLINE double
   d2f_dxdu_Jacobian_pointwise(Patch_T *const patch,const Uint dx_axis, const Uint ijk,const Uint lmn)
 {
-  double (*dX_dx)[3][3]     = patch->JacobianT->dX_dx;
-  const double *const dN_dX = patch->JacobianT->dN_dX;
   Uint i,j,k;
   Uint l,m,n;
   
@@ -2204,9 +2202,6 @@ INLINE double
 INLINE double
   d3f_dxdydu_Jacobian_pointwise(Patch_T *const patch,const int dxdy_axis,const Uint ijk,const Uint lmn)
 {
-  double (*dX_dx)[3][3]     = patch->JacobianT->dX_dx;
-  double (*d2X_dx2)[3][6]   = patch->JacobianT->d2X_dx2;
-  const double *const dN_dX = patch->JacobianT->dN_dX;
   int dx_axis, dy_axis;
   Uint i,j,k;
   Uint l,m,n;
