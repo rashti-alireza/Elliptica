@@ -98,9 +98,6 @@ typedef struct NODE_T
   double x[3];/* for Cartesian value x,y,z */
   double *X;/* for general curvilinear value a,b,c 
             // it's the coordinate the patch uses. */
-  double *theta;/* theta[i] = acos(N[i]), N is the normalized coords
-                // this is used for fast access to theta needed in 
-                // jacobian of d^nf/dx^n. */
 }Node_T;
 
 /* point */
