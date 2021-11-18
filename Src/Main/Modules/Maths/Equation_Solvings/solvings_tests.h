@@ -14,7 +14,8 @@
 #define DO_NOT 0
 
 
-void test_dfs_df_values(Grid_T *const grid);
+void test_dfs_df_spectral_vs_FiniteDiff(Grid_T *const grid);
+void test_dfs_df_Spectral_vs_analytic(Grid_T *const grid);
 void test_dInterp_a_df(Grid_T *const grid);
 fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const sf,const char *const dir);
 static void test_dInterp_x_df_YZ_Tn_Ex(Field_T *const phi_field);

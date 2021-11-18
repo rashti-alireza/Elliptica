@@ -181,8 +181,8 @@ static double root_finder_f2_eq(void *params,const double *const x)
   UNUSED(params);
 }
 
-/* testing if the value of dfs_df are correct */
-void test_dfs_df_values(Grid_T *const grid)
+/* testing d^n/dX^n df/du between spectral and finite diff method. */
+void test_dfs_df_spectral_vs_FiniteDiff(Grid_T *const grid)
 {
   const char *const types[] = {"dfx_df","dfy_df","dfz_df",
                                "dfxx_df","dfxy_df","dfxz_df",
@@ -191,6 +191,18 @@ void test_dfs_df_values(Grid_T *const grid)
   test_make_Js_jacobian_eq(grid,types);
   pr_spent_time(start,"Making Jacobian");
 }
+
+/* testing d^n/dX^n df/du between spectral and analytic spectral method. */
+void test_dfs_df_Spectral_vs_analytic(Grid_T *const grid)
+{
+  const char *const types[] = {"dfx_df","dfy_df","dfz_df",
+                               "dfxx_df","dfxy_df","dfxz_df",
+                               "dfyy_df","dfyz_df","dfzz_df",0};
+  const double start = get_time_sec();
+  test_make_Js_jacobian_eq(grid,types);
+  pr_spent_time(start,"Making Jacobian");
+}
+
 
 /* testing various d(Interpolation)/df */
 void test_dInterp_a_df(Grid_T *const grid)

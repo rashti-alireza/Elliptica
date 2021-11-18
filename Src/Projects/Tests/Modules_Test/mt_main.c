@@ -32,7 +32,7 @@ int Modules_Test(void *vp)
   
   if (strcmp_i(PgetsEZ("Test_Jacobian_Spectral_vs_FiniteDiff"),"yes"))
   {
-    test_dfs_df_values(grid);
+    test_dfs_df_spectral_vs_FiniteDiff(grid);
   }
   
   if (strcmp_i(PgetsEZ("Test_Jacobian_Spectral_vs_Analytic"),"yes"))
