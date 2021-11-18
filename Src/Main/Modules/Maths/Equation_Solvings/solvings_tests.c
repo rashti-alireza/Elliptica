@@ -195,12 +195,32 @@ void test_dfs_df_spectral_vs_FiniteDiff(Grid_T *const grid)
 /* testing d^n/dX^n df/du between spectral and analytic spectral method. */
 void test_dfs_df_Spectral_vs_analytic(Grid_T *const grid)
 {
-  const char *const types[] = {"dfx_df","dfy_df","dfz_df",
-                               "dfxx_df","dfxy_df","dfxz_df",
-                               "dfyy_df","dfyz_df","dfzz_df",0};
-  const double start = get_time_sec();
-  test_make_Js_jacobian_eq(grid,types);
-  pr_spent_time(start,"Making Jacobian");
+  FUNC_TIC
+  //const char *const types[] = {"J_D0","J_D1","J_D2",0};
+                          //     "dfxx_df","dfxy_df","dfxz_df",
+                          //     "dfyy_df","dfyz_df","dfzz_df",0};
+  
+  Uint p;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    const char *types[] = {"J_D0",0};
+    prepare_Js_jacobian_eq(patch,types);
+    Matrix_T *m_J_D0 = get_j_matrix(patch,"J_D0");\
+    fJs_T *f_J_D0    = get_j_reader(m_J_D0);
+    
+    FOR_ALL_ijk
+    {
+      for (Uint lmn = 0; lmn < patch->nn; ++lmn)
+      {
+        double J_D0_spec = f_J_D0(m_J_D0,ijk,lmn);
+        double J_D0_anly = 
+          d2f_dxdu_spectral_Jacobian_analytic(patch,0,ijk,lmn);
+        printf("diff = %e\n",J_D0_spec-J_D0_anly);
+      }
+    }
+  }
+  FUNC_TOC
 }
 
 
