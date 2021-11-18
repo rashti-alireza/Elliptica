@@ -6,12 +6,39 @@
 
 #define MAX_STR_MATH_EQ_SOLVE_LIB (400)
 
+/* NOTE: SPECTRAL_JACOBIAN_MATRIX_FORM and 
+// SPECTRAL_JACOBIAN_ANALYTIC_FORM must be mutually exclusive. */
+#define SPECTRAL_JACOBIAN_MATRIX_FORM (1)
+#define SPECTRAL_JACOBIAN_ANALYTIC_FORM (0)
+
+#if SPECTRAL_JACOBIAN_MATRIX_FORM
+
 /* it compactifies the prepration of Jacobian of derivatives */
 #define Init_Jacobian(xNAME) \
   const char *types_##xNAME[] = {#xNAME,0};\
   prepare_Js_jacobian_eq(patch,types_##xNAME);\
-  Matrix_T *j_##xNAME = get_j_matrix(patch,#xNAME);\
-  fJs_T *xNAME        = get_j_reader(j_##xNAME);
+  Matrix_T *m_##xNAME = get_j_matrix(patch,#xNAME);\
+  fJs_T *f_##xNAME    = get_j_reader(m_##xNAME);
+
+#define d2f_dxdu_Jacobian(patch,dx_axis,ijk,lmn,xNAME) \
+  ( f_##xNAME(m_##xNAME, ijk, lmn) )
+
+#define d3f_dx2du_Jacobian(patch,dx_axis,ijk,lmn,xNAME) \
+  ( f_##xNAME(m_##xNAME, ijk, lmn) )
+
+
+#elif SPECTRAL_JACOBIAN_ANALYTIC_FORM
+
+#define Init_Jacobian(xNAME) /* nothing! */
+
+#define d2f_dxdu_Jacobian(patch,dx_axis,ijk,lmn,xNAME) \
+  d2f_dxdu_Jacobian_pointwise(patch,dx_axis,ijk,lmn)
+
+#define d3f_dx2du_Jacobian(patch,dxdy_axis,ijk,lmn,xNAME) \
+  d3f_dxdydu_Jacobian_pointwise(patch,dxdy_axis,ijk,lmn)
+  
+
+#endif
 
 /* forward declaration structures */
 struct FIELD_T;
