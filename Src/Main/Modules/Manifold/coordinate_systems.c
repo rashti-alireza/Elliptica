@@ -85,18 +85,10 @@ int make_JacobianT(Grid_T *const grid)
       for (j = 0; j < 3; ++j)
           dX_dx[i][j] = alloc_double(patch->nn);
     
-    /* add X-coord fields. denoted by $$ means a temp field. */
-    Field_T *fX = add_field("X_coordinate$$",0,patch,YES);
-    Field_T *fY = add_field("Y_coordinate$$",0,patch,YES);
-    Field_T *fZ = add_field("Z_coordinate$$",0,patch,YES);
     
     /* populate X-coord fields and dX/dx */
     FOR_ALL_ijk
     {
-      fX->v[ijk] = patch->node[ijk]->X[0];
-      fY->v[ijk] = patch->node[ijk]->X[1];
-      fZ->v[ijk] = patch->node[ijk]->X[2];
-      
       /* note: use analytic as you might instruct 
       // Partial_Derivative to use dX_dx. */
       dX_dx[0][0][ijk] = dq2_dq1(patch,_a_,_x_,ijk);
@@ -116,27 +108,95 @@ int make_JacobianT(Grid_T *const grid)
       for (j = 0; j < 3; ++j)
           patch->JacobianT->dX_dx[i][j] = dX_dx[i][j];
 
-    /* populate d^2X/dxdy. note the convention. */
-    d2X_dxdy[0][0] = Partial_Derivative(fX,"x,x");
-    d2X_dxdy[0][1] = Partial_Derivative(fX,"x,y");
-    d2X_dxdy[0][2] = Partial_Derivative(fX,"x,z");
-    d2X_dxdy[0][3] = Partial_Derivative(fX,"y,y");
-    d2X_dxdy[0][4] = Partial_Derivative(fX,"y,z");
-    d2X_dxdy[0][5] = Partial_Derivative(fX,"z,z");
+    /* populate d^2X/dxdy (mostly analytic!). 
+    // for the convention see JacobianTrans_T. */
     
-    d2X_dxdy[1][0] = Partial_Derivative(fY,"x,x");
-    d2X_dxdy[1][1] = Partial_Derivative(fY,"x,y");
-    d2X_dxdy[1][2] = Partial_Derivative(fY,"x,z");
-    d2X_dxdy[1][3] = Partial_Derivative(fY,"y,y");
-    d2X_dxdy[1][4] = Partial_Derivative(fY,"y,z");
-    d2X_dxdy[1][5] = Partial_Derivative(fY,"z,z");
+    /* add a temp field. denoted by $$ means a temp field. */
+    Field_T *df = add_field("$$TempDerivatives$$",0,patch,NO);
     
-    d2X_dxdy[2][0] = Partial_Derivative(fZ,"x,x");
-    d2X_dxdy[2][1] = Partial_Derivative(fZ,"x,y");
-    d2X_dxdy[2][2] = Partial_Derivative(fZ,"x,z");
-    d2X_dxdy[2][3] = Partial_Derivative(fZ,"y,y");
-    d2X_dxdy[2][4] = Partial_Derivative(fZ,"y,z");
-    d2X_dxdy[2][5] = Partial_Derivative(fZ,"z,z");
+    free_coeffs(df);
+    df->v          = dX_dx[0][0];/* dX/dx */
+    d2X_dxdy[0][0] = Partial_Derivative(df,"x");
+    d2X_dxdy[0][1] = Partial_Derivative(df,"y");
+    d2X_dxdy[0][2] = Partial_Derivative(df,"z");
+    free_coeffs(df);
+    df->v          = dX_dx[0][1];/* dX/dy */
+    d2X_dxdy[0][3] = Partial_Derivative(df,"y");
+    d2X_dxdy[0][4] = Partial_Derivative(df,"z");
+    free_coeffs(df);
+    df->v          = dX_dx[0][2];/* dX/dz */
+    d2X_dxdy[0][5] = Partial_Derivative(df,"z");
+
+    free_coeffs(df);
+    df->v          = dX_dx[1][0];/* dY/dx */
+    d2X_dxdy[1][0] = Partial_Derivative(df,"x");
+    d2X_dxdy[1][1] = Partial_Derivative(df,"y");
+    d2X_dxdy[1][2] = Partial_Derivative(df,"z");
+    free_coeffs(df);
+    df->v          = dX_dx[1][1];/* dY/dy */
+    d2X_dxdy[1][3] = Partial_Derivative(df,"y");
+    d2X_dxdy[1][4] = Partial_Derivative(df,"z");
+    free_coeffs(df);
+    df->v          = dX_dx[1][2];/* dY/dz */
+    d2X_dxdy[1][5] = Partial_Derivative(df,"z");
+
+    free_coeffs(df);
+    df->v          = dX_dx[2][0];/* dZ/dx */
+    d2X_dxdy[2][0] = Partial_Derivative(df,"x");
+    d2X_dxdy[2][1] = Partial_Derivative(df,"y");
+    d2X_dxdy[2][2] = Partial_Derivative(df,"z");
+    free_coeffs(df);
+    df->v          = dX_dx[2][1];/* dZ/dy */
+    d2X_dxdy[2][3] = Partial_Derivative(df,"y");
+    d2X_dxdy[2][4] = Partial_Derivative(df,"z");
+    free_coeffs(df);
+    df->v          = dX_dx[2][2];/* dZ/dz */
+    d2X_dxdy[2][5] = Partial_Derivative(df,"z");
+
+    remove_field(df);
+
+    /* populate d^2X/dxdy numerically.
+    // for the convention see JacobianTrans_T.
+    // NOTE: if you want to use this, comment out the populate above. */
+    if(0)
+    {
+      /* add X-coord fields. denoted by $$ means a temp field. */
+      Field_T *fX = add_field("X_coordinate$$",0,patch,YES);
+      Field_T *fY = add_field("Y_coordinate$$",0,patch,YES);
+      Field_T *fZ = add_field("Z_coordinate$$",0,patch,YES);
+      /* populate X-coord fields */
+      FOR_ALL_ijk
+      {
+        fX->v[ijk] = patch->node[ijk]->X[0];
+        fY->v[ijk] = patch->node[ijk]->X[1];
+        fZ->v[ijk] = patch->node[ijk]->X[2];
+      }
+      
+      d2X_dxdy[0][0] = Partial_Derivative(fX,"x,x");
+      d2X_dxdy[0][1] = Partial_Derivative(fX,"x,y");
+      d2X_dxdy[0][2] = Partial_Derivative(fX,"x,z");
+      d2X_dxdy[0][3] = Partial_Derivative(fX,"y,y");
+      d2X_dxdy[0][4] = Partial_Derivative(fX,"y,z");
+      d2X_dxdy[0][5] = Partial_Derivative(fX,"z,z");
+      
+      d2X_dxdy[1][0] = Partial_Derivative(fY,"x,x");
+      d2X_dxdy[1][1] = Partial_Derivative(fY,"x,y");
+      d2X_dxdy[1][2] = Partial_Derivative(fY,"x,z");
+      d2X_dxdy[1][3] = Partial_Derivative(fY,"y,y");
+      d2X_dxdy[1][4] = Partial_Derivative(fY,"y,z");
+      d2X_dxdy[1][5] = Partial_Derivative(fY,"z,z");
+      
+      d2X_dxdy[2][0] = Partial_Derivative(fZ,"x,x");
+      d2X_dxdy[2][1] = Partial_Derivative(fZ,"x,y");
+      d2X_dxdy[2][2] = Partial_Derivative(fZ,"x,z");
+      d2X_dxdy[2][3] = Partial_Derivative(fZ,"y,y");
+      d2X_dxdy[2][4] = Partial_Derivative(fZ,"y,z");
+      d2X_dxdy[2][5] = Partial_Derivative(fZ,"z,z");
+      
+      remove_field(fX);
+      remove_field(fY);
+      remove_field(fZ);
+    }
     
     /* assign */
     for (i = 0; i < 3; ++i)
@@ -147,10 +207,6 @@ int make_JacobianT(Grid_T *const grid)
     dN_dX[0] = dq2_dq1(patch,_N0_,_a_,0);
     dN_dX[1] = dq2_dq1(patch,_N1_,_b_,0);
     dN_dX[2] = dq2_dq1(patch,_N2_,_c_,0);
-    
-    remove_field(fX);
-    remove_field(fY);
-    remove_field(fZ);
   }
   
   return EXIT_SUCCESS;
