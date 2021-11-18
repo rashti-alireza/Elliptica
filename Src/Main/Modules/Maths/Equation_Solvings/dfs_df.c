@@ -2183,8 +2183,10 @@ d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
   return sum;
 }
 
-INLINE double
-  d2f_dxdu_spectral_Jacobian_analytic(Patch_T *const patch,const Uint dx_axis, const Uint ijk,const Uint lmn)
+double
+  d2f_dxdu_spectral_Jacobian_analytic(Patch_T *const patch,
+                                      const Uint dx_axis, 
+                                      const Uint ijk,const Uint lmn)
 {
   Uint i,j,k;
   Uint l,m,n;
@@ -2199,8 +2201,10 @@ INLINE double
 }
 
 
-INLINE double
-  d3f_dxdydu_spectral_Jacobian_analytic(Patch_T *const patch,const int dxdy_axis,const Uint ijk,const Uint lmn)
+double
+  d3f_dxdydu_spectral_Jacobian_analytic(Patch_T *const patch,
+                                        const int dxdy_axis,
+                                        const Uint ijk,const Uint lmn)
 {
   int dx_axis, dy_axis;
   Uint i,j,k;
