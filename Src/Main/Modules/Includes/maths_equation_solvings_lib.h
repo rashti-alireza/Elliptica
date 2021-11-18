@@ -40,6 +40,137 @@
 
 #endif
 
+
+/* defining some macros to improve the readability and simplicity */
+
+/* macros for jacobian of equations */
+#define DDM_SCHUR_JACOBIAN_EQ_DECLARE \
+  Patch_T *const patch  = vp1;\
+  DDM_Schur_Complement_T *const S = vp2;\
+  double **const B = S->B->reg->A;\
+  double **E_Trans;\
+  const Uint *const node = S->inv;\
+  const Uint Ni = S->Oi;/* number of inner mesh nodes */\
+  const Uint Nj = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
+  const Uint K0 = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
+  const Uint Nk = patch->nn;/* total number of nodes */\
+  Uint i,j,k;
+
+/* macro for B part of jacobian */
+#define DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN \
+  for (i = 0; i < Ni; ++i)\
+  {\
+    ijk = node[i];\
+    for (j = 0; j < Nj; ++j)\
+    {\
+      lmn = node[j];
+
+#define DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE \
+    }/* end of for (i = 0; i < Ni; ++i) */\
+  }/* end of for (j = 0; j < Nj; ++j) */
+
+/* macros for E part of jacobian */
+#define DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN \
+  if (S->NI)/* if there is any interface points then E is needed */\
+  {\
+    E_Trans = S->E_Trans->reg->A;\
+    for (k = K0; k < Nk; ++k)\
+    {\
+      lmn = node[k];\
+      j = k-K0;\
+      for (i = 0; i < Ni; ++i)\
+      {\
+        ijk = node[i];
+
+#define DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE \
+     }/* end of for (i = 0; i < Ni; ++i) */\
+    }/* end of for (k = K0; k < Nk; ++k) */\
+  }/* end of if (S->NI) */
+
+
+/* macros for jacobian of boundary condition equations */
+#define DDM_SCHUR_JACOBIAN_BC_DECLARE \
+  Patch_T *const patch  = vp1;\
+  DDM_Schur_Complement_T *const S = vp2;\
+  double **const B = S->B->reg->A;\
+  double **E_Trans;\
+  const Uint *const node = S->inv;\
+  const Uint I0 = S->Oi;/* number of inner mesh nodes */\
+  const Uint Ni = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
+  const Uint Nj = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
+  const Uint K0 = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
+  const Uint Nk = patch->nn;/* total number of nodes */\
+  Uint i,j,k;
+
+/* macro for B part of outer boundary jacobian */
+#define DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN \
+  for (i = I0; i < Ni; ++i)\
+  {\
+    ijk = node[i];\
+    for (j = 0; j < Nj; ++j)\
+    {\
+      lmn = node[j];
+
+#define DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE \
+    }/* end of for (i = I0; i < Ni; ++i) */\
+  }/* end of for (j = 0; j < Nj; ++j) */
+
+/* macros for E part of jacobian */
+#define DDM_SCHUR_JACOBIAN_BC_Epart_OPEN \
+  if (S->NI)/* if there is any interface points then E is needed */\
+  {\
+    E_Trans = S->E_Trans->reg->A;\
+    for (k = K0; k < Nk; ++k)\
+    {\
+      lmn = node[k];\
+      j = k-K0;\
+      for (i = I0; i < Ni; ++i)\
+      {\
+        ijk = node[i];
+
+#define DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE \
+     }/* end of for (i = I0; i < Ni; ++i) */\
+    }/* end of for (k = K0; k < Nk; ++k) */\
+  }/* end of if (S->NI) */
+
+
+/* macro for equation */
+#define DDM_SCHUR_EQ_DECLARE \
+  Patch_T *const patch = vp1;\
+  DDM_Schur_Complement_T *const S = vp2;\
+  double *const F = S->f;\
+  const Uint *const node  = S->inv;/* inverse map to node */\
+  const Uint N = S->Oi;/* number of inner mesh nodes */\
+  Uint n;
+  
+#define DDM_SCHUR_EQ_OPEN \
+  for (n = 0; n < N; ++n)\
+  {\
+    ijk  = node[n];
+
+
+#define DDM_SCHUR_EQ_CLOSE }
+
+/* macro for boundary condition */
+#define DDM_SCHUR_BC_DECLARE \
+  Boundary_Condition_T *const bc = vp1;\
+  DDM_Schur_Complement_T *const S = vp2;\
+  double *const F      = S->f;\
+  Uint *const map  = S->map;\
+  Patch_T *const patch = bc->patch;\
+  const Uint *const node = bc->node;/* nodes at boundary */\
+  const Uint N = bc->nn;/* number of nodes at boundary */\
+  Uint n;
+
+#define DDM_SCHUR_BC_OPEN \
+  for (n = 0; n < N; ++n)\
+  {\
+    ijk  = node[n];
+    
+#define DDM_SCHUR_BC_CLOSE }
+
+
+
 /* forward declaration structures */
 struct FIELD_T;
 struct MATRIX_T;
@@ -364,134 +495,15 @@ void free_patch_SolMan_jacobian(Patch_T *const patch);
 void free_patch_SolMan_method_Schur(Patch_T *const patch);
 void move_dfdu_jacobian_patch(Patch_T *const patch2,Patch_T *const patch1);
 
-/* defining some macros to improve the readability and simplicity */
-
-/* macros for jacobian of equations */
-#define DDM_SCHUR_JACOBIAN_EQ_DECLARE \
-  Patch_T *const patch  = vp1;\
-  DDM_Schur_Complement_T *const S = vp2;\
-  double **const B = S->B->reg->A;\
-  double **E_Trans;\
-  const Uint *const node = S->inv;\
-  const Uint Ni = S->Oi;/* number of inner mesh nodes */\
-  const Uint Nj = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
-  const Uint K0 = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
-  const Uint Nk = patch->nn;/* total number of nodes */\
-  Uint i,j,k;
-
-/* macro for B part of jacobian */
-#define DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN \
-  for (i = 0; i < Ni; ++i)\
-  {\
-    ijk = node[i];\
-    for (j = 0; j < Nj; ++j)\
-    {\
-      lmn = node[j];
-
-#define DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE \
-    }/* end of for (i = 0; i < Ni; ++i) */\
-  }/* end of for (j = 0; j < Nj; ++j) */
-
-/* macros for E part of jacobian */
-#define DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN \
-  if (S->NI)/* if there is any interface points then E is needed */\
-  {\
-    E_Trans = S->E_Trans->reg->A;\
-    for (k = K0; k < Nk; ++k)\
-    {\
-      lmn = node[k];\
-      j = k-K0;\
-      for (i = 0; i < Ni; ++i)\
-      {\
-        ijk = node[i];
-
-#define DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE \
-     }/* end of for (i = 0; i < Ni; ++i) */\
-    }/* end of for (k = K0; k < Nk; ++k) */\
-  }/* end of if (S->NI) */
-
-
-/* macros for jacobian of boundary condition equations */
-#define DDM_SCHUR_JACOBIAN_BC_DECLARE \
-  Patch_T *const patch  = vp1;\
-  DDM_Schur_Complement_T *const S = vp2;\
-  double **const B = S->B->reg->A;\
-  double **E_Trans;\
-  const Uint *const node = S->inv;\
-  const Uint I0 = S->Oi;/* number of inner mesh nodes */\
-  const Uint Ni = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
-  const Uint Nj = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
-  const Uint K0 = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
-  const Uint Nk = patch->nn;/* total number of nodes */\
-  Uint i,j,k;
-
-/* macro for B part of outer boundary jacobian */
-#define DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN \
-  for (i = I0; i < Ni; ++i)\
-  {\
-    ijk = node[i];\
-    for (j = 0; j < Nj; ++j)\
-    {\
-      lmn = node[j];
-
-#define DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE \
-    }/* end of for (i = I0; i < Ni; ++i) */\
-  }/* end of for (j = 0; j < Nj; ++j) */
-
-/* macros for E part of jacobian */
-#define DDM_SCHUR_JACOBIAN_BC_Epart_OPEN \
-  if (S->NI)/* if there is any interface points then E is needed */\
-  {\
-    E_Trans = S->E_Trans->reg->A;\
-    for (k = K0; k < Nk; ++k)\
-    {\
-      lmn = node[k];\
-      j = k-K0;\
-      for (i = I0; i < Ni; ++i)\
-      {\
-        ijk = node[i];
-
-#define DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE \
-     }/* end of for (i = I0; i < Ni; ++i) */\
-    }/* end of for (k = K0; k < Nk; ++k) */\
-  }/* end of if (S->NI) */
-
-
-/* macro for equation */
-#define DDM_SCHUR_EQ_DECLARE \
-  Patch_T *const patch = vp1;\
-  DDM_Schur_Complement_T *const S = vp2;\
-  double *const F = S->f;\
-  const Uint *const node  = S->inv;/* inverse map to node */\
-  const Uint N = S->Oi;/* number of inner mesh nodes */\
-  Uint n;
+double
+  d2f_dxdu_spectral_Jacobian_analytic(Patch_T *const patch,
+                                      const Uint dx_axis, 
+                                      const Uint ijk,const Uint lmn);
   
-#define DDM_SCHUR_EQ_OPEN \
-  for (n = 0; n < N; ++n)\
-  {\
-    ijk  = node[n];
-
-
-#define DDM_SCHUR_EQ_CLOSE }
-
-/* macro for boundary condition */
-#define DDM_SCHUR_BC_DECLARE \
-  Boundary_Condition_T *const bc = vp1;\
-  DDM_Schur_Complement_T *const S = vp2;\
-  double *const F      = S->f;\
-  Uint *const map  = S->map;\
-  Patch_T *const patch = bc->patch;\
-  const Uint *const node = bc->node;/* nodes at boundary */\
-  const Uint N = bc->nn;/* number of nodes at boundary */\
-  Uint n;
-
-#define DDM_SCHUR_BC_OPEN \
-  for (n = 0; n < N; ++n)\
-  {\
-    ijk  = node[n];
-    
-#define DDM_SCHUR_BC_CLOSE }
-
+double
+  d3f_dxdydu_spectral_Jacobian_analytic(Patch_T *const patch,
+                                        const int dxdy_axis,
+                                        const Uint ijk,const Uint lmn);
 
 #endif
 
