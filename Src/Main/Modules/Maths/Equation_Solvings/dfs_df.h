@@ -105,15 +105,15 @@
   )
 
 
-/* -> d/dX(df/du)=d/dX (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N-1}(X)),
+/* -> d/dX(df/du)=d/dX (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X)),
 // NOTE: X = cos(th) */
 #define JACOBIAN_d_dX_df_du(thi,thj,N,j) \
-   ( d_dXi_2xsum_0_N_Tnj_Tni(thi,thj,N) - SIGN(j)*dT_dx((int)(N)-1,cos(thi)) )
+   ( d_dXi_2xsum_0_N_Tnj_Tni(thi,thj,N) - SIGN(j)*dT_dx((int)(N),cos(thi)) )
 
-/* -> d2/dX^2(df/du)=d2/dX^2 (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N-1}(X)),
+/* -> d2/dX^2(df/du)=d2/dX^2 (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X)),
 // NOTE: X = cos(th)). */
 #define JACOBIAN_d2_dX2_df_du(thi,thj,N,j) \
-   ( d2_dXi2_2xsum_0_N_Tnj_Tni(thi,thj,N) - SIGN(j)*d2T_dx2((int)(N)-1,cos(thi)) )
+   ( d2_dXi2_2xsum_0_N_Tnj_Tni(thi,thj,N) - SIGN(j)*d2T_dx2((int)(N),cos(thi)) )
 
 /* normalization * coords jacobian * JACOBIAN_d_dX_df_du */
 #define JACOBIAN_dX_dx_d_dX_df_du(patch, dx_axis, X_axis, ijk, lmn, qi,qj) \
