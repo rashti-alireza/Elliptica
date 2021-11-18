@@ -11,9 +11,11 @@ C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
 C_macro3 = Init_Jacobian(name);
 C_macro4 = READ_v_UNUSED(name);
+C_macro5 = double CPI_name = d2f_dxdu_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
+C_macro6 = double CPI_name = d3f_dx2du_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
 
 # C arguments for jacobian of derivative
-C_arg = (j_name,ijk,lmn);
+C_arg = ;
 C_arg2 = [ijk == lmn]; # for kd
 C_arg3 =;# no argument for U
 
@@ -105,6 +107,15 @@ Symm[dChrisConf(i,j,k,l)  = dChrisConf(i,k,j,l)];
 ###############################################
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n`;
 
+Declare = 
+{
+ # Jacobian: 1st derivative
+ (obj = Field,name = JB0, rank = D, C_macro5,C_arg);
+ 
+ # Jacobian: 2nd derivative
+ (obj = Field,name = JJB0, rank = DD, C_macro6,C_arg);
+}
+
 # for AConfIJ
 dLnOf_alpha_B(i) = dalphaPsi(i)/alphaPsi -7*dpsi(i)/psi;
 
@@ -152,6 +163,15 @@ Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(
 ###### E matrix: J[ijk][lmn] in Jx = -F #######
 ###############################################
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
+
+Declare = 
+{
+ # Jacobian: 1st derivative
+ (obj = Field,name = JB0, rank = D, C_macro5,C_arg);
+ 
+ # Jacobian: 2nd derivative
+ (obj = Field,name = JJB0, rank = DD, C_macro6,C_arg);
+}
 
 # for AConfIJ
 dLnOf_alpha_E(i) = dalphaPsi(i)/alphaPsi -7*dpsi(i)/psi;

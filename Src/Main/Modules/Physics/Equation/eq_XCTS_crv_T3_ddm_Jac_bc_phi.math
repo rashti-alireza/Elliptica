@@ -10,9 +10,11 @@ Point = ijk;
 C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
 C_macro3 = Init_Jacobian(name);
+C_macro4 = double CPI_name = d2f_dxdu_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
+C_macro5 = double CPI_name = d3f_dx2du_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
 
 # C arguments for jacobian of derivatives
-C_arg = (j_name,ijk,lmn);
+C_arg = ;
 C_arg2 = [ijk == lmn]; # for kd
 C_arg3 = ;
 
@@ -94,6 +96,12 @@ Symm[gConf(i,j) = gConf(j,i)];
 ###############################################
 `  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN\n`;
 
+Declare = 
+{
+ # dphi 1st derivative Jacobian
+ (obj = Field,name = Jphi, rank = D, C_macro4,C_arg);
+}
+
 # calculate unnormalized normal:
 ` double n_U0 = dq2_dq1(patch,_c_,_x_,ijk);`
 ` double n_U1 = dq2_dq1(patch,_c_,_y_,ijk);`
@@ -115,6 +123,12 @@ outerB_Bpart = gConf(-i,-l)*Jphi(l)*s_b(i);
 ###### E matrix: J[ijk][lmn] in Jx = -F #######
 ###############################################
 `  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN\n`;
+
+Declare = 
+{
+ # dphi 1st derivative Jacobian
+ (obj = Field,name = Jphi, rank = D, C_macro4,C_arg);
+}
 
 # calculate unnormalized normal:
 ` double n_U0 = dq2_dq1(patch,_c_,_x_,ijk);`

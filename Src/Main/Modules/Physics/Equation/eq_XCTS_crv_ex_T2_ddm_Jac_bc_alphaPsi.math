@@ -13,9 +13,11 @@ Point = ijk;
 C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
 C_macro3 = Init_Jacobian(name);
+C_macro4 = double CPI_name = d2f_dxdu_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
+C_macro5 = double CPI_name = d3f_dx2du_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
 
 # C arguments for jacobian of derivatives
-C_arg  = (j_name,ijk,lmn);
+C_arg  = ;
 C_arg1 = ;
 C_arg2 = [ijk == lmn]; # for kd
 
@@ -125,6 +127,12 @@ outerB_Epart = 0;
 ###############################################
 `  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN\n`;
 
+Declare = 
+{
+ # Jacobian first derivative 
+ (obj = Field,name = JalphaPsi, rank = D, C_arg,C_macro4);
+}
+
 innerB_Bpart = bh_sConf(i)*JalphaPsi(-i);
 
 
@@ -137,6 +145,12 @@ innerB_Bpart = bh_sConf(i)*JalphaPsi(-i);
 ####### E matrix: J[ijk][lmn] in Jx = -F ###### 
 ###############################################
 `  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN\n`;
+
+Declare = 
+{
+ # Jacobian first derivative 
+ (obj = Field,name = JalphaPsi, rank = D, C_arg,C_macro4);
+}
 
 innerB_Epart = bh_sConf(i)*JalphaPsi(-i);
 

@@ -10,9 +10,11 @@ Point = ijk;
 C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
 C_macro3 = Init_Jacobian(name);
+C_macro4 = double CPI_name = d2f_dxdu_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
+C_macro5 = double CPI_name = d3f_dx2du_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
 
 # C arguments for jacobian of derivative
-C_arg = (j_name,ijk,lmn);
+C_arg = ;
 C_arg2 = [ijk == lmn]; # for kd
 
 # main function:
@@ -125,6 +127,16 @@ Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n`;
 
+# principle part Jacobians
+Declare = 
+{
+ # Jphi 1st derivative
+ (obj = Field,name = Jphi, rank = D, C_macro4,C_arg);
+
+ # JJphi 2nd derivative
+ (obj = Field,name = JJphi, rank = DD, C_macro5,C_arg);
+}
+
 ###
 dLn_of_psi_b(i)       = dpsi(i)/psi;
 
@@ -150,6 +162,17 @@ Bpart_ = t1_b+t2_b;
 ###############################################
 
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
+
+# principle part Jacobians
+Declare = 
+{
+ # Jphi 1st derivative
+ (obj = Field,name = Jphi, rank = D, C_macro4,C_arg);
+
+ # JJphi 2nd derivative
+ (obj = Field,name = JJphi, rank = DD, C_macro5,C_arg);
+}
+
 
 dLn_of_psi_e(i)       = dpsi(i)/psi;
 

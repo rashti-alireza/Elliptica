@@ -10,9 +10,11 @@ Point = ijk;
 C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
 C_macro3 = Init_Jacobian(name);
+C_macro4 = double CPI_name = d2f_dxdu_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
+C_macro5 = double CPI_name = d3f_dx2du_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
 
 # C arguments for jacobian of derivative
-C_arg = (j_name,ijk,lmn);
+C_arg = ;
 C_arg2 = [ijk == lmn]; # for kd
 
 # main function:
@@ -99,6 +101,16 @@ Symm[JJpsi(i,j)   = JJpsi(j,i)];
 ###############################################
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n`;
 
+Declare =
+{
+ # jacobian derivative 1st order :
+ (obj = Field,name = Jpsi, rank = D, C_macro4,C_arg);
+
+ # jacobian derivative 2nd order :
+ (obj = Field,name = JJpsi, rank = DD, C_macro5,C_arg);
+}
+
+
 psi4_B = psi**4;
 aij2_B = AConfIJ2/psi4_B;
 
@@ -129,6 +141,16 @@ Bpart =  igConf(i,j)*JJpsi(-i,-j) - igConf(-i,-j)*ChrisConf(l,i,j)*Jpsi(-l)\
 ###### E matrix: J[ijk][lmn] in Jx = -F #######
 ###############################################
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
+
+Declare =
+{
+ # jacobian derivative 1st order :
+ (obj = Field,name = Jpsi, rank = D, C_macro4,C_arg);
+
+ # jacobian derivative 2nd order :
+ (obj = Field,name = JJpsi, rank = DD, C_macro5,C_arg);
+}
+
 
 psi4_E = psi**4;
 aij2_E = AConfIJ2/psi4_E;
