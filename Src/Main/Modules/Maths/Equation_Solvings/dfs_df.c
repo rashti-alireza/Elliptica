@@ -28,6 +28,9 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
   JType_E jt_e = T_UNDEF;
   Uint i;
   
+  /* patch->solving_man must not be empty */
+  assert(sol_man);
+  
   if (get_parameter("Maximum_Size_of_J_Kept_in_Mb"))
     max_j_size = PgetdEZ("Maximum_Size_of_J_Kept_in_Mb");
   
