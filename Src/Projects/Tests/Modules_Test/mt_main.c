@@ -30,9 +30,14 @@ int Modules_Test(void *vp)
     free_physics(ns);
   }
   
-  if (strcmp_i(PgetsEZ("Test_Jacobian_Elements_Js_Values"),"yes"))
+  if (strcmp_i(PgetsEZ("Test_Jacobian_Spectral_vs_FiniteDiff"),"yes"))
   {
     test_dfs_df_values(grid);
+  }
+  
+  if (strcmp_i(PgetsEZ("Test_Jacobian_Spectral_vs_Analytic"),"yes"))
+  {
+    test_dfs_df_Spectral_vs_analytic(grid);
   }
   
   if (strcmp_i(PgetsEZ("Test_d(interp_a)/df"),"yes"))
