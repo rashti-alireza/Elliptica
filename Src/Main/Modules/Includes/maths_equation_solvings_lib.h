@@ -32,10 +32,10 @@
 #define Init_Jacobian(xNAME) /* nothing! */
 
 #define d2f_dxdu_Jacobian(patch,dx_axis,ijk,lmn,xNAME) \
-  d2f_dxdu_Jacobian_pointwise(patch,dx_axis,ijk,lmn)
+  d2f_dxdu_spectral_Jacobian_analytic(patch,dx_axis,ijk,lmn)
 
 #define d3f_dx2du_Jacobian(patch,dxdy_axis,ijk,lmn,xNAME) \
-  d3f_dxdydu_Jacobian_pointwise(patch,dxdy_axis,ijk,lmn)
+  d3f_dxdydu_spectral_Jacobian_analytic(patch,dxdy_axis,ijk,lmn)
   
 
 #endif
