@@ -245,6 +245,74 @@ void test_dfs_df_Spectral_vs_analytic(Grid_T *const grid)
       Pretty1"1st_order |J_spectral - J_analytic|_Linf = %e\n",patch->name,max);
   }
   
+  if(1)/* turn 1st order test on or off */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    const char *types[] = { "J_D0D0","J_D0D1","J_D0D2",
+                            "J_D1D1","J_D1D2","J_D2D2",0};
+    prepare_Js_jacobian_eq(patch,types);
+    
+    Matrix_T *m_J_D0D0 = get_j_matrix(patch,"J_D0D0");
+    fJs_T *f_J_D0D0    = get_j_reader(m_J_D0D0);
+
+    Matrix_T *m_J_D0D1 = get_j_matrix(patch,"J_D0D1");
+    fJs_T *f_J_D0D1    = get_j_reader(m_J_D0D1);
+    
+    Matrix_T *m_J_D0D2 = get_j_matrix(patch,"J_D0D2");
+    fJs_T *f_J_D0D2    = get_j_reader(m_J_D0D2);
+    
+    Matrix_T *m_J_D1D1 = get_j_matrix(patch,"J_D1D1");
+    fJs_T *f_J_D1D1    = get_j_reader(m_J_D1D1);
+    
+    Matrix_T *m_J_D1D2 = get_j_matrix(patch,"J_D1D2");
+    fJs_T *f_J_D1D2    = get_j_reader(m_J_D1D2);
+    
+    Matrix_T *m_J_D2D2 = get_j_matrix(patch,"J_D2D2");
+    fJs_T *f_J_D2D2    = get_j_reader(m_J_D2D2);
+    
+    double diff, max = 0;
+    FOR_ALL_ijk
+    {
+      for (Uint lmn = 0; lmn < patch->nn; ++lmn)
+      {
+        double J_D0D0_spec = f_J_D0D0(m_J_D0D0,ijk,lmn);
+        double J_D0D0_anly = d3f_dxdydu_spectral_Jacobian_analytic(patch,0,ijk,lmn);
+        diff = fabs(J_D0D0_spec-J_D0D0_anly);
+        max  = (diff > max ? diff : max);
+
+        double J_D0D1_spec = f_J_D0D1(m_J_D0D1,ijk,lmn);
+        double J_D0D1_anly = d3f_dxdydu_spectral_Jacobian_analytic(patch,1,ijk,lmn);
+        diff = fabs(J_D0D1_spec-J_D0D1_anly);
+        max  = (diff > max ? diff : max);
+
+        double J_D0D2_spec = f_J_D0D2(m_J_D0D2,ijk,lmn);
+        double J_D0D2_anly = d3f_dxdydu_spectral_Jacobian_analytic(patch,2,ijk,lmn);
+        diff = fabs(J_D0D2_spec-J_D0D2_anly);
+        max  = (diff > max ? diff : max);
+
+        double J_D1D1_spec = f_J_D1D1(m_J_D1D1,ijk,lmn);
+        double J_D1D1_anly = d3f_dxdydu_spectral_Jacobian_analytic(patch,3,ijk,lmn);
+        diff = fabs(J_D1D1_spec-J_D1D1_anly);
+        max  = (diff > max ? diff : max);
+
+        double J_D1D2_spec = f_J_D1D2(m_J_D1D2,ijk,lmn);
+        double J_D1D2_anly = d3f_dxdydu_spectral_Jacobian_analytic(patch,4,ijk,lmn);
+        diff = fabs(J_D1D2_spec-J_D1D2_anly);
+        max  = (diff > max ? diff : max);
+
+        double J_D2D2_spec = f_J_D2D2(m_J_D2D2,ijk,lmn);
+        double J_D2D2_anly = d3f_dxdydu_spectral_Jacobian_analytic(patch,5,ijk,lmn);
+        diff = fabs(J_D2D2_spec-J_D2D2_anly);
+        max  = (diff > max ? diff : max);
+      }
+    }
+    printf("patch[%s]: \n     "
+      Pretty1"2nd_order |J_spectral - J_analytic|_Linf = %e\n",patch->name,max);
+  }
+  
+  
   FUNC_TOC
 }
 
