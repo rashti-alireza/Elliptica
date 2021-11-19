@@ -2138,12 +2138,12 @@ d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
                           Uint N/* the sum upper limit */)
 {
   double sum = 0.;
-  double N0 = N-0.5;
+  double N0 = N+0.5;
   
   if (EQL(thi,0.))
   {
     sum = 
-      d4_dlambda4_sum_0_N_cos_nlambda(N,N0,thj) -
+      d4_dlambda4_sum_0_N_cos_nlambda(N,N0,thj) +
       d2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj);
     sum *= 2./3.;
     
@@ -2152,12 +2152,12 @@ d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
   {
     double lambda = thj+M_PI;
     sum = 
-      d4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) -
+      d4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) +
       d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
     
     lambda = thj-M_PI;
     sum += 
-      d4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) -
+      d4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) +
       d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
       
     sum /= 3.;

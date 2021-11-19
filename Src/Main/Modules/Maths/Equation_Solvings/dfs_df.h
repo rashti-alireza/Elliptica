@@ -112,14 +112,14 @@
 
 
 /* -> eta_j{d/dX(df/du)=d/dX (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X))},
-// NOTE: X = cos(th), N = patch->n[?]-1 */
+// NOTE: X = cos(th), N = patch->n[?]-1. */
 #define JACOBIAN_d_dX_df_du(thi,thj,N,j) \
    (ETA(j,N)*( d_dXi_2xsum_0_N_Tnj_Tni(thi,thj,N) - SIGN(j)*dT_dx((int)(N),cos(thi)) ))
 
 /* -> d2/dX^2(df/du)=d2/dX^2 (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X)),
-// NOTE: X = cos(th)). */
+// NOTE: X = cos(th)), N = patch->n[?]-1. */
 #define JACOBIAN_d2_dX2_df_du(thi,thj,N,j) \
-   ( d2_dXi2_2xsum_0_N_Tnj_Tni(thi,thj,N) - SIGN(j)*d2T_dx2((int)(N),cos(thi)) )
+   (ETA(j,N)*( d2_dXi2_2xsum_0_N_Tnj_Tni(thi,thj,N) - SIGN(j)*d2T_dx2((int)(N),cos(thi)) ))
 
 /* normalization * coords jacobian * JACOBIAN_d_dX_df_du */
 #define JACOBIAN_dX_dx_d_dX_df_du(patch, dx_axis, X_axis, ijk, lmn, qi,qj) \
@@ -129,12 +129,13 @@
 /* normalization * coords jacobian * JACOBIAN_d2_dX2_df_du */
 #define JACOBIAN_d2X_dxdy_d2_dX2_df_du(patch, dx_axis, dy_axis, dxdy_axis,X_axis, ijk, lmn, qi,qj) \
   ( \
+    NORMALIZATION(patch->n[X_axis])*dN__dX(patch,X_axis)*\
     ( \
-      d2X__dxdy(patch,ijk,X_axis,dxdy_axis)*dN__dX(patch,X_axis)*\
+      d2X__dxdy(patch,ijk,X_axis,dxdy_axis)*\
       JACOBIAN_d_dX_df_du(THETA(qi,X_axis),THETA(qj,X_axis),patch->n[X_axis]-1,qj) +     \
-      dX__dx(patch,ijk,X_axis,dx_axis)*dN__dX(patch,X_axis) * dX__dx(patch,ijk,X_axis,dy_axis)*dN__dX(patch,X_axis)* \
+      dX__dx(patch,ijk,X_axis,dx_axis)*dX__dx(patch,ijk,X_axis,dy_axis)*dN__dX(patch,X_axis)* \
       JACOBIAN_d2_dX2_df_du(THETA(qi,X_axis),THETA(qj,X_axis),patch->n[X_axis]-1,qj)     \
-    )*NORMALIZATION(patch->n[X_axis])\
+    )\
   )
 
 
