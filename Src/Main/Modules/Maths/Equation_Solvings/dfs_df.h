@@ -29,7 +29,7 @@
 #define THETA(i,X_axis) ( i*M_PI/((patch->n[(X_axis)])-1.) )
 
 /* normalization */
-#define NORMALIZATION(n) ( 1./( 2.*((n)-1.) ) )
+#define NORMALIZATION(n) ( 0.5/((n)-1.) )
 
 /* dX/dx */
 #define dX__dx(patch,ijk,dX_axis,dx_axis) \
