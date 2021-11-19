@@ -34,7 +34,7 @@
 // NOTE2: assuming patch is defined. */
 #define THETA(i,X_axis) ( (i)*M_PI/((patch->n[(X_axis)])-1.) )
 
-/* normalization */
+/* normalization, NOTE: n = patch->n */
 #define NORMALIZATION(n) ( 0.5/((n)-1.) )
 
 /* dX/dx */
