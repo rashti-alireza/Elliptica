@@ -196,30 +196,55 @@ void test_dfs_df_spectral_vs_FiniteDiff(Grid_T *const grid)
 void test_dfs_df_Spectral_vs_analytic(Grid_T *const grid)
 {
   FUNC_TIC
-  //const char *const types[] = {"J_D0","J_D1","J_D2",0};
-                          //     "dfxx_df","dfxy_df","dfxz_df",
-                          //     "dfyy_df","dfyz_df","dfzz_df",0};
   
+  const Uint np = grid->np;
   Uint p;
-  FOR_ALL_PATCHES(p,grid)
+  
+  if(1)/* turn 1st order test on or off */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < np; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    const char *types[] = {"J_D0",0};
+    const char *types[] = {"J_D0","J_D1","J_D2",0};
     prepare_Js_jacobian_eq(patch,types);
-    Matrix_T *m_J_D0 = get_j_matrix(patch,"J_D0");\
+    
+    Matrix_T *m_J_D0 = get_j_matrix(patch,"J_D0");
     fJs_T *f_J_D0    = get_j_reader(m_J_D0);
     
+    Matrix_T *m_J_D1 = get_j_matrix(patch,"J_D1");
+    fJs_T *f_J_D1    = get_j_reader(m_J_D1);
+    
+    Matrix_T *m_J_D2 = get_j_matrix(patch,"J_D2");
+    fJs_T *f_J_D2    = get_j_reader(m_J_D2);
+    
+    double diff, max = 0;
     FOR_ALL_ijk
     {
       for (Uint lmn = 0; lmn < patch->nn; ++lmn)
       {
         double J_D0_spec = f_J_D0(m_J_D0,ijk,lmn);
-        double J_D0_anly = 
-          d2f_dxdu_spectral_Jacobian_analytic(patch,0,ijk,lmn);
-        printf("diff = %e\n",J_D0_spec-J_D0_anly);
+        double J_D0_anly = d2f_dxdu_spectral_Jacobian_analytic(patch,0,ijk,lmn);
+        
+        double J_D1_spec = f_J_D1(m_J_D1,ijk,lmn);
+        double J_D1_anly = d2f_dxdu_spectral_Jacobian_analytic(patch,1,ijk,lmn);
+        
+        double J_D2_spec = f_J_D2(m_J_D2,ijk,lmn);
+        double J_D2_anly = d2f_dxdu_spectral_Jacobian_analytic(patch,2,ijk,lmn);
+        
+        diff = fabs(J_D0_spec-J_D0_anly);
+        max  = (diff > max ? diff : max);
+        
+        diff = fabs(J_D1_spec-J_D1_anly);
+        max  = (diff > max ? diff : max);
+        
+        diff = fabs(J_D2_spec-J_D2_anly);
+        max  = (diff > max ? diff : max);
       }
     }
+    printf("patch[%s]: \n     "
+      Pretty1"1st_order |J_spectral - J_analytic|_Linf = %e\n",patch->name,max);
   }
+  
   FUNC_TOC
 }
 
