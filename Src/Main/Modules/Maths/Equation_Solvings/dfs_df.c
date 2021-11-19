@@ -2096,31 +2096,23 @@ static void coarse_grain_Ap_ccs_matrix(Matrix_T *const m,const int Nslice)
 // X = cos(th). */
 static double
 d_dXi_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
-                        double thj/* X_i = cos(theta_i) */,
-                        Uint N/* the sum upper limit */)
+                        double thj/* X_j = cos(theta_j) */,
+                        Uint N/* the sum upper limit ( patch->n-1 ) */)
 {
   double sum = 0.;
-  double N0 = N-0.5;
+  double N0 = N+0.5;
   
   if (EQL(thi,0.))
   {
-    sum = 
-      d2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj) +
-      d_dlambda_sum_0_N_cos_nlambda(N,N0,thj);
-    sum *= 2.;
-    
+    sum = -2.*d2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj);
   }
   else if (EQL(thi,M_PI))
   {
     double lambda = thj+M_PI;
-    sum = 
-      d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda) +
-      d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda);
+    sum = -d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
 
     lambda = thj-M_PI;
-    sum += 
-      d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda) +
-      d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda);
+    sum += -d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
   }
   else
   {
