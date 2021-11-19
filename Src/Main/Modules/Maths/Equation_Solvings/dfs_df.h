@@ -17,6 +17,9 @@
 #define Csc(a) (1./sin((a)))
 #define Cot(a) (1./tan((a)))
 
+/* 2*M_PI */
+#define TWO_M_PI (6.283185307179586)
+
 /* Kronecker Delta */
 #define K__D(i,j)  ( (i)==(j) ? 1. : 0.)
 
@@ -26,7 +29,7 @@
 /* quick theta: 
 // NOTE1: assuming Chebyshev Extrema points.
 // NOTE2: assuming patch is defined. */
-#define THETA(i,X_axis) ( i*M_PI/((patch->n[(X_axis)])-1.) )
+#define THETA(i,X_axis) ( (i)*M_PI/((patch->n[(X_axis)])-1.) )
 
 /* normalization */
 #define NORMALIZATION(n) ( 0.5/((n)-1.) )
@@ -56,7 +59,7 @@
 /* d/dlambda sum_{n=0}^{N} cos(n lambda).
 // N0 = N+0.5. */
 #define d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda) \
-  ( EQL((lambda),0.) ?\
+  ( EQL((lambda),0.) || EQL((lambda),TWO_M_PI) ?\
     (0.0):\
     ( \
       Csc(0.5*(lambda))*(2.*(N0)*Cos((lambda)*(N0)) - \
@@ -67,7 +70,7 @@
 /* d^2/dlambda^2 sum_{n=0}^{N} cos(n lambda).
 // N0 = N+0.5. */
 #define d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda) \
-  ( EQL((lambda),0.) ?\
+  ( EQL((lambda),0.) || EQL((lambda),TWO_M_PI) ?\
     -(Pow3(N)/3.+Pow2(N)/2.+N/6.)/* simplified, don't forget - sign! */ :\
     (\
       Csc(0.5*(lambda))*(-4.*(N0)*Cos((lambda)*(N0))*Cot(0.5*(lambda)) + \
@@ -78,7 +81,7 @@
 /* d^3/dlambda^3 sum_{n=0}^{N} cos(n lambda).
 // N0 = N+0.5. */
 #define d3_dlambda3_sum_0_N_cos_nlambda(N,N0,lambda) \
-  ( EQL((lambda),0.) ?\
+  ( EQL((lambda),0.) || EQL((lambda),TWO_M_PI) ?\
     (0.0):\
     (\
       pow(Csc((lambda)/2.,3))*(2*(N0)*\
@@ -91,7 +94,7 @@
 /* d^4/dlambda^4 sum_{n=0}^{N} cos(n lambda).
 // N0 = N+0.5. */
 #define d4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) \
-  ( EQL((lambda),0.) ?\
+  ( EQL((lambda),0.) || EQL((lambda),TWO_M_PI) ?\
     (Pow4(N)*(N/5.+0.5)+Pow3(N)/3.-N/30.)/* simplified */:\
     (\
       pow(Csc((lambda)/2.),5)*(-16*(N0)*\
