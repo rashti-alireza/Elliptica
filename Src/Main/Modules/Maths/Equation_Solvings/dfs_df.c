@@ -2101,7 +2101,7 @@ d_dXi_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
 {
   double sum = 0.;
   double N0 = N+0.5;
-  
+
   if (EQL(thi,0.))
   {
     sum = -2.*d2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj);
@@ -2109,10 +2109,10 @@ d_dXi_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
   else if (EQL(thi,M_PI))
   {
     double lambda = thj+M_PI;
-    sum = -d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+    sum = d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
 
     lambda = thj-M_PI;
-    sum += -d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+    sum += d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
   }
   else
   {
@@ -2188,7 +2188,7 @@ double
   
   ijk_to_i_j_k(ijk,patch->n,&i,&j,&k);
   ijk_to_i_j_k(lmn,patch->n,&l,&m,&n);
-  
+    
   return
     JACOBIAN_dX_dx_d_dX_df_du(patch,dx_axis,0,ijk,lmn,i,l)*K__D(j,m)*K__D(k,n)+
     JACOBIAN_dX_dx_d_dX_df_du(patch,dx_axis,1,ijk,lmn,j,m)*K__D(i,l)*K__D(k,n)+

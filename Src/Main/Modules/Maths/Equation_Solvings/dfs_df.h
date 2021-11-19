@@ -23,6 +23,9 @@
 /* Kronecker Delta */
 #define K__D(i,j)  ( (i)==(j) ? 1. : 0.)
 
+/* eta_i in Elliptica's paper, NOTE: n = patch->n[?] - 1 */
+#define ETA(i,n) ( (i) == 0 || (i) == (n) ? 1. : 2. )
+
 /* (-1)^n */
 #define SIGN(n) (((n)%2) ? -1. : 1.)
 
@@ -108,10 +111,10 @@
   )
 
 
-/* -> d/dX(df/du)=d/dX (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X)),
-// NOTE: X = cos(th) */
+/* -> eta_j{d/dX(df/du)=d/dX (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X))},
+// NOTE: X = cos(th), N = patch->n[?]-1 */
 #define JACOBIAN_d_dX_df_du(thi,thj,N,j) \
-   ( d_dXi_2xsum_0_N_Tnj_Tni(thi,thj,N) - SIGN(j)*dT_dx((int)(N),cos(thi)) )
+   (ETA(j,N)*( d_dXi_2xsum_0_N_Tnj_Tni(thi,thj,N) - SIGN(j)*dT_dx((int)(N),cos(thi)) ))
 
 /* -> d2/dX^2(df/du)=d2/dX^2 (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X)),
 // NOTE: X = cos(th)). */
