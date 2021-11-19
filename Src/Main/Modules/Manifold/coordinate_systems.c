@@ -152,7 +152,8 @@ int make_JacobianT(Grid_T *const grid)
     free_coeffs(df);
     df->v          = dX_dx[2][2];/* dZ/dz */
     d2X_dxdy[2][5] = Partial_Derivative(df,"z");
-
+    
+    df->v = 0;
     remove_field(df);
 
     /* populate d^2X/dxdy numerically.
