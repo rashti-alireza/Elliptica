@@ -2146,7 +2146,6 @@ d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
       d4_dlambda4_sum_0_N_cos_nlambda(N,N0,thj) +
       d2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj);
     sum *= 2./3.;
-    
   }
   else if (EQL(thi,M_PI))
   {
@@ -2169,10 +2168,12 @@ d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
     double dthi_dX   = -1./sin_thi;
     double lambda    = thi+thj;
     
-    sum = d2thi_dX2*d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda);
+    sum = d2thi_dX2*d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda) +
+          Pow2(dthi_dX)*d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
     
     lambda = thi-thj;
-    sum += Pow2(dthi_dX)*d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+    sum += d2thi_dX2*d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda) +
+           Pow2(dthi_dX)*d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
   }
   
   return sum;
@@ -2217,6 +2218,8 @@ double
     dx_axis = dxdy_axis/3;
     dy_axis = dxdy_axis/3 + dxdy_axis%3;
   }
+  
+  //printf("dxdy = %d, dx = %d, dy = %d\n",dxdy_axis,dx_axis,dy_axis);
   
   ijk_to_i_j_k(ijk,patch->n,&i,&j,&k);
   ijk_to_i_j_k(lmn,patch->n,&l,&m,&n);
