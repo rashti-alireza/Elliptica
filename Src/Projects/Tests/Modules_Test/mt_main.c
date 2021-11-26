@@ -32,7 +32,18 @@ int Modules_Test(void *vp)
   
   if (strcmp_i(PgetsEZ("Test_Jacobian_Spectral_vs_FiniteDiff"),"yes"))
   {
+    /* fill data base of equations */
+    mt_fill_db_eqs(&field_eq,&bc_eq,&jacobian_field_eq,&jacobian_bc_eq);
+
+    /* initializing and solving */
+    initialize_solving_man(grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq,0);/* populating solution_man */
+    
     test_dfs_df_spectral_vs_FiniteDiff(grid);
+    
+    free_db_eqs(field_eq);
+    free_db_eqs(bc_eq);
+    free_db_eqs(jacobian_field_eq);
+    free_db_eqs(jacobian_bc_eq);
   }
   
   if (strcmp_i(PgetsEZ("Test_Jacobian_Spectral_vs_Analytic"),"yes"))
