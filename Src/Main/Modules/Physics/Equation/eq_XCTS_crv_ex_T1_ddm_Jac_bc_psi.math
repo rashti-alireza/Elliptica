@@ -13,6 +13,7 @@ C_macro3 = Init_Jacobian(name);
 C_macro4 = READ_v_UNUSED(name);
 C_macro5 = double CPI_name = d2f_dxdu_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
 C_macro6 = double CPI_name = d3f_dx2du_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
+C_macro7 = Free_Jacobian(name);
 
 # C arguments for jacobian of derivatives
 C_arg = ;
@@ -33,6 +34,9 @@ C_arg2 = [ijk == lmn]; # for kd
 `  const double kd[2] = {0.,1.};/* Kronecker delta */`;
 #`  const double is_Aij_on = 1.;`
 ``
+`  Header_Jacobian`
+
+
 # declare for Cpi
 Declare = 
 {
@@ -198,7 +202,15 @@ innerB_Epart = psi3_*bh_sConf(i)*Jpsi(-i)      + \
 
 
 `  }/* end of else if (patch->innerB) */\n`;
-
+``
+Declare =
+{
+ # jacobian derivative 1st order :
+ (obj = Field,name = Jpsi, rank = D, C_macro7,C_arg);
+}
+``
+`  Footer_Jacobian`
+``
 `  return 0;`;
 `}`;
 

@@ -12,6 +12,7 @@ C_macro2 = REALLOC_v_WRITE_v(name);
 C_macro3 = Init_Jacobian(name);
 C_macro4 = double CPI_name = d2f_dxdu_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
 C_macro5 = double CPI_name = d3f_dx2du_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
+C_macro6 = Free_Jacobian(name);
 
 # C arguments for jacobian of derivative
 C_arg = ;
@@ -30,6 +31,9 @@ C_arg2 = [ijk == lmn]; # for kd
 `  DDM_SCHUR_JACOBIAN_EQ_DECLARE`;
 `  Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */`;
 `  const double kd[2] = {0.,1.};/* Kronecker delta */`;
+``
+`  Header_Jacobian`
+
 
 # declare for cpi
 Declare = 
@@ -180,7 +184,18 @@ igConf(-i,-j)*(JJalphaPsi(i,j) - ChrisConf(l,i,j)*JalphaPsi(-l))\
 `  E_Trans[j][i] = Epart;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE\n`;
 ###############################################
+``
+Declare = 
+{
+ # Jacobian first derivative 
+ (obj = Field,name = JalphaPsi, rank = D, C_arg,C_macro6);
 
+ # Jacobian second derivative 
+ (obj = Field,name = JJalphaPsi, rank = DD, C_arg,C_macro6);
+}
+
+`  Footer_Jacobian`
+``
 `  return 0;`;
 `}`;
 

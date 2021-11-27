@@ -12,6 +12,7 @@ C_macro2 = REALLOC_v_WRITE_v(name);
 C_macro3 = Init_Jacobian(name);
 C_macro4 = double CPI_name = d2f_dxdu_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
 C_macro5 = double CPI_name = d3f_dx2du_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
+C_macro6 = Free_Jacobian(name);
 
 # C arguments for jacobian of derivative
 C_arg = ;
@@ -31,6 +32,10 @@ C_arg2 = [ijk == lmn]; # for kd
 `  Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */`;
 #`  const double kd[2] = {0.,1.};/* Kronecker delta */`;
 ``
+``
+`  Header_Jacobian`
+
+
 ## define prefix for parameter
 `  EQ_Def_Param_Prefix_Char`
 `  EQ_Set_Prefix("NS")`
@@ -245,6 +250,19 @@ Epart_ = t1_e+t2_e;
 `      free(d_df);`
 `    }`
 `  }`
+``
+# principle part Jacobians
+Declare = 
+{
+ # Jphi 1st derivative
+ (obj = Field,name = Jphi, rank = D, C_macro6,C_arg);
+
+ # JJphi 2nd derivative
+ (obj = Field,name = JJphi, rank = DD, C_macro6,C_arg);
+}
+
+`  Footer_Jacobian`
+``
 `  return 0;`;
 `}`;
 
