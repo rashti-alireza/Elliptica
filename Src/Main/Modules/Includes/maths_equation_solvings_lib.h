@@ -13,12 +13,20 @@
 
 #if SPECTRAL_JACOBIAN_MATRIX_FORM
 
+#define Header_Jacobian /* nothing needed yet! */
+
+#define Footer_Jacobian /* free and clean stuffs */
+
 /* it compactifies the prepration of Jacobian of derivatives */
 #define Init_Jacobian(xNAME) \
   const char *types_##xNAME[] = {#xNAME,0};\
   prepare_Js_jacobian_eq(patch,types_##xNAME);\
   Matrix_T *m_##xNAME = get_j_matrix(patch,#xNAME);\
   fJs_T *f_##xNAME    = get_j_reader(m_##xNAME);
+
+#define Free_Jacobian(xNAME) /* it's not design yet! maybe in future 
+                             // I want to remove Jacobian after each 
+                             // population. so this is a place holder. */
 
 #define d2f_dxdu_Jacobian(patch,dx_axis,ijk,lmn,xNAME) \
   ( f_##xNAME(m_##xNAME, ijk, lmn) )
@@ -29,7 +37,13 @@
 
 #elif SPECTRAL_JACOBIAN_ANALYTIC_FORM
 
-#define Init_Jacobian(xNAME) /* nothing! */
+#define Init_Jacobian(xNAME) /* nothing needed! */
+
+#define Free_Jacobian(xNAME) /* nothing needed! */
+
+#define Header_Jacobian /* set some variables and initialization */
+
+#define Footer_Jacobian /* free and clean stuffs */
 
 #define d2f_dxdu_Jacobian(patch,dx_axis,ijk,lmn,xNAME) \
   d2f_dxdu_spectral_Jacobian_analytic(patch,dx_axis,ijk,lmn)
