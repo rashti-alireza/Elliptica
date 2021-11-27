@@ -13,6 +13,8 @@ void *eq_XCTS_curve_exc_T1_ddm_jacobian_eq_B0_U1(void *vp1,void *vp2)
   DDM_SCHUR_JACOBIAN_EQ_DECLARE
   Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
   const double kd[2]   = {0.,1.};/* Kronecker delta */
+
+  Header_Jacobian
   Init_Jacobian(JB0_D0)
   Init_Jacobian(JB0_D1)
   Init_Jacobian(JB0_D2)
@@ -621,6 +623,18 @@ t7_E_U1 + t8_E_U1 + t9_E_U1;
   E_Trans[j][i] = Epart_U1;
 
   DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE
+
+
+  Free_Jacobian(JB0_D0)
+  Free_Jacobian(JB0_D1)
+  Free_Jacobian(JB0_D2)
+  Free_Jacobian(JJB0_D0D0)
+  Free_Jacobian(JJB0_D0D1)
+  Free_Jacobian(JJB0_D0D2)
+  Free_Jacobian(JJB0_D1D1)
+  Free_Jacobian(JJB0_D1D2)
+  Free_Jacobian(JJB0_D2D2)
+  Footer_Jacobian
 
   return 0;
 }

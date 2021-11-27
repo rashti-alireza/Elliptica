@@ -13,6 +13,8 @@ void *eq_XCTS_curve_exc_T1_ddm_jacobian_bc_B0_U2(void *vp1,void *vp2)
   DDM_SCHUR_JACOBIAN_BC_DECLARE
   Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
   const double kd[2] = {0.,1.};/* Kronecker delta */
+
+  Header_Jacobian
   if (patch->outerB)
   {
   DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN
@@ -54,6 +56,9 @@ kd[ijk==lmn];
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
 
   }/* end of else if (patch->innerB) */
+
+
+  Footer_Jacobian
 
   return 0;
 }

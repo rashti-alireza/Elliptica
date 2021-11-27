@@ -13,6 +13,8 @@ void *eq_XCTS_curve_T1_ddm_jacobian_eq_phi(void *vp1,void *vp2)
   DDM_SCHUR_JACOBIAN_EQ_DECLARE
   Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
 
+
+  Header_Jacobian
   EQ_Def_Param_Prefix_Char
   EQ_Set_Prefix("NS")
 
@@ -277,5 +279,17 @@ t1_e + t2_e;
       free(d_df);
     }
   }
+
+  Free_Jacobian(Jphi_D0)
+  Free_Jacobian(Jphi_D1)
+  Free_Jacobian(Jphi_D2)
+  Free_Jacobian(JJphi_D0D0)
+  Free_Jacobian(JJphi_D0D1)
+  Free_Jacobian(JJphi_D0D2)
+  Free_Jacobian(JJphi_D1D1)
+  Free_Jacobian(JJphi_D1D2)
+  Free_Jacobian(JJphi_D2D2)
+  Footer_Jacobian
+
   return 0;
 }

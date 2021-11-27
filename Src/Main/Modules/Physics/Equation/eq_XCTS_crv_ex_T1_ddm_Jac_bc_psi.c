@@ -14,6 +14,7 @@ void *eq_XCTS_curve_exc_T1_ddm_jacobian_bc_psi(void *vp1,void *vp2)
   Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
   const double kd[2] = {0.,1.};/* Kronecker delta */
 
+  Header_Jacobian
   READ_v(psi)
   READ_v(trK)
   READ_v_UNUSED(AConfIJ_U0U0)
@@ -148,6 +149,13 @@ bh_sConf_U2[ijk]);
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
 
   }/* end of else if (patch->innerB) */
+
+
+  Free_Jacobian(Jpsi_D0)
+  Free_Jacobian(Jpsi_D1)
+  Free_Jacobian(Jpsi_D2)
+
+  Footer_Jacobian
 
   return 0;
 }

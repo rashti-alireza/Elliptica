@@ -13,6 +13,8 @@ void *eq_XCTS_curve_exc_T2_ddm_jacobian_bc_alphaPsi(void *vp1,void *vp2)
   DDM_SCHUR_JACOBIAN_BC_DECLARE
   Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
   const double kd[2] = {0.,1.};/* Kronecker delta */
+
+  Header_Jacobian
   Init_Jacobian(JalphaPsi_D0)
   Init_Jacobian(JalphaPsi_D1)
   Init_Jacobian(JalphaPsi_D2)
@@ -68,6 +70,12 @@ JalphaPsi_D2*bh_sConf_U2[ijk];
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
 
   }/* end of else if (patch->innerB) */
+
+
+  Free_Jacobian(JalphaPsi_D0)
+  Free_Jacobian(JalphaPsi_D1)
+  Free_Jacobian(JalphaPsi_D2)
+  Footer_Jacobian
 
   return 0;
 }

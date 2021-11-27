@@ -12,6 +12,8 @@ void *eq_XCTS_curve_T1_ddm_jacobian_bc_phi(void *vp1,void *vp2)
 {
   DDM_SCHUR_JACOBIAN_BC_DECLARE
   Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
+
+  Header_Jacobian
   Init_Jacobian(Jphi_D0)
   Init_Jacobian(Jphi_D1)
   Init_Jacobian(Jphi_D2)
@@ -81,6 +83,12 @@ igConf_U1U2[ijk] + Jphi_D2*drho0_D2[ijk]*igConf_U2U2[ijk];
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
 
   }/* end of else if (patch->innerB) */
+
+  Free_Jacobian(Jphi_D0)
+  Free_Jacobian(Jphi_D1)
+  Free_Jacobian(Jphi_D2)
+
+  Footer_Jacobian
 
   return 0;
 }

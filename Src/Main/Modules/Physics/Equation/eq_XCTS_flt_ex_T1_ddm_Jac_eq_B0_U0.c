@@ -12,6 +12,8 @@ void *eq_XCTS_flat_exc_T1_ddm_jacobian_eq_B0_U0(void *vp1,void *vp2)
 {
   DDM_SCHUR_JACOBIAN_EQ_DECLARE
   Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
+
+  Header_Jacobian
   Init_Jacobian(JB0_D0)
   Init_Jacobian(JB0_D1)
   Init_Jacobian(JB0_D2)
@@ -166,6 +168,18 @@ t1_E_U0 + t2_E_U0 + t3_E_U0 + t4_E_U0 + t5_E_U0;
   E_Trans[j][i] = Epart_U0;
 
   DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE
+
+
+  Free_Jacobian(JB0_D0)
+  Free_Jacobian(JB0_D1)
+  Free_Jacobian(JB0_D2)
+  Free_Jacobian(JJB0_D0D0)
+  Free_Jacobian(JJB0_D0D1)
+  Free_Jacobian(JJB0_D0D2)
+  Free_Jacobian(JJB0_D1D1)
+  Free_Jacobian(JJB0_D1D2)
+  Free_Jacobian(JJB0_D2D2)
+  Footer_Jacobian
 
   return 0;
 }
