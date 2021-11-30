@@ -2179,6 +2179,7 @@ d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
   return sum;
 }
 
+/* ->: compute d(df/du)/dx, in which x is a Cartesian coords. */
 double
   d2f_dxdu_spectral_Jacobian_analytic(Patch_T *const patch,
                                       const Uint dx_axis, 
@@ -2197,6 +2198,7 @@ double
 }
 
 
+/* ->: compute d^2(df/du)/dxdy, in which x and y are Cartesian coords. */
 double
   d3f_dxdydu_spectral_Jacobian_analytic(Patch_T *const patch,
                                         const int dxdy_axis,
