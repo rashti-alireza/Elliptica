@@ -323,9 +323,176 @@ double J__v_2pow2_half_csc_lambda = 2.*Pow2(J__v_csc_half_lambda);
   for (i = 0; i < Ni; ++i)\
   {\
     ijk = node[i];\
+    Uint _i,_j,_k; ijk_to_i_j_k(ijk,patch->n,&_i,&_j,&_k);
+    
     for (j = 0; j < Nj; ++j)\
     {\
       lmn = node[j];
+      Uint _l,_m,_n; ijk_to_i_j_k(lmn,patch->n,&_l,&_m,&_n);
+      int _dx_axis,_dy_axis,_dxdy_axis;
+      
+      /* first order Jacobian, NOTE: don't change d2f_dxdu_spectral_Jacobian_analytic name */
+      double d2f_dxdu_spectral_Jacobian_analytic[3];
+      
+      _dx_axis = 0;
+      d2f_dxdu_spectral_Jacobian_analytic[_dx_axis] = 
+        J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n)+
+        J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n)+
+        J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*J__KD(_i,_l)*J__KD(_j,_m);
+
+      _dx_axis = 1;
+      d2f_dxdu_spectral_Jacobian_analytic[_dx_axis] = 
+        J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n)+
+        J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n)+
+        J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*J__KD(_i,_l)*J__KD(_j,_m);
+   
+      _dx_axis = 2;
+      d2f_dxdu_spectral_Jacobian_analytic[_dx_axis] = 
+        J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n)+
+        J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n)+
+        J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*J__KD(_i,_l)*J__KD(_j,_m);
+
+      /* second order Jacobian, NOTE: don't change d3f_dxdydu_spectral_Jacobian_analytic name */
+      double d3f_dxdydu_spectral_Jacobian_analytic[6];
+
+      _dxdy_axis = 0;
+      _dx_axis = 0;
+      _dy_axis = 0;
+      d3f_dxdydu_spectral_Jacobian_analytic[_dxdy_axis] = 
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n) +
+          J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*
+            (
+              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
+              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
+            ) +
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n) +
+          J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*
+            (
+              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l) +
+              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
+            ) +
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,2,ijk,lmn,_k,_n)*J__KD(_j,_m)*J__KD(_i,_l) +
+          J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*
+            (
+              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
+              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l)
+            );
+    
+      _dxdy_axis = 1;
+      _dx_axis = 0;
+      _dy_axis = 1;
+      d3f_dxdydu_spectral_Jacobian_analytic[_dxdy_axis] = 
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n) +
+          J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*
+            (
+              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
+              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
+            ) +
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n) +
+          J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*
+            (
+              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l) +
+              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
+            ) +
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,2,ijk,lmn,_k,_n)*J__KD(_j,_m)*J__KD(_i,_l) +
+          J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*
+            (
+              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
+              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l)
+            );
+        
+      _dxdy_axis = 2;
+      _dx_axis = 0;
+      _dy_axis = 2;
+      d3f_dxdydu_spectral_Jacobian_analytic[_dxdy_axis] = 
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n) +
+          J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*
+            (
+              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
+              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
+            ) +
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n) +
+          J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*
+            (
+              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l) +
+              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
+            ) +
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,2,ijk,lmn,_k,_n)*J__KD(_j,_m)*J__KD(_i,_l) +
+          J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*
+            (
+              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
+              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l)
+            );
+        
+      _dxdy_axis = 3;
+      _dx_axis = 1;
+      _dy_axis = 1;
+      d3f_dxdydu_spectral_Jacobian_analytic[_dxdy_axis] = 
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n) +
+          J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*
+            (
+              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
+              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
+            ) +
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n) +
+          J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*
+            (
+              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l) +
+              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
+            ) +
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,2,ijk,lmn,_k,_n)*J__KD(_j,_m)*J__KD(_i,_l) +
+          J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*
+            (
+              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
+              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l)
+            );
+        
+      _dxdy_axis = 4;
+      _dx_axis = 1;
+      _dy_axis = 2;
+      d3f_dxdydu_spectral_Jacobian_analytic[_dxdy_axis] = 
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n) +
+          J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*
+            (
+              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
+              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
+            ) +
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n) +
+          J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*
+            (
+              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l) +
+              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
+            ) +
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,2,ijk,lmn,_k,_n)*J__KD(_j,_m)*J__KD(_i,_l) +
+          J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*
+            (
+              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
+              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l)
+            );
+        
+      _dxdy_axis = 5;
+      _dx_axis = 2;
+      _dy_axis = 2;
+      d3f_dxdydu_spectral_Jacobian_analytic[_dxdy_axis] = 
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n) +
+          J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*
+            (
+              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
+              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
+            ) +
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n) +
+          J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*
+            (
+              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l) +
+              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
+            ) +
+          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,2,ijk,lmn,_k,_n)*J__KD(_j,_m)*J__KD(_i,_l) +
+          J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*
+            (
+              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
+              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l)
+            );
+
 
 #define DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE \
     }/* end of for (i = 0; i < Ni; ++i) */\
