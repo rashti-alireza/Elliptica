@@ -802,7 +802,7 @@ static double dc_df(const Uint n,const Uint i,const Uint l)
   if (l == 0)
     dcdf = 1;
   else if (l == n-1)
-    dcdf = J__sign(i);
+    dcdf = Jsign(i);
   else
   {
     double xi = ChebExtrema_1point(n,i);
@@ -2104,25 +2104,25 @@ d_dXi_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
 
   if (EQL(thi,0.))
   {
-    sum = -2.*J__d2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj);
+    sum = -2.*Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj);
   }
   else if (EQL(thi,M_PI))
   {
     double lambda = thj+M_PI;
-    sum = J__d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+    sum = Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
 
     lambda = thj-M_PI;
-    sum += J__d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+    sum += Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
   }
   else
   {
     double lambda = thi+thj;
     double dthi_dX   = -1./sin(thi);
     
-    sum = J__d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda);
+    sum = Jd_dlambda_sum_0_N_cos_nlambda(N,N0,lambda);
     
     lambda = thi-thj;
-    sum += J__d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda);
+    sum += Jd_dlambda_sum_0_N_cos_nlambda(N,N0,lambda);
     
     sum *= dthi_dX;
   }
@@ -2143,21 +2143,21 @@ d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
   if (EQL(thi,0.))
   {
     sum = 
-      J__d4_dlambda4_sum_0_N_cos_nlambda(N,N0,thj) +
-      J__d2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj);
+      Jd4_dlambda4_sum_0_N_cos_nlambda(N,N0,thj) +
+      Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj);
     sum *= 2./3.;
   }
   else if (EQL(thi,M_PI))
   {
     double lambda = thj+M_PI;
     sum = 
-      J__d4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) +
-      J__d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+      Jd4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) +
+      Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
     
     lambda = thj-M_PI;
     sum += 
-      J__d4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) +
-      J__d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+      Jd4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) +
+      Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
       
     sum /= 3.;
   }
@@ -2168,12 +2168,12 @@ d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
     double dthi_dX   = -1./sin_thi;
     double lambda    = thi+thj;
     
-    sum = d2thi_dX2*J__d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda) +
-          Pow2(dthi_dX)*J__d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+    sum = d2thi_dX2*Jd_dlambda_sum_0_N_cos_nlambda(N,N0,lambda) +
+          Pow2(dthi_dX)*Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
     
     lambda = thi-thj;
-    sum += d2thi_dX2*J__d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda) +
-           Pow2(dthi_dX)*J__d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+    sum += d2thi_dX2*Jd_dlambda_sum_0_N_cos_nlambda(N,N0,lambda) +
+           Pow2(dthi_dX)*Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
   }
   
   return sum;
@@ -2191,9 +2191,9 @@ double
   ijk_to_i_j_k(lmn,patch->n,&l,&m,&n);
     
   return
-    J__d2f_dudx(patch,dx_axis,0,ijk,lmn,i,l)*J__KD(j,m)*J__KD(k,n)+
-    J__d2f_dudx(patch,dx_axis,1,ijk,lmn,j,m)*J__KD(i,l)*J__KD(k,n)+
-    J__d2f_dudx(patch,dx_axis,2,ijk,lmn,k,n)*J__KD(i,l)*J__KD(j,m);
+    Jd2f_dudx(patch,dx_axis,0,ijk,lmn,i,l)*JKD(j,m)*JKD(k,n)+
+    Jd2f_dudx(patch,dx_axis,1,ijk,lmn,j,m)*JKD(i,l)*JKD(k,n)+
+    Jd2f_dudx(patch,dx_axis,2,ijk,lmn,k,n)*JKD(i,l)*JKD(j,m);
 }
 
 
@@ -2225,24 +2225,24 @@ double
   ijk_to_i_j_k(lmn,patch->n,&l,&m,&n);
   
   return
-    J__d3f_dudxdy(patch,dx_axis,dy_axis,dxdy_axis,0,ijk,lmn,i,l)*J__KD(j,m)*J__KD(k,n) +
-    J__d2f_dudx(patch,dx_axis,0,ijk,lmn,i,l)*
+    Jd3f_dudxdy(patch,dx_axis,dy_axis,dxdy_axis,0,ijk,lmn,i,l)*JKD(j,m)*JKD(k,n) +
+    Jd2f_dudx(patch,dx_axis,0,ijk,lmn,i,l)*
       (
-        J__KD(k,n)*J__d2f_dudx(patch,dy_axis,1,ijk,lmn,j,m) +
-        J__KD(j,m)*J__d2f_dudx(patch,dy_axis,2,ijk,lmn,k,n)
+        JKD(k,n)*Jd2f_dudx(patch,dy_axis,1,ijk,lmn,j,m) +
+        JKD(j,m)*Jd2f_dudx(patch,dy_axis,2,ijk,lmn,k,n)
       ) +
     
-    J__d3f_dudxdy(patch,dx_axis,dy_axis,dxdy_axis,1,ijk,lmn,j,m)*J__KD(i,l)*J__KD(k,n) +
-    J__d2f_dudx(patch,dx_axis,1,ijk,lmn,j,m)*
+    Jd3f_dudxdy(patch,dx_axis,dy_axis,dxdy_axis,1,ijk,lmn,j,m)*JKD(i,l)*JKD(k,n) +
+    Jd2f_dudx(patch,dx_axis,1,ijk,lmn,j,m)*
       (
-        J__KD(k,n)*J__d2f_dudx(patch,dy_axis,0,ijk,lmn,i,l) +
-        J__KD(i,l)*J__d2f_dudx(patch,dy_axis,2,ijk,lmn,k,n)
+        JKD(k,n)*Jd2f_dudx(patch,dy_axis,0,ijk,lmn,i,l) +
+        JKD(i,l)*Jd2f_dudx(patch,dy_axis,2,ijk,lmn,k,n)
       ) +
       
-    J__d3f_dudxdy(patch,dx_axis,dy_axis,dxdy_axis,2,ijk,lmn,k,n)*J__KD(j,m)*J__KD(i,l) +
-    J__d2f_dudx(patch,dx_axis,2,ijk,lmn,k,n)*
+    Jd3f_dudxdy(patch,dx_axis,dy_axis,dxdy_axis,2,ijk,lmn,k,n)*JKD(j,m)*JKD(i,l) +
+    Jd2f_dudx(patch,dx_axis,2,ijk,lmn,k,n)*
       (
-        J__KD(i,l)*J__d2f_dudx(patch,dy_axis,1,ijk,lmn,j,m) +
-        J__KD(j,m)*J__d2f_dudx(patch,dy_axis,0,ijk,lmn,i,l)
+        JKD(i,l)*Jd2f_dudx(patch,dy_axis,1,ijk,lmn,j,m) +
+        JKD(j,m)*Jd2f_dudx(patch,dy_axis,0,ijk,lmn,i,l)
       );
 }
