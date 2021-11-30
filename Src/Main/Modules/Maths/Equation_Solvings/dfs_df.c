@@ -821,12 +821,6 @@ static double ChebExtrema_1point(const Uint n, const Uint p)
   return cos(p*M_PI/(n-1));
 }
 
-/* ->return value: d(Cheb_Tn(x))/dx */
-static double dT_dx(const int n,const double x)
-{
-  return n*Cheb_Un(n-1,x);
-}
-
 /* converitng enum to str */
 static void JType_E2str(const JType_E e,char *const str)
 {
@@ -2051,6 +2045,12 @@ void free_patch_SolMan_jacobian(Patch_T *const patch)
   
   SolMan->jacobian = 0;
   SolMan->nj       = 0;
+  
+  for (i = 0; i < 3; i++)
+  {
+    Free(SolMan->jacobian_workspace->dT_dx[i]);
+    Free(SolMan->jacobian_workspace->d2T_dx2[i]);
+  }
 }
 
 /* slice Ap of ccs matrix to optimiza ccs reader.

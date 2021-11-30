@@ -49,7 +49,6 @@ static void fill_jacobian_direct_method_1stOrder(double **const J,Patch_T *const
 static void fill_jacobian_direct_method_2ndOrder(double **const J, Patch_T *const patch,const JType_E deriv_dir);
 static double ChebExtrema_1point(const Uint n, const Uint p);
 static double dc_df(const Uint n,const Uint i,const Uint l);
-static double dT_dx(const int n,const double x);
 static void read_1st_and_2nd_deriv(const JType_E deriv_dir,JType_E *const deriv_1st,JType_E *const deriv_2nd);
 static void JType_E2Dd_T(const JType_E jt_e, Dd_T *const q_dir);
 static void write_J_in_disk_ccs(void);
