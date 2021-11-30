@@ -171,6 +171,97 @@ double J__v_2pow2_half_csc_lambda = 2.*Pow2(J__v_csc_half_lambda);
     )\
   )
 
+/* X_i = cos(theta_i), X_j = cos(theta_j), N = patch->n-1  */
+#define J__d_dXi_2xsum_0_N_Tnj_Tni(thi,thj,N)
+( EQL(thi,0.) ? 
+  -2.*J__d2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj) :
+  EQL(thi,M_PI) ?
+  ( (lambda = thj+M_PI, _sum  = J__d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda),
+     lambda = thj-M_PI, _sum += J__d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda),_sum)):
+  ())
+  
+{
+  double sum = 0.;
+  double N0 = N+0.5;
+
+  if (EQL(thi,0.))
+  {
+    sum = -2.*Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj);
+  }
+  else if (EQL(thi,M_PI))
+  {
+    double lambda = thj+M_PI;
+    sum = Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+
+    lambda = thj-M_PI;
+    sum += Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+  }
+  else
+  {
+    double lambda = thi+thj;
+    double dthi_dX   = -1./sin(thi);
+    
+    sum = Jd_dlambda_sum_0_N_cos_nlambda(N,N0,lambda);
+    
+    lambda = thi-thj;
+    sum += Jd_dlambda_sum_0_N_cos_nlambda(N,N0,lambda);
+    
+    sum *= dthi_dX;
+  }
+  
+  return sum;
+}
+
+/* -> d^2/dX^2 2*sum_0^N (Tn(Xj) Tn(X))| X = Xi.
+// X = cos(th). */
+static double
+d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
+                          double thj/* X_i = cos(theta_i) */,
+                          Uint N/* the sum upper limit */)
+{
+  double sum = 0.;
+  double N0 = N+0.5;
+  
+  if (EQL(thi,0.))
+  {
+    sum = 
+      Jd4_dlambda4_sum_0_N_cos_nlambda(N,N0,thj) +
+      Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj);
+    sum *= 2./3.;
+  }
+  else if (EQL(thi,M_PI))
+  {
+    double lambda = thj+M_PI;
+    sum = 
+      Jd4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) +
+      Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+    
+    lambda = thj-M_PI;
+    sum += 
+      Jd4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) +
+      Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+      
+    sum /= 3.;
+  }
+  else
+  {
+    double sin_thi   = sin(thi);
+    double d2thi_dX2 = -cos(thi)/(Pow3(sin_thi));
+    double dthi_dX   = -1./sin_thi;
+    double lambda    = thi+thj;
+    
+    sum = d2thi_dX2*Jd_dlambda_sum_0_N_cos_nlambda(N,N0,lambda) +
+          Pow2(dthi_dX)*Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+    
+    lambda = thi-thj;
+    sum += d2thi_dX2*Jd_dlambda_sum_0_N_cos_nlambda(N,N0,lambda) +
+           Pow2(dthi_dX)*Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
+  }
+  
+  return sum;
+}
+
+
 
 
 #if SPECTRAL_JACOBIAN_MATRIX_FORM
@@ -330,7 +421,7 @@ double J__v_2pow2_half_csc_lambda = 2.*Pow2(J__v_csc_half_lambda);
       lmn = node[j];
       Uint _l,_m,_n; ijk_to_i_j_k(lmn,patch->n,&_l,&_m,&_n);
       int _dx_axis,_dy_axis,_dxdy_axis;
-      
+      double _sum;/* for J__d_dXi_2xsum_0_N_Tnj_Tni and J__d2_dXi2_2xsum_0_N_Tnj_Tni. */
       /* first order Jacobian, NOTE: don't change d2f_dxdu_spectral_Jacobian_analytic name */
       double d2f_dxdu_spectral_Jacobian_analytic[3];
       
