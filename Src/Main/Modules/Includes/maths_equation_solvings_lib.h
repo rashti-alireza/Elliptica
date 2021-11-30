@@ -28,16 +28,28 @@
 /* eta_i in Elliptica's paper, NOTE: n = patch->n[?] - 1 */
 #define J__eta(i,n) ( (i) == 0 || (i) == (n) ? 1. : 2. )
 
-/* (-1)^n */
-#define J__sign(n) (((n)%2) ? -1. : 1.)
+const Uint J__v_nm1[3] = {patch->n[0]-1,
+                          patch->n[1]-1,
+                          patch->n[2]-1};
+
+/* (-1)^i */
+#define J__sign(i) (((i)%2) ? -1. : 1.)
 
 /* quick theta: 
 // NOTE1: assuming Chebyshev Extrema points.
 // NOTE2: assuming patch is defined. */
 #define J__theta(i,X_axis) ( (i)*M_PI/((patch->n[(X_axis)])-1.) )
 
+const double J__v_pi_o_nm1[3] = {M_PI/J__v_nm1[0],
+                                 M_PI/J__v_nm1[1], 
+                                 M_PI/J__v_nm1[2]};
+
 /* normalization, NOTE: n = patch->n */
 #define J__norm(n) ( 0.5/((n)-1.) )
+
+const double J__v_norm[3] = {0.5/J__v_nm1[0],
+                             0.5/J__v_nm1[1],
+                             0.5/J__v_nm1[2]};
 
 /* dX/dx */
 #define J__dX_dx(patch,ijk,dX_axis,dx_axis) \
@@ -72,6 +84,34 @@
     )*0.25\
   )
 
+const double J__v_N0[3] = {0.5 + J__v_nm1[0],
+                           0.5 + J__v_nm1[1],
+                           0.5 + J__v_nm1[2]};
+
+double J__v_lambda       = ????
+double J__v_half_lambda  = 0.5*(J__v_lambda);
+double J__v_N0_lambda[3] = {J__v_N0[0]*J__v_lambda,
+                            J__v_N0[1]*J__v_lambda,
+                            J__v_N0[2]*J__v_lambda};
+
+double J__v_cos_lambda = cos(J__v_lambda);
+double J__v_sin_lambda = sin(J__v_lambda);
+double J__v_csc_lambda = 1./J__v_sin_lambda;
+
+double J__v_cos_half_lambda = cos(J__v_half_lambda);
+double J__v_sin_half_lambda = sin(J__v_half_lambda);
+double J__v_csc_half_lambda = 1./J__v_sin_half_lambda;
+
+double J__v_cos_N0_lambda[3] = {cos(J__v_N0_lambda[0]),
+                                cos(J__v_N0_lambda[1]),
+                                cos(J__v_N0_lambda[2])};
+double J__v_sin_N0_lambda[3] = {sin(J__v_N0_lambda[0]),
+                                sin(J__v_N0_lambda[1]),
+                                sin(J__v_N0_lambda[2])};
+double J__v_csc_N0_lambda[3] = {1./J__v_sin_N0_lambda[0],
+                                1./J__v_sin_N0_lambda[1],
+                                1./J__v_sin_N0_lambda[2]};
+
 /* d^2/dlambda^2 sum_{n=0}^{N} cos(n lambda).
 // N0 = N+0.5. */
 #define J__d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda) \
@@ -83,16 +123,26 @@
     )*0.125\
   )
 
+const double J__v_c1_d2[3] = {-(Pow3(J__v_nm1[0])/3.+Pow2(J__v_nm1[0])/2.+J__v_nm1[0]/6.),
+                              -(Pow3(J__v_nm1[1])/3.+Pow2(J__v_nm1[1])/2.+J__v_nm1[1]/6.),
+                              -(Pow3(J__v_nm1[2])/3.+Pow2(J__v_nm1[2])/2.+J__v_nm1[2]/6.)};
+
+const double J__v_c2_d2[3] = {-1. - 4.*Pow2(J__v_N0[0]), 
+                              -1. - 4.*Pow2(J__v_N0[1]),
+                              -1. - 4.*Pow2(J__v_N0[2])};
+
+double J__v_2pow2_half_csc_lambda = 2.*Pow2(J__v_csc_half_lambda);
+
 /* d^3/dlambda^3 sum_{n=0}^{N} cos(n lambda).
 // N0 = N+0.5. */
 #define J__d3_dlambda3_sum_0_N_cos_nlambda(N,N0,lambda) \
   ( EQL((lambda),0.) || EQL((lambda),J__2M_PI) ?\
     (0.0):\
     (\
-      pow(J__Csc((lambda)/2.,3))*(2*(N0)*\
+      pow(J__Csc(0.5*(lambda),3))*(2*(N0)*\
         (9 - 4*Pow2((N0)) + (3 + 4*Pow2((N0)))*J__Cos((lambda)))*\
         J__Cos((lambda)*(N0)) - (11 - 12*Pow2((N0)) + J__Cos((lambda)) + \
-          12*Pow2((N0))*J__Cos((lambda)))*J__Cot((lambda)/2.)*J__Sin((lambda)*(N0)))\
+          12*Pow2((N0))*J__Cos((lambda)))*J__Cot(0.5*(lambda))*J__Sin((lambda)*(N0)))\
     )/32.\
   )
 
@@ -102,7 +152,7 @@
   ( EQL((lambda),0.) || EQL((lambda),J__2M_PI) ?\
     (Pow4(N)*(N/5.+0.5)+Pow3(N)/3.-N/30.)/* simplified */:\
     (\
-      pow(J__Csc((lambda)/2.),5)*(-16*(N0)*\
+      pow(J__Csc(0.5*(lambda)),5)*(-16*(N0)*\
         (11 - 4*Pow2((N0)) + J__Cos((lambda)) + \
           4*Pow2((N0))*J__Cos((lambda)))*J__Cos((lambda)*(N0))*J__Sin((lambda)) + \
        (115 - 120*Pow2((N0)) + 48*Pow4((N0)) + \
@@ -111,6 +161,27 @@
         J__Sin((lambda)*(N0)))\
     )/256.\
   )
+
+const double J__v_c1_d4[3] = {(Pow4(J__v_nm1[0])*(J__v_nm1[0]/5.+0.5)+Pow3(J__v_nm1[0])/3.-J__v_nm1[0]/30.),
+                              (Pow4(J__v_nm1[1])*(J__v_nm1[1]/5.+0.5)+Pow3(J__v_nm1[1])/3.-J__v_nm1[1]/30.),
+                              (Pow4(J__v_nm1[2])*(J__v_nm1[2]/5.+0.5)+Pow3(J__v_nm1[2])/3.-J__v_nm1[2]/30.)};
+
+const double J__v_c2_d4[3] = {4.*Pow2(J__v_nm1[0]),
+                              4.*Pow2(J__v_nm1[1]),
+                              4.*Pow2(J__v_nm1[2])};
+
+const double J__v_c3_d4[3] = {115. - 120.*Pow2(J__v_nm1[0]) + 48.*Pow4(J__v_nm1[0]),
+                              115. - 120.*Pow2(J__v_nm1[1]) + 48.*Pow4(J__v_nm1[1]),
+                              115. - 120.*Pow2(J__v_nm1[2]) + 48.*Pow4(J__v_nm1[2])};
+                              
+const double J__v_c4_d4[3] = {(76. + 96.*Pow2(J__v_nm1[0]) - 64.*Pow4(J__v_nm1[0])),
+                              (76. + 96.*Pow2(J__v_nm1[1]) - 64.*Pow4(J__v_nm1[1])),
+                              (76. + 96.*Pow2(J__v_nm1[2]) - 64.*Pow4(J__v_nm1[2]))};
+
+
+const double J__v_c5_d4[3] = {(1. + 24.*Pow2(J__v_nm1[0]) + 16.*Pow4(J__v_nm1[0])),
+                              (1. + 24.*Pow2(J__v_nm1[1]) + 16.*Pow4(J__v_nm1[1])),
+                              (1. + 24.*Pow2(J__v_nm1[2]) + 16.*Pow4(J__v_nm1[2]))};
 
 
 /* -> eta_j{d/dX(df/du)=d/dX (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X))},
