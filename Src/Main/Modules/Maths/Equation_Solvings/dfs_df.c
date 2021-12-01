@@ -2503,17 +2503,16 @@ void set_Solving_Man_jacobian_workspace(Patch_T *const patch)
   /* populate dT_dx if empty */
   if (!dT_dx[0] || !dT_dx[1] || !dT_dx[2])
   {
-    Free(dT_dx[0]);
-    dT_dx[0] = alloc_double(patch->nn);
+    Free(dT_dx[0]); dT_dx[0] = alloc_double(patch->nn);
+    Free(dT_dx[1]); dT_dx[1] = alloc_double(patch->nn);
+    Free(dT_dx[2]); dT_dx[2] = alloc_double(patch->nn);
     
-    Free(dT_dx[1]);
-    dT_dx[1] = alloc_double(patch->nn);
-    
-    Free(dT_dx[2]);
-    dT_dx[2] = alloc_double(patch->nn);
+    Free(d2T_dx2[0]); d2T_dx2[0] = alloc_double(patch->nn);
+    Free(d2T_dx2[1]); d2T_dx2[1] = alloc_double(patch->nn);
+    Free(d2T_dx2[2]); d2T_dx2[2] = alloc_double(patch->nn);
     
     /* set */
-    for (Uint ijk; ijk < patch->nn; ++ijk)
+    for (Uint ijk = 0; ijk < patch->nn; ++ijk)
     {
       Uint ip,jp,kp;
       double x[3];
