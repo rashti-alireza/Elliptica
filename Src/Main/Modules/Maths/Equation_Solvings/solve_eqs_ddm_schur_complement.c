@@ -1112,18 +1112,12 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
       const Uint *const Imap1 = Schur->Imap;
       const Uint *const Iinv1 = Schur->Iinv;
       const Uint *const node1 = subface->id;
-      const char *types[] = {"dfx_df","dfy_df","dfz_df",0};
-      fJs_T *dfx_df = 0,*dfy_df = 0,*dfz_df = 0;
-      Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
-    
-      prepare_Js_jacobian_eq(patch,types);
-      j0   = get_j_matrix(patch,"dfx_df");
-      j1   = get_j_matrix(patch,"dfy_df");
-      j2   = get_j_matrix(patch,"dfz_df");
-      dfx_df = get_j_reader(j0);
-      dfy_df = get_j_reader(j1);
-      dfz_df = get_j_reader(j2);
       
+      Header_Jacobian
+      Init_Jacobian(Jf_D0)
+      Init_Jacobian(Jf_D1)
+      Init_Jacobian(Jf_D2)
+
       for (subfp1 = 0; subfp1 < NsubFP1; ++subfp1)
       {
         N = pair->nv[subfp1].N;
@@ -1132,30 +1126,37 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
         
         if (i1 == UINT_MAX)
           continue;
-          
+        
+        J__set_temp_vars_JW_ijk(i1_node);
         /* F part */
         for (s1 = 0; s1 < NsubM1; ++s1)
         {
           s1_node = inv1[s1];
-          F[i_j_to_ij(Fncol,i1,s1)] += sign*(
-                       N[0]*dfx_df(j0,i1_node,s1_node)
-                       +
-                       N[1]*dfy_df(j1,i1_node,s1_node)
-                       +
-                       N[2]*dfz_df(j2,i1_node,s1_node));
+          J__set_temp_vars_JW_lmn(s1_node);
+          double dfx_df = d2f_dxdu_Jacobian(patch,0,i1_node,s1_node,Jf_D0);
+          double dfy_df = d2f_dxdu_Jacobian(patch,1,i1_node,s1_node,Jf_D1);
+          double dfz_df = d2f_dxdu_Jacobian(patch,2,i1_node,s1_node,Jf_D2);
+          
+          F[i_j_to_ij(Fncol,i1,s1)] += sign*(N[0]*dfx_df+N[1]*dfy_df+N[2]*dfz_df);
         }
         /* C part */
         for (ip1 = 0; ip1 < NinterFP1; ++ip1)
         {
           ip1_node = Iinv1[ip1];
-          C[i1][ip1] += sign*(
-                        N[0]*dfx_df(j0,i1_node,ip1_node)
-                        +
-                        N[1]*dfy_df(j1,i1_node,ip1_node)
-                        +
-                        N[2]*dfz_df(j2,i1_node,ip1_node));
+          J__set_temp_vars_JW_lmn(ip1_node);
+          
+          double dfx_df = d2f_dxdu_Jacobian(patch,0,i1_node,ip1_node,Jf_D0);
+          double dfy_df = d2f_dxdu_Jacobian(patch,1,i1_node,ip1_node,Jf_D1);
+          double dfz_df = d2f_dxdu_Jacobian(patch,2,i1_node,ip1_node,Jf_D2);
+          
+          C[i1][ip1] += sign*(N[0]*dfx_df+N[1]*dfy_df+N[2]*dfz_df);
         }
       }
+      
+      Free_Jacobian(Jf_D0)
+      Free_Jacobian(Jf_D1)
+      Free_Jacobian(Jf_D2)
+      Footer_Jacobian
     }/* end of if (patch->pn == ppn) */
     /* -(Nx.y2_x+Ny.y2_y+Nz.y2_z)+Nx.interpolation(y1_x)+Ny.interpolation(y1_y)+Nz.interpolation(y1_z) = 0 */
     else
@@ -1306,17 +1307,10 @@ static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
     if (patch->pn == ppn) sign = -1;/* -n.y1'+n.y2'=0 */
     else		  sign =  1;/* -n.y2'+n.y1'=0 */
     
-    const char *types[] = {"dfx_df","dfy_df","dfz_df",0};
-    fJs_T *dfx_df = 0,*dfy_df = 0,*dfz_df = 0;
-    Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
-  
-    prepare_Js_jacobian_eq(patch,types);
-    j0   = get_j_matrix(patch,"dfx_df");
-    j1   = get_j_matrix(patch,"dfy_df");
-    j2   = get_j_matrix(patch,"dfz_df");
-    dfx_df = get_j_reader(j0);
-    dfy_df = get_j_reader(j1);
-    dfz_df = get_j_reader(j2);
+    Header_Jacobian
+    Init_Jacobian(Jf_D0)
+    Init_Jacobian(Jf_D1)
+    Init_Jacobian(Jf_D2)
     
     for (subfp2 = 0; subfp2 < NsubFP2; ++subfp2)
     {
@@ -1327,27 +1321,33 @@ static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
           continue;
       
       i2_node = node1[subfp2];
+      J__set_temp_vars_JW_ijk(i2_node);
       for (s1 = 0; s1 < NsubM1; ++s1)
       {
         s1_node = inv1[s1];
-        F[i_j_to_ij(Fncol,i2,s1)] += sign*(
-                     N[0]*dfx_df(j0,i2_node,s1_node)
-                     +
-                     N[1]*dfy_df(j1,i2_node,s1_node)
-                     +
-                     N[2]*dfz_df(j2,i2_node,s1_node));
+        J__set_temp_vars_JW_lmn(s1_node);
+        double dfx_df = d2f_dxdu_Jacobian(patch,0,i2_node,s1_node,Jf_D0);
+        double dfy_df = d2f_dxdu_Jacobian(patch,1,i2_node,s1_node,Jf_D1);
+        double dfz_df = d2f_dxdu_Jacobian(patch,2,i2_node,s1_node,Jf_D2);
+        
+        F[i_j_to_ij(Fncol,i2,s1)] += sign*(N[0]*dfx_df+N[1]*dfy_df+N[2]*dfz_df);
       }
       for (i1 = 0; i1 < NinterFP1; ++i1)
       {
         i1_node = Iinv1[i1];
-        C[i2][i1] += sign*(
-                     N[0]*dfx_df(j0,i2_node,i1_node)
-                     +
-                     N[1]*dfy_df(j1,i2_node,i1_node)
-                     +
-                     N[2]*dfz_df(j2,i2_node,i1_node));
+        J__set_temp_vars_JW_lmn(i1_node);
+        double dfx_df = d2f_dxdu_Jacobian(patch,0,i2_node,i1_node,Jf_D0);
+        double dfy_df = d2f_dxdu_Jacobian(patch,1,i2_node,i1_node,Jf_D1);
+        double dfz_df = d2f_dxdu_Jacobian(patch,2,i2_node,i1_node,Jf_D2);
+
+        C[i2][i1] += sign*(N[0]*dfx_df+N[1]*dfy_df+N[2]*dfz_df);
       }
     }/* end of for (subfp2 = 0; subfp2 < NsubFP2; ++subfp2) */
+    
+    Free_Jacobian(Jf_D0)
+    Free_Jacobian(Jf_D1)
+    Free_Jacobian(Jf_D2)
+    Footer_Jacobian
   }/* end of if (subface->df_dn) */
   else/* y1 - y2 = 0 => F is zero */
   {
