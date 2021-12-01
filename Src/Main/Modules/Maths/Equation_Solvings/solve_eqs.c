@@ -213,6 +213,15 @@ void move_dfdu_jacobian_patch(Patch_T *const patch2,Patch_T *const patch1)
   patch2->solving_man->nj       = patch1->solving_man->nj;
   patch1->solving_man->jacobian = 0;
   patch1->solving_man->nj       = 0;
+  
+  patch2->solving_man->jacobian_workspace[0] = 
+    patch1->solving_man->jacobian_workspace[0];
+  for (Uint i = 0; i < 3; ++i)
+  {
+    patch1->solving_man->jacobian_workspace->dT_dx[i]   = 0;
+    patch1->solving_man->jacobian_workspace->d2T_dx2[i] = 0;
+  }
+  
 }
 
 /* sync fields and solving_man->jacobian of grid and special grid; THUS,
@@ -264,6 +273,8 @@ void sync_patch_pools(const Grid_T*const latest_grid,Solve_Equations_T *const so
           }
           patch2->solving_man->jacobian = patch1->solving_man->jacobian;
           patch2->solving_man->nj       = patch1->solving_man->nj;
+          patch2->solving_man->jacobian_workspace[0] = 
+                          patch1->solving_man->jacobian_workspace[0];
         }
         
         break;
@@ -296,6 +307,9 @@ void sync_patch_pools(const Grid_T*const latest_grid,Solve_Equations_T *const so
             }
             patch2->solving_man->jacobian = patch1->solving_man->jacobian;
             patch2->solving_man->nj       = patch1->solving_man->nj;
+            patch2->solving_man->jacobian_workspace[0] = 
+                          patch1->solving_man->jacobian_workspace[0];
+
           }
           break;
         }
