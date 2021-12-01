@@ -13,6 +13,9 @@
 
 /* Define macros for analytic calculation of df/du Jacobian */
 
+/* a short hand notation */
+#define JW (patch->solving_man->jacobian_workspace)
+
 /* basic trig math */
 #define JCos(a) cos((a))
 #define JSin(a) sin((a))
