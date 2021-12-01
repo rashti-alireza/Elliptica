@@ -2354,7 +2354,6 @@ double
 /* ->: compute d(df/du)/dx, in which x is a Cartesian coords (optimized).
 // in this optimized version, many of the quantites are saved 
 // in patch->solving_man->jacobian_workspace */
-INLINE
 double
   d2f_dxdu_optimized_spectral_Jacobian_analytic(Patch_T *const patch,
                                                 const Uint dx_axis) 
@@ -2365,9 +2364,7 @@ double
     Jd2f_dudx_opt(patch,dx_axis,2,JW->ijk,JW->k,JW->n)*JKD(JW->i,JW->l)*JKD(JW->j,JW->m);
 }
 
-
 /* ->: compute d^2(df/du)/dxdy, in which x and y are Cartesian coords.(optimized) */
-INLINE
 double
   d3f_dxdydu_optimized_spectral_Jacobian_analytic(Patch_T *const patch,
                                                   const Uint dxdy_axis)
@@ -2409,8 +2406,6 @@ double
         JKD(JW->j,JW->m)*Jd2f_dudx_opt(patch,dy_axis,0,JW->ijk,JW->i,JW->l)
       );
 }
-
-
 
 /* ->: compute d^2(df/du)/dxdy, in which x and y are Cartesian coords. */
 double
