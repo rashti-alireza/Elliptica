@@ -280,3 +280,17 @@ double
                                         const Uint ijk,const Uint lmn);
 
 void set_Solving_Man_jacobian_workspace(Solving_Man_T *const solve_man);
+
+
+
+static double
+d_dXi_2xsum_0_N_Tnj_Tni_opt(const double thi/* X_i = cos(theta_i) */,
+                            const double thj/* X_j = cos(theta_j) */,
+                            Patch_T *const patch,
+                            Uint X_axis);
+
+static double
+d2_dXi2_2xsum_0_N_Tnj_Tni_opt(const double thi/* X_i = cos(theta_i) */,
+                              const double thj/* X_i = cos(theta_i) */,
+                              Patch_T *const patch,
+                              Uint X_axis);

@@ -2130,6 +2130,157 @@ d_dXi_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
   return sum;
 }
 
+/* -> d/dX 2*sum_0^N (Tn(Xj) Tn(X))| X = Xi.
+// X = cos(th), (optimized). */
+static double
+d_dXi_2xsum_0_N_Tnj_Tni_opt(const double thi/* X_i = cos(theta_i) */,
+                            const double thj/* X_j = cos(theta_j) */,
+                            Patch_T *const patch,
+                            Uint X_axis)
+{
+  double sum;
+  double lambda;
+  double sin_half_lambda;
+  double cos_half_lambda;
+  double csc_half_lambda;
+  double cot_half_lambda;
+    
+  if (EQL(thi,0.))
+  {
+    lambda = thj;
+    sin_half_lambda = sin(0.5*lambda);
+    cos_half_lambda = cos(0.5*lambda);
+    csc_half_lambda = 1./sin_half_lambda;
+    cot_half_lambda = cos_half_lambda/sin_half_lambda;
+    
+    sum = -2.*Jd2_dlambda2_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
+  }
+  else if (EQL(thi,M_PI))
+  {
+    lambda = thj+M_PI;
+    sin_half_lambda = sin(0.5*lambda);
+    cos_half_lambda = cos(0.5*lambda);
+    csc_half_lambda = 1./sin_half_lambda;
+    cot_half_lambda = cos_half_lambda/sin_half_lambda;
+    
+    sum = Jd2_dlambda2_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
+
+    lambda = thj-M_PI;
+    sin_half_lambda = sin(0.5*lambda);
+    cos_half_lambda = cos(0.5*lambda);
+    csc_half_lambda = 1./sin_half_lambda;
+    cot_half_lambda = cos_half_lambda/sin_half_lambda;
+    
+    sum += Jd2_dlambda2_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
+  }
+  else
+  {
+    lambda = thi+thj;
+    sin_half_lambda = sin(0.5*lambda);
+    cos_half_lambda = cos(0.5*lambda);
+    csc_half_lambda = 1./sin_half_lambda;
+    cot_half_lambda = cos_half_lambda/sin_half_lambda;
+    
+    sum = Jd_dlambda_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
+    
+    lambda = thi-thj;
+    sin_half_lambda = sin(0.5*lambda);
+    cos_half_lambda = cos(0.5*lambda);
+    csc_half_lambda = 1./sin_half_lambda;
+    cot_half_lambda = cos_half_lambda/sin_half_lambda;
+    
+    sum += Jd_dlambda_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
+    
+    sum *= -1./JW->sin_thi[X_axis];
+  }
+  
+  return sum;
+}
+
+/* -> d^2/dX^2 2*sum_0^N (Tn(Xj) Tn(X))| X = Xi.
+// X = cos(th), (optimized). */
+static double
+d2_dXi2_2xsum_0_N_Tnj_Tni_opt(const double thi/* X_i = cos(theta_i) */,
+                              const double thj/* X_i = cos(theta_i) */,
+                              Patch_T *const patch,
+                              Uint X_axis)
+
+{
+  double sum;
+  double lambda;
+  double sin_half_lambda;
+  double cos_half_lambda;
+  double csc_half_lambda;
+  double cot_half_lambda;
+  
+  if (EQL(thi,0.))
+  {
+    lambda = thj;
+    sin_half_lambda = sin(0.5*lambda);
+    cos_half_lambda = cos(0.5*lambda);
+    csc_half_lambda = 1./sin_half_lambda;
+    cot_half_lambda = cos_half_lambda/sin_half_lambda;
+    
+    sum = 
+      Jd4_dlambda4_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda) +
+      Jd2_dlambda2_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
+    sum *= 2./3.;
+  }
+  else if (EQL(thi,M_PI))
+  {
+    double cos_lambda,
+    lambda = thj+M_PI;
+    sin_half_lambda = sin(0.5*lambda);
+    cos_half_lambda = cos(0.5*lambda);
+    csc_half_lambda = 1./sin_half_lambda;
+    cot_half_lambda = cos_half_lambda/sin_half_lambda;
+    cos_lambda      = cos(lambda);
+    
+    sum = 
+      Jd4_dlambda4_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda) +
+      Jd2_dlambda2_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
+    
+    lambda = thj-M_PI;
+    sin_half_lambda = sin(0.5*lambda);
+    cos_half_lambda = cos(0.5*lambda);
+    csc_half_lambda = 1./sin_half_lambda;
+    cot_half_lambda = cos_half_lambda/sin_half_lambda;
+    cos_lambda      = cos(lambda);
+    
+    sum += 
+      Jd4_dlambda4_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda) +
+      Jd2_dlambda2_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
+      
+    sum /= 3.;
+  }
+  else
+  {
+    double sin_thi   = JW->sin_thi[X_axis];
+    double d2thi_dX2 = -JW->cos_thi[X_axis]/(Pow3(sin_thi));
+    double dthi_dX   = -1./sin_thi;
+    lambda    = thi+thj;
+    sin_half_lambda = sin(0.5*lambda);
+    cos_half_lambda = cos(0.5*lambda);
+    csc_half_lambda = 1./sin_half_lambda;
+    cot_half_lambda = cos_half_lambda/sin_half_lambda;
+    
+    
+    sum = d2thi_dX2*Jd_dlambda_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda) +
+          Pow2(dthi_dX)*Jd2_dlambda2_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
+    
+    lambda = thi-thj;
+    sin_half_lambda = sin(0.5*lambda);
+    cos_half_lambda = cos(0.5*lambda);
+    csc_half_lambda = 1./sin_half_lambda;
+    cot_half_lambda = cos_half_lambda/sin_half_lambda;
+    
+    sum += d2thi_dX2*Jd_dlambda_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda) +
+           Pow2(dthi_dX)*Jd2_dlambda2_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
+  }
+  
+  return sum;
+}
+
 /* -> d^2/dX^2 2*sum_0^N (Tn(Xj) Tn(X))| X = Xi.
 // X = cos(th). */
 static double
@@ -2178,6 +2329,7 @@ d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
   
   return sum;
 }
+
 
 /* ->: compute d(df/du)/dx, in which x is a Cartesian coords. */
 double
