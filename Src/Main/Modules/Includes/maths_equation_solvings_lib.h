@@ -11,258 +11,6 @@
 #define SPECTRAL_JACOBIAN_MATRIX_FORM (1)
 #define SPECTRAL_JACOBIAN_ANALYTIC_FORM (0)
 
-/* Define macros for analytic calculation of df/du Jacobian */
-
-/* basic trig math */
-#define J__Cos(a) cos((a))
-#define J__Sin(a) sin((a))
-#define J__Csc(a) (1./sin((a)))
-#define J__Cot(a) (1./tan((a)))
-
-/* 2*M_PI */
-#define J__2M_PI (6.283185307179586)
-
-/* Kronecker Delta */
-#define J__KD(i,j)  ( (i)==(j) ? 1. : 0.)
-
-/* eta_i in Elliptica's paper, NOTE: n = patch->n[?] - 1 */
-#define J__eta(i,n) ( (i) == 0 || (i) == (n) ? 1. : 2. )
-
-
-/* (-1)^i */
-#define J__sign(i) (((i)%2) ? -1. : 1.)
-
-/* quick theta: 
-// NOTE1: assuming Chebyshev Extrema points.
-// NOTE2: assuming patch is defined. */
-#define J__theta(i,X_axis) ( (i)*M_PI/((patch->n[(X_axis)])-1.) )
-
-
-/* normalization, NOTE: n = patch->n */
-#define J__norm(n) ( 0.5/((n)-1.) )
-
-
-/* dX/dx */
-#define J__dX_dx(patch,ijk,dX_axis,dx_axis) \
-  ( (patch)->JacobianT->dX_dx[(dX_axis)][(dx_axis)][(ijk)] )
-
-
-/* d2X/dxdy */
-#define J__d2X_dxdy(patch,ijk,dX_axis,dxdy_axis) \
-  ( (patch)->JacobianT->d2X_dxdy[(dX_axis)][(dxdy_axis)][(ijk)] )
-
-/* dN/dX */
-#define J__dN_dX(patch,dX_axis) \
-  ( (patch)->JacobianT->dN_dX[(dX_axis)] )
-
-
-/* sum_{n=0}^{N} cos(n lambda) = 
-// 0.5 + 0.5*( sin( (N+0.5)*(lambda) ) ) / ( sin( 0.5*(lambda) ) ),
-// N0 = N+0.5. */
-#define J__sum_0_N_cos_nlambda(N,N0,lambda) \
-  ( \
-    0.5 + 0.5*( sin( (N0)*(lambda) ) ) / ( sin( 0.5*(lambda) ) ) \
-  )
-
-/* d/dlambda sum_{n=0}^{N} cos(n lambda).
-// N0 = N+0.5. */
-#define J__d_dlambda_sum_0_N_cos_nlambda(N,N0,lambda) \
-  ( EQL((lambda),0.) || EQL((lambda),J__2M_PI) ?\
-    (0.0):\
-    ( \
-      J__Csc(0.5*(lambda))*(2.*(N0)*J__Cos((lambda)*(N0)) - \
-      J__Cot(0.5*(lambda))*J__Sin((lambda)*(N0)))\
-    )*0.25\
-  )
-
-
-double J__v_lambda       = ????
-double J__v_half_lambda  = 0.5*(J__v_lambda);
-double J__v_N0_lambda[3] = {J__v_N0[0]*J__v_lambda,
-                            J__v_N0[1]*J__v_lambda,
-                            J__v_N0[2]*J__v_lambda};
-
-double J__v_cos_lambda = cos(J__v_lambda);
-double J__v_sin_lambda = sin(J__v_lambda);
-double J__v_csc_lambda = 1./J__v_sin_lambda;
-
-double J__v_cos_half_lambda = cos(J__v_half_lambda);
-double J__v_sin_half_lambda = sin(J__v_half_lambda);
-double J__v_csc_half_lambda = 1./J__v_sin_half_lambda;
-
-double J__v_cos_N0_lambda[3] = {cos(J__v_N0_lambda[0]),
-                                cos(J__v_N0_lambda[1]),
-                                cos(J__v_N0_lambda[2])};
-double J__v_sin_N0_lambda[3] = {sin(J__v_N0_lambda[0]),
-                                sin(J__v_N0_lambda[1]),
-                                sin(J__v_N0_lambda[2])};
-double J__v_csc_N0_lambda[3] = {1./J__v_sin_N0_lambda[0],
-                                1./J__v_sin_N0_lambda[1],
-                                1./J__v_sin_N0_lambda[2]};
-
-/* d^2/dlambda^2 sum_{n=0}^{N} cos(n lambda).
-// N0 = N+0.5. */
-#define J__d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda) \
-  ( EQL((lambda),0.) || EQL((lambda),J__2M_PI) ?\
-    -(Pow3(N)/3.+Pow2(N)/2.+N/6.)/* simplified, don't forget - sign! */ :\
-    (\
-      J__Csc(0.5*(lambda))*(-4.*(N0)*J__Cos((lambda)*(N0))*J__Cot(0.5*(lambda)) + \
-      (-1. - 4.*Pow2(N0) + 2.*Pow2(J__Csc(0.5*(lambda))))*J__Sin((lambda)*(N0)))\
-    )*0.125\
-  )
-
-
-double J__v_2pow2_half_csc_lambda = 2.*Pow2(J__v_csc_half_lambda);
-
-/* d^3/dlambda^3 sum_{n=0}^{N} cos(n lambda).
-// N0 = N+0.5. */
-#define J__d3_dlambda3_sum_0_N_cos_nlambda(N,N0,lambda) \
-  ( EQL((lambda),0.) || EQL((lambda),J__2M_PI) ?\
-    (0.0):\
-    (\
-      pow(J__Csc(0.5*(lambda),3))*(2*(N0)*\
-        (9 - 4*Pow2((N0)) + (3 + 4*Pow2((N0)))*J__Cos((lambda)))*\
-        J__Cos((lambda)*(N0)) - (11 - 12*Pow2((N0)) + J__Cos((lambda)) + \
-          12*Pow2((N0))*J__Cos((lambda)))*J__Cot(0.5*(lambda))*J__Sin((lambda)*(N0)))\
-    )/32.\
-  )
-
-/* d^4/dlambda^4 sum_{n=0}^{N} cos(n lambda).
-// N0 = N+0.5. */
-#define J__d4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) \
-  ( EQL((lambda),0.) || EQL((lambda),J__2M_PI) ?\
-    (Pow4(N)*(N/5.+0.5)+Pow3(N)/3.-N/30.)/* simplified */:\
-    (\
-      pow(J__Csc(0.5*(lambda)),5)*(-16*(N0)*\
-        (11 - 4*Pow2((N0)) + J__Cos((lambda)) + \
-          4*Pow2((N0))*J__Cos((lambda)))*J__Cos((lambda)*(N0))*J__Sin((lambda)) + \
-       (115 - 120*Pow2((N0)) + 48*Pow4((N0)) + \
-          (76 + 96*Pow2((N0)) - 64*Pow4((N0)))*J__Cos((lambda)) + \
-          (1 + 24*Pow2((N0)) + 16*Pow4((N0)))*J__Cos(2*(lambda)))*\
-        J__Sin((lambda)*(N0)))\
-    )/256.\
-  )
-
-
-/* -> eta_j{d/dX(df/du)=d/dX (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X))},
-// NOTE: X = cos(th), N = patch->n[?]-1. */
-#define J__d2f_dudX(thi,thj,N,j) \
-   (J__eta(j,N)*( d_dXi_2xsum_0_N_Tnj_Tni(thi,thj,N) - J__sign(j)*dT_dx((int)(N),cos(thi)) ))
-
-/* -> d2/dX^2(df/du)=d2/dX^2 (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X)),
-// NOTE: X = cos(th)), N = patch->n[?]-1. */
-#define J__d3f_dudXdX(thi,thj,N,j) \
-   (J__eta(j,N)*( d2_dXi2_2xsum_0_N_Tnj_Tni(thi,thj,N) - J__sign(j)*d2T_dx2((int)(N),cos(thi)) ))
-
-/* normalization * coords jacobian * J__d2f_dudX */
-#define J__d2f_dudx(patch, dx_axis, X_axis, ijk, lmn, qi,qj) \
-  ( J__norm(patch->n[X_axis])*J__dX_dx(patch,ijk,X_axis,dx_axis)*J__dN_dX(patch,X_axis)*\
-    J__d2f_dudX(J__theta(qi,X_axis),J__theta(qj,X_axis),patch->n[X_axis]-1,qj) )
-
-/* normalization * coords jacobian * J__d3f_dudXdX */
-#define J__d3f_dudxdy(patch, dx_axis, dy_axis, dxdy_axis,X_axis, ijk, lmn, qi,qj) \
-  ( \
-    J__norm(patch->n[X_axis])*J__dN_dX(patch,X_axis)*\
-    ( \
-      J__d2X_dxdy(patch,ijk,X_axis,dxdy_axis)*\
-      J__d2f_dudX(J__theta(qi,X_axis),J__theta(qj,X_axis),patch->n[X_axis]-1,qj) +     \
-      J__dX_dx(patch,ijk,X_axis,dx_axis)*J__dX_dx(patch,ijk,X_axis,dy_axis)*J__dN_dX(patch,X_axis)* \
-      J__d3f_dudXdX(J__theta(qi,X_axis),J__theta(qj,X_axis),patch->n[X_axis]-1,qj)     \
-    )\
-  )
-
-/* X_i = cos(theta_i), X_j = cos(theta_j), N = patch->n-1  */
-#define J__d_dXi_2xsum_0_N_Tnj_Tni(thi,thj,N)
-( EQL(thi,0.) ? 
-  -2.*J__d2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj) :
-  EQL(thi,M_PI) ?
-  ( (lambda = thj+M_PI, _sum  = J__d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda),
-     lambda = thj-M_PI, _sum += J__d2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda),_sum)):
-  ())
-  
-{
-  double sum = 0.;
-  double N0 = N+0.5;
-
-  if (EQL(thi,0.))
-  {
-    sum = -2.*Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj);
-  }
-  else if (EQL(thi,M_PI))
-  {
-    double lambda = thj+M_PI;
-    sum = Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
-
-    lambda = thj-M_PI;
-    sum += Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
-  }
-  else
-  {
-    double lambda = thi+thj;
-    double dthi_dX   = -1./sin(thi);
-    
-    sum = Jd_dlambda_sum_0_N_cos_nlambda(N,N0,lambda);
-    
-    lambda = thi-thj;
-    sum += Jd_dlambda_sum_0_N_cos_nlambda(N,N0,lambda);
-    
-    sum *= dthi_dX;
-  }
-  
-  return sum;
-}
-
-/* -> d^2/dX^2 2*sum_0^N (Tn(Xj) Tn(X))| X = Xi.
-// X = cos(th). */
-static double
-d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
-                          double thj/* X_i = cos(theta_i) */,
-                          Uint N/* the sum upper limit */)
-{
-  double sum = 0.;
-  double N0 = N+0.5;
-  
-  if (EQL(thi,0.))
-  {
-    sum = 
-      Jd4_dlambda4_sum_0_N_cos_nlambda(N,N0,thj) +
-      Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,thj);
-    sum *= 2./3.;
-  }
-  else if (EQL(thi,M_PI))
-  {
-    double lambda = thj+M_PI;
-    sum = 
-      Jd4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) +
-      Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
-    
-    lambda = thj-M_PI;
-    sum += 
-      Jd4_dlambda4_sum_0_N_cos_nlambda(N,N0,lambda) +
-      Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
-      
-    sum /= 3.;
-  }
-  else
-  {
-    double sin_thi   = sin(thi);
-    double d2thi_dX2 = -cos(thi)/(Pow3(sin_thi));
-    double dthi_dX   = -1./sin_thi;
-    double lambda    = thi+thj;
-    
-    sum = d2thi_dX2*Jd_dlambda_sum_0_N_cos_nlambda(N,N0,lambda) +
-          Pow2(dthi_dX)*Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
-    
-    lambda = thi-thj;
-    sum += d2thi_dX2*Jd_dlambda_sum_0_N_cos_nlambda(N,N0,lambda) +
-           Pow2(dthi_dX)*Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda);
-  }
-  
-  return sum;
-}
-
-
-
 
 #if SPECTRAL_JACOBIAN_MATRIX_FORM
 
@@ -325,181 +73,27 @@ d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
   const Uint Nk = patch->nn;/* total number of nodes */\
   Uint i,j,k;
 
+/* a short hand notation for: */
+#define J__JW  (patch->solving_man->jacobian_workspace)
+
 /* macro for B part of jacobian */
 #define DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN \
   for (i = 0; i < Ni; ++i)\
   {\
     ijk = node[i];\
-    Uint _i,_j,_k; ijk_to_i_j_k(ijk,patch->n,&_i,&_j,&_k);
-    
+    J__JW->ijk = ijk;\
+    ijk_to_i_j_k(ijk,patch->n,&(J__JW->i),&(J__JW->j),&(J__JW->k));\
+    J__JW->sin_thi[0] = sin(J__JW->i*J__JW->pi_o_nm1[0]);\
+    J__JW->sin_thi[1] = sin(J__JW->j*J__JW->pi_o_nm1[1]);\
+    J__JW->sin_thi[2] = sin(J__JW->k*J__JW->pi_o_nm1[2]);\
+    J__JW->cos_thi[0] = cos(J__JW->i*J__JW->pi_o_nm1[0]);\
+    J__JW->cos_thi[1] = cos(J__JW->j*J__JW->pi_o_nm1[1]);\
+    J__JW->cos_thi[2] = cos(J__JW->k*J__JW->pi_o_nm1[2]);\
     for (j = 0; j < Nj; ++j)\
     {\
-      lmn = node[j];
-      Uint _l,_m,_n; ijk_to_i_j_k(lmn,patch->n,&_l,&_m,&_n);
-      int _dx_axis,_dy_axis,_dxdy_axis;
-      double _sum;/* for J__d_dXi_2xsum_0_N_Tnj_Tni and J__d2_dXi2_2xsum_0_N_Tnj_Tni. */
-      /* first order Jacobian, NOTE: don't change d2f_dxdu_spectral_Jacobian_analytic name */
-      double d2f_dxdu_spectral_Jacobian_analytic[3];
-      
-      _dx_axis = 0;
-      d2f_dxdu_spectral_Jacobian_analytic[_dx_axis] = 
-        J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n)+
-        J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n)+
-        J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*J__KD(_i,_l)*J__KD(_j,_m);
-
-      _dx_axis = 1;
-      d2f_dxdu_spectral_Jacobian_analytic[_dx_axis] = 
-        J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n)+
-        J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n)+
-        J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*J__KD(_i,_l)*J__KD(_j,_m);
-   
-      _dx_axis = 2;
-      d2f_dxdu_spectral_Jacobian_analytic[_dx_axis] = 
-        J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n)+
-        J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n)+
-        J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*J__KD(_i,_l)*J__KD(_j,_m);
-
-      /* second order Jacobian, NOTE: don't change d3f_dxdydu_spectral_Jacobian_analytic name */
-      double d3f_dxdydu_spectral_Jacobian_analytic[6];
-
-      _dxdy_axis = 0;
-      _dx_axis = 0;
-      _dy_axis = 0;
-      d3f_dxdydu_spectral_Jacobian_analytic[_dxdy_axis] = 
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n) +
-          J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*
-            (
-              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
-              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
-            ) +
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n) +
-          J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*
-            (
-              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l) +
-              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
-            ) +
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,2,ijk,lmn,_k,_n)*J__KD(_j,_m)*J__KD(_i,_l) +
-          J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*
-            (
-              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
-              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l)
-            );
-    
-      _dxdy_axis = 1;
-      _dx_axis = 0;
-      _dy_axis = 1;
-      d3f_dxdydu_spectral_Jacobian_analytic[_dxdy_axis] = 
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n) +
-          J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*
-            (
-              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
-              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
-            ) +
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n) +
-          J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*
-            (
-              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l) +
-              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
-            ) +
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,2,ijk,lmn,_k,_n)*J__KD(_j,_m)*J__KD(_i,_l) +
-          J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*
-            (
-              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
-              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l)
-            );
-        
-      _dxdy_axis = 2;
-      _dx_axis = 0;
-      _dy_axis = 2;
-      d3f_dxdydu_spectral_Jacobian_analytic[_dxdy_axis] = 
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n) +
-          J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*
-            (
-              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
-              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
-            ) +
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n) +
-          J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*
-            (
-              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l) +
-              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
-            ) +
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,2,ijk,lmn,_k,_n)*J__KD(_j,_m)*J__KD(_i,_l) +
-          J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*
-            (
-              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
-              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l)
-            );
-        
-      _dxdy_axis = 3;
-      _dx_axis = 1;
-      _dy_axis = 1;
-      d3f_dxdydu_spectral_Jacobian_analytic[_dxdy_axis] = 
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n) +
-          J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*
-            (
-              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
-              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
-            ) +
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n) +
-          J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*
-            (
-              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l) +
-              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
-            ) +
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,2,ijk,lmn,_k,_n)*J__KD(_j,_m)*J__KD(_i,_l) +
-          J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*
-            (
-              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
-              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l)
-            );
-        
-      _dxdy_axis = 4;
-      _dx_axis = 1;
-      _dy_axis = 2;
-      d3f_dxdydu_spectral_Jacobian_analytic[_dxdy_axis] = 
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n) +
-          J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*
-            (
-              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
-              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
-            ) +
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n) +
-          J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*
-            (
-              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l) +
-              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
-            ) +
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,2,ijk,lmn,_k,_n)*J__KD(_j,_m)*J__KD(_i,_l) +
-          J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*
-            (
-              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
-              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l)
-            );
-        
-      _dxdy_axis = 5;
-      _dx_axis = 2;
-      _dy_axis = 2;
-      d3f_dxdydu_spectral_Jacobian_analytic[_dxdy_axis] = 
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,0,ijk,lmn,_i,_l)*J__KD(_j,_m)*J__KD(_k,_n) +
-          J__d2f_dudx(patch,_dx_axis,0,ijk,lmn,_i,_l)*
-            (
-              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
-              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
-            ) +
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,1,ijk,lmn,_j,_m)*J__KD(_i,_l)*J__KD(_k,_n) +
-          J__d2f_dudx(patch,_dx_axis,1,ijk,lmn,_j,_m)*
-            (
-              J__KD(_k,_n)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l) +
-              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,2,ijk,lmn,_k,_n)
-            ) +
-          J__d3f_dudxdy(patch,_dx_axis,_dy_axis,_dxdy_axis,2,ijk,lmn,_k,_n)*J__KD(_j,_m)*J__KD(_i,_l) +
-          J__d2f_dudx(patch,_dx_axis,2,ijk,lmn,_k,_n)*
-            (
-              J__KD(_i,_l)*J__d2f_dudx(patch,_dy_axis,1,ijk,lmn,_j,_m) +
-              J__KD(_j,_m)*J__d2f_dudx(patch,_dy_axis,0,ijk,lmn,_i,_l)
-            );
-
+      lmn = node[j];\
+      J__JW->lmn = lmn;\
+      ijk_to_i_j_k(lmn,patch->n,&(J__JW->l),&(J__JW->m),&(J__JW->n));
 
 #define DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE \
     }/* end of for (i = 0; i < Ni; ++i) */\
@@ -510,14 +104,25 @@ d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
   if (S->NI)/* if there is any interface points then E is needed */\
   {\
     E_Trans = S->E_Trans->reg->A;\
-    for (k = K0; k < Nk; ++k)\
+    for (i = 0; i < Ni; ++i)\
     {\
-      lmn = node[k];\
-      j = k-K0;\
-      for (i = 0; i < Ni; ++i)\
+      ijk = node[i];\
+      J__JW->ijk = ijk;\
+      ijk_to_i_j_k(ijk,patch->n,&(J__JW->i),&(J__JW->j),&(J__JW->k));\
+      J__JW->sin_thi[0] = sin(J__JW->i*J__JW->pi_o_nm1[0]);\
+      J__JW->sin_thi[1] = sin(J__JW->j*J__JW->pi_o_nm1[1]);\
+      J__JW->sin_thi[2] = sin(J__JW->k*J__JW->pi_o_nm1[2]);\
+      J__JW->cos_thi[0] = cos(J__JW->i*J__JW->pi_o_nm1[0]);\
+      J__JW->cos_thi[1] = cos(J__JW->j*J__JW->pi_o_nm1[1]);\
+      J__JW->cos_thi[2] = cos(J__JW->k*J__JW->pi_o_nm1[2]);\
+      for (k = K0; k < Nk; ++k)\
       {\
-        ijk = node[i];
+        lmn = node[k];\
+        j = k-K0;\
+        J__JW->lmn = lmn;\
+        ijk_to_i_j_k(lmn,patch->n,&(J__JW->l),&(J__JW->m),&(J__JW->n));
 
+        
 #define DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE \
      }/* end of for (i = 0; i < Ni; ++i) */\
     }/* end of for (k = K0; k < Nk; ++k) */\
@@ -543,9 +148,20 @@ d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
   for (i = I0; i < Ni; ++i)\
   {\
     ijk = node[i];\
+    J__JW->ijk = ijk;\
+    ijk_to_i_j_k(ijk,patch->n,&(J__JW->i),&(J__JW->j),&(J__JW->k));\
+    J__JW->sin_thi[0] = sin(J__JW->i*J__JW->pi_o_nm1[0]);\
+    J__JW->sin_thi[1] = sin(J__JW->j*J__JW->pi_o_nm1[1]);\
+    J__JW->sin_thi[2] = sin(J__JW->k*J__JW->pi_o_nm1[2]);\
+    J__JW->cos_thi[0] = cos(J__JW->i*J__JW->pi_o_nm1[0]);\
+    J__JW->cos_thi[1] = cos(J__JW->j*J__JW->pi_o_nm1[1]);\
+    J__JW->cos_thi[2] = cos(J__JW->k*J__JW->pi_o_nm1[2]);\
     for (j = 0; j < Nj; ++j)\
     {\
-      lmn = node[j];
+      lmn = node[j];\
+      J__JW->lmn = lmn;\
+      ijk_to_i_j_k(lmn,patch->n,&(J__JW->l),&(J__JW->m),&(J__JW->n));
+
 
 #define DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE \
     }/* end of for (i = I0; i < Ni; ++i) */\
@@ -556,13 +172,23 @@ d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
   if (S->NI)/* if there is any interface points then E is needed */\
   {\
     E_Trans = S->E_Trans->reg->A;\
-    for (k = K0; k < Nk; ++k)\
+    for (i = I0; i < Ni; ++i)\
     {\
-      lmn = node[k];\
-      j = k-K0;\
-      for (i = I0; i < Ni; ++i)\
+      ijk = node[i];\
+      J__JW->ijk = ijk;\
+      ijk_to_i_j_k(ijk,patch->n,&(J__JW->i),&(J__JW->j),&(J__JW->k));\
+      J__JW->sin_thi[0] = sin(J__JW->i*J__JW->pi_o_nm1[0]);\
+      J__JW->sin_thi[1] = sin(J__JW->j*J__JW->pi_o_nm1[1]);\
+      J__JW->sin_thi[2] = sin(J__JW->k*J__JW->pi_o_nm1[2]);\
+      J__JW->cos_thi[0] = cos(J__JW->i*J__JW->pi_o_nm1[0]);\
+      J__JW->cos_thi[1] = cos(J__JW->j*J__JW->pi_o_nm1[1]);\
+      J__JW->cos_thi[2] = cos(J__JW->k*J__JW->pi_o_nm1[2]);\
+      for (k = K0; k < Nk; ++k)\
       {\
-        ijk = node[i];
+        lmn = node[k];\
+        j = k-K0;\
+        J__JW->lmn = lmn;\
+        ijk_to_i_j_k(lmn,patch->n,&(J__JW->l),&(J__JW->m),&(J__JW->n));
 
 #define DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE \
      }/* end of for (i = I0; i < Ni; ++i) */\
