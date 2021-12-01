@@ -295,92 +295,8 @@ d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
 #define Free_Jacobian(xNAME) /* nothing needed! */
 
 #define Header_Jacobian /* set some variables and initialization */
-  const Uint J__v_nm1[3] = {patch->n[0]-1,
-                            patch->n[1]-1,
-                            patch->n[2]-1};
-
-  const double J__v_pi_o_nm1[3] = {M_PI/J__v_nm1[0],
-                                   M_PI/J__v_nm1[1], 
-                                   M_PI/J__v_nm1[2]};
-  const double J__v_norm[3] = {0.5/J__v_nm1[0],
-                               0.5/J__v_nm1[1],
-                               0.5/J__v_nm1[2]};
-
-  const double J__v_N0[3] = {0.5 + J__v_nm1[0],
-                             0.5 + J__v_nm1[1],
-                             0.5 + J__v_nm1[2]};
-
-  const double J__v_c1_d2[3] = {-(Pow3(J__v_nm1[0])/3.+Pow2(J__v_nm1[0])/2.+J__v_nm1[0]/6.),
-                                -(Pow3(J__v_nm1[1])/3.+Pow2(J__v_nm1[1])/2.+J__v_nm1[1]/6.),
-                                -(Pow3(J__v_nm1[2])/3.+Pow2(J__v_nm1[2])/2.+J__v_nm1[2]/6.)};
-
-  const double J__v_c2_d2[3] = {-1. - 4.*Pow2(J__v_N0[0]), 
-                                -1. - 4.*Pow2(J__v_N0[1]),
-                                -1. - 4.*Pow2(J__v_N0[2])};
-
-  const double J__v_c1_d4[3] = {(Pow4(J__v_nm1[0])*(J__v_nm1[0]/5.+0.5)+Pow3(J__v_nm1[0])/3.-J__v_nm1[0]/30.),
-                                (Pow4(J__v_nm1[1])*(J__v_nm1[1]/5.+0.5)+Pow3(J__v_nm1[1])/3.-J__v_nm1[1]/30.),
-                                (Pow4(J__v_nm1[2])*(J__v_nm1[2]/5.+0.5)+Pow3(J__v_nm1[2])/3.-J__v_nm1[2]/30.)};
-
-  const double J__v_c2_d4[3] = {4.*Pow2(J__v_nm1[0]),
-                                4.*Pow2(J__v_nm1[1]),
-                                4.*Pow2(J__v_nm1[2])};
-
-  const double J__v_c3_d4[3] = {115. - 120.*Pow2(J__v_nm1[0]) + 48.*Pow4(J__v_nm1[0]),
-                                115. - 120.*Pow2(J__v_nm1[1]) + 48.*Pow4(J__v_nm1[1]),
-                                115. - 120.*Pow2(J__v_nm1[2]) + 48.*Pow4(J__v_nm1[2])};
-                                
-  const double J__v_c4_d4[3] = {(76. + 96.*Pow2(J__v_nm1[0]) - 64.*Pow4(J__v_nm1[0])),
-                                (76. + 96.*Pow2(J__v_nm1[1]) - 64.*Pow4(J__v_nm1[1])),
-                                (76. + 96.*Pow2(J__v_nm1[2]) - 64.*Pow4(J__v_nm1[2]))};
-
-
-  const double J__v_c5_d4[3] = {(1. + 24.*Pow2(J__v_nm1[0]) + 16.*Pow4(J__v_nm1[0])),
-                                (1. + 24.*Pow2(J__v_nm1[1]) + 16.*Pow4(J__v_nm1[1])),
-                                (1. + 24.*Pow2(J__v_nm1[2]) + 16.*Pow4(J__v_nm1[2]))};
-
-  /* set d^n Cheb/dx^n */
-  double *dT_dx[3]   = patch->Solving_Man_T->jacobian_workspace->dT_dx;
-  double *d2T_dx2[3] = patch->Solving_Man_T->jacobian_workspace->d2T_dx2;
-  /* populate dT_dx if empty */
-  if (!dT_dx[0] || !dT_dx[1] || !dT_dx[2])
-  {
-    Free(dT_dx[0]);
-    dT_dx[0] = alloc_double(patch->nn);
-    
-    Free(dT_dx[1]);
-    dT_dx[1] = alloc_double(patch->nn);
-    
-    Free(dT_dx[2]);
-    dT_dx[2] = alloc_double(patch->nn);
-    
-    /* set */
-    for (Uint _ijk; _ijk < patch->nn; ++_ijk)
-    {
-      Uint _ip,_jp,_kp;
-      double _x[3];
-      
-      ijk_to_i_j_k(_ijk,patch->n,&_ip,&_jp,&_kp);
-      _x[0] =  cos(_ip*J__v_pi_o_nm1[0]);
-      _x[1] =  cos(_jp*J__v_pi_o_nm1[1]);
-      _x[2] =  cos(_kp*J__v_pi_o_nm1[2]);
-      
-      dT_dx[0][_ijk] = dT_dx(int(J__v_nm1[0]),_x[0]);
-      dT_dx[1][_ijk] = dT_dx(int(J__v_nm1[1]),_x[1]);
-      dT_dx[2][_ijk] = dT_dx(int(J__v_nm1[2]),_x[2]);
-      
-      d2T_dx2[0][_ijk] = d2T_dx2(int(J__v_nm1[0]),_x[0]);
-      d2T_dx2[1][_ijk] = d2T_dx2(int(J__v_nm1[1]),_x[1]);
-      d2T_dx2[2][_ijk] = d2T_dx2(int(J__v_nm1[2]),_x[2]);
-    }
-    
-    /* save */
-    for (Uint _i; _i < 3; ++_i)
-    {
-      patch->Solving_Man_T->jacobian_workspace->dT_dx[_i]   = dT_dx[_i];
-      patch->Solving_Man_T->jacobian_workspace->d2T_dx2[_i] = d2T_dx2[_i];
-    }
-  }
+  set_Solving_Man_jacobian_workspace(patch->solving_man);
+  
 
 #define Footer_Jacobian /* free and clean stuffs */
 
@@ -841,6 +757,19 @@ typedef struct SOLVING_MAN_T
                      // where n[?] = patch->n[?]-1. */
     double *d2T_dx2[3];/* save d2Cheb_Tn(n[?],x)/dx2|ijk, 
                        // where n[?] = patch->n[?]-1. */
+    /* constant factors: */
+    Uint nm1[3];/* patch->n[?]-1 */
+    double pi_o_nm1[3];/*M_PI/nm1[?] */
+    double norm[3];/* 0.5/nm1[?] */
+    double N0[3];/* 0.5 + nm1[?] */
+    double c1_d2[3];/* -(Pow3(nm1[?])/3.+Pow2(nm1[?])/2.+nm1[?]/6.) */
+    double c2_d2[3];/*-1. - 4.*Pow2(N0[?]) */
+    double c1_d4[3];/*(Pow4(nm1[0])*(nm1[0]/5.+0.5)+Pow3(nm1[0])/3.-nm1[0]/30.) */
+    double c2_d4[3];/*4.*Pow2(nm1[?]) */
+    double c3_d4[3];/*115. - 120.*Pow2(nm1[?]) + 48.*Pow4(nm1[?]) */
+    double c4_d4[3];/*(76. + 96.*Pow2(nm1[?]) - 64.*Pow4(nm1[?])) */
+    double c5_d4[3];/*(1. + 24.*Pow2(nm1[?]) + 16.*Pow4(nm1[?])) */
+    Uint set: 1;/* 1 means jacobian_workspace is fully set, otherwise 0. */
   }jacobian_workspace[1];
   
   struct/* various method to solve */
@@ -1033,6 +962,8 @@ double
   d3f_dxdydu_spectral_Jacobian_analytic(Patch_T *const patch,
                                         const int dxdy_axis,
                                         const Uint ijk,const Uint lmn);
+
+void set_Solving_Man_jacobian_workspace(Solving_Man_T *const solve_man);
 
 #endif
 

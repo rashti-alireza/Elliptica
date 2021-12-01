@@ -2248,3 +2248,85 @@ double
         JKD(j,m)*Jd2f_dudx(patch,dy_axis,0,ijk,lmn,i,l)
       );
 }
+
+
+/* set Solving_Man_T->jacobian_workspace.
+// note: if the flag "set" is set, it won't populate the jacobian_workspace again. */
+void set_Solving_Man_jacobian_workspace(Solving_Man_T *const solve_man)
+{
+  if (jacobian_workspace->set) return;
+  
+  Uint *const nm1 = solve_man->jacobian_workspace->nm1;
+  double *const solve_man->jacobian_workspace->pi_o_nm1;
+  double *const solve_man->jacobian_workspace->norm;
+  double *const solve_man->jacobian_workspace->N0;
+  double *const solve_man->jacobian_workspace->c1_d2;
+  double *const solve_man->jacobian_workspace->c2_d2;
+  double *const solve_man->jacobian_workspace->c1_d4;
+  double *const solve_man->jacobian_workspace->c2_d4;
+  double *const solve_man->jacobian_workspace->c3_d4;
+  double *const solve_man->jacobian_workspace->c4_d4;
+  double *const solve_man->jacobian_workspace->c5_d4;
+  Uint i;
+  
+  for (i = 0; i < 3; ++i)
+  {
+    nm1[i]      = patch->n[i]-1;
+    pi_o_nm1[i] = M_PI/nm1[i];
+    norm[i] = 0.5/nm1[i],
+    N0[i]   = 0.5 + nm1[i],
+    c1_d2[i] = -(Pow3(nm1[i])/3.+Pow2(nm1[i])/2.+nm1[i]/6.),
+    c2_d2[i] = -1. - 4.*Pow2(N0[i]), 
+    c1_d4[i] = (Pow4(nm1[i])*(nm1[i]/5.+0.5)+Pow3(nm1[i])/3.-nm1[i]/30.),
+    c2_d4[i] = 4.*Pow2(nm1[i]),
+    c3_d4[i] = 115. - 120.*Pow2(nm1[i]) + 48.*Pow4(nm1[i]),
+    c4_d4[i] = (76. + 96.*Pow2(nm1[i]) - 64.*Pow4(nm1[i])),
+    c5_d4[i] = (1. + 24.*Pow2(nm1[i]) + 16.*Pow4(nm1[i])),
+  }
+  
+  /* set d^n Cheb/dx^n */
+  double *dT_dx[3]   = patch->Solving_Man_T->jacobian_workspace->dT_dx;
+  double *d2T_dx2[3] = patch->Solving_Man_T->jacobian_workspace->d2T_dx2;
+  /* populate dT_dx if empty */
+  if (!dT_dx[0] || !dT_dx[1] || !dT_dx[2])
+  {
+    Free(dT_dx[0]);
+    dT_dx[0] = alloc_double(patch->nn);
+    
+    Free(dT_dx[1]);
+    dT_dx[1] = alloc_double(patch->nn);
+    
+    Free(dT_dx[2]);
+    dT_dx[2] = alloc_double(patch->nn);
+    
+    /* set */
+    for (Uint ijk; ijk < patch->nn; ++ijk)
+    {
+      Uint ip,jp,kp;
+      double x[3];
+      
+      ijk_to_i_j_k(ijk,patch->n,&ip,&jp,&kp);
+      x[0] =  cos(ip*pi_o_nm1[0]);
+      x[1] =  cos(jp*pi_o_nm1[1]);
+      x[2] =  cos(kp*pi_o_nm1[2]);
+      
+      dT_dx[0][ijk] = dT_dx(int(nm1[0]),x[0]);
+      dT_dx[1][ijk] = dT_dx(int(nm1[1]),x[1]);
+      dT_dx[2][ijk] = dT_dx(int(nm1[2]),x[2]);
+      
+      d2T_dx2[0][ijk] = d2T_dx2(int(nm1[0]),x[0]);
+      d2T_dx2[1][ijk] = d2T_dx2(int(nm1[1]),x[1]);
+      d2T_dx2[2][ijk] = d2T_dx2(int(nm1[2]),x[2]);
+    }
+    
+    /* save */
+    for (i; i < 3; ++i)
+    {
+      patch->Solving_Man_T->jacobian_workspace->dT_dx[i]   = dT_dx[i];
+      patch->Solving_Man_T->jacobian_workspace->d2T_dx2[i] = d2T_dx2[i];
+    }
+  }
+  
+  /* fully set */
+  patch->Solving_Man_T->set = 1;
+}
