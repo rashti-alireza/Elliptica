@@ -2498,16 +2498,16 @@ void set_Solving_Man_jacobian_workspace(Patch_T *const patch)
   }
   
   /* set d^n Cheb/dx^n */
-  double **dT_dx   = solving_man->jacobian_workspace->dT_dx;
-  double **d2T_dx2 = solving_man->jacobian_workspace->d2T_dx2;
+  double *dT_dx[3]   = {0};
+  double *d2T_dx2[3] = {0};
   
-  Free(dT_dx[0]); dT_dx[0] = alloc_double(patch->nn);
-  Free(dT_dx[1]); dT_dx[1] = alloc_double(patch->nn);
-  Free(dT_dx[2]); dT_dx[2] = alloc_double(patch->nn);
+  dT_dx[0] = alloc_double(patch->nn);
+  dT_dx[1] = alloc_double(patch->nn);
+  dT_dx[2] = alloc_double(patch->nn);
   
-  Free(d2T_dx2[0]); d2T_dx2[0] = alloc_double(patch->nn);
-  Free(d2T_dx2[1]); d2T_dx2[1] = alloc_double(patch->nn);
-  Free(d2T_dx2[2]); d2T_dx2[2] = alloc_double(patch->nn);
+  d2T_dx2[0] = alloc_double(patch->nn);
+  d2T_dx2[1] = alloc_double(patch->nn);
+  d2T_dx2[2] = alloc_double(patch->nn);
   
   /* set */
   for (Uint ijk = 0; ijk < patch->nn; ++ijk)
