@@ -2197,6 +2197,66 @@ double
     Jd2f_dudx(patch,dx_axis,2,ijk,lmn,k,n)*JKD(i,l)*JKD(j,m);
 }
 
+/* ->: compute d(df/du)/dx, in which x is a Cartesian coords (optimized).
+// in this optimized version, many of the quantites are saved 
+// in patch->solving_man->jacobian_workspace */
+INLINE
+double
+  d2f_dxdu_optimized_spectral_Jacobian_analytic(Patch_T *const patch,
+                                                const Uint dx_axis) 
+{
+  return
+    Jd2f_dudx_opt(patch,dx_axis,0,JW->ijk,JW->i,JW->l)*JKD(JW->j,JW->m)*JKD(JW->k,JW->n)+
+    Jd2f_dudx_opt(patch,dx_axis,1,JW->ijk,JW->j,JW->m)*JKD(JW->i,JW->l)*JKD(JW->k,JW->n)+
+    Jd2f_dudx_opt(patch,dx_axis,2,JW->ijk,JW->k,JW->n)*JKD(JW->i,JW->l)*JKD(JW->j,JW->m);
+}
+
+
+/* ->: compute d^2(df/du)/dxdy, in which x and y are Cartesian coords.(optimized) */
+INLINE
+double
+  d3f_dxdydu_optimized_spectral_Jacobian_analytic(Patch_T *const patch,
+                                                  const Uint dxdy_axis)
+{
+  Uint dx_axis, dy_axis;
+  
+  /* set dx_axis & dy_axis.
+  // convention for n:
+  // 0 = (x,x), 1=(x,y), 2=(x,z), 3=(y,y), 4=(y,z), 5=(z,z) */
+  if (dxdy_axis == 5)
+  {
+    dx_axis = dy_axis = 2;
+  }
+  else
+  {
+    dx_axis = dxdy_axis/3;
+    dy_axis = dxdy_axis/3 + dxdy_axis%3;
+  }
+  
+  return
+    Jd3f_dudxdy_opt(patch,dx_axis,dy_axis,dxdy_axis,0,JW->ijk,JW->i,JW->l)*JKD(JW->j,JW->m)*JKD(JW->k,JW->n) +
+    Jd2f_dudx_opt(patch,dx_axis,0,JW->ijk,JW->i,JW->l)*
+      (
+        JKD(JW->k,JW->n)*Jd2f_dudx_opt(patch,dy_axis,1,JW->ijk,JW->j,JW->m) +
+        JKD(JW->j,JW->m)*Jd2f_dudx_opt(patch,dy_axis,2,JW->ijk,JW->k,JW->n)
+      ) +
+    
+    Jd3f_dudxdy_opt(patch,dx_axis,dy_axis,dxdy_axis,1,JW->ijk,JW->j,JW->m)*JKD(JW->i,JW->l)*JKD(JW->k,JW->n) +
+    Jd2f_dudx_opt(patch,dx_axis,1,JW->ijk,JW->j,JW->m)*
+      (
+        JKD(JW->k,JW->n)*Jd2f_dudx_opt(patch,dy_axis,0,JW->ijk,JW->i,JW->l) +
+        JKD(JW->i,JW->l)*Jd2f_dudx_opt(patch,dy_axis,2,JW->ijk,JW->k,JW->n)
+      ) +
+      
+    Jd3f_dudxdy_opt(patch,dx_axis,dy_axis,dxdy_axis,2,JW->ijk,JW->k,JW->n)*JKD(JW->j,JW->m)*JKD(JW->i,JW->l) +
+    Jd2f_dudx_opt(patch,dx_axis,2,JW->ijk,JW->k,JW->n)*
+      (
+        JKD(JW->i,JW->l)*Jd2f_dudx_opt(patch,dy_axis,1,JW->ijk,JW->j,JW->m) +
+        JKD(JW->j,JW->m)*Jd2f_dudx_opt(patch,dy_axis,0,JW->ijk,JW->i,JW->l)
+      );
+}
+
+
 
 /* ->: compute d^2(df/du)/dxdy, in which x and y are Cartesian coords. */
 double
