@@ -2460,7 +2460,7 @@ double
 
 
 /* set Solving_Man_T->jacobian_workspace.
-// note: if the flag "set" is set, it won't populate the jacobian_workspace again. */
+// NOTE: if the flag "set" is set, it won't populate the jacobian_workspace again. */
 void set_Solving_Man_jacobian_workspace(Patch_T *const patch)
 {
   Solving_Man_T *const solving_man = patch->solving_man;
@@ -2500,43 +2500,40 @@ void set_Solving_Man_jacobian_workspace(Patch_T *const patch)
   /* set d^n Cheb/dx^n */
   double **dT_dx   = solving_man->jacobian_workspace->dT_dx;
   double **d2T_dx2 = solving_man->jacobian_workspace->d2T_dx2;
-  /* populate dT_dx if empty */
-  if (!dT_dx[0] || !dT_dx[1] || !dT_dx[2])
+  
+  Free(dT_dx[0]); dT_dx[0] = alloc_double(patch->nn);
+  Free(dT_dx[1]); dT_dx[1] = alloc_double(patch->nn);
+  Free(dT_dx[2]); dT_dx[2] = alloc_double(patch->nn);
+  
+  Free(d2T_dx2[0]); d2T_dx2[0] = alloc_double(patch->nn);
+  Free(d2T_dx2[1]); d2T_dx2[1] = alloc_double(patch->nn);
+  Free(d2T_dx2[2]); d2T_dx2[2] = alloc_double(patch->nn);
+  
+  /* set */
+  for (Uint ijk = 0; ijk < patch->nn; ++ijk)
   {
-    Free(dT_dx[0]); dT_dx[0] = alloc_double(patch->nn);
-    Free(dT_dx[1]); dT_dx[1] = alloc_double(patch->nn);
-    Free(dT_dx[2]); dT_dx[2] = alloc_double(patch->nn);
+    Uint ip,jp,kp;
+    double x[3];
     
-    Free(d2T_dx2[0]); d2T_dx2[0] = alloc_double(patch->nn);
-    Free(d2T_dx2[1]); d2T_dx2[1] = alloc_double(patch->nn);
-    Free(d2T_dx2[2]); d2T_dx2[2] = alloc_double(patch->nn);
+    ijk_to_i_j_k(ijk,patch->n,&ip,&jp,&kp);
+    x[0] =  cos(ip*pi_o_nm1[0]);
+    x[1] =  cos(jp*pi_o_nm1[1]);
+    x[2] =  cos(kp*pi_o_nm1[2]);
     
-    /* set */
-    for (Uint ijk = 0; ijk < patch->nn; ++ijk)
-    {
-      Uint ip,jp,kp;
-      double x[3];
-      
-      ijk_to_i_j_k(ijk,patch->n,&ip,&jp,&kp);
-      x[0] =  cos(ip*pi_o_nm1[0]);
-      x[1] =  cos(jp*pi_o_nm1[1]);
-      x[2] =  cos(kp*pi_o_nm1[2]);
-      
-      dT_dx[0][ijk] = dCheb_Tn_dx((int)(nm1[0]),x[0]);
-      dT_dx[1][ijk] = dCheb_Tn_dx((int)(nm1[1]),x[1]);
-      dT_dx[2][ijk] = dCheb_Tn_dx((int)(nm1[2]),x[2]);
-      
-      d2T_dx2[0][ijk] = d2Cheb_Tn_dx2((int)(nm1[0]),x[0]);
-      d2T_dx2[1][ijk] = d2Cheb_Tn_dx2((int)(nm1[1]),x[1]);
-      d2T_dx2[2][ijk] = d2Cheb_Tn_dx2((int)(nm1[2]),x[2]);
-    }
+    dT_dx[0][ijk] = dCheb_Tn_dx((int)(nm1[0]),x[0]);
+    dT_dx[1][ijk] = dCheb_Tn_dx((int)(nm1[1]),x[1]);
+    dT_dx[2][ijk] = dCheb_Tn_dx((int)(nm1[2]),x[2]);
     
-    /* save */
-    for (i = 0; i < 3; ++i)
-    {
-      solving_man->jacobian_workspace->dT_dx[i]   = dT_dx[i];
-      solving_man->jacobian_workspace->d2T_dx2[i] = d2T_dx2[i];
-    }
+    d2T_dx2[0][ijk] = d2Cheb_Tn_dx2((int)(nm1[0]),x[0]);
+    d2T_dx2[1][ijk] = d2Cheb_Tn_dx2((int)(nm1[1]),x[1]);
+    d2T_dx2[2][ijk] = d2Cheb_Tn_dx2((int)(nm1[2]),x[2]);
+  }
+  
+  /* save */
+  for (i = 0; i < 3; ++i)
+  {
+    solving_man->jacobian_workspace->dT_dx[i]   = dT_dx[i];
+    solving_man->jacobian_workspace->d2T_dx2[i] = d2T_dx2[i];
   }
   
   /* fully set */
