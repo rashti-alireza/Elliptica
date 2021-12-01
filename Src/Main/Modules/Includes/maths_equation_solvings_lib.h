@@ -763,18 +763,21 @@ typedef struct SOLVING_MAN_T
     double norm[3];/* 0.5/nm1[?] */
     double N0[3];/* 0.5 + nm1[?] */
     double c1_d2[3];/* -(Pow3(nm1[?])/3.+Pow2(nm1[?])/2.+nm1[?]/6.) */
-    double c2_d2[3];/*-1. - 4.*Pow2(N0[?]) */
-    double c1_d4[3];/*(Pow4(nm1[0])*(nm1[0]/5.+0.5)+Pow3(nm1[0])/3.-nm1[0]/30.) */
-    double c2_d4[3];/*4.*Pow2(nm1[?]) */
-    double c3_d4[3];/*115. - 120.*Pow2(nm1[?]) + 48.*Pow4(nm1[?]) */
-    double c4_d4[3];/*(76. + 96.*Pow2(nm1[?]) - 64.*Pow4(nm1[?])) */
-    double c5_d4[3];/*(1. + 24.*Pow2(nm1[?]) + 16.*Pow4(nm1[?])) */
+    double c2_d2[3];/* -1. - 4.*Pow2(N0[?]) */
+    double c1_d4[3];/* (Pow4(nm1[0])*(nm1[0]/5.+0.5)+Pow3(nm1[0])/3.-nm1[0]/30.) */
+    double c2_d4[3];/* 4.*Pow2(nm1[?]) */
+    double c3_d4[3];/* 115. - 120.*Pow2(nm1[?]) + 48.*Pow4(nm1[?]) */
+    double c4_d4[3];/* (76. + 96.*Pow2(nm1[?]) - 64.*Pow4(nm1[?])) */
+    double c5_d4[3];/* (1. + 24.*Pow2(nm1[?]) + 16.*Pow4(nm1[?])) */
     Uint set: 1;/* 1 means jacobian_workspace is fully set, otherwise 0. */
     
     /* temp variables */
     Uint ijk,lmn;/* for df[ijk]/du[lmn] etc. */
     Uint i,j,k;/* components composed ijk */
     Uint l,m,n;/* components composed lmn */
+    double sin_thi[3];/* sin(th[i,j,k]) i.e for each direction */
+    double cos_thi[3];/* cos(th[i,j,k]) i.e for each direction */
+    
   }jacobian_workspace[1];
   
   struct/* various method to solve */
