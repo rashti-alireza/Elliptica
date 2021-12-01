@@ -770,6 +770,11 @@ typedef struct SOLVING_MAN_T
     double c4_d4[3];/*(76. + 96.*Pow2(nm1[?]) - 64.*Pow4(nm1[?])) */
     double c5_d4[3];/*(1. + 24.*Pow2(nm1[?]) + 16.*Pow4(nm1[?])) */
     Uint set: 1;/* 1 means jacobian_workspace is fully set, otherwise 0. */
+    
+    /* temp variables */
+    Uint ijk,lmn;/* for df[ijk]/du[lmn] etc. */
+    Uint i,j,k;/* components composed ijk */
+    Uint l,m,n;/* components composed lmn */
   }jacobian_workspace[1];
   
   struct/* various method to solve */
