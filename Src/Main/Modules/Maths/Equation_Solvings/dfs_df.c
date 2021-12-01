@@ -2528,17 +2528,17 @@ void set_Solving_Man_jacobian_workspace(Patch_T *const patch)
       x[1] =  cos(jp*pi_o_nm1[1]);
       x[2] =  cos(kp*pi_o_nm1[2]);
       
-      dT_dx[0][ijk] = dCheb_Tn_dx(int(nm1[0]),x[0]);
-      dT_dx[1][ijk] = dCheb_Tn_dx(int(nm1[1]),x[1]);
-      dT_dx[2][ijk] = dCheb_Tn_dx(int(nm1[2]),x[2]);
+      dT_dx[0][ijk] = dCheb_Tn_dx((int)(nm1[0]),x[0]);
+      dT_dx[1][ijk] = dCheb_Tn_dx((int)(nm1[1]),x[1]);
+      dT_dx[2][ijk] = dCheb_Tn_dx((int)(nm1[2]),x[2]);
       
-      d2T_dx2[0][ijk] = d2Cheb_Tn_dx2(int(nm1[0]),x[0]);
-      d2T_dx2[1][ijk] = d2Cheb_Tn_dx2(int(nm1[1]),x[1]);
-      d2T_dx2[2][ijk] = d2Cheb_Tn_dx2(int(nm1[2]),x[2]);
+      d2T_dx2[0][ijk] = d2Cheb_Tn_dx2((int)(nm1[0]),x[0]);
+      d2T_dx2[1][ijk] = d2Cheb_Tn_dx2((int)(nm1[1]),x[1]);
+      d2T_dx2[2][ijk] = d2Cheb_Tn_dx2((int)(nm1[2]),x[2]);
     }
     
     /* save */
-    for (i; i < 3; ++i)
+    for (i = 0; i < 3; ++i)
     {
       solving_man->jacobian_workspace->dT_dx[i]   = dT_dx[i];
       solving_man->jacobian_workspace->d2T_dx2[i] = d2T_dx2[i];
@@ -2546,5 +2546,5 @@ void set_Solving_Man_jacobian_workspace(Patch_T *const patch)
   }
   
   /* fully set */
-  solving_man->set = 1;
+  solving_man->jacobian_workspace->set = 1;
 }
