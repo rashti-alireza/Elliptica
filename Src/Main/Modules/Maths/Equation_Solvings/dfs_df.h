@@ -310,3 +310,11 @@ d2_dXi2_2xsum_0_N_Tnj_Tni_opt(const double thi/* X_i = cos(theta_i) */,
                               const double thj/* X_i = cos(theta_i) */,
                               Patch_T *const patch,
                               Uint X_axis);
+double
+  d2f_dxdu_optimized_spectral_Jacobian_analytic(Patch_T *const patch,
+                                                const Uint dx_axis);
+double
+  d3f_dxdydu_optimized_spectral_Jacobian_analytic(Patch_T *const patch,
+                                                  const Uint dxdy_axis);
+
+

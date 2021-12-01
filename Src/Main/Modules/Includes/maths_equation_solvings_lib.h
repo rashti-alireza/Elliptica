@@ -49,10 +49,12 @@
 #define Footer_Jacobian /* free and clean stuffs */
 
 #define d2f_dxdu_Jacobian(patch,dx_axis,ijk,lmn,xNAME) \
-  d2f_dxdu_spectral_Jacobian_analytic(patch,dx_axis,ijk,lmn)
+  d2f_dxdu_optimized_spectral_Jacobian_analytic(patch,dx_axis)
+//  d2f_dxdu_spectral_Jacobian_analytic(patch,dx_axis,ijk,lmn)
 
 #define d3f_dx2du_Jacobian(patch,dxdy_axis,ijk,lmn,xNAME) \
-  d3f_dxdydu_spectral_Jacobian_analytic(patch,dxdy_axis,ijk,lmn)
+  d3f_dxdydu_optimized_spectral_Jacobian_analytic(patch,dxdy_axis)
+//  d3f_dxdydu_spectral_Jacobian_analytic(patch,dxdy_axis,ijk,lmn)
   
 
 #endif
@@ -598,6 +600,13 @@ double
                                         const Uint ijk,const Uint lmn);
 
 void set_Solving_Man_jacobian_workspace(Patch_T *const patch);
+
+double
+  d2f_dxdu_optimized_spectral_Jacobian_analytic(Patch_T *const patch,
+                                                const Uint dx_axis);
+double
+  d3f_dxdydu_optimized_spectral_Jacobian_analytic(Patch_T *const patch,
+                                                  const Uint dxdy_axis);
 
 #endif
 
