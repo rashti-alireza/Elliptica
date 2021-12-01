@@ -74,7 +74,7 @@ double Cheb_Tn(const int n, const double x)
 /* second derivative of Cheb_Tn. 
 // ->return value: second derivative of Tn
 */
-double d2T_dx2(const int n, const double x)
+double d2Cheb_Tn_dx2(const int n, const double x)
 {
   double d = DBL_MAX;
   

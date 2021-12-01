@@ -121,7 +121,7 @@
 /* -> d2/dX^2(df/du)=d2/dX^2 (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X)),
 // NOTE: X = cos(th)), N = patch->n[?]-1. */
 #define Jd3f_dudXdX(thi,thj,N,j) \
-   (Jeta(j,N)*( d2_dXi2_2xsum_0_N_Tnj_Tni(thi,thj,N) - Jsign(j)*d2T_dx2((int)(N),cos(thi)) ))
+   (Jeta(j,N)*( d2_dXi2_2xsum_0_N_Tnj_Tni(thi,thj,N) - Jsign(j)*d2Cheb_Tn_dx2((int)(N),cos(thi)) ))
 
 /* normalization * coords jacobian * Jd2f_dudX */
 #define Jd2f_dudx(patch, dx_axis, X_axis, ijk, lmn, qi,qj) \

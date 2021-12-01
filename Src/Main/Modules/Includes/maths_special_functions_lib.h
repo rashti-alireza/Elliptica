@@ -109,7 +109,7 @@ double poly5_f_point(const double x,const double y,const double z);
 int Factorial(const int n);
 double Cheb_U(const int n, const double x);
 double Cheb_Tn(const int n, const double x);
-double d2T_dx2(const int n, const double x);
+double d2Cheb_Tn_dx2(const int n, const double x);
 
 double 
 d_associated_legendre_dtheta

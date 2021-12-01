@@ -2532,9 +2532,9 @@ void set_Solving_Man_jacobian_workspace(Patch_T *const patch)
       dT_dx[1][ijk] = dCheb_Tn_dx(int(nm1[1]),x[1]);
       dT_dx[2][ijk] = dCheb_Tn_dx(int(nm1[2]),x[2]);
       
-      d2T_dx2[0][ijk] = d2T_dx2(int(nm1[0]),x[0]);
-      d2T_dx2[1][ijk] = d2T_dx2(int(nm1[1]),x[1]);
-      d2T_dx2[2][ijk] = d2T_dx2(int(nm1[2]),x[2]);
+      d2T_dx2[0][ijk] = d2Cheb_Tn_dx2(int(nm1[0]),x[0]);
+      d2T_dx2[1][ijk] = d2Cheb_Tn_dx2(int(nm1[1]),x[1]);
+      d2T_dx2[2][ijk] = d2Cheb_Tn_dx2(int(nm1[2]),x[2]);
     }
     
     /* save */

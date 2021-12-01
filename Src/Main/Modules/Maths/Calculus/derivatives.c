@@ -843,10 +843,10 @@ static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd
       for (c = 2; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,c,j,k);
-        der[l] += coeffs[C]*d2T_dx2((int)c,x[i]);
+        der[l] += coeffs[C]*d2Cheb_Tn_dx2((int)c,x[i]);
       }
       der[l] *= 2;
-      der[l] += coeffs[i_j_k_to_ijk(n,B,j,k)]*d2T_dx2((int)B,x[i]);
+      der[l] += coeffs[i_j_k_to_ijk(n,B,j,k)]*d2Cheb_Tn_dx2((int)B,x[i]);
     }
   }
   else if (dir == 1)
@@ -862,10 +862,10 @@ static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd
       for (c = 2; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,i,c,k);
-        der[l] += coeffs[C]*d2T_dx2((int)c,x[j]);
+        der[l] += coeffs[C]*d2Cheb_Tn_dx2((int)c,x[j]);
       }
       der[l] *= 2;
-      der[l] += coeffs[i_j_k_to_ijk(n,i,B,k)]*d2T_dx2((int)B,x[j]);
+      der[l] += coeffs[i_j_k_to_ijk(n,i,B,k)]*d2Cheb_Tn_dx2((int)B,x[j]);
     }
   }
   else /* (dir == 2) */
@@ -881,10 +881,10 @@ static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd
       for (c = 2; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,i,j,c);
-        der[l] += coeffs[C]*d2T_dx2((int)c,x[k]);
+        der[l] += coeffs[C]*d2Cheb_Tn_dx2((int)c,x[k]);
       }
       der[l] *= 2;
-      der[l] += coeffs[i_j_k_to_ijk(n,i,j,B)]*d2T_dx2((int)B,x[k]);
+      der[l] += coeffs[i_j_k_to_ijk(n,i,j,B)]*d2Cheb_Tn_dx2((int)B,x[k]);
     }
   }
   free(x);
@@ -924,7 +924,7 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
       for (c = 2; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,c,j,k);
-        der[l] += coeffs[C]*d2T_dx2((int)c,x[i]);
+        der[l] += coeffs[C]*d2Cheb_Tn_dx2((int)c,x[i]);
       }
       der[l] *= 2;
     }
@@ -942,7 +942,7 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
       for (c = 2; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,i,c,k);
-        der[l] += coeffs[C]*d2T_dx2((int)c,x[j]);
+        der[l] += coeffs[C]*d2Cheb_Tn_dx2((int)c,x[j]);
       }
       der[l] *= 2;
     }
@@ -960,7 +960,7 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
       for (c = 2; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,i,j,c);
-        der[l] += coeffs[C]*d2T_dx2((int)c,x[k]);
+        der[l] += coeffs[C]*d2Cheb_Tn_dx2((int)c,x[k]);
       }
       der[l] *= 2;
     }
