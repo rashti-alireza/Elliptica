@@ -42,7 +42,7 @@
 
 #define Free_Jacobian(xNAME) /* nothing needed! */
 
-#define Header_Jacobian /* set some variables and initialization */
+#define Header_Jacobian /* set some variables and initialization */\
   set_Solving_Man_jacobian_workspace(patch);
   
 
