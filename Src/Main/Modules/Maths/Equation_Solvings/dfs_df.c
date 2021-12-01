@@ -2215,12 +2215,14 @@ d2_dXi2_2xsum_0_N_Tnj_Tni_opt(const double thi/* X_i = cos(theta_i) */,
   
   if (EQL(thi,0.))
   {
+    double cos_lambda;
     lambda = thj;
     sin_half_lambda = sin(0.5*lambda);
     cos_half_lambda = cos(0.5*lambda);
     csc_half_lambda = 1./sin_half_lambda;
     cot_half_lambda = cos_half_lambda/sin_half_lambda;
-    
+    cos_lambda      = cos(lambda);
+
     sum = 
       Jd4_dlambda4_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda) +
       Jd2_dlambda2_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
@@ -2228,7 +2230,7 @@ d2_dXi2_2xsum_0_N_Tnj_Tni_opt(const double thi/* X_i = cos(theta_i) */,
   }
   else if (EQL(thi,M_PI))
   {
-    double cos_lambda,
+    double cos_lambda;
     lambda = thj+M_PI;
     sin_half_lambda = sin(0.5*lambda);
     cos_half_lambda = cos(0.5*lambda);
@@ -2466,7 +2468,7 @@ double
 // note: if the flag "set" is set, it won't populate the jacobian_workspace again. */
 void set_Solving_Man_jacobian_workspace(Solving_Man_T *const solve_man)
 {
-  if (jacobian_workspace->set) return;
+  if (!solve_man || solve_man->jacobian_workspace->set) return;
   
   Uint *const nm1 = solve_man->jacobian_workspace->nm1;
   double *const solve_man->jacobian_workspace->pi_o_nm1;

@@ -39,16 +39,8 @@
 // NOTE2: assuming patch is defined. */
 #define Jtheta(i,X_axis) ( (i)*M_PI/((patch->n[(X_axis)])-1.) )
 
-/* quick theta (optimized): 
-// NOTE1: assuming Chebyshev Extrema points.
-// NOTE2: assuming patch is defined. */
-#define Jtheta_opt(i,X_axis) ( (i)*(JW->pi_o_nm1[X_axis]) )
-
 /* normalization, NOTE: n = patch->n */
 #define Jnorm(n) ( 0.5/((n)-1.) )
-
-/* normalization, optimized */
-#define Jnorm_opt(X) ( JW->norm[X] )
 
 /* dX/dx */
 #define JdX_dx(patch,ijk,dX_axis,dx_axis) \
@@ -81,18 +73,6 @@
     )*0.25\
   )
 
-/* d/dlambda sum_{n=0}^{N} cos(n lambda).
-// N0 = N+0.5. (optimized) */
-#define Jd_dlambda_sum_0_N_cos_nlambda_opt(X_axis,N0,lambda) \
-  ( EQL((lambda),0.) || EQL((lambda),J2M_PI) ?\
-    (0.0):\
-    ( \
-      csc_half_lambda*(2.*(N0)*JCos((lambda)*(N0)) - \
-      cot_half_lambda*JSin((lambda)*(N0)))\
-    )*0.25\
-  )
-
-
 /* d^2/dlambda^2 sum_{n=0}^{N} cos(n lambda).
 // N0 = N+0.5. */
 #define Jd2_dlambda2_sum_0_N_cos_nlambda(N,N0,lambda) \
@@ -101,18 +81,6 @@
     (\
       JCsc(0.5*(lambda))*(-4.*(N0)*JCos((lambda)*(N0))*JCot(0.5*(lambda)) + \
       (-1. - 4.*Pow2(N0) + 2.*Pow2(JCsc(0.5*(lambda))))*JSin((lambda)*(N0)))\
-    )*0.125\
-  )
-
-
-/* d^2/dlambda^2 sum_{n=0}^{N} cos(n lambda).
-// N0 = N+0.5. */
-#define Jd2_dlambda2_sum_0_N_cos_nlambda_opt(X_axis,N0,lambda) \
-  ( EQL((lambda),0.) || EQL((lambda),J2M_PI) ?\
-    JW->c1_d2[X_axis]:\
-    (\
-      csc_half_lambda*(-4.*(N0)*JCos((lambda)*(N0))*cot_half_lambda + \
-      (JW->c2_d2[X_axis] + 2.*Pow2(csc_half_lambda))*JSin((lambda)*(N0)))\
     )*0.125\
   )
 
@@ -145,33 +113,10 @@
     )/256.\
   )
 
-/* d^4/dlambda^4 sum_{n=0}^{N} cos(n lambda).
-// N0 = N+0.5, (optimized). */
-#define Jd4_dlambda4_sum_0_N_cos_nlambda_opt(X_axis,N0,lambda) \
-  ( EQL((lambda),0.) || EQL((lambda),J2M_PI) ?\
-    JW->c1_d4[X_axis]:\
-    (\
-      Pow2(csc_half_lambda)*Pow3(csc_half_lambda)*(-16*(N0)*\
-        ( 11 - JW->c2_d4[X_axis] + cos_lambda + \
-          JW->c2_d4[X_axis]*cos_lambda*JCos((lambda)*(N0))*JSin((lambda)) + \
-       (  JW->c3_d4[X_axis] + \
-          JW->c4_d4[X_axis]*cos_lambda + \
-          JW->c5_d4[X_axis]*JCos(2*(lambda)))*\
-        JSin((lambda)*(N0)))\
-    )/256.\
-  )
-
-
 /* -> eta_j{d/dX(df/du)=d/dX (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X))},
 // NOTE: X = cos(th), N = patch->n[?]-1. */
 #define Jd2f_dudX(thi,thj,N,j) \
    (Jeta(j,N)*( d_dXi_2xsum_0_N_Tnj_Tni(thi,thj,N) - Jsign(j)*dT_dx((int)(N),cos(thi)) ))
-
-
-/* -> eta_j{d/dX(df/du)=d/dX (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X))},
-// NOTE: X = cos(th), N = patch->n[?]-1 (optimized). */
-#define Jd2f_dudX_opt(thi,thj,N,j,X_axis,ijk) \
-   (Jeta(j,N)*( d_dXi_2xsum_0_N_Tnj_Tni(thi,thj,N) - Jsign(j)*(JW->dT_dx[X_axis][ijk]) ))
 
 /* -> d2/dX^2(df/du)=d2/dX^2 (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X)),
 // NOTE: X = cos(th)), N = patch->n[?]-1. */
@@ -182,11 +127,6 @@
 #define Jd2f_dudx(patch, dx_axis, X_axis, ijk, lmn, qi,qj) \
   ( Jnorm(patch->n[X_axis])*JdX_dx(patch,ijk,X_axis,dx_axis)*JdN_dX(patch,X_axis)*\
     Jd2f_dudX(Jtheta(qi,X_axis),Jtheta(qj,X_axis),patch->n[X_axis]-1,qj) )
-
-/* normalization * coords jacobian * Jd2f_dudX (optimized) */
-#define Jd2f_dudx_opt(patch, dx_axis, X_axis, ijk, qi,qj) \
-  ( Jnorm_opt(X_axis)*JdX_dx(patch,ijk,X_axis,dx_axis)*JdN_dX(patch,X_axis)*\
-    Jd2f_dudX_opt(Jtheta(qi,X_axis),Jtheta(qj,X_axis),(JW->nm1[X_axis]),qj,X_axis,ijk) )
 
 /* normalization * coords jacobian * Jd3f_dudXdX */
 #define Jd3f_dudxdy(patch, dx_axis, dy_axis, dxdy_axis,X_axis, ijk, lmn, qi,qj) \
@@ -199,6 +139,82 @@
       Jd3f_dudXdX(Jtheta(qi,X_axis),Jtheta(qj,X_axis),patch->n[X_axis]-1,qj)     \
     )\
   )
+
+
+/* quick theta (optimized): 
+// NOTE1: assuming Chebyshev Extrema points.
+// NOTE2: assuming patch is defined. */
+#define Jtheta_opt(i,X_axis) ( (i)*(JW->pi_o_nm1[X_axis]) )
+
+/* normalization, optimized */
+#define Jnorm_opt(X) ( JW->norm[X] )
+
+/* d/dlambda sum_{n=0}^{N} cos(n lambda).
+// N0 = N+0.5. (optimized) */
+#define Jd_dlambda_sum_0_N_cos_nlambda_opt(X_axis,N0,lambda) \
+  ( EQL((lambda),0.) || EQL((lambda),J2M_PI) ?\
+    (0.0):\
+    ( \
+      csc_half_lambda*(2.*(N0)*JCos((lambda)*(N0)) - \
+      cot_half_lambda*JSin((lambda)*(N0)))\
+    )*0.25\
+  )
+
+/* d^2/dlambda^2 sum_{n=0}^{N} cos(n lambda).
+// N0 = N+0.5. */
+#define Jd2_dlambda2_sum_0_N_cos_nlambda_opt(X_axis,N0,lambda) \
+  ( EQL((lambda),0.) || EQL((lambda),J2M_PI) ?\
+    JW->c1_d2[X_axis]:\
+    (\
+      csc_half_lambda*(-4.*(N0)*JCos((lambda)*(N0))*cot_half_lambda + \
+      (JW->c2_d2[X_axis] + 2.*Pow2(csc_half_lambda))*JSin((lambda)*(N0)))\
+    )*0.125\
+  )
+
+/* d^4/dlambda^4 sum_{n=0}^{N} cos(n lambda).
+// N0 = N+0.5, (optimized). */
+#define Jd4_dlambda4_sum_0_N_cos_nlambda_opt(X_axis,N0,lambda) \
+  ( EQL((lambda),0.) || EQL((lambda),J2M_PI) ?\
+    JW->c1_d4[X_axis]:\
+    (\
+      Pow2(csc_half_lambda)*Pow3(csc_half_lambda)*(-16*(N0)*\
+        ( 11 - JW->c2_d4[X_axis] + cos_lambda + \
+          JW->c2_d4[X_axis]*cos_lambda)*JCos((lambda)*(N0))*JSin((lambda)) + \
+       (  JW->c3_d4[X_axis] + \
+          JW->c4_d4[X_axis]*cos_lambda + \
+          JW->c5_d4[X_axis]*JCos(2*(lambda)))*\
+        JSin((lambda)*(N0)))\
+    )/256.\
+  )
+
+/* -> eta_j{d/dX(df/du)=d/dX (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X))},
+// NOTE: X = cos(th), N = patch->n[?]-1 (optimized). */
+#define Jd2f_dudX_opt(thi,thj,N,patch,j,X_axis,ijk) \
+   (Jeta(j,N)*( d_dXi_2xsum_0_N_Tnj_Tni_opt(thi,thj,patch,X_axis) - Jsign(j)*(JW->dT_dx[X_axis][ijk]) ))
+
+/* -> d2/dX^2(df/du)=d2/dX^2 (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X)),
+// NOTE: X = cos(th)), N = patch->n[?]-1, (optimized). */
+#define Jd3f_dudXdX_opt(thi,thj,N,patch,j,X_axis,ijk) \
+   (Jeta(j,N)*( d2_dXi2_2xsum_0_N_Tnj_Tni_opt(thi,thj,patch,X_axis) - Jsign(j)*(JW->d2T_dx2[X_axis][ijk]) ))
+
+/* normalization * coords jacobian * Jd2f_dudX (optimized) */
+#define Jd2f_dudx_opt(patch, dx_axis, X_axis, ijk, qi,qj) \
+  ( Jnorm_opt(X_axis)*JdX_dx(patch,ijk,X_axis,dx_axis)*JdN_dX(patch,X_axis)*\
+    Jd2f_dudX_opt(Jtheta_opt(qi,X_axis),Jtheta_opt(qj,X_axis),(JW->nm1[X_axis]),patch,qj,X_axis,ijk) )
+
+/* normalization * coords jacobian * Jd3f_dudXdX */
+#define Jd3f_dudxdy_opt(patch, dx_axis, dy_axis, dxdy_axis,X_axis, ijk, qi,qj) \
+  ( \
+    Jnorm_opt(X_axis)*JdN_dX(patch,X_axis)*\
+    ( \
+      Jd2X_dxdy(patch,ijk,X_axis,dxdy_axis)*\
+      Jd2f_dudX_opt(Jtheta(qi,X_axis),Jtheta(qj,X_axis),(JW->nm1[X_axis]),patch,qj,X_axis,ijk) +     \
+      JdX_dx(patch,ijk,X_axis,dx_axis)*JdX_dx(patch,ijk,X_axis,dy_axis)*JdN_dX(patch,X_axis)* \
+      Jd3f_dudXdX_opt(Jtheta_opt(qi,X_axis),Jtheta_opt(qj,X_axis),(JW->nm1[X_axis]),patch,qj,X_axis,ijk)     \
+    )\
+  )
+
+
 
 /* Jacobian type */
 typedef enum JTYPE_E
