@@ -100,7 +100,7 @@ double d2T_dx2(const int n, const double x)
 }
 
 /* ->return value: d(Cheb_Tn(x))/dx */
-double dT_dx(const int n,const double x)
+double dCheb_Tn_dx(const int n,const double x)
 {
   return n*Cheb_Un(n-1,x);
 }

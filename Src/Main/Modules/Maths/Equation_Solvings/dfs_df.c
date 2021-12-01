@@ -538,10 +538,10 @@ void obsolete_fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *c
         {
           for (ip = 1; ip < N[0]-1; ++ip)
           {
-            j0 += dc_df(N[0],ip,l)*dT_dx((int)ip,x);
+            j0 += dc_df(N[0],ip,l)*dCheb_Tn_dx((int)ip,x);
           }
           j0 *= 2;
-          j0 += dc_df(N[0],ip,l)*dT_dx((int)ip,x);
+          j0 += dc_df(N[0],ip,l)*dCheb_Tn_dx((int)ip,x);
           j0 *= cj0;
         }
       }
@@ -552,10 +552,10 @@ void obsolete_fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *c
         {
           for (jp = 1; jp < N[1]-1; ++jp)
           {
-            j1 += dc_df(N[1],jp,m)*dT_dx((int)jp,y);
+            j1 += dc_df(N[1],jp,m)*dCheb_Tn_dx((int)jp,y);
           }
           j1 *= 2;
-          j1 += dc_df(N[1],jp,m)*dT_dx((int)jp,y);
+          j1 += dc_df(N[1],jp,m)*dCheb_Tn_dx((int)jp,y);
           j1 *= cj1;
         }
       }
@@ -566,10 +566,10 @@ void obsolete_fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *c
         {
           for (kp = 1; kp < N[2]-1; ++kp)
           {
-            j2 += dc_df(N[2],kp,n)*dT_dx((int)kp,z);
+            j2 += dc_df(N[2],kp,n)*dCheb_Tn_dx((int)kp,z);
           }
           j2 *= 2;
-          j2 += dc_df(N[2],kp,n)*dT_dx((int)kp,z);
+          j2 += dc_df(N[2],kp,n)*dCheb_Tn_dx((int)kp,z);
           j2 *= cj2;
         }
       }
@@ -2528,9 +2528,9 @@ void set_Solving_Man_jacobian_workspace(Patch_T *const patch)
       x[1] =  cos(jp*pi_o_nm1[1]);
       x[2] =  cos(kp*pi_o_nm1[2]);
       
-      dT_dx[0][ijk] = dT_dx(int(nm1[0]),x[0]);
-      dT_dx[1][ijk] = dT_dx(int(nm1[1]),x[1]);
-      dT_dx[2][ijk] = dT_dx(int(nm1[2]),x[2]);
+      dT_dx[0][ijk] = dCheb_Tn_dx(int(nm1[0]),x[0]);
+      dT_dx[1][ijk] = dCheb_Tn_dx(int(nm1[1]),x[1]);
+      dT_dx[2][ijk] = dCheb_Tn_dx(int(nm1[2]),x[2]);
       
       d2T_dx2[0][ijk] = d2T_dx2(int(nm1[0]),x[0]);
       d2T_dx2[1][ijk] = d2T_dx2(int(nm1[1]),x[1]);

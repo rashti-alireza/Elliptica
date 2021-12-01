@@ -116,7 +116,7 @@
 /* -> eta_j{d/dX(df/du)=d/dX (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X))},
 // NOTE: X = cos(th), N = patch->n[?]-1. */
 #define Jd2f_dudX(thi,thj,N,j) \
-   (Jeta(j,N)*( d_dXi_2xsum_0_N_Tnj_Tni(thi,thj,N) - Jsign(j)*dT_dx((int)(N),cos(thi)) ))
+   (Jeta(j,N)*( d_dXi_2xsum_0_N_Tnj_Tni(thi,thj,N) - Jsign(j)*dCheb_Tn_dx((int)(N),cos(thi)) ))
 
 /* -> d2/dX^2(df/du)=d2/dX^2 (2*sum_0^N (Tn(Xj) Tn(X)) -1 -(-1)^j *T_{N}(X)),
 // NOTE: X = cos(th)), N = patch->n[?]-1. */
