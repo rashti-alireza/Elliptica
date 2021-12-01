@@ -43,7 +43,7 @@
 #define Free_Jacobian(xNAME) /* nothing needed! */
 
 #define Header_Jacobian /* set some variables and initialization */
-  set_Solving_Man_jacobian_workspace(patch->solving_man);
+  set_Solving_Man_jacobian_workspace(patch);
   
 
 #define Footer_Jacobian /* free and clean stuffs */
@@ -597,7 +597,7 @@ double
                                         const int dxdy_axis,
                                         const Uint ijk,const Uint lmn);
 
-void set_Solving_Man_jacobian_workspace(Solving_Man_T *const solve_man);
+void set_Solving_Man_jacobian_workspace(Patch_T *const patch);
 
 #endif
 
