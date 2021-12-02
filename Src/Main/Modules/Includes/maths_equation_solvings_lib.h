@@ -379,10 +379,10 @@ typedef struct SOLVING_MAN_T
     double c1_d2[3];/* -(Pow3(nm1[?])/3.+Pow2(nm1[?])/2.+nm1[?]/6.) */
     double c2_d2[3];/* -1. - 4.*Pow2(N0[?]) */
     double c1_d4[3];/* (Pow4(nm1[0])*(nm1[0]/5.+0.5)+Pow3(nm1[0])/3.-nm1[0]/30.) */
-    double c2_d4[3];/* 4.*Pow2(nm1[?]) */
-    double c3_d4[3];/* 115. - 120.*Pow2(nm1[?]) + 48.*Pow4(nm1[?]) */
-    double c4_d4[3];/* (76. + 96.*Pow2(nm1[?]) - 64.*Pow4(nm1[?])) */
-    double c5_d4[3];/* (1. + 24.*Pow2(nm1[?]) + 16.*Pow4(nm1[?])) */
+    double c2_d4[3];/* 4.*Pow2(N0[?]) */
+    double c3_d4[3];/* 115. - 120.*Pow2(N0[?]) + 48.*Pow4(N0[?]) */
+    double c4_d4[3];/* (76. + 96.*Pow2(N0[?]) - 64.*Pow4(N0[?])) */
+    double c5_d4[3];/* (1. + 24.*Pow2(N0[?]) + 16.*Pow4(N0[?])) */
     Uint set: 1;/* 1 means jacobian_workspace is fully set, otherwise 0. */
     
     /* temp variables */
