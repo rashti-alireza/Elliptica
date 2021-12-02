@@ -6,6 +6,62 @@
 #undef I
 #define imagI _Complex_I
 
+/* Chebyshev polynomial of first kind Tn(x). x MUST be normalized value.
+// ->return value: Tn(x)
+*/
+INLINE double Cheb_Tn(const int n, const double x)
+{
+  double t = DBL_MAX;
+  
+  if (n == 0)
+    t = 1;
+  else if (EQL(x,1))
+    t = 1;
+  else if (EQL(x,-1))
+  {
+    if (n%2)
+      t = -1;
+    else
+      t = 1;
+  }
+  else
+  {
+    double th = acos(x);
+    t = cos(n*th);
+  }
+  
+  return t;
+}
+
+/* Chebyshev polynomial of second kind Un(x). x MUST be normalized value.
+// ->return value: Un(x)
+*/
+INLINE double Cheb_Un(const int n, const double x)
+{
+  double u = DBL_MAX;
+  
+  if (n == 0) 
+    u = 1;
+  else if (EQL(x,1))
+    u = n+1;
+  else if (EQL(x,-1)) 
+  {
+    if (n%2)
+      u = -n-1;
+    else
+      u = n+1;
+  }  
+  else
+  {
+    double th = acos(x);
+    u = sin((n+1)*th)/sin(th);
+  }
+  
+  return u;
+}
+
+
+
 double *c_f(Patch_T *const patch);
 double *x_f(Patch_T *const patch);
 double *y_f(Patch_T *const patch);
@@ -107,8 +163,10 @@ double *sinx_f_yz(Patch_T *const patch);
 double *sinx_f_xyz(Patch_T *const patch);
 double poly5_f_point(const double x,const double y,const double z);
 int Factorial(const int n);
-double Cheb_U(const int n, const double x);
-double Cheb_Tn(const int n, const double x);
+INLINE double Cheb_Tn(const int n, const double x) INLINE_WARN_UNUSED_FUNC;
+INLINE double Cheb_Un(const int n, const double x) INLINE_WARN_UNUSED_FUNC;
+double d2Cheb_Tn_dx2(const int n, const double x);
+double dCheb_Tn_dx(const int n, const double x);
 double d2Cheb_Tn_dx2(const int n, const double x);
 
 double 

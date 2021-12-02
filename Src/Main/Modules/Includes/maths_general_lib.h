@@ -20,14 +20,9 @@
 #define M_E  (2.718281828459045)
 #endif
 
-
 long double rms_l(const long Uint n, const double *v2, const double *v1);
 double root_square(const Uint n, const double *const v2, const double *const v1);
 double dot(const Uint n, const double *const v2, const double *const v1);
-double Cheb_Tn(const int n, const double x);
-double Cheb_Un(const int n, const double x);
-double d2Cheb_Tn_dx2(const int n, const double x);
-double dCheb_Tn_dx(const int n, const double x);
 double sum_1_N_cos_ia(const Uint N, const double a);
 double sum_0_N_dCi_dfj_by_Ti_q(const Uint N,const Uint j,const double q);
 double sum_0_N_dCi_dfj_by_dTi_dq(const Uint N,const Uint j,const double q);

@@ -5,6 +5,7 @@
 #include "error_handling_lib.h"
 #include "maths_general_lib.h"
 #include "maths_calculus_lib.h"
+#include "maths_special_functions_lib.h"
 #include "maths_linear_algebra_lib.h"
 #include "fields_lib.h"
 #include "maths_equation_solvings_lib.h"

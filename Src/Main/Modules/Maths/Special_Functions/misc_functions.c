@@ -17,59 +17,6 @@ int Factorial(const int n)
   return n*Factorial(n-1);
 }
 
-/* Chebyshev polynomial of second kind Un(x). x MUST be normalized value.
-// ->return value: Un(x)
-*/
-double Cheb_Un(const int n, const double x)
-{
-  double u = DBL_MAX;
-  
-  if (n == 0) 
-    u = 1;
-  else if (EQL(x,1))
-    u = n+1;
-  else if (EQL(x,-1)) 
-  {
-    if (n%2)
-      u = -n-1;
-    else
-      u = n+1;
-  }  
-  else
-  {
-    double th = acos(x);
-    u = sin((n+1)*th)/sin(th);
-  }
-  
-  return u;
-}
-
-/* Chebyshev polynomial of first kind Tn(x). x MUST be normalized value.
-// ->return value: Tn(x)
-*/
-double Cheb_Tn(const int n, const double x)
-{
-  double t = DBL_MAX;
-  
-  if (n == 0)
-    t = 1;
-  else if (EQL(x,1))
-    t = 1;
-  else if (EQL(x,-1))
-  {
-    if (n%2)
-      t = -1;
-    else
-      t = 1;
-  }
-  else
-  {
-    double th = acos(x);
-    t = cos(n*th);
-  }
-  
-  return t;
-}
 
 /* second derivative of Cheb_Tn. 
 // ->return value: second derivative of Tn
