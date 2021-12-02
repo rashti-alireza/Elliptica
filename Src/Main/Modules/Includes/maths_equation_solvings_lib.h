@@ -594,6 +594,8 @@ double
   d3f_dxdydu_optimized_spectral_Jacobian_analytic(Patch_T *const patch,
                                                   const Uint dxdy_axis);
 
+void test_dfs_df_Spectral_vs_Spectral(Grid_T *const grid);
+
 #endif
 
 

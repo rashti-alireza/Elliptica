@@ -326,6 +326,133 @@ void test_dfs_df_Spectral_vs_analytic(Grid_T *const grid)
   FUNC_TOC
 }
 
+/* testing d^n/dX^n df/du between numeric spectral and analytic spectral method.
+// NOTE: SPECTRAL_JACOBIAN_ANALYTIC_FORM macro must be 1. */
+void test_dfs_df_Spectral_vs_Spectral(Grid_T *const grid)
+{
+  FUNC_TIC
+  
+  const Uint np = grid->np;
+  Uint p;
+  
+  
+  if(1)/* turn 1st order test on or off */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    Header_Jacobian
+    Init_Jacobian(J_D0)
+    Init_Jacobian(J_D1)
+    Init_Jacobian(J_D2)
+    
+    double diff, max = 0;
+    FOR_ALL_ijk
+    {
+      J__set_temp_vars_JW_ijk(ijk)
+      for (Uint lmn = 0; lmn < patch->nn; ++lmn)
+      {
+        J__set_temp_vars_JW_lmn(lmn)
+        
+        double J_D0_anly0 = d2f_dxdu_Jacobian(patch,0,ijk,lmn,J_D0);
+        double J_D0_anly1 = d2f_dxdu_spectral_Jacobian_analytic(patch,0,ijk,lmn);
+        
+        double J_D1_anly0 = d2f_dxdu_Jacobian(patch,1,ijk,lmn,J_D0);
+        double J_D1_anly1 = d2f_dxdu_spectral_Jacobian_analytic(patch,1,ijk,lmn);
+        
+        double J_D2_anly0 = d2f_dxdu_Jacobian(patch,2,ijk,lmn,J_D0);
+        double J_D2_anly1 = d2f_dxdu_spectral_Jacobian_analytic(patch,2,ijk,lmn);
+        
+        diff = fabs(J_D0_anly0-J_D0_anly1);
+        max  = (diff > max ? diff : max);
+        
+        
+        diff = fabs(J_D1_anly0-J_D1_anly1);
+        max  = (diff > max ? diff : max);
+        
+        diff = fabs(J_D2_anly0-J_D2_anly1);
+        max  = (diff > max ? diff : max);
+      }
+    }
+    printf("patch[%s]:\n"
+      Pretty1"1st_order |J_numeric_spectral-J_analytic_spectral|_Linf = %e\n",patch->name,max);
+    
+    Free_Jacobian(J_D0)
+    Free_Jacobian(J_D1)
+    Free_Jacobian(J_D2)
+    Footer_Jacobian
+  }
+  
+  if(1)/* turn 1st order test on or off */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    Header_Jacobian
+    Init_Jacobian(J_D0D0)
+    Init_Jacobian(J_D0D1)
+    Init_Jacobian(J_D0D2)
+    Init_Jacobian(J_D1D1)
+    Init_Jacobian(J_D1D2)
+    Init_Jacobian(J_D2D2)
+    
+    double diff, max = 0;
+    FOR_ALL_ijk
+    {
+      J__set_temp_vars_JW_ijk(ijk)
+      for (Uint lmn = 0; lmn < patch->nn; ++lmn)
+      {
+        J__set_temp_vars_JW_lmn(lmn)
+        
+        double J_D0D0_anly0 = d3f_dx2du_Jacobian(patch,0,ijk,lmn,J_D0D0);
+        double J_D0D0_anly1 = d3f_dxdydu_spectral_Jacobian_analytic(patch,0,ijk,lmn);
+        diff = fabs(J_D0D0_anly0-J_D0D0_anly1);
+        max  = (diff > max ? diff : max);
+
+        double J_D0D1_anly0 = d3f_dx2du_Jacobian(patch,1,ijk,lmn,J_D0D1);
+        double J_D0D1_anly1 = d3f_dxdydu_spectral_Jacobian_analytic(patch,1,ijk,lmn);
+        diff = fabs(J_D0D1_anly0-J_D0D1_anly1);
+        max  = (diff > max ? diff : max);
+
+        double J_D0D2_anly0 = d3f_dx2du_Jacobian(patch,2,ijk,lmn,J_D0D2);
+        double J_D0D2_anly1 = d3f_dxdydu_spectral_Jacobian_analytic(patch,2,ijk,lmn);
+        diff = fabs(J_D0D2_anly0-J_D0D2_anly1);
+        max  = (diff > max ? diff : max);
+
+        double J_D1D1_anly0 = d3f_dx2du_Jacobian(patch,3,ijk,lmn,J_D1D1);
+        double J_D1D1_anly1 = d3f_dxdydu_spectral_Jacobian_analytic(patch,3,ijk,lmn);
+        diff = fabs(J_D1D1_anly0-J_D1D1_anly1);
+        max  = (diff > max ? diff : max);
+
+        double J_D1D2_anly0 = d3f_dx2du_Jacobian(patch,4,ijk,lmn,J_D1D2);
+        double J_D1D2_anly1 = d3f_dxdydu_spectral_Jacobian_analytic(patch,4,ijk,lmn);
+        diff = fabs(J_D1D2_anly0-J_D1D2_anly1);
+        max  = (diff > max ? diff : max);
+
+        double J_D2D2_anly0 = d3f_dx2du_Jacobian(patch,5,ijk,lmn,J_D2D2);
+        double J_D2D2_anly1 = d3f_dxdydu_spectral_Jacobian_analytic(patch,5,ijk,lmn);
+        diff = fabs(J_D2D2_anly0-J_D2D2_anly1);
+        max  = (diff > max ? diff : max);
+      }
+    }
+    printf("patch[%s]: \n"
+      Pretty1"2nd_order |J_numeric_spectral-J_analytic_spectral|_Linf = %e\n",patch->name,max);
+    
+    Init_Jacobian(J_D0D0)
+    Init_Jacobian(J_D0D1)
+    Init_Jacobian(J_D0D2)
+    Init_Jacobian(J_D1D1)
+    Init_Jacobian(J_D1D2)
+    Init_Jacobian(J_D2D2)
+    Footer_Jacobian
+  }
+  
+  
+  FUNC_TOC
+}
+
 
 /* testing various d(Interpolation)/df */
 void test_dInterp_a_df(Grid_T *const grid)

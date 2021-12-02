@@ -42,3 +42,5 @@ static double root_finder_df2_dx_eq(void *params,const double *const x,const Uin
 static double root_finder_f0_eq(void *params,const double *const x);
 static double root_finder_f1_eq(void *params,const double *const x);
 static double root_finder_f2_eq(void *params,const double *const x);
+void test_dfs_df_Spectral_vs_Spectral(Grid_T *const grid);
+

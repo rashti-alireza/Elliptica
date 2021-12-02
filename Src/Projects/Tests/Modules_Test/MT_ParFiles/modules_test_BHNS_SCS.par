@@ -9,6 +9,7 @@ Test_Interpolation                    = yes
 Test_d(interp_a)/df                   = yes
 Test_Jacobian_Spectral_vs_Analytic    = yes
 Test_Jacobian_Spectral_vs_FiniteDiff  = yes
+Test_Jacobian_Spectral_vs_Spectral    = yes
 Test_Jacobian_Elements_Js_Consistency = yes
 Test_Matrix_Consistency               = yes
 Test_Solver_Consistency               = yes
