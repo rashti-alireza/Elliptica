@@ -355,13 +355,13 @@ void test_dfs_df_Spectral_vs_Spectral(Grid_T *const grid)
       {
         J__set_temp_vars_JW_lmn(lmn)
         
-        double J_D0_anly0 = d2f_dxdu_Jacobian(patch,0,ijk,lmn,J_D0);
+        double J_D0_anly0 = d2f_dxdu_optimized_spectral_Jacobian_analytic(patch,0);
         double J_D0_anly1 = d2f_dxdu_spectral_Jacobian_analytic(patch,0,ijk,lmn);
         
-        double J_D1_anly0 = d2f_dxdu_Jacobian(patch,1,ijk,lmn,J_D0);
+        double J_D1_anly0 = d2f_dxdu_optimized_spectral_Jacobian_analytic(patch,1);
         double J_D1_anly1 = d2f_dxdu_spectral_Jacobian_analytic(patch,1,ijk,lmn);
         
-        double J_D2_anly0 = d2f_dxdu_Jacobian(patch,2,ijk,lmn,J_D0);
+        double J_D2_anly0 = d2f_dxdu_optimized_spectral_Jacobian_analytic(patch,2);
         double J_D2_anly1 = d2f_dxdu_spectral_Jacobian_analytic(patch,2,ijk,lmn);
         
         diff = fabs(J_D0_anly0-J_D0_anly1);
@@ -406,32 +406,32 @@ void test_dfs_df_Spectral_vs_Spectral(Grid_T *const grid)
       {
         J__set_temp_vars_JW_lmn(lmn)
         
-        double J_D0D0_anly0 = d3f_dx2du_Jacobian(patch,0,ijk,lmn,J_D0D0);
+        double J_D0D0_anly0 = d3f_dxdydu_optimized_spectral_Jacobian_analytic(patch,0);
         double J_D0D0_anly1 = d3f_dxdydu_spectral_Jacobian_analytic(patch,0,ijk,lmn);
         diff = fabs(J_D0D0_anly0-J_D0D0_anly1);
         max  = (diff > max ? diff : max);
 
-        double J_D0D1_anly0 = d3f_dx2du_Jacobian(patch,1,ijk,lmn,J_D0D1);
+        double J_D0D1_anly0 = d3f_dxdydu_optimized_spectral_Jacobian_analytic(patch,1);
         double J_D0D1_anly1 = d3f_dxdydu_spectral_Jacobian_analytic(patch,1,ijk,lmn);
         diff = fabs(J_D0D1_anly0-J_D0D1_anly1);
         max  = (diff > max ? diff : max);
 
-        double J_D0D2_anly0 = d3f_dx2du_Jacobian(patch,2,ijk,lmn,J_D0D2);
+        double J_D0D2_anly0 = d3f_dxdydu_optimized_spectral_Jacobian_analytic(patch,2);
         double J_D0D2_anly1 = d3f_dxdydu_spectral_Jacobian_analytic(patch,2,ijk,lmn);
         diff = fabs(J_D0D2_anly0-J_D0D2_anly1);
         max  = (diff > max ? diff : max);
 
-        double J_D1D1_anly0 = d3f_dx2du_Jacobian(patch,3,ijk,lmn,J_D1D1);
+        double J_D1D1_anly0 = d3f_dxdydu_optimized_spectral_Jacobian_analytic(patch,3);
         double J_D1D1_anly1 = d3f_dxdydu_spectral_Jacobian_analytic(patch,3,ijk,lmn);
         diff = fabs(J_D1D1_anly0-J_D1D1_anly1);
         max  = (diff > max ? diff : max);
 
-        double J_D1D2_anly0 = d3f_dx2du_Jacobian(patch,4,ijk,lmn,J_D1D2);
+        double J_D1D2_anly0 = d3f_dxdydu_optimized_spectral_Jacobian_analytic(patch,4);
         double J_D1D2_anly1 = d3f_dxdydu_spectral_Jacobian_analytic(patch,4,ijk,lmn);
         diff = fabs(J_D1D2_anly0-J_D1D2_anly1);
         max  = (diff > max ? diff : max);
 
-        double J_D2D2_anly0 = d3f_dx2du_Jacobian(patch,5,ijk,lmn,J_D2D2);
+        double J_D2D2_anly0 = d3f_dxdydu_optimized_spectral_Jacobian_analytic(patch,5);
         double J_D2D2_anly1 = d3f_dxdydu_spectral_Jacobian_analytic(patch,5,ijk,lmn);
         diff = fabs(J_D2D2_anly0-J_D2D2_anly1);
         max  = (diff > max ? diff : max);
