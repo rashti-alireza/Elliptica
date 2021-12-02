@@ -2491,10 +2491,10 @@ void set_Solving_Man_jacobian_workspace(Patch_T *const patch)
     c1_d2[i] = -(Pow3(nm1[i])/3.+Pow2(nm1[i])/2.+nm1[i]/6.);
     c2_d2[i] = -1. - 4.*Pow2(N0[i]);
     c1_d4[i] = (Pow4(nm1[i])*(nm1[i]/5.+0.5)+Pow3(nm1[i])/3.-nm1[i]/30.);
-    c2_d4[i] = 4.*Pow2(nm1[i]);
-    c3_d4[i] = 115. - 120.*Pow2(nm1[i]) + 48.*Pow4(nm1[i]);
-    c4_d4[i] = (76. + 96.*Pow2(nm1[i]) - 64.*Pow4(nm1[i]));
-    c5_d4[i] = (1. + 24.*Pow2(nm1[i]) + 16.*Pow4(nm1[i]));
+    c2_d4[i] = 4.*Pow2(N0[i]);
+    c3_d4[i] = 115. - 120.*Pow2(N0[i]) + 48.*Pow4(N0[i]);
+    c4_d4[i] = (76. + 96.*Pow2(N0[i]) - 64.*Pow4(N0[i]));
+    c5_d4[i] = (1. + 24.*Pow2(N0[i]) + 16.*Pow4(N0[i]));
   }
   
   /* set d^n Cheb/dx^n */
