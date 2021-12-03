@@ -350,10 +350,10 @@ void test_dfs_df_Spectral_vs_Spectral(Grid_T *const grid)
     double diff, max = 0;
     FOR_ALL_ijk
     {
-      J__set_temp_vars_JW_ijk(ijk)
+      Workspace_ijk_Jacobian(ijk)
       for (Uint lmn = 0; lmn < patch->nn; ++lmn)
       {
-        J__set_temp_vars_JW_lmn(lmn)
+        Workspace_lmn_Jacobian(lmn)
         
         double J_D0_anly0 = d2f_dxdu_optimized_spectral_Jacobian_analytic(patch,0);
         double J_D0_anly1 = d2f_dxdu_spectral_Jacobian_analytic(patch,0,ijk,lmn);
@@ -401,10 +401,10 @@ void test_dfs_df_Spectral_vs_Spectral(Grid_T *const grid)
     double diff, max = 0;
     FOR_ALL_ijk
     {
-      J__set_temp_vars_JW_ijk(ijk)
+      Workspace_ijk_Jacobian(ijk)
       for (Uint lmn = 0; lmn < patch->nn; ++lmn)
       {
-        J__set_temp_vars_JW_lmn(lmn)
+        Workspace_lmn_Jacobian(lmn)
         
         double J_D0D0_anly0 = d3f_dxdydu_optimized_spectral_Jacobian_analytic(patch,0);
         double J_D0D0_anly1 = d3f_dxdydu_spectral_Jacobian_analytic(patch,0,ijk,lmn);

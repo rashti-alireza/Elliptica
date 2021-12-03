@@ -1130,12 +1130,12 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
         if (i1 == UINT_MAX)
           continue;
         
-        J__set_temp_vars_JW_ijk(i1_node);
+        Workspace_ijk_Jacobian(i1_node);
         /* F part */
         for (s1 = 0; s1 < NsubM1; ++s1)
         {
           s1_node = inv1[s1];
-          J__set_temp_vars_JW_lmn(s1_node);
+          Workspace_lmn_Jacobian(s1_node);
           double dfx_df = d2f_dxdu_Jacobian(patch,0,i1_node,s1_node,Jf_D0);
           double dfy_df = d2f_dxdu_Jacobian(patch,1,i1_node,s1_node,Jf_D1);
           double dfz_df = d2f_dxdu_Jacobian(patch,2,i1_node,s1_node,Jf_D2);
@@ -1146,7 +1146,7 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
         for (ip1 = 0; ip1 < NinterFP1; ++ip1)
         {
           ip1_node = Iinv1[ip1];
-          J__set_temp_vars_JW_lmn(ip1_node);
+          Workspace_lmn_Jacobian(ip1_node);
           
           double dfx_df = d2f_dxdu_Jacobian(patch,0,i1_node,ip1_node,Jf_D0);
           double dfy_df = d2f_dxdu_Jacobian(patch,1,i1_node,ip1_node,Jf_D1);
@@ -1324,11 +1324,11 @@ static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
           continue;
       
       i2_node = node1[subfp2];
-      J__set_temp_vars_JW_ijk(i2_node);
+      Workspace_ijk_Jacobian(i2_node);
       for (s1 = 0; s1 < NsubM1; ++s1)
       {
         s1_node = inv1[s1];
-        J__set_temp_vars_JW_lmn(s1_node);
+        Workspace_lmn_Jacobian(s1_node);
         double dfx_df = d2f_dxdu_Jacobian(patch,0,i2_node,s1_node,Jf_D0);
         double dfy_df = d2f_dxdu_Jacobian(patch,1,i2_node,s1_node,Jf_D1);
         double dfz_df = d2f_dxdu_Jacobian(patch,2,i2_node,s1_node,Jf_D2);
@@ -1338,7 +1338,7 @@ static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
       for (i1 = 0; i1 < NinterFP1; ++i1)
       {
         i1_node = Iinv1[i1];
-        J__set_temp_vars_JW_lmn(i1_node);
+        Workspace_lmn_Jacobian(i1_node);
         double dfx_df = d2f_dxdu_Jacobian(patch,0,i2_node,i1_node,Jf_D0);
         double dfy_df = d2f_dxdu_Jacobian(patch,1,i2_node,i1_node,Jf_D1);
         double dfz_df = d2f_dxdu_Jacobian(patch,2,i2_node,i1_node,Jf_D2);

@@ -40,9 +40,9 @@
 #define d3f_dx2du_Jacobian(patch,dx_axis,ijk,lmn,xNAME) \
   ( f_##xNAME(m_##xNAME, ijk, lmn) )
 
-#define J__set_temp_vars_JW_ijk(Xijk) /* nothing! */
+#define Workspace_ijk_Jacobian(Xijk) /* nothing! */
 
-#define J__set_temp_vars_JW_lmn(Xlmn) /* nothing! */
+#define Workspace_lmn_Jacobian(Xlmn) /* nothing! */
 
 
 #elif SPECTRAL_JACOBIAN_ANALYTIC_FORM
@@ -66,7 +66,7 @@
 //  d3f_dxdydu_spectral_Jacobian_analytic(patch,dxdy_axis,ijk,lmn)
 
 /* setting temporary vars */ 
-#define J__set_temp_vars_JW_ijk(Xijk) \
+#define Workspace_ijk_Jacobian(Xijk) \
     J__JW->ijk = (Xijk);\
     ijk_to_i_j_k((Xijk),patch->n,&(J__JW->i),&(J__JW->j),&(J__JW->k));\
     J__JW->sin_thi[0] = sin(J__JW->i*J__JW->pi_o_nm1[0]);\
@@ -76,7 +76,7 @@
     J__JW->cos_thi[1] = cos(J__JW->j*J__JW->pi_o_nm1[1]);\
     J__JW->cos_thi[2] = cos(J__JW->k*J__JW->pi_o_nm1[2]);
 
-#define J__set_temp_vars_JW_lmn(Xlmn) \
+#define Workspace_lmn_Jacobian(Xlmn) \
     J__JW->lmn = (Xlmn);\
     ijk_to_i_j_k((Xlmn),patch->n,&(J__JW->l),&(J__JW->m),&(J__JW->n));\
     J__JW->kd = J__KD_INT(J__JW->i,J__JW->l)*JKD_il + \
@@ -107,11 +107,11 @@
   for (i = 0; i < Ni; ++i)\
   {\
     ijk = node[i];\
-    J__set_temp_vars_JW_ijk(ijk)\
+    Workspace_ijk_Jacobian(ijk)\
     for (j = 0; j < Nj; ++j)\
     {\
       lmn = node[j];\
-      J__set_temp_vars_JW_lmn(lmn)
+      Workspace_lmn_Jacobian(lmn)
 
 #define DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE \
     }/* end of for (i = 0; i < Ni; ++i) */\
@@ -125,12 +125,12 @@
     for (i = 0; i < Ni; ++i)\
     {\
       ijk = node[i];\
-      J__set_temp_vars_JW_ijk(ijk)\
+      Workspace_ijk_Jacobian(ijk)\
       for (k = K0; k < Nk; ++k)\
       {\
         lmn = node[k];\
         j = k-K0;\
-        J__set_temp_vars_JW_lmn(lmn)
+        Workspace_lmn_Jacobian(lmn)
 
         
 #define DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE \
@@ -158,11 +158,11 @@
   for (i = I0; i < Ni; ++i)\
   {\
     ijk = node[i];\
-    J__set_temp_vars_JW_ijk(ijk)\
+    Workspace_ijk_Jacobian(ijk)\
     for (j = 0; j < Nj; ++j)\
     {\
       lmn = node[j];\
-      J__set_temp_vars_JW_lmn(lmn)
+      Workspace_lmn_Jacobian(lmn)
 
 
 #define DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE \
@@ -177,12 +177,12 @@
     for (i = I0; i < Ni; ++i)\
     {\
       ijk = node[i];\
-      J__set_temp_vars_JW_ijk(ijk)\
+      Workspace_ijk_Jacobian(ijk)\
       for (k = K0; k < Nk; ++k)\
       {\
         lmn = node[k];\
         j = k-K0;\
-        J__set_temp_vars_JW_lmn(lmn)
+        Workspace_lmn_Jacobian(lmn)
 
 #define DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE \
      }/* end of for (i = I0; i < Ni; ++i) */\
