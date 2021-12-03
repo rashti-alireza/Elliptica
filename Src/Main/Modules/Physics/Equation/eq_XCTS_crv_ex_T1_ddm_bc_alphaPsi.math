@@ -16,9 +16,6 @@ C_macro2 = REALLOC_v_WRITE_v(name);
 `void *eq_XCTS_curve_exc_T1_ddm_bc_alphaPsi(void *vp1,void *vp2);`;
 `void *eq_XCTS_curve_exc_T1_ddm_bc_alphaPsi(void *vp1,void *vp2)\n{`;
 
-# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
-# patch, S, map, F, node, N, n.
-# THUS, DO NOT DEFINE THEM AGAIN.
 `  DDM_SCHUR_BC_DECLARE`;
 `  Uint ijk;/* node index */`;
 
