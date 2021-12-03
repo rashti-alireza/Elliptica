@@ -2358,10 +2358,37 @@ double
   d2f_dxdu_optimized_spectral_Jacobian_analytic(Patch_T *const patch,
                                                 const Uint dx_axis) 
 {
-  return
-    Jd2f_dudx_opt(patch,dx_axis,0,JW->ijk,JW->i,JW->l)*JKD(JW->j,JW->m)*JKD(JW->k,JW->n)+
-    Jd2f_dudx_opt(patch,dx_axis,1,JW->ijk,JW->j,JW->m)*JKD(JW->i,JW->l)*JKD(JW->k,JW->n)+
-    Jd2f_dudx_opt(patch,dx_axis,2,JW->ijk,JW->k,JW->n)*JKD(JW->i,JW->l)*JKD(JW->j,JW->m);
+  double sum;
+  
+  switch(JW->kd)
+  {
+    case JKD_zero:
+    case JKD_il:
+    case JKD_jm:
+    case JKD_kn:
+      sum = 0;
+    break;
+    
+    case JKD_iljm:
+      sum = Jd2f_dudx_opt(patch,dx_axis,2,JW->ijk,JW->k,JW->n);
+    break;
+    
+    case JKD_ilkn:
+      sum = Jd2f_dudx_opt(patch,dx_axis,1,JW->ijk,JW->j,JW->m);
+    break;
+    
+    case JKD_jmkn:
+      sum = Jd2f_dudx_opt(patch,dx_axis,0,JW->ijk,JW->i,JW->l);
+    break;
+    
+    default:/* case JKD_iljmkn */
+      sum = 
+        Jd2f_dudx_opt(patch,dx_axis,0,JW->ijk,JW->i,JW->l)+
+        Jd2f_dudx_opt(patch,dx_axis,1,JW->ijk,JW->j,JW->m)+
+        Jd2f_dudx_opt(patch,dx_axis,2,JW->ijk,JW->k,JW->n);
+  }
+  
+  return sum;
 }
 
 /* ->: compute d^2(df/du)/dxdy, in which x and y are Cartesian coords.(optimized) */
