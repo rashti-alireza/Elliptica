@@ -76,6 +76,8 @@
     J__JW->cos_thi[1] = cos(J__JW->j*J__JW->pi_o_nm1[1]);\
     J__JW->cos_thi[2] = cos(J__JW->k*J__JW->pi_o_nm1[2]);
 
+/* NOTE: as we can see Workspace_lmn_Jacobian has to be after 
+// Workspace_ijk_Jacobian */
 #define Workspace_lmn_Jacobian(Xlmn) \
     J__JW->lmn = (Xlmn);\
     ijk_to_i_j_k((Xlmn),patch->n,&(J__JW->l),&(J__JW->m),&(J__JW->n));\
@@ -134,8 +136,8 @@
 
         
 #define DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE \
-     }/* end of for (i = 0; i < Ni; ++i) */\
-    }/* end of for (k = K0; k < Nk; ++k) */\
+     }/* end of for (k = K0; k < Nk; ++k) */\
+    }/* end of for (i = 0; i < Ni; ++i) */\
   }/* end of if (S->NI) */
 
 
@@ -185,8 +187,8 @@
         Workspace_lmn_Jacobian(lmn)
 
 #define DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE \
-     }/* end of for (i = I0; i < Ni; ++i) */\
-    }/* end of for (k = K0; k < Nk; ++k) */\
+     }/* end of for (k = K0; k < Nk; ++k) */\
+    }/* end of for (i = I0; i < Ni; ++i)*/\
   }/* end of if (S->NI) */
 
 
