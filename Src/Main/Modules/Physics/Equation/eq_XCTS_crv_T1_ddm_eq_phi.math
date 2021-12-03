@@ -102,8 +102,8 @@ Symm[ddphi(i,j)       = ddphi(j,i)];
 `  const double att  = e*rhoc;`
 
 ##########################################################################
-# NOTE: In domain decomposition method n is relabed from point ijk.
-# In fact ijk is mapped to point n, for relabeling purposes of
+# NOTE: In domain decomposition method, schur_ijk is relabed from point ijk.
+# In fact ijk is mapped to point schur_ijk, for relabeling purposes of
 # domain decompostion which is encapsulated in macro DDM_SCHUR_EQ_OPEN.
 # The bottom line is JUST simply WRITE the equation FOR F_eq 
 # at Newton-Raphson scheme (Jx = -F_eq) in TERMS OF ijk POINT.
