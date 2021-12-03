@@ -90,6 +90,14 @@
 
 /* defining some macros to improve the readability and simplicity */
 
+#define DDM_SCHUR_JACOBIAN_LOOP_OPEN(i,i0,iN,ijk) \
+  for ((i) = (i0); (i) < (iN); ++(i))\
+  {\
+    (ijk) = node[(i)];
+
+#define DDM_SCHUR_JACOBIAN_LOOP_CLOSE  }
+
+
 /* macros for jacobian of equations */
 #define DDM_SCHUR_JACOBIAN_EQ_DECLARE \
   Patch_T *const patch  = vp1;\
@@ -106,38 +114,30 @@
 
 /* macro for B part of jacobian */
 #define DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN \
-  for (i = 0; i < Ni; ++i)\
-  {\
-    ijk = node[i];\
+  DDM_SCHUR_JACOBIAN_LOOP_OPEN(i,0,Ni,ijk)\
     Workspace_ijk_Jacobian(ijk)\
-    for (j = 0; j < Nj; ++j)\
-    {\
-      lmn = node[j];\
+    DDM_SCHUR_JACOBIAN_LOOP_OPEN(j,0,Nj,lmn)\
       Workspace_lmn_Jacobian(lmn)
 
 #define DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE \
-    }/* end of for (i = 0; i < Ni; ++i) */\
-  }/* end of for (j = 0; j < Nj; ++j) */
+  DDM_SCHUR_JACOBIAN_LOOP_CLOSE\
+    DDM_SCHUR_JACOBIAN_LOOP_CLOSE
 
 /* macros for E part of jacobian */
 #define DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN \
   if (S->NI)/* if there is any interface points then E is needed */\
   {\
     E_Trans = S->E_Trans->reg->A;\
-    for (i = 0; i < Ni; ++i)\
-    {\
-      ijk = node[i];\
+    DDM_SCHUR_JACOBIAN_LOOP_OPEN(i,0,Ni,ijk)\
       Workspace_ijk_Jacobian(ijk)\
-      for (k = K0; k < Nk; ++k)\
-      {\
-        lmn = node[k];\
+      DDM_SCHUR_JACOBIAN_LOOP_OPEN(k,K0,Nk,lmn)\
         j = k-K0;\
         Workspace_lmn_Jacobian(lmn)
 
         
 #define DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE \
-     }/* end of for (k = K0; k < Nk; ++k) */\
-    }/* end of for (i = 0; i < Ni; ++i) */\
+    DDM_SCHUR_JACOBIAN_LOOP_CLOSE\
+      DDM_SCHUR_JACOBIAN_LOOP_CLOSE\
   }/* end of if (S->NI) */
 
 
@@ -155,40 +155,33 @@
   const Uint Nk = patch->nn;/* total number of nodes */\
   Uint i,j,k;
 
+
 /* macro for B part of outer boundary jacobian */
 #define DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN \
-  for (i = I0; i < Ni; ++i)\
-  {\
-    ijk = node[i];\
+  DDM_SCHUR_JACOBIAN_LOOP_OPEN(i,I0,Ni,ijk)\
     Workspace_ijk_Jacobian(ijk)\
-    for (j = 0; j < Nj; ++j)\
-    {\
-      lmn = node[j];\
+    DDM_SCHUR_JACOBIAN_LOOP_OPEN(j,0,Nj,lmn)\
       Workspace_lmn_Jacobian(lmn)
 
 
 #define DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE \
-    }/* end of for (i = I0; i < Ni; ++i) */\
-  }/* end of for (j = 0; j < Nj; ++j) */
+  DDM_SCHUR_JACOBIAN_LOOP_CLOSE\
+    DDM_SCHUR_JACOBIAN_LOOP_CLOSE
 
 /* macros for E part of jacobian */
 #define DDM_SCHUR_JACOBIAN_BC_Epart_OPEN \
   if (S->NI)/* if there is any interface points then E is needed */\
   {\
     E_Trans = S->E_Trans->reg->A;\
-    for (i = I0; i < Ni; ++i)\
-    {\
-      ijk = node[i];\
+    DDM_SCHUR_JACOBIAN_LOOP_OPEN(i,I0,Ni,ijk)\
       Workspace_ijk_Jacobian(ijk)\
-      for (k = K0; k < Nk; ++k)\
-      {\
-        lmn = node[k];\
+      DDM_SCHUR_JACOBIAN_LOOP_OPEN(k,K0,Nk,lmn)\
         j = k-K0;\
         Workspace_lmn_Jacobian(lmn)
 
 #define DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE \
-     }/* end of for (k = K0; k < Nk; ++k) */\
-    }/* end of for (i = I0; i < Ni; ++i)*/\
+    DDM_SCHUR_JACOBIAN_LOOP_CLOSE\
+      DDM_SCHUR_JACOBIAN_LOOP_CLOSE\
   }/* end of if (S->NI) */
 
 
@@ -202,12 +195,11 @@
   Uint n;
   
 #define DDM_SCHUR_EQ_OPEN \
-  for (n = 0; n < N; ++n)\
-  {\
-    ijk  = node[n];
+  DDM_SCHUR_JACOBIAN_LOOP_OPEN(n,0,N,ijk)
 
 
-#define DDM_SCHUR_EQ_CLOSE }
+#define DDM_SCHUR_EQ_CLOSE \
+  DDM_SCHUR_JACOBIAN_LOOP_CLOSE
 
 /* macro for boundary condition */
 #define DDM_SCHUR_BC_DECLARE \
@@ -221,11 +213,11 @@
   Uint n;
 
 #define DDM_SCHUR_BC_OPEN \
-  for (n = 0; n < N; ++n)\
-  {\
-    ijk  = node[n];
-    
-#define DDM_SCHUR_BC_CLOSE }
+  DDM_SCHUR_JACOBIAN_LOOP_OPEN(n,0,N,ijk)
+
+#define DDM_SCHUR_BC_CLOSE \
+  DDM_SCHUR_JACOBIAN_LOOP_CLOSE
+
 
 /* Kronecker delta for jacobian workspace
 // NOTE: the summation of each two-indexed KD must be an 
