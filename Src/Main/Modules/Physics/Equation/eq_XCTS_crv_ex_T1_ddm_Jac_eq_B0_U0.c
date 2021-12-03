@@ -366,7 +366,7 @@ t7_B_U0 + t8_B_U0 + t9_B_U0;
 
 
 
-  B[schur_ijk][schur_c] = Bpart_U0;
+  B[schur_ijk][schur_lmn] = Bpart_U0;
 
   DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE
 
@@ -620,7 +620,7 @@ t7_E_U0 + t8_E_U0 + t9_E_U0;
 
 
 
-  E_Trans[schur_c][schur_ijk] = Epart_U0;
+  E_Trans[schur_lmn][schur_ijk] = Epart_U0;
 
   DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE
 

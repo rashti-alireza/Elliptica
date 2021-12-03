@@ -109,14 +109,14 @@
   const Uint _schur_Nj = _schur_S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const Uint _schur_K0 = _schur_S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const Uint _schur_Nk = patch->nn;/* total number of nodes */\
-  Uint schur_ijk,schur_c,_schur_k;
+  Uint schur_ijk,schur_lmn,_schur_k;
 
 
 /* macro for B part of jacobian */
 #define DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN \
   DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_ijk,0,_schur_Ni,ijk)\
     Workspace_ijk_Jacobian(ijk)\
-    DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_c,0,_schur_Nj,lmn)\
+    DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_lmn,0,_schur_Nj,lmn)\
       Workspace_lmn_Jacobian(lmn)
 
 #define DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE \
@@ -131,7 +131,7 @@
     DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_ijk,0,_schur_Ni,ijk)\
       Workspace_ijk_Jacobian(ijk)\
       DDM_SCHUR_JACOBIAN_LOOP_OPEN(_schur_k,_schur_K0,_schur_Nk,lmn)\
-        schur_c = _schur_k - _schur_K0;\
+        schur_lmn = _schur_k - _schur_K0;\
         Workspace_lmn_Jacobian(lmn)
 
         
@@ -153,14 +153,14 @@
   const Uint _schur_Nj = _schur_S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const Uint _schur_K0 = _schur_S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const Uint _schur_Nk = patch->nn;/* total number of nodes */\
-  Uint schur_ijk,schur_c,_schur_k;
+  Uint schur_ijk,schur_lmn,_schur_k;
 
 
 /* macro for B part of outer boundary jacobian */
 #define DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN \
   DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_ijk,_schur_I0,_schur_Ni,ijk)\
     Workspace_ijk_Jacobian(ijk)\
-    DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_c,0,_schur_Nj,lmn)\
+    DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_lmn,0,_schur_Nj,lmn)\
       Workspace_lmn_Jacobian(lmn)
 
 
@@ -176,7 +176,7 @@
     DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_ijk,_schur_I0,_schur_Ni,ijk)\
       Workspace_ijk_Jacobian(ijk)\
       DDM_SCHUR_JACOBIAN_LOOP_OPEN(_schur_k,_schur_K0,_schur_Nk,lmn)\
-        schur_c = _schur_k - _schur_K0;\
+        schur_lmn = _schur_k - _schur_K0;\
         Workspace_lmn_Jacobian(lmn)
 
 #define DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE \

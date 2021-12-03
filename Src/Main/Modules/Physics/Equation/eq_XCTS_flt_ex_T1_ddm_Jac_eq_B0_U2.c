@@ -99,7 +99,7 @@ JB0_D2*igConf_U2U2[ijk]);
   double Bpart_U2 =
 t1_B_U2 + t2_B_U2 + t3_B_U2 + t4_B_U2 + t5_B_U2;
 
-  B[schur_ijk][schur_c] = Bpart_U2;
+  B[schur_ijk][schur_lmn] = Bpart_U2;
 
   DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE
 
@@ -165,7 +165,7 @@ JB0_D2*igConf_U2U2[ijk]);
   double Epart_U2 =
 t1_E_U2 + t2_E_U2 + t3_E_U2 + t4_E_U2 + t5_E_U2;
 
-  E_Trans[schur_c][schur_ijk] = Epart_U2;
+  E_Trans[schur_lmn][schur_ijk] = Epart_U2;
 
   DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE
 
