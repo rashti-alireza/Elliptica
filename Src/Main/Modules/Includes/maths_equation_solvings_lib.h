@@ -192,10 +192,10 @@
   double *const F = _schur_S->f;\
   const Uint *const _schur_node = _schur_S->inv;/* inverse map to node */\
   const Uint _schur_N = _schur_S->Oi;/* number of inner mesh nodes */\
-  Uint n;
+  Uint schur_r;
   
 #define DDM_SCHUR_EQ_OPEN \
-  DDM_SCHUR_JACOBIAN_LOOP_OPEN(n,0,_schur_N,ijk)
+  DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_r,0,_schur_N,ijk)
 
 
 #define DDM_SCHUR_EQ_CLOSE \
@@ -210,10 +210,10 @@
   Patch_T *const patch = bc->patch;\
   const Uint *const _schur_node = bc->node;/* nodes at boundary */\
   const Uint _schur_N = bc->nn;/* number of nodes at boundary */\
-  Uint n;
+  Uint schur_r;
 
 #define DDM_SCHUR_BC_OPEN \
-  DDM_SCHUR_JACOBIAN_LOOP_OPEN(n,0,_schur_N,ijk)
+  DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_r,0,_schur_N,ijk)
 
 #define DDM_SCHUR_BC_CLOSE \
   DDM_SCHUR_JACOBIAN_LOOP_CLOSE
