@@ -17,8 +17,10 @@ C_macro5 = ...;
 C_arg1 = ;
 C_arg2 = ....;
 
+`#include "eq_header.h"`;
+`#include "maths_equation_solvings_lib.h"`;
+``
 ## C func
-
 `void *eq_XCTS_curve_T3_ddm_jacobian_eq_ex(void *vp1,void *vp2);`
 `void *eq_XCTS_curve_T3_ddm_jacobian_eq_ex(void *vp1,void *vp2)`
 `{`
