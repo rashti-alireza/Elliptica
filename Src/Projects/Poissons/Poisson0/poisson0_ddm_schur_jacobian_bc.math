@@ -21,12 +21,10 @@ Ccode["#include "maths_equation_solvings_lib.h""];
 Ccode["#include "poisson0_equations_lib.h"\n\n"];
 Ccode["void *jacobian_bc_alpha(void *vp1,void *vp2)\n{"];
 
-# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
-# patch, S, B, E_Trans, node, I0, Ni, Nj, K0, Nk, i,j,k.
-# THUS, DO NOT DEFINE THEM AGAIN.
 Ccode["  DDM_SCHUR_JACOBIAN_BC_DECLARE"];
 Ccode["  Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */"];
 Ccode["  const double kd[2] = {0.,1.};/* Kronecker delta */"];
+`  Header_Jacobian`
 # declare for Cpi
 Declare = 
 {
@@ -44,11 +42,13 @@ Declare =
 #    NOTE2: In Schur domain decomposition method we need two types of
 # matrices for Jacobian of Newton-Raphson scheme, matrix B and matrix E. 
 # Let's say Jx = -F in Newton-Raphson scheme; then,
-# B[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# B[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and
+# schur_lmn = map[lmn] and
 # ijk takes their values ON BOUNDARY POINTS of a patch, 
 # and lmn runs over ALL BUT the interface points (interface
 # points are those located between two patches).
-# E[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# E[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and
+# schur_lmn = map[lmn] and
 # ijk takes their values ON BOUNDARY POINTS and lmn runs over INTERFACE points.
 #
 #    PRAGMATICALLY:
@@ -63,24 +63,27 @@ Declare =
 #    NOTE3: For each part which doesn't exist, let it be 0.
 ###########################################################################
 
-
+``
 # outer boundary like infinity
 Ccode["  if (patch->outerB)"];
 Ccode["  {"];
+``
 Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN"];
-
+``
 # B matrix:
 outerB_Bpart = kd;
 
-Ccode["  B[i][j] = outerB_Bpart;"];
+Ccode["  B[schur_ijk][schur_lmn] = outerB_Bpart;"];
+``
 Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE\n"];
-
+``
 Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN"];
-
+``
 # E matrix:
 outerB_Epart = 0;
 
-Ccode["  E_Trans[j][i] = outerB_Epart;"];
+Ccode["  E_Trans[schur_lmn][schur_ijk] = outerB_Epart;"];
+``
 Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE"];
 Ccode["  }/* end of if (patch->outerB) */"];
 
@@ -88,24 +91,27 @@ Ccode["  }/* end of if (patch->outerB) */"];
 Ccode["  else if (patch->innerB)"];
 Ccode["  {"];
 Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN"];
-
+``
 # B matrix:
 innerB_Bpart = kd;
 
-Ccode["  B[i][j] = innerB_Bpart;"];
+Ccode["  B[schur_ijk][schur_lmn] = innerB_Bpart;"];
+``
 Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE\n"];
-
+``
 Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN"];
-
+``
 # E matrix:
 innerB_Epart = 0;
 
-Ccode["  E_Trans[j][i] = innerB_Epart;"];
+Ccode["  E_Trans[schur_lmn][schur_ijk] = innerB_Epart;"];
+``
 Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE\n"];
 
 Ccode["  }/* end of else if (patch->innerB) */"];
 
-
+`Footer_Jacobian`
+``
 Ccode["  return 0;"];
 Ccode["}"];
 

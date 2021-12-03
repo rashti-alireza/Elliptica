@@ -16,9 +16,6 @@ Ccode["#include "maths_equation_solvings_lib.h""];
 Ccode["#include "poisson0_equations_lib.h"\n\n"];
 Ccode["void *bc_alpha(void *vp1,void *vp2)\n{"];
 
-# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
-# patch, S, map, F, node, N, n.
-# THUS, DO NOT DEFINE THEM AGAIN.
 Ccode["  DDM_SCHUR_BC_DECLARE"];
 Ccode["  Uint ijk;/* node index */"];
 

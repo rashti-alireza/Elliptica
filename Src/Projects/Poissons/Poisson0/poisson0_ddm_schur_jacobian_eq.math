@@ -9,10 +9,12 @@ Point = ijk;
 # C macors
 C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
-C_macro3 = JACOBIAN_DERIVATIVE(name);
+C_macro3 = Init_Jacobian(name);
+C_macro4 = Free_Jacobian(name);
+C_macro5 = double CPI_name = d3f_dx2du_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
 
 # C arguments for jacobian of derivative
-C_arg = (j_name,ijk,lmn);
+C_arg = ;
 
 # main function:
 Ccode["#include "poisson0_headers.h""];
@@ -20,12 +22,12 @@ Ccode["#include "maths_equation_solvings_lib.h""];
 Ccode["#include "poisson0_equations_lib.h"\n\n"];
 Ccode["void *jacobian_eq_alpha(void *vp1,void *vp2)\n{"];
 
-# NOTE: THE FOLLOWING MACRO DECLARES OR DEFINES THE FOLLOWING VARIABLES:
-# patch, S, B, E_Trans, node, Ni, Nj, K0, Nk, i,j,k
-# THUS, DO NOT DEFINE THEM AGAIN.
 Ccode["  DDM_SCHUR_JACOBIAN_EQ_DECLARE"];
 Ccode["  Uint ijk,lmn;/* for Jacobian entries J[ijk][lmn] */"];
 
+## init Jacobian
+`  Header_Jacobian`
+``
 # declare for cpi
 Declare = 
 {
@@ -33,7 +35,6 @@ Declare =
   (obj = field, name = dfxx_df, rank = 0, C_macro3,C_arg);
   (obj = field, name = dfyy_df, rank = 0, C_macro3,C_arg);
   (obj = field, name = dfzz_df, rank = 0, C_macro3,C_arg);
-
 }
 
 # symmetries for cpi
@@ -46,12 +47,14 @@ Declare =
 #    NOTE2: In Schur domain decomposition method we need two types of
 # matrices for Jacobian of Newton-Raphson scheme, matrix B and matrix E. 
 # Let's say Jx = -F in Newton-Raphson scheme; then,
-# B[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# B[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and
+# schur_lmn = map[lmn] and
 # ijk takes their values ON INNER POINTS
 # of a patch, namley those collocated points that don't reach boundary of
 # the patch, and lmn runs over ALL BUT the interface points (interface
 # points are those located between two patches).
-# E[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# E[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and
+# schur_lmn = map[lmn] and
 # ijk takes their values ON INNER POINTS and lmn runs over INTERFACE points.
 #
 #    PRAGMATICALLY:
@@ -65,19 +68,48 @@ Declare =
 
 # B matrix:
 Ccode["  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN"];
+``
+Declare = 
+{
+  # jacobian derivative
+  (obj = field, name = dfxx_df, rank = 0, C_macro5,C_arg);
+  (obj = field, name = dfyy_df, rank = 0, C_macro5,C_arg);
+  (obj = field, name = dfzz_df, rank = 0, C_macro5,C_arg);
+}
+
 
 Bpart = dfxx_df+dfyy_df+dfzz_df;
 
-Ccode["  B[i][j] = Bpart;"];
+Ccode["  B[schur_ijk][schur_lmn] = Bpart;"];
+``
 Ccode["  DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE\n"];
 
 # E matrix:
 Ccode["  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n"];
+``
+Declare = 
+{
+  # jacobian derivative
+  (obj = field, name = dfxx_df, rank = 0, C_macro5,C_arg);
+  (obj = field, name = dfyy_df, rank = 0, C_macro5,C_arg);
+  (obj = field, name = dfzz_df, rank = 0, C_macro5,C_arg);
+}
 Epart = dfxx_df+dfyy_df+dfzz_df;
 
-Ccode["  E_Trans[j][i] = Epart;"];
+Ccode["  E_Trans[schur_lmn][schur_ijk] = Epart;"];
+``
 Ccode["  DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE"];
 
+Declare = 
+{
+  # jacobian derivative
+  (obj = field, name = dfxx_df, rank = 0, C_macro4,C_arg);
+  (obj = field, name = dfyy_df, rank = 0, C_macro4,C_arg);
+  (obj = field, name = dfzz_df, rank = 0, C_macro4,C_arg);
+}
+
+`  Footer_Jacobian`
+``
 Ccode["  return 0;"];
 Ccode["}"];
 
