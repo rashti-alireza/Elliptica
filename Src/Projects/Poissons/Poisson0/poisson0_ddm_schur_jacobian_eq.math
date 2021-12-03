@@ -11,7 +11,6 @@ C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
 C_macro3 = Init_Jacobian(name);
 C_macro4 = Free_Jacobian(name);
-C_macro5 = double CPI_name = d3f_dx2du_Jacobian(patch,CPI_index,ijk,lmn,CPI_name);;
 
 # C arguments for jacobian of derivative
 C_arg = ;
@@ -69,14 +68,10 @@ Declare =
 # B matrix:
 Ccode["  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN"];
 ``
-Declare = 
-{
-  # jacobian derivative
-  (obj = field, name = dfxx_df, rank = 0, C_macro5,C_arg);
-  (obj = field, name = dfyy_df, rank = 0, C_macro5,C_arg);
-  (obj = field, name = dfzz_df, rank = 0, C_macro5,C_arg);
-}
 
+`  double dfxx_df = d3f_dx2du_Jacobian(patch,0,ijk,lmn,dfxx_df);`
+`  double dfyy_df = d3f_dx2du_Jacobian(patch,3,ijk,lmn,dfyy_df);`
+`  double dfzz_df = d3f_dx2du_Jacobian(patch,5,ijk,lmn,dfzz_df);`
 
 Bpart = dfxx_df+dfyy_df+dfzz_df;
 
@@ -87,13 +82,11 @@ Ccode["  DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE\n"];
 # E matrix:
 Ccode["  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n"];
 ``
-Declare = 
-{
-  # jacobian derivative
-  (obj = field, name = dfxx_df, rank = 0, C_macro5,C_arg);
-  (obj = field, name = dfyy_df, rank = 0, C_macro5,C_arg);
-  (obj = field, name = dfzz_df, rank = 0, C_macro5,C_arg);
-}
+
+`  double dfxx_df = d3f_dx2du_Jacobian(patch,0,ijk,lmn,dfxx_df);`
+`  double dfyy_df = d3f_dx2du_Jacobian(patch,3,ijk,lmn,dfyy_df);`
+`  double dfzz_df = d3f_dx2du_Jacobian(patch,5,ijk,lmn,dfzz_df);`
+
 Epart = dfxx_df+dfyy_df+dfzz_df;
 
 Ccode["  E_Trans[schur_lmn][schur_ijk] = Epart;"];

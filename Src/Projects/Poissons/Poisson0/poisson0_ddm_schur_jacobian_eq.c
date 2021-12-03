@@ -21,8 +21,8 @@ void *jacobian_eq_alpha(void *vp1,void *vp2)
   DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN
 
   double dfxx_df = d3f_dx2du_Jacobian(patch,0,ijk,lmn,dfxx_df);
-  double dfyy_df = d3f_dx2du_Jacobian(patch,0,ijk,lmn,dfyy_df);
-  double dfzz_df = d3f_dx2du_Jacobian(patch,0,ijk,lmn,dfzz_df);
+  double dfyy_df = d3f_dx2du_Jacobian(patch,3,ijk,lmn,dfyy_df);
+  double dfzz_df = d3f_dx2du_Jacobian(patch,5,ijk,lmn,dfzz_df);
   double Bpart =
 dfxx_df + dfyy_df + dfzz_df;
 
@@ -34,8 +34,8 @@ dfxx_df + dfyy_df + dfzz_df;
 
 
   double dfxx_df = d3f_dx2du_Jacobian(patch,0,ijk,lmn,dfxx_df);
-  double dfyy_df = d3f_dx2du_Jacobian(patch,0,ijk,lmn,dfyy_df);
-  double dfzz_df = d3f_dx2du_Jacobian(patch,0,ijk,lmn,dfzz_df);
+  double dfyy_df = d3f_dx2du_Jacobian(patch,3,ijk,lmn,dfyy_df);
+  double dfzz_df = d3f_dx2du_Jacobian(patch,5,ijk,lmn,dfzz_df);
   double Epart =
 dfxx_df + dfyy_df + dfzz_df;
 
