@@ -101,13 +101,13 @@
 /* macros for jacobian of equations */
 #define DDM_SCHUR_JACOBIAN_EQ_DECLARE \
   Patch_T *const patch  = vp1;\
-  DDM_Schur_Complement_T *const S = vp2;\
-  double **const B = S->B->reg->A;\
+  DDM_Schur_Complement_T *const _schur_S = vp2;\
+  double **const B = _schur_S->B->reg->A;\
   double **E_Trans;\
-  const Uint *const node = S->inv;\
-  const Uint Ni = S->Oi;/* number of inner mesh nodes */\
-  const Uint Nj = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
-  const Uint K0 = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
+  const Uint *const node = _schur_S->inv;\
+  const Uint Ni = _schur_S->Oi;/* number of inner mesh nodes */\
+  const Uint Nj = _schur_S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
+  const Uint K0 = _schur_S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const Uint Nk = patch->nn;/* total number of nodes */\
   Uint schur_r,schur_c,k;
 
@@ -125,9 +125,9 @@
 
 /* macros for E part of jacobian */
 #define DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN \
-  if (S->NI)/* if there is any interface points then E is needed */\
+  if (_schur_S->NI)/* if there is any interface points then E is needed */\
   {\
-    E_Trans = S->E_Trans->reg->A;\
+    E_Trans = _schur_S->E_Trans->reg->A;\
     DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_r,0,Ni,ijk)\
       Workspace_ijk_Jacobian(ijk)\
       DDM_SCHUR_JACOBIAN_LOOP_OPEN(k,K0,Nk,lmn)\
@@ -138,20 +138,20 @@
 #define DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE \
     DDM_SCHUR_JACOBIAN_LOOP_CLOSE\
       DDM_SCHUR_JACOBIAN_LOOP_CLOSE\
-  }/* end of if (S->NI) */
+  }/* end of if (_schur_S->NI) */
 
 
 /* macros for jacobian of boundary condition equations */
 #define DDM_SCHUR_JACOBIAN_BC_DECLARE \
   Patch_T *const patch  = vp1;\
-  DDM_Schur_Complement_T *const S = vp2;\
-  double **const B = S->B->reg->A;\
+  DDM_Schur_Complement_T *const _schur_S = vp2;\
+  double **const B = _schur_S->B->reg->A;\
   double **E_Trans;\
-  const Uint *const node = S->inv;\
-  const Uint I0 = S->Oi;/* number of inner mesh nodes */\
-  const Uint Ni = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
-  const Uint Nj = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
-  const Uint K0 = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
+  const Uint *const node = _schur_S->inv;\
+  const Uint I0 = _schur_S->Oi;/* number of inner mesh nodes */\
+  const Uint Ni = _schur_S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
+  const Uint Nj = _schur_S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
+  const Uint K0 = _schur_S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const Uint Nk = patch->nn;/* total number of nodes */\
   Uint schur_r,schur_c,k;
 
@@ -170,9 +170,9 @@
 
 /* macros for E part of jacobian */
 #define DDM_SCHUR_JACOBIAN_BC_Epart_OPEN \
-  if (S->NI)/* if there is any interface points then E is needed */\
+  if (_schur_S->NI)/* if there is any interface points then E is needed */\
   {\
-    E_Trans = S->E_Trans->reg->A;\
+    E_Trans = _schur_S->E_Trans->reg->A;\
     DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_r,I0,Ni,ijk)\
       Workspace_ijk_Jacobian(ijk)\
       DDM_SCHUR_JACOBIAN_LOOP_OPEN(k,K0,Nk,lmn)\
@@ -182,16 +182,16 @@
 #define DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE \
     DDM_SCHUR_JACOBIAN_LOOP_CLOSE\
       DDM_SCHUR_JACOBIAN_LOOP_CLOSE\
-  }/* end of if (S->NI) */
+  }/* end of if (_schur_S->NI) */
 
 
 /* macro for equation */
 #define DDM_SCHUR_EQ_DECLARE \
   Patch_T *const patch = vp1;\
-  DDM_Schur_Complement_T *const S = vp2;\
-  double *const F = S->f;\
-  const Uint *const node  = S->inv;/* inverse map to node */\
-  const Uint N = S->Oi;/* number of inner mesh nodes */\
+  DDM_Schur_Complement_T *const _schur_S = vp2;\
+  double *const F = _schur_S->f;\
+  const Uint *const node = _schur_S->inv;/* inverse map to node */\
+  const Uint N = _schur_S->Oi;/* number of inner mesh nodes */\
   Uint n;
   
 #define DDM_SCHUR_EQ_OPEN \
@@ -204,9 +204,9 @@
 /* macro for boundary condition */
 #define DDM_SCHUR_BC_DECLARE \
   Boundary_Condition_T *const bc = vp1;\
-  DDM_Schur_Complement_T *const S = vp2;\
-  double *const F      = S->f;\
-  Uint *const map  = S->map;\
+  DDM_Schur_Complement_T *const _schur_S = vp2;\
+  double *const F  = _schur_S->f;\
+  Uint *const map  = _schur_S->map;\
   Patch_T *const patch = bc->patch;\
   const Uint *const node = bc->node;/* nodes at boundary */\
   const Uint N = bc->nn;/* number of nodes at boundary */\
