@@ -109,14 +109,14 @@
   const Uint Nj = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const Uint K0 = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const Uint Nk = patch->nn;/* total number of nodes */\
-  Uint i,j,k;
+  Uint schur_r,schur_c,k;
 
 
 /* macro for B part of jacobian */
 #define DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN \
-  DDM_SCHUR_JACOBIAN_LOOP_OPEN(i,0,Ni,ijk)\
+  DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_r,0,Ni,ijk)\
     Workspace_ijk_Jacobian(ijk)\
-    DDM_SCHUR_JACOBIAN_LOOP_OPEN(j,0,Nj,lmn)\
+    DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_c,0,Nj,lmn)\
       Workspace_lmn_Jacobian(lmn)
 
 #define DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE \
@@ -128,10 +128,10 @@
   if (S->NI)/* if there is any interface points then E is needed */\
   {\
     E_Trans = S->E_Trans->reg->A;\
-    DDM_SCHUR_JACOBIAN_LOOP_OPEN(i,0,Ni,ijk)\
+    DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_r,0,Ni,ijk)\
       Workspace_ijk_Jacobian(ijk)\
       DDM_SCHUR_JACOBIAN_LOOP_OPEN(k,K0,Nk,lmn)\
-        j = k-K0;\
+        schur_c = k-K0;\
         Workspace_lmn_Jacobian(lmn)
 
         
@@ -153,14 +153,14 @@
   const Uint Nj = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const Uint K0 = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const Uint Nk = patch->nn;/* total number of nodes */\
-  Uint i,j,k;
+  Uint schur_r,schur_c,k;
 
 
 /* macro for B part of outer boundary jacobian */
 #define DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN \
-  DDM_SCHUR_JACOBIAN_LOOP_OPEN(i,I0,Ni,ijk)\
+  DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_r,I0,Ni,ijk)\
     Workspace_ijk_Jacobian(ijk)\
-    DDM_SCHUR_JACOBIAN_LOOP_OPEN(j,0,Nj,lmn)\
+    DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_c,0,Nj,lmn)\
       Workspace_lmn_Jacobian(lmn)
 
 
@@ -173,10 +173,10 @@
   if (S->NI)/* if there is any interface points then E is needed */\
   {\
     E_Trans = S->E_Trans->reg->A;\
-    DDM_SCHUR_JACOBIAN_LOOP_OPEN(i,I0,Ni,ijk)\
+    DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_r,I0,Ni,ijk)\
       Workspace_ijk_Jacobian(ijk)\
       DDM_SCHUR_JACOBIAN_LOOP_OPEN(k,K0,Nk,lmn)\
-        j = k-K0;\
+        schur_c = k-K0;\
         Workspace_lmn_Jacobian(lmn)
 
 #define DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE \

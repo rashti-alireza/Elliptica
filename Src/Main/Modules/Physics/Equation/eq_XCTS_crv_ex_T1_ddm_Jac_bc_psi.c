@@ -72,7 +72,7 @@ void *eq_XCTS_curve_exc_T1_ddm_jacobian_bc_psi(void *vp1,void *vp2)
   double outerB_Bpart =
 kd[ijk==lmn];
 
-  B[i][j] = outerB_Bpart;
+  B[schur_r][schur_c] = outerB_Bpart;
 
   DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE
 
@@ -81,7 +81,7 @@ kd[ijk==lmn];
   double outerB_Epart =
 0;
 
-  E_Trans[j][i] = outerB_Epart;
+  E_Trans[schur_c][schur_r] = outerB_Epart;
 
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
   }/* end of if (patch->outerB) */
@@ -113,7 +113,7 @@ dpsi_D1[ijk] + bh_sConf_U2[ijk]*dpsi_D2[ijk]) + kd[ijk==lmn]*psi3*
 (_DiHSi_b - psi2*trK[ijk]) + psi3*(Jpsi_D0*bh_sConf_U0[ijk] + Jpsi_D1*
 bh_sConf_U1[ijk] + Jpsi_D2*bh_sConf_U2[ijk]);
 
-  B[i][j] = innerB_Bpart;
+  B[schur_r][schur_c] = innerB_Bpart;
 
   DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE
 
@@ -144,7 +144,7 @@ kd[ijk==lmn]*psi3_*(_DiHSi_e - psi2_*trK[ijk]) + psi3_*(Jpsi_D0*
 bh_sConf_U0[ijk] + Jpsi_D1*bh_sConf_U1[ijk] + Jpsi_D2*
 bh_sConf_U2[ijk]);
 
-  E_Trans[j][i] = innerB_Epart;
+  E_Trans[schur_c][schur_r] = innerB_Epart;
 
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
 

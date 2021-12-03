@@ -71,11 +71,11 @@ Declare =
 #    NOTE2: In Schur domain decomposition method we need two types of
 # matrices for Jacobian of Newton-Raphson scheme, matrix B and matrix E. 
 # Let's say Jx = -F in Newton-Raphson scheme; then,
-# B[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# B[schur_r][schur_c] = d[F(f(ijk))]/df(lmn), where schur_r = map[ijk], and schur_c = map[lmn] and
 # ijk takes their values ON BOUNDARY POINTS of a patch, 
 # and lmn runs over ALL BUT the interface points (interface
 # points are those located between two patches).
-# E[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# E[schur_r][schur_c] = d[F(f(ijk))]/df(lmn), where schur_r = map[ijk], and schur_c = map[lmn] and
 # ijk takes their values ON BOUNDARY POINTS and lmn runs over INTERFACE points.
 #
 #    PRAGMATICALLY:
@@ -103,7 +103,7 @@ Declare =
 outerB_Bpart = kd;
 
 
-`  B[i][j] = outerB_Bpart;\n`;
+`  B[schur_r][schur_c] = outerB_Bpart;\n`;
 `  DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE\n`;
 ###############################################
 
@@ -115,7 +115,7 @@ outerB_Bpart = kd;
 outerB_Epart = 0;
 
 
-`  E_Trans[j][i] = outerB_Epart;\n`;
+`  E_Trans[schur_c][schur_r] = outerB_Epart;\n`;
 `  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE`;
 ###############################################
 
@@ -140,7 +140,7 @@ Declare =
 innerB_Bpart = bh_sConf(i)*JalphaPsi(-i);
 
 
-`  B[i][j] = innerB_Bpart;\n`;
+`  B[schur_r][schur_c] = innerB_Bpart;\n`;
 `  DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE\n`;
 ###############################################
 
@@ -159,7 +159,7 @@ Declare =
 innerB_Epart = bh_sConf(i)*JalphaPsi(-i);
 
 
-`  E_Trans[j][i] = innerB_Epart;\n`;
+`  E_Trans[schur_c][schur_r] = innerB_Epart;\n`;
 `  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE\n`;
 ###############################################
 

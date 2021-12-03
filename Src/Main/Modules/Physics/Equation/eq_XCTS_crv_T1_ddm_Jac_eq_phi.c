@@ -147,7 +147,7 @@ dLn_of_enthalpy_b_U2 + 2*dLn_of_psi_b_U2));
   double Bpart_ =
 t1_b + t2_b;
 
-  B[i][j] = Bpart_;
+  B[schur_r][schur_c] = Bpart_;
 
   DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE
 
@@ -228,7 +228,7 @@ dLn_of_enthalpy_e_U2 + 2*dLn_of_psi_e_U2));
   double Epart_ =
 t1_e + t2_e;
 
-  E_Trans[j][i] = Epart_;
+  E_Trans[schur_c][schur_r] = Epart_;
 
   DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE
 
@@ -254,28 +254,13 @@ t1_e + t2_e;
       for (ijk = 0; ijk < nn; ++ijk)
         d_df[ijk] = dInterp_df(patch,X,ijk,0);
 
-      for (i = 0; i < Ni; ++i)
-      {
-        for (j = 0; j < Nj; ++j)
-        {
-         lmn = node[j];
-         B[i][j] += Att_Con_Num*d_df[lmn];
-        }
-      }
+      DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN
+      	 B[schur_r][schur_c] += Att_Con_Num*d_df[lmn];
+      DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE
 
-      if (S->NI)/* if there is any interface points then E is needed */
-      {
-        E_Trans = S->E_Trans->reg->A;
-        for (k = K0; k < Nk; ++k)
-        {
-          lmn = node[k];
-          j = k-K0;
-          for (i = 0; i < Ni; ++i)
-          {
-            E_Trans[j][i] += Att_Con_Num*d_df[lmn];
-          }
-        }
-      }/* end of if (S->NI) */
+      DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN
+        E_Trans[schur_c][schur_r] += Att_Con_Num*d_df[lmn];
+      DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE
       free(d_df);
     }
   }

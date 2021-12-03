@@ -109,12 +109,12 @@ Symm[ChrisConf(i,j,k) = ChrisConf(i,k,j)];
 #    NOTE2: In Schur domain decomposition method we need two types of
 # matrices for Jacobian of Newton-Raphson scheme, matrix B and matrix E. 
 # Let's say Jx = -F in Newton-Raphson scheme; then,
-# B[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# B[schur_r][schur_c] = d[F(f(ijk))]/df(lmn), where schur_r = map[ijk], and schur_c = map[lmn] and
 # ijk takes their values ON INNER POINTS
 # of a patch, namley those collocated points that don't reach boundary of
 # the patch, and lmn runs over ALL BUT the interface points (interface
 # points are those located between two patches).
-# E[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# E[schur_r][schur_c] = d[F(f(ijk))]/df(lmn), where schur_r = map[ijk], and schur_c = map[lmn] and
 # ijk takes their values ON INNER POINTS and lmn runs over INTERFACE points.
 #
 #    PRAGMATICALLY:
@@ -159,7 +159,7 @@ t2_b = igConf(-i,l)*Jphi(-l)*(drho0(i) + rho0*\
 
 Bpart_ = t1_b+t2_b;
 
-`  B[i][j] = Bpart_;\n`;
+`  B[schur_r][schur_c] = Bpart_;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE\n`;
 
 ###############################################
@@ -195,7 +195,7 @@ t2_e = igConf(-i,l)*Jphi(-l)*(drho0(i) + rho0*\
 Epart_ = t1_e+t2_e;
 
 
-`  E_Trans[j][i] = Epart_;\n`;
+`  E_Trans[schur_c][schur_r] = Epart_;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE\n`;
 
 ###############################################
@@ -224,29 +224,14 @@ Epart_ = t1_e+t2_e;
 `        d_df[ijk] = dInterp_df(patch,X,ijk,0);`
 ``
        ## B part:
-`      for (i = 0; i < Ni; ++i)`
-`      {`
-`        for (j = 0; j < Nj; ++j)`
-`        {`
-`         lmn = node[j];`
-`         B[i][j] += Att_Con_Num*d_df[lmn];` # for eq: phi = 0
-`        }`
-`      }`
+`      DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN`
+`      	 B[schur_r][schur_c] += Att_Con_Num*d_df[lmn];` # for eq: phi = 0
+`      DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE`
 ``
        ## E part:
-`      if (S->NI)/* if there is any interface points then E is needed */`
-`      {`
-`        E_Trans = S->E_Trans->reg->A;`
-`        for (k = K0; k < Nk; ++k)`
-`        {`
-`          lmn = node[k];`
-`          j = k-K0;`
-`          for (i = 0; i < Ni; ++i)`
-`          {`
-`            E_Trans[j][i] += Att_Con_Num*d_df[lmn];`
-`          }`
-`        }`
-`      }/* end of if (S->NI) */`
+`      DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN`
+`        E_Trans[schur_c][schur_r] += Att_Con_Num*d_df[lmn];`
+`      DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE`
 `      free(d_df);`
 `    }`
 `  }`

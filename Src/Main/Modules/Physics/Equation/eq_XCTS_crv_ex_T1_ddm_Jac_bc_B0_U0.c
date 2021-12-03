@@ -22,7 +22,7 @@ void *eq_XCTS_curve_exc_T1_ddm_jacobian_bc_B0_U0(void *vp1,void *vp2)
   double outerB_Bpart =
 kd[ijk==lmn];
 
-  B[i][j] = outerB_Bpart;
+  B[schur_r][schur_c] = outerB_Bpart;
 
   DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE
 
@@ -31,7 +31,7 @@ kd[ijk==lmn];
   double outerB_Epart =
 0;
 
-  E_Trans[j][i] = outerB_Epart;
+  E_Trans[schur_c][schur_r] = outerB_Epart;
 
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
   }/* end of if (patch->outerB) */
@@ -42,7 +42,7 @@ kd[ijk==lmn];
   double innerB_Bpart =
 kd[ijk==lmn];
 
-  B[i][j] = innerB_Bpart;
+  B[schur_r][schur_c] = innerB_Bpart;
 
   DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE
 
@@ -51,7 +51,7 @@ kd[ijk==lmn];
   double innerB_Epart =
 0;
 
-  E_Trans[j][i] = innerB_Epart;
+  E_Trans[schur_c][schur_r] = innerB_Epart;
 
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
 
