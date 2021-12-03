@@ -237,7 +237,8 @@ typedef enum JKD_FLAG_T
   JKD_iljm = 3/* if i==l && j == m */,
   JKD_ilkn = 5/* if i==l && k == n */,
   JKD_jmkn = 6/* if j==m && k == n */,
-  JKD_iljmkn = 7/* if i==l && j == m && k == n */,
+  JKD_iljmkn = 7/* if i==l && j == m && k == n, 
+                // NOTE: this is the default. DON'T change this! */,
   JKD_UNDEFINED/* not defined */
 }JKD_Flag_T;
 
