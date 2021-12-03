@@ -191,11 +191,11 @@
   DDM_Schur_Complement_T *const _schur_S = vp2;\
   double *const F = _schur_S->f;\
   const Uint *const _schur_node = _schur_S->inv;/* inverse map to node */\
-  const Uint N = _schur_S->Oi;/* number of inner mesh nodes */\
+  const Uint _schur_N = _schur_S->Oi;/* number of inner mesh nodes */\
   Uint n;
   
 #define DDM_SCHUR_EQ_OPEN \
-  DDM_SCHUR_JACOBIAN_LOOP_OPEN(n,0,N,ijk)
+  DDM_SCHUR_JACOBIAN_LOOP_OPEN(n,0,_schur_N,ijk)
 
 
 #define DDM_SCHUR_EQ_CLOSE \
@@ -209,11 +209,11 @@
   Uint *const map  = _schur_S->map;\
   Patch_T *const patch = bc->patch;\
   const Uint *const _schur_node = bc->node;/* nodes at boundary */\
-  const Uint N = bc->nn;/* number of nodes at boundary */\
+  const Uint _schur_N = bc->nn;/* number of nodes at boundary */\
   Uint n;
 
 #define DDM_SCHUR_BC_OPEN \
-  DDM_SCHUR_JACOBIAN_LOOP_OPEN(n,0,N,ijk)
+  DDM_SCHUR_JACOBIAN_LOOP_OPEN(n,0,_schur_N,ijk)
 
 #define DDM_SCHUR_BC_CLOSE \
   DDM_SCHUR_JACOBIAN_LOOP_CLOSE
