@@ -6,6 +6,9 @@
 
 #define MAX_STR_MATH_EQ_SOLVE_LIB (400)
 
+/* Kronecker Delta MUST be integer */
+#define J__KD_INT(i,j)  ( (i)==(j) ? 1 : 0)
+
 /* a short hand notation for: */
 #define J__JW  (patch->solving_man->jacobian_workspace)
 
@@ -75,7 +78,10 @@
 
 #define J__set_temp_vars_JW_lmn(Xlmn) \
     J__JW->lmn = (Xlmn);\
-    ijk_to_i_j_k((Xlmn),patch->n,&(J__JW->l),&(J__JW->m),&(J__JW->n));
+    ijk_to_i_j_k((Xlmn),patch->n,&(J__JW->l),&(J__JW->m),&(J__JW->n));\
+    J__JW->kd = J__KD_INT(J__JW->i,J__JW->l)*JKD_il + \
+                J__KD_INT(J__JW->j,J__JW->m)*JKD_jm + \
+                J__KD_INT(J__JW->k,J__JW->n)*JKD_kn;
 
 #endif
 
@@ -219,11 +225,26 @@
     
 #define DDM_SCHUR_BC_CLOSE }
 
-
+/* Kronecker delta for jacobian workspace
+// NOTE: the summation of each two-indexed KD must be an 
+// mutually exclusive number. */
+typedef enum JKD_FLAG_T
+{
+  JKD_zero = 0/* if no indices are equal */,
+  JKD_il = 1/* if i==l */,
+  JKD_jm = 2/* if j==m */,
+  JKD_kn = 4/* if k==n */,
+  JKD_iljm = 3/* if i==l && j == m */,
+  JKD_ilkn = 5/* if i==l && k == n */,
+  JKD_jmkn = 6/* if j==m && k == n */,
+  JKD_iljmkn = 7/* if i==l && j == m && k == n */,
+  JKD_UNDEFINED/* not defined */
+}JKD_Flag_T;
 
 /* forward declaration structures */
 struct FIELD_T;
 struct MATRIX_T;
+
 
 
 /* typedef function for Solve_Equations_T */
@@ -391,7 +412,7 @@ typedef struct SOLVING_MAN_T
     Uint l,m,n;/* components composed lmn */
     double sin_thi[3];/* sin(th[i,j,k]) i.e for each direction */
     double cos_thi[3];/* cos(th[i,j,k]) i.e for each direction */
-    
+    JKD_Flag_T kd;/* Kronecker delta for ijk and lmn */
   }jacobian_workspace[1];
   
   struct/* various method to solve */
