@@ -92,7 +92,7 @@ F_eq = \
  - beta(i)*dtrK(-i)*(psi4)*psi-2*pi*alphaPsi*(psi**-2)*(EConf+2*SConf);
 
 
-`  F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
+`  F[schur_r] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
 `  DDM_SCHUR_EQ_CLOSE\n`;
 
 `  return 0;`;

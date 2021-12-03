@@ -93,7 +93,7 @@ dalphaPsi_D2[ijk] - ddalphaPsi_D2D2[ijk]) - psi[ijk]*psi4*(beta_U0[ijk]*
 dtrK_D0[ijk] + beta_U1[ijk]*dtrK_D1[ijk] + beta_U2[ijk]*
 dtrK_D2[ijk]);
 
-  F[n] = F_eq;
+  F[schur_r] = F_eq;
 
   DDM_SCHUR_EQ_CLOSE
 
