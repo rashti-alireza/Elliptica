@@ -343,9 +343,6 @@ void test_dfs_df_Spectral_vs_Spectral(Grid_T *const grid)
     Patch_T *patch = grid->patch[p];
     
     Header_Jacobian
-    Init_Jacobian(J_D0)
-    Init_Jacobian(J_D1)
-    Init_Jacobian(J_D2)
     
     double diff, max = 0;
     FOR_ALL_ijk
@@ -378,9 +375,6 @@ void test_dfs_df_Spectral_vs_Spectral(Grid_T *const grid)
     printf("patch[%s]:\n"
       Pretty1"1st_order |J_numeric_spectral-J_analytic_spectral|_Linf = %e\n",patch->name,max);
     
-    Free_Jacobian(J_D0)
-    Free_Jacobian(J_D1)
-    Free_Jacobian(J_D2)
     Footer_Jacobian
   }
   
@@ -391,12 +385,6 @@ void test_dfs_df_Spectral_vs_Spectral(Grid_T *const grid)
     Patch_T *patch = grid->patch[p];
     
     Header_Jacobian
-    Init_Jacobian(J_D0D0)
-    Init_Jacobian(J_D0D1)
-    Init_Jacobian(J_D0D2)
-    Init_Jacobian(J_D1D1)
-    Init_Jacobian(J_D1D2)
-    Init_Jacobian(J_D2D2)
     
     double diff, max = 0;
     FOR_ALL_ijk
@@ -440,12 +428,6 @@ void test_dfs_df_Spectral_vs_Spectral(Grid_T *const grid)
     printf("patch[%s]: \n"
       Pretty1"2nd_order |J_numeric_spectral-J_analytic_spectral|_Linf = %e\n",patch->name,max);
     
-    Init_Jacobian(J_D0D0)
-    Init_Jacobian(J_D0D1)
-    Init_Jacobian(J_D0D2)
-    Init_Jacobian(J_D1D1)
-    Init_Jacobian(J_D1D2)
-    Init_Jacobian(J_D2D2)
     Footer_Jacobian
   }
   
