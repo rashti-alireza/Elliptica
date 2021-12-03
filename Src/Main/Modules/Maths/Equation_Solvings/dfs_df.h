@@ -235,6 +235,75 @@ typedef enum JTYPE_E
 /* Jacobain for equation */
 typedef void Js_Jacobian_eq_F(double **const J,Patch_T *const patch,JType_E jt_e);
 
+/* -> d/dX 2*sum_0^N (Tn(Xj) Tn(X))| X = Xi.
+// X = cos(th), (optimized). */
+INLINE double
+d_dXi_2xsum_0_N_Tnj_Tni_opt(const double thi/* X_i = cos(theta_i) */,
+                            const double thj/* X_j = cos(theta_j) */,
+                            Patch_T *const patch,
+                            Uint X_axis)
+{
+  double sum;
+  double lambda;
+  double sin_half_lambda;
+  double cos_half_lambda;
+  double csc_half_lambda;
+  double cot_half_lambda;
+    
+  if (EQL(thi,0.))
+  {
+    lambda = thj;
+    sin_half_lambda = sin(0.5*lambda);
+    cos_half_lambda = cos(0.5*lambda);
+    csc_half_lambda = 1./sin_half_lambda;
+    cot_half_lambda = cos_half_lambda/sin_half_lambda;
+    
+    sum = -2.*Jd2_dlambda2_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
+  }
+  else if (EQL(thi,M_PI))
+  {
+    lambda = thj+M_PI;
+    sin_half_lambda = sin(0.5*lambda);
+    cos_half_lambda = cos(0.5*lambda);
+    csc_half_lambda = 1./sin_half_lambda;
+    cot_half_lambda = cos_half_lambda/sin_half_lambda;
+    
+    sum = Jd2_dlambda2_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
+
+    lambda = thj-M_PI;
+    sin_half_lambda = sin(0.5*lambda);
+    cos_half_lambda = cos(0.5*lambda);
+    csc_half_lambda = 1./sin_half_lambda;
+    cot_half_lambda = cos_half_lambda/sin_half_lambda;
+    
+    sum += Jd2_dlambda2_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
+  }
+  else
+  {
+    lambda = thi+thj;
+    sin_half_lambda = sin(0.5*lambda);
+    cos_half_lambda = cos(0.5*lambda);
+    csc_half_lambda = 1./sin_half_lambda;
+    cot_half_lambda = cos_half_lambda/sin_half_lambda;
+    
+    sum = Jd_dlambda_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
+    
+    lambda = thi-thj;
+    sin_half_lambda = sin(0.5*lambda);
+    cos_half_lambda = cos(0.5*lambda);
+    csc_half_lambda = 1./sin_half_lambda;
+    cot_half_lambda = cos_half_lambda/sin_half_lambda;
+    
+    sum += Jd_dlambda_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
+    
+    sum *= -1./JW->sin_thi[X_axis];
+  }
+  
+  return sum;
+}
+
+
+
 void free_patch_SolMan_jacobian(Patch_T *const patch);
 void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types);
 void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types);
@@ -300,11 +369,11 @@ void set_Solving_Man_jacobian_workspace(Patch_T *const patch);
 
 
 
-static double
+INLINE double
 d_dXi_2xsum_0_N_Tnj_Tni_opt(const double thi/* X_i = cos(theta_i) */,
                             const double thj/* X_j = cos(theta_j) */,
                             Patch_T *const patch,
-                            Uint X_axis);
+                            Uint X_axis) INLINE_WARN_UNUSED_FUNC;
 
 static double
 d2_dXi2_2xsum_0_N_Tnj_Tni_opt(const double thi/* X_i = cos(theta_i) */,
