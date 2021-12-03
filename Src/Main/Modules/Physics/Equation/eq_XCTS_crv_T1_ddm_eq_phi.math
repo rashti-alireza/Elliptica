@@ -183,8 +183,9 @@ F_eq  = polish*t1+rho0*(t1+t2+t3+t4+t5)+drho0(-i)*t6(i);
 `      plan_interpolation(interp_phi0);`
 `      interp = execute_interpolation(interp_phi0);`
 `      free_interpolation(interp_phi0);`
-`      for (n = 0; n < N; ++n)`
+`      DDM_SCHUR_EQ_OPEN`
 `	 F[n] += Att_Con_Num*interp;` # phi = 0 at the center of NS
+`      DDM_SCHUR_EQ_CLOSE`
 `   }`
 `   `
 `  }`
