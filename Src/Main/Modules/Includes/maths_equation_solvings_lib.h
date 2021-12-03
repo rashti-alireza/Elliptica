@@ -109,12 +109,12 @@
   const Uint _schur_Nj = _schur_S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const Uint _schur_K0 = _schur_S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const Uint _schur_Nk = patch->nn;/* total number of nodes */\
-  Uint schur_r,schur_c,_schur_k;
+  Uint schur_ijk,schur_c,_schur_k;
 
 
 /* macro for B part of jacobian */
 #define DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN \
-  DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_r,0,_schur_Ni,ijk)\
+  DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_ijk,0,_schur_Ni,ijk)\
     Workspace_ijk_Jacobian(ijk)\
     DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_c,0,_schur_Nj,lmn)\
       Workspace_lmn_Jacobian(lmn)
@@ -128,7 +128,7 @@
   if (_schur_S->NI)/* if there is any interface points then E is needed */\
   {\
     E_Trans = _schur_S->E_Trans->reg->A;\
-    DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_r,0,_schur_Ni,ijk)\
+    DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_ijk,0,_schur_Ni,ijk)\
       Workspace_ijk_Jacobian(ijk)\
       DDM_SCHUR_JACOBIAN_LOOP_OPEN(_schur_k,_schur_K0,_schur_Nk,lmn)\
         schur_c = _schur_k - _schur_K0;\
@@ -153,12 +153,12 @@
   const Uint _schur_Nj = _schur_S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const Uint _schur_K0 = _schur_S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const Uint _schur_Nk = patch->nn;/* total number of nodes */\
-  Uint schur_r,schur_c,_schur_k;
+  Uint schur_ijk,schur_c,_schur_k;
 
 
 /* macro for B part of outer boundary jacobian */
 #define DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN \
-  DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_r,_schur_I0,_schur_Ni,ijk)\
+  DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_ijk,_schur_I0,_schur_Ni,ijk)\
     Workspace_ijk_Jacobian(ijk)\
     DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_c,0,_schur_Nj,lmn)\
       Workspace_lmn_Jacobian(lmn)
@@ -173,7 +173,7 @@
   if (_schur_S->NI)/* if there is any interface points then E is needed */\
   {\
     E_Trans = _schur_S->E_Trans->reg->A;\
-    DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_r,_schur_I0,_schur_Ni,ijk)\
+    DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_ijk,_schur_I0,_schur_Ni,ijk)\
       Workspace_ijk_Jacobian(ijk)\
       DDM_SCHUR_JACOBIAN_LOOP_OPEN(_schur_k,_schur_K0,_schur_Nk,lmn)\
         schur_c = _schur_k - _schur_K0;\
@@ -192,10 +192,10 @@
   double *const F = _schur_S->f;\
   const Uint *const _schur_node = _schur_S->inv;/* inverse map to node */\
   const Uint _schur_N = _schur_S->Oi;/* number of inner mesh nodes */\
-  Uint schur_r;
+  Uint schur_ijk;
   
 #define DDM_SCHUR_EQ_OPEN \
-  DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_r,0,_schur_N,ijk)
+  DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_ijk,0,_schur_N,ijk)
 
 
 #define DDM_SCHUR_EQ_CLOSE \
@@ -210,10 +210,10 @@
   Patch_T *const patch = bc->patch;\
   const Uint *const _schur_node = bc->node;/* nodes at boundary */\
   const Uint _schur_N = bc->nn;/* number of nodes at boundary */\
-  Uint schur_r;
+  Uint schur_ijk;
 
 #define DDM_SCHUR_BC_OPEN \
-  DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_r,0,_schur_N,ijk)
+  DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_ijk,0,_schur_N,ijk)
 
 #define DDM_SCHUR_BC_CLOSE \
   DDM_SCHUR_JACOBIAN_LOOP_CLOSE

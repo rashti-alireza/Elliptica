@@ -91,7 +91,7 @@ JalphaPsi_D2 - JJalphaPsi_D2D2) - kd[ijk==lmn]*(0.875*aij2_B/psi4_B +
 trRicciConf[ijk]) - 2*M_PI*kd[ijk==lmn]*(EConf[ijk] + 2*SConf[ijk])/
 pow(psi[ijk], 2);
 
-  B[schur_r][schur_c] = Bpart;
+  B[schur_ijk][schur_c] = Bpart;
 
   DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE
 
@@ -132,7 +132,7 @@ JalphaPsi_D2 - JJalphaPsi_D2D2) - kd[ijk==lmn]*(0.875*aij2_E/psi4_E +
 trRicciConf[ijk]) - 2*M_PI*kd[ijk==lmn]*(EConf[ijk] + 2*SConf[ijk])/
 pow(psi[ijk], 2);
 
-  E_Trans[schur_c][schur_r] = Epart;
+  E_Trans[schur_c][schur_ijk] = Epart;
 
   DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE
 

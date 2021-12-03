@@ -92,7 +92,7 @@ JJpsi_D1D2*igConf_U1U2[ijk] + JJpsi_D2D2*igConf_U2U2[ijk] -
 kd[ijk==lmn]*(2*M_PI*EConf[ijk]/pow(psi[ijk], 2) + 0.875*aij2_B/psi4_B +
 (5.0/12.0)*psi4_B*pow(trK[ijk], 2) + (1.0/8.0)*trRicciConf[ijk]);
 
-  B[schur_r][schur_c] = Bpart;
+  B[schur_ijk][schur_c] = Bpart;
 
   DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE
 
@@ -135,7 +135,7 @@ JJpsi_D1D2*igConf_U1U2[ijk] + JJpsi_D2D2*igConf_U2U2[ijk] -
 kd[ijk==lmn]*(2*M_PI*EConf[ijk]/pow(psi[ijk], 2) + 0.875*aij2_E/psi4_E +
 (5.0/12.0)*psi4_E*pow(trK[ijk], 2) + (1.0/8.0)*trRicciConf[ijk]);
 
-  E_Trans[schur_c][schur_r] = Epart;
+  E_Trans[schur_c][schur_ijk] = Epart;
 
   DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE
 

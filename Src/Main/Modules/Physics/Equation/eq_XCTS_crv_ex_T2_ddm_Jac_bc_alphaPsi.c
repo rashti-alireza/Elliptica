@@ -28,7 +28,7 @@ void *eq_XCTS_curve_exc_T2_ddm_jacobian_bc_alphaPsi(void *vp1,void *vp2)
   double outerB_Bpart =
 kd[ijk==lmn];
 
-  B[schur_r][schur_c] = outerB_Bpart;
+  B[schur_ijk][schur_c] = outerB_Bpart;
 
   DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE
 
@@ -37,7 +37,7 @@ kd[ijk==lmn];
   double outerB_Epart =
 0;
 
-  E_Trans[schur_c][schur_r] = outerB_Epart;
+  E_Trans[schur_c][schur_ijk] = outerB_Epart;
 
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
   }/* end of if (patch->outerB) */
@@ -52,7 +52,7 @@ kd[ijk==lmn];
 JalphaPsi_D0*bh_sConf_U0[ijk] + JalphaPsi_D1*bh_sConf_U1[ijk] +
 JalphaPsi_D2*bh_sConf_U2[ijk];
 
-  B[schur_r][schur_c] = innerB_Bpart;
+  B[schur_ijk][schur_c] = innerB_Bpart;
 
   DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE
 
@@ -65,7 +65,7 @@ JalphaPsi_D2*bh_sConf_U2[ijk];
 JalphaPsi_D0*bh_sConf_U0[ijk] + JalphaPsi_D1*bh_sConf_U1[ijk] +
 JalphaPsi_D2*bh_sConf_U2[ijk];
 
-  E_Trans[schur_c][schur_r] = innerB_Epart;
+  E_Trans[schur_c][schur_ijk] = innerB_Epart;
 
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
 

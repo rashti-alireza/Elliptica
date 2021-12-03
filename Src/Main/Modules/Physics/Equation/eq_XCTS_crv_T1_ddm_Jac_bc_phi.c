@@ -41,7 +41,7 @@ igConf_U1U1[ijk] + Jphi_D1*drho0_D2[ijk]*igConf_U1U2[ijk] + Jphi_D2*
 drho0_D0[ijk]*igConf_U0U2[ijk] + Jphi_D2*drho0_D1[ijk]*
 igConf_U1U2[ijk] + Jphi_D2*drho0_D2[ijk]*igConf_U2U2[ijk];
 
-  B[schur_r][schur_c] = outerB_Bpart;
+  B[schur_ijk][schur_c] = outerB_Bpart;
 
   DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE
 
@@ -58,7 +58,7 @@ igConf_U1U1[ijk] + Jphi_D1*drho0_D2[ijk]*igConf_U1U2[ijk] + Jphi_D2*
 drho0_D0[ijk]*igConf_U0U2[ijk] + Jphi_D2*drho0_D1[ijk]*
 igConf_U1U2[ijk] + Jphi_D2*drho0_D2[ijk]*igConf_U2U2[ijk];
 
-  E_Trans[schur_c][schur_r] = outerB_Epart;
+  E_Trans[schur_c][schur_ijk] = outerB_Epart;
 
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
   }/* end of if (patch->outerB) */
@@ -69,7 +69,7 @@ igConf_U1U2[ijk] + Jphi_D2*drho0_D2[ijk]*igConf_U2U2[ijk];
   double innerB_Bpart =
 0;
 
-  B[schur_r][schur_c] = innerB_Bpart;
+  B[schur_ijk][schur_c] = innerB_Bpart;
 
   DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE
 
@@ -78,7 +78,7 @@ igConf_U1U2[ijk] + Jphi_D2*drho0_D2[ijk]*igConf_U2U2[ijk];
   double innerB_Epart =
 0;
 
-  E_Trans[schur_c][schur_r] = innerB_Epart;
+  E_Trans[schur_c][schur_ijk] = innerB_Epart;
 
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
 
