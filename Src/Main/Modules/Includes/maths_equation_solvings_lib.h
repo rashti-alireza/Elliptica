@@ -129,7 +129,7 @@
   Patch_T *const patch  = vp1;\
   DDM_Schur_Complement_T *const _schur_S = vp2;\
   double **const schur_B = _schur_S->B->reg->A;\
-  double **E_Trans = 0;\
+  double **schur_Et = 0;\
   const Uint *const _schur_node = _schur_S->inv;\
   const Uint _schur_Ni = _schur_S->Oi;/* number of inner mesh nodes */\
   const Uint _schur_Nj = _schur_S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
@@ -153,7 +153,7 @@
 #define DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN \
   if (_schur_S->NI)/* if there is any interface points then E is needed */\
   {\
-    E_Trans = _schur_S->E_Trans->reg->A;\
+    schur_Et = _schur_S->E_Trans->reg->A;\
     DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_ijk,0,_schur_Ni,ijk)\
       Workspace_ijk_Jacobian(ijk)\
       DDM_SCHUR_JACOBIAN_LOOP_OPEN(_schur_k,_schur_K0,_schur_Nk,lmn)\
@@ -172,7 +172,7 @@
   Patch_T *const patch  = vp1;\
   DDM_Schur_Complement_T *const _schur_S = vp2;\
   double **const schur_B = _schur_S->B->reg->A;\
-  double **E_Trans = 0;\
+  double **schur_Et = 0;\
   const Uint *const _schur_node = _schur_S->inv;\
   const Uint _schur_I0 = _schur_S->Oi;/* number of inner mesh nodes */\
   const Uint _schur_Ni = _schur_S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
@@ -198,7 +198,7 @@
 #define DDM_SCHUR_JACOBIAN_BC_Epart_OPEN \
   if (_schur_S->NI)/* if there is any interface points then E is needed */\
   {\
-    E_Trans = _schur_S->E_Trans->reg->A;\
+    schur_Et = _schur_S->E_Trans->reg->A;\
     DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_ijk,_schur_I0,_schur_Ni,ijk)\
       Workspace_ijk_Jacobian(ijk)\
       DDM_SCHUR_JACOBIAN_LOOP_OPEN(_schur_k,_schur_K0,_schur_Nk,lmn)\

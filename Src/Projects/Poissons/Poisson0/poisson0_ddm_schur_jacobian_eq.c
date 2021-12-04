@@ -39,7 +39,7 @@ dfxx_df + dfyy_df + dfzz_df;
   double Epart =
 dfxx_df + dfyy_df + dfzz_df;
 
-  E_Trans[schur_lmn][schur_ijk] = Epart;
+  schur_Et[schur_lmn][schur_ijk] = Epart;
 
   DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE
   Free_Jacobian(dfxx_df)

@@ -63,7 +63,7 @@ Symm[igConf(i,j)   = igConf(j,i)];
 # ijk takes their values ON BOUNDARY POINTS of a patch, 
 # and lmn runs over ALL BUT the interface points (interface
 # points are those located between two patches).
-# E[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and schur_lmn = map[lmn] and
+# schur_E[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and schur_lmn = map[lmn] and
 # ijk takes their values ON BOUNDARY POINTS and lmn runs over INTERFACE points.
 #
 #    PRAGMATICALLY:
@@ -117,7 +117,7 @@ Declare =
 outerB_Epart = igConf(i,l)*Jphi(-l)*drho0(-i);
 
 
-`  E_Trans[schur_lmn][schur_ijk] = outerB_Epart;\n`;
+`  schur_Et[schur_lmn][schur_ijk] = outerB_Epart;\n`;
 `  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE`;
 ###############################################
 
@@ -148,7 +148,7 @@ innerB_Bpart = 0;
 innerB_Epart = 0;
 
 
-`  E_Trans[schur_lmn][schur_ijk] = innerB_Epart;\n`;
+`  schur_Et[schur_lmn][schur_ijk] = innerB_Epart;\n`;
 `  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE\n`;
 ###############################################
 

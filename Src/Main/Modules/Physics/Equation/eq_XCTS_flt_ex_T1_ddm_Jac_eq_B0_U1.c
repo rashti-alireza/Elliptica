@@ -165,7 +165,7 @@ JB0_D2*igConf_U1U2[ijk]);
 t1_E_U1 + t2_E_U1 + t3_E_U1 + t4_E_U1 + t5_E_U1;
 
 
-  E_Trans[schur_lmn][schur_ijk] = Epart_U1;
+  schur_Et[schur_lmn][schur_ijk] = Epart_U1;
 
   DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE
 

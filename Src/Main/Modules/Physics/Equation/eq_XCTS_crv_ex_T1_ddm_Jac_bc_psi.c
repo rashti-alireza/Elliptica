@@ -81,7 +81,7 @@ kd[ijk==lmn];
   double outerB_Epart =
 0;
 
-  E_Trans[schur_lmn][schur_ijk] = outerB_Epart;
+  schur_Et[schur_lmn][schur_ijk] = outerB_Epart;
 
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
   }/* end of if (patch->outerB) */
@@ -144,7 +144,7 @@ kd[ijk==lmn]*psi3_*(_DiHSi_e - psi2_*trK[ijk]) + psi3_*(Jpsi_D0*
 bh_sConf_U0[ijk] + Jpsi_D1*bh_sConf_U1[ijk] + Jpsi_D2*
 bh_sConf_U2[ijk]);
 
-  E_Trans[schur_lmn][schur_ijk] = innerB_Epart;
+  schur_Et[schur_lmn][schur_ijk] = innerB_Epart;
 
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
 

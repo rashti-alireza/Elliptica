@@ -51,7 +51,7 @@ Declare =
 # ijk takes their values ON BOUNDARY POINTS of a patch, 
 # and lmn runs over ALL BUT the interface points (interface
 # points are those located between two patches).
-# E[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and schur_lmn = map[lmn] and
+# schur_E[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and schur_lmn = map[lmn] and
 # ijk takes their values ON BOUNDARY POINTS and lmn runs over INTERFACE points.
 # For more info look at the first paper of Elliptica regarding Schur domain
 # decomposition and also other real case equations in this dir.
@@ -108,7 +108,7 @@ Declare =
 outerB_Epart = ...;
 
 
-`  E_Trans[schur_lmn][schur_ijk] = outerB_Epart;`;
+`  schur_Et[schur_lmn][schur_ijk] = outerB_Epart;`;
 `  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE`;
 ###############################################
 
@@ -143,7 +143,7 @@ innerB_Bpart = 0;
 innerB_Epart = 0;
 
 
-`  E_Trans[schur_lmn][schur_ijk] = innerB_Epart;`;
+`  schur_Et[schur_lmn][schur_ijk] = innerB_Epart;`;
 `  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE`;
 ###############################################
 

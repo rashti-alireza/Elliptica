@@ -47,7 +47,7 @@ Declare =
 # ijk takes their values ON BOUNDARY POINTS of a patch, 
 # and lmn runs over ALL BUT the interface points (interface
 # points are those located between two patches).
-# E[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and
+# schur_E[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and
 # schur_lmn = map[lmn] and
 # ijk takes their values ON BOUNDARY POINTS and lmn runs over INTERFACE points.
 #
@@ -82,7 +82,7 @@ Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN"];
 # E matrix:
 outerB_Epart = 0;
 
-Ccode["  E_Trans[schur_lmn][schur_ijk] = outerB_Epart;"];
+Ccode["  schur_Et[schur_lmn][schur_ijk] = outerB_Epart;"];
 ``
 Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE"];
 Ccode["  }/* end of if (patch->outerB) */"];
@@ -104,7 +104,7 @@ Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN"];
 # E matrix:
 innerB_Epart = 0;
 
-Ccode["  E_Trans[schur_lmn][schur_ijk] = innerB_Epart;"];
+Ccode["  schur_Et[schur_lmn][schur_ijk] = innerB_Epart;"];
 ``
 Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE\n"];
 

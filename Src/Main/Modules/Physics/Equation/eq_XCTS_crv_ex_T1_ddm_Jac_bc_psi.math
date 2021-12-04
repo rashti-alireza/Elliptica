@@ -87,7 +87,7 @@ Symm[ChrisConf(i,j,k)  = ChrisConf(i,k,j)];
 # ijk takes their values ON BOUNDARY POINTS of a patch, 
 # and lmn runs over ALL BUT the interface points (interface
 # points are those located between two patches).
-# E[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and schur_lmn = map[lmn] and
+# schur_E[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and schur_lmn = map[lmn] and
 # ijk takes their values ON BOUNDARY POINTS and lmn runs over INTERFACE points.
 #
 #    PRAGMATICALLY:
@@ -127,7 +127,7 @@ outerB_Bpart = kd;
 outerB_Epart = 0;
 
 
-`  E_Trans[schur_lmn][schur_ijk] = outerB_Epart;\n`;
+`  schur_Et[schur_lmn][schur_ijk] = outerB_Epart;\n`;
 `  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE`;
 ###############################################
 
@@ -193,7 +193,7 @@ innerB_Epart = psi3_*bh_sConf(i)*Jpsi(-i)      + \
                kd*3*psi2_*bh_sConf(i)*dpsi(-i) + \
 	       kd*psi3_*(_DiHSi_e-trK*(psi2_));
 
-`  E_Trans[schur_lmn][schur_ijk] = innerB_Epart;\n`;
+`  schur_Et[schur_lmn][schur_ijk] = innerB_Epart;\n`;
 `  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE\n`;
 ###############################################
 

@@ -620,7 +620,7 @@ t10_E_U1 + t1_E_U1 + t2_E_U1 + t3_E_U1 + t4_E_U1 + t5_E_U1 + t6_E_U1 +
 t7_E_U1 + t8_E_U1 + t9_E_U1;
 
 
-  E_Trans[schur_lmn][schur_ijk] = Epart_U1;
+  schur_Et[schur_lmn][schur_ijk] = Epart_U1;
 
   DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE
 

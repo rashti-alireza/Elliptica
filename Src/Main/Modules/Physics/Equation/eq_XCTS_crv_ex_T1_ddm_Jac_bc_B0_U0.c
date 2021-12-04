@@ -31,7 +31,7 @@ kd[ijk==lmn];
   double outerB_Epart =
 0;
 
-  E_Trans[schur_lmn][schur_ijk] = outerB_Epart;
+  schur_Et[schur_lmn][schur_ijk] = outerB_Epart;
 
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
   }/* end of if (patch->outerB) */
@@ -51,7 +51,7 @@ kd[ijk==lmn];
   double innerB_Epart =
 0;
 
-  E_Trans[schur_lmn][schur_ijk] = innerB_Epart;
+  schur_Et[schur_lmn][schur_ijk] = innerB_Epart;
 
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
 

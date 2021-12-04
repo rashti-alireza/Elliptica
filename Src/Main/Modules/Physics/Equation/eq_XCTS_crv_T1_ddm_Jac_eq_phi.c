@@ -228,7 +228,7 @@ dLn_of_enthalpy_e_U2 + 2*dLn_of_psi_e_U2));
   double Epart_ =
 t1_e + t2_e;
 
-  E_Trans[schur_lmn][schur_ijk] = Epart_;
+  schur_Et[schur_lmn][schur_ijk] = Epart_;
 
   DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE
 
@@ -259,7 +259,7 @@ t1_e + t2_e;
       DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE
 
       DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN
-        E_Trans[schur_lmn][schur_ijk] += Att_Con_Num*d_df[lmn];
+        schur_Et[schur_lmn][schur_ijk] += Att_Con_Num*d_df[lmn];
       DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE
       free(d_df);
     }

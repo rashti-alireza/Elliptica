@@ -87,7 +87,7 @@ Jphi_D1*gConf_D1D1[ijk]*s_e_U1 + Jphi_D1*gConf_D1D2[ijk]*s_e_U2 +
 Jphi_D2*gConf_D0D2[ijk]*s_e_U0 + Jphi_D2*gConf_D1D2[ijk]*s_e_U1 +
 Jphi_D2*gConf_D2D2[ijk]*s_e_U2;
 
-  E_Trans[schur_lmn][schur_ijk] = outerB_Epart;
+  schur_Et[schur_lmn][schur_ijk] = outerB_Epart;
 
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
   }/* end of if (patch->outerB) */
@@ -107,7 +107,7 @@ Jphi_D2*gConf_D2D2[ijk]*s_e_U2;
   double innerB_Epart =
 0;
 
-  E_Trans[schur_lmn][schur_ijk] = innerB_Epart;
+  schur_Et[schur_lmn][schur_ijk] = innerB_Epart;
 
   DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE
 

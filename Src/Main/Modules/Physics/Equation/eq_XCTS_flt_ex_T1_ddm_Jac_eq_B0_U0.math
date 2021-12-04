@@ -82,7 +82,7 @@ Symm[dChrisConf(i,j,k,l)  = dChrisConf(i,k,j,l)];
 # of a patch, namley those collocated points that don't reach boundary of
 # the patch, and lmn runs over ALL BUT the interface points (interface
 # points are those located between two patches).
-# E[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and schur_lmn = map[lmn] and
+# schur_E[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and schur_lmn = map[lmn] and
 # ijk takes their values ON INNER POINTS and lmn runs over INTERFACE points.
 #
 #    PRAGMATICALLY:
@@ -158,7 +158,7 @@ Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i);
 
 
 
-`  E_Trans[schur_lmn][schur_ijk] = Epart_U0;\n`;
+`  schur_Et[schur_lmn][schur_ijk] = Epart_U0;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE\n`;
 ###############################################
 ``
