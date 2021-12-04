@@ -208,9 +208,11 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       printf("      |---> Newton step '%d':\n",step+1);
       pr_line_custom('~');
       
-      DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+      DDM_SCHUR_COMPLEMENT_OpenMP_SET_THREADS(omp parallel for)
       for (p = 0; p < npatch; ++p)
       {
+        printf("my thread num = %d\n",omp_get_thread_num());\
+
         Patch_T *patch = grid->patch[p];
         double tic = get_time_sec();
         char *msg  = calloc(MSG_SIZE2,1); 
