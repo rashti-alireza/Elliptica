@@ -30,7 +30,7 @@ void *eq_XCTS_curve_exc_T2_ddm_bc_alphaPsi(void *vp1,void *vp2)
   double outerB_F = 
 alphaPsi[ijk] - 1;
 
-  F[map[ijk]] = outerB_F;
+  schur_F[schur_ijk] = outerB_F;
 
   DDM_SCHUR_BC_CLOSE
   }/* end of if (patch->outerB) */
@@ -43,7 +43,7 @@ alphaPsi[ijk] - 1;
 bh_sConf_U0[ijk]*dalphaPsi_D0[ijk] + bh_sConf_U1[ijk]*
 dalphaPsi_D1[ijk] + bh_sConf_U2[ijk]*dalphaPsi_D2[ijk];
 
-  F[map[ijk]] = innerB_F;
+  schur_F[schur_ijk] = innerB_F;
 
   DDM_SCHUR_BC_CLOSE
   }/* end of else if (patch->innerB) */

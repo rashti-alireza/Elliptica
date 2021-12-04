@@ -61,7 +61,7 @@ Declare =
 outerB_F = alphaPsi - 1;
 
 
-`  F[map[ijk]] = outerB_F;\n`;
+`  schur_F[schur_ijk] = outerB_F;\n`;
 `  DDM_SCHUR_BC_CLOSE`;
 `  }/* end of if (patch->outerB) */`;
 
@@ -75,7 +75,7 @@ outerB_F = alphaPsi - 1;
 # dalphaPsi/dr = 0.
 innerB_F = bh_sConf(i)*dalphaPsi(-i);
 
-`  F[map[ijk]] = innerB_F;\n`;
+`  schur_F[schur_ijk] = innerB_F;\n`;
 `  DDM_SCHUR_BC_CLOSE`;
 
 `  }/* end of else if (patch->innerB) */`;

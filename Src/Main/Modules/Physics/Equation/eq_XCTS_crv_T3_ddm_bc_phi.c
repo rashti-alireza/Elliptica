@@ -69,7 +69,7 @@ gConf_D1D2[ijk]*s_U1*(W_U2[ijk] - beta_U2[ijk]*u0[ijk]) +
 gConf_D1D2[ijk]*s_U2*(W_U1[ijk] - beta_U1[ijk]*u0[ijk]) +
 gConf_D2D2[ijk]*s_U2*(W_U2[ijk] - beta_U2[ijk]*u0[ijk]));
 
-  F[map[ijk]] = outerB_F;
+  schur_F[schur_ijk] = outerB_F;
 
   DDM_SCHUR_BC_CLOSE
   }/* end of if (patch->outerB) */
@@ -80,7 +80,7 @@ gConf_D2D2[ijk]*s_U2*(W_U2[ijk] - beta_U2[ijk]*u0[ijk]));
   double innerB_F = 
 0;
 
-  F[map[ijk]] = innerB_F;
+  schur_F[schur_ijk] = innerB_F;
 
   DDM_SCHUR_BC_CLOSE
   }/* end of else if (patch->innerB) */

@@ -60,7 +60,7 @@ Declare =
 outerB_F = B0_U1-v1_boost;
 
 
-`  F[map[ijk]] = outerB_F;\n`;
+`  schur_F[schur_ijk] = outerB_F;\n`;
 `  DDM_SCHUR_BC_CLOSE`;
 `  }/* end of if (patch->outerB) */`;
 
@@ -73,7 +73,7 @@ outerB_F = B0_U1-v1_boost;
 # bc equation for inner boundary at ijk point:
 innerB_F = B0_U1+B1_U1 - ibc_beta_U1;
 
-`  F[map[ijk]] = innerB_F;\n`;
+`  schur_F[schur_ijk] = innerB_F;\n`;
 `  DDM_SCHUR_BC_CLOSE`;
 `  }/* end of else if (patch->innerB) */`;
 

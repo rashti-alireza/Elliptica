@@ -31,7 +31,7 @@ void *eq_XCTS_curve_exc_T1_ddm_bc_B0_U2(void *vp1,void *vp2)
   double outerB_F = 
 B0_U2[ijk] - v2_boost;
 
-  F[map[ijk]] = outerB_F;
+  schur_F[schur_ijk] = outerB_F;
 
   DDM_SCHUR_BC_CLOSE
   }/* end of if (patch->outerB) */
@@ -42,7 +42,7 @@ B0_U2[ijk] - v2_boost;
   double innerB_F = 
 B0_U2[ijk] + B1_U2[ijk] - ibc_beta_U2[ijk];
 
-  F[map[ijk]] = innerB_F;
+  schur_F[schur_ijk] = innerB_F;
 
   DDM_SCHUR_BC_CLOSE
   }/* end of else if (patch->innerB) */

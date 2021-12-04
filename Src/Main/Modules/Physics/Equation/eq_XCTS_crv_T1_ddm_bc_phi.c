@@ -56,7 +56,7 @@ dphi_D2[ijk]*drho0_D2[ijk]*igConf_U2U2[ijk] + psi4*(drho0_D0[ijk]*
 (W_U1[ijk] - beta_U1[ijk]*enthalpy[ijk]*u0[ijk]) + drho0_D2[ijk]*
 (W_U2[ijk] - beta_U2[ijk]*enthalpy[ijk]*u0[ijk]));
 
-  F[map[ijk]] = outerB_F;
+  schur_F[schur_ijk] = outerB_F;
 
   DDM_SCHUR_BC_CLOSE
   }/* end of if (patch->outerB) */
@@ -67,7 +67,7 @@ dphi_D2[ijk]*drho0_D2[ijk]*igConf_U2U2[ijk] + psi4*(drho0_D0[ijk]*
   double innerB_F = 
 0;
 
-  F[map[ijk]] = innerB_F;
+  schur_F[schur_ijk] = innerB_F;
 
   DDM_SCHUR_BC_CLOSE
   }/* end of else if (patch->innerB) */

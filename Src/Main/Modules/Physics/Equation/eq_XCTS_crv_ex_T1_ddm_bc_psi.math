@@ -66,7 +66,7 @@ Symm[ChrisConf(i,j,k)  = ChrisConf(i,k,j)];
 outerB_F = psi-1;
 
 
-`  F[map[ijk]] = outerB_F;\n`;
+`  schur_F[schur_ijk] = outerB_F;\n`;
 `  DDM_SCHUR_BC_CLOSE`;
 `  }/* end of if (patch->outerB) */`;
 
@@ -87,10 +87,10 @@ innerB_F = bh_sConf(i)*dpsi(-i) + \
            psi*_DiHSi/4 - trK*(psi**3)/6 + _AIJsisj/4/psi3;
 
 ## multiply by psi3 to get rid of _AIJsisj in Jacobian
-`  F[map[ijk]] = psi3*innerB_F;\n`;
+`  schur_F[schur_ijk] = psi3*innerB_F;\n`;
 
 ## no multiply by psi3
-#`  F[map[ijk]] = innerB_F;\n`;
+#`  schur_F[schur_ijk] = innerB_F;\n`;
 
 `  DDM_SCHUR_BC_CLOSE`;
 

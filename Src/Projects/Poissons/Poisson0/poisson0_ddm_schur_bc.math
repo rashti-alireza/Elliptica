@@ -47,7 +47,7 @@ Ccode["  DDM_SCHUR_BC_OPEN"];
 	 # bc equation for outer boundary:
 	 outerB_F = alpha - 1/(1 + (x**2) + (y**2) + (z**2))**0.5;
 
-Ccode["  F[map[ijk]] = outerB_F;"];
+Ccode["  schur_F[schur_ijk] = outerB_F;"];
 Ccode["  DDM_SCHUR_BC_CLOSE"];
 Ccode["  }/* end of if (patch->outerB) */"];
 
@@ -62,7 +62,7 @@ Ccode["  DDM_SCHUR_BC_OPEN"];
          # bc equation for outer boundary:
          innerB_F = alpha - 1/(1 + (x**2) + (y**2) + (z**2))**0.5;
 
-Ccode["  F[map[ijk]] = innerB_F;"];
+Ccode["  schur_F[schur_ijk] = innerB_F;"];
 Ccode["  DDM_SCHUR_BC_CLOSE"];
 Ccode["  }/* end of else if (patch->innerB) */"];
 

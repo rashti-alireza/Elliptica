@@ -66,7 +66,7 @@ outerB_F = igConf(i,l)*dphi(-l)*drho0(-i) + \
 	   psi4*drho0(-i)*(W(i)-enthalpy*u0*beta(i));
 
 
-`  F[map[ijk]] = outerB_F;\n`;
+`  schur_F[schur_ijk] = outerB_F;\n`;
 `  DDM_SCHUR_BC_CLOSE`;
 `  }/* end of if (patch->outerB) */`;
 
@@ -80,7 +80,7 @@ outerB_F = igConf(i,l)*dphi(-l)*drho0(-i) + \
 innerB_F = 0;
 
 
-`  F[map[ijk]] = innerB_F;\n`;
+`  schur_F[schur_ijk] = innerB_F;\n`;
 `  DDM_SCHUR_BC_CLOSE`;
 `  }/* end of else if (patch->innerB) */`;
 

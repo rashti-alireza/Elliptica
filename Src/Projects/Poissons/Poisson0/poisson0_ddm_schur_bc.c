@@ -24,7 +24,7 @@ void *bc_alpha(void *vp1,void *vp2)
 alpha[ijk] - pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 1, -
 0.5);
 
-  F[map[ijk]] = outerB_F;
+  schur_F[schur_ijk] = outerB_F;
   DDM_SCHUR_BC_CLOSE
   }/* end of if (patch->outerB) */
   else if (patch->innerB)/* at inner boundary */
@@ -37,7 +37,7 @@ alpha[ijk] - pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 1, -
 alpha[ijk] - pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 1, -
 0.5);
 
-  F[map[ijk]] = innerB_F;
+  schur_F[schur_ijk] = innerB_F;
   DDM_SCHUR_BC_CLOSE
   }/* end of else if (patch->innerB) */
   return 0;

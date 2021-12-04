@@ -70,7 +70,7 @@ void *eq_XCTS_curve_exc_T1_ddm_bc_psi(void *vp1,void *vp2)
   double outerB_F = 
 psi[ijk] - 1;
 
-  F[map[ijk]] = outerB_F;
+  schur_F[schur_ijk] = outerB_F;
 
   DDM_SCHUR_BC_CLOSE
   }/* end of if (patch->outerB) */
@@ -158,7 +158,7 @@ pow(gConf_D2D2[ijk], 2);
 dpsi_D0[ijk] + bh_sConf_U1[ijk]*dpsi_D1[ijk] + bh_sConf_U2[ijk]*
 dpsi_D2[ijk] - 1.0/6.0*pow(psi[ijk], 3)*trK[ijk];
 
-  F[map[ijk]] = psi3*innerB_F;
+  schur_F[schur_ijk] = psi3*innerB_F;
 
   DDM_SCHUR_BC_CLOSE
   }/* end of else if (patch->innerB) */

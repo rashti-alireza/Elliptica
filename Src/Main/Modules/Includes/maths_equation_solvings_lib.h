@@ -232,14 +232,15 @@
   Boundary_Condition_T *const bc = vp1;\
   DDM_Schur_Complement_T *const _schur_S = vp2;\
   double *const schur_F  = _schur_S->f;\
-  Uint *const map  = _schur_S->map;\
+  Uint *const _schur_map = _schur_S->map;\
   Patch_T *const patch = bc->patch;\
   const Uint *const _schur_node = bc->node;/* nodes at boundary */\
   const Uint _schur_N = bc->nn;/* number of nodes at boundary */\
-  Uint schur_ijk;
+  Uint _schur_b,schur_ijk;
 
 #define DDM_SCHUR_BC_OPEN \
-  DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_ijk,0,_schur_N,ijk)
+  DDM_SCHUR_JACOBIAN_LOOP_OPEN(_schur_b,0,_schur_N,ijk)\
+  schur_ijk = _schur_map[ijk];
 
 #define DDM_SCHUR_BC_CLOSE \
   DDM_SCHUR_JACOBIAN_LOOP_CLOSE
