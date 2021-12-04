@@ -229,13 +229,13 @@
 
 /* macro for boundary condition */
 #define DDM_SCHUR_BC_DECLARE \
-  Boundary_Condition_T *const bc = vp1;\
+  Boundary_Condition_T *const  _schur_bc = vp1;\
   DDM_Schur_Complement_T *const _schur_S = vp2;\
+  Patch_T *const patch   = _schur_bc->patch;\
   double *const schur_F  = _schur_S->f;\
   Uint *const _schur_map = _schur_S->map;\
-  Patch_T *const patch = bc->patch;\
-  const Uint *const _schur_node = bc->node;/* nodes at boundary */\
-  const Uint _schur_N = bc->nn;/* number of nodes at boundary */\
+  const Uint *const _schur_node = _schur_bc->node;/* nodes at boundary */\
+  const Uint _schur_N = _schur_bc->nn;/* number of nodes at boundary */\
   Uint _schur_b,schur_ijk;
 
 #define DDM_SCHUR_BC_OPEN \
