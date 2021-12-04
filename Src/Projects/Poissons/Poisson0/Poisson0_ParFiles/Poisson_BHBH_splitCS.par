@@ -34,7 +34,7 @@ BH_dimensionless_spin2 = 0
 BHBH_separation        = 10
 
 #-----------------------------------------------------------------------#
-# Solve Settings and Methods:                                         #
+# Solve Settings and Methods:                                           #
 #-----------------------------------------------------------------------#
 solve_Order                         = alpha
 solve_Newton_Update_Weight          = 1.0

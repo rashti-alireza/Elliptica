@@ -26,7 +26,7 @@ BH_mass 	       = 3
 BH_dimensionless_spin  = 1
 
 #-----------------------------------------------------------------------#
-# Solve Settings and Methods:                                         #
+# Solve Settings and Methods:                                           #
 #-----------------------------------------------------------------------#
 solve_Order                         = alpha
 solve_Newton_Update_Weight          = 1.0
