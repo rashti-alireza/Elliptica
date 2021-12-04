@@ -479,10 +479,10 @@ void pr_field_difference(const Grid_T *const grid,const char *const fld1,const c
   path_par = Pgets("top_directory");
   path = make_directory(path_par,"Fields");
   
-  sprintf(dir,"%s/%s-%s.grid",path,fld1,fld2);
+  sprintf(dir,"%s/%s-%s.grid",path,fld2,fld1);
   file1 = Fopen(dir,"w");
   
-  fprintf(file1,"# node %s %s %s-%s\n",fld2,fld1,fld2,fld1);
+  fprintf(file1,"# node %s %s |%s-%s|\n",fld2,fld1,fld2,fld1);
   R = 0;
   FOR_ALL(i,grid->patch)
   {
@@ -491,13 +491,14 @@ void pr_field_difference(const Grid_T *const grid,const char *const fld1,const c
     const double *f2 = patch->fields[Ind(fld2)]->v;
     Uint U = patch->nn;
     
-    sprintf(dir,"%s/%s-%s.%s",path,fld1,fld2,patch->name);
+    sprintf(dir,"%s/%s-%s.%s",path,fld2,fld1,patch->name);
     file2 = Fopen(dir,"w");
-  
+    fprintf(file2,"# node %s %s |%s-%s|\n",fld2,fld1,fld2,fld1);
+    
     for (l = 0; l < U; l++)
     {
-      fprintf(file1,"%u %0.15f %0.15f %0.15f\n",l+R,f2[l],f1[l],f2[l]-f1[l]);
-      fprintf(file2,"%u %0.15f %0.15f %0.15f\n",l,f2[l],f1[l],f2[l]-f1[l]);
+      fprintf(file1,"%u %0.15f %0.15f %0.15f\n",l+R,f2[l],f1[l],fabs(f2[l]-f1[l]));
+      fprintf(file2,"%u %0.15f %0.15f %0.15f\n",l,f2[l],f1[l],fabs(f2[l]-f1[l]));
     }
       
     R += U;
