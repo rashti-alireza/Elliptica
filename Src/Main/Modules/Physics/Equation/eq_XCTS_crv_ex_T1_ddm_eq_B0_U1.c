@@ -105,7 +105,7 @@ dtrK_D2[ijk]*igConf_U1U2[ijk]))/pow(psi[ijk], 3);
   double F_eq_U1 = 
 2*alphaPsi[ijk]*(F0_U1 + F1_U1);
 
-  F[schur_ijk] = F_eq_U1;
+  schur_F[schur_ijk] = F_eq_U1;
 
   DDM_SCHUR_EQ_CLOSE
 

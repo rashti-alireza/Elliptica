@@ -215,7 +215,7 @@
 #define DDM_SCHUR_EQ_DECLARE \
   Patch_T *const patch = vp1;\
   DDM_Schur_Complement_T *const _schur_S = vp2;\
-  double *const F = _schur_S->f;\
+  double *const schur_F = _schur_S->f;\
   const Uint *const _schur_node = _schur_S->inv;/* inverse map to node */\
   const Uint _schur_N = _schur_S->Oi;/* number of inner mesh nodes */\
   Uint schur_ijk;
@@ -231,7 +231,7 @@
 #define DDM_SCHUR_BC_DECLARE \
   Boundary_Condition_T *const bc = vp1;\
   DDM_Schur_Complement_T *const _schur_S = vp2;\
-  double *const F  = _schur_S->f;\
+  double *const schur_F  = _schur_S->f;\
   Uint *const map  = _schur_S->map;\
   Patch_T *const patch = bc->patch;\
   const Uint *const _schur_node = bc->node;/* nodes at boundary */\

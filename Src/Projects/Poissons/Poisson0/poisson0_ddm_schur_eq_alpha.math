@@ -65,7 +65,7 @@ Ccode["  DDM_SCHUR_EQ_OPEN"];
 	F_eq = alpha_xx + alpha_yy + alpha_zz +\
 	       3./(1 + (x**2) + (y**2) + (z**2))**2.5;
 
-Ccode["  F[schur_ijk] = F_eq;"];# Jx = -F in Newton-Raphson scheme
+Ccode["  schur_F[schur_ijk] = F_eq;"];# Jx = -F in Newton-Raphson scheme
 ``
 Ccode["  DDM_SCHUR_EQ_CLOSE\n"];
 Ccode["  free(alpha_xx);"];

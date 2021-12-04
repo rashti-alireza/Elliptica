@@ -215,7 +215,7 @@ igConf_U2U2[ijk];
 drho0_D0[ijk]*t6_U0 + drho0_D1[ijk]*t6_U1 + drho0_D2[ijk]*t6_U2 +
 polish*t1 + rho0[ijk]*(t1 + t2 + t3 + t4 + t5);
 
-  F[schur_ijk] = F_eq;
+  schur_F[schur_ijk] = F_eq;
 
   DDM_SCHUR_EQ_CLOSE
 
@@ -246,7 +246,7 @@ polish*t1 + rho0[ijk]*(t1 + t2 + t3 + t4 + t5);
       interp = execute_interpolation(interp_phi0);
       free_interpolation(interp_phi0);
       DDM_SCHUR_EQ_OPEN
-	 F[schur_ijk] += Att_Con_Num*interp;
+	 schur_F[schur_ijk] += Att_Con_Num*interp;
      DDM_SCHUR_EQ_CLOSE
    }
    

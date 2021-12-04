@@ -75,7 +75,7 @@ F_eq = igConf(i,j)*ddpsi(-i,-j) \
      - igConf(-i,-j)*ChrisConf(l,i,j)*dpsi(-l)\
      - psi*trRicciConf/8 - psi4*psi*(trK**2)/12 + aij2/(8*psi**3) + 2*pi*EConf/psi;
 
-`  F[schur_ijk] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
+`  schur_F[schur_ijk] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
 `  DDM_SCHUR_EQ_CLOSE\n`;
 
 `  return 0;`;

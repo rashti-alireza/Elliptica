@@ -27,7 +27,7 @@ void *eq_alpha(void *vp1,void *vp2)
 alpha_xx[ijk] + alpha_yy[ijk] + alpha_zz[ijk] + 3.0*pow(pow(x, 2) +
 pow(y, 2) + pow(z, 2) + 1, -2.5);
 
-  F[schur_ijk] = F_eq;
+  schur_F[schur_ijk] = F_eq;
 
   DDM_SCHUR_EQ_CLOSE
 

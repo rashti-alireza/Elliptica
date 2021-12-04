@@ -88,7 +88,7 @@ ddpsi_D0D2[ijk]*igConf_U0U2[ijk] + ddpsi_D1D1[ijk]*igConf_U1U1[ijk] +
 igConf_U2U2[ijk] - 1.0/12.0*psi[ijk]*psi4*pow(trK[ijk], 2) - 1.0/8.0*
 psi[ijk]*trRicciConf[ijk];
 
-  F[schur_ijk] = F_eq;
+  schur_F[schur_ijk] = F_eq;
 
   DDM_SCHUR_EQ_CLOSE
 

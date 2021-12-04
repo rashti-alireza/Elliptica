@@ -155,7 +155,7 @@ t6(i) = (igConf(i,l)*dphi(-l)+psi4*W(i)-hxu0xpsi4*beta(i));
 F_eq  = polish*t1+rho0*(t1+t2+t3+t4+t5)+drho0(-i)*t6(i);
 
 
-`  F[schur_ijk] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
+`  schur_F[schur_ijk] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
 `  DDM_SCHUR_EQ_CLOSE\n`;
 
 ## put phi zero at a point in the center of NS
@@ -189,7 +189,7 @@ F_eq  = polish*t1+rho0*(t1+t2+t3+t4+t5)+drho0(-i)*t6(i);
 `      free_interpolation(interp_phi0);`
 `      DDM_SCHUR_EQ_OPEN`
 
-`	 F[schur_ijk] += Att_Con_Num*interp;` # phi = 0 at the center of NS
+`	 schur_F[schur_ijk] += Att_Con_Num*interp;` # phi = 0 at the center of NS
 
 `     DDM_SCHUR_EQ_CLOSE`
 `   }`
