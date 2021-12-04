@@ -19,7 +19,14 @@ int poisson0_initial_data_alpha(Grid_T *const grid)
     Uint n;
     
     FOR_ALL_POINTS(n,patch)
-      alpha[n] = Pow2(x_(n))+Pow2(y_(n))+Pow2(z_(n))+0.3;
+    {
+      double x = patch->node[n]->x[0];
+      double y = patch->node[n]->x[1];
+      double z = patch->node[n]->x[2];
+      double r2 = Pow2(x)+Pow2(y)+Pow2(z);
+      /* true solution + a noise */
+      alpha[n] = 1./sqrt(r2+1) + 0.1*exp(-sqrt(r2));
+    }
   }
   
   return EXIT_SUCCESS;

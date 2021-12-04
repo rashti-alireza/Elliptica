@@ -8,7 +8,7 @@ Point = ijk;
 
 C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
-C_arg    = (ijk);
+C_arg    = ;
 
 # main function:
 Ccode["#include "poisson0_headers.h""];
@@ -24,15 +24,10 @@ Declare =
 {
   # alpha;
   (obj = field, name = alpha, rank = 0, C_macro);
-  # x;
-  (obj = field, name = x_, rank = 0, None,C_arg);
-  # y;
-  (obj = field, name = y_, rank = 0, None,C_arg);
-  # z;
-  (obj = field, name = z_, rank = 0, None,C_arg);
-
-
-
+  # x,y,z coords
+  (obj = field, name = x, rank = 0, None,C_arg);
+  (obj = field, name = y, rank = 0, None,C_arg);
+  (obj = field, name = z, rank = 0, None,C_arg);
 }
 
 # symmetries for Cpi
@@ -46,8 +41,11 @@ Ccode["  if (patch->outerB)/* at outer boundary */"];
 Ccode["  {"];
 Ccode["  DDM_SCHUR_BC_OPEN"];
 
+	`  double x = patch->node[ijk]->x[0];`
+	`  double y = patch->node[ijk]->x[1];`
+	`  double z = patch->node[ijk]->x[2];`
 	 # bc equation for outer boundary:
-	 outerB_F = alpha-(x_**2+y_**2+z_**2);
+	 outerB_F = alpha - 1/(1 + (x**2) + (y**2) + (z**2))**0.5;
 
 Ccode["  F[map[ijk]] = outerB_F;"];
 Ccode["  DDM_SCHUR_BC_CLOSE"];
@@ -58,8 +56,11 @@ Ccode["  else if (patch->innerB)/* at inner boundary */"];
 Ccode["  {"];
 Ccode["  DDM_SCHUR_BC_OPEN"];
 
+	`  double x = patch->node[ijk]->x[0];`
+	`  double y = patch->node[ijk]->x[1];`
+	`  double z = patch->node[ijk]->x[2];`
          # bc equation for outer boundary:
-         innerB_F = alpha-(x_**2+y_**2+z_**2);
+         innerB_F = alpha - 1/(1 + (x**2) + (y**2) + (z**2))**0.5;
 
 Ccode["  F[map[ijk]] = innerB_F;"];
 Ccode["  DDM_SCHUR_BC_CLOSE"];

@@ -20,8 +20,12 @@ void *eq_alpha(void *vp1,void *vp2)
 
   DDM_SCHUR_EQ_OPEN
 
+  double x = patch->node[ijk]->x[0];
+  double y = patch->node[ijk]->x[1];
+  double z = patch->node[ijk]->x[2];
   double F_eq =
-alpha_xx[ijk] + alpha_yy[ijk] + alpha_zz[ijk] - 6;
+alpha_xx[ijk] + alpha_yy[ijk] + alpha_zz[ijk] + 3.0*pow(pow(x, 2) +
+pow(y, 2) + pow(z, 2) + 1, -2.5);
 
   F[schur_ijk] = F_eq;
 

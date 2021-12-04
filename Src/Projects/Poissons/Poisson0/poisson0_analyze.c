@@ -21,7 +21,13 @@ int poisson0_analyze_answer(const Grid_T *const grid)
     alpha_real = add_field("alpha_real",0,patch,YES);
     
     FOR_ALL_POINTS(n,patch)
-      alpha_real->v[n] = Pow2(x_(n))+Pow2(y_(n))+Pow2(z_(n));
+    {
+      double x = patch->node[n]->x[0];
+      double y = patch->node[n]->x[1];
+      double z = patch->node[n]->x[2];
+
+      alpha_real->v[n] = 1./sqrt(Pow2(x)+Pow2(y)+Pow2(z)+1);
+    }
   }
   
   pr_field_difference(grid,"alpha","alpha_real");

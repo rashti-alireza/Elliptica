@@ -10,6 +10,8 @@ C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
 C_macro3  = DECLARE_FIELD(name);
 
+C_arg = ;
+
 # main function:
 Ccode["#include "poisson0_headers.h""];
 Ccode["#include "maths_equation_solvings_lib.h""];
@@ -29,6 +31,11 @@ Declare =
   (obj = field, name = alpha_xx, rank = 0, None);
   (obj = field, name = alpha_yy, rank = 0, None);
   (obj = field, name = alpha_zz, rank = 0, None);
+
+  # x,y,z coords
+  (obj = field, name = x, rank = 0, None,C_arg);
+  (obj = field, name = y, rank = 0, None,C_arg);
+  (obj = field, name = z, rank = 0, None,C_arg);
 }
 
 # symmetries for Cpi:
@@ -50,8 +57,14 @@ Ccode["  double *alpha_zz = Partial_Derivative(alpha,"z,z");"];
 ``
 Ccode["  DDM_SCHUR_EQ_OPEN"];
 ``
-	 # write the equation below at each ijk point:
-         F_eq = alpha_xx+alpha_yy+alpha_zz-6;
+	`  double x = patch->node[ijk]->x[0];`
+	`  double y = patch->node[ijk]->x[1];`
+	`  double z = patch->node[ijk]->x[2];`
+
+	# write the equation below at each ijk point:
+	F_eq = alpha_xx + alpha_yy + alpha_zz +\
+	       3./(1 + (x**2) + (y**2) + (z**2))**2.5;
+
 Ccode["  F[schur_ijk] = F_eq;"];# Jx = -F in Newton-Raphson scheme
 ``
 Ccode["  DDM_SCHUR_EQ_CLOSE\n"];
