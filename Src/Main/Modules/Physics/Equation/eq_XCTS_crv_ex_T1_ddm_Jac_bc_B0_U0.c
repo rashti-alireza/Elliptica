@@ -22,7 +22,7 @@ void *eq_XCTS_curve_exc_T1_ddm_jacobian_bc_B0_U0(void *vp1,void *vp2)
   double outerB_Bpart =
 kd[ijk==lmn];
 
-  B[schur_ijk][schur_lmn] = outerB_Bpart;
+  schur_B[schur_ijk][schur_lmn] = outerB_Bpart;
 
   DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE
 
@@ -42,7 +42,7 @@ kd[ijk==lmn];
   double innerB_Bpart =
 kd[ijk==lmn];
 
-  B[schur_ijk][schur_lmn] = innerB_Bpart;
+  schur_B[schur_ijk][schur_lmn] = innerB_Bpart;
 
   DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE
 

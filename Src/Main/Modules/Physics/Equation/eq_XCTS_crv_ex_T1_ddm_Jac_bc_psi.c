@@ -72,7 +72,7 @@ void *eq_XCTS_curve_exc_T1_ddm_jacobian_bc_psi(void *vp1,void *vp2)
   double outerB_Bpart =
 kd[ijk==lmn];
 
-  B[schur_ijk][schur_lmn] = outerB_Bpart;
+  schur_B[schur_ijk][schur_lmn] = outerB_Bpart;
 
   DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE
 
@@ -113,7 +113,7 @@ dpsi_D1[ijk] + bh_sConf_U2[ijk]*dpsi_D2[ijk]) + kd[ijk==lmn]*psi3*
 (_DiHSi_b - psi2*trK[ijk]) + psi3*(Jpsi_D0*bh_sConf_U0[ijk] + Jpsi_D1*
 bh_sConf_U1[ijk] + Jpsi_D2*bh_sConf_U2[ijk]);
 
-  B[schur_ijk][schur_lmn] = innerB_Bpart;
+  schur_B[schur_ijk][schur_lmn] = innerB_Bpart;
 
   DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE
 

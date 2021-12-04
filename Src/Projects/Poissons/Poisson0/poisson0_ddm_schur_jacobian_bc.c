@@ -24,7 +24,7 @@ void *jacobian_bc_alpha(void *vp1,void *vp2)
   double outerB_Bpart =
 kd[ijk==lmn];
 
-  B[schur_ijk][schur_lmn] = outerB_Bpart;
+  schur_B[schur_ijk][schur_lmn] = outerB_Bpart;
 
   DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE
 
@@ -45,7 +45,7 @@ kd[ijk==lmn];
   double innerB_Bpart =
 kd[ijk==lmn];
 
-  B[schur_ijk][schur_lmn] = innerB_Bpart;
+  schur_B[schur_ijk][schur_lmn] = innerB_Bpart;
 
   DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE
 

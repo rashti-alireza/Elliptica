@@ -128,7 +128,7 @@
 #define DDM_SCHUR_JACOBIAN_EQ_DECLARE \
   Patch_T *const patch  = vp1;\
   DDM_Schur_Complement_T *const _schur_S = vp2;\
-  double **const B = _schur_S->B->reg->A;\
+  double **const schur_B = _schur_S->B->reg->A;\
   double **E_Trans = 0;\
   const Uint *const _schur_node = _schur_S->inv;\
   const Uint _schur_Ni = _schur_S->Oi;/* number of inner mesh nodes */\
@@ -138,7 +138,7 @@
   Uint schur_ijk,schur_lmn,_schur_k;
 
 
-/* macro for B part of jacobian */
+/* macro for schur_B part of jacobian */
 #define DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN \
   DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_ijk,0,_schur_Ni,ijk)\
     Workspace_ijk_Jacobian(ijk)\
@@ -171,7 +171,7 @@
 #define DDM_SCHUR_JACOBIAN_BC_DECLARE \
   Patch_T *const patch  = vp1;\
   DDM_Schur_Complement_T *const _schur_S = vp2;\
-  double **const B = _schur_S->B->reg->A;\
+  double **const schur_B = _schur_S->B->reg->A;\
   double **E_Trans = 0;\
   const Uint *const _schur_node = _schur_S->inv;\
   const Uint _schur_I0 = _schur_S->Oi;/* number of inner mesh nodes */\
@@ -182,7 +182,7 @@
   Uint schur_ijk,schur_lmn,_schur_k;
 
 
-/* macro for B part of outer boundary jacobian */
+/* macro for schur_B part of outer boundary jacobian */
 #define DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN \
   DDM_SCHUR_JACOBIAN_LOOP_OPEN(schur_ijk,_schur_I0,_schur_Ni,ijk)\
     Workspace_ijk_Jacobian(ijk)\

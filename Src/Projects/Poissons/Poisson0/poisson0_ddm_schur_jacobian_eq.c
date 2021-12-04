@@ -26,7 +26,7 @@ void *jacobian_eq_alpha(void *vp1,void *vp2)
   double Bpart =
 dfxx_df + dfyy_df + dfzz_df;
 
-  B[schur_ijk][schur_lmn] = Bpart;
+  schur_B[schur_ijk][schur_lmn] = Bpart;
 
   DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE
 

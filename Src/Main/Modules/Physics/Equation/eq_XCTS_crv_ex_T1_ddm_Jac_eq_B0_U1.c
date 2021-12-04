@@ -366,7 +366,7 @@ t10_B_U1 + t1_B_U1 + t2_B_U1 + t3_B_U1 + t4_B_U1 + t5_B_U1 + t6_B_U1 +
 t7_B_U1 + t8_B_U1 + t9_B_U1;
 
 
-  B[schur_ijk][schur_lmn] = Bpart_U1;
+  schur_B[schur_ijk][schur_lmn] = Bpart_U1;
 
   DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE
 

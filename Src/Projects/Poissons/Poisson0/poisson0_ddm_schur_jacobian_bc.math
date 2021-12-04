@@ -42,7 +42,7 @@ Declare =
 #    NOTE2: In Schur domain decomposition method we need two types of
 # matrices for Jacobian of Newton-Raphson scheme, matrix B and matrix E. 
 # Let's say Jx = -F in Newton-Raphson scheme; then,
-# B[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and
+# schur_B[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and
 # schur_lmn = map[lmn] and
 # ijk takes their values ON BOUNDARY POINTS of a patch, 
 # and lmn runs over ALL BUT the interface points (interface
@@ -73,7 +73,7 @@ Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN"];
 # B matrix:
 outerB_Bpart = kd;
 
-Ccode["  B[schur_ijk][schur_lmn] = outerB_Bpart;"];
+Ccode["  schur_B[schur_ijk][schur_lmn] = outerB_Bpart;"];
 ``
 Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE\n"];
 ``
@@ -95,7 +95,7 @@ Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN"];
 # B matrix:
 innerB_Bpart = kd;
 
-Ccode["  B[schur_ijk][schur_lmn] = innerB_Bpart;"];
+Ccode["  schur_B[schur_ijk][schur_lmn] = innerB_Bpart;"];
 ``
 Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE\n"];
 ``

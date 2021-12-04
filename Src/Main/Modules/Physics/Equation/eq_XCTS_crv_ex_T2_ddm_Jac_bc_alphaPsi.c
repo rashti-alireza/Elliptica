@@ -28,7 +28,7 @@ void *eq_XCTS_curve_exc_T2_ddm_jacobian_bc_alphaPsi(void *vp1,void *vp2)
   double outerB_Bpart =
 kd[ijk==lmn];
 
-  B[schur_ijk][schur_lmn] = outerB_Bpart;
+  schur_B[schur_ijk][schur_lmn] = outerB_Bpart;
 
   DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE
 
@@ -52,7 +52,7 @@ kd[ijk==lmn];
 JalphaPsi_D0*bh_sConf_U0[ijk] + JalphaPsi_D1*bh_sConf_U1[ijk] +
 JalphaPsi_D2*bh_sConf_U2[ijk];
 
-  B[schur_ijk][schur_lmn] = innerB_Bpart;
+  schur_B[schur_ijk][schur_lmn] = innerB_Bpart;
 
   DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE
 

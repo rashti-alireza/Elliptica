@@ -92,7 +92,7 @@ JJpsi_D1D2*igConf_U1U2[ijk] + JJpsi_D2D2*igConf_U2U2[ijk] -
 kd[ijk==lmn]*(2*M_PI*EConf[ijk]/pow(psi[ijk], 2) + 0.875*aij2_B/psi4_B +
 (5.0/12.0)*psi4_B*pow(trK[ijk], 2) + (1.0/8.0)*trRicciConf[ijk]);
 
-  B[schur_ijk][schur_lmn] = Bpart;
+  schur_B[schur_ijk][schur_lmn] = Bpart;
 
   DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE
 

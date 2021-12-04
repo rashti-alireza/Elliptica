@@ -77,7 +77,7 @@ Symm[dChrisConf(i,j,k,l)  = dChrisConf(i,k,j,l)];
 #    NOTE2: In Schur domain decomposition method we need two types of
 # matrices for Jacobian of Newton-Raphson scheme, matrix B and matrix E. 
 # Let's say Jx = -F in Newton-Raphson scheme; then,
-# B[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and schur_lmn = map[lmn] and
+# schur_B[schur_ijk][schur_lmn] = d[F(f(ijk))]/df(lmn), where schur_ijk = map[ijk], and schur_lmn = map[lmn] and
 # ijk takes their values ON INNER POINTS
 # of a patch, namley those collocated points that don't reach boundary of
 # the patch, and lmn runs over ALL BUT the interface points (interface
@@ -123,7 +123,7 @@ t5_B(i)  = -dLnOf_alpha_B(-j)*igConf(i,-m)*KD1i(j)*JB0(m);
 Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i);
 
 
-`  B[schur_ijk][schur_lmn] = Bpart_U1;\n`;
+`  schur_B[schur_ijk][schur_lmn] = Bpart_U1;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE\n`;
 ###############################################
 
