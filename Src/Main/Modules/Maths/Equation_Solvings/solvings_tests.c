@@ -327,7 +327,7 @@ void test_dfs_df_Spectral_vs_analytic(Grid_T *const grid)
 }
 
 /* testing d^n/dX^n df/du between numeric spectral and analytic spectral method.
-// NOTE: SPECTRAL_JACOBIAN_ANALYTIC_FORM macro must be 1. */
+// NOTE: SPECTRAL_JACOBIAN_ENTRY_FORM macro must be 1. */
 void test_dfs_df_Spectral_vs_Spectral(Grid_T *const grid)
 {
   FUNC_TIC

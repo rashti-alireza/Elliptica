@@ -13,9 +13,20 @@
 #define J__JW  (patch->solving_man->jacobian_workspace)
 
 /* NOTE: SPECTRAL_JACOBIAN_MATRIX_FORM and 
-// SPECTRAL_JACOBIAN_ANALYTIC_FORM must be mutually exclusive. */
+//       SPECTRAL_JACOBIAN_ENTRY_FORM must be mutually exclusive.
+// NOTE: SPECTRAL_JACOBIAN_MATRIX_FORM uses a lot of memroy in high 
+//       resolution and slower! */
+#if defined (SAVE_JACOBIAN)
+
+#define SPECTRAL_JACOBIAN_MATRIX_FORM (1)
+#define SPECTRAL_JACOBIAN_ENTRY_FORM (0)
+
+#else/* default */
+
 #define SPECTRAL_JACOBIAN_MATRIX_FORM (0)
-#define SPECTRAL_JACOBIAN_ANALYTIC_FORM (1)
+#define SPECTRAL_JACOBIAN_ENTRY_FORM (1)
+
+#endif
 
 #if SPECTRAL_JACOBIAN_MATRIX_FORM
 
@@ -45,7 +56,7 @@
 #define Workspace_lmn_Jacobian(Xlmn) /* nothing! */
 
 
-#elif SPECTRAL_JACOBIAN_ANALYTIC_FORM
+#elif SPECTRAL_JACOBIAN_ENTRY_FORM
 
 #define Init_Jacobian(xNAME) /* nothing needed! */
 
