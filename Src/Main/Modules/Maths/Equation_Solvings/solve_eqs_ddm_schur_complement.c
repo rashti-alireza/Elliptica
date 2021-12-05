@@ -211,8 +211,6 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       DDM_SCHUR_OpenMP_SET_NUM_THREADS(omp parallel for)
       for (p = 0; p < npatch; ++p)
       {
-        printf("my thread num = %d\n",omp_get_thread_num());\
-
         Patch_T *patch = grid->patch[p];
         double tic = get_time_sec();
         char *msg  = calloc(MSG_SIZE2,1); 

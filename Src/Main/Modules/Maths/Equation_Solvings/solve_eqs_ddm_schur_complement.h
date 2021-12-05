@@ -41,13 +41,11 @@
 #define DDM_SCHUR_OpenMP_SET_NUM_THREADS(x)\
   double _nt_percent = PgetdEZ("solve_ddm_schur_thread_cap");\
   int _nt_avail      = omp_get_max_threads();\
-  printf("my thread before = %d\n",_nt_avail);\
   if (_nt_percent != DBL_MAX)\
   {\
     omp_set_dynamic(0);\
     omp_set_num_threads((int)(_nt_percent*_nt_avail));\
   }\
-  printf("my thread after = %d\n",omp_get_max_threads());\
   _Pragma ( #x )
 
 /* NOTE: we should set back num of threads to its avail max. */
