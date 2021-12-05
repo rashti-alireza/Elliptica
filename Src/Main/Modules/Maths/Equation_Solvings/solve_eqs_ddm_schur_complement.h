@@ -46,8 +46,7 @@
   double _nt_percent = PgetdEZ("solve_ddm_schur_thread_cap");\
   int _nt_avail      = omp_get_max_threads();\
   if (_nt_percent != DBL_MAX)\
-  {\
-    omp_set_dynamic(0);\
+  { /* omp_set_dynamic(0); */\
     omp_set_num_threads((int)(_nt_percent*_nt_avail));\
   }\
   _Pragma ( #x )
