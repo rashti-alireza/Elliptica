@@ -174,7 +174,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       
       printf("{ Compute f and g ...\n");
       time_temp = get_time_sec();
-      DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+      DDM_SCHUR_OpenMP(omp parallel for)
       for (p = 0; p < npatch; ++p)
       {
         Patch_T *patch = grid->patch[p];
@@ -272,7 +272,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       fflush(stdout);
       free(pr_msg);
       
-      DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+      DDM_SCHUR_OpenMP(omp parallel for)
       for (p = 0; p < npatch; ++p)
       {
         Patch_T *patch    = grid->patch[p];
@@ -2633,7 +2633,7 @@ static void set_solving_man_settings_Frms_i(Grid_T *const grid)
   const Uint npatch = grid->np;
   Uint p;
   
-  DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+  DDM_SCHUR_OpenMP(omp parallel for)
   for (p = 0; p < npatch; ++p)
   {
     Patch_T *patch = grid->patch[p];
@@ -2671,7 +2671,7 @@ static void calculate_residual(Grid_T *const grid)
   double *extd = 0;
   Uint p,i;
   
-  DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+  DDM_SCHUR_OpenMP(omp parallel for)
   for (p = 0; p < npatch; ++p)
   {
     Patch_T *patch = grid->patch[p];
@@ -3024,7 +3024,7 @@ static Matrix_T *making_J_Schur_Method(Solve_Equations_T *const SolveEqs)
   Uint R;/* reference */
   Uint p;
   
-  DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+  DDM_SCHUR_OpenMP(omp parallel for)
   for (p = 0; p < npatch; ++p)
   {
     Patch_T *patch = grid->patch[p];
@@ -3160,7 +3160,7 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
       const Uint npatch = grid->np;
       Uint p;
       
-      DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+      DDM_SCHUR_OpenMP(omp parallel for)
       for (p = 0; p < npatch; ++p)
       {
         Patch_T *patch = grid->patch[p];
@@ -3169,7 +3169,7 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
       }
       make_g(grid);/* free pg */
       
-      DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+      DDM_SCHUR_OpenMP(omp parallel for)
       for (p = 0; p < npatch; ++p)
       {
         Patch_T *patch = grid->patch[p];

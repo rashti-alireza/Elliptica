@@ -35,7 +35,7 @@
 #define MSG_SIZE1 (999)
 #define MSG_SIZE2 (9999)
 /* openmp */
-#define DDM_SCHUR_COMPLEMENT_OpenMP(x) _Pragma ( #x )
+#define DDM_SCHUR_OpenMP(x) _Pragma ( #x )
 
 
 /* IDEA for memory management:
