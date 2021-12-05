@@ -208,7 +208,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       printf("      |---> Newton step '%d':\n",step+1);
       pr_line_custom('~');
       
-      DDM_SCHUR_COMPLEMENT_OpenMP_SET_THREADS(omp parallel for)
+      DDM_SCHUR_OpenMP_SET_NUM_THREADS(omp parallel for)
       for (p = 0; p < npatch; ++p)
       {
         printf("my thread num = %d\n",omp_get_thread_num());\
@@ -251,6 +251,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
         free(msg6);
         free(msg);
       }
+      DDM_SCHUR_OpenMP_UNSET_NUM_THREADS
       
       /* compute g' */
       printf("{ Compute g' ...\n");
