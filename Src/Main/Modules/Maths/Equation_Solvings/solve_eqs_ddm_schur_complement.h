@@ -40,14 +40,14 @@
 /* openmp where we can set the number of threads too. */
 #define DDM_SCHUR_COMPLEMENT_OpenMP_SET_THREADS(x)\
   double _nt_percent = PgetdEZ("solve_ddm_schur_thread_cap");\
-  printf("my thread before = %d\n",omp_get_num_threads());\
+  printf("my thread before = %d\n",omp_get_max_threads());\
   if (_nt_percent != DBL_MAX)\
   {\
-    int _ntt = omp_get_num_threads();\
+    int _ntt = omp_get_max_threads();\
     omp_set_dynamic(0);\
     omp_set_num_threads((int)(_nt_percent*_ntt));\
   }\
-  printf("my thread after = %d\n",omp_get_num_threads());\
+  printf("my thread after = %d\n",omp_get_max_threads());\
   _Pragma ( #x )
 
 typedef enum DDM_SCHUR_COMPLEMENT_FLAG_T
