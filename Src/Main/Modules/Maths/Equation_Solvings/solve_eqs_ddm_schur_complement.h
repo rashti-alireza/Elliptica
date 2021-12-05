@@ -34,9 +34,12 @@
 /* string size */
 #define MSG_SIZE1 (999)
 #define MSG_SIZE2 (9999)
+
 /* openmp */
 #define DDM_SCHUR_OpenMP(x) _Pragma ( #x )
 
+
+#if defined(DDM_SCHUR_OpenMP_CAP)
 
 /* IDEA for memory management:
 // in case if the memory is scarce one can set the number of 
@@ -55,6 +58,13 @@
 /* NOTE: we should set back num of threads to its avail max. */
 #define DDM_SCHUR_OpenMP_UNSET_NUM_THREADS \
   omp_set_num_threads(_nt_avail);
+
+#else
+
+#define DDM_SCHUR_OpenMP_SET_NUM_THREADS(x) DDM_SCHUR_OpenMP(x)
+#define DDM_SCHUR_OpenMP_UNSET_NUM_THREADS /* nothing! */
+
+#endif
 
 typedef enum DDM_SCHUR_COMPLEMENT_FLAG_T
 {
