@@ -43,11 +43,12 @@
 // threads to lower than the maximum available. */
 /* openmp where we can set the number of threads too. */
 #define DDM_SCHUR_OpenMP_SET_NUM_THREADS(x)\
-  double _nt_percent = PgetdEZ("solve_ddm_schur_thread_cap");\
-  int _nt_avail      = omp_get_max_threads();\
-  if (_nt_percent != DBL_MAX)\
+  double _nt_cap = PgetdEZ("solve_ddm_schur_thread_cap");\
+  int _nt_avail  = omp_get_max_threads();\
+  if (_nt_cap != DBL_MAX)\
   { /* omp_set_dynamic(0); */\
-    omp_set_num_threads((int)(_nt_percent*_nt_avail));\
+    assert(_nt_cap >= 0.);\
+    omp_set_num_threads((int)(_nt_cap*_nt_avail));\
   }\
   _Pragma ( #x )
 
