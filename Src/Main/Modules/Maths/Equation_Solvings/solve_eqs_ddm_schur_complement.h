@@ -37,6 +37,10 @@
 /* openmp */
 #define DDM_SCHUR_COMPLEMENT_OpenMP(x) _Pragma ( #x )
 
+
+/* IDEA for memory management:
+// in case if the memory is scarce one can set the number of 
+// threads to lower than the maximum available. */
 /* openmp where we can set the number of threads too. */
 #define DDM_SCHUR_OpenMP_SET_NUM_THREADS(x)\
   double _nt_percent = PgetdEZ("solve_ddm_schur_thread_cap");\

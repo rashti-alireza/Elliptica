@@ -157,9 +157,6 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       step++;
     }
   }
-  /* IDEA for memory management:
-  // in case if the memory is scarce one can set the number of 
-  // threads to lower than the maximum available. */
   else/* multi-domains grid */
   {
     while (CONTINUE)
