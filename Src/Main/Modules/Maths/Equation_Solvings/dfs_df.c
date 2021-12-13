@@ -2353,46 +2353,46 @@ double
     break;
     
     case JKD_il:
-      sum = Jd2f_dudx_opt(patch,dx_axis,1,JW->ijk,JW->j,JW->m)*
+      sum = Jd2f_dudx_opt(patch,dx_axis,1,JW->ljn,JW->j,JW->m)*
             Jd2f_dudx_opt(patch,dy_axis,2,JW->ijk,JW->k,JW->n)
             +
-            Jd2f_dudx_opt(patch,dx_axis,2,JW->ijk,JW->k,JW->n)*
+            Jd2f_dudx_opt(patch,dx_axis,2,JW->lmk,JW->k,JW->n)*
             Jd2f_dudx_opt(patch,dy_axis,1,JW->ijk,JW->j,JW->m);
     break;
     
     case JKD_jm:
-      sum = Jd2f_dudx_opt(patch,dx_axis,0,JW->ijk,JW->i,JW->l)*
+      sum = Jd2f_dudx_opt(patch,dx_axis,0,JW->imn,JW->i,JW->l)*
               (
                 Jd2f_dudx_opt(patch,dy_axis,2,JW->ijk,JW->k,JW->n)
               ) +
-            Jd2f_dudx_opt(patch,dx_axis,2,JW->ijk,JW->k,JW->n)*
+            Jd2f_dudx_opt(patch,dx_axis,2,JW->lmk,JW->k,JW->n)*
               (
                 Jd2f_dudx_opt(patch,dy_axis,0,JW->ijk,JW->i,JW->l)
               );
     break;
     
     case JKD_kn:
-        sum = Jd2f_dudx_opt(patch,dx_axis,0,JW->ijk,JW->i,JW->l)*
+        sum = Jd2f_dudx_opt(patch,dx_axis,0,JW->imn,JW->i,JW->l)*
                 (
                   Jd2f_dudx_opt(patch,dy_axis,1,JW->ijk,JW->j,JW->m)
                 ) +
-              Jd2f_dudx_opt(patch,dx_axis,1,JW->ijk,JW->j,JW->m)*
+              Jd2f_dudx_opt(patch,dx_axis,1,JW->ljn,JW->j,JW->m)*
                 (
                   Jd2f_dudx_opt(patch,dy_axis,0,JW->ijk,JW->i,JW->l)
                 );
     break;
     
     case JKD_iljm:
-      sum = Jd2f_dudx_opt(patch,dx_axis,0,JW->ijk,JW->i,JW->l)*
+      sum = Jd2f_dudx_opt(patch,dx_axis,0,JW->imn,JW->i,JW->l)*
               (
                 Jd2f_dudx_opt(patch,dy_axis,2,JW->ijk,JW->k,JW->n)
               ) +
-            Jd2f_dudx_opt(patch,dx_axis,1,JW->ijk,JW->j,JW->m)*
+            Jd2f_dudx_opt(patch,dx_axis,1,JW->ljn,JW->j,JW->m)*
               (
                 Jd2f_dudx_opt(patch,dy_axis,2,JW->ijk,JW->k,JW->n)
               ) +
             Jd3f_dudxdy_opt(patch,dx_axis,dy_axis,dxdy_axis,2,JW->ijk,JW->k,JW->n) +
-            Jd2f_dudx_opt(patch,dx_axis,2,JW->ijk,JW->k,JW->n)*
+            Jd2f_dudx_opt(patch,dx_axis,2,JW->lmk,JW->k,JW->n)*
               (
                 Jd2f_dudx_opt(patch,dy_axis,1,JW->ijk,JW->j,JW->m) +
                 Jd2f_dudx_opt(patch,dy_axis,0,JW->ijk,JW->i,JW->l)
@@ -2400,17 +2400,17 @@ double
     break;
     
     case JKD_ilkn:
-      sum = Jd2f_dudx_opt(patch,dx_axis,0,JW->ijk,JW->i,JW->l)*
+      sum = Jd2f_dudx_opt(patch,dx_axis,0,JW->imn,JW->i,JW->l)*
               (
                 Jd2f_dudx_opt(patch,dy_axis,1,JW->ijk,JW->j,JW->m)
               ) +
             Jd3f_dudxdy_opt(patch,dx_axis,dy_axis,dxdy_axis,1,JW->ijk,JW->j,JW->m) +
-            Jd2f_dudx_opt(patch,dx_axis,1,JW->ijk,JW->j,JW->m)*
+            Jd2f_dudx_opt(patch,dx_axis,1,JW->ljn,JW->j,JW->m)*
               (
                 Jd2f_dudx_opt(patch,dy_axis,0,JW->ijk,JW->i,JW->l) +
                 Jd2f_dudx_opt(patch,dy_axis,2,JW->ijk,JW->k,JW->n)
               ) +
-            Jd2f_dudx_opt(patch,dx_axis,2,JW->ijk,JW->k,JW->n)*
+            Jd2f_dudx_opt(patch,dx_axis,2,JW->lmk,JW->k,JW->n)*
               (
                 Jd2f_dudx_opt(patch,dy_axis,1,JW->ijk,JW->j,JW->m)
               );
@@ -2418,16 +2418,16 @@ double
     
     case JKD_jmkn:
       sum = Jd3f_dudxdy_opt(patch,dx_axis,dy_axis,dxdy_axis,0,JW->ijk,JW->i,JW->l) +
-            Jd2f_dudx_opt(patch,dx_axis,0,JW->ijk,JW->i,JW->l)*
+            Jd2f_dudx_opt(patch,dx_axis,0,JW->imn,JW->i,JW->l)*
               (
                 Jd2f_dudx_opt(patch,dy_axis,1,JW->ijk,JW->j,JW->m) +
                 Jd2f_dudx_opt(patch,dy_axis,2,JW->ijk,JW->k,JW->n)
               ) +
-            Jd2f_dudx_opt(patch,dx_axis,1,JW->ijk,JW->j,JW->m)*
+            Jd2f_dudx_opt(patch,dx_axis,1,JW->ljn,JW->j,JW->m)*
               (
                 Jd2f_dudx_opt(patch,dy_axis,0,JW->ijk,JW->i,JW->l)
               ) +
-            Jd2f_dudx_opt(patch,dx_axis,2,JW->ijk,JW->k,JW->n)*
+            Jd2f_dudx_opt(patch,dx_axis,2,JW->lmk,JW->k,JW->n)*
               (
                 Jd2f_dudx_opt(patch,dy_axis,0,JW->ijk,JW->i,JW->l)
               );
@@ -2435,19 +2435,19 @@ double
     
     default:/* case JKD_iljmkn */
       sum = Jd3f_dudxdy_opt(patch,dx_axis,dy_axis,dxdy_axis,0,JW->ijk,JW->i,JW->l)+
-            Jd2f_dudx_opt(patch,dx_axis,0,JW->ijk,JW->i,JW->l)*
+            Jd2f_dudx_opt(patch,dx_axis,0,JW->imn,JW->i,JW->l)*
               (
                 Jd2f_dudx_opt(patch,dy_axis,1,JW->ijk,JW->j,JW->m) +
                 Jd2f_dudx_opt(patch,dy_axis,2,JW->ijk,JW->k,JW->n)
               ) +
             Jd3f_dudxdy_opt(patch,dx_axis,dy_axis,dxdy_axis,1,JW->ijk,JW->j,JW->m) +
-            Jd2f_dudx_opt(patch,dx_axis,1,JW->ijk,JW->j,JW->m)*
+            Jd2f_dudx_opt(patch,dx_axis,1,JW->ljn,JW->j,JW->m)*
               (
                 Jd2f_dudx_opt(patch,dy_axis,0,JW->ijk,JW->i,JW->l) +
                 Jd2f_dudx_opt(patch,dy_axis,2,JW->ijk,JW->k,JW->n)
               ) +
             Jd3f_dudxdy_opt(patch,dx_axis,dy_axis,dxdy_axis,2,JW->ijk,JW->k,JW->n) +
-            Jd2f_dudx_opt(patch,dx_axis,2,JW->ijk,JW->k,JW->n)*
+            Jd2f_dudx_opt(patch,dx_axis,2,JW->lmk,JW->k,JW->n)*
               (
                 Jd2f_dudx_opt(patch,dy_axis,1,JW->ijk,JW->j,JW->m) +
                 Jd2f_dudx_opt(patch,dy_axis,0,JW->ijk,JW->i,JW->l)
@@ -2511,21 +2511,21 @@ double
   
   return
     Jd3f_dudxdy(patch,dx_axis,dy_axis,dxdy_axis,0,ijk,lmn,i,l)*JKD(j,m)*JKD(k,n) +
-    Jd2f_dudx(patch,dx_axis,0,ijk,lmn,i,l)*
+    Jd2f_dudx(patch,dx_axis,0,i_j_k_to_ijk(patch->n,i,m,n),lmn,i,l)*   
       (
         JKD(k,n)*Jd2f_dudx(patch,dy_axis,1,ijk,lmn,j,m) +
         JKD(j,m)*Jd2f_dudx(patch,dy_axis,2,ijk,lmn,k,n)
       ) +
     
     Jd3f_dudxdy(patch,dx_axis,dy_axis,dxdy_axis,1,ijk,lmn,j,m)*JKD(i,l)*JKD(k,n) +
-    Jd2f_dudx(patch,dx_axis,1,ijk,lmn,j,m)*
+    Jd2f_dudx(patch,dx_axis,1,i_j_k_to_ijk(patch->n,l,j,n),lmn,j,m)*
       (
         JKD(k,n)*Jd2f_dudx(patch,dy_axis,0,ijk,lmn,i,l) +
         JKD(i,l)*Jd2f_dudx(patch,dy_axis,2,ijk,lmn,k,n)
       ) +
       
     Jd3f_dudxdy(patch,dx_axis,dy_axis,dxdy_axis,2,ijk,lmn,k,n)*JKD(j,m)*JKD(i,l) +
-    Jd2f_dudx(patch,dx_axis,2,ijk,lmn,k,n)*
+    Jd2f_dudx(patch,dx_axis,2,i_j_k_to_ijk(patch->n,l,m,k),lmn,k,n)*
       (
         JKD(i,l)*Jd2f_dudx(patch,dy_axis,1,ijk,lmn,j,m) +
         JKD(j,m)*Jd2f_dudx(patch,dy_axis,0,ijk,lmn,i,l)

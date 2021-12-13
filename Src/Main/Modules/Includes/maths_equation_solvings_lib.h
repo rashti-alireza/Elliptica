@@ -107,6 +107,9 @@
 #define Workspace_lmn_Jacobian(Xlmn) \
     J__JW->lmn = (Xlmn);\
     ijk_to_i_j_k((Xlmn),patch->n,&(J__JW->l),&(J__JW->m),&(J__JW->n));\
+    J__JW->imn = i_j_k_to_ijk(patch->n,(J__JW->i),(J__JW->m),(J__JW->n));\
+    J__JW->ljn = i_j_k_to_ijk(patch->n,(J__JW->l),(J__JW->j),(J__JW->n));\
+    J__JW->lmk = i_j_k_to_ijk(patch->n,(J__JW->l),(J__JW->m),(J__JW->k));\
     J__JW->kd = J__KD_INT(J__JW->i,J__JW->l)*JKD_il + \
                 J__KD_INT(J__JW->j,J__JW->m)*JKD_jm + \
                 J__KD_INT(J__JW->k,J__JW->n)*JKD_kn;
@@ -430,6 +433,7 @@ typedef struct SOLVING_MAN_T
     
     /* temp variables */
     Uint ijk,lmn;/* for df[ijk]/du[lmn] etc. */
+    Uint imn,ljn,lmk;/* various combinations between (i,j,k) and (l,m,n) */
     Uint i,j,k;/* components composed ijk */
     Uint l,m,n;/* components composed lmn */
     double sin_thi[3];/* sin(th[i,j,k]) i.e for each direction */
