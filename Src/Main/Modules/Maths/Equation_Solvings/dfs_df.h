@@ -349,7 +349,7 @@ static double dInterp_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,co
 static double
 d2_dXi2_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
                           double thj/* X_i = cos(theta_i) */,
-                          Uint N/* the sum upper limit */);
+                          Uint N/* the sum upper limit */)  __attribute__((unused));
 static double
 d_dXi_2xsum_0_N_Tnj_Tni(double thi/* X_i = cos(theta_i) */,
                         double thj/* X_i = cos(theta_i) */,
@@ -379,7 +379,7 @@ static double
 d2_dXi2_2xsum_0_N_Tnj_Tni_opt(const double thi/* X_i = cos(theta_i) */,
                               const double thj/* X_i = cos(theta_i) */,
                               Patch_T *const patch,
-                              Uint X_axis);
+                              Uint X_axis) __attribute__((unused));
 double
   d2f_dxdu_optimized_spectral_Jacobian_analytic(Patch_T *const patch,
                                                 const Uint dx_axis);
