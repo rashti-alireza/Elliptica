@@ -296,7 +296,7 @@ d_dXi_2xsum_0_N_Tnj_Tni_opt(const double thi/* X_i = cos(theta_i) */,
     
     sum += Jd_dlambda_sum_0_N_cos_nlambda_opt(X_axis,JW->N0[X_axis],lambda);
     
-    sum *= -1./JW->sin_thi[X_axis];
+    sum *= -1./sin(thi);
   }
   
   return sum;

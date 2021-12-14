@@ -2191,8 +2191,8 @@ d2_dXi2_2xsum_0_N_Tnj_Tni_opt(const double thi/* X_i = cos(theta_i) */,
   }
   else
   {
-    double sin_thi   = JW->sin_thi[X_axis];
-    double d2thi_dX2 = -JW->cos_thi[X_axis]/(Pow3(sin_thi));
+    double sin_thi   = sin(thi);
+    double d2thi_dX2 = -cos(thi)/(Pow3(sin_thi));
     double dthi_dX   = -1./sin_thi;
     lambda    = thi+thj;
     sin_half_lambda = sin(0.5*lambda);
@@ -2465,6 +2465,7 @@ double
         Uint lpmn = i_j_k_to_ijk(patch->n,lp,JW->m,JW->n);
         sum += Jd2f_dudx_opt(patch,dx_axis,0,lpmn,lp,JW->l)*
                Jd2f_dudx_opt(patch,dy_axis,0,JW->ijk,JW->i,lp);
+        
       }
       for (Uint mp = 0; mp < patch->n[1]; ++mp)
       {
@@ -2496,31 +2497,7 @@ double
               );
   }
   
-  
   return sum;
-  
-  /*  for reference:
-    sum = 
-    Jd3f_dudxdy_opt(patch,dx_axis,dy_axis,dxdy_axis,0,JW->ijk,JW->i,JW->l)*JKD(JW->j,JW->m)*JKD(JW->k,JW->n) +
-    Jd2f_dudx_opt(patch,dx_axis,0,JW->imn,JW->i,JW->l)*
-      (
-        JKD(JW->k,JW->n)*Jd2f_dudx_opt(patch,dy_axis,1,JW->ijk,JW->j,JW->m) +
-        JKD(JW->j,JW->m)*Jd2f_dudx_opt(patch,dy_axis,2,JW->ijk,JW->k,JW->n)
-      ) +
-    
-    Jd3f_dudxdy_opt(patch,dx_axis,dy_axis,dxdy_axis,1,JW->ijk,JW->j,JW->m)*JKD(JW->i,JW->l)*JKD(JW->k,JW->n) +
-    Jd2f_dudx_opt(patch,dx_axis,1,JW->ljn,JW->j,JW->m)*
-      (
-        JKD(JW->k,JW->n)*Jd2f_dudx_opt(patch,dy_axis,0,JW->ijk,JW->i,JW->l) +
-        JKD(JW->i,JW->l)*Jd2f_dudx_opt(patch,dy_axis,2,JW->ijk,JW->k,JW->n)
-      ) +
-      
-    Jd3f_dudxdy_opt(patch,dx_axis,dy_axis,dxdy_axis,2,JW->ijk,JW->k,JW->n)*JKD(JW->j,JW->m)*JKD(JW->i,JW->l) +
-    Jd2f_dudx_opt(patch,dx_axis,2,JW->lmk,JW->k,JW->n)*
-      (
-        JKD(JW->i,JW->l)*Jd2f_dudx_opt(patch,dy_axis,1,JW->ijk,JW->j,JW->m) +
-        JKD(JW->j,JW->m)*Jd2f_dudx_opt(patch,dy_axis,0,JW->ijk,JW->i,JW->l)
-      ); */
 }
 
 /* ->: compute d^2(df/du)/dxdy, in which x and y are Cartesian coords. */
