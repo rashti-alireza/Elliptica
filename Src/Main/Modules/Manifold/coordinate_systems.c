@@ -110,52 +110,54 @@ int make_JacobianT(Grid_T *const grid)
 
     /* populate d^2X/dxdy (mostly analytic!). 
     // for the convention see JacobianTrans_T. */
-    
-    /* add a temp field. denoted by $$ means a temp field. */
-    Field_T *df = add_field("$$TempDerivatives$$",0,patch,NO);
-    
-    free_coeffs(df);
-    df->v          = dX_dx[0][0];/* dX/dx */
-    d2X_dxdy[0][0] = Partial_Derivative(df,"x");
-    d2X_dxdy[0][1] = Partial_Derivative(df,"y");
-    d2X_dxdy[0][2] = Partial_Derivative(df,"z");
-    free_coeffs(df);
-    df->v          = dX_dx[0][1];/* dX/dy */
-    d2X_dxdy[0][3] = Partial_Derivative(df,"y");
-    d2X_dxdy[0][4] = Partial_Derivative(df,"z");
-    free_coeffs(df);
-    df->v          = dX_dx[0][2];/* dX/dz */
-    d2X_dxdy[0][5] = Partial_Derivative(df,"z");
+    if (0)/* NOTE: since I changed the method, we don't need to set
+          // d2X/dxdy anymore. */
+    {
+      /* add a temp field. denoted by $$ means a temp field. */
+      Field_T *df = add_field("$$TempDerivatives$$",0,patch,NO);
+      
+      free_coeffs(df);
+      df->v          = dX_dx[0][0];/* dX/dx */
+      d2X_dxdy[0][0] = Partial_Derivative(df,"x");
+      d2X_dxdy[0][1] = Partial_Derivative(df,"y");
+      d2X_dxdy[0][2] = Partial_Derivative(df,"z");
+      free_coeffs(df);
+      df->v          = dX_dx[0][1];/* dX/dy */
+      d2X_dxdy[0][3] = Partial_Derivative(df,"y");
+      d2X_dxdy[0][4] = Partial_Derivative(df,"z");
+      free_coeffs(df);
+      df->v          = dX_dx[0][2];/* dX/dz */
+      d2X_dxdy[0][5] = Partial_Derivative(df,"z");
 
-    free_coeffs(df);
-    df->v          = dX_dx[1][0];/* dY/dx */
-    d2X_dxdy[1][0] = Partial_Derivative(df,"x");
-    d2X_dxdy[1][1] = Partial_Derivative(df,"y");
-    d2X_dxdy[1][2] = Partial_Derivative(df,"z");
-    free_coeffs(df);
-    df->v          = dX_dx[1][1];/* dY/dy */
-    d2X_dxdy[1][3] = Partial_Derivative(df,"y");
-    d2X_dxdy[1][4] = Partial_Derivative(df,"z");
-    free_coeffs(df);
-    df->v          = dX_dx[1][2];/* dY/dz */
-    d2X_dxdy[1][5] = Partial_Derivative(df,"z");
+      free_coeffs(df);
+      df->v          = dX_dx[1][0];/* dY/dx */
+      d2X_dxdy[1][0] = Partial_Derivative(df,"x");
+      d2X_dxdy[1][1] = Partial_Derivative(df,"y");
+      d2X_dxdy[1][2] = Partial_Derivative(df,"z");
+      free_coeffs(df);
+      df->v          = dX_dx[1][1];/* dY/dy */
+      d2X_dxdy[1][3] = Partial_Derivative(df,"y");
+      d2X_dxdy[1][4] = Partial_Derivative(df,"z");
+      free_coeffs(df);
+      df->v          = dX_dx[1][2];/* dY/dz */
+      d2X_dxdy[1][5] = Partial_Derivative(df,"z");
 
-    free_coeffs(df);
-    df->v          = dX_dx[2][0];/* dZ/dx */
-    d2X_dxdy[2][0] = Partial_Derivative(df,"x");
-    d2X_dxdy[2][1] = Partial_Derivative(df,"y");
-    d2X_dxdy[2][2] = Partial_Derivative(df,"z");
-    free_coeffs(df);
-    df->v          = dX_dx[2][1];/* dZ/dy */
-    d2X_dxdy[2][3] = Partial_Derivative(df,"y");
-    d2X_dxdy[2][4] = Partial_Derivative(df,"z");
-    free_coeffs(df);
-    df->v          = dX_dx[2][2];/* dZ/dz */
-    d2X_dxdy[2][5] = Partial_Derivative(df,"z");
-    
-    df->v = 0;
-    remove_field(df);
-
+      free_coeffs(df);
+      df->v          = dX_dx[2][0];/* dZ/dx */
+      d2X_dxdy[2][0] = Partial_Derivative(df,"x");
+      d2X_dxdy[2][1] = Partial_Derivative(df,"y");
+      d2X_dxdy[2][2] = Partial_Derivative(df,"z");
+      free_coeffs(df);
+      df->v          = dX_dx[2][1];/* dZ/dy */
+      d2X_dxdy[2][3] = Partial_Derivative(df,"y");
+      d2X_dxdy[2][4] = Partial_Derivative(df,"z");
+      free_coeffs(df);
+      df->v          = dX_dx[2][2];/* dZ/dz */
+      d2X_dxdy[2][5] = Partial_Derivative(df,"z");
+      
+      df->v = 0;
+      remove_field(df);
+    }
     /* populate d^2X/dxdy numerically.
     // for the convention see JacobianTrans_T.
     // NOTE: if you want to use this, comment out the populate above. */
@@ -200,10 +202,13 @@ int make_JacobianT(Grid_T *const grid)
     }
     
     /* assign */
-    for (i = 0; i < 3; ++i)
-      for (j = 0; j < 6; ++j)
-        patch->JacobianT->d2X_dxdy[i][j] = d2X_dxdy[i][j];
-
+    if (0)
+    {
+      for (i = 0; i < 3; ++i)
+        for (j = 0; j < 6; ++j)
+          patch->JacobianT->d2X_dxdy[i][j] = d2X_dxdy[i][j];
+    }
+    
     /* populate dN/dX, NOTE: assume it is point independent, so picked 0. */
     dN_dX[0] = dq2_dq1(patch,_N0_,_a_,0);
     dN_dX[1] = dq2_dq1(patch,_N1_,_b_,0);
