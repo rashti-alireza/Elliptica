@@ -29,7 +29,7 @@ BH_dimensionless_spin  = 1
 # Solve Settings and Methods:                                           #
 #-----------------------------------------------------------------------#
 solve_Order                         = alpha
-solve_Newton_Update_Weight          = 0.2
+solve_Newton_Update_Weight          = 1.
 solve_Residual                      = 1E-20
 solve_Max_Iteration                 = 1
 solve_Max_Newton_Step               = 1
