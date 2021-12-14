@@ -94,13 +94,13 @@
 /* setting temporary vars */ 
 #define Workspace_ijk_Jacobian(Xijk) \
     J__JW->ijk = (Xijk);\
-    ijk_to_i_j_k((Xijk),patch->n,&(J__JW->i),&(J__JW->j),&(J__JW->k));\
-    J__JW->sin_thi[0] = sin(J__JW->i*J__JW->pi_o_nm1[0]);\
-    J__JW->sin_thi[1] = sin(J__JW->j*J__JW->pi_o_nm1[1]);\
-    J__JW->sin_thi[2] = sin(J__JW->k*J__JW->pi_o_nm1[2]);\
-    J__JW->cos_thi[0] = cos(J__JW->i*J__JW->pi_o_nm1[0]);\
-    J__JW->cos_thi[1] = cos(J__JW->j*J__JW->pi_o_nm1[1]);\
-    J__JW->cos_thi[2] = cos(J__JW->k*J__JW->pi_o_nm1[2]);
+    ijk_to_i_j_k((Xijk),patch->n,&(J__JW->i),&(J__JW->j),&(J__JW->k));
+//    J__JW->sin_thi[0] = sin(J__JW->i*J__JW->pi_o_nm1[0]);
+//    J__JW->sin_thi[1] = sin(J__JW->j*J__JW->pi_o_nm1[1]);
+//    J__JW->sin_thi[2] = sin(J__JW->k*J__JW->pi_o_nm1[2]);
+//    J__JW->cos_thi[0] = cos(J__JW->i*J__JW->pi_o_nm1[0]);
+//    J__JW->cos_thi[1] = cos(J__JW->j*J__JW->pi_o_nm1[1]);
+//    J__JW->cos_thi[2] = cos(J__JW->k*J__JW->pi_o_nm1[2]);
 
 /* NOTE: as we can see Workspace_lmn_Jacobian has to be after 
 // Workspace_ijk_Jacobian */
@@ -436,8 +436,8 @@ typedef struct SOLVING_MAN_T
     Uint imn,ljn,lmk;/* various combinations between (i,j,k) and (l,m,n) */
     Uint i,j,k;/* components composed ijk */
     Uint l,m,n;/* components composed lmn */
-    double sin_thi[3];/* sin(th[i,j,k]) i.e for each direction */
-    double cos_thi[3];/* cos(th[i,j,k]) i.e for each direction */
+    //double sin_thi[3];/* sin(th[i,j,k]) i.e for each direction */
+    //double cos_thi[3];/* cos(th[i,j,k]) i.e for each direction */
     JKD_Flag_T kd;/* Kronecker delta for ijk and lmn */
   }jacobian_workspace[1];
   
