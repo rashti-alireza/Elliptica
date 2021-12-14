@@ -245,17 +245,7 @@ void test_dfs_df_Spectral_vs_analytic(Grid_T *const grid)
       Pretty1"1st_order |J_spectral - J_analytic|_Linf = %e\n",patch->name,max);
   }
   
-  /* NOTE: the following test was found to be not accurate for coordinate systems 
-  // with complex coords Jacobian such as cubed spherical coords, because
-  // the are some terms in analytic expression that depends on the number 
-  // of grid points and by increasing the resolution they increase too.
-  // Thus, they cannot be expanded numerically and hence the truncation error 
-  // will always be large. For instance, the term dX/dx*dCheb_Tn/dX
-  // cannot be resolved by increasing the resolution as it depends on 
-  // the resolutions, and the culprit term is dX/dx which is at least O(X^2).
-  // However, we can turn on this test for coords in which the dX/dx Jacobians
-  // are of order less than O(X^2). */
-  if(0)/* turn 1st order test on or off */
+  if(1)/* turn 2nd order test on or off */
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < np; ++p)
   {

@@ -129,7 +129,22 @@
   ( Jnorm(patch->n[X_axis])*JdX_dx(patch,ijk,X_axis,dx_axis)*JdN_dX(patch,X_axis)*\
     Jd2f_dudX(Jtheta(qi,X_axis),Jtheta(qj,X_axis),patch->n[X_axis]-1,qj) )
 
-/* normalization * coords jacobian * Jd3f_dudXdX */
+/* normalization * coords jacobian * Jd3f_dudXdX
+// NOTE: SPECTRAL_JACOBIAN_ENTRY_FORM using an exact analytic expression.
+// Moreover, it was found that these two methods give different values 
+// for coordinate systems with complex coords Jacobian such as cubed spherical coords, 
+// because the are some terms in analytic expression that depends on the number 
+// of grid points and by increasing the resolution they increase too.
+// Thus, they cannot be expanded numerically and hence the truncation error 
+// will always be large. For instance, the term dX/dx*dCheb_Tn/dX
+// cannot be resolved by increasing the resolution as it depends on 
+// the resolutions, and the culprit term is dX/dx which is at least O(X^2).
+// However, they give exact same results for coords in which the dX/dx Jacobians
+// are of order less than O(X^2). 
+// Therefore, it seems SPECTRAL_JACOBIAN_ENTRY_FORM  is an over-fitting 
+// for a Jacobian of an equation and as a results  It is highly 
+// recommended to use Newton step weight about 0.2 for an elliptic 
+// equation even for a simple Poisson case! */
 #define Jd3f_dudxdy(patch, dx_axis, dy_axis, dxdy_axis,X_axis, ijk, lmn, qi,qj) \
   ( \
     Jnorm(patch->n[X_axis])*JdN_dX(patch,X_axis)*\
