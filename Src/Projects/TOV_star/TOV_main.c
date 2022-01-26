@@ -27,7 +27,7 @@ int TOV_star(void *vp)
   /* number of points for composite Simpson's rule integral.
   // for accuracy we choose large number and the method
   // requires the number be an odd number. */
-  Pset_default("TOV_Star_n","91");
+  Pset_default("TOV_Star_n","1001");
   
   TOV_T *tov = TOV_init();
   tov->phys  = phys;
