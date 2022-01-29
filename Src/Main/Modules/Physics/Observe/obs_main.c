@@ -51,11 +51,11 @@
 //        (arXiv:gr-qc/0703035v1) a counter example is Painleve-Gullstrand.
 //
 //        some explanation about parameters:
-//        S_inf: carry out integral at a S2 surface at inf not very accurate.
+//        S_inf: carry out integral at a S2 surface at inf.
 //               NOTE:
 //               this method utilizes conformal factor and conformal
 //               metric, thus if conformal factor is const and metric 
-//               is flat this gives zero.
+//               is flat this gives zero(like Painleve-Gullstrand BH).
 //
 //        S+V  : use Gauss lema to carry out the integral in a 
 //               volume and a closer surface than inf. 
