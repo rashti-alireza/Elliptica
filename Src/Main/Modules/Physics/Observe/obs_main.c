@@ -52,6 +52,13 @@
 //
 //        some explanation about parameters:
 //        S_inf: carry out integral at a S2 surface at inf.
+//        a rough approximation of the absolute error for this method 
+//        at res. 20x20x20 is:
+//        E_abs = 4*10^-5 * total_mass.
+//        this was found by testing the Christodoulou mass of a single 
+//        Kerr-Schild BH with arbitary spin direction, and the source of
+//        the error, I guess(not experimented though), 
+//        is due to finite radius of the outer boundary (1*10^5 solar_mass).
 //               NOTE:
 //               this method utilizes conformal factor and conformal
 //               metric, thus if conformal factor is const and metric 
@@ -70,6 +77,13 @@
 //               g_{ij} condition and the latter fails K too.
 //               furthermore, this method depends on conformal 
 //               factor psi thus if psi = const => 0.
+//        a rough approximation of the absolute error for this method
+//        (S+V,default) at res. 20x20x20 is:
+//        E_abs = 6*10^-4 * total_mass.
+//        this was found by testing the Christodoulou mass of a single 
+//        Schwarzschild (in isotropic coords), and the source of the error, 
+//        is due to resolution, since at res 40x40x40 the absolut error becomes:
+//        2*10^-7*total_mass.
 // ----------------------------------------------------------------------
 //
 // "Irreducible(M)" #=> irreducible mass for the givne physics (BH)
