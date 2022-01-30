@@ -52,13 +52,16 @@
 //
 //        some explanation about parameters:
 //        S_inf: carry out integral at a S2 surface at inf.
-//        a rough approximation of the absolute error for this method 
-//        at res. 20x20x20 is:
-//        E_abs = 4*10^-5 * total_mass.
-//        this was found by testing the Christodoulou mass of a single 
-//        Kerr-Schild BH with arbitary spin direction, and the source of
-//        the error, I guess(not experimented though), 
-//        is due to finite radius of the outer boundary (1*10^5 solar_mass).
+//
+//        Error analysis: ~ M/R where R is outer boundary radius and M is total mass
+//        this was found by testing the analytic solution of the 
+//        Christodoulou mass (~4.2) of a single Kerr-Schild BH with arbitary spin 
+//        direction where the outer boundary was at 1*10^5 solar_mass and we got
+//        at res. 20x20x20, E_rel ~ 4*10^-5.
+//        when the outer radius increases to 10^6 the error becomes E_rel ~ 10^-6.
+//        Moreover, this error depends on the total mass of the system, since by increasing 
+//        the BH mass (with arbitrary spin) to ~ 10 the E_rel ~ 10^-4 at outer bound R = 10^5
+//        and for outer bound R = 10^6, E_rel ~ 10^-5.
 //               NOTE:
 //               this method utilizes conformal factor and conformal
 //               metric, thus if conformal factor is const and metric 
