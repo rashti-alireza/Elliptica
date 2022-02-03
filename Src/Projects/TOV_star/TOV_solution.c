@@ -137,18 +137,18 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   {
     printf("TOV properties:\n");
     printf("--> NS equation of state              = %s\n",Gets("EoS_description"));
-    printf("--> NS radius (Schwarzschild Coords.) = %+e\n",TOV->r[TOV->N-1]);
-    printf("--> NS radius (Isotropic Coords.)     = %+e\n",TOV->rbar[TOV->N-1]);
-    printf("--> ADM mass                          = %+e\n",TOV->ADM_m);
-    printf("--> baryonic mass                     = %+e\n",TOV->bar_m);
-    printf("--> compactness                       = %+e\n",TOV->ADM_m/TOV->r[TOV->N-1]);
-    printf("--> psi at the center                 = %+e\n",TOV->psi[0]);
-    printf("--> central enthalpy                  = %+e\n",TOV->h[0]);
-    printf("--> central pressure                  = %+e\n",TOV->p[0]);
+    printf("--> NS radius (Schwarzschild Coords.) = %+0.15f\n",TOV->r[TOV->N-1]);
+    printf("--> NS radius (Isotropic Coords.)     = %+0.15f\n",TOV->rbar[TOV->N-1]);
+    printf("--> ADM mass                          = %+0.15f\n",TOV->ADM_m);
+    printf("--> baryonic mass                     = %+0.15f\n",TOV->bar_m);
+    printf("--> compactness                       = %+0.15f\n",TOV->ADM_m/TOV->r[TOV->N-1]);
+    printf("--> psi at the center                 = %+0.15f\n",TOV->psi[0]);
+    printf("--> central enthalpy                  = %+0.15f\n",TOV->h[0]);
+    printf("--> central pressure                  = %+0.15f\n",TOV->p[0]);
     
     tov_eos->h = TOV->h_cent;
-    printf("--> central energy density            = %+e\n",tov_eos->energy_density(tov_eos));
-    printf("--> central rest_mass_density         = %+e\n",tov_eos->rest_mass_density(tov_eos));
+    printf("--> central energy density            = %+0.15f\n",tov_eos->energy_density(tov_eos));
+    printf("--> central rest_mass_density         = %+0.15f\n",tov_eos->rest_mass_density(tov_eos));
   }
   
   /* some checks */
