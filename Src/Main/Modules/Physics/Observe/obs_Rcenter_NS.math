@@ -1,4 +1,5 @@
-# calculating R center for NS
+# calculating R center for NS with respect to the system center of mass.
+# note: NS_CM with respect to coord origin is NS_CM + sys_CM.
 
 # Manifold or grid Dimension
 Dimension = 3;
