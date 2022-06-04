@@ -73,7 +73,7 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
         drho0_D2[ijk] = drho0_dh*denthalpy_D2[ijk];
       }
     }
-    else/* the following not using change rule for rho0 */
+    else/* the following not using chain rule for rho0 */
     {
       Tij_NS_IF_XCTS_gConf_derives(patch);
     }
