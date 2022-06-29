@@ -31,6 +31,20 @@ typedef struct EquationOfState_T
  double (*rest_mass_density)(struct EquationOfState_T *const eos);
  double (*de_dh)(struct EquationOfState_T *const eos);/* d(energy_density)/dh */
  double (*drho0_dh)(struct EquationOfState_T *const eos);/* d(rest_mass_density)/dh */
+ /* save coeffs for spline interpolation */
+ struct
+ {
+   double h_floor;/* set some themodynamics var to 0 if h < h_floor. */
+   Uint sample_size;/* the number of points for a spline fit */
+   double *h_sample;/* enthalpy sample values */
+   double *p_sample;/* pressure sample values */
+   double *e_sample;/* energy_density sample values */
+   double *rho0_sample;/* rest_mass_density sample values */
+   void *interp_p;/* spline interpolation struct for p */
+   void *interp_e;/* spline interpolation struct for e */
+   void *interp_rho0;/* spline interpolation struct for rho0 */
+ }cubic_spline[1];
+ 
 }EoS_T;
 #undef EOS_MAX_STR
 
