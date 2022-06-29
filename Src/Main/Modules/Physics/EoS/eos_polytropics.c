@@ -195,10 +195,14 @@ double EoS_p_h_pwp_ncs(EoS_T *const eos)
 {
   if (LSSEQL(eos->h, eos->cubic_spline->h_floor))
     return 0.;
-    
+
+  double p;  
   Interpolation_T *const interp_s = eos->cubic_spline->interp_p;
+  
   interp_s->N_cubic_spline_1d->h  = eos->h;
-  return execute_interpolation(interp_s);
+  p = execute_interpolation(interp_s);
+  
+  return (LSSEQL(p,0.) ? 0. : p);
 }
 
 /* calculate rest mass density in terms of h for pwp and natural cubic spline
@@ -207,10 +211,14 @@ double EoS_rho0_h_pwp_ncs(EoS_T *const eos)
 {
   if (LSSEQL(eos->h, eos->cubic_spline->h_floor))
     return 0.;
-    
+  
+  double rho0;  
   Interpolation_T *const interp_s = eos->cubic_spline->interp_rho0;
+  
   interp_s->N_cubic_spline_1d->h  = eos->h;
-  return execute_interpolation(interp_s);
+  rho0 = execute_interpolation(interp_s);
+  
+  return (LSSEQL(rho0,0.) ? 0. : rho0);
 }
 
 /* calculate the total energy density in terms of h for pwp and natural cubic spline
@@ -220,7 +228,11 @@ double EoS_e_h_pwp_ncs(EoS_T *const eos)
   if (LSSEQL(eos->h, eos->cubic_spline->h_floor))
     return 0.;
 
+  double e;
   Interpolation_T *const interp_s = eos->cubic_spline->interp_e;
+  
   interp_s->N_cubic_spline_1d->h  = eos->h;
-  return execute_interpolation(interp_s);  
+  e = execute_interpolation(interp_s);
+  
+  return (LSSEQL(e,0.) ? 0. : e);
 }
