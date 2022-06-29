@@ -151,7 +151,7 @@ static void populate_EoS(EoS_T *const eos)
       // to smooth them. */
       const double h_i = enthalpy_initial;
       const double h_f = enthalpy_final;
-      const Uint sample_s = (Uint)Pgeti(P_"sample_size");/* number of sample points */
+      const Uint sample_s = (Uint)Geti(P_"sample_size");/* number of sample points */
       double *h_sample    = alloc_double(sample_s);
       double *p_sample    = alloc_double(sample_s);
       double *e_sample    = alloc_double(sample_s);
@@ -172,7 +172,7 @@ static void populate_EoS(EoS_T *const eos)
       eos->cubic_spline->p_sample    = p_sample;
       eos->cubic_spline->e_sample    = e_sample;
       eos->cubic_spline->rho0_sample = rho0_sample;
-      eos->cubic_spline->h_floor     = Pgetd(P_"enthalpy_floor");
+      eos->cubic_spline->h_floor     = Getd(P_"enthalpy_floor");
       
       /* find and save spline coeffs for (p, e, rho0).
       // NOTE: we assume each is a function of the enthalpy h. */
