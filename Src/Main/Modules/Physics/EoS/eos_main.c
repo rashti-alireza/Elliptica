@@ -5,6 +5,9 @@
 
 #include "eos_main.h"
 
+/* to be used for sampling purposes */
+static const double enthalpy_initial = 1.0;/* initial h */
+static const double enthalpy_final   = 2.0;/* final h */
 
 /* tutorial:
 // this is how we can calculate thermodynamic quantities
@@ -51,6 +54,16 @@ void free_EoS(EoS_T *s)
   if (s->n)      free(s->n);
   if (s->a)      free(s->a);
   if (s->gamma)  free(s->gamma);
+  
+  /* free cubic spline struct */
+  Free(s->cubic_spline->h_sample);
+  Free(s->cubic_spline->p_sample);
+  Free(s->cubic_spline->e_sample);
+  Free(s->cubic_spline->rho0_sample);
+  free_interpolation(s->cubic_spline->interp_p);
+  free_interpolation(s->cubic_spline->interp_e);
+  free_interpolation(s->cubic_spline->interp_rho0);
+  
   free(s);
 }
 
@@ -99,12 +112,110 @@ static void populate_EoS(EoS_T *const eos)
       eos->gamma = gamma;
       fill_n(eos);
       fill_a(eos);
-      fill_h_th(eos);/* this depends on a, so put it in the last */
+      fill_h_th(eos);/* NOTE: this depends on a, so put it in the last */
       eos->pressure          = EoS_p_h_pwp;
       eos->energy_density    = EoS_e_h_pwp;
       eos->rest_mass_density = EoS_rho0_h_pwp;
       eos->de_dh             = EoS_de_dh_h_pwp;
       eos->drho0_dh	     = EoS_drho0_dh_h_pwp;
+    }
+    /* pwp eos's are generally C^0 continuous so we use 
+    // natural cubic spline method to smooth them. the idea is 
+    // taking a sample of thermodynamic variables, p(h),e(h),rho0(h), 
+    // and then use a cubic spline fit to these data. */
+    else if (strcmp_i(eos->type,"pwp_natural_cubic_spline"))
+    {
+      /* check if rho is in increasing order. */
+      if (!rho0_th)
+        Error0("rho threshold must be specified.\n");
+        
+      for (i = 1; i < N-1; ++i)
+        if (GRT(rho0_th[i-1],rho0_th[i]))
+          Error0("rho0_th for piecewise polytropic EoS "
+                  "must be written in increasing order.\n");
+    
+      eos->N      = N;
+      eos->K      = K;
+      eos->rho0_th = rho0_th;
+      eos->gamma = gamma;
+      fill_n(eos);
+      fill_a(eos);
+      fill_h_th(eos);/* NOTE: this depends on a, so put it in the last */
+      eos->pressure          = EoS_p_h_pwp;
+      eos->energy_density    = EoS_e_h_pwp;
+      eos->rest_mass_density = EoS_rho0_h_pwp;
+      eos->de_dh             = EoS_de_dh_h_pwp;
+      eos->drho0_dh	     = EoS_drho0_dh_h_pwp;
+      
+      /* use pwp to find the (p, e, rho0) values and then use spline 
+      // to smooth them. */
+      const double h_i = enthalpy_initial;
+      const double h_f = enthalpy_final;
+      const Uint sample_s = (Uint)Pgeti(P_"sample_size");/* number of sample points */
+      double *h_sample    = alloc_double(sample_s);
+      double *p_sample    = alloc_double(sample_s);
+      double *e_sample    = alloc_double(sample_s);
+      double *rho0_sample = alloc_double(sample_s);
+      const double dh = (h_f-h_i)/(sample_s-1.);/* assumed equispaced */
+      
+      /* for sampling we use analytic pwp eqs. */
+      for (i = 0; i < sample_s; ++i)
+      {
+        eos->h = h_sample[i] = h_i + i*dh;
+        p_sample[i]    = eos->pressure(eos);
+        e_sample[i]    = eos->energy_density(eos);
+        rho0_sample[i] = eos->rest_mass_density(eos);
+      }
+      /* save samples: */
+      eos->cubic_spline->sample_size = sample_s;
+      eos->cubic_spline->h_sample    = h_sample;
+      eos->cubic_spline->p_sample    = p_sample;
+      eos->cubic_spline->e_sample    = e_sample;
+      eos->cubic_spline->rho0_sample = rho0_sample;
+      eos->cubic_spline->h_floor     = Pgetd(P_"enthalpy_floor");
+      
+      /* find and save spline coeffs for (p, e, rho0).
+      // NOTE: we assume each is a function of the enthalpy h. */
+      // p:
+      Interpolation_T *interp_p = init_interpolation();
+      interp_p->method          = "Natural_Cubic_Spline_1D";
+      interp_p->N_cubic_spline_1d->f   = p_sample;
+      interp_p->N_cubic_spline_1d->x   = h_sample;
+      interp_p->N_cubic_spline_1d->N   = sample_s;
+      plan_interpolation(interp_p);
+      eos->cubic_spline->interp_p = interp_p;
+      
+      // e:
+      Interpolation_T *interp_e = init_interpolation();
+      interp_e->method          = "Natural_Cubic_Spline_1D";
+      interp_e->N_cubic_spline_1d->f   = e_sample;
+      interp_e->N_cubic_spline_1d->x   = h_sample;
+      interp_e->N_cubic_spline_1d->N   = sample_s;
+      plan_interpolation(interp_e);
+      eos->cubic_spline->interp_e = interp_e;
+      
+      // rho0:
+      Interpolation_T *interp_rho0 = init_interpolation();
+      interp_rho0->method          = "Natural_Cubic_Spline_1D";
+      interp_rho0->N_cubic_spline_1d->f   = rho0_sample;
+      interp_rho0->N_cubic_spline_1d->x   = h_sample;
+      interp_rho0->N_cubic_spline_1d->N   = sample_s;
+      plan_interpolation(interp_rho0);
+      eos->cubic_spline->interp_rho0 = interp_rho0;
+      
+      /* assign functions for (p, e, rho0) */
+      eos->pressure          = EoS_p_h_pwp_ncs;
+      eos->energy_density    = EoS_e_h_pwp_ncs;
+      eos->rest_mass_density = EoS_rho0_h_pwp_ncs;
+      /* FIXME: for now use analytical calculations so it isn't continuous */
+      eos->de_dh             = EoS_de_dh_h_pwp;
+      eos->drho0_dh	     = EoS_drho0_dh_h_pwp;
+      
+      /* set to null for precaution */
+      h_sample = 0;
+      p_sample = 0;
+      e_sample = 0;
+      rho0_sample = 0;
     }
     else if (strcmp_i(eos->type,"polytropic") ||
              strcmp_i(eos->type,"polytrop"))
