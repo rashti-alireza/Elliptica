@@ -17,6 +17,7 @@
 
 #define Pretty0        "|--> "
 #define Pretty1        "~> "
+#define Pretty2        "--> "
 
 /* some general macros */
 #define FOLDER_AFFIX "_%02d"/* that's how folders are named */
