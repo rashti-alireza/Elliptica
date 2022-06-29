@@ -337,9 +337,10 @@ static void calculate_ADM_and_Komar_mass(TOV_T *const TOV)
   if (GRT(fabs(Komar_mass-ADM_mass),tol))/* virial theorem */
   {
     TOV->status = 1;
-    fprintf(stderr,"Komar mass = %g, ADM mass = %g\n",Komar_mass,ADM_mass);
-    if (TOV->exit_if_error)
-      Error0("Komar mass and ADM mass must be equal!\n");
+    //if (TOV->exit_if_error)
+      //Error0("Komar mass and ADM mass must be equal!\n");
+    fprintf(stderr,"*** A big mass difference: Komar mass = %g, "
+            "ADM mass = %g ***\n", Komar_mass, ADM_mass);
   }
 }
 
