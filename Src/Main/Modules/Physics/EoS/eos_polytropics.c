@@ -188,3 +188,39 @@ static Uint find_threshold_number_h(const EoS_T *const eos)
   
   return i;
 }
+
+/* calculate pressure in terms of h for pwp and natural cubic spline
+// ->return value: p(h) */
+double EoS_p_h_pwp_ncs(EoS_T *const eos)
+{
+  if (LSSEQL(eos->h, eos->cubic_spline->h_floor))
+    return 0.;
+    
+  Interpolation_T *const interp_s = eos->cubic_spline->interp_p;
+  interp_s->N_cubic_spline_1d->h  = eos->h;
+  return execute_interpolation(interp_s);
+}
+
+/* calculate rest mass density in terms of h for pwp and natural cubic spline
+// ->return value: rho(h) */
+double EoS_rho0_h_pwp_ncs(EoS_T *const eos)
+{
+  if (LSSEQL(eos->h, eos->cubic_spline->h_floor))
+    return 0.;
+    
+  Interpolation_T *const interp_s = eos->cubic_spline->interp_rho0;
+  interp_s->N_cubic_spline_1d->h  = eos->h;
+  return execute_interpolation(interp_s);
+}
+
+/* calculate the total energy density in terms of h for pwp and natural cubic spline
+// ->return value: e(h) */
+double EoS_e_h_pwp_ncs(EoS_T *const eos)
+{
+  if (LSSEQL(eos->h, eos->cubic_spline->h_floor))
+    return 0.;
+
+  Interpolation_T *const interp_s = eos->cubic_spline->interp_e;
+  interp_s->N_cubic_spline_1d->h  = eos->h;
+  return execute_interpolation(interp_s);  
+}
