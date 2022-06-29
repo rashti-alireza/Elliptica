@@ -228,7 +228,7 @@ static double interpolation_natural_cubic_spline_1d(Interpolation_T *const inter
   
   if (flg != FOUND)
   {
-    Error0("The given point for the interpolation is out of the domain.\n");
+    Warning("The given point for the interpolation is out of the domain.\n");
   }
   else
   {
