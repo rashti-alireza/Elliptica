@@ -17,7 +17,7 @@ typedef struct EquationOfState_T
  double *K;/* polytropic constant */
  double *rho0_th;/* thresholds of rest mass density */
  double *h_th;/* enthalpy thresholds */
- double *n;/* polytropic index n = 1/(gamma-1)*/
+ double *n;/* polytropic index n = 1/(gamma-1) */
  double *gamma;/* polytropic index */
  double *a;/* constant coefficient to ensure continuity */
  double h;/* enthalpy */
