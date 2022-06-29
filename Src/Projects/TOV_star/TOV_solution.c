@@ -136,19 +136,19 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   if (TOV->description)
   {
     printf("TOV properties:\n");
-    printf("--> NS equation of state              = %s\n",Gets("EoS_description"));
-    printf("--> NS radius (Schwarzschild Coords.) = %+0.15f\n",TOV->r[TOV->N-1]);
-    printf("--> NS radius (Isotropic Coords.)     = %+0.15f\n",TOV->rbar[TOV->N-1]);
-    printf("--> ADM mass                          = %+0.15f\n",TOV->ADM_m);
-    printf("--> baryonic mass                     = %+0.15f\n",TOV->bar_m);
-    printf("--> compactness                       = %+0.15f\n",TOV->ADM_m/TOV->r[TOV->N-1]);
-    printf("--> psi at the center                 = %+0.15f\n",TOV->psi[0]);
-    printf("--> central enthalpy                  = %+0.15f\n",TOV->h[0]);
-    printf("--> central pressure                  = %+0.15f\n",TOV->p[0]);
+    printf(Pretty2 "NS equation of state              = %s\n",Gets("EoS_description"));
+    printf(Pretty2 "NS radius (Schwarzschild Coords.) = %+0.15f\n",TOV->r[TOV->N-1]);
+    printf(Pretty2 "NS radius (Isotropic Coords.)     = %+0.15f\n",TOV->rbar[TOV->N-1]);
+    printf(Pretty2 "ADM mass                          = %+0.15f\n",TOV->ADM_m);
+    printf(Pretty2 "baryonic mass                     = %+0.15f\n",TOV->bar_m);
+    printf(Pretty2 "compactness                       = %+0.15f\n",TOV->ADM_m/TOV->r[TOV->N-1]);
+    printf(Pretty2 "psi at the center                 = %+0.15f\n",TOV->psi[0]);
+    printf(Pretty2 "central enthalpy                  = %+0.15f\n",TOV->h[0]);
+    printf(Pretty2 "central pressure                  = %+0.15f\n",TOV->p[0]);
     
     tov_eos->h = TOV->h_cent;
-    printf("--> central energy density            = %+0.15f\n",tov_eos->energy_density(tov_eos));
-    printf("--> central rest_mass_density         = %+0.15f\n",tov_eos->rest_mass_density(tov_eos));
+    printf(Pretty2 "central energy density            = %+0.15f\n",tov_eos->energy_density(tov_eos));
+    printf(Pretty2 "central rest_mass_density         = %+0.15f\n",tov_eos->rest_mass_density(tov_eos));
   }
   
   /* some checks */
