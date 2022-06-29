@@ -193,7 +193,6 @@ static void find_coeffs_natural_cubic_spline_1d(Interpolation_T *const interp_s)
 // interp_s->N_cubic_spline_1d->x   = x;
 // interp_s->N_cubic_spline_1d->h   = h;// the point that we wanna interpolate f i.e. f(h)
 // interp_s->N_cubic_spline_1d->N   = 20;// dimention of array f and x
-// interp_s->N_cubic_spline_1d->max = 10;// 10 out of N used for interpolation
 // ** planning the appropriate function for interpolation **
 // plan_interpolation(interp_s);
 //
