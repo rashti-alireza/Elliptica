@@ -182,6 +182,7 @@ static void populate_EoS(EoS_T *const eos)
       interp_p->N_cubic_spline_1d->f   = p_sample;
       interp_p->N_cubic_spline_1d->x   = h_sample;
       interp_p->N_cubic_spline_1d->N   = sample_s;
+      interp_p->N_cubic_spline_1d->No_Warn = 1;/* suppress warning */
       plan_interpolation(interp_p);
       eos->cubic_spline->interp_p = interp_p;
       
@@ -191,6 +192,7 @@ static void populate_EoS(EoS_T *const eos)
       interp_e->N_cubic_spline_1d->f   = e_sample;
       interp_e->N_cubic_spline_1d->x   = h_sample;
       interp_e->N_cubic_spline_1d->N   = sample_s;
+      interp_e->N_cubic_spline_1d->No_Warn = 1;/* suppress warning */
       plan_interpolation(interp_e);
       eos->cubic_spline->interp_e = interp_e;
       
@@ -200,6 +202,7 @@ static void populate_EoS(EoS_T *const eos)
       interp_rho0->N_cubic_spline_1d->f   = rho0_sample;
       interp_rho0->N_cubic_spline_1d->x   = h_sample;
       interp_rho0->N_cubic_spline_1d->N   = sample_s;
+      interp_rho0->N_cubic_spline_1d->No_Warn = 1;/* suppress warning */
       plan_interpolation(interp_rho0);
       eos->cubic_spline->interp_rho0 = interp_rho0;
       
