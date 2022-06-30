@@ -56,6 +56,7 @@ typedef struct INTERPOLATION_T
    double *a,*b,*c,*d;/* coefficents in s(h) = a+b(h-xi)+c(h-xi)^2+d(h-xi)^3 */
    Uint Order: 1;/* if xi's in the order 1, otherwise 0 */
    Uint Alloc_Mem: 1;/* if it allocates memory for x and f */
+   Uint No_Warn: 1;/* if 1 it prints NO warning in case of an error */
   }N_cubic_spline_1d[1];/* natural cubic spline 1d */
 }Interpolation_T;
 
