@@ -122,7 +122,10 @@ static void populate_EoS(EoS_T *const eos)
     /* pwp eos's are generally C^0 continuous so we use 
     // natural cubic spline method to smooth them. the idea is 
     // taking a sample of thermodynamic variables, p(h),e(h),rho0(h), 
-    // and then use a cubic spline fit to these data. */
+    // and then use a cubic spline fit to these data. 
+    // NOTE: the required params are:
+    // "sample_size"   : set how many points will be selected from the eos.
+    // "enthalpy_floor": set thermodynamics vars to zero if h < enthalpy_floor. */
     else if (strcmp_i(eos->type,"pwp_natural_cubic_spline"))
     {
       /* check if rho is in increasing order. */
