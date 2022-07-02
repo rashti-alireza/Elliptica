@@ -213,10 +213,11 @@ static double interpolation_natural_cubic_spline_1d(Interpolation_T *const inter
   const double *const d = interp_s->N_cubic_spline_1d->d;
   const double h = interp_s->N_cubic_spline_1d->h;
   const double N = interp_s->N_cubic_spline_1d->N;
-  double ret = DBL_MAX;
-  Uint i;
+  double ret = DBL_MAX;/* it's important to be max double */
+  Uint i = 0;
   Flag_T flg = NONE;
   
+  /* find the segment */
   for (i = 0; i < N-1; ++i)
   {
     if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
@@ -225,15 +226,16 @@ static double interpolation_natural_cubic_spline_1d(Interpolation_T *const inter
       break;
     }
   }
+
+  if (flg != FOUND)
+  {
+    if (!interp_s->N_cubic_spline_1d->No_Warn)
+      Warning("The given point for the interpolation is out of the domain.\n");
+    
+    return ret;
+  }
   
-  if (flg != FOUND && !interp_s->N_cubic_spline_1d->No_Warn)
-  {
-    Warning("The given point for the interpolation is out of the domain.\n");
-  }
-  else
-  {
-    ret = a[i]+b[i]*(h-x[i])+c[i]*Pow2(h-x[i])+d[i]*Pow3(h-x[i]);
-  }
+  ret = a[i]+b[i]*(h-x[i])+c[i]*Pow2(h-x[i])+d[i]*Pow3(h-x[i]);
   
   return ret; 
 }
