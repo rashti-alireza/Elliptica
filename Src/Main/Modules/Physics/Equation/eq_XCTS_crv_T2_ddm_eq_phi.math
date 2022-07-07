@@ -140,7 +140,9 @@ hxu0xpsi4           = enthalpy * u0 * psi4;
 DiBi = 6*dLn_of_psi(i)*beta(-i)+dbeta(i,-i)+ChrisConf(i,ip,l)*KD(-i,-ip)*beta(-l);
 
 
-t1    = igConf(-i,-l)*(ddphi(i,l)-ChrisConf(n,i,l)*dphi(-n));
+t0    = igConf(-i,-l)*(ddphi(i,l));
+
+t1    = igConf(-i,-l)*(-ChrisConf(n,i,l)*dphi(-n));
 
 t2    = (2*dLn_of_psi(-i)+dLn_of_alpha(-i)-dLn_of_enthalpy(-i))*igConf(i,l)*dphi(-l);
 
@@ -152,7 +154,7 @@ t5    = -hxu0xpsi4 * (DiBi);
 
 t6(i) = (igConf(i,l)*dphi(-l)+psi4*W(i)-hxu0xpsi4*beta(i));
 
-F_eq  = polish*t1+rho0*(t1+t2+t3+t4+t5)+drho0(-i)*t6(i);
+F_eq  = polish*t0+rho0*(t0+t1+t2+t3+t4+t5)+drho0(-i)*t6(i);
 
 
 `  schur_F[schur_ijk] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme

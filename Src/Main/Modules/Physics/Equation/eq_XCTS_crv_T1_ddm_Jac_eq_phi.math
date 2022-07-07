@@ -148,13 +148,15 @@ dLn_of_enthalpy_b(i)  = denthalpy(i)/enthalpy;
 
 polish_b              = att*((1-rho0/rhoc)**4);
 
-t1_b = (rho0+polish_b)*igConf(-i,-l)*(JJphi(i,l)-ChrisConf(n,i,l)*Jphi(-n));
+t0_b = (rho0+polish_b)*igConf(-i,-l)*(JJphi(i,l));
+
+t1_b = (rho0)*igConf(-i,-l)*(-ChrisConf(n,i,l)*Jphi(-n));
 
 t2_b = igConf(-i,l)*Jphi(-l)*(drho0(i) + rho0*\
          (2*dLn_of_psi_b(i)+dLn_of_alpha_b(i)-dLn_of_enthalpy_b(i)));
 
 
-Bpart_ = t1_b+t2_b;
+Bpart_ = t0_b+t1_b+t2_b;
 
 `  schur_B[schur_ijk][schur_lmn] = Bpart_;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE\n`;
@@ -184,12 +186,14 @@ dLn_of_enthalpy_e(i)  = denthalpy(i)/enthalpy;
 
 polish_e              = att*((1-rho0/rhoc)**4);
 
-t1_e = (rho0+polish_e)*igConf(-i,-l)*(JJphi(i,l)-ChrisConf(n,i,l)*Jphi(-n));
+t0_e = (rho0+polish_e)*igConf(-i,-l)*(JJphi(i,l));
+
+t1_e = (rho0)*igConf(-i,-l)*(-ChrisConf(n,i,l)*Jphi(-n));
 
 t2_e = igConf(-i,l)*Jphi(-l)*(drho0(i) + rho0*\
          (2*dLn_of_psi_e(i)+dLn_of_alpha_e(i)-dLn_of_enthalpy_e(i)));
 
-Epart_ = t1_e+t2_e;
+Epart_ = t0_e+t1_e+t2_e;
 
 
 `  schur_Et[schur_lmn][schur_ijk] = Epart_;\n`;
