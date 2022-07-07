@@ -855,6 +855,16 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
   /* if NS surface finder interrupted */
   if (root->interrupt)
   {
+    /* track the number of fails! */
+    Uint mfail = (Uint)Geti("surface_max_fail");
+    Uint nfail = (Uint)Geti("surface_num_fail");
+    Seti("surface_num_fail",(int)(++nfail));
+    
+    if (nfail > mfail)
+    {
+      Error0("NS surface finder failed too many times!");
+    }
+    
     /* these are crucial for the next grid */
     printf(Pretty0"NS surface finder was interrupted.\n");
     

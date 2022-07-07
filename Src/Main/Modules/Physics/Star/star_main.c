@@ -262,6 +262,15 @@ static int set_star_params(Physics_T *const phys)
     // ======
     // surface_Ylm_max_l .*/
     
+    /* tracking the number of surface finder failings. 
+    // this stops the code if something is wrong!
+    //
+    // param:
+    // ======
+    // surface_max_fail: max allowed surface fails.
+    // surface_num_fail: number of surface fails.
+    */
+    
     /* how to extrapolate matter fields outside the NS :
     //
     // param:
