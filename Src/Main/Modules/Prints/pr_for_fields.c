@@ -312,35 +312,35 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
   /* list of the fields(flds) to be printed out */
   char **flds = 
      read_separated_items_in_string(PgetsEZ("txt_output_1d"),',');
-  /* list of requested directions(d) */
-  char **d = 
+  /* list of lines */
+  char **lns = 
      read_separated_items_in_string(PgetsEZ(line_par_name),')');
   
   Uint Nparsed;/* number of parsed struct */
   Uint i,j,k,f,l,p,counter;
   
-  if (!d)
+  if (!lns)
     printf(Pretty0"No line was specified.\n");
   
   /* count the number of meaning full values */
   counter = 0;
-  for (i = 0; d && d[i]; ++i)
+  for (i = 0; lns && lns[i]; ++i)
   {
-    if (strlen(d[i]) > 5)/* coz we need, for example, "(I,1,2". 
+    if (strlen(lns[i]) > 5)/* coz we need, for example, "(I,1,2". 
                          // note ')' is eliminated. */
       counter++;
   }
   Nparsed = counter;
   struct parsed_s parsed[counter];
   j = 0;
-  for (i = 0; d && d[i]; ++i)
+  for (i = 0; lns && lns[i]; ++i)
   {
      counter = 0;
-     if (strlen(d[i]) <= 5)
+     if (strlen(lns[i]) <= 5)
        continue;
      /* substitue ,e.g., ",(0,J,2" by "0,J,2". */
-     regex_replace(d[i],"^.?\\(","",d[i]);
-     char **subs = read_separated_items_in_string(d[i],',');
+     regex_replace(lns[i],"^.?\\(","",lns[i]);
+     char **subs = read_separated_items_in_string(lns[i],',');
      
      /* sanity checks */
      if (!subs) Errors("Wrong format for %s.\n",line_par_name);
@@ -410,7 +410,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
      if (counter != 1)
        Errors("Wrong order for %s.\n",line_par_name); 
        
-     sprintf(parsed[j].strv,"(%s)",d[i]);
+     sprintf(parsed[j].strv,"(%s)",lns[i]);
      j++;
      free_2d(subs);
   }
@@ -425,7 +425,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
             parsed[i].X,parsed[i].Y,parsed[i].Z);
   }
   
-  if(flds && d)
+  if(flds && lns)
   for (l = 0; l < Nparsed; ++l)
   {
     struct parsed_s *line = &parsed[l];
@@ -653,7 +653,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
   }    
   
   free_2d(flds);
-  free_2d(d);
+  free_2d(lns);
   
   FUNC_TOC
 }
