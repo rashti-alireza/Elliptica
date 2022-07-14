@@ -299,28 +299,31 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
   /* parsed directions. */
   struct parsed_s
   {
-    Uint X:1;/* if X dir is asked 1, otherwise 0. */
-    Uint Y:1;/* if Y dir is asked 1, otherwise 0. */
-    Uint Z:1;/* if Z dir is asked 1, otherwise 0. */
-    Uint I;/* save the requested index for print */
-    Uint J;/* save the requested index for print */
-    Uint K;/* save the requested index for print */
+    Uint Xline:1;/* if X-line is asked 1, otherwise 0. */
+    Uint Yline:1;/* if Y-line is asked 1, otherwise 0. */
+    Uint Zline:1;/* if Z-line is asked 1, otherwise 0. */
+    double X;/* X coords of the print line */
+    double Y;/* Y coords of the print line */
+    double Z;/* Z coords of the print line */
     char strv[1000];/* save a version of param values. */
   };
-  
+  const char *const line_par_name = "txt_output_1d_line";
   /* list of the fields(f) to be printed out */
   char **f = 
      read_separated_items_in_string(PgetsEZ("txt_output_1d"),',');
   /* list of requested directions(d) */
   char **d = 
-     read_separated_items_in_string(PgetsEZ("txt_output_1d_IJK"),')');
+     read_separated_items_in_string(PgetsEZ(line_par_name),')');
   
   Uint Nparsed;/* number of parsed struct */
   Uint i, j, counter;
   
+  if (!d)
+    printf(Pretty0"No line was specified.\n");
+  
   /* count the number of meaning full values */
   counter = 0;
-  for (i = 0; d[i]; ++i)
+  for (i = 0; d && d[i]; ++i)
   {
     if (strlen(d[i]) > 5)/* coz we need, for example, "(I,1,2". 
                          // note ')' is eliminated. */
@@ -329,7 +332,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
   Nparsed = counter;
   struct parsed_s parsed[counter];
   j = 0;
-  for (i = 0; d[i]; ++i)
+  for (i = 0; d && d[i]; ++i)
   {
      counter = 0;
      if (strlen(d[i]) <= 5)
@@ -339,70 +342,69 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
      char **subs = read_separated_items_in_string(d[i],',');
      
      /* sanity checks */
-     if (!subs) Errors("Wrong format for %s.\n","txt_output_1d_IJK");
+     if (!subs) Errors("Wrong format for %s.\n",line_par_name);
      for (counter = 0; subs[counter]; counter++);
-     if (counter != 3) Errors("Wrong format for %s.\n","txt_output_1d_IJK");
+     if (counter != 3) Errors("Wrong format for %s.\n",line_par_name);
      
      if (
          /* 'I/i' should only take place on 0th position */
-         *subs[1] == 'I' || 
-         *subs[1] == 'i' || 
-         *subs[2] == 'I' || 
-         *subs[2] == 'i' ||
+         *subs[1] == 'X' || 
+         *subs[1] == 'x' || 
+         *subs[2] == 'X' || 
+         *subs[2] == 'x' ||
          /* 'J/j' should only take place on 1st position */
-         *subs[0] == 'J' || 
-         *subs[0] == 'j' || 
-         *subs[2] == 'J' || 
-         *subs[2] == 'j' || 
-         
+         *subs[0] == 'Y' || 
+         *subs[0] == 'y' || 
+         *subs[2] == 'Y' || 
+         *subs[2] == 'y' || 
          /* 'K/k' should only take place on 2nd position */
-         *subs[0] == 'K' || 
-         *subs[0] == 'k' || 
-         *subs[1] == 'K' || 
-         *subs[1] == 'k'
+         *subs[0] == 'Z' || 
+         *subs[0] == 'z' || 
+         *subs[1] == 'Z' || 
+         *subs[1] == 'z'
          )
      {
-       Errors("Wrong order for %s.\n","txt_output_1d_IJK"); 
+       Errors("Wrong order for %s.\n",line_par_name); 
      }
      
      /* realize */
      counter = 0;
-     if (*subs[0] == 'I' || *subs[0] == 'i')
+     if (*subs[0] == 'X' || *subs[0] == 'x')
      {
-       parsed[j].X = 1;
-       parsed[j].Y = 0;
-       parsed[j].Z = 0;
+       parsed[j].Xline = 1;
+       parsed[j].Yline = 0;
+       parsed[j].Zline = 0;
        
-       parsed[j].I = UINT_MAX;
-       parsed[j].J = (Uint)atoi(subs[1]);
-       parsed[j].K = (Uint)atoi(subs[2]);
+       parsed[j].X = DBL_MAX;
+       parsed[j].Y = atof(subs[1]);
+       parsed[j].Z = atof(subs[2]);
        counter++;
      }
-     if (*subs[1] == 'J' || *subs[1] == 'j')
+     if (*subs[1] == 'Y' || *subs[1] == 'y')
      {
-       parsed[j].X = 0;
-       parsed[j].Y = 1;
-       parsed[j].Z = 0;
+       parsed[j].Xline = 0;
+       parsed[j].Yline = 1;
+       parsed[j].Zline = 0;
        
-       parsed[j].I = (Uint)atoi(subs[0]);
-       parsed[j].J = UINT_MAX;
-       parsed[j].K = (Uint)atoi(subs[2]);
+       parsed[j].X = atof(subs[0]);
+       parsed[j].Y = DBL_MAX;
+       parsed[j].Z = atof(subs[2]);
        counter++;
      }
-     if (*subs[2] == 'K' || *subs[2] == 'k')
+     if (*subs[2] == 'Z' || *subs[2] == 'z')
      {
-       parsed[j].X = 0;
-       parsed[j].Y = 0;
-       parsed[j].Z = 1;
+       parsed[j].Xline = 0;
+       parsed[j].Yline = 0;
+       parsed[j].Zline = 1;
        
-       parsed[j].I = (Uint)atoi(subs[0]);
-       parsed[j].J = (Uint)atoi(subs[1]);
-       parsed[j].K = UINT_MAX;
+       parsed[j].X = atof(subs[0]);
+       parsed[j].Y = atof(subs[1]);
+       parsed[j].Z = DBL_MAX;
        counter++;
      }
      /* if we have more than two letters, e.g., "(I,J,7)". */
-     if (counter > 1)
-       Errors("Wrong order for %s.\n","txt_output_1d_IJK"); 
+     if (counter != 1)
+       Errors("Wrong order for %s.\n",line_par_name); 
        
      sprintf(parsed[j].strv,"(%s)",d[i]);
      j++;
@@ -413,10 +415,10 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
   if (1)
   for (i = 0; i < Nparsed; ++i)
   {
-    printf("param[%u] = %s => (%u,%u,%u) & (%u,%u,%u)\n",
+    printf("param[%u] = %s => (%u,%u,%u) & (%g,%g,%g)\n",
             i, parsed[i].strv, 
-            parsed[i].X,parsed[i].Y,parsed[i].Z,
-            parsed[i].I,parsed[i].J,parsed[i].K);
+            parsed[i].Xline,parsed[i].Yline,parsed[i].Zline,
+            parsed[i].X,parsed[i].Y,parsed[i].Z);
   }
   
 UNUSED(grid)
