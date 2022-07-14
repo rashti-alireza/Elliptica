@@ -172,7 +172,7 @@ int print_fields_3D(const Grid_T *const grid,const int iteration,
 
 /* ->: largest L2 norm.
 // print norms L2, L1 and L_inf of the specified fields 
-// in parameter "txt_output_1d" (supporting regular expression) */
+// in parameter "txt_output_0d" (supporting regular expression) */
 double print_fields_0D(const Grid_T *const grid,const int iteration, 
                       const char *const folder)
 {
@@ -181,7 +181,7 @@ double print_fields_0D(const Grid_T *const grid,const int iteration,
   
   /* list of the fields to be printed out */
   char **f = 
-     read_separated_items_in_string(PgetsEZ("txt_output_1d"),',');
+     read_separated_items_in_string(PgetsEZ("txt_output_0d"),',');
   double largest_L2_error = 0; 
   Uint i,p;
   
