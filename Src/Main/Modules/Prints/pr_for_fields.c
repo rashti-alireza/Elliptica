@@ -305,7 +305,8 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
     double X;/* X coords of the print line */
     double Y;/* Y coords of the print line */
     double Z;/* Z coords of the print line */
-    char strv[1000];/* save a version of param values. */
+    char strv[STR_LEN];/* save a version of param values. */
+    char suffix[STR_LEN/2];/* suffix for the file. */
   };
   const char *const line_par_name = "txt_output_1d_line";
   /* list of the fields(f) to be printed out */
@@ -316,7 +317,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
      read_separated_items_in_string(PgetsEZ(line_par_name),')');
   
   Uint Nparsed;/* number of parsed struct */
-  Uint i, j, counter;
+  Uint i,j,k,l,p,counter;
   
   if (!d)
     printf(Pretty0"No line was specified.\n");
@@ -378,6 +379,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
        parsed[j].X = DBL_MAX;
        parsed[j].Y = atof(subs[1]);
        parsed[j].Z = atof(subs[2]);
+       sprintf(parsed[j].suffix,"X_%s_%s",subs[1],subs[2]);
        counter++;
      }
      if (*subs[1] == 'Y' || *subs[1] == 'y')
@@ -389,6 +391,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
        parsed[j].X = atof(subs[0]);
        parsed[j].Y = DBL_MAX;
        parsed[j].Z = atof(subs[2]);
+       sprintf(parsed[j].suffix,"%s_Y_%s",subs[0],subs[2]);
        counter++;
      }
      if (*subs[2] == 'Z' || *subs[2] == 'z')
@@ -400,6 +403,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
        parsed[j].X = atof(subs[0]);
        parsed[j].Y = atof(subs[1]);
        parsed[j].Z = DBL_MAX;
+       sprintf(parsed[j].suffix,"%s_%s_Z",subs[0],subs[1]);
        counter++;
      }
      /* if we have more than two letters, e.g., "(I,J,7)". */
@@ -421,13 +425,131 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
             parsed[i].X,parsed[i].Y,parsed[i].Z);
   }
   
-UNUSED(grid)
-UNUSED(folder)
-
-#if 0     
-  Uint i,p;
-  
   if(f && d)
+  for (l = 0; l < Nparsed; ++l)
+  {
+    struct parsed_s *line = &parsed[l];
+    Uint ijk;/* (X,Y,Z) indices */
+    
+    FOR_ALL_PATCHES(p,grid)
+    {
+      Patch_T *patch = grid->patch[p];
+      const Uint *const n = patch->n;
+      Uint I,J,K;
+      double min_d;
+      FILE *file;
+      char file_name[STR_LEN];
+      char *stem = strstr(patch->name,"_");
+      stem++;
+      
+      /* finding the index of the closest point to 
+      // the specified one in the param. */
+      I = J = K = UINT_MAX;
+      if (line->Xline)
+      {
+        min_d = DBL_MAX;
+        for (j = 0; j < n[1]; ++j)
+        {
+          ijk = i_j_k_to_ijk(n,0,j,0);
+          double dist = fabs(line->Y-patch->node[ijk]->X[1]);
+          if (dist < min_d)
+          {
+            J = j;
+            min_d = dist;
+          }
+        }
+        
+        min_d = DBL_MAX;
+        for (k = 0; k < n[2]; ++k)
+        {
+          ijk = i_j_k_to_ijk(n,0,0,k);
+          double dist = fabs(line->Z-patch->node[ijk]->X[2]);
+          if (dist < min_d)
+          {
+            K = k;
+            min_d = dist;
+          }
+        }
+      }
+      
+      else if (line->Yline)
+      {
+        min_d = DBL_MAX;
+        for (i = 0; i < n[0]; ++i)
+        {
+          ijk = i_j_k_to_ijk(n,i,0,0);
+          double dist = fabs(line->X-patch->node[ijk]->X[0]);
+          if (dist < min_d)
+          {
+            I = i;
+            min_d = dist;
+          }
+        }
+        
+        min_d = DBL_MAX;
+        for (k = 0; k < n[2]; ++k)
+        {
+          ijk = i_j_k_to_ijk(n,0,0,k);
+          double dist = fabs(line->Z-patch->node[ijk]->X[2]);
+          if (dist < min_d)
+          {
+            K = k;
+            min_d = dist;
+          }
+        }
+      }
+      
+      else if (line->Zline)
+      {
+        min_d = DBL_MAX;
+        for (i = 0; i < n[0]; ++i)
+        {
+          ijk = i_j_k_to_ijk(n,i,0,0);
+          double dist = fabs(line->X-patch->node[ijk]->X[0]);
+          if (dist < min_d)
+          {
+            I = i;
+            min_d = dist;
+          }
+        }
+        
+        min_d = DBL_MAX;
+        for (j = 0; j < n[1]; ++j)
+        {
+          ijk = i_j_k_to_ijk(n,0,j,0);
+          double dist = fabs(line->Y-patch->node[ijk]->X[1]);
+          if (dist < min_d)
+          {
+            J = j;
+            min_d = dist;
+          }
+        }
+      }
+      else
+      {
+        Error0(NO_OPTION);
+      }
+      
+      /* create the file if not exist */
+      sprintf(file_name,"%s/%s_%s_1d.txt",folder,stem,line->suffix);
+      if (access(file_name,F_OK) != -1)/* if file exists */
+      {
+        file = Fopen(file_name,"a");
+      }
+      else
+      {
+        file = Fopen(file_name,"w");
+        fprintf(file,"# \"time = %d\" ",iteration);
+      }
+      Fclose(file);
+      /* print coords and fields in each column. */
+      UNUSED(I)
+      UNUSED(J)
+      UNUSED(K)
+    }
+  }    
+  
+#if 0      
   for (i = 0; f[i]; ++i)
   {
     FOR_ALL_PATCHES(p,grid)
