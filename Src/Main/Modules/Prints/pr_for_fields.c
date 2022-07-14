@@ -590,19 +590,25 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         file = Fopen(file_name,"w");
         
         /* header:  iteration field1 field2 ... */
-        fprintf(file,"# coordinate");
+        fprintf(file,"# line_coordinate x(X,Y,Z) y(X,Y,Z) z(X,Y,Z)");
         for (f = 0; f < Nfld; ++f)
           fprintf(file," %s", fields[f]->name);
+        fprintf(file,"\n");
       }
-      fprintf(file,"\n# \"time = %d\" %s\n",iteration,line->strv);
+      fprintf(file,"\n# \"time = %d\", (X,Y,Z) = %s,",iteration,line->strv);
       
       /* print coords and fields in each column. */
       if (line->Xline)
       {
+        fprintf(file," j = %u, k = %u\n",J,K);
         for (i = 0; i < n[0]; ++i)
         {
           ijk = i_j_k_to_ijk(n,i,J,K);
-          fprintf(file,"%0.15f",patch->node[ijk]->X[0]);
+          fprintf(file,"%0.15f %0.15f %0.15f %0.15f",
+                        patch->node[ijk]->X[0],
+                        patch->node[ijk]->x[0],
+                        patch->node[ijk]->x[1],
+                        patch->node[ijk]->x[2]);
           for (f = 0; f < Nfld; ++f)
             fprintf(file," %0.15f",fields[f]->v[ijk]);
           fprintf(file,"\n");
@@ -610,10 +616,15 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       }
       else if (line->Yline)
       {
+        fprintf(file," i = %u, k = %u\n",I,K);
         for (j = 0; j < n[1]; ++j)
         {
           ijk = i_j_k_to_ijk(n,I,j,K);
-          fprintf(file,"%0.15f",patch->node[ijk]->X[1]);
+          fprintf(file,"%0.15f %0.15f %0.15f %0.15f",
+                        patch->node[ijk]->X[1],
+                        patch->node[ijk]->x[0],
+                        patch->node[ijk]->x[1],
+                        patch->node[ijk]->x[2]);
           for (f = 0; f < Nfld; ++f)
             fprintf(file," %0.15f",fields[f]->v[ijk]);
           fprintf(file,"\n");
@@ -621,10 +632,15 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       }
       else if (line->Zline)
       {
+        fprintf(file," i = %u, j = %u\n",I,J);
         for (k = 0; k < n[2]; ++k)
         {
           ijk = i_j_k_to_ijk(n,I,J,k);
-          fprintf(file,"%0.15f",patch->node[ijk]->X[2]);
+          fprintf(file,"%0.15f %0.15f %0.15f %0.15f",
+                        patch->node[ijk]->X[2],
+                        patch->node[ijk]->x[0],
+                        patch->node[ijk]->x[1],
+                        patch->node[ijk]->x[2]);
           for (f = 0; f < Nfld; ++f)
             fprintf(file," %0.15f",fields[f]->v[ijk]);
           fprintf(file,"\n");
