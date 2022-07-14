@@ -68,6 +68,12 @@ then
 		
 		counter=$((counter+1))
 	done
+        if [[ "$col2" == "" ]];
+        then
+                echo "could not find the field name \"${field}\""
+                exit 2
+        fi
+
 fi
 
 counter=0
@@ -91,6 +97,11 @@ then
 		
 		counter=$((counter+1))
 	done
+	if [[ "$col2" == "" ]];
+        then
+                echo "could not find the field name \"${field}\""
+                exit 2
+        fi
 fi
 
 ##
