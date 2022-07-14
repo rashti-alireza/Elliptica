@@ -78,6 +78,7 @@ void pr_field_difference(const struct GRID_T *const grid,const char *const fld1,
 void pr_hdf5_silo(Pr_Field_T *const pr);
 int print_fields_3D(const struct GRID_T *const grid,const int iteration,const char *const dir);
 double print_fields_0D(const struct GRID_T *const grid,const int iteration,const char *const folder);
+void print_fields_1D(const struct GRID_T *const grid,const int iteration,const char *const folder);
 double convert_clock(int *const days,int *const hours,
                      int *const minutes,int *const seconds);
 
