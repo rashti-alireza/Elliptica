@@ -541,6 +541,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       }
       
       /* find all fields for this patch */
+      Nfld = 0;
       for (f = 0; flds[f]; ++f)
       {
         Nf   = 0;
@@ -574,8 +575,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
           Nfld++;
         }
         /* only if it is a regex found free it. */
-        if (field_ind < 0)
-        Free(fInd);
+        if (field_ind < 0) Free(fInd);
       }/* end of for (f = 0; flds[f]; ++f) */
       
       /* create the file if not exist */
@@ -590,11 +590,11 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         file = Fopen(file_name,"w");
         
         /* header:  iteration field1 field2 ... */
-        fprintf(file,"# iteration");
+        fprintf(file,"# coordinate");
         for (f = 0; f < Nfld; ++f)
-          fprintf(file," %s", field->name);
+          fprintf(file," %s", fields[f]->name);
       }
-      fprintf(file,"# \"time = %d\" %s\n",iteration,line->strv);
+      fprintf(file,"\n# \"time = %d\" %s\n",iteration,line->strv);
       
       /* print coords and fields in each column. */
       if (line->Xline)
@@ -602,7 +602,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         for (i = 0; i < n[0]; ++i)
         {
           ijk = i_j_k_to_ijk(n,i,J,K);
-          fprintf(file," %0.15f ",patch->node[ijk]->X[0]);
+          fprintf(file,"%0.15f",patch->node[ijk]->X[0]);
           for (f = 0; f < Nfld; ++f)
             fprintf(file," %0.15f",fields[f]->v[ijk]);
           fprintf(file,"\n");
@@ -613,7 +613,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         for (j = 0; j < n[1]; ++j)
         {
           ijk = i_j_k_to_ijk(n,I,j,K);
-          fprintf(file," %0.15f ",patch->node[ijk]->X[1]);
+          fprintf(file,"%0.15f",patch->node[ijk]->X[1]);
           for (f = 0; f < Nfld; ++f)
             fprintf(file," %0.15f",fields[f]->v[ijk]);
           fprintf(file,"\n");
@@ -624,7 +624,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         for (k = 0; k < n[2]; ++k)
         {
           ijk = i_j_k_to_ijk(n,I,J,k);
-          fprintf(file," %0.15f ",patch->node[ijk]->X[2]);
+          fprintf(file,"%0.15f",patch->node[ijk]->X[2]);
           for (f = 0; f < Nfld; ++f)
             fprintf(file," %0.15f",fields[f]->v[ijk]);
           fprintf(file,"\n");
