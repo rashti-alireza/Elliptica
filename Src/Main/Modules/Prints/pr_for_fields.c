@@ -592,7 +592,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       fields = find_field_by_name_or_regex(patch,flds,&Nfld);
       
       /* create the file if not exist */
-      sprintf(file_name,"%s/%s_%s_1D.txt",folder,stem,line->suffix);
+      sprintf(file_name,"%s/%s_%s_1d.txt",folder,stem,line->suffix);
       if (access(file_name,F_OK) != -1)/* if file exists */
       {
         file = Fopen(file_name,"a");
