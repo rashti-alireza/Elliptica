@@ -10,6 +10,17 @@
 
 #define STR_LEN (999)
 
+/* compactify repeated lines */
+#define FWRITE_1D_MODE0(dir) \
+  fprintf(file,"%0.15f %0.15f %0.15f %0.15f",\
+               patch->node[ijk]->X[dir],\
+               patch->node[ijk]->x[0],\
+               patch->node[ijk]->x[1],\
+               patch->node[ijk]->x[2]);\
+  for (f = 0; f < Nfld; ++f){\
+    fprintf(file," %0.15f",fields[f]->v[ijk]);}\
+  fprintf(file,"\n");
+
 void pr_fields(Pr_Field_T *const pr);
 Pr_Field_T *init_PrField(const Grid_T *const grid);
 void free_PrField(Pr_Field_T *pr);
@@ -19,7 +30,8 @@ int print_fields_3D(const Grid_T *const grid,const int iteration,const char *con
 double print_fields_0D(const Grid_T *const grid,const int iteration,const char *const folder);
 void print_fields_1D(const Grid_T *const grid,const int iteration,const char *const folder);
 static Field_T **find_field_by_name_or_regex(const Patch_T *const patch,char **const fld_names,Uint *const Nfld);
-static double map_to_patch_ref_interval(const double X,const Patch_T *const patch,const double *const min,const double *const max,const int dir, const int map_type);
+static double map_to_patch_ref_interval(const double X,const Patch_T *const patch,const double *const min,const double *const max,const Uint dir, const int map_type);
+static Uint find_closest_index(const double Xp,const Patch_T *const patch,const Uint dir);
 
 
 

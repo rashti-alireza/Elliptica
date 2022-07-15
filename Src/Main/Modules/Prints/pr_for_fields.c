@@ -497,7 +497,6 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       Uint Nfld      = 0;/* total num of the found fields. */
       FILE *file     = 0;
       char file_name[STR_LEN] = {0};
-      double min_d;
       double X,Y,Z;
       Uint I,J,K;
       Uint i,j,k,ijk,f;
@@ -510,30 +509,8 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         /* normalize */
         Y = map_to_patch_ref_interval(line->Y,patch,REF_coord_min,REF_coord_max,1,map_type);
         Z = map_to_patch_ref_interval(line->Z,patch,REF_coord_min,REF_coord_max,2,map_type);
-       
-        min_d = DBL_MAX;
-        for (j = 0; j < n[1]; ++j)
-        {
-          ijk = i_j_k_to_ijk(n,0,j,0);
-          double dist = fabs(Y-patch->node[ijk]->X[1]);
-          if (dist < min_d)
-          {
-            J = j;
-            min_d = dist;
-          }
-        }
-        
-        min_d = DBL_MAX;
-        for (k = 0; k < n[2]; ++k)
-        {
-          ijk = i_j_k_to_ijk(n,0,0,k);
-          double dist = fabs(Z-patch->node[ijk]->X[2]);
-          if (dist < min_d)
-          {
-            K = k;
-            min_d = dist;
-          }
-        }
+        J = find_closest_index(Y,patch,1);
+        K = find_closest_index(Z,patch,2);
       }
       
       else if (line->Yline)
@@ -541,30 +518,8 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         /* normalize */
         X = map_to_patch_ref_interval(line->X,patch,REF_coord_min,REF_coord_max,0,map_type);
         Z = map_to_patch_ref_interval(line->Z,patch,REF_coord_min,REF_coord_max,2,map_type);
-
-        min_d = DBL_MAX;
-        for (i = 0; i < n[0]; ++i)
-        {
-          ijk = i_j_k_to_ijk(n,i,0,0);
-          double dist = fabs(X-patch->node[ijk]->X[0]);
-          if (dist < min_d)
-          {
-            I = i;
-            min_d = dist;
-          }
-        }
-        
-        min_d = DBL_MAX;
-        for (k = 0; k < n[2]; ++k)
-        {
-          ijk = i_j_k_to_ijk(n,0,0,k);
-          double dist = fabs(Z-patch->node[ijk]->X[2]);
-          if (dist < min_d)
-          {
-            K = k;
-            min_d = dist;
-          }
-        }
+        I = find_closest_index(X,patch,0);
+        K = find_closest_index(Z,patch,2);
       }
       
       else if (line->Zline)
@@ -572,30 +527,8 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         /* normalize */
         X = map_to_patch_ref_interval(line->X,patch,REF_coord_min,REF_coord_max,0,map_type);
         Y = map_to_patch_ref_interval(line->Y,patch,REF_coord_min,REF_coord_max,1,map_type);
-
-        min_d = DBL_MAX;
-        for (i = 0; i < n[0]; ++i)
-        {
-          ijk = i_j_k_to_ijk(n,i,0,0);
-          double dist = fabs(X-patch->node[ijk]->X[0]);
-          if (dist < min_d)
-          {
-            I = i;
-            min_d = dist;
-          }
-        }
-        
-        min_d = DBL_MAX;
-        for (j = 0; j < n[1]; ++j)
-        {
-          ijk = i_j_k_to_ijk(n,0,j,0);
-          double dist = fabs(Y-patch->node[ijk]->X[1]);
-          if (dist < min_d)
-          {
-            J = j;
-            min_d = dist;
-          }
-        }
+        I = find_closest_index(X,patch,0);
+        J = find_closest_index(Y,patch,1);
       }
       else
       {
@@ -634,14 +567,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         for (i = 0; i < n[0]; ++i)
         {
           ijk = i_j_k_to_ijk(n,i,J,K);
-          fprintf(file,"%0.15f %0.15f %0.15f %0.15f",
-                        patch->node[ijk]->X[0],
-                        patch->node[ijk]->x[0],
-                        patch->node[ijk]->x[1],
-                        patch->node[ijk]->x[2]);
-          for (f = 0; f < Nfld; ++f)
-            fprintf(file," %0.15f",fields[f]->v[ijk]);
-          fprintf(file,"\n");
+          FWRITE_1D_MODE0(0)
         }
       }
       else if (line->Yline)
@@ -653,14 +579,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         for (j = 0; j < n[1]; ++j)
         {
           ijk = i_j_k_to_ijk(n,I,j,K);
-          fprintf(file,"%0.15f %0.15f %0.15f %0.15f",
-                        patch->node[ijk]->X[1],
-                        patch->node[ijk]->x[0],
-                        patch->node[ijk]->x[1],
-                        patch->node[ijk]->x[2]);
-          for (f = 0; f < Nfld; ++f)
-            fprintf(file," %0.15f",fields[f]->v[ijk]);
-          fprintf(file,"\n");
+          FWRITE_1D_MODE0(1)
         }
       }
       else if (line->Zline)
@@ -672,14 +591,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         for (k = 0; k < n[2]; ++k)
         {
           ijk = i_j_k_to_ijk(n,I,J,k);
-          fprintf(file,"%0.15f %0.15f %0.15f %0.15f",
-                        patch->node[ijk]->X[2],
-                        patch->node[ijk]->x[0],
-                        patch->node[ijk]->x[1],
-                        patch->node[ijk]->x[2]);
-          for (f = 0; f < Nfld; ++f)
-            fprintf(file," %0.15f",fields[f]->v[ijk]);
-          fprintf(file,"\n");
+          FWRITE_1D_MODE0(2)
         }
       }
       
@@ -752,7 +664,7 @@ static double map_to_patch_ref_interval(const double X,
                                   const Patch_T *const patch,
                                   const double *const min,
                                   const double *const max,
-                                  const int dir, const int map_type)
+                                  const Uint dir, const int map_type)
 {
   const double mp = min[dir];
   const double Mp = max[dir];
@@ -778,4 +690,59 @@ static double map_to_patch_ref_interval(const double X,
   //printf("dir[%d]: %g -> %g, [%g,%g]\n",dir,X,y,m,M);
   
   return y;
+}
+
+/* :-> find the index of the closest point X to Xp */
+static Uint find_closest_index(const double Xp,const Patch_T *const patch,const Uint dir)
+{
+  Uint indx = UINT_MAX;
+  const Uint *const n = patch->n;
+  double min_d = DBL_MAX;
+  Uint ijk;
+  
+  if (dir == 0)
+  {
+    for (Uint i = 0; i < n[dir]; ++i)
+    {
+      ijk = i_j_k_to_ijk(n,i,0,0);
+      double dist = fabs(Xp-patch->node[ijk]->X[dir]);
+      if (dist < min_d)
+      {
+        indx = i;
+        min_d = dist;
+      }
+    }
+  }
+  else if (dir == 1)
+  {
+    for (Uint i = 0; i < n[dir]; ++i)
+    {
+      ijk = i_j_k_to_ijk(n,0,i,0);
+      double dist = fabs(Xp-patch->node[ijk]->X[dir]);
+      if (dist < min_d)
+      {
+        indx = i;
+        min_d = dist;
+      }
+    }
+  }
+  else if (dir == 2)
+  {
+    for (Uint i = 0; i < n[dir]; ++i)
+    {
+      ijk = i_j_k_to_ijk(n,0,0,i);
+      double dist = fabs(Xp-patch->node[ijk]->X[dir]);
+      if (dist < min_d)
+      {
+        indx = i;
+        min_d = dist;
+      }
+    }
+  }
+  else
+  {
+    Error0(NO_OPTION);
+  }
+  
+  return indx;
 }
