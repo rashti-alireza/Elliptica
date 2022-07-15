@@ -291,7 +291,7 @@ double print_fields_0D(const Grid_T *const grid,const int iteration,
 // specified line.
 // note: parameter "txt_output_1d" supports regular expression. 
 // note: the user must provide the coordinate in the reference interval,
-// i.e.,[-1,1]x[-1,1]x[-1,1]. this makes more sense where we are interested 
+// i.e.,[0,1]x[0,1]x[0,1]. this makes more sense where we are interested 
 // to plot the line irrespective of patch coordinates. 
 // a linear map then changes this interval according to the patch 
 // reference coords (X,Y,Z). */
@@ -316,10 +316,10 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
   const char *const line_par_name  = "txt_output_1d_line";
   const char *const field_par_name = "txt_output_1d";
   /* the user must provide the coordinate in the reference interval, i.e.,
-  // [-1,1]x[-1,1]x[-1,1]. this makes more sense where we are interested 
+  // [0,1]x[0,1]x[0,1]. this makes more sense where we are interested 
   // to plot the line irrespective of patch coordinates. 
   // NOTE: if you change this, please change the error msg too. */
-  const double REF_coord_min[3] = {-1,-1,-1};
+  const double REF_coord_min[3] = {0,0,0};
   const double REF_coord_max[3] = {1,1,1};
   const int map_type = 0;/* for future if you want to change the map */
   /* list of the fields(flds) to be printed out */
@@ -385,6 +385,9 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
        Errors("Wrong order for %s.\n",line_par_name); 
      }
      
+     /* cp str */
+     sprintf(parsed[p].strv,"(%s)",lns[l]);
+     
      /* realize the components */
      counter = 0;
      if (*subs[0] == 'X' || *subs[0] == 'x')
@@ -404,7 +407,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
            LSS(parsed[p].Z,REF_coord_min[2]) ||
            GRT(parsed[p].Z,REF_coord_max[2]) 
            )
-           Errors("%s falling outside of the reference interval [-1,1]x[-1,1]x[-1,1].\n",
+           Errors("%s falling outside of the reference interval [0,1]x[0,1]x[0,1].\n",
                   parsed[p].strv);
        counter++;
      }
@@ -424,7 +427,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
            LSS(parsed[p].Z,REF_coord_min[2]) ||
            GRT(parsed[p].Z,REF_coord_max[2]) 
            )
-           Errors("%s falling outside of the reference interval [-1,1]x[-1,1]x[-1,1].\n",
+           Errors("%s falling outside of the reference interval [0,1]x[0,1]x[0,1].\n",
                   parsed[p].strv);
        counter++;
      }
@@ -444,7 +447,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
            LSS(parsed[p].X,REF_coord_min[0]) ||
            GRT(parsed[p].X,REF_coord_max[0]) 
            )
-           Errors("%s falling outside of the reference interval [-1,1]x[-1,1]x[-1,1].\n",
+           Errors("%s falling outside of the reference interval [0,1]x[0,1]x[0,1].\n",
                   parsed[p].strv);
        counter++;
      }
@@ -452,7 +455,6 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
      if (counter != 1)
        Errors("Wrong format for %s.\n",line_par_name); 
        
-     sprintf(parsed[p].strv,"(%s)",lns[l]);
      p++;
      free_2d(subs);
   }
@@ -590,7 +592,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       fields = find_field_by_name_or_regex(patch,flds,&Nfld);
       
       /* create the file if not exist */
-      sprintf(file_name,"%s/%s_%s_1d.txt",folder,stem,line->suffix);
+      sprintf(file_name,"%s/%s_%s_1D.txt",folder,stem,line->suffix);
       if (access(file_name,F_OK) != -1)/* if file exists */
       {
         file = Fopen(file_name,"a");
@@ -611,7 +613,10 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       /* print coords and fields in each column. */
       if (line->Xline)
       {
-        fprintf(file," j = %u, k = %u\n",J,K);
+        Y = patch->node[i_j_k_to_ijk(n,0,J,0)]->X[1];
+        Z = patch->node[i_j_k_to_ijk(n,0,0,K)]->X[2];
+        fprintf(file," Y[%u] = %g, Z[%u] = %g\n",J,Y,K,Z);
+        
         for (i = 0; i < n[0]; ++i)
         {
           ijk = i_j_k_to_ijk(n,i,J,K);
@@ -627,7 +632,10 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       }
       else if (line->Yline)
       {
-        fprintf(file," i = %u, k = %u\n",I,K);
+        X = patch->node[i_j_k_to_ijk(n,I,0,0)]->X[0];
+        Z = patch->node[i_j_k_to_ijk(n,0,0,K)]->X[2];
+        fprintf(file," X[%u] = %g, Z[%u] = %g\n",I,X,K,Z);
+        
         for (j = 0; j < n[1]; ++j)
         {
           ijk = i_j_k_to_ijk(n,I,j,K);
@@ -643,7 +651,10 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       }
       else if (line->Zline)
       {
-        fprintf(file," i = %u, j = %u\n",I,J);
+        X = patch->node[i_j_k_to_ijk(n,I,0,0)]->X[0];
+        Y = patch->node[i_j_k_to_ijk(n,0,J,0)]->X[1];
+        fprintf(file," X[%u] = %g, Y[%u] = %g\n",I,X,J,Y);
+        
         for (k = 0; k < n[2]; ++k)
         {
           ijk = i_j_k_to_ijk(n,I,J,k);
@@ -734,20 +745,23 @@ static double map_to_ref_interval(const double X,
   const double m  = patch->min[dir];
   const double M  = patch->max[dir];
   double a,b;
-  double x = DBL_MAX;
+  double y = DBL_MAX;
   
   switch (map_type)
   {
-    case 0:/* linear map */
+    case 0:/* linear map f: X-> aX+b */
       
       a = (m - M)/(mp - Mp);
       b = (M*mp - m*Mp)/(mp - Mp);
-      x = a*X+b;
+      y = a*X+b;
       
       break;
     default:
       Error0(NO_OPTION);
   }
   
-  return x;
+  /* test */
+  //printf("%g -> %g, [%g,%g]\n",X,y,m,M);
+  
+  return y;
 }
