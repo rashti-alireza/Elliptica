@@ -331,8 +331,11 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
   Uint Nlines;/* number of lines (pars struct) */
   Uint l,p,counter;
   
+  if (!flds)
+    printf(Pretty0"No field is specified.\n");
+  
   if (!lns)
-    printf(Pretty0"No line was specified.\n");
+    printf(Pretty0"No line is specified.\n");
   
   /* count the number of lines to create the struct */
   counter = 0;
@@ -772,7 +775,7 @@ static double map_to_ref_interval(const double X,
   }
   
   /* test */
-  //printf("%g -> %g, [%g,%g]\n",X,y,m,M);
+  //printf("dir[%d]: %g -> %g, [%g,%g]\n",dir,X,y,m,M);
   
   return y;
 }
