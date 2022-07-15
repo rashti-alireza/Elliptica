@@ -18,6 +18,7 @@ static void parse_parameter_3d(const char *const par,Pr_Field_T *const pr);
 int print_fields_3D(const Grid_T *const grid,const int iteration,const char *const dir);
 double print_fields_0D(const Grid_T *const grid,const int iteration,const char *const folder);
 void print_fields_1D(const Grid_T *const grid,const int iteration,const char *const folder);
+static Field_T **find_field_by_name_or_regex(const Patch_T *const patch,char **const fld_names,Uint *const Nfld);
 
 
 

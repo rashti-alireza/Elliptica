@@ -442,7 +442,6 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       const char *stem = strstr(patch->name,"_"); stem++;
       Field_T **fields = 0;/* save the found fields */
       Uint Nfld      = 0;/* total num of the found fields. */
-      Field_T *field = 0;
       FILE *file     = 0;
       char file_name[STR_LEN] = {0};
       double min_d;
@@ -537,45 +536,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       }
       
       /* find all fields for this patch */
-      Nfld = 0;
-      for (f = 0; flds[f]; ++f)
-      {
-        int field_ind  = 0;
-        Uint Nf        = 0;
-        Uint *fInd     = 0;
-        Uint Ufield_ind= 0;
-        Uint fi;
-      
-        field_ind  = _Ind(flds[f]); 
-        /* if couldn't find, maybe its a regex. */
-        if (field_ind < 0)
-        {
-          fInd = find_field_index_regex(patch,flds[f],&Nf);
-            
-          /* if nothing found. */
-          if (!fInd)
-            continue;
-        }
-        else
-        {
-          Ufield_ind = (Uint)field_ind;
-          fInd = &Ufield_ind;
-          Nf   = 1;
-        }
-        for (fi = 0; fi < Nf; ++fi)
-        {
-          field = patch->fields[fInd[fi]];
-          if (!field->v)/* if field empty */
-            continue;
-          
-          fields = realloc(fields,(Nfld+1)*sizeof(*fields));
-          IsNull(fields);
-          fields[Nfld] = field;
-          Nfld++;
-        }
-        /* only if it is a regex found free it. */
-        if (field_ind < 0) Free(fInd);
-      }/* end of for (f = 0; flds[f]; ++f) */
+      fields = find_field_by_name_or_regex(patch,flds,&Nfld);
       
       /* create the file if not exist */
       sprintf(file_name,"%s/%s_%s_1d.txt",folder,stem,line->suffix);
@@ -655,4 +616,57 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
   free_2d(lns);
   
   FUNC_TOC
+}
+
+/* :-> a set of pointers to the found fields in the given patch.
+// the number of pointers is set in Nfld and the field names 
+// given should be given in the argument fld_names. */
+static Field_T **find_field_by_name_or_regex(const Patch_T *const patch,
+                                             char **const fld_names,
+                                             Uint *const Nfld)
+{
+  Field_T **fields = 0;
+  *Nfld = 0;
+  
+  for (Uint f = 0; fld_names[f]; ++f)
+  {
+    int field_ind  = 0;
+    Uint Nf        = 0;
+    Uint *fInd     = 0;
+    Uint Ufield_ind= 0;
+    Field_T *field = 0;
+    Uint fi;
+  
+    field_ind  = _Ind(fld_names[f]); 
+    /* if couldn't find, maybe its a regex. */
+    if (field_ind < 0)
+    {
+      fInd = find_field_index_regex(patch,fld_names[f],&Nf);
+        
+      /* if nothing found. */
+      if (!fInd)
+        continue;
+    }
+    else
+    {
+      Ufield_ind = (Uint)field_ind;
+      fInd = &Ufield_ind;
+      Nf   = 1;
+    }
+    for (fi = 0; fi < Nf; ++fi)
+    {
+      field = patch->fields[fInd[fi]];
+      if (!field->v)/* if field empty */
+        continue;
+      
+      fields = realloc(fields,(*Nfld+1)*sizeof(*fields));
+      IsNull(fields);
+      fields[*Nfld] = field;
+      (*Nfld)++;
+    }
+    /* only if it is a regex found free it. */
+    if (field_ind < 0) Free(fInd);
+  }/* end of for (f = 0; fld_names[f]; ++f) */
+  
+  return fields;
 }
