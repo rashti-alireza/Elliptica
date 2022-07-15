@@ -508,8 +508,8 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       if (line->Xline)
       {
         /* normalize */
-        Y = map_to_ref_interval(line->Y,patch,REF_coord_min,REF_coord_max,1,map_type);
-        Z = map_to_ref_interval(line->Z,patch,REF_coord_min,REF_coord_max,2,map_type);
+        Y = map_to_patch_ref_interval(line->Y,patch,REF_coord_min,REF_coord_max,1,map_type);
+        Z = map_to_patch_ref_interval(line->Z,patch,REF_coord_min,REF_coord_max,2,map_type);
        
         min_d = DBL_MAX;
         for (j = 0; j < n[1]; ++j)
@@ -539,8 +539,8 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       else if (line->Yline)
       {
         /* normalize */
-        X = map_to_ref_interval(line->X,patch,REF_coord_min,REF_coord_max,0,map_type);
-        Z = map_to_ref_interval(line->Z,patch,REF_coord_min,REF_coord_max,2,map_type);
+        X = map_to_patch_ref_interval(line->X,patch,REF_coord_min,REF_coord_max,0,map_type);
+        Z = map_to_patch_ref_interval(line->Z,patch,REF_coord_min,REF_coord_max,2,map_type);
 
         min_d = DBL_MAX;
         for (i = 0; i < n[0]; ++i)
@@ -570,8 +570,8 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       else if (line->Zline)
       {
         /* normalize */
-        X = map_to_ref_interval(line->X,patch,REF_coord_min,REF_coord_max,0,map_type);
-        Y = map_to_ref_interval(line->Y,patch,REF_coord_min,REF_coord_max,1,map_type);
+        X = map_to_patch_ref_interval(line->X,patch,REF_coord_min,REF_coord_max,0,map_type);
+        Y = map_to_patch_ref_interval(line->Y,patch,REF_coord_min,REF_coord_max,1,map_type);
 
         min_d = DBL_MAX;
         for (i = 0; i < n[0]; ++i)
@@ -748,7 +748,7 @@ static Field_T **find_field_by_name_or_regex(const Patch_T *const patch,
 }
 
 /* :-> map the given point x to the [patch->min,patch->max] interval. */
-static double map_to_ref_interval(const double X,
+static double map_to_patch_ref_interval(const double X,
                                   const Patch_T *const patch,
                                   const double *const min,
                                   const double *const max,

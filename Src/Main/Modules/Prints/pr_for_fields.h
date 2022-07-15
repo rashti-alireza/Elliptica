@@ -19,7 +19,7 @@ int print_fields_3D(const Grid_T *const grid,const int iteration,const char *con
 double print_fields_0D(const Grid_T *const grid,const int iteration,const char *const folder);
 void print_fields_1D(const Grid_T *const grid,const int iteration,const char *const folder);
 static Field_T **find_field_by_name_or_regex(const Patch_T *const patch,char **const fld_names,Uint *const Nfld);
-static double map_to_ref_interval(const double X,const Patch_T *const patch,const double *const min,const double *const max,const int dir, const int map_type);
+static double map_to_patch_ref_interval(const double X,const Patch_T *const patch,const double *const min,const double *const max,const int dir, const int map_type);
 
 
 
