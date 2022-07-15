@@ -460,7 +460,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
   }
   
   /* test */
-  if (1)
+  if (0)
   for (l = 0; l < Nlines; ++l)
   {
     printf("param[%u] = %s => (%u,%u,%u) & (%g,%g,%g)| %s\n",
@@ -468,7 +468,18 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
             parsed[l].Xline,parsed[l].Yline,parsed[l].Zline,
             parsed[l].X,parsed[l].Y,parsed[l].Z,parsed[l].suffix);
   }
-  
+  /* check for redundancy */
+  for (l = 0; l < Nlines; ++l)
+  {
+    struct pars_s *line = &parsed[l];
+    for (Uint lp = l+1; lp < Nlines; ++lp)
+    {
+      struct pars_s *linep = &parsed[lp];
+      if (!strcmp(line->strv,linep->strv))
+        Errors("Multiple line with same value for %s.",line->strv);
+    }
+  }
+
   if(flds && lns)
   for (l = 0; l < Nlines; ++l)
   {
