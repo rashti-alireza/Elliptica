@@ -296,8 +296,8 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
   FUNC_TIC
   printf(Pretty0"iteration = %d\n",iteration);
   
-  /* parsed directions. */
-  struct parsed_s
+  /* pars struct for the print line */
+  struct pars_s
   {
     Uint Xline:1;/* if X-line is asked 1, otherwise 0. */
     Uint Yline:1;/* if Y-line is asked 1, otherwise 0. */
@@ -305,60 +305,65 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
     double X;/* X coords of the print line */
     double Y;/* Y coords of the print line */
     double Z;/* Z coords of the print line */
-    char strv[STR_LEN];/* save a version of param values. */
+    char strv[STR_LEN/2];/* save the line str given in the param file. */
     char suffix[STR_LEN/2];/* suffix for the file. */
   };
   const char *const line_par_name = "txt_output_1d_line";
+  const char *const field_par_name = "txt_output_1d";
   /* list of the fields(flds) to be printed out */
   char **flds = 
-     read_separated_items_in_string(PgetsEZ("txt_output_1d"),',');
-  /* list of lines */
+     read_separated_items_in_string(PgetsEZ(field_par_name),',');
+  /* list of lines(lns) */
   char **lns = 
      read_separated_items_in_string(PgetsEZ(line_par_name),')');
-  
-  Uint Nparsed;/* number of parsed struct */
-  Uint i,j,k,f,l,p,counter;
+  Uint Nlines;/* number of lines (pars struct) */
+  Uint l,p,counter;
   
   if (!lns)
     printf(Pretty0"No line was specified.\n");
   
-  /* count the number of meaning full values */
+  /* count the number of lines to create the struct */
   counter = 0;
-  for (i = 0; lns && lns[i]; ++i)
+  for (l = 0; lns && lns[l]; ++l)
   {
-    if (strlen(lns[i]) > 5)/* coz we need, for example, "(I,1,2". 
-                         // note ')' is eliminated. */
+    if (strlen(lns[l]) > 5)/* coz we need, e.g., "(I,1,2" and not ",".
+                           // note ')' is eliminated. */
       counter++;
   }
-  Nparsed = counter;
-  struct parsed_s parsed[counter];
-  j = 0;
-  for (i = 0; lns && lns[i]; ++i)
+  Nlines = counter;
+  struct pars_s parsed[counter];
+  
+  /* populate the parsed structs */
+  p = 0;/* index for parsed */
+  for (l = 0; lns && lns[l]; ++l)
   {
-     counter = 0;
-     if (strlen(lns[i]) <= 5)
-       continue;
-     /* substitue ,e.g., ",(0,J,2" by "0,J,2". */
-     regex_replace(lns[i],"^.?\\(","",lns[i]);
-     char **subs = read_separated_items_in_string(lns[i],',');
+     if (strlen(lns[l]) <= 5) continue;
      
-     /* sanity checks */
+     char **subs = 0;
+     
+     /* substitue ,e.g., ",(0,J,2" by "0,J,2". */
+     regex_replace(lns[l],"^.?\\(","",lns[l]);
+     subs = read_separated_items_in_string(lns[l],',');
+     
+     /* sanity checks: */
+     /* nothing found */
      if (!subs) Errors("Wrong format for %s.\n",line_par_name);
+     /* we need 3 pieces like 0,J, and 2  in "(0,J,2)" */
      for (counter = 0; subs[counter]; counter++);
      if (counter != 3) Errors("Wrong format for %s.\n",line_par_name);
-     
+     /* correct position */
      if (
-         /* 'I/i' should only take place on 0th position */
+         /* 'I/i' should only take place on the 0th position */
          *subs[1] == 'X' || 
          *subs[1] == 'x' || 
          *subs[2] == 'X' || 
          *subs[2] == 'x' ||
-         /* 'J/j' should only take place on 1st position */
+         /* 'J/j' should only take place on the 1st position */
          *subs[0] == 'Y' || 
          *subs[0] == 'y' || 
          *subs[2] == 'Y' || 
          *subs[2] == 'y' || 
-         /* 'K/k' should only take place on 2nd position */
+         /* 'K/k' should only take place on the 2nd position */
          *subs[0] == 'Z' || 
          *subs[0] == 'z' || 
          *subs[1] == 'Z' || 
@@ -368,93 +373,84 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
        Errors("Wrong order for %s.\n",line_par_name); 
      }
      
-     /* realize */
+     /* realize the components */
      counter = 0;
      if (*subs[0] == 'X' || *subs[0] == 'x')
      {
-       parsed[j].Xline = 1;
-       parsed[j].Yline = 0;
-       parsed[j].Zline = 0;
+       parsed[p].Xline = 1;
+       parsed[p].Yline = 0;
+       parsed[p].Zline = 0;
        
-       parsed[j].X = DBL_MAX;
-       parsed[j].Y = atof(subs[1]);
-       parsed[j].Z = atof(subs[2]);
-       sprintf(parsed[j].suffix,"X_%s_%s",subs[1],subs[2]);
+       parsed[p].X = DBL_MAX;
+       parsed[p].Y = atof(subs[1]);
+       parsed[p].Z = atof(subs[2]);
+       sprintf(parsed[p].suffix,"X_%s_%s",subs[1],subs[2]);
        counter++;
      }
      if (*subs[1] == 'Y' || *subs[1] == 'y')
      {
-       parsed[j].Xline = 0;
-       parsed[j].Yline = 1;
-       parsed[j].Zline = 0;
+       parsed[p].Xline = 0;
+       parsed[p].Yline = 1;
+       parsed[p].Zline = 0;
        
-       parsed[j].X = atof(subs[0]);
-       parsed[j].Y = DBL_MAX;
-       parsed[j].Z = atof(subs[2]);
-       sprintf(parsed[j].suffix,"%s_Y_%s",subs[0],subs[2]);
+       parsed[p].X = atof(subs[0]);
+       parsed[p].Y = DBL_MAX;
+       parsed[p].Z = atof(subs[2]);
+       sprintf(parsed[p].suffix,"%s_Y_%s",subs[0],subs[2]);
        counter++;
      }
      if (*subs[2] == 'Z' || *subs[2] == 'z')
      {
-       parsed[j].Xline = 0;
-       parsed[j].Yline = 0;
-       parsed[j].Zline = 1;
+       parsed[p].Xline = 0;
+       parsed[p].Yline = 0;
+       parsed[p].Zline = 1;
        
-       parsed[j].X = atof(subs[0]);
-       parsed[j].Y = atof(subs[1]);
-       parsed[j].Z = DBL_MAX;
-       sprintf(parsed[j].suffix,"%s_%s_Z",subs[0],subs[1]);
+       parsed[p].X = atof(subs[0]);
+       parsed[p].Y = atof(subs[1]);
+       parsed[p].Z = DBL_MAX;
+       sprintf(parsed[p].suffix,"%s_%s_Z",subs[0],subs[1]);
        counter++;
      }
      /* if we have more than two letters, e.g., "(I,J,7)". */
      if (counter != 1)
-       Errors("Wrong order for %s.\n",line_par_name); 
+       Errors("Wrong format for %s.\n",line_par_name); 
        
-     sprintf(parsed[j].strv,"(%s)",lns[i]);
-     j++;
+     sprintf(parsed[p].strv,"(%s)",lns[l]);
+     p++;
      free_2d(subs);
   }
   
   /* test */
   if (1)
-  for (i = 0; i < Nparsed; ++i)
+  for (l = 0; l < Nlines; ++l)
   {
-    printf("param[%u] = %s => (%u,%u,%u) & (%g,%g,%g)\n",
-            i, parsed[i].strv, 
-            parsed[i].Xline,parsed[i].Yline,parsed[i].Zline,
-            parsed[i].X,parsed[i].Y,parsed[i].Z);
+    printf("param[%u] = %s => (%u,%u,%u) & (%g,%g,%g)| %s\n",
+            l, parsed[l].strv, 
+            parsed[l].Xline,parsed[l].Yline,parsed[l].Zline,
+            parsed[l].X,parsed[l].Y,parsed[l].Z,parsed[l].suffix);
   }
   
   if(flds && lns)
-  for (l = 0; l < Nparsed; ++l)
+  for (l = 0; l < Nlines; ++l)
   {
-    struct parsed_s *line = &parsed[l];
-    Uint ijk;/* (X,Y,Z) indices */
+    struct pars_s *line = &parsed[l];
     
     FOR_ALL_PATCHES(p,grid)
     {
       Patch_T *patch = grid->patch[p];
-      Field_T **fields = 0;/* save the found fields */
-      Uint Nfld = 0;/* total num of the found fields. */
-      Field_T *field = 0;
-      //Uint nn        = patch->nn;
-      int field_ind  = 0;
-      Uint Nf        = 0;
-      Uint *fInd     = 0;
-      Uint Ufield_ind= 0;
-      Uint fi;
-      
       const Uint *const n = patch->n;
-      Uint I,J,K;
+      const char *stem = strstr(patch->name,"_"); stem++;
+      Field_T **fields = 0;/* save the found fields */
+      Uint Nfld      = 0;/* total num of the found fields. */
+      Field_T *field = 0;
+      FILE *file     = 0;
+      char file_name[STR_LEN] = {0};
       double min_d;
-      FILE *file;
-      char file_name[STR_LEN];
-      char *stem = strstr(patch->name,"_");
-      stem++;
+      Uint i,j,k,I,J,K,ijk,f;
       
       /* finding the index of the closest point to 
       // the specified one in the param. */
-      I = J = K = UINT_MAX;
+      I = J = K = UINT_MAX;/* to catch bug */
       if (line->Xline)
       {
         min_d = DBL_MAX;
@@ -544,9 +540,12 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       Nfld = 0;
       for (f = 0; flds[f]; ++f)
       {
-        Nf   = 0;
-        fInd = 0;
-        Ufield_ind = 0;
+        int field_ind  = 0;
+        Uint Nf        = 0;
+        Uint *fInd     = 0;
+        Uint Ufield_ind= 0;
+        Uint fi;
+      
         field_ind  = _Ind(flds[f]); 
         /* if couldn't find, maybe its a regex. */
         if (field_ind < 0)
