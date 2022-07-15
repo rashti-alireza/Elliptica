@@ -289,7 +289,12 @@ double print_fields_0D(const Grid_T *const grid,const int iteration,
 
 /* print the value of the given fields in the params along a 
 // specified line.
-// note: parameter "txt_output_1d" supports regular expression. */
+// note: parameter "txt_output_1d" supports regular expression. 
+// note: the user must provide the coordinate in the reference interval,
+// i.e.,[-1,1]x[-1,1]x[-1,1]. this makes more sense where we are interested 
+// to plot the line irrespective of patch coordinates. 
+// a linear map then changes this interval according to the patch 
+// reference coords (X,Y,Z). */
 void print_fields_1D(const Grid_T *const grid,const int iteration, 
                       const char *const folder)
 {
@@ -308,8 +313,15 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
     char strv[STR_LEN/2];/* save the line str given in the param file. */
     char suffix[STR_LEN/2];/* suffix for the file. */
   };
-  const char *const line_par_name = "txt_output_1d_line";
+  const char *const line_par_name  = "txt_output_1d_line";
   const char *const field_par_name = "txt_output_1d";
+  /* the user must provide the coordinate in the reference interval, i.e.,
+  // [-1,1]x[-1,1]x[-1,1]. this makes more sense where we are interested 
+  // to plot the line irrespective of patch coordinates. 
+  // NOTE: if you change this, please change the error msg too. */
+  const double REF_coord_min[3] = {-1,-1,-1};
+  const double REF_coord_max[3] = {1,1,1};
+  const int map_type = 0;/* for future if you want to change the map */
   /* list of the fields(flds) to be printed out */
   char **flds = 
      read_separated_items_in_string(PgetsEZ(field_par_name),',');
@@ -385,6 +397,15 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
        parsed[p].Y = atof(subs[1]);
        parsed[p].Z = atof(subs[2]);
        sprintf(parsed[p].suffix,"X_%s_%s",subs[1],subs[2]);
+       
+       /* interval check */
+       if (LSS(parsed[p].Y,REF_coord_min[1]) ||
+           GRT(parsed[p].Y,REF_coord_max[1]) ||
+           LSS(parsed[p].Z,REF_coord_min[2]) ||
+           GRT(parsed[p].Z,REF_coord_max[2]) 
+           )
+           Errors("%s falling outside of the reference interval [-1,1]x[-1,1]x[-1,1].\n",
+                  parsed[p].strv);
        counter++;
      }
      if (*subs[1] == 'Y' || *subs[1] == 'y')
@@ -397,6 +418,14 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
        parsed[p].Y = DBL_MAX;
        parsed[p].Z = atof(subs[2]);
        sprintf(parsed[p].suffix,"%s_Y_%s",subs[0],subs[2]);
+       /* interval check */
+       if (LSS(parsed[p].X,REF_coord_min[0]) ||
+           GRT(parsed[p].X,REF_coord_max[0]) ||
+           LSS(parsed[p].Z,REF_coord_min[2]) ||
+           GRT(parsed[p].Z,REF_coord_max[2]) 
+           )
+           Errors("%s falling outside of the reference interval [-1,1]x[-1,1]x[-1,1].\n",
+                  parsed[p].strv);
        counter++;
      }
      if (*subs[2] == 'Z' || *subs[2] == 'z')
@@ -409,6 +438,14 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
        parsed[p].Y = atof(subs[1]);
        parsed[p].Z = DBL_MAX;
        sprintf(parsed[p].suffix,"%s_%s_Z",subs[0],subs[1]);
+       /* interval check */
+       if (LSS(parsed[p].Y,REF_coord_min[1]) ||
+           GRT(parsed[p].Y,REF_coord_max[1]) ||
+           LSS(parsed[p].X,REF_coord_min[0]) ||
+           GRT(parsed[p].X,REF_coord_max[0]) 
+           )
+           Errors("%s falling outside of the reference interval [-1,1]x[-1,1]x[-1,1].\n",
+                  parsed[p].strv);
        counter++;
      }
      /* if we have more than two letters, e.g., "(I,J,7)". */
@@ -445,18 +482,24 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       FILE *file     = 0;
       char file_name[STR_LEN] = {0};
       double min_d;
-      Uint i,j,k,I,J,K,ijk,f;
+      double X,Y,Z;
+      Uint I,J,K;
+      Uint i,j,k,ijk,f;
       
       /* finding the index of the closest point to 
       // the specified one in the param. */
       I = J = K = UINT_MAX;/* to catch bug */
       if (line->Xline)
       {
+        /* normalize */
+        Y = map_to_ref_interval(line->Y,patch,REF_coord_min,REF_coord_max,1,map_type);
+        Z = map_to_ref_interval(line->Z,patch,REF_coord_min,REF_coord_max,2,map_type);
+       
         min_d = DBL_MAX;
         for (j = 0; j < n[1]; ++j)
         {
           ijk = i_j_k_to_ijk(n,0,j,0);
-          double dist = fabs(line->Y-patch->node[ijk]->X[1]);
+          double dist = fabs(Y-patch->node[ijk]->X[1]);
           if (dist < min_d)
           {
             J = j;
@@ -468,7 +511,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         for (k = 0; k < n[2]; ++k)
         {
           ijk = i_j_k_to_ijk(n,0,0,k);
-          double dist = fabs(line->Z-patch->node[ijk]->X[2]);
+          double dist = fabs(Z-patch->node[ijk]->X[2]);
           if (dist < min_d)
           {
             K = k;
@@ -479,11 +522,15 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       
       else if (line->Yline)
       {
+        /* normalize */
+        X = map_to_ref_interval(line->X,patch,REF_coord_min,REF_coord_max,0,map_type);
+        Z = map_to_ref_interval(line->Z,patch,REF_coord_min,REF_coord_max,2,map_type);
+
         min_d = DBL_MAX;
         for (i = 0; i < n[0]; ++i)
         {
           ijk = i_j_k_to_ijk(n,i,0,0);
-          double dist = fabs(line->X-patch->node[ijk]->X[0]);
+          double dist = fabs(X-patch->node[ijk]->X[0]);
           if (dist < min_d)
           {
             I = i;
@@ -495,7 +542,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         for (k = 0; k < n[2]; ++k)
         {
           ijk = i_j_k_to_ijk(n,0,0,k);
-          double dist = fabs(line->Z-patch->node[ijk]->X[2]);
+          double dist = fabs(Z-patch->node[ijk]->X[2]);
           if (dist < min_d)
           {
             K = k;
@@ -506,11 +553,15 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       
       else if (line->Zline)
       {
+        /* normalize */
+        X = map_to_ref_interval(line->X,patch,REF_coord_min,REF_coord_max,0,map_type);
+        Y = map_to_ref_interval(line->Y,patch,REF_coord_min,REF_coord_max,1,map_type);
+
         min_d = DBL_MAX;
         for (i = 0; i < n[0]; ++i)
         {
           ijk = i_j_k_to_ijk(n,i,0,0);
-          double dist = fabs(line->X-patch->node[ijk]->X[0]);
+          double dist = fabs(X-patch->node[ijk]->X[0]);
           if (dist < min_d)
           {
             I = i;
@@ -522,7 +573,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         for (j = 0; j < n[1]; ++j)
         {
           ijk = i_j_k_to_ijk(n,0,j,0);
-          double dist = fabs(line->Y-patch->node[ijk]->X[1]);
+          double dist = fabs(Y-patch->node[ijk]->X[1]);
           if (dist < min_d)
           {
             J = j;
@@ -609,7 +660,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       
       Free(fields);
       Fclose(file);
-    }
+    }/* end of FOR_ALL_PATCHES(p,grid) */
   }    
   
   free_2d(flds);
@@ -669,4 +720,34 @@ static Field_T **find_field_by_name_or_regex(const Patch_T *const patch,
   }/* end of for (f = 0; fld_names[f]; ++f) */
   
   return fields;
+}
+
+/* :-> map the given point x to the [patch->min,patch->max] interval. */
+static double map_to_ref_interval(const double X,
+                                  const Patch_T *const patch,
+                                  const double *const min,
+                                  const double *const max,
+                                  const int dir, const int map_type)
+{
+  const double mp = min[dir];
+  const double Mp = max[dir];
+  const double m  = patch->min[dir];
+  const double M  = patch->max[dir];
+  double a,b;
+  double x = DBL_MAX;
+  
+  switch (map_type)
+  {
+    case 0:/* linear map */
+      
+      a = (m - M)/(mp - Mp);
+      b = (M*mp - m*Mp)/(mp - Mp);
+      x = a*X+b;
+      
+      break;
+    default:
+      Error0(NO_OPTION);
+  }
+  
+  return x;
 }
