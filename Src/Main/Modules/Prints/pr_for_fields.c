@@ -192,8 +192,8 @@ void print_fields_0D(const Grid_T *const grid,const int iteration,
     const Uint nn  = patch->nn;
     const char *stem = strstr(patch->name,"_"); stem++;
     Field_T **fields = 0;/* save the found fields */
-    Uint Nfld      = 0;/* total num of the found fields. */
-    FILE *file     = 0;
+    Uint Nfld  = 0;/* total num of the found fields. */
+    FILE *file = 0;
     char file_name[STR_LEN] = {0};
     double Linf,L1,L2;
     Uint f;
@@ -221,12 +221,12 @@ void print_fields_0D(const Grid_T *const grid,const int iteration,
     }
     
     /* write values */
-    fprintf(file,"%u ",iteration);
+    fprintf(file,"%u",iteration);
     for (f = 0; f < Nfld; ++f)
     {
       Linf = L_inf(nn,fields[f]->v);
-      L2   = L2_norm(nn,fields[f]->v,0);
       L1   = L1_norm(nn,fields[f]->v,0);
+      L2   = L2_norm(nn,fields[f]->v,0);
       fprintf(file," %0.15f %0.15f %0.15f", Linf,L1,L2);
     }
     fprintf(file,"\n");
