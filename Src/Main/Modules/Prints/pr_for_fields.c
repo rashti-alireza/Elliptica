@@ -625,7 +625,8 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
 // i.e.,[0,1]x[0,1]x[0,1]. this makes more sense where we are interested 
 // to plot the plane irrespective of patch coordinates. 
 // a linear map then changes this interval according to the patch 
-// reference coords (X,Y,Z). */
+// reference coords (X,Y,Z). 
+// NOTE: the convention is {XYplane = 0, XZplane = 1, YZplane = 2} */
 void print_fields_2D(const Grid_T *const grid,const int iteration, 
                       const char *const folder)
 {
@@ -841,31 +842,25 @@ void print_fields_2D(const Grid_T *const grid,const int iteration,
       /* finding the index of the closest point to 
       // the specified one in the param. */
       I = J = K = UINT_MAX;/* to catch bug */
-      if (plane->Xplane)
+      if (plane->XYplane)
       {
         /* normalize */
-        Y = map_to_patch_ref_interval(plane->Y,patch,REF_coord_min,REF_coord_max,1,map_type);
         Z = map_to_patch_ref_interval(plane->Z,patch,REF_coord_min,REF_coord_max,2,map_type);
-        J = find_closest_index(Y,patch,1);
         K = find_closest_index(Z,patch,2);
       }
       
-      else if (plane->Yplane)
+      else if (plane->XZplane)
       {
         /* normalize */
-        X = map_to_patch_ref_interval(plane->X,patch,REF_coord_min,REF_coord_max,0,map_type);
-        Z = map_to_patch_ref_interval(plane->Z,patch,REF_coord_min,REF_coord_max,2,map_type);
-        I = find_closest_index(X,patch,0);
-        K = find_closest_index(Z,patch,2);
+        Y = map_to_patch_ref_interval(plane->Y,patch,REF_coord_min,REF_coord_max,1,map_type);
+        J = find_closest_index(X,patch,1);
       }
       
-      else if (plane->Zplane)
+      else if (plane->YZplane)
       {
         /* normalize */
         X = map_to_patch_ref_interval(plane->X,patch,REF_coord_min,REF_coord_max,0,map_type);
-        Y = map_to_patch_ref_interval(plane->Y,patch,REF_coord_min,REF_coord_max,1,map_type);
         I = find_closest_index(X,patch,0);
-        J = find_closest_index(Y,patch,1);
       }
       else
       {
@@ -876,7 +871,7 @@ void print_fields_2D(const Grid_T *const grid,const int iteration,
       fields = find_field_by_name_or_regex(patch,flds,&Nfld);
       
       /* create the file if not exist */
-      sprintf(file_name,"%s/%s_%s_1d.txt",folder,stem,plane->suffix);
+      sprintf(file_name,"%s/%s_%s_2d.txt",folder,stem,plane->suffix);
       if (access(file_name,F_OK) != -1)/* if file exists */
       {
         file = Fopen(file_name,"a");
@@ -887,28 +882,25 @@ void print_fields_2D(const Grid_T *const grid,const int iteration,
         file = Fopen(file_name,"w");
         
         /* header:  iteration field1 field2 ... */
-        fprintf(file,"# plane_coordinate x(X,Y,Z) y(X,Y,Z) z(X,Y,Z)");
+        fprintf(file,"# plane_coordinate1 plane_coordinate2 x(X,Y,Z) y(X,Y,Z) z(X,Y,Z)");
         for (f = 0; f < Nfld; ++f)
           fprintf(file," %s", fields[f]->name);
         fprintf(file,"\n\n# ");
         
-        if (plane->Xplane)
+        if (plane->XYplane)
+        {
+          Z = patch->node[i_j_k_to_ijk(n,0,0,K)]->X[2];
+          FWRITE_2D_HEADER(0)
+        }
+        else if (plane->XZplane)
         {
           Y = patch->node[i_j_k_to_ijk(n,0,J,0)]->X[1];
-          Z = patch->node[i_j_k_to_ijk(n,0,0,K)]->X[2];
-          FWRITE_1D_HEADER(0)
+          FWRITE_2D_HEADER(1)
         }
-        else if (plane->Yplane)
+        else if (plane->YZplane)
         {
           X = patch->node[i_j_k_to_ijk(n,I,0,0)]->X[0];
-          Z = patch->node[i_j_k_to_ijk(n,0,0,K)]->X[2];
-          FWRITE_1D_HEADER(1)
-        }
-        else if (plane->Zplane)
-        {
-          X = patch->node[i_j_k_to_ijk(n,I,0,0)]->X[0];
-          Y = patch->node[i_j_k_to_ijk(n,0,J,0)]->X[1];
-          FWRITE_1D_HEADER(2)
+          FWRITE_2D_HEADER(2)
         }
         else
         {
@@ -919,28 +911,40 @@ void print_fields_2D(const Grid_T *const grid,const int iteration,
       fprintf(file,"\n# \"time = %d\"\n",iteration);
       
       /* print coords and fields in each column. */
-      if (plane->Xplane)
-      {
-        for (i = 0; i < n[0]; ++i)
-        {
-          ijk = i_j_k_to_ijk(n,i,J,K);
-          FWRITE_1D_VALUES(0)
-        }
-      }
-      else if (plane->Yplane)
+      if (plane->XYplane)
       {
         for (j = 0; j < n[1]; ++j)
         {
-          ijk = i_j_k_to_ijk(n,I,j,K);
-          FWRITE_1D_VALUES(1)
+          for (i = 0; i < n[0]; ++i)
+          {
+            ijk = i_j_k_to_ijk(n,i,j,K);
+            FWRITE_2D_VALUES(0,1)
+          }
+          fprintf(file,"\n");
         }
       }
-      else if (plane->Zplane)
+      else if (plane->XZplane)
       {
         for (k = 0; k < n[2]; ++k)
         {
-          ijk = i_j_k_to_ijk(n,I,J,k);
-          FWRITE_1D_VALUES(2)
+          for (i = 0; i < n[0]; ++i)
+          {
+            ijk = i_j_k_to_ijk(n,i,J,k);
+            FWRITE_2D_VALUES(0,2)
+          }
+          fprintf(file,"\n");
+        }
+      }
+      else if (plane->YZplane)
+      {
+        for (k = 0; k < n[2]; ++k)
+        {
+          for (j = 0; j < n[1]; ++j)
+          {
+            ijk = i_j_k_to_ijk(n,I,j,k);
+            FWRITE_2D_VALUES(1,2)
+          }
+          fprintf(file,"\n");
         }
       }
       Free(fields);

@@ -25,6 +25,18 @@
     fprintf(file," %0.15f",fields[f]->v[ijk]);}\
   fprintf(file,"\n");
 
+/* compactify repeated lines, dir = (dir)ection */
+#define FWRITE_2D_VALUES(dir1,dir2) \
+  fprintf(file,"%0.15f %0.15f %0.15f %0.15f %0.15f",\
+               patch->node[ijk]->X[dir1],\
+               patch->node[ijk]->X[dir2],\
+               patch->node[ijk]->x[0],\
+               patch->node[ijk]->x[1],\
+               patch->node[ijk]->x[2]);\
+  for (f = 0; f < Nfld; ++f){\
+    fprintf(file," %0.15f",fields[f]->v[ijk]);}\
+  fprintf(file,"\n");
+
 /* general 1D header, dir = (dir)ection */
 #define FWRITE_1D_HEADER(dir) \
   if (dir == 0)\
@@ -47,6 +59,32 @@
                 " (X[%u]=%0.2f)*I + (Y[%u]=%0.2f)*J + t*K\n",\
                   line->strv,patch->min[dir],patch->max[dir],\
                   I,X,J,Y);\
+  }\
+  else Error0(NO_OPTION);
+  
+
+/* general 2D header, pln = {XYplane = 0, XZplane = 1, YZplane = 2} */
+#define FWRITE_2D_HEADER(pln) \
+  if (pln == 0)\
+  {\
+   fprintf(file,"plane_%s: t1 x t2 in [%0.2f,%0.2f]x[%0.2f,%0.2f] -->"\
+                " t1*I + t2*J + (Z[%u]=%0.2f)*K\n",\
+                  plane->strv,patch->min[0],patch->max[0],\
+                  patch->min[1],patch->max[1],K,Z);\
+  }\
+  else if (pln == 1)\
+  {\
+   fprintf(file,"plane_%s: t1 x t2 in [%0.2f,%0.2f]x[%0.2f,%0.2f] -->"\
+                " t1*I + (Y[%u]=%0.2f)*J + t2*K\n",\
+                  plane->strv,patch->min[0],patch->max[0],\
+                  patch->min[2],patch->max[2],J,Y);\
+  }\
+  else if (pln == 2)\
+  {\
+     fprintf(file,"plane_%s: t1 x t2 in [%0.2f,%0.2f]x[%0.2f,%0.2f] -->"\
+                " (X[%u]=%0.2f)*I + t1*J + t2*K\n",\
+                  plane->strv,patch->min[1],patch->max[1],\
+                  patch->min[2],patch->max[2],I,X);\
   }\
   else Error0(NO_OPTION);
   
