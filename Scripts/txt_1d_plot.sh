@@ -106,7 +106,7 @@ fi
 
 ##
 echo "---"
-echo "plot: $v  vs. $x ==> column = $col1 vs. column = $col2"
+echo "plot: $v  vs. $x ==> column = $col2 vs. column = $col1"
 echo "---"
 
 tgraph.py -m -c ${col1}:${col2} ${file}
