@@ -486,8 +486,9 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
   if(flds && lns)
   for (l = 0; l < Nlines; ++l)
   {
-    struct pars_s *line = &parsed[l];
+    const struct pars_s *line = &parsed[l];
     
+    PR_1D_OpenMP(omp parallel for)
     FOR_ALL_PATCHES(p,grid)
     {
       Patch_T *patch = grid->patch[p];
