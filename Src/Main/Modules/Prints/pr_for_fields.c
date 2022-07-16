@@ -341,7 +341,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
   counter = 0;
   for (l = 0; lns && lns[l]; ++l)
   {
-    if (strlen(lns[l]) > 5)/* coz we need, e.g., "(I,1,2" and not ",".
+    if (strlen(lns[l]) > 5)/* coz we need, e.g., "(X,1,0" and not ",".
                            // note ')' is eliminated. */
       counter++;
   }
@@ -356,29 +356,29 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
      
      char **subs = 0;
      
-     /* substitue ,e.g., ",(0,J,2" by "0,J,2". */
+     /* substitue ,e.g., ",(0,Y,0.2" by "0,Y,0.2". */
      regex_replace(lns[l],"^.?\\(","",lns[l]);
      subs = read_separated_items_in_string(lns[l],',');
      
      /* sanity checks: */
      /* nothing found */
      if (!subs) Errors("Wrong format for %s.\n",line_par_name);
-     /* we need 3 pieces like 0,J, and 2  in "(0,J,2)" */
+     /* we need 3 pieces like 0, Y, and 0.2  in "(0,Y,0.2)" */
      for (counter = 0; subs[counter]; counter++);
      if (counter != 3) Errors("Wrong format for %s.\n",line_par_name);
      /* correct position */
      if (
-         /* 'I/i' should only take place on the 0th position */
+         /* 'X/x' should only take place on the 0th position */
          *subs[1] == 'X' || 
          *subs[1] == 'x' || 
          *subs[2] == 'X' || 
          *subs[2] == 'x' ||
-         /* 'J/j' should only take place on the 1st position */
+         /* 'Y/y' should only take place on the 1st position */
          *subs[0] == 'Y' || 
          *subs[0] == 'y' || 
          *subs[2] == 'Y' || 
          *subs[2] == 'y' || 
-         /* 'K/k' should only take place on the 2nd position */
+         /* 'Z/z' should only take place on the 2nd position */
          *subs[0] == 'Z' || 
          *subs[0] == 'z' || 
          *subs[1] == 'Z' || 
@@ -454,7 +454,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
                   parsed[p].strv);
        counter++;
      }
-     /* if we have more than two letters, e.g., "(I,J,7)". */
+     /* if we have more than two letters, e.g., "(X,Y,0.7)". */
      if (counter != 1)
        Errors("Wrong format for %s.\n",line_par_name); 
        
@@ -617,6 +617,338 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
   
   FUNC_TOC
 }
+
+/* print the value of the given fields in the params on the
+// specified plane.
+// note: parameter "txt_output_2d" supports regular expression. 
+// note: the user must provide the coordinate in the reference interval,
+// i.e.,[0,1]x[0,1]x[0,1]. this makes more sense where we are interested 
+// to plot the plane irrespective of patch coordinates. 
+// a linear map then changes this interval according to the patch 
+// reference coords (X,Y,Z). */
+void print_fields_2D(const Grid_T *const grid,const int iteration, 
+                      const char *const folder)
+{
+  FUNC_TIC
+  printf(Pretty0"iteration = %d\n",iteration);
+  
+  /* pars struct for the print line */
+  struct pars_s
+  {
+    Uint Xplane:1;/* if X-plane is asked 1, otherwise 0. */
+    Uint Yplane:1;/* if Y-plane is asked 1, otherwise 0. */
+    Uint Zplane:1;/* if Z-plane is asked 1, otherwise 0. */
+    double X;/* X coords of the print plane */
+    double Y;/* Y coords of the print plane */
+    double Z;/* Z coords of the print plane */
+    char strv[STR_LEN/2];/* save the plane str given in the param file. */
+    char suffix[STR_LEN/2];/* suffix for the file. */
+  };
+  const char *const plane_par_name  = "txt_output_2d_plane";
+  const char *const field_par_name = "txt_output_2d";
+  /* the user must provide the coordinate in the reference interval, i.e.,
+  // [0,1]x[0,1]x[0,1]. this makes more sense where we are interested 
+  // to plot the plane irrespective of patch coordinates. 
+  // NOTE: if you change this, please change the error msg too. */
+  const double REF_coord_min[3] = {0,0,0};
+  const double REF_coord_max[3] = {1,1,1};
+  const int map_type = 0;/* for future if you want to change the map */
+  /* list of the fields(flds) to be printed out */
+  char **flds = 
+     read_separated_items_in_string(PgetsEZ(field_par_name),',');
+  /* list of planes(lns) */
+  char **plns = 
+     read_separated_items_in_string(PgetsEZ(plane_par_name),')');
+  Uint Nplanes;/* number of planes (pars struct) */
+  Uint l,p,counter;
+  
+  if (!flds)
+    printf(Pretty0"No field is specified.\n");
+  
+  if (!plns)
+    printf(Pretty0"No plane is specified.\n");
+  
+  /* count the number of planes to create the struct */
+  counter = 0;
+  for (l = 0; plns && plns[l]; ++l)
+  {
+    if (strlen(plns[l]) > 5)/* coz we need, e.g., "(X,Y,0.2" and not ",".
+                           // note ')' is eliminated. */
+      counter++;
+  }
+  Nplanes = counter;
+  struct pars_s parsed[counter];
+  
+  /* populate the parsed structs */
+  p = 0;/* index for parsed */
+  for (l = 0; plns && plns[l]; ++l)
+  {
+     if (strlen(plns[l]) <= 5) continue;
+     
+     char **subs = 0;
+     
+     /* substitue ,e.g., ",(X,Y,0.5" by "X,Y,0.5". */
+     regex_replace(plns[l],"^.?\\(","",plns[l]);
+     subs = read_separated_items_in_string(plns[l],',');
+     
+     /* sanity checks: */
+     /* nothing found */
+     if (!subs) Errors("Wrong format for %s.\n",plane_par_name);
+     /* we need 3 pieces like X, Y, and 0.2  in "(X,Y,0.2)" */
+     for (counter = 0; subs[counter]; counter++);
+     if (counter != 3) Errors("Wrong format for %s.\n",plane_par_name);
+     /* correct position */
+     if (
+         /* 'X/x' should only take place on the 0th position */
+         *subs[1] == 'X' || 
+         *subs[1] == 'x' || 
+         *subs[2] == 'X' || 
+         *subs[2] == 'x' ||
+         /* 'Y/y' should only take place on the 1st position */
+         *subs[0] == 'Y' || 
+         *subs[0] == 'y' || 
+         *subs[2] == 'Y' || 
+         *subs[2] == 'y' || 
+         /* 'Z/z' should only take place on the 2nd position */
+         *subs[0] == 'Z' || 
+         *subs[0] == 'z' || 
+         *subs[1] == 'Z' || 
+         *subs[1] == 'z'
+         )
+     {
+       Errors("Wrong order for %s.\n",plane_par_name); 
+     }
+     
+     /* cp str */
+     sprintf(parsed[p].strv,"(%s)",plns[l]);
+     
+     /* realize the components */
+     counter = 0;
+     if (*subs[0] == 'X' || *subs[0] == 'x')
+     {
+       parsed[p].Xplane = 1;
+       parsed[p].Yplane = 0;
+       parsed[p].Zplane = 0;
+       
+       parsed[p].X = DBL_MAX;
+       parsed[p].Y = atof(subs[1]);
+       parsed[p].Z = atof(subs[2]);
+       sprintf(parsed[p].suffix,"X_%s_%s",subs[1],subs[2]);
+       
+       /* interval check */
+       if (LSS(parsed[p].Y,REF_coord_min[1]) ||
+           GRT(parsed[p].Y,REF_coord_max[1]) ||
+           LSS(parsed[p].Z,REF_coord_min[2]) ||
+           GRT(parsed[p].Z,REF_coord_max[2]) 
+           )
+           Errors("%s falling outside of the reference interval [0,1]x[0,1]x[0,1].\n",
+                  parsed[p].strv);
+       counter++;
+     }
+     if (*subs[1] == 'Y' || *subs[1] == 'y')
+     {
+       parsed[p].Xplane = 0;
+       parsed[p].Yplane = 1;
+       parsed[p].Zplane = 0;
+       
+       parsed[p].X = atof(subs[0]);
+       parsed[p].Y = DBL_MAX;
+       parsed[p].Z = atof(subs[2]);
+       sprintf(parsed[p].suffix,"%s_Y_%s",subs[0],subs[2]);
+       /* interval check */
+       if (LSS(parsed[p].X,REF_coord_min[0]) ||
+           GRT(parsed[p].X,REF_coord_max[0]) ||
+           LSS(parsed[p].Z,REF_coord_min[2]) ||
+           GRT(parsed[p].Z,REF_coord_max[2]) 
+           )
+           Errors("%s falling outside of the reference interval [0,1]x[0,1]x[0,1].\n",
+                  parsed[p].strv);
+       counter++;
+     }
+     if (*subs[2] == 'Z' || *subs[2] == 'z')
+     {
+       parsed[p].Xplane = 0;
+       parsed[p].Yplane = 0;
+       parsed[p].Zplane = 1;
+       
+       parsed[p].X = atof(subs[0]);
+       parsed[p].Y = atof(subs[1]);
+       parsed[p].Z = DBL_MAX;
+       sprintf(parsed[p].suffix,"%s_%s_Z",subs[0],subs[1]);
+       /* interval check */
+       if (LSS(parsed[p].Y,REF_coord_min[1]) ||
+           GRT(parsed[p].Y,REF_coord_max[1]) ||
+           LSS(parsed[p].X,REF_coord_min[0]) ||
+           GRT(parsed[p].X,REF_coord_max[0]) 
+           )
+           Errors("%s falling outside of the reference interval [0,1]x[0,1]x[0,1].\n",
+                  parsed[p].strv);
+       counter++;
+     }
+     /* if we have more or less letters, e.g., "(X,Y,Z)". */
+     if (counter != 2)
+       Errors("Wrong format for %s.\n",plane_par_name); 
+       
+     p++;
+     free_2d(subs);
+  }
+  
+  /* test */
+  if (0)
+  for (l = 0; l < Nplanes; ++l)
+  {
+    printf("param[%u] = %s => (%u,%u,%u) & (%g,%g,%g)| %s\n",
+            l, parsed[l].strv, 
+            parsed[l].Xplane,parsed[l].Yplane,parsed[l].Zplane,
+            parsed[l].X,parsed[l].Y,parsed[l].Z,parsed[l].suffix);
+  }
+  /* check for redundancy */
+  for (l = 0; l < Nplanes; ++l)
+  {
+    struct pars_s *plane = &parsed[l];
+    for (Uint lp = l+1; lp < Nplanes; ++lp)
+    {
+      struct pars_s *planep = &parsed[lp];
+      if (!strcmp(plane->strv,planep->strv))
+        Errors("Multiple plane with same value for %s.",plane->strv);
+    }
+  }
+
+  if(flds && plns)
+  for (l = 0; l < Nplanes; ++l)
+  {
+    const struct pars_s *plane = &parsed[l];
+    
+    PR_1D_OpenMP(omp parallel for)
+    FOR_ALL_PATCHES(p,grid)
+    {
+      Patch_T *patch = grid->patch[p];
+      const Uint *const n = patch->n;
+      const char *stem = strstr(patch->name,"_"); stem++;
+      Field_T **fields = 0;/* save the found fields */
+      Uint Nfld      = 0;/* total num of the found fields. */
+      FILE *file     = 0;
+      char file_name[STR_LEN] = {0};
+      double X,Y,Z;
+      Uint I,J,K;
+      Uint i,j,k,ijk,f;
+      
+      /* finding the index of the closest point to 
+      // the specified one in the param. */
+      I = J = K = UINT_MAX;/* to catch bug */
+      if (plane->Xplane)
+      {
+        /* normalize */
+        Y = map_to_patch_ref_interval(plane->Y,patch,REF_coord_min,REF_coord_max,1,map_type);
+        Z = map_to_patch_ref_interval(plane->Z,patch,REF_coord_min,REF_coord_max,2,map_type);
+        J = find_closest_index(Y,patch,1);
+        K = find_closest_index(Z,patch,2);
+      }
+      
+      else if (plane->Yplane)
+      {
+        /* normalize */
+        X = map_to_patch_ref_interval(plane->X,patch,REF_coord_min,REF_coord_max,0,map_type);
+        Z = map_to_patch_ref_interval(plane->Z,patch,REF_coord_min,REF_coord_max,2,map_type);
+        I = find_closest_index(X,patch,0);
+        K = find_closest_index(Z,patch,2);
+      }
+      
+      else if (plane->Zplane)
+      {
+        /* normalize */
+        X = map_to_patch_ref_interval(plane->X,patch,REF_coord_min,REF_coord_max,0,map_type);
+        Y = map_to_patch_ref_interval(plane->Y,patch,REF_coord_min,REF_coord_max,1,map_type);
+        I = find_closest_index(X,patch,0);
+        J = find_closest_index(Y,patch,1);
+      }
+      else
+      {
+        Error0(NO_OPTION);
+      }
+      
+      /* find all fields for this patch */
+      fields = find_field_by_name_or_regex(patch,flds,&Nfld);
+      
+      /* create the file if not exist */
+      sprintf(file_name,"%s/%s_%s_1d.txt",folder,stem,plane->suffix);
+      if (access(file_name,F_OK) != -1)/* if file exists */
+      {
+        file = Fopen(file_name,"a");
+      }
+      /* open a new file with an appropriate header */
+      else
+      {
+        file = Fopen(file_name,"w");
+        
+        /* header:  iteration field1 field2 ... */
+        fprintf(file,"# plane_coordinate x(X,Y,Z) y(X,Y,Z) z(X,Y,Z)");
+        for (f = 0; f < Nfld; ++f)
+          fprintf(file," %s", fields[f]->name);
+        fprintf(file,"\n\n# ");
+        
+        if (plane->Xplane)
+        {
+          Y = patch->node[i_j_k_to_ijk(n,0,J,0)]->X[1];
+          Z = patch->node[i_j_k_to_ijk(n,0,0,K)]->X[2];
+          FWRITE_1D_HEADER(0)
+        }
+        else if (plane->Yplane)
+        {
+          X = patch->node[i_j_k_to_ijk(n,I,0,0)]->X[0];
+          Z = patch->node[i_j_k_to_ijk(n,0,0,K)]->X[2];
+          FWRITE_1D_HEADER(1)
+        }
+        else if (plane->Zplane)
+        {
+          X = patch->node[i_j_k_to_ijk(n,I,0,0)]->X[0];
+          Y = patch->node[i_j_k_to_ijk(n,0,J,0)]->X[1];
+          FWRITE_1D_HEADER(2)
+        }
+        else
+        {
+          Error0(NO_OPTION);
+        }
+      }
+      /* requires for gnuplot or tgraph */
+      fprintf(file,"\n# \"time = %d\"\n",iteration);
+      
+      /* print coords and fields in each column. */
+      if (plane->Xplane)
+      {
+        for (i = 0; i < n[0]; ++i)
+        {
+          ijk = i_j_k_to_ijk(n,i,J,K);
+          FWRITE_1D_VALUES(0)
+        }
+      }
+      else if (plane->Yplane)
+      {
+        for (j = 0; j < n[1]; ++j)
+        {
+          ijk = i_j_k_to_ijk(n,I,j,K);
+          FWRITE_1D_VALUES(1)
+        }
+      }
+      else if (plane->Zplane)
+      {
+        for (k = 0; k < n[2]; ++k)
+        {
+          ijk = i_j_k_to_ijk(n,I,J,k);
+          FWRITE_1D_VALUES(2)
+        }
+      }
+      Free(fields);
+      Fclose(file);
+    }/* end of FOR_ALL_PATCHES(p,grid) */
+  }    
+  
+  free_2d(flds);
+  free_2d(plns);
+  
+  FUNC_TOC
+}
+
 
 /* :-> a set of pointers to the found fields in the given patch.
 // the number of pointers is set in Nfld and the field names 
