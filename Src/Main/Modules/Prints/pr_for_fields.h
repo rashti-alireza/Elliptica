@@ -11,7 +11,7 @@
 #define STR_LEN (999)
 
 /* compactify repeated lines */
-#define FWRITE_1D_MODE0(dir) \
+#define FWRITE_1D_VALUES(dir) \
   fprintf(file,"%0.15f %0.15f %0.15f %0.15f",\
                patch->node[ijk]->X[dir],\
                patch->node[ijk]->x[0],\
@@ -20,6 +20,10 @@
   for (f = 0; f < Nfld; ++f){\
     fprintf(file," %0.15f",fields[f]->v[ijk]);}\
   fprintf(file,"\n");
+
+/* general 1D header */
+#define FWRITE_1D_HEADER(dir)
+
 
 void pr_fields(Pr_Field_T *const pr);
 Pr_Field_T *init_PrField(const Grid_T *const grid);

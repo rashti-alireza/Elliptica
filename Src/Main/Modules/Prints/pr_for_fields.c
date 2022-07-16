@@ -567,7 +567,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         for (i = 0; i < n[0]; ++i)
         {
           ijk = i_j_k_to_ijk(n,i,J,K);
-          FWRITE_1D_MODE0(0)
+          FWRITE_1D_VALUES(0)
         }
       }
       else if (line->Yline)
@@ -579,7 +579,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         for (j = 0; j < n[1]; ++j)
         {
           ijk = i_j_k_to_ijk(n,I,j,K);
-          FWRITE_1D_MODE0(1)
+          FWRITE_1D_VALUES(1)
         }
       }
       else if (line->Zline)
@@ -591,7 +591,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         for (k = 0; k < n[2]; ++k)
         {
           ijk = i_j_k_to_ijk(n,I,J,k);
-          FWRITE_1D_MODE0(2)
+          FWRITE_1D_VALUES(2)
         }
       }
       
