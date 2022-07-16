@@ -170,121 +170,74 @@ int print_fields_3D(const Grid_T *const grid,const int iteration,
   return EXIT_SUCCESS;
 }
 
-/* ->: largest L2 norm.
-// print norms L2, L1 and L_inf of the specified fields 
-// in parameter "txt_output_0d" (supporting regular expression) */
-double print_fields_0D(const Grid_T *const grid,const int iteration, 
+/* print norms L2, L1 and L_inf of the specified fields 
+// in parameter "txt_output_0d" (supporting regular expression). */
+void print_fields_0D(const Grid_T *const grid,const int iteration, 
                       const char *const folder)
 {
   FUNC_TIC
   printf(Pretty0"iteration = %d\n",iteration);
   
+  const char *const field_par_name = "txt_output_0d";
   /* list of the fields to be printed out */
-  char **f = 
-     read_separated_items_in_string(PgetsEZ("txt_output_0d"),',');
-  double largest_L2_error = 0; 
-  Uint i,p;
+  char **flds = 
+     read_separated_items_in_string(PgetsEZ(field_par_name),',');
+  Uint p;
   
-  if(f)         
-  for (i = 0; f[i]; ++i)
+  if(flds)
+  PR_0D_OpenMP(omp parallel for)
+  FOR_ALL_PATCHES(p,grid)
   {
-    FOR_ALL_PATCHES(p,grid)
+    Patch_T *patch = grid->patch[p];
+    const Uint nn  = patch->nn;
+    const char *stem = strstr(patch->name,"_"); stem++;
+    Field_T **fields = 0;/* save the found fields */
+    Uint Nfld      = 0;/* total num of the found fields. */
+    FILE *file     = 0;
+    char file_name[STR_LEN] = {0};
+    double Linf,L1,L2;
+    Uint f;
+    
+    /* find all fields for this patch */
+    fields = find_field_by_name_or_regex(patch,flds,&Nfld);
+    
+    /* create the file if not exist */
+    sprintf(file_name,"%s/%s_0d.txt",folder,stem);
+    if (access(file_name,F_OK) != -1)/* if file exists */
     {
-      Patch_T *patch = grid->patch[p];
-      Field_T *field = 0;
-      Uint nn        = patch->nn;
-      int field_ind  = _Ind(f[i]);
-      Uint Nf        = 0;
-      Uint *fInd     = 0;
-      Uint Ufield_ind= 0;
-      Uint fi;
-      double Linf,L2,L1;
-      FILE *file_Linf,*file_L1,*file_L2;
-      char file_name_Linf[STR_LEN];
-      char file_name_L1[STR_LEN];
-      char file_name_L2[STR_LEN];
-      char *stem = strstr(patch->name,"_");
-      stem++;
-      
-      /* if couldn't find, maybe its a regex. */
-      if (field_ind < 0)
-      {
-        fInd = find_field_index_regex(patch,f[i],&Nf);
-        
-        /* if nothing found. */
-        if (!fInd)
-          continue;
-      }
-      else
-      {
-        Ufield_ind = (Uint)field_ind;
-        fInd = &Ufield_ind;
-        Nf   = 1;
-      }
-      
-      for (fi = 0; fi < Nf; ++fi)
-      {
-        field = patch->fields[fInd[fi]];
-        if (!field->v)/* if field empty */
-          continue;
-          
-        sprintf(file_name_Linf,"%s/%s_Linf_%s.txt",folder,field->name,stem);
-        sprintf(file_name_L1,  "%s/%s_L1_%s.txt" ,folder,field->name,stem);
-        sprintf(file_name_L2,  "%s/%s_L2_%s.txt" ,folder,field->name,stem);
-        
-        if (access(file_name_Linf,F_OK) != -1)/* if file exists */
-        {
-          file_Linf = Fopen(file_name_Linf,"a");
-        }
-        else
-        {
-          file_Linf = Fopen(file_name_Linf,"w");
-          fprintf(file_Linf,"#iteration  %s\n",field->name);
-        }
-        
-        if (access(file_name_L1,F_OK) != -1)
-        {
-          file_L1 = Fopen(file_name_L1,"a");
-        }
-        else
-        {
-          file_L1 = Fopen(file_name_L1,"w");
-          fprintf(file_L1,"#iteration  %s\n",field->name);
-        }
-        
-        if (access(file_name_L2,F_OK) != -1)
-        {
-          file_L2 = Fopen(file_name_L2,"a");
-        }
-        else
-        {
-          file_L2 = Fopen(file_name_L2,"w");
-          fprintf(file_L2,"#iteration  %s\n",field->name);
-        }
-          
-        Linf  = L_inf(nn,field->v);
-        L2    = L2_norm(nn,field->v,0);
-        L1    = L1_norm(nn,field->v,0);
-        
-        fprintf(file_Linf,"%-11u %0.15f\n",iteration,Linf);
-        fprintf(file_L1,  "%-11u %0.15f\n",iteration,L1);
-        fprintf(file_L2,  "%-11u %0.15f\n",iteration,L2);
-        
-        largest_L2_error = L2 > largest_L2_error ? L2 : largest_L2_error;
-        
-        Fclose(file_Linf);
-        Fclose(file_L1);
-        Fclose(file_L2);
-      }
-      /* only if it is a regex found free it. */
-      if (field_ind < 0)
-        Free(fInd);
+      file = Fopen(file_name,"a");
     }
-  }
-  free_2d(f);
+    /* open a new file with an appropriate header */
+    else
+    {
+      file = Fopen(file_name,"w");
+      
+      /* header:  iteration ... */
+      fprintf(file,"# iteration");
+      for (f = 0; f < Nfld; ++f)
+        fprintf(file," %s|Linf %s|L1 %s|L2", 
+                fields[f]->name,fields[f]->name,fields[f]->name);
+      fprintf(file,"\n\n");
+    }
+    
+    /* write values */
+    fprintf(file,"%u ",iteration);
+    for (f = 0; f < Nfld; ++f)
+    {
+      Linf = L_inf(nn,fields[f]->v);
+      L2   = L2_norm(nn,fields[f]->v,0);
+      L1   = L1_norm(nn,fields[f]->v,0);
+      fprintf(file," %0.15f %0.15f %0.15f", Linf,L1,L2);
+    }
+    fprintf(file,"\n");
+    
+    Free(fields);
+    Fclose(file);
+  }/* end of FOR_ALL_PATCHES(p,grid) */
+  
+  free_2d(flds);
   
   FUNC_TOC
-  return largest_L2_error;
 }
 
 /* print the values of the given fields on the specified line at the param file.
