@@ -287,7 +287,7 @@ double print_fields_0D(const Grid_T *const grid,const int iteration,
   return largest_L2_error;
 }
 
-/* print the value of the given fields in the params along a 
+/* print the values of the given fields on the specified line at the param file.
 // specified line.
 // note: parameter "txt_output_1d" supports regular expression. 
 // note: the user must provide the coordinate in the reference interval,
@@ -618,8 +618,7 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
   FUNC_TOC
 }
 
-/* print the value of the given fields in the params on the
-// specified plane.
+/* print the values of the given fields on the specified plane at the param file.
 // note: parameter "txt_output_2d" supports regular expression. 
 // note: the user must provide the coordinate in the reference interval,
 // i.e.,[0,1]x[0,1]x[0,1]. this makes more sense where we are interested 
@@ -825,7 +824,7 @@ void print_fields_2D(const Grid_T *const grid,const int iteration,
   {
     const struct pars_s *plane = &parsed[l];
     
-    //PR_2D_OpenMP(omp parallel for)
+    PR_2D_OpenMP(omp parallel for)
     FOR_ALL_PATCHES(p,grid)
     {
       Patch_T *patch = grid->patch[p];
@@ -853,7 +852,7 @@ void print_fields_2D(const Grid_T *const grid,const int iteration,
       {
         /* normalize */
         Y = map_to_patch_ref_interval(plane->Y,patch,REF_coord_min,REF_coord_max,1,map_type);
-        J = find_closest_index(X,patch,1);
+        J = find_closest_index(Y,patch,1);
       }
       
       else if (plane->YZplane)
