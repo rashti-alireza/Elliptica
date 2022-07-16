@@ -553,17 +553,37 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
         fprintf(file,"# line_coordinate x(X,Y,Z) y(X,Y,Z) z(X,Y,Z)");
         for (f = 0; f < Nfld; ++f)
           fprintf(file," %s", fields[f]->name);
-        fprintf(file,"\n");
+        fprintf(file,"\n\n# ");
+        
+        if (line->Xline)
+        {
+          Y = patch->node[i_j_k_to_ijk(n,0,J,0)]->X[1];
+          Z = patch->node[i_j_k_to_ijk(n,0,0,K)]->X[2];
+          FWRITE_1D_HEADER(0)
+        }
+        else if (line->Yline)
+        {
+          X = patch->node[i_j_k_to_ijk(n,I,0,0)]->X[0];
+          Z = patch->node[i_j_k_to_ijk(n,0,0,K)]->X[2];
+          FWRITE_1D_HEADER(1)
+        }
+        else if (line->Zline)
+        {
+          X = patch->node[i_j_k_to_ijk(n,I,0,0)]->X[0];
+          Y = patch->node[i_j_k_to_ijk(n,0,J,0)]->X[1];
+          FWRITE_1D_HEADER(2)
+        }
+        else
+        {
+          Error0(NO_OPTION);
+        }
       }
-      fprintf(file,"\n# \"time = %d\", (X,Y,Z) = %s,",iteration,line->strv);
+      /* requires for gnuplot or tgraph */
+      fprintf(file,"\n# \"time = %d\"\n",iteration);
       
       /* print coords and fields in each column. */
       if (line->Xline)
       {
-        Y = patch->node[i_j_k_to_ijk(n,0,J,0)]->X[1];
-        Z = patch->node[i_j_k_to_ijk(n,0,0,K)]->X[2];
-        fprintf(file," Y[%u] = %g, Z[%u] = %g\n",J,Y,K,Z);
-        
         for (i = 0; i < n[0]; ++i)
         {
           ijk = i_j_k_to_ijk(n,i,J,K);
@@ -572,10 +592,6 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       }
       else if (line->Yline)
       {
-        X = patch->node[i_j_k_to_ijk(n,I,0,0)]->X[0];
-        Z = patch->node[i_j_k_to_ijk(n,0,0,K)]->X[2];
-        fprintf(file," X[%u] = %g, Z[%u] = %g\n",I,X,K,Z);
-        
         for (j = 0; j < n[1]; ++j)
         {
           ijk = i_j_k_to_ijk(n,I,j,K);
@@ -584,17 +600,12 @@ void print_fields_1D(const Grid_T *const grid,const int iteration,
       }
       else if (line->Zline)
       {
-        X = patch->node[i_j_k_to_ijk(n,I,0,0)]->X[0];
-        Y = patch->node[i_j_k_to_ijk(n,0,J,0)]->X[1];
-        fprintf(file," X[%u] = %g, Y[%u] = %g\n",I,X,J,Y);
-        
         for (k = 0; k < n[2]; ++k)
         {
           ijk = i_j_k_to_ijk(n,I,J,k);
           FWRITE_1D_VALUES(2)
         }
       }
-      
       Free(fields);
       Fclose(file);
     }/* end of FOR_ALL_PATCHES(p,grid) */

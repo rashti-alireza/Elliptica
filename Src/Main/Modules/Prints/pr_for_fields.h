@@ -10,7 +10,7 @@
 
 #define STR_LEN (999)
 
-/* compactify repeated lines */
+/* compactify repeated lines, dir = (dir)ection */
 #define FWRITE_1D_VALUES(dir) \
   fprintf(file,"%0.15f %0.15f %0.15f %0.15f",\
                patch->node[ijk]->X[dir],\
@@ -21,8 +21,31 @@
     fprintf(file," %0.15f",fields[f]->v[ijk]);}\
   fprintf(file,"\n");
 
-/* general 1D header */
-#define FWRITE_1D_HEADER(dir)
+/* general 1D header, dir = (dir)ection */
+#define FWRITE_1D_HEADER(dir) \
+  if (dir == 0)\
+  {\
+   fprintf(file,"line_%s: t in [%0.2f,%0.2f] -->"\
+                " t*I + (Y[%u]=%0.2f)*J + (Z[%u]=%0.2f)*K\n",\
+                  line->strv,patch->min[dir],patch->max[dir],\
+                  J,Y,K,Z);\
+  }\
+  else if (dir == 1)\
+  {\
+   fprintf(file,"line_%s: t in [%0.2f,%0.2f] -->"\
+                " (X[%u]=%0.2f)*I + t*J + (Z[%u]=%0.2f)*K\n",\
+                  line->strv,patch->min[dir],patch->max[dir],\
+                  I,X,K,Z);\
+  }\
+  else if (dir == 2)\
+  {\
+   fprintf(file,"line_%s: t in [%0.2f,%0.2f] -->"\
+                " (X[%u]=%0.2f)*I + (Y[%u]=%0.2f)*J + t*K\n",\
+                  line->strv,patch->min[dir],patch->max[dir],\
+                  I,X,J,Y);\
+  }\
+  else Error0(NO_OPTION);
+  
 
 
 void pr_fields(Pr_Field_T *const pr);
