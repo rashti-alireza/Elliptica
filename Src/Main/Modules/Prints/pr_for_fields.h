@@ -12,6 +12,7 @@
 
 /* openmp */
 #define PR_1D_OpenMP(x) _Pragma ( #x )
+#define PR_2D_OpenMP(x) _Pragma ( #x )
 
 /* compactify repeated lines, dir = (dir)ection */
 #define FWRITE_1D_VALUES(dir) \

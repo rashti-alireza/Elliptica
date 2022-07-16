@@ -635,16 +635,19 @@ void print_fields_2D(const Grid_T *const grid,const int iteration,
   /* pars struct for the print line */
   struct pars_s
   {
-    Uint Xplane:1;/* if X-plane is asked 1, otherwise 0. */
-    Uint Yplane:1;/* if Y-plane is asked 1, otherwise 0. */
-    Uint Zplane:1;/* if Z-plane is asked 1, otherwise 0. */
+    Uint XYplane:1;/* if XY-plane is asked 1, otherwise 0. */
+    Uint XZplane:1;/* if XZ-plane is asked 1, otherwise 0. */
+    Uint YZplane:1;/* if YZ-plane is asked 1, otherwise 0. */
+    Uint Xline:1;/* if X-line is asked 1, otherwise 0. */
+    Uint Yline:1;/* if Y-line is asked 1, otherwise 0. */
+    Uint Zline:1;/* if Z-line is asked 1, otherwise 0. */
     double X;/* X coords of the print plane */
     double Y;/* Y coords of the print plane */
     double Z;/* Z coords of the print plane */
     char strv[STR_LEN/2];/* save the plane str given in the param file. */
     char suffix[STR_LEN/2];/* suffix for the file. */
   };
-  const char *const plane_par_name  = "txt_output_2d_plane";
+  const char *const plane_par_name = "txt_output_2d_plane";
   const char *const field_par_name = "txt_output_2d";
   /* the user must provide the coordinate in the reference interval, i.e.,
   // [0,1]x[0,1]x[0,1]. this makes more sense where we are interested 
@@ -723,83 +726,85 @@ void print_fields_2D(const Grid_T *const grid,const int iteration,
      sprintf(parsed[p].strv,"(%s)",plns[l]);
      
      /* realize the components */
+     parsed[p].XYplane = 0;
+     parsed[p].XZplane = 0;
+     parsed[p].YZplane = 0;
+     parsed[p].Xline   = 0;
+     parsed[p].Yline   = 0;
+     parsed[p].Zline   = 0;
      counter = 0;
      if (*subs[0] == 'X' || *subs[0] == 'x')
      {
-       parsed[p].Xplane = 1;
-       parsed[p].Yplane = 0;
-       parsed[p].Zplane = 0;
-       
-       parsed[p].X = DBL_MAX;
-       parsed[p].Y = atof(subs[1]);
-       parsed[p].Z = atof(subs[2]);
-       sprintf(parsed[p].suffix,"X_%s_%s",subs[1],subs[2]);
-       
-       /* interval check */
-       if (LSS(parsed[p].Y,REF_coord_min[1]) ||
-           GRT(parsed[p].Y,REF_coord_max[1]) ||
-           LSS(parsed[p].Z,REF_coord_min[2]) ||
-           GRT(parsed[p].Z,REF_coord_max[2]) 
-           )
-           Errors("%s falling outside of the reference interval [0,1]x[0,1]x[0,1].\n",
-                  parsed[p].strv);
+       parsed[p].Xline = 1;
+       parsed[p].X     = DBL_MAX;
        counter++;
      }
      if (*subs[1] == 'Y' || *subs[1] == 'y')
      {
-       parsed[p].Xplane = 0;
-       parsed[p].Yplane = 1;
-       parsed[p].Zplane = 0;
-       
-       parsed[p].X = atof(subs[0]);
-       parsed[p].Y = DBL_MAX;
-       parsed[p].Z = atof(subs[2]);
-       sprintf(parsed[p].suffix,"%s_Y_%s",subs[0],subs[2]);
-       /* interval check */
-       if (LSS(parsed[p].X,REF_coord_min[0]) ||
-           GRT(parsed[p].X,REF_coord_max[0]) ||
-           LSS(parsed[p].Z,REF_coord_min[2]) ||
-           GRT(parsed[p].Z,REF_coord_max[2]) 
-           )
-           Errors("%s falling outside of the reference interval [0,1]x[0,1]x[0,1].\n",
-                  parsed[p].strv);
+       parsed[p].Yline = 1;
+       parsed[p].Y     = DBL_MAX;
        counter++;
      }
      if (*subs[2] == 'Z' || *subs[2] == 'z')
      {
-       parsed[p].Xplane = 0;
-       parsed[p].Yplane = 0;
-       parsed[p].Zplane = 1;
-       
-       parsed[p].X = atof(subs[0]);
-       parsed[p].Y = atof(subs[1]);
-       parsed[p].Z = DBL_MAX;
-       sprintf(parsed[p].suffix,"%s_%s_Z",subs[0],subs[1]);
-       /* interval check */
-       if (LSS(parsed[p].Y,REF_coord_min[1]) ||
-           GRT(parsed[p].Y,REF_coord_max[1]) ||
-           LSS(parsed[p].X,REF_coord_min[0]) ||
-           GRT(parsed[p].X,REF_coord_max[0]) 
-           )
-           Errors("%s falling outside of the reference interval [0,1]x[0,1]x[0,1].\n",
-                  parsed[p].strv);
+       parsed[p].Zline = 1;
+       parsed[p].Z     = DBL_MAX;
        counter++;
      }
      /* if we have more or less letters, e.g., "(X,Y,Z)". */
      if (counter != 2)
        Errors("Wrong format for %s.\n",plane_par_name); 
-       
+     
+     if (parsed[p].Xline && parsed[p].Yline)      parsed[p].XYplane = 1;
+     else if (parsed[p].Xline && parsed[p].Zline) parsed[p].XZplane = 1;
+     else if (parsed[p].Yline && parsed[p].Zline) parsed[p].YZplane = 1;
+     else Error0(NO_OPTION);
+     
+     if (parsed[p].XYplane)
+     {
+       parsed[p].Z = atof(subs[2]);
+       /* interval check */
+       if ( LSS(parsed[p].Z,REF_coord_min[2]) ||
+            GRT(parsed[p].Z,REF_coord_max[2]) 
+          )
+           Errors("%s falling outside of the reference interval [0,1]x[0,1]x[0,1].\n",
+                  parsed[p].strv);
+       sprintf(parsed[p].suffix,"X_Y_%s",subs[2]);
+     }
+     if (parsed[p].XZplane)
+     {
+       parsed[p].Y = atof(subs[1]);
+       /* interval check */
+       if ( LSS(parsed[p].Y,REF_coord_min[1]) ||
+            GRT(parsed[p].Y,REF_coord_max[1]) 
+          )
+           Errors("%s falling outside of the reference interval [0,1]x[0,1]x[0,1].\n",
+                  parsed[p].strv);
+       sprintf(parsed[p].suffix,"X_%s_Z",subs[1]);
+     }
+     if (parsed[p].YZplane)
+     {
+       parsed[p].X = atof(subs[0]);
+       /* interval check */
+       if ( LSS(parsed[p].X,REF_coord_min[0]) ||
+            GRT(parsed[p].X,REF_coord_max[0]) 
+          )
+           Errors("%s falling outside of the reference interval [0,1]x[0,1]x[0,1].\n",
+                  parsed[p].strv);
+       sprintf(parsed[p].suffix,"%s_Y_Z",subs[0]);
+     }
      p++;
      free_2d(subs);
   }
   
   /* test */
-  if (0)
+  if (1)
   for (l = 0; l < Nplanes; ++l)
   {
-    printf("param[%u] = %s => (%u,%u,%u) & (%g,%g,%g)| %s\n",
+    printf("param[%u] = %s => (%u,%u,%u) & (%u,%u,%u) & (%g,%g,%g)| %s\n",
             l, parsed[l].strv, 
-            parsed[l].Xplane,parsed[l].Yplane,parsed[l].Zplane,
+            parsed[l].Xline,parsed[l].Yline,parsed[l].Zline,
+            parsed[l].XYplane,parsed[l].XZplane,parsed[l].YZplane,
             parsed[l].X,parsed[l].Y,parsed[l].Z,parsed[l].suffix);
   }
   /* check for redundancy */
@@ -819,7 +824,7 @@ void print_fields_2D(const Grid_T *const grid,const int iteration,
   {
     const struct pars_s *plane = &parsed[l];
     
-    PR_1D_OpenMP(omp parallel for)
+    //PR_2D_OpenMP(omp parallel for)
     FOR_ALL_PATCHES(p,grid)
     {
       Patch_T *patch = grid->patch[p];
@@ -942,7 +947,7 @@ void print_fields_2D(const Grid_T *const grid,const int iteration,
       Fclose(file);
     }/* end of FOR_ALL_PATCHES(p,grid) */
   }    
-  
+
   free_2d(flds);
   free_2d(plns);
   
