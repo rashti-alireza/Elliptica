@@ -798,7 +798,7 @@ void print_fields_2D(const Grid_T *const grid,const int iteration,
   }
   
   /* test */
-  if (1)
+  if (0)
   for (l = 0; l < Nplanes; ++l)
   {
     printf("param[%u] = %s => (%u,%u,%u) & (%u,%u,%u) & (%g,%g,%g)| %s\n",
