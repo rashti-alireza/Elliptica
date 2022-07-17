@@ -1,23 +1,24 @@
 # Alireza Rashti July 2022
 #
-# find out the columns of interest from the txt format 0d-outputs to 
+# find out the column of interest from the txt format 0d-outputs to 
 # be plotted. the header (THE VERY FIRST LINE) of the output file should be like:
 #
 # # iteration field1|Linf field1|L1 field1|L2 field2|Linf ....
 #
 # NOTE: there should be a space between '#' and 'iteration' and 
 # all other names.
-# NOTE: it requires the bash file postprocess_utils.sh
+# NOTE: it requires the bash file "postprocess_utils.sh" so add it into the PATH search
 #
 # usage:
-## to plot "ham1|L2" vs "iteration" for all resolutions at all "left_NS_around_front*" files:
+## to plot "ham1|L2" vs "iteration" for all resolutions at all "left_NS_around_front.+" files:
 # $ txt_0d_plot.sh  <dir_output_name> "ham1|L2" "left_NS_around_front.+"
+# 
 #
 
 #!/bin/bash
 
 ## load utils
-source "./postprocess_utils.sh"
+source "postprocess_utils.sh"
 
 ## some defs
 suffix0d="0d.txt"
@@ -28,11 +29,8 @@ col1_name="iteration"
 argc=$#
 argv=("$@")
 ## find column1 (col1) and coulmn2 (col2): (col2 vs col1)
-col1="1"
-col2="" 
-## v vs x
-x=""
-v=""
+col1="1" ## 1 is the iteration column
+col2=""  ## we want to find this
 
 # check if it needs help
 if [[ $argc -le 1 || $1 =~ --h.? ]];
@@ -40,7 +38,7 @@ then
         printf \
 "usage:\n"\
 "------\n"\
-"## to plot \"ham1|L2\" vs \"iteration\" for all resolutions at all \"left_NS_around_front*\" files \n"\
+"## to plot \"ham1|L2\" vs \"iteration\" for all resolutions at all \"left_NS_around_front.+\" files \n"\
 "$ txt_0d_plot.sh  <dir_output_name> \"ham1|L2\" \"left_NS_around_front.+\" \n\n"
         exit 1
 fi
@@ -55,11 +53,10 @@ then
         exit 2
 fi
 
-## collect all subdirs inside the topdir inside outdir
+## collect all outdir inside the topdir
 subdirs=$(find "${topdir}" -type d -name "${outdir}")
 
-## collect all matched files in each subdir
-
+## collect all matched files in each outdir
 colms=()
 files=()
 for subdir in ${subdirs[@]}
@@ -67,8 +64,8 @@ do
 	matched_files=$(find "${subdir}" -type f -regex ".+${argv[ $(($argc -1)) ]}${suffix0d}$" )
 	if [[ ${#matched_files} -eq 0 ]];
 	then
-		printf "Could not find any match for \"${argv[ $(($argc -1)) ]}\" file!\n"
-		exit 2
+		printf "!!\nCould not find any match for \"${argv[ $(($argc -1)) ]}\" in\n${subdir}\n"
+		continue
 	fi
 
 	## find and save col2 in each file
@@ -77,7 +74,7 @@ do
 		c=$(find_field_position_header ${field} $f)
 		if [[ ${#c} -eq 0 ]];
 		then
-			printf "cound not find ${field} inside $f\n"
+			printf "!!\ncound not find ${field} inside $f\n"
 			exit 2
 		fi
 		# Add new element at the end of the array
@@ -88,7 +85,7 @@ do
 done
 
 echo "---"
-## print pertinent found info and save command for tgraph
+## print pertinent info and save command for tgraph
 graph_cmds=""
 for ((i=0; i < ${#colms[@]}; i++))
 do
@@ -101,7 +98,4 @@ done
 
 tgraph.py -m ${graph_cmds}
 
-
-
-
-
+## end
