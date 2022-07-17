@@ -24,7 +24,7 @@ source "postprocess_utils.sh"
 suffix0d="0d.txt"
 outdir="Diagnostics_00"
 col1_name="iteration"
-
+res_regex="[[:digit:]]+x[[:digit:]]+x[[:digit:]]+"
 
 argc=$#
 argv=("$@")
@@ -84,6 +84,20 @@ do
 	
 done
 
+## for a quick legend
+files_tmp=()
+for ((i=0; i < ${#files[@]}; i++))
+do
+	fname=$(echo ${files[$i]} | grep -E -o "${res_regex}.+"    )
+	fname=$(echo ${fname}     | sed -E "s/\/${outdir}\/.+/_/g" )
+	fname=$(echo ${fname}     | sed -E "s/_[[:digit:]]+_$//g"  )
+	fname="${field}___${fname}__"
+	tmp_file=$(mktemp ".${fname}XXXXX.txt")
+	## soft link
+	ln -fs ${files[$i]} ${tmp_file}
+	files_tmp+=("${tmp_file}")
+done
+
 echo "---"
 ## print pertinent info and save command for tgraph
 graph_cmds=""
@@ -92,10 +106,17 @@ do
 	echo "${files[$i]}:"
 	echo "plot: ${field} vs. ${col1_name} ==> column = ${colms[$i]} vs. column = ${col1}"
 	echo "---"
-	graph_cmds+=" -c ${col1}:${colms[$i]} ${files[$i]}"
+	graph_cmds+=" -c ${col1}:${colms[$i]} ${files_tmp[$i]}"
 	
 done
 
+## plot
 tgraph.py -m ${graph_cmds}
+
+## remove tmp files
+for ((i=0; i < ${#colms[@]}; i++))
+do
+	rm -rf ${files_tmp[$i]}
+done
 
 ## end
