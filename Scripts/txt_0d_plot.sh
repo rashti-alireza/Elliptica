@@ -7,6 +7,7 @@
 #
 # NOTE: there should be a space between '#' and 'iteration' and 
 # all other names.
+# NOTE: it requires the bash file postprocess_utils.sh
 #
 # usage:
 ## to plot "ham1|L2" vs "iteration" for all resolutions at all "left_NS_around_front*" files:
@@ -18,8 +19,11 @@
 ## load utils
 source "./postprocess_utils.sh"
 
+## some defs
 suffix0d="0d.txt"
 outdir="Diagnostics_00"
+col1_name="iteration"
+
 
 argc=$#
 argv=("$@")
@@ -56,6 +60,8 @@ subdirs=$(find "${topdir}" -type d -name "${outdir}")
 
 ## collect all matched files in each subdir
 
+colms=()
+files=()
 for subdir in ${subdirs[@]}
 do
 	matched_files=$(find "${subdir}" -type f -regex ".+${argv[ $(($argc -1)) ]}${suffix0d}$" )
@@ -65,11 +71,9 @@ do
 		exit 2
 	fi
 
-	## find col2 in each file and save it
-	colms=()
+	## find and save col2 in each file
 	for f in ${matched_files[@]}
 	do
-		echo $f
 		c=$(find_field_position_header ${field} $f)
 		if [[ ${#c} -eq 0 ]];
 		then
@@ -77,91 +81,26 @@ do
 			exit 2
 		fi
 		# Add new element at the end of the array
-		echo $c
-		#colms+=$c
+		colms+=($c)
+		files+=($f)
 	done
-	
-	## print pertinent found info
-	for c in ${colms[@]}
-	do
-		echo $c
-	done
-	
-	echo "----"
 	
 done
 
-
-exit 0
-
-
-## if 3 args given
-counter=0
-if [[ $argc -eq 3 ]];
-then
-	header=$(head -n1 ${file})
-	coord=${argv[0]}
-	field=${argv[1]}
-	x=$coord
-	v=$field
-	
-	echo $header
-	for i in $header
-	do
-		if [[ "$coord" == "$i" ]];
-		then
-			col1=$counter
-		elif [[ "$field" == "$i" ]]
-		then
-			col2=$counter
-		fi
-		## test
-		echo $i $counter
-		
-		counter=$((counter+1))
-	done
-        if [[ "$col2" == "" ]];
-        then
-                echo "could not find the field name \"${field}\""
-                exit 2
-        fi
-
-fi
-
-counter=0
-if [[ $argc -eq 2 ]];
-then
-	col1=1
-	header=$(head -n1 ${file})
-	field=${argv[0]}
-	x="line_coordinate"
-	v=$field
-	
-	echo $header
-	for i in $header
-	do
-		if [[ "$field" == "$i" ]]
-		then
-			col2=$counter
-		fi
-		## test
-		echo $i $counter
-		
-		counter=$((counter+1))
-	done
-	if [[ "$col2" == "" ]];
-        then
-                echo "could not find the field name \"${field}\""
-                exit 2
-        fi
-fi
-
-##
 echo "---"
-echo "plot: $v  vs. $x ==> column = $col2 vs. column = $col1"
-echo "---"
+## print pertinent found info and save command for tgraph
+graph_cmds=""
+for ((i=0; i < ${#colms[@]}; i++))
+do
+	echo "${files[$i]}:"
+	echo "plot: ${field} vs. ${col1_name} ==> column = ${colms[$i]} vs. column = ${col1}"
+	echo "---"
+	graph_cmds+=" -c ${col1}:${colms[$i]} ${files[$i]}"
+	
+done
 
-tgraph.py -m -c ${col1}:${col2} ${file}
+tgraph.py -m ${graph_cmds}
+
 
 
 
