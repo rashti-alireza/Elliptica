@@ -125,8 +125,8 @@ files_tmp=()
 for ((i=0; i < ${#files[@]}; i++))
 do
 	fname=$(echo ${files[$i]} | grep -E -o "${res_regex}.+"    )
-	fname=$(echo ${fname}     | sed -E "s/\/${outdir}\/.+/_/g" )
-	fname=$(echo ${fname}     | sed -E "s/_[[:digit:]]+_$//g"  )
+	fname=$(echo ${fname}     | sed -E "s/\/${outdir}\//_/g" )
+	fname=$(echo ${fname}     | sed -E "s/_[[:digit:]]+//g"  )
 	fname="${field}___${fname}__"
 	tmp_file=$(mktemp ".${fname}XXXXX.txt")
 	## soft link
