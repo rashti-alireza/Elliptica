@@ -10,8 +10,7 @@
 # NOTE: it requires the bash file "postprocess_utils.sh" so add it into the PATH search
 #
 # usage:
-## to plot "ham1|L2" vs "iteration" for all resolutions at all "left_NS_around_front.+" files:
-# $ txt_0d_plot.sh  <dir_output_name> "ham1|L2" "left_NS_around_front.+"
+# $ txt_0d_plot.sh --help 
 # 
 #
 
