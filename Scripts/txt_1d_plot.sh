@@ -18,22 +18,22 @@
 source "postprocess_utils.sh"
 
 ## some defs:
-suffix0d="1d.txt"
+suffix1d="1d.txt"
 outdir="Diagnostics_00"
 coord_ref_file="reference_coords_help.txt"
 coord_default="line_coordinate"
 outdir="Diagnostics_00"
+res_regex="[[:digit:]]+x[[:digit:]]+x[[:digit:]]+"
 
 argc=$#
 argv=("$@")
 
 ## find column1 (col1) and coulmn2 (col2):
-col1=""
-col2="" 
-
+coord=""
+field=""
 
 # check if it needs help
-if [[ $argc -le 1 || $1 =~ --h.? ]];
+if [[ $argc -le 1 || $1 =~ --hel.? ]];
 then
         printf \
 "usage:\n"\
@@ -56,7 +56,7 @@ then
         exit 2
 fi
 
-if [[ $argc -eq 4 ]];
+if [[ $argc -eq 4 ]];## ==> the coord is given
 then
 	coord=${argv[1]}
 	## translate x,y,z
@@ -85,7 +85,7 @@ coord_colms=()
 files=()
 for subdir in ${subdirs[@]}
 do
-	matched_files=$(find "${subdir}" -type f -regex ".+${argv[ $(($argc -1)) ]}${suffix0d}$" )
+	matched_files=$(find "${subdir}" -type f -regex ".+${argv[ $(($argc -1)) ]}${suffix1d}$" )
 	if [[ ${#matched_files} -eq 0 ]];
 	then
 		printf "!!\nCould not find any match for \"${argv[ $(($argc -1)) ]}\" in\n${subdir}\n"
@@ -118,87 +118,40 @@ do
 	done
 	
 done
-exit 0
 
+## for a quick legend
+files_tmp=()
+for ((i=0; i < ${#files[@]}; i++))
+do
+	fname=$(echo ${files[$i]} | grep -E -o "${res_regex}.+"    )
+	fname=$(echo ${fname}     | sed -E "s/\/${outdir}\/.+/_/g" )
+	fname=$(echo ${fname}     | sed -E "s/_[[:digit:]]+_$//g"  )
+	fname="${field}___${fname}__"
+	tmp_file=$(mktemp ".${fname}XXXXX.txt")
+	## soft link
+	ln -fs ${files[$i]} ${tmp_file}
+	files_tmp+=("${tmp_file}")
+done
 
-
-
-file=${argv[ $(($argc-1)) ]}
-# check if file exists
-if [[ ! -f ${file} ]]; 
-then
-        printf "Could not open file %s\n" ${file}
-        exit 2
-fi
-
-## if 3 args given
-counter=0
-if [[ $argc -eq 3 ]];
-then
-	header=$(head -n1 ${file})
-	coord=${argv[0]}
-	field=${argv[1]}
-	x=$coord
-	v=$field
-	
-	echo $header
-	for i in $header
-	do
-		if [[ "$coord" == "$i" ]];
-		then
-			col1=$counter
-		elif [[ "$field" == "$i" ]]
-		then
-			col2=$counter
-		fi
-		## test
-		echo $i $counter
-		
-		counter=$((counter+1))
-	done
-        if [[ "$col2" == "" ]];
-        then
-                echo "could not find the field name \"${field}\""
-                exit 2
-        fi
-
-fi
-
-counter=0
-if [[ $argc -eq 2 ]];
-then
-	col1=1
-	header=$(head -n1 ${file})
-	field=${argv[0]}
-	x="line_coordinate"
-	v=$field
-	
-	echo $header
-	for i in $header
-	do
-		if [[ "$field" == "$i" ]]
-		then
-			col2=$counter
-		fi
-		## test
-		echo $i $counter
-		
-		counter=$((counter+1))
-	done
-	if [[ "$col2" == "" ]];
-        then
-                echo "could not find the field name \"${field}\""
-                exit 2
-        fi
-fi
-
-##
 echo "---"
-echo "plot: $v  vs. $x ==> column = $col2 vs. column = $col1"
-echo "---"
+## print pertinent info and save command for tgraph
+graph_cmds=""
+for ((i=0; i < ${#files[@]}; i++))
+do
+	echo "${files[$i]}:"
+	echo "plot: ${field} vs. ${coord} ==> column = ${field_colms[$i]} vs. column = ${coord_colms[$i]}"
+	echo "---"
+	graph_cmds+=" -c ${coord_colms[$i]}:${field_colms[$i]} ${files_tmp[$i]}"
+	
+done
 
-tgraph.py -m -c ${col1}:${col2} ${file}
+## plot
+tgraph.py -m ${graph_cmds}
 
+## remove tmp files
+for ((i=0; i < ${#files[@]}; i++))
+do
+	rm -rf ${files_tmp[$i]}
+done
 
-
-
+## end
