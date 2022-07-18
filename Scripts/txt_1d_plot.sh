@@ -17,7 +17,12 @@
 ## load utils
 source "postprocess_utils.sh"
 
+## some defs:
+suffix0d="1d.txt"
+outdir="Diagnostics_00"
 coord_ref_file="reference_coords_help.txt"
+coord_default="line_coordinate"
+outdir="Diagnostics_00"
 
 argc=$#
 argv=("$@")
@@ -26,9 +31,6 @@ argv=("$@")
 col1=""
 col2="" 
 
-## v vs x
-x=""
-v=""
 
 # check if it needs help
 if [[ $argc -le 1 || $1 =~ --h.? ]];
@@ -44,6 +46,75 @@ then
 	cat "$coord_ref_file"
         exit 1
 fi
+
+## parse and check inputs:
+topdir=${argv[0]}
+# check if topdir exists
+if [[ ! -d ${topdir} ]]; 
+then
+        printf "Could not open topdir \"%s\"\n" ${topdir}
+        exit 2
+fi
+
+if [[ $argc -eq 4 ]];
+then
+	coord=${argv[1]}
+	field=${argv[2]}
+elif [[ $argc -eq 3 ]];
+then
+	coord="${coord_default}"
+	field=${argv[1]}
+else
+	printf "Too few arguments!\n"
+        exit 2
+fi
+
+## collect all outdir inside the topdir
+subdirs=$(find "${topdir}" -type d -name "${outdir}")
+
+## collect all matched files in each outdir
+field_colms=()
+coord_colms=()
+files=()
+for subdir in ${subdirs[@]}
+do
+	matched_files=$(find "${subdir}" -type f -regex ".+${argv[ $(($argc -1)) ]}${suffix0d}$" )
+	if [[ ${#matched_files} -eq 0 ]];
+	then
+		printf "!!\nCould not find any match for \"${argv[ $(($argc -1)) ]}\" in\n${subdir}\n"
+		continue
+	fi
+
+	## find and save col2 in each file
+	for f in ${matched_files[@]}
+	do
+		c=$(find_field_position_header ${field} $f)
+		if [[ ${#c} -eq 0 ]];
+		then
+			printf "\n!!\ncound not find \"${field}\" inside:\n$f\n"
+			exit 2
+		fi
+		# Add a new element at the end of the array
+		field_colms+=($c)
+		
+		c=$(find_field_position_header ${coord} $f)
+		if [[ ${#c} -eq 0 ]];
+		then
+			printf "\n!!\ncound not find \"${coord}\" inside:\n$f\n"
+			exit 2
+		fi
+		# Add a new element at the end of the array
+		coord_colms+=($c)
+		
+		# now add the file
+		files+=($f)
+	done
+	
+done
+exit 0
+
+
+
 
 file=${argv[ $(($argc-1)) ]}
 # check if file exists
