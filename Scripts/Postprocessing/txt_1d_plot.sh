@@ -20,7 +20,6 @@ source "plot_utils.sh"
 ## some defs:
 suffix1d="1d.txt"
 outdir="Diagnostics_00"
-coord_ref_file="reference_coords_help.txt"
 coord_default="line_coordinate"
 outdir="Diagnostics_00"
 res_regex="[[:digit:]]+x[[:digit:]]+x[[:digit:]]+"
@@ -28,7 +27,7 @@ res_regex="[[:digit:]]+x[[:digit:]]+x[[:digit:]]+"
 argc=$#
 argv=("$@")
 
-## find column1 (col1) and coulmn2 (col2):
+## find column1 (col1) and column2 (col2):
 coord=""
 field=""
 
