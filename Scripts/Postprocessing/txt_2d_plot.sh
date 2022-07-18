@@ -39,10 +39,10 @@ then
         printf \
 "usage:\n"\
 "------\n"\
-"## to plot psi vs x(X,Y,Z) and y(X,Y,Z) for all resolutions at all \"left_NS_(around_)?front.+\" files:\n"\
+"## to plot psi vs x(X,Y,Z) and y(X,Y,Z) for all resolutions at all \"left_NS_front.+\" files:\n"\
 "$ txt_2d_plot.sh <dir_output_name> x y psi \"left_NS_(around_)?front.+\"\n\n"\
-"## to plot psi vs plane coords. for all resolutions at all \"left_NS_front.+\" files:\n"\
-"$ txt_2d_plot.sh <dir_output_name> psi \"left_NS_front.+\" \n\n"\
+"## to plot psi vs plane coords. for the resolution 14x14x15 at all \"14x14x14.+left_NS_front.+\" files:\n"\
+"$ txt_2d_plot.sh <dir_output_name> psi \"14x14x14.+left_NS_front.+\" \n\n"\
 "## A rough translation of the reference coordinate (X,Y,Z) used in each\n"\
 "## cubed spherical patch to the Cartesian coordinates.\n"\
 "## Note: Z always increase in the radial direction w.r.t the slice.\n"\
@@ -91,7 +91,7 @@ then
 		*) printf "Not expected ${coord2}!\n"; exit 2;;
 		esac
 	field=${argv[3]}
-elif [[ $argc -eq 4 ]];
+elif [[ $argc -eq 3 ]];
 then
 	coord1="${coord_default1}"
 	coord2="${coord_default2}"
@@ -174,7 +174,7 @@ graph_cmds=""
 for ((i=0; i < ${#files[@]}; i++))
 do
 	echo "${files[$i]}:"
-	echo "plot: ${field} vs. (${coord1}, ${coord1}) ==> column = ${field_colms[$i]} vs. columns = (${coord1_colms[$i]}, ${coord2_colms[$i]})"
+	echo "plot: ${field} vs. (${coord1}, ${coord2}) ==> column = ${field_colms[$i]} vs. columns = (${coord1_colms[$i]}, ${coord2_colms[$i]})"
 	echo "---"
 	graph_cmds+=" -c ${coord1_colms[$i]}:${coord2_colms[$i]}:${field_colms[$i]} ${files_tmp[$i]}"
 	
