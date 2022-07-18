@@ -59,6 +59,13 @@ fi
 if [[ $argc -eq 4 ]];
 then
 	coord=${argv[1]}
+	## translate x,y,z
+	case ${coord} in
+		"x") coord="x(X,Y,Z)";;
+		"y") coord="y(X,Y,Z)";;
+		"z") coord="z(X,Y,Z)";;
+		*) printf "Not expected ${coord}!\n"; exit 2;;
+		esac
 	field=${argv[2]}
 elif [[ $argc -eq 3 ]];
 then
