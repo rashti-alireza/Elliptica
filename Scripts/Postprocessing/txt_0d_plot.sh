@@ -17,7 +17,7 @@
 #!/bin/bash
 
 ## load utils
-source "postprocess_utils.sh"
+source "plot_utils.sh"
 
 ## some defs
 suffix0d="0d.txt"
