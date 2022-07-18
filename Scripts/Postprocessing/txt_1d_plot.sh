@@ -58,7 +58,6 @@ then
 "\n"\
 "front : X = y, Y = z, Z = x\n\n"\
 
-
         exit 1
 fi
 
