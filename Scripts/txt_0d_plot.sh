@@ -63,7 +63,7 @@ do
 	matched_files=$(find "${subdir}" -type f -regex ".+${argv[ $(($argc -1)) ]}${suffix0d}$" )
 	if [[ ${#matched_files} -eq 0 ]];
 	then
-		printf "!!\nCould not find any match for \"${argv[ $(($argc -1)) ]}\" in\n${subdir}\n"
+		printf "\n!!\nCould not find any match for \"${argv[ $(($argc -1)) ]}\" in:\n${subdir}\n"
 		continue
 	fi
 
@@ -73,7 +73,7 @@ do
 		c=$(find_field_position_header ${field} $f)
 		if [[ ${#c} -eq 0 ]];
 		then
-			printf "!!\ncound not find ${field} inside $f\n"
+			printf "!!\ncound not find ${field} inside:\n$f\n"
 			exit 2
 		fi
 		# Add new element at the end of the array
