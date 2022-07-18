@@ -9,17 +9,23 @@
 # all other names.
 #
 # usage:
-# $ txt_1d_plot.sh "x(X,Y,Z)" "psi" <file_name> ## plot "psi" vs "x(X,Y,Z)"
-# $ txt_1d_plot.sh "psi" <file_name>            ## plot "psi" vs line_coordinate
+# $ txt_1d_plot.sh --help
 #
 
 #!/bin/bash
 
+## load utils
+source "postprocess_utils.sh"
+
+coord_ref_file="reference_coords_help.txt"
+
 argc=$#
 argv=("$@")
+
 ## find column1 (col1) and coulmn2 (col2):
 col1=""
 col2="" 
+
 ## v vs x
 x=""
 v=""
@@ -30,8 +36,12 @@ then
         printf \
 "usage:\n"\
 "------\n"\
-"$ txt_1d_plot.sh \"x(X,Y,Z)\" \"psi <file_name>\" #=> plot psi vs x(X,Y,Z)\n"\
-"$ txt_1d_plot.sh \"psi\" <file_name> #=> plot psi vs line_coordinate\n"
+"## to plot psi vs x(X,Y,Z) for all resolutions at all \"left_NS_(around_)?front.+\" files:\n"\
+"$ txt_1d_plot.sh <dir_output_name> x psi \"left_NS_(around_)?front.+\"\n\n"\
+"## to plot psi vs referece coords. for all resolutions at all \"left_NS_front.+\" files:\n"\
+"$ txt_1d_plot.sh <dir_output_name> psi \"left_NS_front.+\" \n\n"
+
+	cat "$coord_ref_file"
         exit 1
 fi
 
