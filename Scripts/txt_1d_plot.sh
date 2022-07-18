@@ -85,7 +85,8 @@ coord_colms=()
 files=()
 for subdir in ${subdirs[@]}
 do
-	matched_files=$(find "${subdir}" -type f -regex ".+${argv[ $(($argc -1)) ]}${suffix1d}$" )
+	matched_files=$(find "${subdir}" -type f -regextype posix-extended \
+	               -regex ".+${argv[ $(($argc -1)) ]}${suffix1d}$" )
 	if [[ ${#matched_files} -eq 0 ]];
 	then
 		printf "!!\nCould not find any match for \"${argv[ $(($argc -1)) ]}\" in\n${subdir}\n"
