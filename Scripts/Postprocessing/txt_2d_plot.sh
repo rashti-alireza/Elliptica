@@ -37,7 +37,7 @@ field=""
 if [[ $argc -le 1 || $1 =~ --hel.? ]];
 then
         printf \
-"usage:\n"\
+"\nusage by examples:\n"\
 "------\n"\
 "## to plot psi vs x(X,Y,Z) and y(X,Y,Z) for all resolutions at all \"left_NS_front.+\" files:\n"\
 "$ txt_2d_plot.sh <dir_output_name> x y psi \"left_NS_(around_)?front.+\"\n\n"\

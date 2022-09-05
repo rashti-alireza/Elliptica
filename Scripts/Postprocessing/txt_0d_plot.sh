@@ -35,10 +35,13 @@ col2=""  ## we want to find this
 if [[ $argc -le 1 || $1 =~ --h.? ]];
 then
         printf \
-"usage:\n"\
+"\nusage:\n"\
 "------\n"\
-"## to plot \"ham1|L2\" vs \"iteration\" for all resolutions at all \"left_NS_around_front.+\" files \n"\
-"$ txt_0d_plot.sh  <dir_output_name> \"ham1|L2\" \"left_NS_around_front.+\" \n\n"
+"$ txt_0d_plot.sh <dir_output_name> <quantity> <region>\n\n"\
+"example:\n"\
+"--------\n"\
+"## this plots \"ham1|L2\" vs \"iteration\" for all resolutions at all \"left_NS_around_front.+\" files \n"\
+"$ txt_0d_plot.sh bhns_00 \"ham1|L2\" \"left_NS_around_front.+\" \n\n"
         exit 1
 fi
 
