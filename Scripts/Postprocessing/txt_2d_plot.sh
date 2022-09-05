@@ -45,7 +45,7 @@ then
 "$ txt_2d_plot.sh <dir_output_name> psi \"14x14x14.+left_NS_front.+\" \n\n"\
 "## A rough translation of the reference coordinate (X,Y,Z) used in each\n"\
 "## cubed spherical patch to the Cartesian coordinates.\n"\
-"## Note: Z always increase in the radial direction w.r.t the slice.\n"\
+"## Note: Z always increases in the radial direction w.r.t the slice.\n"\
 "\n"\
 "up    : X = x, Y = y, Z = z\n"\
 "\n"\
