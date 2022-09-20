@@ -42,8 +42,9 @@ else if(par->find_Omega)
   x_CM  = par->x_CM;
 }
 else
+{
   Error0(NO_OPTION);
-
+}
 
   /* declaring: */
   READ_v(gConf_D0D2)

@@ -48,7 +48,9 @@ C_arg   =;
 `  x_CM  = par->x_CM;`
 `}`
 `else`
+`{`
 `  Error0(NO_OPTION);`
+`}`
 ``
 Declare = 
 {

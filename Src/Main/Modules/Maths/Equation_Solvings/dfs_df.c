@@ -138,7 +138,9 @@ static char *interpret_type(const char *const type)
  or simply df*_df */
  
  if (regex_search("^df[xyz]+_df$",type))
+ {
   sprintf(jtype,"%s",type);
+ }
  else if (regex_search("_([DU][[:digit:]])+$",type))
  {
   char *match = regex_find("_([DU][[:digit:]])+$",type);/* e.g _U2D0 */
@@ -158,7 +160,9 @@ static char *interpret_type(const char *const type)
   free(match);
  }
  else
+ {
   Errors("The type '%s' cannot be realized!\n",type);
+ }
  
   return jtype;
 }
