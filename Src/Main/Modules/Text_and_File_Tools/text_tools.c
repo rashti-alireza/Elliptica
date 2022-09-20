@@ -101,7 +101,7 @@ char *dup_s(const char *const str)
   
   n = (Uint)strlen(str)+1;
   
-  r = malloc(n);
+  r = calloc(n,sizeof(*r));
   IsNull(r);
   
   for (i = 0; i < n-1; i++)
