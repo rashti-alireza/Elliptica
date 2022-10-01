@@ -39,6 +39,8 @@ then
 "------\n"\
 "## to plot psi vs x(X,Y,Z) for all resolutions at all \"left_NS_(around_)?front.+\" files:\n"\
 "$ txt_1d_plot.sh <dir_output_name> x psi \"left_NS_(around_)?front.+\"\n\n"\
+"## to plot psi vs x(X,Y,Z) for resolutions 18 and 20 on the line (0.5,0.5,Z) at \"left_NS_front\" files:\n"\
+"$ txt_1d_plot.sh <dir_output_name> x psi \"(18|20).+left_NS_front.+_0.5_0.5_Z.+\"\n\n"\
 "## to plot psi vs referece coords. for all resolutions at all \"left_NS_front.+\" files:\n"\
 "$ txt_1d_plot.sh <dir_output_name> psi \"left_NS_front.+\" \n\n"\
 "## A rough translation of the reference coordinate (X,Y,Z) used in each\n"\
