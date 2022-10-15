@@ -12,6 +12,7 @@
 # usage:
 # $ txt_0d_plot.sh --help 
 # 
+# NOTE: it assumes posix-extended for find regextype.
 #
 
 #!/bin/bash
@@ -34,14 +35,19 @@ col2=""  ## we want to find this
 # check if it needs help
 if [[ $argc -le 1 || $1 =~ --h.? ]];
 then
-        printf \
-"\nusage:\n"\
-"------\n"\
-"$ txt_0d_plot.sh <dir_output_name> <quantity> <region>\n\n"\
-"example:\n"\
-"--------\n"\
-"## this plots \"ham1|L2\" vs \"iteration\" for all resolutions at all \"left_NS_around_front.+\" files \n"\
-"$ txt_0d_plot.sh bhns_00 \"ham1|L2\" \"left_NS_around_front.+\" \n\n"
+	pr_header "help"
+	printf "Reading the plot files with '${suffix0d}' in the '${outdir}' directory.\n\n"
+	
+	pr_header "usage"
+        printf "$ txt_0d_plot.sh <dir_output_name> <quantity> <region>\n\n"
+        
+	pr_header "examples"
+	printf "## The following plots \"ham1|L2\" (L2 norm of Hamiltonian) vs \"iteration\".\n"
+	printf "## The region is the \"left_NS_around_front.+\" files for all available resolutions.\n"
+        printf "$ txt_0d_plot.sh bhns_00 \"ham1|L2\" \"left_NS_around_front.+\"\n\n"
+        printf "## To only pick specific resolutions, e.g., 18 and 20, we have:\n"
+        printf "$ txt_0d_plot.sh bhns_00 \"ham1|L2\" \"(18|20).+left_NS_around_front.+\"\n\n"
+      
         exit 1
 fi
 
@@ -63,7 +69,8 @@ colms=()
 files=()
 for subdir in ${subdirs[@]}
 do
-	matched_files=$(find "${subdir}" -type f -regex ".+${argv[ $(($argc -1)) ]}${suffix0d}$" )
+	matched_files=$(find "${subdir}" -type f -regextype posix-extended \
+	                -regex ".+${argv[ $(($argc -1)) ]}${suffix0d}$" )
 	if [[ ${#matched_files} -eq 0 ]];
 	then
 		printf "\n!!\nCould not find any match for \"${argv[ $(($argc -1)) ]}\" in:\n${subdir}\n"

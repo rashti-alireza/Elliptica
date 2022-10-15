@@ -11,6 +11,8 @@
 # usage:
 # $ txt_2d_plot.sh --help
 #
+# NOTE: it assumes posix-extended for find regextype.
+#
 
 #!/bin/bash
 
@@ -18,7 +20,7 @@
 source "plot_utils.sh"
 
 ## some defs:
-suffix1d="2d.txt"
+suffix2d="2d.txt"
 outdir="Diagnostics_00"
 coord_default1="plane_coordinate1"
 coord_default2="plane_coordinate2"
@@ -36,27 +38,37 @@ field=""
 # check if it needs help
 if [[ $argc -le 1 || $1 =~ --hel.? ]];
 then
-        printf \
-"\nusage by examples:\n"\
-"------\n"\
-"## to plot psi vs x(X,Y,Z) and y(X,Y,Z) for all resolutions at all \"left_NS_front.+\" files:\n"\
-"$ txt_2d_plot.sh <dir_output_name> x y psi \"left_NS_(around_)?front.+\"\n\n"\
-"## to plot psi vs plane coords. for the resolution 14x14x15 at all \"14x14x14.+left_NS_front.+\" files:\n"\
-"$ txt_2d_plot.sh <dir_output_name> psi \"14x14x14.+left_NS_front.+\" \n\n"\
-"## A rough translation of the reference coordinate (X,Y,Z) used in each\n"\
-"## cubed spherical patch to the Cartesian coordinates.\n"\
-"## Note: Z always increases in the radial direction w.r.t the slice.\n"\
+	pr_header "help"
+	printf "Reading the plot files with '${suffix2d}' in the '${outdir}' directory.\n\n"
+	
+	pr_header "usage"
+	printf "$ txt_2d_plot.sh <dir_output_name> <coord1> <coord2> <quantity> <region>\n\n"
+	
+	pr_header "examples"
+	
+	printf "The following plots \"psi\" vs \"x(X,Y,Z)\" and \"y(X,Y,Z)\" over all surfaces.\n"
+	printf "The region is all \"left_NS_(around_)?front.+\" files for all available resolutions.\n"
+	printf "$ txt_2d_plot.sh bns_00 x y psi \"left_NS_(around_)?front.+\"\n\n"
+	
+	printf "Below plots only for 18 and 20 resolutions over the surface (X,Y,1):\n"
+	printf "$ txt_2d_plot.sh bns_00 x y psi \"(18|20).+left_NS_(around_)?front.+_X_Y_1.+\"\n\n"
+	
+	printf "Plotting psi vs reference coords:\n"
+	printf "$ txt_2d_plot.sh bns_00 psi \"(18|20).+left_NS_around_front.+_X_Y_1.+\" \n\n"
+
+	pr_header "extra"
+	
+	printf "A rough translation of the reference coordinate (X,Y,Z) used in each\n"\
+"cubed spherical patch to the Cartesian coordinates listed below.\n"\
+"Note: Z always increases in the radial direction w.r.t the slice.\n"\
 "\n"\
 "up    : X = x, Y = y, Z = z\n"\
-"\n"\
 "down  : X = y, Y = x, Z = z\n"\
 "\n"\
 "left  : X = x, Y = z, Z = y\n"\
-"\n"\
 "right : X = z, Y = x, Z = y\n"\
 "\n"\
 "back  : X = z, Y = y, Z = x\n"\
-"\n"\
 "front : X = y, Y = z, Z = x\n\n"\
 
         exit 1
@@ -112,7 +124,7 @@ files=()
 for subdir in ${subdirs[@]}
 do
 	matched_files=$(find "${subdir}" -type f -regextype posix-extended \
-	               -regex ".+${argv[ $(($argc -1)) ]}${suffix1d}$" )
+	               -regex ".+${argv[ $(($argc -1)) ]}${suffix2d}$" )
 	if [[ ${#matched_files} -eq 0 ]];
 	then
 		printf "!!\nCould not find any match for \"${argv[ $(($argc -1)) ]}\" in\n${subdir}\n"

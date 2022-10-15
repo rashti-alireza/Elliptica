@@ -11,6 +11,8 @@
 # usage:
 # $ txt_1d_plot.sh --help
 #
+# NOTE: it assumes posix-extended for find regextype.
+#
 
 #!/bin/bash
 
@@ -34,29 +36,37 @@ field=""
 # check if it needs help
 if [[ $argc -le 1 || $1 =~ --hel.? ]];
 then
-        printf \
-"\nusage by examples:\n"\
-"------\n"\
-"## to plot psi vs x(X,Y,Z) for all resolutions at all \"left_NS_(around_)?front.+\" files:\n"\
-"$ txt_1d_plot.sh <dir_output_name> x psi \"left_NS_(around_)?front.+\"\n\n"\
-"## to plot psi vs x(X,Y,Z) for resolutions 18 and 20 on the line (0.5,0.5,Z) at \"left_NS_front\" files:\n"\
-"$ txt_1d_plot.sh <dir_output_name> x psi \"(18|20).+left_NS_front.+_0.5_0.5_Z.+\"\n\n"\
-"## to plot psi vs referece coords. for all resolutions at all \"left_NS_front.+\" files:\n"\
-"$ txt_1d_plot.sh <dir_output_name> psi \"left_NS_front.+\" \n\n"\
-"## A rough translation of the reference coordinate (X,Y,Z) used in each\n"\
-"## cubed spherical patch to the Cartesian coordinates.\n"\
-"## Note: Z always increases in the radial direction w.r.t the slice.\n"\
+	pr_header "help"
+	printf "Reading the plot files with '${suffix1d}' in the '${outdir}' directory.\n\n"
+	
+	pr_header "usage"
+	printf "$ txt_1d_plot.sh <dir_output_name> <coord> <quantity> <region>\n\n"
+	
+	pr_header "examples"
+	
+	printf "## The following plots \"psi\" vs \"x(X,Y,Z)\" over all lines.\n"
+	printf "## The region is all \"left_NS_(around_)?front.+\" files for all available resolutions.\n"
+	printf "$ txt_1d_plot.sh bns_00 x psi \"left_NS_(around_)?front.+\"\n\n"
+	
+	printf "Below plots only for 18 and 20 resolutions on the line (0.5,0.5,Z):\n"
+	printf "$ txt_1d_plot.sh bns_00 x psi \"(18|20).+left_NS_front.+_0.5_0.5_Z.+\"\n\n"
+	
+	printf "## Plotting psi vs referee coords:\n"
+	printf "$ txt_1d_plot.sh bns_00 psi \"left_NS_front.+\" \n\n"
+
+	pr_header "extra"
+	
+	printf "A rough translation of the reference coordinate (X,Y,Z) used in each\n"\
+"cubed spherical patch to the Cartesian coordinates listed below.\n"\
+"Note: Z always increases in the radial direction w.r.t the slice.\n"\
 "\n"\
 "up    : X = x, Y = y, Z = z\n"\
-"\n"\
 "down  : X = y, Y = x, Z = z\n"\
 "\n"\
 "left  : X = x, Y = z, Z = y\n"\
-"\n"\
 "right : X = z, Y = x, Z = y\n"\
 "\n"\
 "back  : X = z, Y = y, Z = x\n"\
-"\n"\
 "front : X = y, Y = z, Z = x\n\n"\
 
         exit 1
