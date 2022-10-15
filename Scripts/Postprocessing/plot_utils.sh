@@ -25,3 +25,15 @@ function find_field_position_header {
 }
 
 #export -f find_field_position_header
+
+## printing fancy headers!
+function pr_header(){
+        local header_line="#########################################################"
+        local len
+        (( len=${#1} + 6))
+        echo "${header_line:0:$len}"
+        ## to capitalize use ^^
+        echo "${header_line:0:2} ${1^^} ${header_line:0:2}"
+        echo "${header_line:0:$len}"
+}
+
