@@ -145,6 +145,17 @@ do
 	
 done
 
+## remove tmp files
+function rm_tmps(){
+	for ((i=0; i < ${#files[@]}; i++))
+	do
+	       rm -rf ${files_tmp[$i]}
+	done
+}
+
+## clean up after yourself
+trap rm_tmps SIGHUP SIGINT SIGQUIT SIGABRT
+
 ## for a quick legend
 files_tmp=()
 for ((i=0; i < ${#files[@]}; i++))
@@ -174,9 +185,6 @@ done
 tgraph.py -m ${graph_cmds}
 
 ## remove tmp files
-for ((i=0; i < ${#files[@]}; i++))
-do
-	rm -rf ${files_tmp[$i]}
-done
+rm_tmps
 
 ## end
