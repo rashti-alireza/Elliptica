@@ -54,11 +54,14 @@ Declare =
  # trKij
  (obj = Field,name = trK, rank = 0, C_macro);
 
- # total conformal energy density
- (obj = Field,name = EConf, rank = 0, C_macro);
+ # total conformal energy density(P)
+ (obj = Field,name = EConfP, rank = 0, C_macro);
 
- # conformal momentum density
- (obj = Field,name = SConf, rank = 0, C_macro);
+ # conformal momentum density(P)
+ (obj = Field,name = SConfP, rank = 0, C_macro);
+
+ # conformal momentum density(C)
+ (obj = Field,name = SConfC, rank = 0, C_macro);
 
  # _A_{ij}*_A^{ij}
  (obj = Field,name = AConfIJ2, rank = 0, C_macro);
@@ -119,10 +122,14 @@ psi4_B = psi**4;
 aij2_B = AConfIJ2/psi4_B;
 
 # with AConfIJ and  trRicciConf :
-Bpart = \
-igConf(-i,-j)*(JJalphaPsi(i,j) - ChrisConf(l,i,j)*JalphaPsi(-l))\
- - kd*(trRicciConf/8+(5/12)*psi4_B*(trK**2)+(7/8)*aij2_B/psi4_B)\
- -2*pi*kd*(psi**-2)*(EConf+2*SConf);
+t1_b = \
+ igConf(-i,-j)*(JJalphaPsi(i,j) - ChrisConf(l,i,j)*JalphaPsi(-l))\
+ - kd*(trRicciConf/8+(5/12)*psi4_B*(trK**2)+(7/8)*aij2_B/psi4_B);
+
+t2_b = -2*pi*kd*(psi**-2)*(EConfP+2*SConfP);
+
+## NOTE: assume SConfC = EConfC
+Bpart = SConfC*t1_b + t2_b;
 
 # with AConfIJ no trRicciConf:
 #Bpart = \
@@ -160,10 +167,15 @@ psi4_E = psi**4;
 aij2_E = AConfIJ2/psi4_E;
 
 # with AConfIJ and trRicciConf :
-Epart = \
-igConf(-i,-j)*(JJalphaPsi(i,j) - ChrisConf(l,i,j)*JalphaPsi(-l))\
- -kd*(trRicciConf/8+(5/12)*psi4_E*(trK**2)+(7/8)*aij2_E/psi4_E)\
- -2*pi*kd*(psi**-2)*(EConf+2*SConf);
+t1_e = \
+ igConf(-i,-j)*(JJalphaPsi(i,j) - ChrisConf(l,i,j)*JalphaPsi(-l))\
+ - kd*(trRicciConf/8+(5/12)*psi4_E*(trK**2)+(7/8)*aij2_E/psi4_E);
+
+t2_e = -2*pi*kd*(psi**-2)*(EConfP+2*SConfP);
+
+## NOTE: assume SConfC = EConfC
+Epart = SConfC*t1_e + t2_e;
+
 
 # with AConfIJ and no trRicciConf:
 # Epart = \

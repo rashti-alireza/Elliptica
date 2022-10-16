@@ -49,11 +49,14 @@ Declare =
  # _A_{ij}*_A^{ij}
  (obj = Field,name = AConfIJ2, rank = 0, C_macro);
 
- # total conformal energy density
- (obj = Field,name = EConf, rank = 0, C_macro);
+ # total conformal energy density (P)
+ (obj = Field,name = EConfP, rank = 0, C_macro);
 
- # conformal momentum density
- (obj = Field,name = SConf, rank = 0, C_macro);
+ # conformal momentum density (P)
+ (obj = Field,name = SConfP, rank = 0, C_macro);
+
+ # conformal momentum density (C)
+ (obj = Field,name = SConfC, rank = 0, C_macro);
 
  # conformal metric inverse
  (obj = Field,name = igConf, rank = UU, C_macro);
@@ -83,10 +86,19 @@ Symm[ChrisConf(i,j,k)  = ChrisConf(i,k,j)];
 
 psi4 = psi**4;
 aij2 = AConfIJ2/psi4;
-F_eq = \
+
+
+ell = \
  igConf(-i,-j)*(ddalphaPsi(i,j) - ChrisConf(l,i,j)*dalphaPsi(-l))\
  - alphaPsi*(trRicciConf/8+(5/12)*(psi4)*(trK**2)+(7/8)*aij2/psi4)\
- - beta(i)*dtrK(-i)*(psi4)*psi-2*pi*alphaPsi*(psi**-2)*(EConf+2*SConf);
+ - beta(i)*dtrK(-i)*(psi4)*psi;
+
+
+src = -2*pi*alphaPsi*(psi**-2)*(EConfP+2*SConfP);
+
+
+## NOTE: we assumed SConfC = EConfC
+F_eq = SConfC*ell+src;
 
 
 `  schur_F[schur_ijk] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
