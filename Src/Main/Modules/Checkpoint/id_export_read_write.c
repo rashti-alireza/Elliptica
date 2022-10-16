@@ -21,6 +21,7 @@ void
   Uint npoints    = 0;
   char *match_str = 0;
   char str[STR_LEN_MAX] = {'\0'};
+  char *l = 0;
   Uint i,p;
   
   /* some checks */
@@ -31,7 +32,7 @@ void
   file = Fopen(coords_file_path,"r");
   
   /* winding file */
-  fgets(str,STR_LEN_MAX,file);
+  l = fgets(str,STR_LEN_MAX,file);
   FReadP_bin(match_str)
   if (strcmp(match_str,HEADER))
     Error1("It could not find the header");
@@ -100,6 +101,7 @@ void
     }
   }
 
+  UNUSED(l)
   FUNC_TOC
 }
 

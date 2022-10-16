@@ -229,6 +229,7 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
   Uint i,p,nn,r,c;
   enum Method_E e;
   Flag_T flg = NONE;
+  char *l = 0; // get line
   
   i = 0;
   while (types[i] != 0)
@@ -276,8 +277,9 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
       flg = NO;
       /* check if the second line is empty so both approach are equal */
       file = Fopen(file_name,"r");
-      fgets(line,sizeof(line),file);
-      if(fgets(line,sizeof(line),file) == 0)
+      l = fgets(line,sizeof(line),file);
+      l = fgets(line,sizeof(line),file);
+      if(l == 0)
         flg = YES;
         
       if (flg == YES) printf("[+].\n");

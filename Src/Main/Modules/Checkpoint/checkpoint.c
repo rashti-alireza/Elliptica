@@ -301,18 +301,19 @@ static void read_header(struct checkpoint_header *const alloc_info,FILE *const f
   fflush(stdout);
   
   char line[MAX_ARR] = {'\0'};
-
+  int sys_ret;
+  
   fseek(file,0,SEEK_SET);
   
   /* check the header */
-  fscanf(file,"%s",line);
+  sys_ret = fscanf(file,"%s",line);
   if (strcmp(line,ALLOC_HEADER))
       Error0("No header found. Checkpoint file got a problem.\n");
     
   /* read allocations */
   while (strcmp(line,ALLOC_FOOTER))
   {
-    fscanf(file,"%s",line);
+    sys_ret = fscanf(file,"%s",line);
     if (!strcmp(line,ALLOC_FOOTER))
       break;
       
@@ -342,6 +343,7 @@ static void read_header(struct checkpoint_header *const alloc_info,FILE *const f
   }
   /* read the binary parts */
   fseek(file,ftell(file)+1,SEEK_SET);/* +1 since fscanf won't read \n */
+  UNUSED(sys_ret)
 }
 
 /* find and save modified checkpoint pars specified at the par file
@@ -431,18 +433,20 @@ Parameter_T *parameter_query_from_checkpoint(const char *const par_name,FILE *co
   char *match_str = 0;
   Uint i,npar = 0;
   int found;
+  int sys_ret;
   
   fseek(file,0,SEEK_SET);
   
   /* check the header */
-  fscanf(file,"%s",line);
+  sys_ret = fscanf(file,"%s",line);
+
   if (strcmp(line,ALLOC_HEADER))
       Error0("No header found. Checkpoint file got a problem.\n");
     
   /* read allocations */
   while (strcmp(line,ALLOC_FOOTER))
   {
-    fscanf(file,"%s",line);
+    sys_ret = fscanf(file,"%s",line);
     if (!strcmp(line,ALLOC_FOOTER))
       break;
       
@@ -501,7 +505,8 @@ Parameter_T *parameter_query_from_checkpoint(const char *const par_name,FILE *co
       Error0("It could not find the parameter footer.\n");
     Free(match_str);
   }
- 
+  
+  UNUSED(sys_ret)
   return par;
 }
 
