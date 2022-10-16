@@ -6,6 +6,7 @@ Point = ijk;
 
 C_macro  = ADD_FIELD(name);
 C_macro2 = ADD_AND_ALLOC_FIELD(name);# Improtant to set source 0 everywhere.
+C_macro3 = ADD_AND_ALLOC_FIELD(name);WRITE_v(name);# to set the eq. coeffs.
 
 `#include "Tij_header.h"`
 ``
@@ -48,6 +49,33 @@ Declare =
  # SConf
  (obj = Field,name = SConf, rank = 0, C_macro2);
 
+ # EConf': smooth EConf
+ (obj = Field,name = EConfP, rank = 0, C_macro2);
+
+ # JConf': smooth JConf
+ (obj = Field,name = JConfP, rank = U, C_macro2);
+
+ # SConf': smooth SConf
+ (obj = Field,name = SConfP, rank = 0, C_macro2);
+
+ # EConfC: for eq coefficient
+ (obj = Field,name = EConfC, rank = 0, C_macro3);
+
+ # JConfC: for eq coefficient
+ (obj = Field,name = JConfC, rank = 0, C_macro3);
+
+ # SConfC: for eq coefficient
+ (obj = Field,name = SConfC, rank = 0, C_macro3);
+
 }
+``
+   # set the equation coeffs to 1. 
+  `FOR_ALL_ijk`
+  `{`
+	`EConfC[ijk] = 1.;`
+	`SConfC[ijk] = 1.;`
+	`JConfC[ijk] = 1.;`
+  `}`
+``
 ` }`
 `}`
