@@ -70,6 +70,9 @@ Declare =
  # conformal connections 1st derivative
  (obj = Field,name = dChrisConf, rank = UDDD, C_macro4);
 
+ # conformal momentum current(C)
+ (obj = Field,name = JConfC, rank = 0, C_macro);
+
 }
 
 # symmetries for Cpi:
@@ -154,6 +157,7 @@ Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(
 # with RicciConf and no AConfIJ
 # Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(i);
 
+`  Bpart_U2 *= JConfC[ijk];`
 
 `  schur_B[schur_ijk][schur_lmn] = Bpart_U2;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE\n`;
@@ -211,6 +215,7 @@ Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t9_E(
 # with RicciConf and no AConfIJ
 # Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t9_E(i);
 
+`  Epart_U2 *= JConfC[ijk];`
 
 `  schur_Et[schur_lmn][schur_ijk] = Epart_U2;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE\n`;

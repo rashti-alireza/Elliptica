@@ -44,8 +44,11 @@ Declare =
  # conformal connections
  (obj = Field,name = ChrisConf, rank = UDD, C_macro4);
 
- # conformal momentum current
- (obj = Field,name = JConf, rank = U, C_macro4);
+ # conformal momentum current(P)
+ (obj = Field,name = JConfP, rank = U, C_macro4);
+
+ # conformal momentum current(C)
+ (obj = Field,name = JConfC, rank = 0, C_macro);
 
 }
 
@@ -75,9 +78,13 @@ ChrisConf(j,jp,l)*AConfIJ(i,-l)*KD(-j,-jp));
 
 F0(i) = psi**(-4)*F00(i);
 
-F1(i) = -2/3*igConf(i,j)*dtrK(-j)/psi -8*pi*(psi**-3)*JConf(i);
+F1(i) = -2/3*igConf(i,j)*dtrK(-j)/psi;
 
-F_eq(i) = 2*alphaPsi*(F0(i)+F1(i));
+s(i)  = -8*pi*(psi**-3)*JConfP(i);
+
+ell(i) = JConfC*(F0(i)+F1(i));
+
+F_eq(i) = 2*alphaPsi*(ell(i)+s(i));
 
 `  schur_F[schur_ijk] = F_eq_U0;\n`;# Jx = -F in Newton-Raphson scheme
 `  DDM_SCHUR_EQ_CLOSE\n`;
