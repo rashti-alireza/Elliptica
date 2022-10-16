@@ -18,9 +18,6 @@ Ccode["#include "Tij_header.h"\n\n"];
 Ccode["void Tij_NS_IF_XCTS_gConf_psi6E(Patch_T *const patch,EoS_T *const eos)"];
 Ccode["{"];
 
-Ccode["  const Uint nn = patch->nn;"];
-Ccode["  Uint ijk;"];
-
 Declare = 
 {
 
@@ -42,20 +39,55 @@ Declare =
  # pressure
  (obj = Variable,name = p, rank = 0, None);
 
+ # p/rho0
+ (obj = Variable,name = p_o_rho0, rank = 0, None);
+
  # EConf
  (obj = Field,name = EConf, rank = 0, C_macro2);
 
+ # EConfP
+ (obj = Field,name = EConfP, rank = 0, C_macro2);
+ 
+ # EConfC
+ (obj = Field,name = EConfC, rank = 0, C_macro2);
+
 }
 
-# calculate EConf:
-Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
-Ccode["  {"];
-Ccode["    eos->h   = enthalpy[ijk];"];
-Ccode["    double p = eos->pressure(eos);"];
-     alpha = alphaPsi/psi;
-     psi6  = psi**(6);
-     Ebar  = psi6*(rho0*enthalpy*(u0*alpha)**2 - p);
-     Ccode["  EConf[ijk] = Ebar;"];
-Ccode["  }"];
+# calculate EConf, EConfP, and EConfC:
+
+`FOR_ALL_ijk`
+`{`
+`  eos->h    = enthalpy[ijk];`
+`  double p  = eos->pressure(eos);`
+`  double e0 = eos->specific_internal_energy(eos);`
+
+   alpha = alphaPsi/psi;
+   psi6  = psi**(6);
+   Ebar  = psi6*(rho0*enthalpy*(u0*alpha)**2 - p);
+`  EConf[ijk] = Ebar;`
+
+## multiply by p/rho0 = h-1-e0 so avoid any 0 in the denominator
+`  double p_o_rho0 = enthalpy[ijk] - 1. - e0;`
+
+   EbarP = psi6*p*(enthalpy*(u0*alpha)**2 - p_o_rho0);
+
+`  EConfP[ijk] = EbarP;`
+`  EConfC[ijk] = p_o_rho0;`
+
+`}`
+
+## set EConfP = EConf, and EConfC somewhere else is set 1.:
+
+#`FOR_ALL_ijk`
+#`{`
+#`  eos->h   = enthalpy[ijk];`
+#`  double p = eos->pressure(eos);`
+#   alpha = alphaPsi/psi;
+#   psi6  = psi**(6);
+#   Ebar  = psi6*(rho0*enthalpy*(u0*alpha)**2 - p);
+#`  EConfP[ijk] = EConf[ijk] = Ebar;`
+#
+#`}`
+
 
 Ccode["}"];
