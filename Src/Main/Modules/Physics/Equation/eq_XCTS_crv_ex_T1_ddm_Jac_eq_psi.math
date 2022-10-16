@@ -51,8 +51,11 @@ Declare =
  # _A_{ij}*_A^{ij}
  (obj = Field,name = AConfIJ2, rank = 0, C_macro);
 
- # total conformal energy density
- (obj = Field,name = EConf, rank = 0, C_macro);
+ # total conformal energy density(P)
+ (obj = Field,name = EConfP, rank = 0, C_macro);
+
+ # total conformal energy density(C)
+ (obj = Field,name = EConfC, rank = 0, C_macro);
 
  # conformal metric inverse
  (obj = Field,name = igConf, rank = UU, C_macro);
@@ -115,11 +118,15 @@ Declare =
 psi4_B = psi**4;
 aij2_B = AConfIJ2/psi4_B;
 
-# with AConfIJ^2 and  trRicciConf :
-Bpart =  igConf(i,j)*JJpsi(-i,-j) - igConf(-i,-j)*ChrisConf(l,i,j)*Jpsi(-l)\
+# with AConfIJ^2 and trRicciConf :
+t1_b =  igConf(i,j)*JJpsi(-i,-j) - igConf(-i,-j)*ChrisConf(l,i,j)*Jpsi(-l)\
  -kd*(\
-       trRicciConf/8 + 5*psi4_B*(trK**2)/12 + (7/8)*aij2_B/psi4_B + 2*pi*EConf*(psi**-2)\
+       trRicciConf/8 + 5*psi4_B*(trK**2)/12 + (7/8)*aij2_B/psi4_B \
      );
+
+t2_b =  -kd*(2*pi*EConfP*(psi**-2));
+
+Bpart = EConfC*t1_b+t2_b;
 
 # with AConfIJ^2 and no trRicciConf:
 #Bpart =  igConf(i,j)*JJpsi(-i,-j) - igConf(-i,-j)*ChrisConf(l,i,j)*Jpsi(-l)\
@@ -157,10 +164,14 @@ psi4_E = psi**4;
 aij2_E = AConfIJ2/psi4_E;
 
 # with AConfIJ^2 and trRicciConf:
-Epart =  igConf(i,j)*JJpsi(-i,-j) - igConf(-i,-j)*ChrisConf(l,i,j)*Jpsi(-l)\
+t1_e =  igConf(i,j)*JJpsi(-i,-j) - igConf(-i,-j)*ChrisConf(l,i,j)*Jpsi(-l)\
 -kd*(\
-       trRicciConf/8 + 5*psi4_E*(trK**2)/12 + (7/8)*aij2_E/psi4_E + 2*pi*EConf*(psi**-2)\
+       trRicciConf/8 + 5*psi4_E*(trK**2)/12 + (7/8)*aij2_E/psi4_E \
      );
+
+t2_e =  -kd*(2*pi*EConfP*(psi**-2));
+
+Epart =  EConfC*t1_e+t2_e;
 
 # with AConfIJ^2 and no trRicciConf:
 # Epart =  igConf(i,j)*JJpsi(-i,-j) - igConf(-i,-j)*ChrisConf(l,i,j)*Jpsi(-l)\
