@@ -53,7 +53,7 @@ Declare =
 
 }
 
-# calculate EConf, EConfP, and EConfC:
+## calculate EConf, EConfP, and EConfC. Note: EConfC at outside is 1.
 
 `FOR_ALL_ijk`
 `{`
