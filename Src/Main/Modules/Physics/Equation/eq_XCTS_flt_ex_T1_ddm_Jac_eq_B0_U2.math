@@ -61,6 +61,9 @@ Declare =
  # conformal metric inverse
  (obj = Field,name = igConf, rank = UU, C_macro4);
 
+ # conformal momentum current(C)
+ (obj = Field,name = JConfC, rank = 0, C_macro);
+
 }
 
 # symmetries for Cpi:
@@ -122,6 +125,7 @@ t5_B(i)  = -dLnOf_alpha_B(-j)*igConf(i,-m)*KD2i(j)*JB0(m);
 
 Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i);
 
+`  Bpart_U2 *= JConfC[ijk];`
 
 `  schur_B[schur_ijk][schur_lmn] = Bpart_U2;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE\n`;
@@ -156,7 +160,7 @@ t5_E(i)  = -dLnOf_alpha_E(-j)*igConf(i,-m)*KD2i(j)*JB0(m);
 
 Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i);
 
-
+`  Epart_U2 *= JConfC[ijk];`
 
 `  schur_Et[schur_lmn][schur_ijk] = Epart_U2;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE\n`;
