@@ -29,6 +29,7 @@ typedef struct EquationOfState_T
  double (*pressure)(struct EquationOfState_T *const eos);
  double (*energy_density)(struct EquationOfState_T *const eos);/* total energy density */
  double (*rest_mass_density)(struct EquationOfState_T *const eos);
+ double (*specific_internal_energy)(struct EquationOfState_T *const eos);
  double (*de_dh)(struct EquationOfState_T *const eos);/* d(energy_density)/dh */
  double (*drho0_dh)(struct EquationOfState_T *const eos);/* d(rest_mass_density)/dh */
  /* save coeffs for spline interpolation */

@@ -71,9 +71,20 @@ double EoS_drho0_dh_h_p(EoS_T *const eos)
   return pow((h-1)/(n+1),n-1)*pow(K,-n)*n/(n+1);
 }
 
-/* calculate the total energy density in terms of h for pwd
+/* calculate the total energy density in terms of h for pwp
 // ->return value: e(h) */
 double EoS_e_h_pwp(EoS_T *const eos)
+{
+  if (EQL(eos->h,1)) eos->h = 1;
+  
+  const double e0 = EoS_e0_h_pwp(eos);
+  
+  return EoS_rho0_h_pwp(eos)*(1. + e0);
+}
+
+/* calculate the specific internal energy in terms of h for pwp
+// ->return value: e0(h) */
+double EoS_e0_h_pwp(EoS_T *const eos)
 {
   if (EQL(eos->h,1)) eos->h = 1;
   
@@ -82,10 +93,10 @@ double EoS_e_h_pwp(EoS_T *const eos)
   const double a = eos->a[i];
   const double n = eos->n[i];
   
-  return EoS_rho0_h_pwp(eos)*(1+(a+n*(h-1))/(n+1));
+  return (a+n*(h-1))/(n+1);
 }
 
-/* calculate d(total energy density)/dh in terms of h for pwd
+/* calculate d(total energy density)/dh in terms of h for pwp
 // ->return value: de(h)/dh */
 double EoS_de_dh_h_pwp(EoS_T *const eos)
 {
@@ -144,10 +155,21 @@ double EoS_e_h_p(EoS_T *const eos)
 {
   if (EQL(eos->h,1)) eos->h = 1;
   
+  const double e0 = EoS_e0_h_p(eos);
+  
+  return EoS_rho0_h_p(eos)*(1. + e0);
+}
+
+/* calculate the specific internal energy in terms of h for polytropic
+// ->return value: e0(h) */
+double EoS_e0_h_p(EoS_T *const eos)
+{
+  if (EQL(eos->h,1)) eos->h = 1;
+  
   const double h = eos->h;
   const double n = eos->n[0];
   
-  return EoS_rho0_h_p(eos)*(1+n*(h-1)/(n+1));
+  return n*(h-1)/(n+1);
 }
 
 /* given eos->h it finds this enthalpy takes place in which intervale.

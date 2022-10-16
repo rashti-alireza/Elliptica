@@ -113,11 +113,12 @@ static void populate_EoS(EoS_T *const eos)
       fill_n(eos);
       fill_a(eos);
       fill_h_th(eos);/* NOTE: this depends on a, so put it in the last */
-      eos->pressure          = EoS_p_h_pwp;
-      eos->energy_density    = EoS_e_h_pwp;
-      eos->rest_mass_density = EoS_rho0_h_pwp;
-      eos->de_dh             = EoS_de_dh_h_pwp;
-      eos->drho0_dh	     = EoS_drho0_dh_h_pwp;
+      eos->pressure                 = EoS_p_h_pwp;
+      eos->energy_density           = EoS_e_h_pwp;
+      eos->rest_mass_density        = EoS_rho0_h_pwp;
+      eos->specific_internal_energy = EoS_e0_h_pwp;
+      eos->de_dh    = EoS_de_dh_h_pwp;
+      eos->drho0_dh = EoS_drho0_dh_h_pwp;
     }
     /* pwp eos's are generally C^0 continuous so we use 
     // natural cubic spline method to smooth them. the idea is 
@@ -215,9 +216,11 @@ static void populate_EoS(EoS_T *const eos)
       eos->pressure          = EoS_p_h_pwp_ncs;
       eos->energy_density    = EoS_e_h_pwp_ncs;
       eos->rest_mass_density = EoS_rho0_h_pwp_ncs;
+      eos->specific_internal_energy = EoS_e0_h_pwp; /* FIXME: it uses pwp */
+      
       /* FIXME: for now use analytical calculations so it isn't continuous */
-      eos->de_dh             = EoS_de_dh_h_pwp;
-      eos->drho0_dh	     = EoS_drho0_dh_h_pwp;
+      eos->de_dh    = EoS_de_dh_h_pwp;
+      eos->drho0_dh = EoS_drho0_dh_h_pwp;
       
       /* set to null for precaution */
       h_sample = 0;
@@ -236,18 +239,23 @@ static void populate_EoS(EoS_T *const eos)
       eos->gamma = gamma;
       fill_n(eos);
       fill_a(eos);
-      eos->pressure          = EoS_p_h_p;
-      eos->energy_density    = EoS_e_h_p;
-      eos->rest_mass_density = EoS_rho0_h_p;
-      eos->de_dh             = EoS_de_dh_h_p;
-      eos->drho0_dh	     = EoS_drho0_dh_h_p;
+      eos->pressure                 = EoS_p_h_p;
+      eos->energy_density           = EoS_e_h_p;
+      eos->rest_mass_density        = EoS_rho0_h_p;
+      eos->specific_internal_energy = EoS_e0_h_p;
+      eos->de_dh    = EoS_de_dh_h_p;
+      eos->drho0_dh = EoS_drho0_dh_h_p;
     }
     else
+    {
       Error0(NO_JOB);
+    }
     
   }
   else
+  {
     Error0(NO_JOB);
+  }
   
 }
 
