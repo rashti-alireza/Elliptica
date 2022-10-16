@@ -20,7 +20,7 @@ void Tij_NS_idealfluid_XCTS_gConf_add_fields(Grid_T *const grid);
 void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys);
 void Tij_NS_IF_XCTS_gConf_enthalpy(Patch_T *const patch,const double Euler_C);
 void Tij_NS_IF_XCTS_gConf_u0(Patch_T *const patch);
-void Tij_NS_IF_XCTS_gConf_psi6J_Ui(Patch_T *const patch);
+void Tij_NS_IF_XCTS_gConf_psi6J_Ui(Patch_T *const patch,EoS_T *const eos);
 void Tij_NS_IF_XCTS_gConf_psi6E(Patch_T *const patch,EoS_T *const eos);
 void Tij_NS_IF_XCTS_gConf_psi6S(Patch_T *const patch,EoS_T *const eos);
 void Tij_NS_IF_XCTS_gConf_derives(Patch_T *const patch);

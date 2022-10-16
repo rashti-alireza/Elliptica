@@ -79,7 +79,7 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
     }
     
     /* sources */
-    Tij_NS_IF_XCTS_gConf_psi6J_Ui(patch);
+    Tij_NS_IF_XCTS_gConf_psi6J_Ui(patch,eos);
     Tij_NS_IF_XCTS_gConf_psi6E(patch,eos);
     Tij_NS_IF_XCTS_gConf_psi6S(patch,eos);
   }
