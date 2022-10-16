@@ -515,7 +515,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
 void print_root_finder_exit_status(const Root_Finder_T *const root)
 {
   if (root->description)
-    printf(root->description);
+    printf("%s\n",root->description);
     
   switch(root->exit_status)
   {

@@ -46,7 +46,7 @@ void add_eq(sEquation_T ***const data_base, fEquation_T *const eq,const char *co
   db[ndb] = calloc(1,sizeof(*db[ndb]));
   IsNull(db[ndb]);
   
-  sprintf(db[ndb]->name,name);
+  sprintf(db[ndb]->name,"%s",name);
   db[ndb]->eq = eq;
   
   *data_base = db;

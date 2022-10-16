@@ -99,7 +99,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     IsNull(sol_man->jacobian);
     sol_man->jacobian[c] = calloc(1,sizeof(*sol_man->jacobian[c]));
     IsNull(sol_man->jacobian[c]);
-    sprintf(sol_man->jacobian[c]->type,jtype);
+    sprintf(sol_man->jacobian[c]->type,"%s",jtype);
     sol_man->jacobian[c]->J = cast_matrix_ccs(J);
     free_matrix(J);
     
@@ -712,7 +712,7 @@ static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *co
    IsNull(sol_man->jacobian);
    sol_man->jacobian[c] = calloc(1,sizeof(*sol_man->jacobian[c]));
    IsNull(sol_man->jacobian[c]);
-   sprintf(sol_man->jacobian[c]->type,jtype_1st);
+   sprintf(sol_man->jacobian[c]->type,"%s",jtype_1st);
    sol_man->jacobian[c]->J = Jm_1st;
    Jm_1st = 0;
    ++sol_man->nj;
