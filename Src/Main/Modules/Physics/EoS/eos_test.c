@@ -28,7 +28,7 @@ void test_EoS(Physics_T *const phys)
     sprintf(file_name,"%s/%s.pwp",path,eos->description);
     file = Fopen(file_name,"w+");
     
-    fprintf(file,"1:piece  2:Kappa  3:rho  4:gamma  5:a  6:h-1\n");
+    fprintf(file,"[1]:piece  [2]:Kappa  [3]:rho  [4]:gamma  [5]:a  [6]:h-1\n");
     for (i = 0; i < eos->N; ++i)  
       fprintf(file,"%u %0.15f %0.15f %0.15f %0.15f %0.15f\n",i,eos->K[i],eos->rho0_th[i],eos->gamma[i],eos->a[i],eos->h_th[i]-1);
     Fclose(file);
