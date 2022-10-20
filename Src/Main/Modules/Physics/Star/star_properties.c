@@ -42,7 +42,7 @@ star_print_properties
   PR_PROPERTY_IN_FILE_s("EoS_description",file, pr_screen)
   PR_PROPERTY_IN_FILE_s("EoS_type",file, pr_screen)
   PR_PROPERTY_IN_FILE_s("EoS_unit",file, pr_screen)
-  PR_PROPERTY_IN_FILE_s("EoS_K",file, pr_screen)
+  PR_PROPERTY_IN_FILE_s("EoS_K0",file, pr_screen)
   PR_PROPERTY_IN_FILE_s("EoS_Gamma",file, pr_screen)
   PR_PROPERTY_IN_FILE_s("EoS_rho0_th",file, pr_screen)
   
