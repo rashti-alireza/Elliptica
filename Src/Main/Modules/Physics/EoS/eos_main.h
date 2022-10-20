@@ -24,6 +24,7 @@ static void populate_EoS(EoS_T *const eos);
 static void fill_h_th(EoS_T *const eos);
 static void fill_a(EoS_T *const eos);
 static void fill_n(EoS_T *const eos);
+static void fill_K(EoS_T *const eos);
 static double *read_EoS_in_parameter_file(const char *const par,Uint *const N);
 
 

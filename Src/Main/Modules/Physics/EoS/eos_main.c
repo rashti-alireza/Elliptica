@@ -80,8 +80,9 @@ static void populate_EoS(EoS_T *const eos)
   sprintf(eos->type,"%s",       Gets(P_"type")); 
   sprintf(eos->unit,"%s",       Gets(P_"unit"));
   
-  K      = read_EoS_in_parameter_file(Gets(P_"K"),&N);
-  gamma  = read_EoS_in_parameter_file(Gets(P_"Gamma"),0);
+  /* NOTE: order matters */
+  gamma  = read_EoS_in_parameter_file(Gets(P_"Gamma"),&N);
+  K      = read_EoS_in_parameter_file(Gets(P_"K0"),0);/* this is K0 */
   
   /* if we have a single polytropic eos, then we don't have rho0_th  */
   if (!strcmp_i(eos->type,"polytropic") &&
@@ -107,12 +108,14 @@ static void populate_EoS(EoS_T *const eos)
                   "must be written in increasing order.\n");
     
       eos->N      = N;
-      eos->K      = K;
+      eos->K      = K;/* this is K0 now, below all other Ks will be found. */
       eos->rho0_th = rho0_th;
       eos->gamma = gamma;
+      /* NOTE: order matters */
       fill_n(eos);
+      fill_K(eos);/* now complete all other Ks. */
       fill_a(eos);
-      fill_h_th(eos);/* NOTE: this depends on a, so put it in the last */
+      fill_h_th(eos);
       eos->pressure                 = EoS_p_h_pwp;
       eos->energy_density           = EoS_e_h_pwp;
       eos->rest_mass_density        = EoS_rho0_h_pwp;
@@ -141,12 +144,14 @@ static void populate_EoS(EoS_T *const eos)
                   "must be written in increasing order.\n");
     
       eos->N      = N;
-      eos->K      = K;
+      eos->K      = K;/* K0 */
       eos->rho0_th = rho0_th;
       eos->gamma = gamma;
+      /* NOTE: order matters */
       fill_n(eos);
+      fill_K(eos);/* now complete all other Ks. */
       fill_a(eos);
-      fill_h_th(eos);/* NOTE: this depends on a, so put it in the last */
+      fill_h_th(eos);
       eos->pressure          = EoS_p_h_pwp;
       eos->energy_density    = EoS_e_h_pwp;
       eos->rest_mass_density = EoS_rho0_h_pwp;
@@ -237,6 +242,7 @@ static void populate_EoS(EoS_T *const eos)
       eos->N      = N;
       eos->K      = K;
       eos->gamma = gamma;
+      /* NOTE: order matters */
       fill_n(eos);
       fill_a(eos);
       eos->pressure                 = EoS_p_h_p;
@@ -267,7 +273,30 @@ static void fill_n(EoS_T *const eos)
   assert(eos->N);
   eos->n = alloc_double(eos->N);
   for (i = 0; i < eos->N; ++i)
-    eos->n[i] = 1/(eos->gamma[i]-1);
+  {
+    double gm1 = eos->gamma[i] - 1.;
+    assert(!EQL(gm1,0.));
+    
+    eos->n[i] = 1./gm1;
+  }
+}
+
+/* given the initial K (K0), fills other Ks (polytropic const) using K0 (first value).
+// ref: eq 11. https://arxiv.org/pdf/0812.2163.pdf */
+static void fill_K(EoS_T *const eos)
+{
+  Uint i;
+  
+  assert(eos->N);
+  const double *const n    = eos->n;
+  const double *const rho0 = eos->rho0_th;
+  double *const K = eos->K = realloc(eos->K, eos->N*sizeof(*eos->K));
+  IsNull(K);
+  
+  for (i = 1; i < eos->N; ++i)
+  {
+    K[i] = K[i-1]*pow(rho0[i],(n[i]-n[i-1])/(n[i-1]*n[i]));
+  }
 }
 
 /* filling a by requiring the continuity of energy density */
