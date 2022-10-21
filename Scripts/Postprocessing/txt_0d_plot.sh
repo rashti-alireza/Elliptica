@@ -114,7 +114,7 @@ do
 	fname=$(echo ${fname}     | sed -E "s/\/${outdir}\/.+/_/g" )
 	fname=$(echo ${fname}     | sed -E "s/_[[:digit:]]+_$//g"  )
 	fname="${field}___${fname}__"
-	tmp_file=$(mktemp ".${fname}XXXXX.txt")
+	tmp_file=$(mktemp ".${fname}XXXXX")
 	## soft link
 	ln -fs ${files[$i]} ${tmp_file}
 	files_tmp+=("${tmp_file}")
