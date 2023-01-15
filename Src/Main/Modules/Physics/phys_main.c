@@ -162,7 +162,9 @@ init_physics
     phys->ssys = "OBJ_UNDEFINED";/* important to have different name for system */
   }
   else
+  {
     Error0(NO_OPTION);
+  }
   
   switch(type)
   {
@@ -186,9 +188,11 @@ init_physics
         phys->spos = "center";
       }
       else
+      {
         Error0(NO_OPTION);
-        
+      }
     break;
+    
     case NS1:
       phys->ctype = NS;
       phys->stype = "NS1";
@@ -204,9 +208,11 @@ init_physics
         phys->spos = "right";
       }
       else
+      {
         Error0(NO_OPTION);
-      
+      }
     break;
+    
     case NS2:
       phys->ctype = NS;
       phys->stype = "NS2";
@@ -222,9 +228,11 @@ init_physics
         phys->spos = "right";
       }
       else
+      {
         Error0(NO_OPTION);
-      
+      }
     break;
+    
     case BH:
       phys->ctype = BH;
       phys->stype = "BH";
@@ -245,9 +253,11 @@ init_physics
         phys->spos = "center";
       }
       else
+      {
         Error0(NO_OPTION);
-        
+      }
     break;
+    
     case BH1:
       phys->ctype = BH;
       phys->stype = "BH1";
@@ -263,9 +273,11 @@ init_physics
         phys->spos = "right";
       }
       else
+      {
         Error0(NO_OPTION);
-      
+      }
     break;
+    
     case BH2:
       phys->ctype = BH;
       phys->stype = "BH2";
@@ -281,9 +293,11 @@ init_physics
         phys->spos = "right";
       }
       else
+      {
         Error0(NO_OPTION);
-      
+      }
     break;
+
     case SBH:
       phys->ctype = SBH;
       phys->stype = "SBH";
@@ -294,15 +308,23 @@ init_physics
         phys->spos = "center";
       }
       else
+      {
         Error0(NO_OPTION);
-      
+      }
     break;
+    
     case BHNS:
       phys->ctype = BHNS;
       phys->stype = "BHNS";
       phys->pos   = NONE;
-      
     break;
+    
+    case NSNS:
+      phys->ctype = NSNS;
+      phys->stype = "NSNS";
+      phys->pos   = NONE;
+    break;
+    
     default:
       Error0(NO_OPTION);
   }
