@@ -789,24 +789,45 @@ double diff_3x3_symmetric_fields(Grid_T *const grid,
   return max;
 }
 
-/* superimpose such that f = f1 + f2 + extra. */
+/* superimpose such that f = f1 + f2 + extra. 
+// if f1 and f2 are zero f = extra. */
 void superimpose_simple(Grid_T *const grid,
                         const char *const f,
                         const char *const f1,
                         const char *const f2,
                         const double extra)
 {
-  OpenMP_Patch_Pragma(omp parallel for)
-  FOR_ALL_p(grid->np)
+  if (!f1 && !f2)
   {
-    Patch_T *patch = grid->patch[p];
-    
-    READ_v_STEM(F1,f1)
-    READ_v_STEM(F2,f2)
-    REALLOC_v_WRITE_v_STEM(F,f)
-    
-    FOR_ALL_ijk
-      F[ijk] = F1[ijk]+F2[ijk]+extra;
+    OpenMP_Patch_Pragma(omp parallel for)
+    FOR_ALL_p(grid->np)
+    {
+      Patch_T *patch = grid->patch[p];
+      
+      REALLOC_v_WRITE_v_STEM(F,f)
+      
+      FOR_ALL_ijk
+        F[ijk] = extra;
+    }
+  }
+  else if (f1 && f2)
+  {
+    OpenMP_Patch_Pragma(omp parallel for)
+    FOR_ALL_p(grid->np)
+    {
+      Patch_T *patch = grid->patch[p];
+      
+      READ_v_STEM(F1,f1)
+      READ_v_STEM(F2,f2)
+      REALLOC_v_WRITE_v_STEM(F,f)
+      
+      FOR_ALL_ijk
+        F[ijk] = F1[ijk]+F2[ijk]+extra;
+    }
+  }
+  else
+  {
+    Error0(NO_OPTION);
   }
 }
 
