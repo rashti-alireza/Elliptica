@@ -535,6 +535,8 @@ populate_CS_patch_SplitCS
             Error0(NO_OPTION);
           }
           
+          // printf("patch region = %s\n",patch->CoordSysInfo->region);
+          
           /* filling flags */
           patch->CoordSysInfo->CubedSphericalCoord->side = side;
           patch->CoordSysInfo->CubedSphericalCoord->type = type;
