@@ -131,12 +131,12 @@ init_physics
     phys->sys  = BHNS;
     phys->ssys = "BHNS";
   }
-  else if (Pcmps("project","NS_NS_initial_data"))
+  else if (Pcmps("project","NS_NS_binary_initial_data"))
   {
     phys->sys  = NSNS;
     phys->ssys = "NSNS";
   }
-  else if (Pcmps("project","BH_BH_initial_data"))
+  else if (Pcmps("project","BH_BH_binary_initial_data"))
   {
     phys->sys  = BHBH;
     phys->ssys = "BHBH";
