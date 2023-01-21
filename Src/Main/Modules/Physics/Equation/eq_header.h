@@ -51,9 +51,9 @@ sprintf(EQ__Temp1,"%s1",X);\
 sprintf(EQ__Temp2,"%s2",X);\
 if (strchr(X,'1') || strchr(X,'2'))\
   sprintf(EQ__param__prefix,"%s",X);\
-else if (strstr(patch->name,EQ__Temp1))\
+else if (strstr(patch->CoordSysInfo->region,EQ__Temp1))\
   sprintf(EQ__param__prefix,"%s1",X);\
-else if (strstr(patch->name,EQ__Temp2))\
+else if (strstr(patch->CoordSysInfo->region,EQ__Temp2))\
   sprintf(EQ__param__prefix,"%s2",X);\
 else if (strcmp_i("system",X))\
   sprintf(EQ__param__prefix,"%s",Pgets(P_"system_prefix"));\
