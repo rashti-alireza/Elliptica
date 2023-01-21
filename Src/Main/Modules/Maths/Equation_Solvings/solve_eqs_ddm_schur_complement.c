@@ -2565,9 +2565,9 @@ static void f_in_equation_part(Patch_T *const patch)
 /* calculating the part of f coming from boundary points */
 static void f_in_boundary_part(Patch_T *const patch)
 {
-  const Uint nintfc    = countf(patch->interface);
+  const Uint nintfc        = countf(patch->interface);
   Solving_Man_T *const S   = patch->solving_man;
-  const Uint cf        = S->cf;
+  const Uint cf            = S->cf;
   fEquation_T *const bc_eq = S->bc_eq[cf];
   Boundary_Condition_T bc;
   Uint intfc;
