@@ -27,10 +27,6 @@ Declare =
 
  #  conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
-
- # inner BC value for lapse
- (obj = Field,name = ibc_alpha, rank = 0, C_macro);
-
 }
 
 # symmetries for Cpi
@@ -55,6 +51,12 @@ outerB_F = alphaPsi - 1;
 # INNER BOUNDARY LIKE BLACK HOLE HORIZON #
 `  else if (patch->innerB)/* at inner boundary */`;
 `  {`;
+Declare =
+{
+ # inner BC value for lapse
+ (obj = Field,name = ibc_alpha, rank = 0, C_macro);
+}
+``
 `  DDM_SCHUR_BC_OPEN\n`;
 ``
 innerB_F = alphaPsi - ibc_alpha*psi;

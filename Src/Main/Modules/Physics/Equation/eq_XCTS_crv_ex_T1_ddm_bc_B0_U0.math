@@ -29,9 +29,6 @@ Declare =
  # B1 in beta^i = B0^i+B1^i
  (obj = Field,name = B1_U0, rank = 0, C_macro);
 
- # inner BC
- (obj = Field,name = ibc_beta_U0, rank = 0, C_macro);
-
  # boost velocity
  (obj = variable,name = v0_boost,none);
  #(obj = variable,name = v1_boost,none);
@@ -69,6 +66,12 @@ outerB_F = B0_U0-v0_boost;
 `  {`;
 
 `  DDM_SCHUR_BC_OPEN\n`;
+
+Declare =
+{
+ # inner BC
+ (obj = Field,name = ibc_beta_U0, rank = 0, C_macro);
+}
 
 # bc equation for inner boundary at ijk point:
 innerB_F = B0_U0+B1_U0 - ibc_beta_U0;

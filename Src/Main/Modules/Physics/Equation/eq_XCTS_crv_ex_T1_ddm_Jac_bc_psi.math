@@ -55,12 +55,6 @@ Declare =
  # conformal metric 
  (obj = Field,name = gConf, rank = DD, C_macro4);
 
- # normal vector at the horizon
- (obj = Field,name = bh_sConf, rank = U, C_macro);
-
- # first derivative of normal vector at the horizon
- (obj = Field,name = dbh_sConf, rank = UD, C_macro4);
-
  # jacobian derivative 1st order :
  (obj = Field,name = Jpsi, rank = D, C_macro3,C_arg);
 
@@ -138,6 +132,14 @@ outerB_Epart = 0;
 `  else if (patch->innerB)`;
 `  {`;
 
+Declare =
+{
+ # normal vector at the horizon
+ (obj = Field,name = bh_sConf, rank = U, C_macro);
+
+ # first derivative of normal vector at the horizon
+ (obj = Field,name = dbh_sConf, rank = UD, C_macro4);
+}
 
 ###############################################
 ####### B matrix: J[ijk][lmn] in Jx = -F ###### 

@@ -53,10 +53,6 @@ Declare =
 
  # Kroneker delta
  (obj = field, name = kd, rank = 0, none,C_arg2);
-
- # normal vector at the horizon
- (obj = Field,name = bh_sConf, rank = U, C_macro);
-
 }
 
 # symmetries for Cpi
@@ -122,6 +118,12 @@ outerB_Epart = 0;
 # INNER BOUNDARY LIKE BLACK HOLE HORIZON #
 `  else if (patch->innerB)`;
 `  {`;
+
+Declare = 
+{
+ # normal vector at the horizon
+ (obj = Field,name = bh_sConf, rank = U, C_macro);
+}
 
 ###############################################
 ####### B matrix: J[ijk][lmn] in Jx = -F ###### 
