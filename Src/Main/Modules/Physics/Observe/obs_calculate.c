@@ -2404,6 +2404,44 @@ static void calc_spin(Observe_T *const obs)
       Error0(obs_err_msg);
     }
   }
+  else IFsc("Spin|NS1")
+  {
+    if (IsIt("S_obj,JRP"))
+    {
+      define_spin_JRP(obs);
+    }
+    else if (IsIt("S_obj,Campanelli"))
+    {
+      define_spin_campanelli(obs);
+    }
+    else if (IsIt("S_obj,AKV"))
+    {
+      define_spin_akv(obs);
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
+  }
+  else IFsc("Spin|NS2")
+  {
+    if (IsIt("S_obj,JRP"))
+    {
+      define_spin_JRP(obs);
+    }
+    else if (IsIt("S_obj,Campanelli"))
+    {
+      define_spin_campanelli(obs);
+    }
+    else if (IsIt("S_obj,AKV"))
+    {
+      define_spin_akv(obs);
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
+  }
   else
   {
     Error0(obs_err_msg);
