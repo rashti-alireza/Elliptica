@@ -25,8 +25,9 @@ C_macro2 = add_and_get_field(name);
 `void obs_Rc_NS(Observe_T *const obs)`
 `{` 
 `  Physics_T *const phys = obs->phys;`
-`  double *const Rc = obs->ret;`
-`  Grid_T *const grid = phys->grid;`
+`  double *const Rc      = obs->ret;`
+`  Grid_T *const grid    = phys->grid;`
+`  const char *const region = Ftype("NS");`
 `  const double Madm = Getd("ADM_mass");`
 `  const double x_CM = sysGetd("x_CM");`
 `  const double y_CM = sysGetd("y_CM");`
@@ -40,7 +41,7 @@ C_macro2 = add_and_get_field(name);
 `  FOR_ALL_PATCHES(p,grid)`
 `  {`
 `    Patch_T *patch = grid->patch[p];`
-`    if (!IsItCovering(patch,"NS"))`
+`    if (!IsItCovering(patch,region))`
 `      continue;`
 ``
 Declare = 

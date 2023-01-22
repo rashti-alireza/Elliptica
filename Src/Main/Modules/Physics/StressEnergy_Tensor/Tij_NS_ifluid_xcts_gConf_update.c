@@ -11,7 +11,7 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
 {
   FUNC_TIC
   
-  Grid_T *const grid  = mygrid(phys,"NS");
+  Grid_T *const grid  = mygrid(phys,Ftype("NS"));
   Patch_T *patch      = 0;
   const int  neat = strstr_i(Gets("enthalpy_neat"),"yes");
   const double W  = (neat == 0 ? Getd("enthalpy_update_weight") : 0.);
