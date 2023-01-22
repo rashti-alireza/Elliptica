@@ -18,8 +18,8 @@ C_macro  = READ_v(name);
 `double star_NS_current_Euler_eq_const(Physics_T *const phys);`
 `double star_NS_current_Euler_eq_const(Physics_T *const phys)`
 `{`
-`  AssureType(phys->type == NS)`
-`  Grid_T *const grid = mygrid(phys,"NS");`
+`  AssureType(phys->ctype == NS)`
+`  Grid_T *const grid = mygrid(phys,Ftype("NS"));`
 `  char cover[99] = {'\0'};`
 ``
 `  sprintf(cover,"%s_%s",phys->spos,"central_box");`
