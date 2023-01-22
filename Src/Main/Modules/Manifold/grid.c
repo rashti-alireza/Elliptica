@@ -352,6 +352,7 @@ void free_patch(Patch_T *patch)
     Free(patch->solving_man->jacobian_field_eq);
     Free(patch->solving_man->jacobian_bc_eq);
     free_2d_mem(patch->solving_man->field_name,patch->solving_man->nf);
+    free_2d_mem(patch->solving_man->field_aliased,patch->solving_man->nf);
     free(patch->solving_man);
   }
   
