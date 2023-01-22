@@ -53,17 +53,22 @@ void add_eq(sEquation_T ***const data_base, fEquation_T *const eq,const char *co
 }
 
 /* initializing Solving_Man_T struct and its elements */
-void initialize_solving_man(Grid_T *const grid,
-                            sEquation_T **const field_eq,
-                            sEquation_T **const bc_eq,
-                            sEquation_T **const jacobian_field_eq,
-                            sEquation_T **const jacobian_bc_eq,
-                            const char *const par_prefix/* prefix for eq param, ex: Eq_phi1 */)
+void initialize_solving_man
+  (
+  Grid_T *const grid,
+  sEquation_T **const field_eq,
+  sEquation_T **const bc_eq,
+  sEquation_T **const jacobian_field_eq,
+  sEquation_T **const jacobian_bc_eq,
+  const char *const par_prefix/* prefix for eq param, eg: "Eq_" in "Eq_phi1" */
+  )
 {
   const char *par_f = Pgets("solve_order");
-  char eq_fname[STR_LEN1]  = {'\0'};
-  char par_fname[STR_LEN0] = {'\0'};
-  char val_fname[STR_LEN0] = {'\0'};
+  char eq_fname[STR_LEN1]    = {'\0'};
+  char par_fname[STR_LEN0]   = {'\0'};
+  char val_fname[STR_LEN0]   = {'\0'};
+  char alias_fname[STR_LEN0] = {'\0'};
+  const char *pval  = 0;
   char **field_name = 0;
   char *tok  = 0;
   char *save = 0;
@@ -72,7 +77,7 @@ void initialize_solving_man(Grid_T *const grid,
   Uint nf = 0;
   Uint p,i;
   
-  /* finding fields's name */
+  /* finding field names */
   par = dup_s(par_f);/* par = f1,f2,... */
   tok = tok_s(par,COMMA,&save);/* tok = f1 */
   while(tok)
@@ -103,6 +108,13 @@ void initialize_solving_man(Grid_T *const grid,
     }
     patch->solving_man->field_name = calloc(nf,sizeof(*patch->solving_man->field_name));
     IsNull(patch->solving_man->field_name);
+
+    if (patch->solving_man->field_aliased)
+    {
+      free_2d_mem(patch->solving_man->field_aliased,patch->solving_man->nf);
+    }
+    patch->solving_man->field_aliased = calloc(nf,sizeof(*patch->solving_man->field_aliased));
+    IsNull(patch->solving_man->field_aliased);
     
     Free(patch->solving_man->field_eq);
     patch->solving_man->field_eq = calloc(nf,sizeof(*patch->solving_man->field_eq));
@@ -129,6 +141,7 @@ void initialize_solving_man(Grid_T *const grid,
       // => eq_name = "XCTS_curve_phi". */
       if (par_prefix)
       {
+/* get the name of eq and region where it is solved */
         /* get the param name */
         sprintf(par_fname,"%s%s",par_prefix,field_name[i]);
         /* get param value */
@@ -142,13 +155,27 @@ void initialize_solving_man(Grid_T *const grid,
         aux[0] = '\0';
         aux = val_fname;
         sprintf(eq_fname,"%s_%s",aux,field_name[i]);
+
+ /* get the name of the actual field if an alias is defined */
+        sprintf(par_fname,"%s%s%s",par_prefix,Alias_Field,field_name[i]);
+        pval = PgetsEZ(par_fname);
+        if (pval)// if there is an alias
+        {
+          sprintf(alias_fname,"%s",pval);
+        }
+        else// alias is the same as the field_name
+        {
+          sprintf(alias_fname,"%s",field_name[i]); 
+        }
+
       }
       else
       {
        sprintf(eq_fname,"%s",field_name[i]); 
       }
       
-      patch->solving_man->field_name[i] = dup_s(field_name[i]);
+      patch->solving_man->field_name[i]    = dup_s(field_name[i]);
+      patch->solving_man->field_aliased[i] = dup_s(alias_fname);
       patch->solving_man->field_eq[i]   = get_field_eq(eq_fname,field_eq,Prefix_EQ);
       patch->solving_man->bc_eq[i]      = get_field_eq(eq_fname,bc_eq,Prefix_BC);
       patch->solving_man->jacobian_field_eq[i] = get_field_eq(eq_fname,jacobian_field_eq,Prefix_Jac_EQ);

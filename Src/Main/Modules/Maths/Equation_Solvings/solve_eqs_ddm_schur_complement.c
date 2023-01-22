@@ -42,7 +42,7 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
   FUNC_TIC
   
   Grid_T *grid;
-  char **field_name = 0;/* name of all fields to be solved */
+  char **field_name = 0;/* name of all fields (equations) to be solved */
   Uint nf = 0;/* number of all fields */
   Uint f;/* dummy index */
   
@@ -343,8 +343,8 @@ static void update_field(Patch_T *const patch)
   const double *const y = Schur->y;
   const double *const x = Schur->x;
   const Uint cf = patch->solving_man->cf;
-  const char *const field_name = patch->solving_man->field_name[cf];
-  Field_T *const f = patch->fields[Ind(field_name)];
+  const char *const field_aliased = patch->solving_man->field_aliased[cf];  
+  Field_T *const f = patch->fields[Ind(field_aliased)];
   const double lambda = patch->solving_man->settings->relaxation_factor;
   const double *const u_old = f->v;
   double *const u_new = f->v;
@@ -378,8 +378,8 @@ static void update_field_single_patch(Patch_T *const patch)
   const Uint *const inv = Schur->inv;
   const double *const x = Schur->x;
   const Uint cf = patch->solving_man->cf;
-  const char *const field_name = patch->solving_man->field_name[cf];
-  Field_T *const f = patch->fields[Ind(field_name)];
+  const char *const field_aliased = patch->solving_man->field_aliased[cf];
+  Field_T *const f = patch->fields[Ind(field_aliased)];
   const double lambda = patch->solving_man->settings->relaxation_factor;
   const double *const u_old = f->v;
   double *const u_new = f->v;
@@ -2280,8 +2280,8 @@ static void pg_collocation(Patch_T *const patch, Pair_T *const pair)
 {
   SubFace_T *const subface = pair->subface;
   const Uint cf = patch->solving_man->cf;
-  const char *const field_name = patch->solving_man->field_name[cf];
-  Field_T *const f   = patch->fields[Ind(field_name)];
+  const char *const field_aliased = patch->solving_man->field_aliased[cf];
+  Field_T *const f = patch->fields[Ind(field_aliased)];
   const Uint ppn = pair->patchN;
   const Uint NSubFP = subface->np;
   const Uint *node = 0;
@@ -2342,8 +2342,8 @@ static void pg_interpolation(Patch_T *const patch, Pair_T *const pair)
 {
   SubFace_T *const subface = pair->subface;
   const Uint cf = patch->solving_man->cf;
-  const char *const field_name = patch->solving_man->field_name[cf];
-  Field_T *const f   = patch->fields[Ind(field_name)];
+  const char *const field_aliased = patch->solving_man->field_aliased[cf];
+  Field_T *const f = patch->fields[Ind(field_aliased)];
   const Uint np = subface->np;
   const Uint ppn = pair->patchN;
   double *const pg = pair->pg; 
@@ -2932,6 +2932,7 @@ static Matrix_T *making_J_Old_Fashion(Solve_Equations_T *const SolveEqs)
   for (pn = 0; pn < npatch; ++pn)
   {
     Patch_T *patch2 = grid->patch[pn];
+    // NOTE: potentially might be a problem when we have an alias field
     Field_T *f = patch2->fields[LookUpField(SolveEqs->field_name,patch2)];
     double EPS = CONST/patch2->nn;
     
@@ -3138,7 +3139,6 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
       DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
       char field_res[MSG_SIZE1];
       sprintf(field_res,"%s%s",field_name[f],fsuffix);
-      
       empty_field(patch->fields[Ind(field_res)]);
       patch->fields[Ind(field_res)]->v = alloc_double(patch->nn);
         
@@ -3176,7 +3176,6 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
         DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
         char field_res[MSG_SIZE1];
         sprintf(field_res,"%s%s",field_name[f],fsuffix);
-      
         empty_field(patch->fields[Ind(field_res)]);
         patch->fields[Ind(field_res)]->v = alloc_double(patch->nn);
         

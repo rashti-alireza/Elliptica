@@ -381,7 +381,17 @@ typedef struct DDM_SCHUR_COMPLEMENT_T
 typedef struct SOLVING_MAN_T
 {
   struct PATCH_T *patch;/* refers to its patch itself */
-  char **field_name;/* field to be solved */
+  char **field_name;/* field name specified in the parfile. note: it may be different
+                    // from the actual field being called, in particulate, when  
+                    // one field needs to be solved in two disjoint regions of the grid,
+                    // e.g., phi1 and phi2 for NS1 and NS2. 
+                    // you can think of this vaiable as the equation name we use to 
+                    // schedule the solver. */
+  char **field_aliased;/* this is the name of the actual field to be solved, 
+                       // i.e., aliased by the field_name var. eg: phi1 is an alias for phi.
+                       // the usage of alias is promoted to solve one field in 
+                       // different regions and it can be specified in the param file. */
+  
   Uint nf;/* number of fields */
   Uint cf;/* current field; index of the field is being solved */
   double Frms;/* the current residual(rms) of F in, Jx=-F for this field 
