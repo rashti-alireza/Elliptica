@@ -1410,6 +1410,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
   Uint n,ijk,nn;
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_NSNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
   {
     IFsc("Komar(M)|BHNS")
@@ -1434,6 +1435,25 @@ static void calc_Kommar_mass(Observe_T *const obs)
         Error0(obs_err_msg);
       }
     }
+    else IFsc("Komar(M)|NSNS")
+    {
+      if (IsIt("S+V,default"))
+      {
+        /* volume part */
+        region   = "NS1,NS2";
+        patches1 = collect_patches(grid,region,&N1);
+      }
+      else if (IsIt("S_inf,default"))
+      {
+        /* surface part */
+        region   = "outermost_OB";
+        patches2 = collect_patches(grid,region,&N2);  
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
     else IFsc("Komar(M)|NS")
     {
       if (IsIt("V_obj,default"))
@@ -1446,6 +1466,44 @@ static void calc_Kommar_mass(Observe_T *const obs)
       {
         /* surface part */
         region = "NS_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
+    else IFsc("Komar(M)|NS1")
+    {
+      if (IsIt("V_obj,default"))
+      {
+        /* volume part */
+        region = "NS1";
+        patches1 = collect_patches(grid,region,&N1);
+      }
+      else if (IsIt("S_obj,default"))
+      {
+        /* surface part */
+        region = "NS1_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
+    else IFsc("Komar(M)|NS2")
+    {
+      if (IsIt("V_obj,default"))
+      {
+        /* volume part */
+        region = "NS2";
+        patches1 = collect_patches(grid,region,&N1);
+      }
+      else if (IsIt("S_obj,default"))
+      {
+        /* surface part */
+        region = "NS2_OB";
         patches2 = collect_patches(grid,region,&N2);
       }
       else
@@ -1582,6 +1640,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
     Komar[n]->g22 = g22;
     
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_NSNS ||
         grid->kind == Grid_SplitCubedSpherical_SBH)
     {
       IFsc("Komar(M)|BHNS")
@@ -1606,7 +1665,63 @@ static void calc_Kommar_mass(Observe_T *const obs)
           Error0(obs_err_msg);
         }
       }
+      else IFsc("Komar(M)|NSNS")
+      {
+        if (IsIt("S+V,default"))
+        {
+          ;
+        }
+        else if (IsIt("S_inf,default"))
+        {
+          /* NOTE: we can use a closer surface to the objects
+          // since Komar is independent of surface, so: */
+          Set_outermost_integral_S_SplitCS(Komar)
+          n_physical_metric_around(Komar[n],_c_);
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
       else IFsc("Komar(M)|NS")
+      {
+        if (IsIt("V_obj,default"))
+        {
+          ;
+        }
+        else if (IsIt("S_obj,default"))
+        {
+          /* surface integral */
+          Komar[n]->surface_integration_flg = 1;
+          Komar[n]->Z_surface = 1;
+          Komar[n]->K = patch->n[2]-1;
+          n_physical_metric_around(Komar[n],_c_);
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
+      else IFsc("Komar(M)|NS1")
+      {
+        if (IsIt("V_obj,default"))
+        {
+          ;
+        }
+        else if (IsIt("S_obj,default"))
+        {
+          /* surface integral */
+          Komar[n]->surface_integration_flg = 1;
+          Komar[n]->Z_surface = 1;
+          Komar[n]->K = patch->n[2]-1;
+          n_physical_metric_around(Komar[n],_c_);
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
+      else IFsc("Komar(M)|NS2")
       {
         if (IsIt("V_obj,default"))
         {
@@ -1668,6 +1783,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
   Free(patches2);
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_NSNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
   {
     if (IsIt("S+V,default"))
