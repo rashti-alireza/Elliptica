@@ -22,8 +22,12 @@ void eq_solve_elliptic_equation(Physics_T *const phys)
   Grid_T *const grid = phys->grid;
   
   /* populating solution managment */
-  initialize_solving_man
-    (grid,eq_global_field_eq,eq_global_bc_eq,eq_global_jacobian_field_eq,eq_global_jacobian_bc_eq,P_);
+  initialize_solving_man (
+      grid, 
+      eq_global_field_eq,
+      eq_global_bc_eq,
+      eq_global_jacobian_field_eq,
+      eq_global_jacobian_bc_eq, P_);
   
   /* solving equation(s) */
   Solve_Equations_T *SolveEqs = init_solve_equations(grid);
