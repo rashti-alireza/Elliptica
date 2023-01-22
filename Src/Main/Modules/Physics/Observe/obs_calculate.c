@@ -2333,6 +2333,28 @@ static void calc_CM(Observe_T *const obs)
       Error0(obs_err_msg);
     }
   }
+  else IFsc("CM|NS1")
+  {
+    if (IsIt("V_obj,default"))
+    {
+      obs_Rc_NS(obs);
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
+  }
+  else IFsc("CM|NS2")
+  {
+    if (IsIt("V_obj,default"))
+    {
+      obs_Rc_NS(obs);
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
+  }
   else
   {
     Error0(obs_err_msg);
