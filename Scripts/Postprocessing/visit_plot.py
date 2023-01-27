@@ -506,7 +506,7 @@ def plot(directory_path,file_names,scalar_name,vector_name):
       MeshAtts.opaqueMode = MeshAtts.Auto  # Auto, On, Off
       MeshAtts.pointSize = 0.05
       MeshAtts.opaqueColor = (255, 255, 255, 255)
-      MeshAtts.smoothingLevel = MeshAtts.None  # None, Fast, High
+      #MeshAtts.smoothingLevel = MeshAtts.None  # None, Fast, High
       MeshAtts.pointSizeVarEnabled = 0
       MeshAtts.pointSizeVar = "default"
       MeshAtts.pointType = MeshAtts.Point  # Box, Axis, Icosahedron, Octahedron, Tetrahedron, SphereGeometry, Point, Sphere
@@ -523,7 +523,7 @@ def plot(directory_path,file_names,scalar_name,vector_name):
       MeshAtts.opaqueMode = MeshAtts.Auto  # Auto, On, Off
       MeshAtts.pointSize = 0.05
       MeshAtts.opaqueColor = (255, 255, 255, 255)
-      MeshAtts.smoothingLevel = MeshAtts.None  # None, Fast, High
+      #MeshAtts.smoothingLevel = MeshAtts.None  # None, Fast, High
       MeshAtts.pointSizeVarEnabled = 0
       MeshAtts.pointSizeVar = "default"
       MeshAtts.pointType = MeshAtts.Point  # Box, Axis, Icosahedron, Octahedron, Tetrahedron, SphereGeometry, Point, Sphere
