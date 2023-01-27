@@ -50,7 +50,7 @@ then
 	printf "The region is all \"left_NS_(around_)?front.+\" files for all available resolutions.\n"
 	printf "$ txt_2d_plot.sh bns_00 x y psi \"left_NS_(around_)?front.+\"\n\n"
 	
-	printf "Below plots only for 18 and 20 resolutions over the surface (X,Y,1):\n"
+	printf "Below, it plots only for 18 and 20 resolutions over the surface (X,Y,1):\n"
 	printf "$ txt_2d_plot.sh bns_00 x y psi \"(18|20).+left_NS_(around_)?front.+_X_Y_1.+\"\n\n"
 	
 	printf "Plotting psi vs reference coords:\n"

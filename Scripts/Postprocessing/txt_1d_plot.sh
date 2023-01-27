@@ -48,7 +48,7 @@ then
 	printf "## The region is all \"left_NS_(around_)?front.+\" files for all available resolutions.\n"
 	printf "$ txt_1d_plot.sh bns_00 x psi \"left_NS_(around_)?front.+\"\n\n"
 	
-	printf "Below plots only for 18 and 20 resolutions on the line (0.5,0.5,Z):\n"
+	printf "Below, it plots only for 18 and 20 resolutions on the line (0.5,0.5,Z):\n"
 	printf "$ txt_1d_plot.sh bns_00 x psi \"(18|20).+left_NS_front.+_0.5_0.5_Z.+\"\n\n"
 	
 	printf "## Plotting psi vs referee coords:\n"
