@@ -149,8 +149,8 @@ void adm_update_adm_gij(Physics_T *const phys,const char *const region)
 
 /* update beta and its derivatives.
 // note: it assumes B0 and B1 are already updated.
-// note: the reasion we have a dedicated function for beta update
-// is B1 part, since this might not get resolved well in outermost patches,
+// note: the reason we have a dedicated function for beta update
+// is the B1 part, this part might not get resolved well in outermost patches,
 // thus, we should calculated it analytically. */
 void adm_update_beta(Physics_T *const phys,const char *const region)
 {
