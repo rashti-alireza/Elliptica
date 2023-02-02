@@ -1,48 +1,35 @@
-# Ignore the following:
-Src/Projects/Approximate_Killing_Vector/*
-Src/Projects/Approximate_Killing_Vector
-Src/Projects/Binary_NS_Initial_Data/*
-Src/Projects/Binary_NS_Initial_Data
+# stand alone project:
+Src/Projects/NS_NS_Binary_Initial_Data
 Src/Projects/Single_BH_Initial_Data
 Src/Projects/BH_NS_Binary_Initial_Data
+Src/Projects/Approximate_Killing_Vector
 
-
-# ignore backup joe files:
-*.*~ 
-*~
-DEADJOE
-#.gitignore
-
-# ignore folder Bin
+# folder Bin
 Bin
 
-#ignore input files
-#*.in
-#*.in~
-
-#ignore output directory
+# output directory
 *_output_*/
 
-#ignore parameter directory
+# parameter directory
 Parfiles/*
 parfiles/*
 Parfile/*
 parfile/*
 
-#ignore Trash directory
+# Trash directory
 Trash/*
 
-#ignore makes
+# gnu makes
 makefile
 MyConfig
 
-#ignore ctags
+# ctags
 tags
 
-# ignore backup dir
+# backup dir
 backup
 
-# ignore Lib and Exe
+# Lib and Exe
 Lib/*
 Exe/*
 
@@ -51,3 +38,4 @@ Exe/*
 
 # auto-generated things:
 projects_data_base_MADE_BY_MAKE.c
+DEADJOE
