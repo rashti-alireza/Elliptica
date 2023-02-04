@@ -53,10 +53,21 @@ Elliptica_ID_Reader_T * elliptica_id_reader_init (
   
   Elliptica_ID_Reader_T *idr = calloc(1,sizeof(*idr));
   IsNull(idr);
+  FILE *file = 0;
+  Parameter_T *par = 0;
   
+  // set path
   sprintf(idr->checkpoint_path,"%s",checkpnt);
   
-  // set id system???
+  // read checkpoint file
+  file = Fopen(idr->checkpoint_path,"r");
+  IsNull(file);
+  
+  // which ID system
+  par = parameter_query_from_checkpoint("Project",file);
+  idr->system = dup_s(par->rv);
+  
+  Fclose(file);
   
   return idr;
 }
@@ -78,6 +89,8 @@ int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr)
 /* ->return success. free everything */
 int elliptica_id_reader_free(Elliptica_ID_Reader_T *idr)
 {
+  Free(idr->system);
+  
   return EXIT_SUCCESS;
 }
 
