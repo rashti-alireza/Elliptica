@@ -1,0 +1,3 @@
+. idr struct
+. how to set to modify and set param files from evo code conveniently
+.
