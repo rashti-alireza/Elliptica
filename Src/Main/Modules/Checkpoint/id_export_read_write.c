@@ -454,7 +454,7 @@ void idexp_find_XYZ_from_xyz(Elliptica_ID_Reader_T *const idr,
   printf(Pretty0"Preparing points for the interpolation ...\n");
   fflush(stdout);
   OpenMP_1d_Pragma(omp parallel for)
-  for (p = 0; p < npoints; ++p)
+  for (Uint p = 0; p < npoints; ++p)
   {
     Patch_T *patch = 0;
     double x[3],X[3];
