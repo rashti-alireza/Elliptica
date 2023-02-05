@@ -35,3 +35,14 @@ void
 void idexp_free(ID_Export_T *pnt);
 ID_Export_T *idexp_init(void);
 
+void idexp_find_XYZ_from_xyz(Elliptica_ID_Reader_T *const idr, 
+                             ID_Export_T *const pnt,const double *const CM);
+
+
+void 
+  idexp_interpolate_fields_and_save_in_id_reader
+    (Elliptica_ID_Reader_T *const idr, ID_Export_T *const pnt,
+     const char *const fields_name_str/* comma separated */,
+     const char *const evo_fields_name_str/* comma separated */);
+ 
+ 
