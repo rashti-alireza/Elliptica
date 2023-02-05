@@ -38,11 +38,14 @@ const int Npnts = 16*16*16; // for all x,y,z coords
 Elliptica_ID_Reader_T *idr = elliptica_id_reader_init(checkpnt_path);
 
 // the list of fields to be interpolated. should be comma separated
-idr->fields   = "alpha,betax,betay,betaz,adm_g_xx,adm_g_xy";
+idr->ifields  = "alpha,betax,betay,betaz,adm_gxx,adm_gxy";
 idr->npoints  = Npnts;
 idr->x_coords = a pointer to double type 1D array of Cartesian x coord values;
 idr->y_coords = a pointer to double type 1D array of Cartesian y coord values;
 idr->z_coords = a pointer to double type 1D array of Cartesian z coord values;
+
+// set parameter for elliptica
+idr->param("bh_filler","on",idr);
 
 // interpolate
 elliptica_id_reader_interpolate(idr);
@@ -51,9 +54,9 @@ elliptica_id_reader_interpolate(idr);
 int ijk = 0;
 for(i,j,k)
 {
-    double g_xx   = idr->field[idr->indx("adm_g_xx")][ijk];
-    double beta_x = idr->field[idr->indx("betax")][ijk];
-    double alpha  = idr->field[idr->indx("alpha")][ijk];
+    double g_xx  = idr->field[idr->indx("adm_gxx")][ijk];
+    double betax = idr->field[idr->indx("betax")][ijk];
+    double alpha = idr->field[idr->indx("alpha")][ijk];
     
     ijk++;
 }
@@ -65,7 +68,7 @@ elliptica_id_reader_free(idr);
 
 /* -> create a struct for initial data reader. 
 // note: checkpoint file includes all info the system. */
-Elliptica_ID_Reader_T * elliptica_id_reader_init (
+Elliptica_ID_Reader_T *elliptica_id_reader_init (
   const char *const checkpnt/* path/to/elliptica/checkpoint/file */
   )
 {
@@ -109,6 +112,32 @@ Elliptica_ID_Reader_T * elliptica_id_reader_init (
   FUNC_TOC  
   
   return idr;
+}
+
+/* set parameter for reader from evo code side.
+// e.g., set_param_from_evo("bh_filler", "on",idr); --> bh_filler = on. */
+static void set_param_from_evo(
+          const char *const lv/* e.g., force_balance */, 
+          const char *const rv/* e.g., on */,
+          Elliptica_ID_Reader_T *const idr)
+{
+  // checks
+  if(!lv && !rv)
+  {
+    Error1("A param with empty content.");
+  }
+  
+  Uint nparams = idr->nparams;
+  
+  idr->params_lv = realloc(idr->params_lv,(nparams+1)*(sizeof(*idr->params_lv)));
+  IsNull(idr->params_lv);
+  idr->params_lv[nparams] = dup_s(rv);
+
+  idr->params_rv = realloc(idr->params_rv,(nparams+1)*(sizeof(*idr->params_rv)));
+  IsNull(idr->params_rv);
+  idr->params_rv[nparams] = dup_s(rv);
+  
+  idr->nparams++;
 }
 
 /* given the field name, it returns back the index number of the field.
@@ -159,15 +188,26 @@ int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr)
 int elliptica_id_reader_free(Elliptica_ID_Reader_T *idr)
 {
   FUNC_TIC
-  Uint nf;
+  Uint n;
   
   Free(idr->system);
   
-  for (nf = 0; nf < idr->nfield; nf++)
+  // free fields
+  for (n = 0; n < idr->nfield; n++)
   {
-    Free(idr->field[nf]);
+    Free(idr->field[n]);
   }
   Free(idr->field);
+  
+  // free params
+  for (n = 0; n < idr->nparams; n++)
+  {
+    Free(idr->params_lv[n]);
+    Free(idr->params_rv[n]);
+    
+  }
+  Free(idr->params_lv);
+  Free(idr->params_rv);
   
   FUNC_TOC
   return EXIT_SUCCESS;
