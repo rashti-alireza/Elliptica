@@ -81,7 +81,7 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
   // some sanity checks
   if (!checkpnt)
   {
-    Error1("No checkpoint file path.")
+    Error1("No checkpoint file path.");
   }
   
   Elliptica_ID_Reader_T *idr = calloc(1,sizeof(*idr));
@@ -110,7 +110,7 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
   for (nf = 0; Field_Dictionary[nf]; nf++);
   idr->nfield = nf;
   idr->field  = calloc(nf,sizeof(*idr->field));
-  IsNullf(idr->field);
+  IsNull(idr->field);
   
   Fclose(file);
 
@@ -150,7 +150,7 @@ static void set_param_from_evo(
 // ->return: field index. */
 static Uint find_field_index(const char *const fname)
 {
-  Uint indx = Uint_MAX;
+  Uint indx = UINT_MAX;
   Uint nf   = 0;
   
   while (Field_Dictionary[nf])
@@ -163,7 +163,7 @@ static Uint find_field_index(const char *const fname)
     nf++;
   }
   
-  if (indx == Uint_MAX)
+  if (indx == UINT_MAX)
   {
     Errors("could not find the field '%s'",fname);
   }
