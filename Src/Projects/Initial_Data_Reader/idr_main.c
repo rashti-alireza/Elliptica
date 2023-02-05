@@ -93,6 +93,9 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
   // set index finder
   idr->indx = find_field_index;
   
+  // settig param function
+  idr->param = set_param_from_evo;
+  
   // read checkpoint file
   file = Fopen(idr->checkpoint_path,"r");
   IsNull(file);
