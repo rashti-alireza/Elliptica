@@ -17,7 +17,7 @@ typedef struct ELLIPTICA_ID_READER_T
   double *z_coords;// Cartesian z coord values, z_coords[ijk]
   Uint (*indx)(const char *const fname);// find field index  
   void (*param)(const char *const lv,const char *const rv,
-                ELLIPTICA_ID_READER_T *const idr);// set params from evo code
+                struct ELLIPTICA_ID_READER_T *const idr);// set params from evo code
   char **params_lv;// left value,  params[0]="force_balance"
   char **params_rv;// right value, params[0]="on"
   Uint nparams;// number of params
