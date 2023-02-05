@@ -39,7 +39,7 @@ Elliptica_ID_Reader_T *idr = elliptica_id_reader_init(checkpnt_path);
 
 // the list of fields to be interpolated. should be comma separated
 idr->fields   = "alpha,betax,betay,betaz,adm_g_xx,adm_g_xy";
-idr->Npoints  = Npnts;
+idr->npoints  = Npnts;
 idr->x_coords = a pointer to double type 1D array of Cartesian x coord values;
 idr->y_coords = a pointer to double type 1D array of Cartesian y coord values;
 idr->z_coords = a pointer to double type 1D array of Cartesian z coord values;
@@ -86,6 +86,9 @@ Elliptica_ID_Reader_T * elliptica_id_reader_init (
   
   // set path
   sprintf(idr->checkpoint_path,"%s",checkpnt);
+  
+  // set index finder
+  idr->indx = find_field_index;
   
   // read checkpoint file
   file = Fopen(idr->checkpoint_path,"r");
