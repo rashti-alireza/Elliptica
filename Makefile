@@ -198,7 +198,7 @@ SUB_MAKE_FILES := $(foreach d,$(C_DIRS),$(join $d/,$(SUB_MAKE_NAME_STEM)))
 ## recap flags and export all variables:
 ########################################
 # making all C_LIBS strings:
-C_LIBS := $(foreach d,$(C_DIRS),$(addprefix -l, $(notdir $d)))
+C_LIBS := $(foreach d,$(C_DIRS),$(addprefix -l_elliptica_, $(notdir $d)))
 # Note: to resolve inter library dependenciesI added C_LIBS few times.
 # you can add more if the linking at the last step fails.
 C_LIBS += $(C_LIBS)
