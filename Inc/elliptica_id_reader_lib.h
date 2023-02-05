@@ -23,6 +23,12 @@ typedef struct ELLIPTICA_ID_READER_T
   Uint nparams;// number of params
 }Elliptica_ID_Reader_T;
 
+Elliptica_ID_Reader_T *elliptica_id_reader_init (
+  const char *const checkpnt/* path/to/elliptica/checkpoint/file */);
+int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr);
+int elliptica_id_reader_free(Elliptica_ID_Reader_T *idr);
+
+
 #undef EIDR_MAX_STR
 
 #endif
