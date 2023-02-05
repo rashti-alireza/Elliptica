@@ -1,6 +1,8 @@
 #ifndef ELLIPTICA_ID_READER_LIB_H
 #define ELLIPTICA_ID_READER_LIB_H
 
+#include "elliptica_system_lib.h"
+
 #define EIDR_MAX_STR (400)
 
 // saves options and info to interact and control between the evo code and ID code
