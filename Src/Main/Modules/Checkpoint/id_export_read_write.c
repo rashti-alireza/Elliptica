@@ -442,7 +442,7 @@ void idexp_find_XYZ_from_xyz(Elliptica_ID_Reader_T *const idr,
   pnt->x       = idr->x_coords;
   pnt->y       = idr->y_coords;
   pnt->z       = idr->z_coords;
-  pnt->npoints = npoints = (Uint)idr->Npoints;
+  pnt->npoints = npoints = (Uint)idr->npoints;
   pnt->X       = alloc_double(npoints);
   pnt->Y       = alloc_double(npoints);
   pnt->Z       = alloc_double(npoints);  
