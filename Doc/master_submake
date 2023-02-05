@@ -27,7 +27,7 @@ h_files := $(wildcard $(top)/*.h)
 o_dir := $(notdir $(top))
 o_dir := $(O_TOP)/$(o_dir)
 # library name for this directory this is a standard name
-lib_name := libelliptica_$(notdir $(top)).a
+lib_name := lib$(notdir $(top)).a
 # collect all o files related to all of the c files in this directory
 o_files:= \
        $(foreach f,$(c_files),\
