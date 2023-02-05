@@ -68,6 +68,13 @@ elliptica_id_reader_free(idr);
 
 */
 
+// for adding project
+int Initial_Data_Reader(void *vp)
+{
+  UNUSED(vp);
+  return EXIT_SUCCESS;
+}
+
 /* -> create a struct for initial data reader. 
 // note: checkpoint file includes all info the system. */
 Elliptica_ID_Reader_T *elliptica_id_reader_init (
