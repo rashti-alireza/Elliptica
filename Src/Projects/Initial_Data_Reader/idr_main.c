@@ -199,8 +199,10 @@ int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr)
 /* ->return success. free everything */
 int elliptica_id_reader_free(Elliptica_ID_Reader_T *idr)
 {
-  FUNC_TIC
   Uint n;
+  
+  if (!idr)
+    return EXIT_SUCCESS;
   
   Free(idr->system);
   
@@ -221,7 +223,7 @@ int elliptica_id_reader_free(Elliptica_ID_Reader_T *idr)
   Free(idr->params_lv);
   Free(idr->params_rv);
   
-  FUNC_TOC
+  Free(idr);
   return EXIT_SUCCESS;
 }
 
