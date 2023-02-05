@@ -3,6 +3,8 @@
 // February 2023
 */
 
+#include "idr_main.h"
+
 /* exporting initial data for evolution codes */
 
 /* field dictionary */
