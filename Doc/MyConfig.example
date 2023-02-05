@@ -98,6 +98,9 @@ DFLAGS += -DCCS_READER_OPTIMIZE
 ## special inlcudes and libraries:
 ##################################
 
+# for Initial_Data_Reader project
+SPECIAL_INCS += -I/$(TOP)/Inc
+
 # for omp for clang
 #SPECIAL_INCS += -I/usr/lib/gcc/x86_64-linux-gnu/6.3.0/include
 #SPECIAL_LIBS += -L/usr/lib/gcc/x86_64-linux-gnu/6.3.0
