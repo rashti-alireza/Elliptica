@@ -424,8 +424,11 @@ void idexp_free(ID_Export_T *pnt)
 
 /* get (x,y,z) points from id_reader struct and find the corresponding (X,Y,Z) coords. 
 // NOTE: no allocation done for (x,y,z), i.e., we assuemd idr struct already contains 
-// (x,y,z) coords. */
-void idexp_find_XYZ_from_xyz(Elliptica_ID_Reader_T *const idr, ID_Export_T *const pnt)
+// (x,y,z) coords.
+// NOTE: CM denotes shifting of GIVEN (x,y,z) coords as follows:
+// (x,y,z) = (x,y,z)' - CM => (x,y,z) + CM = (x,y,z)', prime denotes elliptica coords. */
+void idexp_find_XYZ_from_xyz(Elliptica_ID_Reader_T *const idr, 
+                             ID_Export_T *const pnt,const double *const CM)
 {
   FUNC_TIC
 
@@ -456,9 +459,9 @@ void idexp_find_XYZ_from_xyz(Elliptica_ID_Reader_T *const idr, ID_Export_T *cons
     Patch_T *patch = 0;
     double x[3],X[3];
     
-    x[0] = pnt->x[p];
-    x[1] = pnt->y[p];
-    x[2] = pnt->z[p];
+    x[0] = pnt->x[p] + CM[0];
+    x[1] = pnt->y[p] + CM[1];
+    x[2] = pnt->z[p] + CM[2];
     patch = x_in_which_patch(x,grid->patch,grid->np);
     if (patch && X_of_x(X,x,patch))
     {
