@@ -37,7 +37,7 @@ const char *checkpnt_path  = "path/to/elliptica/checkpoint/file"
 const int Npnts = 16*16*16; // for all x,y,z coords
 
 // initialize
-Elliptica_ID_Reader_T *idr = elliptica_id_reader_init(checkpnt_path);
+Elliptica_ID_Reader_T *idr = elliptica_id_reader_init(checkpnt_path,"asymptotically_inertial");
 
 // the list of fields to be interpolated. should be comma separated
 idr->ifields  = "alpha,betax,betay,betaz,adm_gxx,adm_gxy";
@@ -76,9 +76,13 @@ int Initial_Data_Reader(void *vp)
 }
 
 /* -> create a struct for initial data reader. 
-// note: checkpoint file includes all info the system. */
+// checkpnt: full path to the checkpoint file (file includes all info about the system)
+// option: for any special treatment of the interpolating fields.
+// it is case insensitive. options include:
+// asymptotically_inertial: fields are exported for a asymptotically inertial frame */
 Elliptica_ID_Reader_T *elliptica_id_reader_init (
-  const char *const checkpnt/* path/to/elliptica/checkpoint/file */
+  const char *const checkpnt/* path/to/elliptica/checkpoint/file */,
+  const char *const option/* the option for export */
   )
 {
   FUNC_TIC
@@ -112,6 +116,8 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
   // which ID system
   par = parameter_query_from_checkpoint("Project",file);
   idr->system = dup_s(par->rv);
+  // which option
+  idr->option = dup_s(option);
   
   // alloc field
   for (nf = 0; Field_Dictionary[nf]; nf++);
@@ -183,7 +189,8 @@ int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr)
 {
   FUNC_TIC
 
-  if (strcmp_i(idr->system,"BH_NS_binary_initial_data"))
+  if (strcmp_i(idr->system,"BH_NS_binary_initial_data") &&
+      strcmp_i(idr->option,"asymptotically_inertial"))
   {
     bhns_evo_exporting_initial_data(idr);
   }
@@ -205,6 +212,7 @@ int elliptica_id_reader_free(Elliptica_ID_Reader_T *idr)
     return EXIT_SUCCESS;
   
   Free(idr->system);
+  Free(idr->option);
   
   // free fields
   for (n = 0; n < idr->nfield; n++)

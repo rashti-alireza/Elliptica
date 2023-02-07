@@ -11,6 +11,7 @@ typedef struct ELLIPTICA_ID_READER_T
   char checkpoint_path[EIDR_MAX_STR];// path/to/elliptica/checkpoint/file
   const char *ifields;// input fields, e.g., "alpha,betax,adm_gxx"
   char *system;// the ID system, e.g., BHNS, NSNS, etc.
+  char *option;// options for exportation, e.g., asymptotically_inertial
   Uint nfield;// total number of Field_Dictionary
   double **field;// value = field[indx(Field_Dictionary[i])][ijk]
   double npoints;// number of (x,y,z) coords
@@ -26,7 +27,10 @@ typedef struct ELLIPTICA_ID_READER_T
 }Elliptica_ID_Reader_T;
 
 Elliptica_ID_Reader_T *elliptica_id_reader_init (
-  const char *const checkpnt/* path/to/elliptica/checkpoint/file */);
+  const char *const checkpnt/* path/to/elliptica/checkpoint/file */,
+  const char *const option/* the option for export */
+  );
+
 int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr);
 int elliptica_id_reader_free(Elliptica_ID_Reader_T *idr);
 
