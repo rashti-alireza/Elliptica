@@ -77,8 +77,9 @@ int Initial_Data_Reader(void *vp)
 
 /* -> create a struct for initial data reader. 
 // checkpnt: full path to the checkpoint file (file includes all info about the system)
-// option: for any special treatment of the interpolating fields.
-// it is case insensitive. options include:
+// option: for any special treatment/request from the interpolated fields.
+// it is case insensitive. to combine more options use ';'.
+// options include:
 // asymptotically_inertial: fields are exported for a asymptotically inertial frame */
 Elliptica_ID_Reader_T *elliptica_id_reader_init (
   const char *const checkpnt/* path/to/elliptica/checkpoint/file */,
