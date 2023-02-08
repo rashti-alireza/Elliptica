@@ -57,6 +57,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   {
     TOV->h_cent = h_cent_new;
     solve_ODE_enthalpy_approach(TOV);
+    printf("m == %f\n", m); //////////////////////////////////////////
     m = calculate_baryonic_mass(TOV);
     
     /* as long as the mass is less than desired mass, increase enthalpy
