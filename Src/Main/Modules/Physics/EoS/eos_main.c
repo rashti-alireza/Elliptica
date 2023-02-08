@@ -202,8 +202,6 @@ static void populate_EoS(EoS_T *const eos)
       plan_interpolation(interp_p);
       eos->cubic_spline->interp_p = interp_p;
       
-      printf("Pressure spline coefficient a == %E\n", interp_p->N_cubic_spline_1d->x[0]); //Debugging///////////////////////
-      
       // e:
       Interpolation_T *interp_e = init_interpolation();
       interp_e->method          = "Natural_Cubic_Spline_1D";
@@ -263,47 +261,38 @@ static void populate_EoS(EoS_T *const eos)
     ////////////////////////////////////////////////////////////////////////////////Tabular EOS
     //Generates tabular EOS
     else if (strcmp_i(eos->type, "tabular") || strcmp_i(eos->type, "tab"))
-    {
-        printf("Generating tabular EOS.\n");
-        const Uint sample_s = (Uint)Geti(P_"sample_size");          //# of tabular EOS data points, input as integer parameter
+    {        
+        FILE* eos_table = fopen(Pgets("eos_table_name"),"r");        //Name of EOS table
+        if (!eos_table) { Error0("ERROR: Could not open EOS table."); }
+        
+        //Reads number of data points in EOS file.
+        const Uint sample_s = get_sample_size(Pgets("eos_table_name"));   //Defined in eos_tabular.c
+        printf("EOS sample size: %i\n", sample_s);/////////////////////
+        
         eos->cubic_spline->sample_size = sample_s;
         double *h_sample    = alloc_double(sample_s);               //Arrays for tabular data points
         double *p_sample    = alloc_double(sample_s);
         double *e_sample    = alloc_double(sample_s);
         double *rho0_sample = alloc_double(sample_s);
         
-        //Reads in EOS data from text file. Table format [pressure] [rest-mass density] [energy density] [enthalpy] (in columns).
+        //Reads EOS data from text file. Table format [pressure] [rest-mass density] [energy density] [enthalpy] (in columns).
         double h_point;
         double p_point;
         double rho0_point;
         double e_point;
-        FILE* eos_table = fopen(Pgets("eos_table_name"),"r");        //Name of EOS table (CHECK FOR PRIOR CONVENTION)///////////////
-        if (!eos_table) { Error0("ERROR: Could not open EOS table."); }
         
-        for (int line=0; line<sample_s; line++)
+        for (unsigned int line=0; line<sample_s; line++)
         {
             fscanf(eos_table, "%lf %lf %lf %lf\n", &p_point, &rho0_point, &e_point, &h_point);
             p_sample[line] = p_point;
             h_sample[line] = h_point;
             rho0_sample[line] = rho0_point;
             e_sample[line] = e_point;
-            if (line % 10 == 0) { printf("Line: %E %E %E %E\n", p_point, rho0_point, e_point, h_point); }
         }
-        
-        printf("Data arrays:\n");                           ////////////////Debugging//////////////
-        for (int ctr=0; ctr<sample_s; ctr++)
-        {
-            if (ctr % 10 == 0)
-            {
-                printf("h_sample[%i] == %E\n", ctr, h_sample[ctr]);
-                printf("p_sample[%i] == %E\n", ctr, p_sample[ctr]);
-                printf("e_sample[%i] == %E\n", ctr, e_sample[ctr]);
-                printf("rho0_sample[%i] == %E\n", ctr, rho0_sample[ctr]);
-            }
-        }
-        
-        printf("h[0] == %lf\n", h_sample[0]);               ///////////////////Debugging///////////////
-        printf("h[15] == %lf\n", h_sample[15]);
+        fclose(eos_table);
+        //Sets interpolation bounds.
+        eos->cubic_spline->h_floor = h_sample[0];
+        eos->cubic_spline->h_max = h_sample[sample_s-1];
         
         //Saves data points in EOS.
         eos->cubic_spline->sample_size = sample_s;
@@ -311,7 +300,7 @@ static void populate_EoS(EoS_T *const eos)
         eos->cubic_spline->p_sample    = p_sample;
         eos->cubic_spline->e_sample    = e_sample;
         eos->cubic_spline->rho0_sample = rho0_sample;
-        eos->cubic_spline->h_floor     = Getd(P_"enthalpy_floor");
+        //eos->cubic_spline->h_floor     = Getd(P_"enthalpy_floor");
         
         // p:
         Interpolation_T *interp_p = init_interpolation();
@@ -322,8 +311,6 @@ static void populate_EoS(EoS_T *const eos)
         interp_p->N_cubic_spline_1d->No_Warn = 1;/* suppress warning */
         plan_interpolation(interp_p);
         eos->cubic_spline->interp_p = interp_p;
-        
-        printf("Pressure spline coefficient a == %E\n", interp_p->N_cubic_spline_1d->x[0]); //Debugging///////////////////////
         
         // e:
         Interpolation_T *interp_e = init_interpolation();
@@ -349,7 +336,7 @@ static void populate_EoS(EoS_T *const eos)
         eos->pressure          = EoS_p_h_tab;
         eos->energy_density    = EoS_e_h_tab;
         eos->rest_mass_density = EoS_rho0_h_tab;
-        eos->specific_internal_energy = EoS_e0_h_tab; ///////////////FIXME: Not implemented yet
+        eos->specific_internal_energy = EoS_e0_h_tab;
         eos->de_dh    = EoS_de_dh_h_tab;
         eos->drho0_dh = EoS_drho0_dh_h_tab;
         
