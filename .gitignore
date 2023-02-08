@@ -1,41 +1,30 @@
-# stand alone project:
-Src/Projects/NS_NS_Binary_Initial_Data
-Src/Projects/Single_BH_Initial_Data
-Src/Projects/BH_NS_Binary_Initial_Data
-Src/Projects/Approximate_Killing_Vector
+## stand alone project:
+/Src/Projects/NS_NS_Binary_Initial_Data
+/Src/Projects/Single_BH_Initial_Data
+/Src/Projects/BH_NS_Binary_Initial_Data
+/Src/Projects/Approximate_Killing_Vector
 
-# folder Bin
-Bin
+## parameter directory
+/Parfiles/*
+/parfiles/*
+/Parfile/*
+/parfile/*
 
-# output directory
-*_output_*/
-
-# parameter directory
-Parfiles/*
-parfiles/*
-Parfile/*
-parfile/*
-
-# Trash directory
+## Trash directory
 Trash/*
 
-# gnu makes
+## gnu makes
 makefile
 MyConfig
 
-# ctags
+## ctags
 tags
 
-# backup dir
-backup
+## Lib and Exe
+/Lib
+/Exe
 
-# Lib and Exe
-Lib/*
-Exe/*
-
-# dependency files
-.dep
-
-# auto-generated things:
+## auto-generated things:
 projects_data_base_MADE_BY_MAKE.c
 DEADJOE
+
