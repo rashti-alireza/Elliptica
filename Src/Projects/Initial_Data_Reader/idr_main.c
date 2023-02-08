@@ -193,7 +193,7 @@ int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr)
   if (strcmp_i(idr->system,"BH_NS_binary_initial_data") &&
       strcmp_i(idr->option,"asymptotically_inertial"))
   {
-    bhns_evo_exporting_initial_data(idr);
+    bhns_read_id_asymptotically_inertial(idr);
   }
   else
   {

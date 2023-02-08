@@ -11,7 +11,7 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
 
 int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr);
 int elliptica_id_reader_free(Elliptica_ID_Reader_T *idr);
-void bhns_evo_exporting_initial_data(Elliptica_ID_Reader_T *const idr);
+void bhns_read_id_asymptotically_inertial(Elliptica_ID_Reader_T *const idr);
 
 static void set_param_from_evo(
           const char *const lv/* e.g., force_balance */, 
