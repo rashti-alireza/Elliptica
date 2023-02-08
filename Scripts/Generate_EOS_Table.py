@@ -83,22 +83,16 @@ def enthalpy(rho0_th, Ks, Gammas, rho0_val):
     
 
 if __name__ == "__main__":
-    points = 100
+    points = 1000
     rho0_th = [2.3674e-04, 8.1147e-04, 1.6191e-03]
     K0 = 8.9493e-02
     Gammas = [1.3569e+00, 3.0050e+00, 2.9880e+00, 2.8510e+00]
     name = "eos_test_table.txt"
-    rho0_i = 1E-6
-    rho0_f = 2e-2
+    rho0_i = 1E-9
+    rho0_f = 3e-3
     Ks = generate_Ks(rho0_th, K0, Gammas)
-    print("Ks: ")
-    print(Ks)
     
     print_SLy_pwp(rho0_th, K0, Gammas, name, rho0_i, rho0_f, points)
-    
-    rho0_value = float(input("Enter rho0 value: "))
-    print("Interval: " + str(find_interval(rho0_value, rho0_th)))
-    print("p(rho0 = " + str(rho0_value) + ") = " + str(pressure(rho0_th, Ks, Gammas, rho0_value)))
 
 
 
