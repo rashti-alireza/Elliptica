@@ -23,6 +23,7 @@ tags
 ## Lib and Exe
 /Lib
 /Exe
+/ID_Reader
 
 ## auto-generated things:
 projects_data_base_MADE_BY_MAKE.c
