@@ -238,7 +238,7 @@ void
 // NOTE: the order of fields_name_str and evo_fields_name_str MUST
 // be the same.*/
 void 
-  idexp_interpolate_fields_and_save_in_id_reader
+  idexp_interpolate_fields_and_save_in_array
     (Elliptica_ID_Reader_T *const idr, ID_Export_T *const pnt,
      const char *const fields_name_str/* comma separated */,
      const char *const evo_fields_name_str/* comma separated */)

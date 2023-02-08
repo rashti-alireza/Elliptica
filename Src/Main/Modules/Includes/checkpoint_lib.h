@@ -58,7 +58,7 @@ void idexp_find_XYZ_from_xyz(struct ELLIPTICA_ID_READER_T *const idr,
 
 
 void 
-  idexp_interpolate_fields_and_save_in_id_reader
+  idexp_interpolate_fields_and_save_in_array
     (struct ELLIPTICA_ID_READER_T *const idr, ID_Export_T *const pnt,
      const char *const fields_name_str/* comma separated */,
      const char *const evo_fields_name_str/* comma separated */);
