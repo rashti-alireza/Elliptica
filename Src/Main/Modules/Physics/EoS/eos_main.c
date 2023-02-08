@@ -81,12 +81,17 @@ static void populate_EoS(EoS_T *const eos)
   sprintf(eos->unit,"%s",       Gets(P_"unit"));
   
   /* NOTE: order matters */
-  gamma  = read_EoS_in_parameter_file(Gets(P_"Gamma"),&N);
-  K      = read_EoS_in_parameter_file(Gets(P_"K0"),0);/* this is K0 */
+  if (strcmp_i(eos->type,"polytropic") || strcmp_i(eos->type,"piecewise_polytropic") || 
+        strcmp_i(eos->type,"polytrop") || strcmp_i(eos->type, "pwp") || strcmp_i(eos->type,"pwp_natural_cubic_spline"))
+  {
+    gamma  = read_EoS_in_parameter_file(Gets(P_"Gamma"),&N);
+    K      = read_EoS_in_parameter_file(Gets(P_"K0"),0);/* this is K0 */
+  }
   
   /* if we have a single polytropic eos, then we don't have rho0_th  */
   if (!strcmp_i(eos->type,"polytropic") &&
-      !strcmp_i(eos->type,"polytrop"))
+      !strcmp_i(eos->type,"polytrop") &&
+      !strcmp_i(eos->type,"tabular"))
     rho0_th = read_EoS_in_parameter_file(Gets(P_"rho0_th"),0);   
   else
     rho0_th = 0;
@@ -197,6 +202,8 @@ static void populate_EoS(EoS_T *const eos)
       plan_interpolation(interp_p);
       eos->cubic_spline->interp_p = interp_p;
       
+      printf("Pressure spline coefficient a == %E\n", interp_p->N_cubic_spline_1d->x[0]); //Debugging///////////////////////
+      
       // e:
       Interpolation_T *interp_e = init_interpolation();
       interp_e->method          = "Natural_Cubic_Spline_1D";
@@ -252,6 +259,107 @@ static void populate_EoS(EoS_T *const eos)
       eos->de_dh    = EoS_de_dh_h_p;
       eos->drho0_dh = EoS_drho0_dh_h_p;
     }
+    
+    ////////////////////////////////////////////////////////////////////////////////Tabular EOS
+    //Generates tabular EOS
+    else if (strcmp_i(eos->type, "tabular") || strcmp_i(eos->type, "tab"))
+    {
+        printf("Generating tabular EOS.\n");
+        const Uint sample_s = (Uint)Geti(P_"sample_size");          //# of tabular EOS data points, input as integer parameter
+        eos->cubic_spline->sample_size = sample_s;
+        double *h_sample    = alloc_double(sample_s);               //Arrays for tabular data points
+        double *p_sample    = alloc_double(sample_s);
+        double *e_sample    = alloc_double(sample_s);
+        double *rho0_sample = alloc_double(sample_s);
+        
+        //Reads in EOS data from text file. Table format [pressure] [rest-mass density] [energy density] [enthalpy] (in columns).
+        double h_point;
+        double p_point;
+        double rho0_point;
+        double e_point;
+        FILE* eos_table = fopen(Pgets("eos_table_name"),"r");        //Name of EOS table (CHECK FOR PRIOR CONVENTION)///////////////
+        if (!eos_table) { Error0("ERROR: Could not open EOS table."); }
+        
+        for (int line=0; line<sample_s; line++)
+        {
+            fscanf(eos_table, "%lf %lf %lf %lf\n", &p_point, &rho0_point, &e_point, &h_point);
+            p_sample[line] = p_point;
+            h_sample[line] = h_point;
+            rho0_sample[line] = rho0_point;
+            e_sample[line] = e_point;
+            if (line % 10 == 0) { printf("Line: %E %E %E %E\n", p_point, rho0_point, e_point, h_point); }
+        }
+        
+        printf("Data arrays:\n");                           ////////////////Debugging//////////////
+        for (int ctr=0; ctr<sample_s; ctr++)
+        {
+            if (ctr % 10 == 0)
+            {
+                printf("h_sample[%i] == %E\n", ctr, h_sample[ctr]);
+                printf("p_sample[%i] == %E\n", ctr, p_sample[ctr]);
+                printf("e_sample[%i] == %E\n", ctr, e_sample[ctr]);
+                printf("rho0_sample[%i] == %E\n", ctr, rho0_sample[ctr]);
+            }
+        }
+        
+        printf("h[0] == %lf\n", h_sample[0]);               ///////////////////Debugging///////////////
+        printf("h[15] == %lf\n", h_sample[15]);
+        
+        //Saves data points in EOS.
+        eos->cubic_spline->sample_size = sample_s;
+        eos->cubic_spline->h_sample    = h_sample;
+        eos->cubic_spline->p_sample    = p_sample;
+        eos->cubic_spline->e_sample    = e_sample;
+        eos->cubic_spline->rho0_sample = rho0_sample;
+        eos->cubic_spline->h_floor     = Getd(P_"enthalpy_floor");
+        
+        // p:
+        Interpolation_T *interp_p = init_interpolation();
+        interp_p->method          = "Natural_Cubic_Spline_1D";
+        interp_p->N_cubic_spline_1d->f   = p_sample;
+        interp_p->N_cubic_spline_1d->x   = h_sample;
+        interp_p->N_cubic_spline_1d->N   = sample_s;
+        interp_p->N_cubic_spline_1d->No_Warn = 1;/* suppress warning */
+        plan_interpolation(interp_p);
+        eos->cubic_spline->interp_p = interp_p;
+        
+        printf("Pressure spline coefficient a == %E\n", interp_p->N_cubic_spline_1d->x[0]); //Debugging///////////////////////
+        
+        // e:
+        Interpolation_T *interp_e = init_interpolation();
+        interp_e->method          = "Natural_Cubic_Spline_1D";
+        interp_e->N_cubic_spline_1d->f   = e_sample;
+        interp_e->N_cubic_spline_1d->x   = h_sample;
+        interp_e->N_cubic_spline_1d->N   = sample_s;
+        interp_e->N_cubic_spline_1d->No_Warn = 1;/* suppress warning */
+        plan_interpolation(interp_e);
+        eos->cubic_spline->interp_e = interp_e;
+      
+        // rho0:
+        Interpolation_T *interp_rho0 = init_interpolation();
+        interp_rho0->method          = "Natural_Cubic_Spline_1D";
+        interp_rho0->N_cubic_spline_1d->f   = rho0_sample;
+        interp_rho0->N_cubic_spline_1d->x   = h_sample;
+        interp_rho0->N_cubic_spline_1d->N   = sample_s;
+        interp_rho0->N_cubic_spline_1d->No_Warn = 1;/* suppress warning */
+        plan_interpolation(interp_rho0);
+        eos->cubic_spline->interp_rho0 = interp_rho0;
+      
+        /* assign functions for (p, e, rho0) */
+        eos->pressure          = EoS_p_h_tab;
+        eos->energy_density    = EoS_e_h_tab;
+        eos->rest_mass_density = EoS_rho0_h_tab;
+        eos->specific_internal_energy = EoS_e0_h_tab; ///////////////FIXME: Not implemented yet
+        eos->de_dh    = EoS_de_dh_h_tab;
+        eos->drho0_dh = EoS_drho0_dh_h_tab;
+        
+        h_sample = 0;
+        p_sample = 0;
+        e_sample = 0;
+        rho0_sample = 0;
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////
+    
     else
     {
       Error0(NO_JOB);
@@ -297,6 +405,10 @@ static void fill_K(EoS_T *const eos)
   {
     K[i] = K[i-1]*pow(rho0[i],(n[i]-n[i-1])/(n[i-1]*n[i]));
   }
+  
+  //////////////Debugging/////////////////
+  printf("K values:\n");
+  for(i = 0; i < eos->N; ++i) { printf("K%i == %E\n", i, K[i]); }
 }
 
 /* filling a by requiring the continuity of energy density */

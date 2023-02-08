@@ -18,6 +18,22 @@ double EoS_de_dh_h_p(EoS_T *const eos);
 double EoS_p_h_pwp_ncs(EoS_T *const eos);
 double EoS_e_h_pwp_ncs(EoS_T *const eos);
 double EoS_rho0_h_pwp_ncs(EoS_T *const eos);
+
+//////////////////////////////////////////////////Tabular EOS
+double EoS_rho0_h_tab(EoS_T *const eos);
+double EoS_p_h_tab(EoS_T *const eos);
+double EoS_e_h_tab(EoS_T *const eos);
+double EoS_e0_h_tab(EoS_T *const eos);
+double EoS_rho0_h_tab(EoS_T *const eos);
+double EoS_p_h_tab(EoS_T *const eos);
+double EoS_e_h_tab(EoS_T *const eos);
+double EoS_e0_h_tab(EoS_T *const eos);
+double EoS_drho0_dh_h_tab(EoS_T *const eos);
+double EoS_drho0_dh_h_tab(EoS_T *const eos);
+double EoS_de_dh_h_tab(EoS_T *const eos);
+double EoS_de_dh_h_tab(EoS_T *const eos);
+/////////////////////////////////////////////////////
+
 EoS_T *init_EoS(Physics_T *const phys);
 void free_EoS(EoS_T *eos);
 static void populate_EoS(EoS_T *const eos);
