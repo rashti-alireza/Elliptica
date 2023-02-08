@@ -85,6 +85,13 @@ PROJECT_DIR := $(TOP)/Src/Projects
 MODULE_DIR := $(TOP)/Src/Main/Modules
 # core directory, where main.c is, see the above sketch
 CORE_DIR := Core
+# ID reader library
+IDR_TOP := $(TOP)/ID_Reader
+IDR_LIB_DIR := $(IDR_TOP)/lib
+# ID reader library
+IDR_INC_DIR := $(TOP)/ID_Reader/include
+# ID reader library name
+IDR_LIB_NAME := libelliptica_id_reader.a
 # master sub-make file path
 MASTER_SUB_MAKE_FILE := $(TOP)/Doc/master_submake
 # sub-make file name stem in each directory
@@ -318,6 +325,8 @@ clean:
 	@echo $(PR_L0)
 	@$(call PR_TASK_relPATH,"rm -rf",$(LIB_DIR))
 	@-rm -rf $(LIB_DIR)
+	@$(call PR_TASK_relPATH,"rm -rf",$(IDR_TOP))
+	@-rm -rf $(IDR_TOP)
 #	@$(call PR_TASK_relPATH,"rm -rf",$(EXEC_DIR))
 #	@-rm -rf $(EXEC_DIR)
 	@$(call PR_TASK_relPATH,"rm -rf",$(auto_gen_c_file))
@@ -328,6 +337,18 @@ clean:
 	    $(MAKE) $(SUB_MAKE_FLAGS) -C $$d $@; \
 	  done	 	
 .PHONY: clean
+
+.PHONY: ID_Reader
+ID_Reader:$(EXEC)
+	@mkdir -p $(IDR_LIB_DIR)
+	@mkdir -p $(IDR_INC_DIR)
+	@cp $(PROJECT_DIR)/Includes/elliptica_id_reader_lib.h $(IDR_INC_DIR)
+	@$(call cmd_and_pr_func, $(AR) $(ARFLAGS) $(IDR_LIB_DIR)/$(IDR_LIB_NAME) \
+           $(wildcard $(LIB_DIR)/*.a), $(IDR_LIB_NAME))
+	@echo $(PR_L0)
+	@echo $(PR_F1) "find '$(IDR_LIB_NAME)' at '$(IDR_LIB_DIR)'"
+	@echo $(PR_F1) "Thanks!"
+
 #######################################################################
 ####################################
 ## some tools for print and compile:
