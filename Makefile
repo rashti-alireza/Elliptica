@@ -343,6 +343,7 @@ ID_Reader:$(EXEC)
 	@mkdir -p $(IDR_LIB_DIR)
 	@mkdir -p $(IDR_INC_DIR)
 	@cp $(PROJECT_DIR)/Includes/elliptica_id_reader_lib.h $(IDR_INC_DIR)
+	@cp $(TOP)/Src/Main/$(CORE_DIR)/elliptica_system_lib.h $(IDR_INC_DIR)
 	@$(call cmd_and_pr_func, $(AR) $(ARFLAGS) $(IDR_LIB_DIR)/$(IDR_LIB_NAME) \
            $(wildcard $(LIB_DIR)/*.a), $(IDR_LIB_NAME))
 	@echo $(PR_L0)
