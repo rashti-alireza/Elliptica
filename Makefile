@@ -338,16 +338,22 @@ clean:
 	  done	 	
 .PHONY: clean
 
-.PHONY: ID_Reader
-ID_Reader:$(EXEC)
+.PHONY: id_reader
+id_reader:$(EXEC)
 	@mkdir -p $(IDR_LIB_DIR)
 	@mkdir -p $(IDR_INC_DIR)
 	@cp $(PROJECT_DIR)/Includes/elliptica_id_reader_lib.h $(IDR_INC_DIR)
 	@cp $(TOP)/Src/Main/$(CORE_DIR)/elliptica_system_lib.h $(IDR_INC_DIR)
-	@$(call cmd_and_pr_func, $(AR) $(ARFLAGS) $(IDR_LIB_DIR)/$(IDR_LIB_NAME) \
-           $(wildcard $(LIB_DIR)/*.a), $(IDR_LIB_NAME))
+## --> making lib from all object files and update the lib for each new object file
+	@for d in $(O_DIRS); \
+	  do \
+	  	o=$$(find $$d -type f); \
+	  	$(AR) $(ARFLAGS) $(IDR_LIB_DIR)/$(IDR_LIB_NAME) $$o; \
+	   done;
+## empty command for print
+	@$(call cmd_and_pr_func, , $@)
 	@echo $(PR_L0)
-	@echo $(PR_F1) "find '$(IDR_LIB_NAME)' at '$(IDR_LIB_DIR)'"
+	@echo $(PR_F1) "find the library '$(IDR_LIB_NAME)' at '$(IDR_LIB_DIR)'"
 	@echo $(PR_F1) "Thanks!"
 
 #######################################################################
