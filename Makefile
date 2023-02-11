@@ -352,7 +352,7 @@ id_reader:$(EXEC)
 ## --> empty command for print
 	@$(call cmd_and_pr_func, , $@)
 	@echo $(PR_L0)
-	@echo $(PR_F1) "find the library '$(IDR_LIB_NAME)' at '$(IDR_LIB_DIR)'"
+	@echo $(PR_F1) "find the library and include directories at '$(IDR_TOP)'"
 	@echo $(PR_F1) "Thanks!"
 .PHONY: id_reader
 
