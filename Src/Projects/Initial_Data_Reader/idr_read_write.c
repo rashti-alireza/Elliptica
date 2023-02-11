@@ -11,8 +11,8 @@
 /* given file path, it reads cartesian coordinate from the file
 // then populates pnt struct and finds also X coords. */
 void 
-  idexp_load_Cartesian_coordinates_from_file
-    (const char *const coords_file_path,ID_Export_T *const pnt)
+  idr_load_Cartesian_coordinates_from_file
+    (const char *const coords_file_path,ID_Reader_T *const pnt)
 {
   FUNC_TIC
   
@@ -112,8 +112,8 @@ void
 // NOTE: the order of fields_name_str and evo_fields_name_str MUST
 // be the same.*/
 void 
-  idexp_interpolate_fields_and_write_to_file
-    (FILE *const file,ID_Export_T *const pnt,
+  idr_interpolate_fields_and_write_to_file
+    (FILE *const file,ID_Reader_T *const pnt,
      const char *const fields_name_str/* comma separated */,
      const char *const evo_fields_name_str/* comma separated */)
 {
@@ -238,8 +238,8 @@ void
 // NOTE: the order of fields_name_str and evo_fields_name_str MUST
 // be the same.*/
 void 
-  idexp_interpolate_fields_and_save_in_array
-    (Elliptica_ID_Reader_T *const idr, ID_Export_T *const pnt,
+  idr_interpolate_fields_and_save_in_array
+    (Elliptica_ID_Reader_T *const idr, ID_Reader_T *const pnt,
      const char *const fields_name_str/* comma separated */,
      const char *const evo_fields_name_str/* comma separated */)
 {
@@ -365,7 +365,7 @@ void
 // fields_name will be the header of this file, for instance,
 // this argument can be evaluation's fields name */
 void *
-  idexp_new_binary_file_to_write
+  idr_new_binary_file_to_write
     (const char *const file_path,const char *const fields_name)
 {
   FILE *file;
@@ -382,7 +382,7 @@ void *
 }
 
 /* close the given ID fields file with appropriate footer */
-void idexp_close_file(FILE *file)
+void idr_close_file(FILE *file)
 {
   char title_line[STR_LEN_MAX];
   char *const p_title_line = title_line;/* to avoid GCC warning for FWriteP_bin */
@@ -395,16 +395,16 @@ void idexp_close_file(FILE *file)
   Fclose(file);
 }
 
-/* alloc struct ID_Export_T */
-ID_Export_T *idexp_init(void)
+/* alloc struct ID_Reader_T */
+ID_Reader_T *idr_init(void)
 {
-  ID_Export_T *pnt = calloc(1,sizeof(*pnt));
+  ID_Reader_T *pnt = calloc(1,sizeof(*pnt));
   IsNull(pnt);
   return pnt;
 }
 
-/* free struct ID_Export_T */
-void idexp_free(ID_Export_T *pnt)
+/* free struct ID_Reader_T */
+void idr_free(ID_Reader_T *pnt)
 {
   if (!pnt)
     return;
@@ -427,8 +427,8 @@ void idexp_free(ID_Export_T *pnt)
 // (x,y,z) coords.
 // NOTE: CM denotes shifting of GIVEN (x,y,z) coords as follows:
 // (x,y,z) = (x,y,z)' - CM => (x,y,z) + CM = (x,y,z)', prime denotes elliptica coords. */
-void idexp_find_XYZ_from_xyz(Elliptica_ID_Reader_T *const idr, 
-                             ID_Export_T *const pnt,const double *const CM)
+void idr_find_XYZ_from_xyz(Elliptica_ID_Reader_T *const idr, 
+                             ID_Reader_T *const pnt,const double *const CM)
 {
   FUNC_TIC
 
