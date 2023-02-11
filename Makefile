@@ -350,7 +350,7 @@ id_reader:$(EXEC)
 	  	o=$$(find $$d -type f); \
 	  	$(AR) $(ARFLAGS) $(IDR_LIB_DIR)/$(IDR_LIB_NAME) $$o; \
 	   done;
-## empty command for print
+## --> empty command for print
 	@$(call cmd_and_pr_func, , $@)
 	@echo $(PR_L0)
 	@echo $(PR_F1) "find the library '$(IDR_LIB_NAME)' at '$(IDR_LIB_DIR)'"
