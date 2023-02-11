@@ -195,6 +195,16 @@ int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr)
 
   FUNC_TIC
 
+// some sanity checks:
+  if (!idr->ifields)
+  {
+    Error1("No field is set!");
+  }
+  if (!idr->x_coords || !idr->y_coords || !idr->z_coords || idr->npoints == 0)
+  {
+    Error1("Coordinate(s) is empty!");
+  }
+
   if (strcmp_i(idr->system,"BH_NS_binary_initial_data") &&
       strcmp_i(idr->option,"generic"))
   {
