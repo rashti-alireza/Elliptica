@@ -87,8 +87,10 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
   const char *const option/* the option for export */
   )
 {
-  FUNC_TIC
-  
+// NOTE: in this function one should not add or use any global variables of Elliptica
+// as they are not initialized yet, e.g., timer, parameters, etc. 
+// ONLY set things in idr struct.
+
   Uint nf;
   
   // some sanity checks
@@ -118,6 +120,8 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
   // which ID system
   par = parameter_query_from_checkpoint("Project",file);
   idr->system = dup_s(par->rv);
+  // add a project parameter
+  idr->param("Project",idr->system,idr);
   // which option
   idr->option = dup_s(option);
   
@@ -129,8 +133,6 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
   
   Fclose(file);
 
-  FUNC_TOC  
-  
   return idr;
 }
 
@@ -151,7 +153,7 @@ static void set_param_from_evo(
   
   idr->params_lv = realloc(idr->params_lv,(nparams+1)*(sizeof(*idr->params_lv)));
   IsNull(idr->params_lv);
-  idr->params_lv[nparams] = dup_s(rv);
+  idr->params_lv[nparams] = dup_s(lv);
 
   idr->params_rv = realloc(idr->params_rv,(nparams+1)*(sizeof(*idr->params_rv)));
   IsNull(idr->params_rv);
@@ -189,6 +191,8 @@ static Uint find_field_index(const char *const fname)
 /* ->return success. interpolate fields for the given coordinates */
 int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr)
 {
+  init_global_variables(".");
+
   FUNC_TIC
 
   if (strcmp_i(idr->system,"BH_NS_binary_initial_data") &&
@@ -207,6 +211,12 @@ int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr)
   }
   
   FUNC_TOC
+  
+  /* free parameter data base */  
+  free_parameter_db();
+  /* free grid data base */
+  free_grid_db();
+
   return EXIT_SUCCESS;
 }
 

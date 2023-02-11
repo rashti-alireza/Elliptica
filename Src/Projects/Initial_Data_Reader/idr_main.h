@@ -13,7 +13,9 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
 int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr);
 int elliptica_id_reader_free(Elliptica_ID_Reader_T *idr);
 void bhns_export_id_generic(Elliptica_ID_Reader_T *const idr);
-
+int init_global_variables(const char *const path);
+void free_parameter_db(void);
+void free_grid_db(void);
 static void set_param_from_evo(
           const char *const lv/* e.g., force_balance */, 
           const char *const rv/* e.g., on */,
