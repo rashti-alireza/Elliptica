@@ -81,7 +81,7 @@ int Initial_Data_Reader(void *vp)
 // option: for any special treatment/request from the interpolated fields.
 // it is case insensitive.
 // options include:
-// generic: a standard (default) method for exporting ID. */
+// generic: a standard (default) method for exporting ID, what is done for BAM. */
 Elliptica_ID_Reader_T *elliptica_id_reader_init (
   const char *const checkpnt/* path/to/elliptica/checkpoint/file */,
   const char *const option/* the option for export */
