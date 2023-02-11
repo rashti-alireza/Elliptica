@@ -342,7 +342,6 @@ id_reader:$(EXEC)
 	@mkdir -p $(IDR_LIB_DIR)
 	@mkdir -p $(IDR_INC_DIR)
 	@cp $(PROJECT_DIR)/Includes/elliptica_id_reader_lib.h $(IDR_INC_DIR)
-	@cp $(TOP)/Src/Main/$(CORE_DIR)/elliptica_system_lib.h $(IDR_INC_DIR)
 ## --> making lib from all object files and update the lib for each new object file
 	@for d in $(O_DIRS); \
 	  do \
