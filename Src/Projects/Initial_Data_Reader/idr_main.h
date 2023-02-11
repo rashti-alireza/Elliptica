@@ -1,4 +1,5 @@
 #include "core_lib.h"
+#include "id_reader_lib.h"
 #include "elliptica_id_reader_lib.h"
 #include "checkpoint_lib.h"
 
