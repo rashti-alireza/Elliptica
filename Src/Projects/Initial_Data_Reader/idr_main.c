@@ -37,7 +37,7 @@ const char *checkpnt_path  = "path/to/elliptica/checkpoint/file"
 const int Npnts = 16*16*16; // for all x,y,z coords
 
 // initialize
-Elliptica_ID_Reader_T *idr = elliptica_id_reader_init(checkpnt_path,"asymptotically_inertial");
+Elliptica_ID_Reader_T *idr = elliptica_id_reader_init(checkpnt_path,"generic");
 
 // the list of fields to be interpolated. should be comma separated
 idr->ifields  = "alpha,betax,betay,betaz,adm_gxx,adm_gxy";
@@ -47,7 +47,8 @@ idr->y_coords = a pointer to double type 1D array of Cartesian y coord values;
 idr->z_coords = a pointer to double type 1D array of Cartesian z coord values;
 
 // set parameter for elliptica
-idr->param("bh_filler","on",idr);
+idr->param("BHNS_filler_method","ChebTn_Ylm_perfect_s2",idr);
+idr->param("ADM_B1I_form","zero",idr);
 
 // interpolate
 elliptica_id_reader_interpolate(idr);
@@ -80,7 +81,7 @@ int Initial_Data_Reader(void *vp)
 // option: for any special treatment/request from the interpolated fields.
 // it is case insensitive.
 // options include:
-// asymptotically_inertial: fields are exported for a asymptotically inertial frame */
+// generic: a standard (default) method for exporting ID. */
 Elliptica_ID_Reader_T *elliptica_id_reader_init (
   const char *const checkpnt/* path/to/elliptica/checkpoint/file */,
   const char *const option/* the option for export */
@@ -198,7 +199,7 @@ int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr)
   /*else if (strcmp_i(idr->system,"NS_NS_binary_initial_data") &&
            strcmp_i(idr->option,"asymptotically_inertial"))
   {
-    nsns_read_id_asymptotically_inertial(idr);
+    nsns_read_id_generic(idr);
   }*/
   else
   {
