@@ -102,7 +102,7 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
   Elliptica_ID_Reader_T *idr = calloc(1,sizeof(*idr));
   IsNull(idr);
   FILE *file = 0;
-  const Parameter_T *par = 0;
+  Parameter_T *par = 0;
   
   // set path
   sprintf(idr->checkpoint_path,"%s",checkpnt);
@@ -130,7 +130,8 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
   idr->nfield = nf;
   idr->field  = calloc(nf,sizeof(*idr->field));
   IsNull(idr->field);
-  
+
+  free_given_parameter(par);
   Fclose(file);
 
   return idr;
