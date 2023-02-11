@@ -307,6 +307,9 @@ void
   f = 0;
   while(fields_name[f])
   {
+    // alloc mem field for id reader
+    idr->field[idr->indx(evo_fields[f])] = alloc_double(npoints);
+    
     printf(Pretty0"Interpolating and saving: %s\n",fields_name[f]);
     fflush(stdout);
 
