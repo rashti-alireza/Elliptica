@@ -321,8 +321,8 @@ MyConfig:
 ##
 ## clean Lib, auto generated files and dependency files in submake:
 clean:
-	@echo $(PR_F0) "cleaning '$(EXEC)':"
-	@echo $(PR_L0)
+#	@echo $(PR_F0) "cleaning '$(EXEC)':"
+#	@echo $(PR_L0)
 	@$(call PR_TASK_relPATH,"rm -rf",$(LIB_DIR))
 	@-rm -rf $(LIB_DIR)
 	@$(call PR_TASK_relPATH,"rm -rf",$(IDR_TOP))
@@ -338,7 +338,6 @@ clean:
 	  done	 	
 .PHONY: clean
 
-.PHONY: id_reader
 id_reader:$(EXEC)
 	@mkdir -p $(IDR_LIB_DIR)
 	@mkdir -p $(IDR_INC_DIR)
@@ -355,6 +354,7 @@ id_reader:$(EXEC)
 	@echo $(PR_L0)
 	@echo $(PR_F1) "find the library '$(IDR_LIB_NAME)' at '$(IDR_LIB_DIR)'"
 	@echo $(PR_F1) "Thanks!"
+.PHONY: id_reader
 
 #######################################################################
 ####################################
