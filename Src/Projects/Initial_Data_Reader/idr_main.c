@@ -5,7 +5,7 @@
 
 #include "idr_main.h"
 
-/* exporting initial data for evolution codes */
+/* exporting Elliptica initial data for evolution codes */
 
 /* field dictionary */
 static const char *const Field_Dictionary[] =
@@ -18,9 +18,10 @@ static const char *const Field_Dictionary[] =
 "adm_Kyy","adm_Kyz","adm_Kzz",/* extrinsic curvature: K_ij */
 
 /* matter part */
-"grhd_rho",/* primitive rho */
-"grhd_p",/* primitive p */
-"grhd_epsl",/* primitive epsilon: total_energy_density = grhd_rho(1+grhd_epsl)*/
+"grhd_rho",/* primitive rho (rest mass density, rho0 in Elliptica) */
+"grhd_p",/* primitive p (pressure) */
+"grhd_epsl",/* primitive epsilon (specific_internal_energy). 
+            // note: total_energy_density = grhd_rho(1+grhd_epsl) */
 "grhd_vx","grhd_vy","grhd_vz",/* primitive v, measured by an Eulerian observer, 
                               // v^i = u^i/(alpha u^0) + beta^i / alpha
                               // where u^{mu}=(u^0,u^i) is the 4-velocity of the fluid */
@@ -30,10 +31,10 @@ static const char *const Field_Dictionary[] =
 
 
 
-/* tutorial
-// --------
+/* tutorial: how to use ID reader in an evolution code
+// ---------------------------------------------------
 
-const char *checkpnt_path  = "path/to/elliptica/checkpoint/file"
+const char *checkpnt_path  = "full/path/to/elliptica/checkpoint/file"
 const int Npnts = 16*16*16; // for all x,y,z coords
 
 // initialize
@@ -42,18 +43,19 @@ Elliptica_ID_Reader_T *idr = elliptica_id_reader_init(checkpnt_path,"generic");
 // the list of fields to be interpolated. should be comma separated
 idr->ifields  = "alpha,betax,betay,betaz,adm_gxx,adm_gxy";
 idr->npoints  = Npnts;
-idr->x_coords = a pointer to double type 1D array of Cartesian x coord values;
-idr->y_coords = a pointer to double type 1D array of Cartesian y coord values;
-idr->z_coords = a pointer to double type 1D array of Cartesian z coord values;
+// here we convert a 3D index to 1D index, e.g., (i,j,k) -> ijk.
+idr->x_coords = a pointer to double type 1D(ijk) array of Cartesian x coord values;
+idr->y_coords = a pointer to double type 1D(ijk) array of Cartesian y coord values;
+idr->z_coords = a pointer to double type 1D(ijk) array of Cartesian z coord values;
 
-// set parameter for elliptica
+// set parameter for elliptica, for example:
 idr->param("BHNS_filler_method","ChebTn_Ylm_perfect_s2",idr);
 idr->param("ADM_B1I_form","zero",idr);
 
 // interpolate
 elliptica_id_reader_interpolate(idr);
 
-// get interpolated values, e.g.,
+// now in an evolution code one can get interpolated values as follows:
 int ijk = 0;
 for(i,j,k)
 {
