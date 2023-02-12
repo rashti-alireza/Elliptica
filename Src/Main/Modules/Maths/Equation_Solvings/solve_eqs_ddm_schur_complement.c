@@ -3216,8 +3216,8 @@ static void pr_intro_ddm_schur_complement(void)
   
   "\n* Quick Introduction to Schur Complement Domain Decomposition Method *\n\n"
 
-  "  We want to solve system of equations A z = b on the given grid,\n"
-  "for example, Jx = -F at Newton-Raphson method.\n"
+  "  We want to solve the system of equations A z = b on the given grid,\n"
+  "for example, Jx = -F equations in the Newton-Raphson method.\n"
   "The system of equations A z = b are reordered as follows:\n\n"
 
 
