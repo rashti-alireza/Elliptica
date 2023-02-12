@@ -305,6 +305,7 @@ void
   
   interp_v = alloc_double(npoints);
   f = 0;
+  // NOTE: fields_name and evo_fields have the same order.
   while(fields_name[f])
   {
     // alloc mem field for id reader
@@ -313,7 +314,7 @@ void
     printf(Pretty0"Interpolating and saving: %s\n",fields_name[f]);
     fflush(stdout);
 
-    /* interpolating each fields at the all given points */
+    /* interpolating each fields at the given points */
     OpenMP_1d_Pragma(omp parallel for)
     for (p = 0; p < npoints; ++p)
     {
