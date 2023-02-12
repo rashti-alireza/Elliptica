@@ -4,12 +4,10 @@
 /* NOTE: this is the header to be used for an evolution code */
 /* NOTE: unsigned is not used here in case there is any conflicts for evo codes. */
 
-#define EIDR_MAX_STR (400)
-
 // saves options and info to interact and control between the evo code and ID code
 typedef struct ELLIPTICA_ID_READER_T
 {
-  char checkpoint_path[EIDR_MAX_STR];// path/to/elliptica/checkpoint/file
+  char *checkpoint_path;// path/to/elliptica/checkpoint/file
   const char *ifields;// input fields, e.g., "alpha,betax,adm_gxx"
   char *system;// the ID system, e.g., BHNS, NSNS, etc.
   char *option;// options for exportation, e.g., asymptotically_inertial
@@ -35,7 +33,5 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
 int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr);
 int elliptica_id_reader_free(Elliptica_ID_Reader_T *idr);
 
-
-#undef EIDR_MAX_STR
 
 #endif
