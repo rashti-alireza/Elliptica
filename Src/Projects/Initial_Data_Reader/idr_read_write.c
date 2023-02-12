@@ -432,7 +432,7 @@ void idr_free(ID_Reader_T *pnt)
 // NOTE: CM denotes shifting of GIVEN (x,y,z) coords as follows:
 // (x,y,z) = (x,y,z)' - CM => (x,y,z) + CM = (x,y,z)', prime denotes elliptica coords. */
 void idr_find_XYZ_from_xyz(Elliptica_ID_Reader_T *const idr, 
-                             ID_Reader_T *const pnt,const double *const CM)
+                           ID_Reader_T *const pnt,const double *const CM)
 {
   FUNC_TIC
 
