@@ -355,7 +355,7 @@ char *regex_find(const char *const regex_pattern,const char *const str)
 
 /* parsing a string contains items separated with delimiter and return
 // all items separately. note: the last pointer is null so one can count
-// the number of items.
+// the number of items. note: it conserves the order from the left of give string.
 // ->return value: array of pointers to items,the last pointer is null. */
 char **read_separated_items_in_string(const char *const string,const char delimiter)
 {
