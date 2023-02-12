@@ -79,14 +79,20 @@ int Initial_Data_Reader(void *vp)
 }
 
 /* -> create a struct for initial data reader. 
-// checkpnt: full path to the checkpoint file (file includes all info about the system)
-// option: for any special treatment/request from the interpolated fields.
-// it is case insensitive.
+// checkpnt: full path to the checkpoint file.
+// ---------
+// note checkpoint file has all info about the system.
+//
+// option: for any special treatment/request from elliptica reader.
+// -------
+// note: it is case insensitive.
 // options include:
-// generic: a standard (default) method for exporting ID, what is done for BAM. */
+// generic: a standard (default) method for exporting ID, what is done for BAM. 
+//
+// --> return value: alloc and return a pointer to workspace for ID reader struct */
 Elliptica_ID_Reader_T *elliptica_id_reader_init (
   const char *const checkpnt/* path/to/elliptica/checkpoint/file */,
-  const char *const option/* the option for export */
+  const char *const option/* the option for elliptica reader */
   )
 {
 // NOTE: in this function one should not add or use any global variables of Elliptica
@@ -100,6 +106,10 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
   {
     Error1("No checkpoint file path.");
   }
+  if (!option)
+  {
+    Error1("No option specified.");
+  }
   
   Elliptica_ID_Reader_T *idr = calloc(1,sizeof(*idr));
   IsNull(idr);
@@ -107,7 +117,7 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
   Parameter_T *par = 0;
   
   // set path
-  sprintf(idr->checkpoint_path,"%s",checkpnt);
+  idr->checkpoint_path = dup_s(checkpnt);
   
   // set index finder
   idr->indx = find_field_index;
@@ -117,17 +127,17 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
   
   // read checkpoint file
   file = Fopen(idr->checkpoint_path,"r");
-  IsNull(file);
-  
+
   // which ID system
   par = parameter_query_from_checkpoint("Project",file);
+  assert(par);
   idr->system = dup_s(par->rv);
   // add a project parameter
   idr->param("Project",idr->system,idr);
   // which option
   idr->option = dup_s(option);
   
-  // alloc field
+  // alloc field. NOTE: is allocs index for all field anyway
   for (nf = 0; Field_Dictionary[nf]; nf++);
   idr->nfield = nf;
   idr->field  = calloc(nf,sizeof(*idr->field));
@@ -165,8 +175,10 @@ static void set_param_from_evo(
   idr->nparams++;
 }
 
-/* given the field name, it returns back the index number of the field.
-// if could found, gives error.
+/* given the field name, it returns the index number of the field.
+// gives error if it couldn't find the field. 
+// NOTE: it's case sensitive
+// NOTE: we are assuming the order of field are as Field_Dictionary.
 // ->return: field index. */
 static Uint find_field_index(const char *const fname)
 {
@@ -175,7 +187,7 @@ static Uint find_field_index(const char *const fname)
   
   while (Field_Dictionary[nf])
   {
-    if (strcmp_i(fname,Field_Dictionary[nf]))
+    if (!strcmp(fname,Field_Dictionary[nf]))
     {
       indx = nf;
       break;
@@ -191,14 +203,18 @@ static Uint find_field_index(const char *const fname)
   return indx;
 }
 
-/* ->return success. interpolate fields for the given coordinates */
+
+
+/* call the pertinent exporter to interpolate fields. */
+/* ->return: success */
 int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr)
 {
+  // NOTE: since we add params, using time, and etc we need this.
   init_global_variables(".");
 
   FUNC_TIC
 
-// some sanity checks:
+  // some sanity checks:
   if (!idr->ifields)
   {
     Error1("No field is set!");
@@ -241,6 +257,7 @@ int elliptica_id_reader_free(Elliptica_ID_Reader_T *idr)
   if (!idr)
     return EXIT_SUCCESS;
   
+  Free(idr->checkpoint_path);
   Free(idr->system);
   Free(idr->option);
   
