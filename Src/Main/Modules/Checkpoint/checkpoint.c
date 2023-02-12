@@ -425,7 +425,7 @@ static void alloc_db(struct checkpoint_header *const alloc_info)
 }
 
 /* given the name of the checkpoint file, and the checkpoint file. 
-// -> return value: a parameter read from the given checpoint file */
+// -> return value: a parameter read from the given checpoint file, null if not found. */
 Parameter_T *parameter_query_from_checkpoint(const char *const par_name,FILE *const file)
 {
   Parameter_T *par = 0;
