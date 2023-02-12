@@ -13,10 +13,10 @@ typedef struct ELLIPTICA_ID_READER_T
   char *option;// options for exportation, e.g., asymptotically_inertial
   unsigned nfield;// total number of Field_Dictionary
   double **field;// value = field[indx(Field_Dictionary[i])][ijk]
-  double npoints;// number of (x,y,z) coords
-  double *x_coords;// Cartesian x coord values, x_coords[ijk]
-  double *y_coords;// Cartesian y coord values, y_coords[ijk]
-  double *z_coords;// Cartesian z coord values, z_coords[ijk]
+  int npoints;// length of 1D coord array, use int(not Uint) as most evo codes use int
+  double *x_coords;// Cartesian x coord values, x_coords[ijk] with length npoints
+  double *y_coords;// Cartesian y coord values, y_coords[ijk] with length npoints
+  double *z_coords;// Cartesian z coord values, z_coords[ijk] with length npoints
   unsigned (*indx)(const char *const fname);// find field index  
   void (*param)(const char *const lv,const char *const rv,
                 struct ELLIPTICA_ID_READER_T *const idr);// set params from evo code
