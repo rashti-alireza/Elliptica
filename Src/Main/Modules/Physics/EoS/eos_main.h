@@ -32,6 +32,7 @@ double EoS_drho0_dh_h_tab(EoS_T *const eos);
 double EoS_drho0_dh_h_tab(EoS_T *const eos);
 double EoS_de_dh_h_tab(EoS_T *const eos);
 double EoS_de_dh_h_tab(EoS_T *const eos);
+Uint get_sample_size(const char* const eos_file_name);
 /////////////////////////////////////////////////////
 
 EoS_T *init_EoS(Physics_T *const phys);

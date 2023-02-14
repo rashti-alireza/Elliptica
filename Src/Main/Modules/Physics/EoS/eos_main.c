@@ -283,7 +283,11 @@ static void populate_EoS(EoS_T *const eos)
         
         for (unsigned int line=0; line<sample_s; line++)
         {
-            fscanf(eos_table, "%lf %lf %lf %lf\n", &p_point, &rho0_point, &e_point, &h_point);
+            if (fscanf(eos_table, "%lf %lf %lf %lf\n", &p_point, &rho0_point, &e_point, &h_point) != 4)
+            {
+                Error0("ERROR reading EOS data table.");
+                return;
+            }
             p_sample[line] = p_point;
             h_sample[line] = h_point;
             rho0_sample[line] = rho0_point;
