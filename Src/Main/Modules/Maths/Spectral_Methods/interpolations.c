@@ -60,6 +60,12 @@ void plan_interpolation(Interpolation_T *const interp_s)
     find_coeffs_natural_cubic_spline_1d(interp_s);
     interp_s->interpolation_func = interpolation_natural_cubic_spline_1d;
   }
+  else if (strstr_i(interp_s->method,"Clamped_Cubic_Spline_1D"))
+  {
+    order_arrays_natural_cubic_spline_1d(interp_s);
+    find_coeffs_clamped_cubic_spline_1d(interp_s);
+    interp_s->interpolation_func = interpolation_clamped_cubic_spline_1d;
+  }
   else if ( strstr_i(interp_s->method,"Spectral") || 
        strstr_i(PgetsEZ("Interpolation_Method"),"Spectral"))
   {
@@ -248,6 +254,113 @@ static double interpolation_natural_cubic_spline_1d(Interpolation_T *const inter
   
   return ret; 
 }
+
+////////////////////////////////////////////Clamped cubic spline
+// Uses the same principle as natural cubic spline on the interval [a,b],
+// but with S_0'(a) = f'(a) and S_n-1'(b) = f'(b).
+// Uses a finite difference approximation to find f'(a) and f'(b).
+static void find_coeffs_clamped_cubic_spline_1d(Interpolation_T *const interp_s)
+{
+  const Uint n = interp_s->N_cubic_spline_1d->N-1;
+  const double *const x = interp_s->N_cubic_spline_1d->x;
+  double *const a = interp_s->N_cubic_spline_1d->f;
+  double *const b = alloc_double(n);
+  double *const c = alloc_double(n+1);
+  double *const d = alloc_double(n);
+  double *h  = alloc_double(n),
+         *l  = alloc_double(n+1),
+         *z  = alloc_double(n+1),
+         *al = alloc_double(n),
+         *mu = alloc_double(n);
+  Uint i;
+  
+  for (i = 0; i < n; ++i)
+    h[i] = x[i+1]-x[i];
+    
+  // Set clamped ends using f'(0) = 0, f'(n) = 0.
+  double dfdx0 = 0;
+  double dfdxn = 0;
+  al[0] = 3*(a[1] - a[0])/h[0] - 3*dfdx0;
+  al[n] = -3*(a[n] - a[n-1])/h[n-1] + 3*dfdxn;
+  
+  for (i = 1; i < n; ++i)
+    al[i] = 3*(a[i+1]-a[i])/h[i]-3*(a[i]-a[i-1])/h[i-1];
+  
+  l[0]  = 1;
+  mu[0] = 0;
+  z[0]  = 0;
+  for (i = 1; i < n; ++i)
+  {
+    l[i] = 2*(x[i+1]-x[i-1])-h[i-1]*mu[i-1];
+    mu[i] = h[i]/l[i];
+    z[i] = (al[i]-h[i-1]*z[i-1])/l[i];
+  }
+  l[n] = 1;
+  z[n] = 0;
+  c[n] = 0;
+  
+  for (i = n-1; i >= 1; --i)
+  {
+    c[i] = z[i]-mu[i]*c[i+1];
+    b[i] = (a[i+1]-a[i])/h[i]-h[i]*(c[i+1]+2.*c[i])/3.;
+    d[i] = (c[i+1]-c[i])/3./h[i];
+  }
+  i = 0;
+  c[i] = z[i]-mu[i]*c[i+1];
+  b[i] = (a[i+1]-a[i])/h[i]-h[i]*(c[i+1]+2.*c[i])/3.;
+  d[i] = (c[i+1]-c[i])/3./h[i];
+  
+  interp_s->N_cubic_spline_1d->a = a;
+  interp_s->N_cubic_spline_1d->b = b;
+  interp_s->N_cubic_spline_1d->c = c;
+  interp_s->N_cubic_spline_1d->d = d;
+  
+  free(h);
+  free(l);
+  free(z);
+  free(mu);
+  free(al);
+}
+
+static double interpolation_clamped_cubic_spline_1d(Interpolation_T *const interp_s)
+{
+  if (!interp_s->N_cubic_spline_1d->Order)
+    order_arrays_natural_cubic_spline_1d(interp_s);
+    
+  const double *const x = interp_s->N_cubic_spline_1d->x;
+  const double *const a = interp_s->N_cubic_spline_1d->a;
+  const double *const b = interp_s->N_cubic_spline_1d->b;
+  const double *const c = interp_s->N_cubic_spline_1d->c;
+  const double *const d = interp_s->N_cubic_spline_1d->d;
+  const double h = interp_s->N_cubic_spline_1d->h;
+  const double N = interp_s->N_cubic_spline_1d->N;
+  double ret = DBL_MAX;/* it's important to be max double */
+  Uint i = 0;
+  Flag_T flg = NONE;
+  
+  /* find the segment */
+  for (i = 0; i < N-1; ++i)
+  {
+    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+    {
+      flg = FOUND;
+      break;
+    }
+  }
+
+  if (flg != FOUND)
+  {
+    if (!interp_s->N_cubic_spline_1d->No_Warn)
+      Warning("The given point for the interpolation is out of the domain.\n");
+    
+    return ret;
+  }
+  
+  ret = a[i]+b[i]*(h-x[i])+c[i]*Pow2(h-x[i])+d[i]*Pow3(h-x[i]);
+  
+  return ret; 
+}
+
 
 /* tutorial:
 // =========
