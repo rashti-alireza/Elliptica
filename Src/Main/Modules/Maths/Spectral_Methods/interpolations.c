@@ -92,6 +92,12 @@ void plan_interpolation(Interpolation_T *const interp_s)
     */
     interp_s->interpolation_func = func(interp_s);
   }
+  else if (strstr_i(interp_s->method,"Log_Linear"))
+  {
+    printf("Checkpoint\n");//////////////////////////////
+    prepare_log_interpolation(interp_s);
+    interp_s->interpolation_func = interpolation_log_linear;
+  } 
   else
     Error0(INCOMPLETE_FUNC);
   
@@ -333,7 +339,7 @@ static double interpolation_clamped_cubic_spline_1d(Interpolation_T *const inter
   const double *const c = interp_s->N_cubic_spline_1d->c;
   const double *const d = interp_s->N_cubic_spline_1d->d;
   const double h = interp_s->N_cubic_spline_1d->h;
-  const double N = interp_s->N_cubic_spline_1d->N;
+  const Uint N = interp_s->N_cubic_spline_1d->N;
   double ret = DBL_MAX;/* it's important to be max double */
   Uint i = 0;
   Flag_T flg = NONE;
@@ -361,7 +367,84 @@ static double interpolation_clamped_cubic_spline_1d(Interpolation_T *const inter
   return ret; 
 }
 
+//////////////////////////////////////////////////Logarithmic interpolation
+static double interpolation_log_linear(Interpolation_T *const interp_s)
+{
+    if (!interp_s->log_interpolation_1d->Order)
+        prepare_log_interpolation(interp_s);
+        
+    const double *const x = interp_s->log_interpolation_1d->x;
+    const double *const log_f = interp_s->log_interpolation_1d->log_f;
+    const double h = interp_s->log_interpolation_1d->h;
+    const Uint N = interp_s->log_interpolation_1d->N;
+    double ret = DBL_MAX;/* it's important to be max double */
+    Uint i;
+    Flag_T flg = NONE;
+  
+    /* find the segment */
+    for (i = 0; i < N-1; ++i)
+    {
+        if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+        {
+            flg = FOUND;
+            break;
+        }
+    }
 
+    if (flg != FOUND)
+    {
+        if (!interp_s->N_cubic_spline_1d->No_Warn)
+        {
+          Warning("The given point for the interpolation is out of the domain.\n");
+          printf("Point: %lf\n", h);
+          printf("Domain: (%lf,%lf)\n", x[0], x[N-1]);
+        }
+        
+        return ret;
+    }
+
+    ret = exp(log_f[i] + (h - x[i])*(log_f[i+1] - log_f[i])/(x[i+1] - x[i]));
+    return ret;
+}
+
+static void prepare_log_interpolation(Interpolation_T *const interp_s)
+{
+  double *x = interp_s->log_interpolation_1d->x;
+  double *f = interp_s->log_interpolation_1d->f;
+  double *y;/* ordered x */
+  double *g;/* ordered f */
+  const Uint N = interp_s->log_interpolation_1d->N;
+  Uint i;
+  
+  if (EQL(x[0],x[N-1]))
+  {
+    Error0("Periodic case has not been considered.\n");
+  }
+  if (GRT(x[0],x[N-1]))/* if the x's are in decreasing order */
+  {
+    interp_s->log_interpolation_1d->Alloc_Mem = 1;
+    y = alloc_double(N);
+    g = alloc_double(N);
+    
+    for (i = 0; i < N; ++i)
+    {
+      y[i] = x[N-1-i];
+      g[i] = f[N-1-i];
+    }
+    interp_s->log_interpolation_1d->x = y;
+    interp_s->log_interpolation_1d->f = g;
+  }
+  interp_s->log_interpolation_1d->Order = 1;
+
+    double *log_f = alloc_double(N);
+    for (i = 0; i < N; i++)
+    {
+        log_f[i] = log(interp_s->log_interpolation_1d->f[i]);
+    }
+    interp_s->log_interpolation_1d->log_f = log_f;
+}
+
+/////////////////////////////////////////Neville interpolation
 /* tutorial:
 // =========
 // given function f(xi)'s and points xi's it calculates value of f(h)
@@ -693,6 +776,16 @@ void free_interpolation(Interpolation_T *interp_s)
     {
       free(interp_s->N_cubic_spline_1d->x);
       free(interp_s->N_cubic_spline_1d->f);
+    }
+  }
+  else if (strstr_i(interp_s->method,"Log_Linear"))
+  {
+    if (interp_s->log_interpolation_1d->log_f)
+      free(interp_s->log_interpolation_1d->log_f);
+    if (interp_s->log_interpolation_1d->Alloc_Mem)
+    {
+      free(interp_s->log_interpolation_1d->x);
+      free(interp_s->log_interpolation_1d->f);
     }
   }
   free(interp_s);

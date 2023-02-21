@@ -306,36 +306,58 @@ static void populate_EoS(EoS_T *const eos)
         eos->cubic_spline->rho0_sample = rho0_sample;
         //eos->cubic_spline->h_floor     = Getd(P_"enthalpy_floor");
         
-        // p:
-        Interpolation_T *interp_p = init_interpolation();
-        interp_p->method          = "Natural_Cubic_Spline_1D";
-        interp_p->N_cubic_spline_1d->f   = p_sample;
-        interp_p->N_cubic_spline_1d->x   = h_sample;
-        interp_p->N_cubic_spline_1d->N   = sample_s;
-        interp_p->N_cubic_spline_1d->No_Warn = 1;/* suppress warning */
-        plan_interpolation(interp_p);
-        eos->cubic_spline->interp_p = interp_p;
+        Interpolation_T *interp_p = init_interpolation();    //pressure
+        Interpolation_T *interp_e = init_interpolation();    //energy density
+        Interpolation_T *interp_rho0 = init_interpolation(); //rest-mass density
+
+
+        interp_p->method = Gets(P_"Interpolation_Method");
+        interp_e->method = Gets(P_"Interpolation_Method");
+        interp_rho0->method = Gets(P_"Interpolation_Method");
+        if (strstr_i(Gets(P_"Interpolation_Method"), "Natural_Cubic_Spline_1D"))
+        {
+            interp_p->N_cubic_spline_1d->f   = p_sample;
+            interp_p->N_cubic_spline_1d->x   = h_sample;
+            interp_p->N_cubic_spline_1d->N   = sample_s;
+            interp_p->N_cubic_spline_1d->No_Warn = 1;/* suppress warning */
+            
+            interp_e->N_cubic_spline_1d->f   = e_sample;
+            interp_e->N_cubic_spline_1d->x   = h_sample;
+            interp_e->N_cubic_spline_1d->N   = sample_s;
+            interp_e->log_interpolation_1d->No_Warn = 1;
         
-        // e:
-        Interpolation_T *interp_e = init_interpolation();
-        interp_e->method          = "Natural_Cubic_Spline_1D";
-        interp_e->N_cubic_spline_1d->f   = e_sample;
-        interp_e->N_cubic_spline_1d->x   = h_sample;
-        interp_e->N_cubic_spline_1d->N   = sample_s;
-        interp_e->N_cubic_spline_1d->No_Warn = 1;/* suppress warning */
+            interp_rho0->N_cubic_spline_1d->f   = rho0_sample;
+            interp_rho0->N_cubic_spline_1d->x   = h_sample;
+            interp_rho0->N_cubic_spline_1d->N   = sample_s;
+            interp_rho0->log_interpolation_1d->No_Warn = 1;
+        }
+        else if (strstr_i(Gets(P_"Interpolation_Method"), "Log_Linear"))
+        {
+            interp_p->log_interpolation_1d->f   = p_sample;
+            interp_p->log_interpolation_1d->x   = h_sample;
+            interp_p->log_interpolation_1d->N   = sample_s;
+            interp_p->log_interpolation_1d->No_Warn = 1;/* suppress warning */
+            
+            interp_e->log_interpolation_1d->f   = e_sample;
+            interp_e->log_interpolation_1d->x   = h_sample;
+            interp_e->log_interpolation_1d->N   = sample_s;
+            interp_e->log_interpolation_1d->No_Warn = 1;
+            
+            interp_rho0->log_interpolation_1d->f   = rho0_sample;
+            interp_rho0->log_interpolation_1d->x   = h_sample;
+            interp_rho0->log_interpolation_1d->N   = sample_s;
+            interp_rho0->log_interpolation_1d->No_Warn = 1;
+        }
+        else
+        { Error0("Unsupported interpolation type applied to tabular EOS."); }
+        
+        plan_interpolation(interp_p);
         plan_interpolation(interp_e);
-        eos->cubic_spline->interp_e = interp_e;
-      
-        // rho0:
-        Interpolation_T *interp_rho0 = init_interpolation();
-        interp_rho0->method          = "Natural_Cubic_Spline_1D";
-        interp_rho0->N_cubic_spline_1d->f   = rho0_sample;
-        interp_rho0->N_cubic_spline_1d->x   = h_sample;
-        interp_rho0->N_cubic_spline_1d->N   = sample_s;
-        interp_rho0->N_cubic_spline_1d->No_Warn = 1;/* suppress warning */
         plan_interpolation(interp_rho0);
+        eos->cubic_spline->interp_p = interp_p;
+        eos->cubic_spline->interp_e = interp_e;
         eos->cubic_spline->interp_rho0 = interp_rho0;
-      
+        
         /* assign functions for (p, e, rho0) */
         eos->pressure          = EoS_p_h_tab;
         eos->energy_density    = EoS_e_h_tab;
@@ -348,6 +370,7 @@ static void populate_EoS(EoS_T *const eos)
         p_sample = 0;
         e_sample = 0;
         rho0_sample = 0;
+        printf("Checkpoint 1\n");//////////////////////////
     }
     //////////////////////////////////////////////////////////////////////////////////////////
     

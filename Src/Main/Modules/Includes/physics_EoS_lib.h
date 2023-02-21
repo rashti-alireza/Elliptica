@@ -33,6 +33,7 @@ typedef struct EquationOfState_T
  double (*de_dh)(struct EquationOfState_T *const eos);/* d(energy_density)/dh */
  double (*drho0_dh)(struct EquationOfState_T *const eos);/* d(rest_mass_density)/dh */
  /* save coeffs for spline interpolation */
+ /* Note: this structure is also used for logarithmic interpolation */
  struct
  {
    double h_floor;/* set some themodynamics var to 0 if h < h_floor. */

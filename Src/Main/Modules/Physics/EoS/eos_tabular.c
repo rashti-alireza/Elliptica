@@ -56,7 +56,13 @@ double EoS_p_h_tab(EoS_T* const eos)
     double p;  
     Interpolation_T *const interp_s = eos->cubic_spline->interp_p;
   
-    interp_s->N_cubic_spline_1d->h  = eos->h;
+    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
+    { interp_s->N_cubic_spline_1d->h  = eos->h; }
+    else if (strstr_i(interp_s->method, "Log_Linear"))
+    { interp_s->log_interpolation_1d-> h = eos->h; }
+    else
+    { Error0("Failed to read enthalpy in tabular EOS pressure function.\n"); }
+    
     p = execute_interpolation(interp_s);
     
     return (LSSEQL(p,0.) || p == DBL_MAX ? 0. : p);
@@ -76,7 +82,13 @@ double EoS_rho0_h_tab(EoS_T* const eos)
     double rho0;  
     Interpolation_T *const interp_s = eos->cubic_spline->interp_rho0;
   
-    interp_s->N_cubic_spline_1d->h  = eos->h;
+    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
+    { interp_s->N_cubic_spline_1d->h  = eos->h; }
+    else if (strstr_i(interp_s->method, "Log_Linear"))
+    { interp_s->log_interpolation_1d-> h = eos->h; }
+    else
+    { Error0("Failed to read enthalpy in tabular EOS rest-mass-density function.\n"); }
+    
     rho0 = execute_interpolation(interp_s);
   
     return (LSSEQL(rho0,0.) || rho0 == DBL_MAX ? 0. : rho0);
@@ -96,7 +108,13 @@ double EoS_e_h_tab(EoS_T* const eos)
     double e;
     Interpolation_T *const interp_s = eos->cubic_spline->interp_e;
   
-    interp_s->N_cubic_spline_1d->h  = eos->h;
+    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
+    { interp_s->N_cubic_spline_1d->h  = eos->h; }
+    else if (strstr_i(interp_s->method, "Log_Linear"))
+    { interp_s->log_interpolation_1d-> h = eos->h; }
+    else
+    { Error0("Failed to read enthalpy in tabular EOS energy-density function.\n"); }
+    
     e = execute_interpolation(interp_s);
   
     return (LSSEQL(e,0.) || e == DBL_MAX ? 0. : e);
@@ -117,25 +135,47 @@ double EoS_de_dh_h_tab(EoS_T* const eos)
         return 0.0;
     }
     
+    //const double* h_array;
     Interpolation_T *const interpolation = (Interpolation_T*)eos->cubic_spline->interp_e;
     
-    //Finds the spline interval
     Uint h_interval;
     for (h_interval=0; h_interval<eos->cubic_spline->sample_size; ++h_interval)
     {
-        if (GRTEQL(eos->h,interpolation->N_cubic_spline_1d->x[h_interval]) 
-            && LSSEQL(eos->h,interpolation->N_cubic_spline_1d->x[h_interval+1]))
+        if (GRTEQL(eos->h, eos->cubic_spline->h_sample[h_interval]) 
+            && LSSEQL(eos->h, eos->cubic_spline->h_sample[h_interval+1]))
         {
             break;
         }
     }
     
-    double bj = interpolation->N_cubic_spline_1d->b[h_interval];
-    double cj = interpolation->N_cubic_spline_1d->c[h_interval];
-    double dj = interpolation->N_cubic_spline_1d->d[h_interval];
-    double hj = interpolation->N_cubic_spline_1d->x[h_interval];
+    if (strstr_i(interpolation->method, "Natural_Cubic_Spline_1D"))
+    {
+    //Uses derivative of natural cubic spline:
+    //  e(h) ~ aj + bj(h - hj) + cj(h-hj)^2 + dj(h-hj)^3, so
+    //  e'(h) ~ bj*h - 2cj(h-hj) + 3dj(h-hj)^2, where j is the spline interval.
+        double bj = interpolation->N_cubic_spline_1d->b[h_interval];
+        double cj = interpolation->N_cubic_spline_1d->c[h_interval];
+        double dj = interpolation->N_cubic_spline_1d->d[h_interval];
+        double hj = interpolation->N_cubic_spline_1d->x[h_interval];
 
-    return bj + 2*cj*(eos->h-hj) + 3*dj*(eos->h-hj) * (eos->h-hj);
+        return bj + 2*cj*(eos->h-hj) + 3*dj*(eos->h-hj) * (eos->h-hj);
+    }
+    else if (strstr_i(interpolation->method, "Log_Linear"))
+    {
+    //Uses derivative of log-linear interpolation:
+    // f'(x) ~ f(x) * ((log(f(x_k+1) _ log(f(x_k))/(x_k+1 - x_k))
+        double m = (log(interpolation->log_interpolation_1d->f[h_interval+1])
+                    - log(interpolation->log_interpolation_1d->f[h_interval])) /
+                    (interpolation->log_interpolation_1d->x[h_interval+1]
+                    - interpolation->log_interpolation_1d->x[h_interval]);
+        
+        return EoS_e_h_tab(eos) * m;
+    }
+    else
+    {
+        Error0("Tabular EOS function de/dh: Interpolation method not supported.\n");
+        return 0;
+    }
 }
 
 //Calculates specific internal energy in terms of enthalpy,
@@ -157,9 +197,6 @@ double EoS_e0_h_tab(EoS_T* const eos)
 }
 
 //Calculates derivative of rest-mass density wrt enthalpy, with enthalpy as the independent variable.
-//Uses derivative of natural cubic spline:
-//  e(h) ~ aj + bj(h - hj) + cj(h-hj)^2 + dj(h-hj)^3, so
-//  e'(h) ~ bj*h - 2cj(h-hj) + 3dj(h-hj)^2, where j is the spline interval.
 double EoS_drho0_dh_h_tab(EoS_T* const eos)
 {
     //Check bounds for enthalpy
@@ -175,36 +212,43 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
     
     //Finds the spline interval
     Uint h_interval;
-    for (h_interval=0; h_interval<eos->cubic_spline->sample_size; ++h_interval)
+    for (h_interval=0; h_interval<eos->cubic_spline->sample_size-1; ++h_interval)
     {
-        if (GRTEQL(eos->h,interpolation->N_cubic_spline_1d->x[h_interval]) 
-            && LSSEQL(eos->h,interpolation->N_cubic_spline_1d->x[h_interval+1]))
+        if (GRTEQL(eos->h, eos->cubic_spline->h_sample[h_interval]) 
+            && LSSEQL(eos->h, eos->cubic_spline->h_sample[h_interval+1]))
         {
             break;
         }
     }
     
-    double bj = interpolation->N_cubic_spline_1d->b[h_interval];
-    double cj = interpolation->N_cubic_spline_1d->c[h_interval];
-    double dj = interpolation->N_cubic_spline_1d->d[h_interval];
-    double hj = interpolation->N_cubic_spline_1d->x[h_interval];
+    if (strstr_i(interpolation->method, "Natural_Cubic_Spline_1D"))
+    {
+    //Uses derivative of natural cubic spline:
+    //  e(h) ~ aj + bj(h - hj) + cj(h-hj)^2 + dj(h-hj)^3, so
+    //  e'(h) ~ bj*h - 2cj(h-hj) + 3dj(h-hj)^2, where j is the spline interval.
+        double bj = interpolation->N_cubic_spline_1d->b[h_interval];
+        double cj = interpolation->N_cubic_spline_1d->c[h_interval];
+        double dj = interpolation->N_cubic_spline_1d->d[h_interval];
+        double hj = interpolation->N_cubic_spline_1d->x[h_interval];
 
-    return bj + 2*cj*(eos->h-hj) + 3*dj*(eos->h-hj) * (eos->h-hj);
-    /*
-    if (LSSEQL(eos->h, eos->cubic_spline->h_floor)) { return 0.0; }
-    
-    double h_copy = eos->h;
-    double h_delta = 1e-5;                  //FIXME: Make dynamic var
-    
-    eos->h = h_copy - h_delta;
-    double rho0_0 = EoS_rho0_h_tab(eos);
-    eos->h = h_copy + h_delta;
-    double rho0_1 = EoS_rho0_h_tab(eos);
-    
-    eos->h = h_copy;
-    
-    return (rho0_1 - rho0_0) / (2 * h_delta);
-    */
+        return bj + 2*cj*(eos->h-hj) + 3*dj*(eos->h-hj) * (eos->h-hj);
+    }
+    else if (strstr_i(interpolation->method, "Log_Linear"))
+    {
+    //Uses derivative of log-linear interpolation:
+    // f'(x) ~ f(x) * ((log(f(x_k+1) _ log(f(x_k))/(x_k+1 - x_k))
+        double m = (log(interpolation->log_interpolation_1d->f[h_interval+1])
+                    - log(interpolation->log_interpolation_1d->f[h_interval])) /
+                    (interpolation->log_interpolation_1d->x[h_interval+1]
+                    - interpolation->log_interpolation_1d->x[h_interval]);
+        
+        return EoS_rho0_h_tab(eos) * m;
+    }
+    else
+    {
+        Error0("Tabular EOS function drho0/dh: Interpolation method not supported.\n");
+        return 0;
+    }
 }
 
 

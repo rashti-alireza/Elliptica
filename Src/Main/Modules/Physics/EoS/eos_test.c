@@ -13,8 +13,8 @@ void test_EoS(Physics_T *const phys)
   char *path,file_name[1000];
   FILE *file = 0;
   Uint N = 1000;
-  const double h_max = 3.0;// eos->h_th != 0 ? eos->h_th[eos->N-1]+1: 2; //NOTE: Original values h = [1,2]. (Andrew)
-  const double h_min = 0;                                            //Changed bounds to test tabular EOS with TOV solver project.
+  const double h_max = 4.0;// eos->h_th != 0 ? eos->h_th[eos->N-1]+1: 2; //NOTE: Original values h = [1,2]. (Andrew)
+  const double h_min = 1.0;                                            //Changed bounds to test tabular EOS with TOV solver project.
   double s = (h_max-h_min)/(N-1);
   Uint i;
   
@@ -33,25 +33,24 @@ void test_EoS(Physics_T *const phys)
       fprintf(file,"%u %0.15f %0.15f %0.15f %0.15f %0.15f\n",i,eos->K[i],eos->rho0_th[i],eos->gamma[i],eos->a[i],eos->h_th[i]-1);
     Fclose(file);
   }
-    
+  
   /* continuity */
   sprintf(file_name,"%s/%s",path,"pressure");
   file = Fopen(file_name,"w+");
   fprintf(file,"# enthalpy  pressure\n");  
   for (i = 0; i < N; ++i)
   {
-    eos->h = 1+s*i;
+    eos->h = h_min+s*i;
     fprintf(file,"%0.15f %0.15f\n",eos->h,eos->pressure(eos));
-    printf("%0.15f %0.15f\n",eos->h,eos->pressure(eos));////////////////////////
   }
   Fclose(file);
-  
+    
   sprintf(file_name,"%s/%s",path,"rest_mass_density");
   file = Fopen(file_name,"w+");
   fprintf(file,"# enthalpy  rest_mass_density\n");  
   for (i = 0; i < N; ++i)
   {
-    eos->h = 1+s*i;
+    eos->h = h_min+s*i;
     fprintf(file,"%0.15f %0.15f\n",eos->h,eos->rest_mass_density(eos));
   }
   Fclose(file);
@@ -61,7 +60,7 @@ void test_EoS(Physics_T *const phys)
   fprintf(file,"# enthalpy  energy_density\n");
   for (i = 0; i < N; ++i)
   {
-    eos->h = 1+s*i;
+    eos->h = h_min+s*i;
     fprintf(file,"%0.15f %0.15f\n",eos->h,eos->energy_density(eos));
   }
   Fclose(file);
@@ -71,34 +70,32 @@ void test_EoS(Physics_T *const phys)
   fprintf(file,"# enthalpy  specific_internal_energy\n");
   for (i = 0; i < N; ++i)
   {
-    eos->h = 1+s*i;
+    eos->h = h_min+s*i;
     fprintf(file,"%0.15f %0.15f\n",eos->h,eos->specific_internal_energy(eos));
   }
   Fclose(file);
-  
+    
   sprintf(file_name,"%s/%s",path,"drho0_dh");
   file = Fopen(file_name,"w+");
   fprintf(file,"# enthalpy  drho0_dh\n");  
   for (i = 0; i < N; ++i)
   {
-    eos->h = 1+s*i;
+    eos->h = h_min+s*i;
     fprintf(file,"%0.15f %0.15f\n",eos->h,eos->drho0_dh(eos));
   }
   Fclose(file);
-  
+      
   sprintf(file_name,"%s/%s",path,"de_dh");
   file = Fopen(file_name,"w+");
   fprintf(file,"# enthalpy  de_dh\n");  
   for (i = 0; i < N; ++i)
   {
-    eos->h = 1+s*i;
+    eos->h = h_min+s*i;
     fprintf(file,"%0.15f %0.15f\n",eos->h,eos->de_dh(eos));
   }
   Fclose(file);
   
-  
   free_EoS(eos);
   free(path);
   UNUSED(grid);
-  
 }
