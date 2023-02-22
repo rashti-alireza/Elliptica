@@ -94,7 +94,6 @@ void plan_interpolation(Interpolation_T *const interp_s)
   }
   else if (strstr_i(interp_s->method,"Log_Linear"))
   {
-    printf("Checkpoint\n");//////////////////////////////
     prepare_log_interpolation(interp_s);
     interp_s->interpolation_func = interpolation_log_linear;
   } 

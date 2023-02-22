@@ -370,7 +370,6 @@ static void populate_EoS(EoS_T *const eos)
         p_sample = 0;
         e_sample = 0;
         rho0_sample = 0;
-        printf("Checkpoint 1\n");//////////////////////////
     }
     //////////////////////////////////////////////////////////////////////////////////////////
     
