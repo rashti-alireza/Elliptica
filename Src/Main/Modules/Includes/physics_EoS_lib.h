@@ -20,7 +20,7 @@ typedef struct EquationOfState_T
  double *n;/* polytropic index n = 1/(gamma-1) */
  double *gamma;/* polytropic index */
  double *a;/* constant coefficient to ensure continuity */
- double h;/* enthalpy */
+ double h;/* specific enthalpy, h = (total_energy_density + pressure)/rest_mass_density */
  Uint N;/* number of intervals i.e number of pieces */
  /* some flags for extra checks:
  // the default value is 0, so initially they are inactive, 
