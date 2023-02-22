@@ -82,7 +82,8 @@ static void populate_EoS(EoS_T *const eos)
   
   /* NOTE: order matters */
   if (strcmp_i(eos->type,"polytropic") || strcmp_i(eos->type,"piecewise_polytropic") || 
-        strcmp_i(eos->type,"polytrop") || strcmp_i(eos->type, "pwp") || strcmp_i(eos->type,"pwp_natural_cubic_spline"))
+        strcmp_i(eos->type,"polytrop") || strcmp_i(eos->type, "pwp") || 
+        strcmp_i(eos->type,"pwp_natural_cubic_spline"))
   {
     gamma  = read_EoS_in_parameter_file(Gets(P_"Gamma"),&N);
     K      = read_EoS_in_parameter_file(Gets(P_"K0"),0);/* this is K0 */
@@ -261,12 +262,13 @@ static void populate_EoS(EoS_T *const eos)
     ////////////////////////////////////////////////////////////////////////////////Tabular EOS
     //Generates tabular EOS
     else if (strcmp_i(eos->type, "tabular") || strcmp_i(eos->type, "tab"))
-    {        
+    {
         FILE* eos_table = fopen(Pgets("eos_table_name"),"r");        //Name of EOS table
         if (!eos_table) { Error0("ERROR: Could not open EOS table."); }
         
         //Reads number of data points in EOS file.
-        const Uint sample_s = get_sample_size(Pgets("eos_table_name"));   //Defined in eos_tabular.c
+        Uint sample_s = get_sample_size(Pgets("eos_table_name"));    //Defined in eos_tabular.c
+        if (strstr_i(Pgets("EOS_table_format"), "Lorene")) { sample_s -= 9; }
         printf("EOS sample size: %i\n", sample_s);/////////////////////
         
         eos->cubic_spline->sample_size = sample_s;
@@ -275,24 +277,97 @@ static void populate_EoS(EoS_T *const eos)
         double *e_sample    = alloc_double(sample_s);
         double *rho0_sample = alloc_double(sample_s);
         
-        //Reads EOS data from text file. Table format [pressure] [rest-mass density] [energy density] [enthalpy] (in columns).
+        //Reads EOS data from text file.
         double h_point;
         double p_point;
         double rho0_point;
         double e_point;
         
-        for (unsigned int line=0; line<sample_s; line++)
+        if (!PgetsEZ("EOS_table_format"))
         {
-            if (fscanf(eos_table, "%lf %lf %lf %lf\n", &p_point, &rho0_point, &e_point, &h_point) != 4)
-            {
-                Error0("ERROR reading EOS data table.");
-                return;
-            }
-            p_sample[line] = p_point;
-            h_sample[line] = h_point;
-            rho0_sample[line] = rho0_point;
-            e_sample[line] = e_point;
+            Error0("ERROR: EOS table format not specified.\n");
         }
+        else if (strstr_i(PgetsEZ("EOS_table_format"), "Elliptica"))
+        {
+            // Default format in columns [pressure] [rest-mass density] [energy density] [enthalpy]
+            // in geometrized (G = c = solar mass = 1) units.
+            for (unsigned int line=0; line<sample_s; line++)
+            {
+                if (fscanf(eos_table, "%lf %lf %lf %lf\n", &p_point, &rho0_point, &e_point, &h_point) != 4)
+                {
+                    Error0("ERROR reading EOS data table.");
+                    return;
+                }
+                
+                p_sample[line] = p_point;
+                h_sample[line] = h_point;
+                rho0_sample[line] = rho0_point;
+                e_sample[line] = e_point;
+            }
+        }
+        else if (strstr_i(PgetsEZ("EOS_table_format"), "Lorene"))
+        {
+            // Lorene format in columns [line number] [number density] [energy density] [pressure].
+            // in units [1/fm^3] [g/cm^3] [dyn/cm^2].
+            // Calculates rest-mass density and specific enthalpy, and converts
+            // to geometrized units.
+            
+            // Physical constants from 2018 CODATA values.
+            double G_const = 6.67430E-11;          // Gravitational constant in m^3/(kg s^2)
+            double c_const = 299792458;            // Speed of light in m/s
+            double M_const = 1.98841E30;            // Solar mass in kg
+            double mn_const = 1.67492749804E-27;    // Neutron mass in kg
+            // Lorene data is converted to SI units then geometrized.
+            
+            double n_point;
+            char dummy_var_1;
+            Uint dummy_var;
+            // Pressure conversion factor: G^3 * M_solar^2 / (10 * c^8)
+            double p_factor = ((G_const*G_const*G_const) * (M_const*M_const) /
+                   (10 * (c_const*c_const*c_const*c_const*c_const*c_const*c_const*c_const)));
+                   
+            // Energy density conversion factor: G^3  * M_solar^2 / (10 * c^6)
+            double e_factor = ((G_const*G_const*G_const) * (M_const*M_const) /
+                   (10 * (c_const*c_const*c_const*c_const*c_const*c_const)));
+                   
+            // Rest-mass conversion factor: 10^45 * neutron mass * G^3 * m_solar ^2 / (c^6)
+            // (Rest-mass is calculated by multiplying the baryon density by the baryon mass.)
+            double rho0_factor = (mn_const * 1E45 * (G_const*G_const*G_const) * (M_const*M_const) / 
+                   (c_const*c_const*c_const*c_const*c_const*c_const));
+                   
+            Uint dummy_var_2;
+            for (Uint ctr=0; ctr<5; ctr++)
+            {
+                dummy_var_2 = (Uint)fscanf(eos_table, "%c\n", &dummy_var_1);
+                dummy_var_2 += 1;
+            }
+            dummy_var_2 = (Uint)fscanf(eos_table, "%u\n", &dummy_var);
+            for (Uint ctr=0; ctr<3; ctr++)
+            {
+                dummy_var_2 = (Uint)fscanf(eos_table, "%c\n", &dummy_var_1);
+                dummy_var_2 += 1;
+            }
+            for (Uint line=0; line<sample_s; line++)
+            {
+                if (fscanf(eos_table, "%u %lf %lf %lf\n", &dummy_var, &n_point, &e_point, &p_point) != 4)
+                {
+                    printf("Line: %u %E %E %E\n", dummy_var, n_point, e_point, p_point);//////////////////
+                    Error0("ERROR reading EOS data table.");
+                    return;
+                }
+                
+                p_sample[line] = p_point * p_factor;
+                rho0_sample[line] = n_point * rho0_factor;
+                e_sample[line] = e_point * e_factor;
+                h_sample[line] = (p_point*p_factor + e_point*e_factor) /
+                                 (n_point*rho0_factor);
+            }
+        }
+        else
+        {
+            Error0("ERROR: Unrecognized EOS table format.\n");
+        }
+        
         fclose(eos_table);
         //Sets interpolation bounds.
         eos->cubic_spline->h_floor = h_sample[0];
@@ -419,8 +494,6 @@ static void fill_K(EoS_T *const eos)
     K[i] = K[i-1]*pow(rho0[i],(n[i]-n[i-1])/(n[i-1]*n[i]));
   }
   
-  //////////////Debugging/////////////////
-  printf("K values:\n");
   for(i = 0; i < eos->N; ++i) { printf("K%i == %E\n", i, K[i]); }
 }
 
