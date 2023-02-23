@@ -14,10 +14,12 @@
 # NOTE: it assumes posix-extended for find regextype.
 #
 
-#!/bin/bash
+#!/usr/bin/env bash
 
 ## load utils
-source "plot_utils.sh"
+mypath=$(realpath $0)
+mydir=$(dirname ${mypath})
+source "${mydir}/plot_utils.sh"
 
 ## some defs:
 suffix1d="1d.txt"

@@ -29,7 +29,7 @@
 # $collect.sh -s quantity_name file_name # collect, scale and plot
 #
 
-#!/bin/bash
+#!/usr/bin/env bash
 
 argc=$#
 argv=("$@")
