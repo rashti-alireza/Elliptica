@@ -269,7 +269,6 @@ static void populate_EoS(EoS_T *const eos)
         //Reads number of data points in EOS file.
         Uint sample_s = get_sample_size(Pgets("eos_table_name"));    //Defined in eos_tabular.c
         if (strstr_i(Pgets("EOS_table_format"), "Lorene")) { sample_s -= 9; }
-        printf("EOS sample size: %i\n", sample_s);/////////////////////
         
         eos->cubic_spline->sample_size = sample_s;
         double *h_sample    = alloc_double(sample_s);               //Arrays for tabular data points
@@ -307,34 +306,30 @@ static void populate_EoS(EoS_T *const eos)
         }
         else if (strstr_i(PgetsEZ("EOS_table_format"), "Lorene"))
         {
-            // Lorene format in columns [line number] [number density] [energy density] [pressure].
+            // Lorene format in columns
+            //      [line number] [number density] [internal energy density] [pressure].
             // in units [1/fm^3] [g/cm^3] [dyn/cm^2].
-            // Calculates rest-mass density and specific enthalpy, and converts
-            // to geometrized units.
+            // Calculates rest-mass density (total) energy density, 
+            // and specific enthalpy, and converts to geometrized units.
             
             // Physical constants from 2018 CODATA values.
-            double G_const = 6.67430E-11;          // Gravitational constant in m^3/(kg s^2)
-            double c_const = 299792458;            // Speed of light in m/s
-            double M_const = 1.98841E30;            // Solar mass in kg
-            double mn_const = 1.67492749804E-27;    // Neutron mass in kg
+            //double G_const = 6.67430E-11;          // Gravitational constant in m^3/(kg s^2)
+            //double c_const = 299792458;            // Speed of light in m/s
+            //double M_const = 1.98841E30;           // Solar mass in kg
+            //double mn_const = 1.67492749804E-27;   // Neutron mass in kg
             // Lorene data is converted to SI units then geometrized.
             
             double n_point;
             char dummy_var_1;
             Uint dummy_var;
             // Pressure conversion factor: G^3 * M_solar^2 / (10 * c^8)
-            double p_factor = ((G_const*G_const*G_const) * (M_const*M_const) /
-                   (10 * (c_const*c_const*c_const*c_const*c_const*c_const*c_const*c_const)));
-                   
-            // Energy density conversion factor: G^3  * M_solar^2 / (10 * c^6)
-            double e_factor = ((G_const*G_const*G_const) * (M_const*M_const) /
-                   (10 * (c_const*c_const*c_const*c_const*c_const*c_const)));
-                   
+            // Internal Energy density conversion factor: G^3  * M_solar^2 / (10 * c^6)
             // Rest-mass conversion factor: 10^45 * neutron mass * G^3 * m_solar ^2 / (c^6)
             // (Rest-mass is calculated by multiplying the baryon density by the baryon mass.)
-            double rho0_factor = (mn_const * 1E45 * (G_const*G_const*G_const) * (M_const*M_const) / 
-                   (c_const*c_const*c_const*c_const*c_const*c_const));
-                   
+            const double p_FACTOR = 1.80162095578956E-39;
+            const double rho0_FACTOR = 0.002712069678583313;
+            const double e_FACTOR = 1.619216164136643E-22;
+               
             Uint dummy_var_2;
             for (Uint ctr=0; ctr<5; ctr++)
             {
@@ -351,16 +346,15 @@ static void populate_EoS(EoS_T *const eos)
             {
                 if (fscanf(eos_table, "%u %lf %lf %lf\n", &dummy_var, &n_point, &e_point, &p_point) != 4)
                 {
-                    printf("Line: %u %E %E %E\n", dummy_var, n_point, e_point, p_point);//////////////////
                     Error0("ERROR reading EOS data table.");
                     return;
                 }
                 
-                p_sample[line] = p_point * p_factor;
-                rho0_sample[line] = n_point * rho0_factor;
-                e_sample[line] = e_point * e_factor;
-                h_sample[line] = (p_point*p_factor + e_point*e_factor) /
-                                 (n_point*rho0_factor);
+                p_sample[line] = p_point * p_FACTOR;
+                rho0_sample[line] = n_point * rho0_FACTOR;
+                e_sample[line] = n_point * rho0_FACTOR * (1.0+ e_point * e_FACTOR);
+                h_sample[line] = (p_point*p_FACTOR + (n_point * rho0_FACTOR * (1.0+ e_point * e_FACTOR))) /
+                                 (n_point*rho0_FACTOR);
             }
         }
         else

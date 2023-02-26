@@ -392,7 +392,7 @@ static double interpolation_log_linear(Interpolation_T *const interp_s)
 
     if (flg != FOUND)
     {
-        if (!interp_s->N_cubic_spline_1d->No_Warn)
+        if (!interp_s->N_cubic_spline_1d->No_Warn)///////////////////////////////////////////////
         {
           Warning("The given point for the interpolation is out of the domain.\n");
           printf("Point: %lf\n", h);

@@ -13,8 +13,8 @@ void test_EoS(Physics_T *const phys)
   char *path,file_name[1000];
   FILE *file = 0;
   Uint N = 1000;
-  const double h_max = 0.75;// eos->h_th != 0 ? eos->h_th[eos->N-1]+1: 2; //NOTE: Original values h = [1,2]. (Andrew)
-  const double h_min = 1.0E-4;                                            //Changed bounds to test tabular EOS with TOV solver project.
+  const double h_max = 1.01;// eos->h_th != 0 ? eos->h_th[eos->N-1]+1: 2; //NOTE: Original values h = [1,2]. (Andrew)
+  const double h_min = 1.78;                                            //Changed bounds to test tabular EOS with TOV solver project.
   double s = (h_max-h_min)/(N-1);
   Uint i;
   
@@ -41,7 +41,7 @@ void test_EoS(Physics_T *const phys)
   for (i = 0; i < N; ++i)
   {
     eos->h = h_min+s*i;
-    fprintf(file,"%0.15f %0.15f\n",eos->h,eos->pressure(eos));
+    fprintf(file,"%0.15e %0.15e\n",eos->h,eos->pressure(eos));
   }
   Fclose(file);
     
@@ -51,7 +51,7 @@ void test_EoS(Physics_T *const phys)
   for (i = 0; i < N; ++i)
   {
     eos->h = h_min+s*i;
-    fprintf(file,"%0.15f %0.15f\n",eos->h,eos->rest_mass_density(eos));
+    fprintf(file,"%0.15e %0.15e\n",eos->h,eos->rest_mass_density(eos));
   }
   Fclose(file);
   
@@ -61,7 +61,7 @@ void test_EoS(Physics_T *const phys)
   for (i = 0; i < N; ++i)
   {
     eos->h = h_min+s*i;
-    fprintf(file,"%0.15f %0.15f\n",eos->h,eos->energy_density(eos));
+    fprintf(file,"%0.15e %0.15e\n",eos->h,eos->energy_density(eos));
   }
   Fclose(file);
   
@@ -71,7 +71,7 @@ void test_EoS(Physics_T *const phys)
   for (i = 0; i < N; ++i)
   {
     eos->h = h_min+s*i;
-    fprintf(file,"%0.15f %0.15f\n",eos->h,eos->specific_internal_energy(eos));
+    fprintf(file,"%0.15e %0.15e\n",eos->h,eos->specific_internal_energy(eos));
   }
   Fclose(file);
     
@@ -81,7 +81,7 @@ void test_EoS(Physics_T *const phys)
   for (i = 0; i < N; ++i)
   {
     eos->h = h_min+s*i;
-    fprintf(file,"%0.15f %0.15f\n",eos->h,eos->drho0_dh(eos));
+    fprintf(file,"%0.15e %0.15e\n",eos->h,eos->drho0_dh(eos));
   }
   Fclose(file);
       
@@ -91,7 +91,7 @@ void test_EoS(Physics_T *const phys)
   for (i = 0; i < N; ++i)
   {
     eos->h = h_min+s*i;
-    fprintf(file,"%0.15f %0.15f\n",eos->h,eos->de_dh(eos));
+    fprintf(file,"%0.15e %0.15e\n",eos->h,eos->de_dh(eos));
   }
   Fclose(file);
   
