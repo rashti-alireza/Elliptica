@@ -12,10 +12,10 @@ static const char *const Field_Dictionary[] =
 {
 "alpha",/* lapse: alpha */
 "betax","betay","betaz",/* shift: beta^i */
-"adm_gxx","adm_gxy","adm_gxz",/* metric: g_ij */
-"adm_gyy","adm_gyz","adm_gzz",/* metric: g_ij */
-"adm_Kxx","adm_Kxy","adm_Kxz",/* extrinsic curvature: K_ij */
-"adm_Kyy","adm_Kyz","adm_Kzz",/* extrinsic curvature: K_ij */
+"adm_gxx","adm_gxy","adm_gxz",/* symmetic ADM metric: g_ij */
+"adm_gyy","adm_gyz","adm_gzz",/* symmetic ADM metric: g_ij */
+"adm_Kxx","adm_Kxy","adm_Kxz",/* symmetic ADM extrinsic curvature: K_ij */
+"adm_Kyy","adm_Kyz","adm_Kzz",/* symmetic ADM extrinsic curvature: K_ij */
 
 /* matter part */
 "grhd_rho",/* primitive rho (rest mass density, rho0 in Elliptica) */
