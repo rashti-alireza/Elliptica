@@ -48,7 +48,7 @@ SRC+=("${MODULE_DIR}/Physics/Transformation")
 SRC+=("${MODULE_DIR}/Physics/StressEnergy_Tensor")
 SRC+=("${MODULE_DIR}/Physics/Star")
 SRC+=("${MODULE_DIR}/Physics/BlackHole")
-SRC+=("${MODULE_DIR}/Physics/System")
+#SRC+=("${MODULE_DIR}/Physics/System")
 SRC+=("${MODULE_DIR}/Physics/Free_Data")
 SRC+=("${MODULE_DIR}/Physics/ADM")
 #SRC+=("${MODULE_DIR}/Physics/Equation")
@@ -109,4 +109,6 @@ sed -i '/free_patch_SolMan_method_Schur/d' *.c
 sed -i '/alloc_matrix/d' *.c
 sed -i '/free_matrix/d' *.c
 sed -i '/eq_main/d' *.c
+sed -i '/sys_main/d' *.c
+
 
