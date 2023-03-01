@@ -263,7 +263,6 @@ static double interpolation_natural_cubic_spline_1d(Interpolation_T *const inter
   
   ret = a[i]+b[i]*(h-x[i])+c[i]*Pow2(h-x[i])+d[i]*Pow3(h-x[i]);
   
-  printf("a[%i] = %e\n", i, a[i]);///////////////////
   return ret; 
 }
 
