@@ -13,8 +13,8 @@ void test_EoS(Physics_T *const phys)
   char *path,file_name[1000];
   FILE *file = 0;
   Uint N = 1000;
-  const double h_max = 1.01;// eos->h_th != 0 ? eos->h_th[eos->N-1]+1: 2; //NOTE: Original values h = [1,2]. (Andrew)
-  const double h_min = 1.78;                                            //Changed bounds to test tabular EOS with TOV solver project.
+  const double h_max = 1.0;// eos->h_th != 0 ? eos->h_th[eos->N-1]+1: 2; //NOTE: Original values h = [1,2]. (Andrew)
+  const double h_min = 2.0;                                            //Changed bounds to test tabular EOS with TOV solver project.
   double s = (h_max-h_min)/(N-1);
   Uint i;
   
@@ -34,6 +34,7 @@ void test_EoS(Physics_T *const phys)
     Fclose(file);
   }
   
+  printf("Checkpoint 1\n");///////////////////////////////////////////
   /* continuity */
   sprintf(file_name,"%s/%s",path,"pressure");
   file = Fopen(file_name,"w+");
@@ -44,6 +45,7 @@ void test_EoS(Physics_T *const phys)
     fprintf(file,"%0.15e %0.15e\n",eos->h,eos->pressure(eos));
   }
   Fclose(file);
+  printf("Checkpoint 1.1\n");///////////////////////////////////////////
     
   sprintf(file_name,"%s/%s",path,"rest_mass_density");
   file = Fopen(file_name,"w+");
@@ -74,7 +76,9 @@ void test_EoS(Physics_T *const phys)
     fprintf(file,"%0.15e %0.15e\n",eos->h,eos->specific_internal_energy(eos));
   }
   Fclose(file);
-    
+  
+  printf("Checkpoint 2\n");///////////////////////////////////////////
+  /*  
   sprintf(file_name,"%s/%s",path,"drho0_dh");
   file = Fopen(file_name,"w+");
   fprintf(file,"# enthalpy  drho0_dh\n");  
@@ -94,7 +98,8 @@ void test_EoS(Physics_T *const phys)
     fprintf(file,"%0.15e %0.15e\n",eos->h,eos->de_dh(eos));
   }
   Fclose(file);
-  
+  */
+   
   free_EoS(eos);
   free(path);
   UNUSED(grid);

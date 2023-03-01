@@ -34,6 +34,8 @@ static double interpolation_Chebyshev_Tn_XYZ(Interpolation_T *const interp_s);
 void free_interpolation(Interpolation_T *interp_s);
 
 /////////////////////////////Extra interpolation methods.
+static void find_coeffs_Hermite_cubic_spline(Interpolation_T *const interp_s);
+static double interpolation_Hermite_cubic_spline(Interpolation_T *const interp_s);
 static void find_coeffs_clamped_cubic_spline_1d(Interpolation_T *const interp_s);
 static double interpolation_clamped_cubic_spline_1d(Interpolation_T *const interp_s);
 static double interpolation_log_linear(Interpolation_T *const interp_s);

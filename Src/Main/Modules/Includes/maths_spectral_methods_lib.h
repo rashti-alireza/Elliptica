@@ -54,21 +54,23 @@ typedef struct INTERPOLATION_T
    double h;/* desired point to interpolate f */
    Uint N;/* number of xi's */
    double *a,*b,*c,*d;/* coefficents in s(h) = a+b(h-xi)+c(h-xi)^2+d(h-xi)^3 */
+   /* *b, *c, and *d are also used as coefficients for cubic Hermite spline. */
+   double *log_f; /* used for log interpolation */
    Uint Order: 1;/* if xi's in the order 1, otherwise 0 */
    Uint Alloc_Mem: 1;/* if it allocates memory for x and f */
    Uint No_Warn: 1;/* if 1 it prints NO warning in case of an error */
   }N_cubic_spline_1d[1];/* natural cubic spline 1d */
-  struct
-  {
-   double *f;/* f(xi)'s */
-   double *x;/* xi's, note: it must be x0 < x1 < ...< xN */
-   double h;/* desired point to interpolate f */
-   double *log_f;/* log_f[i] = ln(f[i]) */
-   Uint N;/* number of xi's */
-   Uint Order: 1;/* if xi's in the order 1, otherwise 0 */
-   Uint Alloc_Mem: 1;/* if it allocates memory for x, f, log_x, and log_f */
-   Uint No_Warn: 1;/* if 1 it prints NO warning in case of an error */
-  }log_interpolation_1d[1];/* 1D logarithmic interpolation */
+  //struct
+  //{
+   //double *f;/* f(xi)'s */
+   //double *x;/* xi's, note: it must be x0 < x1 < ...< xN */
+   //double h;/* desired point to interpolate f */
+   //double *log_f;/* log_f[i] = ln(f[i]) */
+   //Uint N;/* number of xi's */
+   //Uint Order: 1;/* if xi's in the order 1, otherwise 0 */
+   //Uint Alloc_Mem: 1;/* if it allocates memory for x, f, log_x, and log_f */
+   //Uint No_Warn: 1;/* if 1 it prints NO warning in case of an error */
+  //}log_interpolation_1d[1];/* 1D logarithmic interpolation */
 }Interpolation_T;
 
 void rft_1d_ChebyshevExtrema_coeffs(double *const values ,double *const coeffs,const Uint n);

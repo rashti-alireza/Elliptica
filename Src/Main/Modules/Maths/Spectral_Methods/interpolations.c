@@ -60,6 +60,12 @@ void plan_interpolation(Interpolation_T *const interp_s)
     find_coeffs_natural_cubic_spline_1d(interp_s);
     interp_s->interpolation_func = interpolation_natural_cubic_spline_1d;
   }
+  else if (strstr_i(interp_s->method,"Hermite_Cubic_Spline"))
+  {
+    order_arrays_natural_cubic_spline_1d(interp_s);
+    find_coeffs_Hermite_cubic_spline(interp_s);
+    interp_s->interpolation_func = interpolation_Hermite_cubic_spline;
+  }
   else if (strstr_i(interp_s->method,"Clamped_Cubic_Spline_1D"))
   {
     order_arrays_natural_cubic_spline_1d(interp_s);
@@ -257,7 +263,109 @@ static double interpolation_natural_cubic_spline_1d(Interpolation_T *const inter
   
   ret = a[i]+b[i]*(h-x[i])+c[i]*Pow2(h-x[i])+d[i]*Pow3(h-x[i]);
   
+  printf("a[%i] = %e\n", i, a[i]);///////////////////
   return ret; 
+}
+
+////////////////////////////////////////////Cubic Hermite Spline///////////////////////////////////////////////////////////
+// Interpolates function f(x) over sub-intervals [a,b]
+// using linear combination of basis functions:
+// f(x) ~ p(x) = h00(x)f(a) + h10(x)(b-a)m_k + h01(x)f(b) + h11(x)(b-a)m_k+1,
+// where h00, etc are cubic basis functions 
+// and slopes m_k are estimated by finite difference.
+// This method also interpolates f'(x).
+static void find_coeffs_Hermite_cubic_spline(Interpolation_T *const interp_s)
+{
+    // Finds values of m0 and m1 for each sub-interval
+    // using 3-point finite difference approximation.
+    const Uint n = interp_s->N_cubic_spline_1d->N-1;
+    const double *const x = interp_s->N_cubic_spline_1d->x;
+    double *const a = interp_s->N_cubic_spline_1d->f;
+    double *const b = alloc_double(n); // m values
+    double *const c = alloc_double(n); // spline coefficients
+    double *const d = alloc_double(n); // spline coefficients
+    Uint i = 0;
+    
+    // Estimates m_k by 3-point finite difference
+    // except at end points, where 2-point
+    // finite difference is used instead.
+    // Stores m values in N_cubic_spline_1d->b array.
+    for (i = 1; i < n-1; i++)
+    {
+        b[i] = 0.5 * ((a[i+1]-a[i])/(x[i+1]-x[i])
+             + (a[i]-a[i-1])/(x[i]-x[i-1]));
+    }
+    b[0] = (a[1]-a[0])/(x[1]-x[0]);
+    b[n-1] = (a[n-1]-a[n-2])/(x[n-1]-x[n-2]);
+    
+    // Pre-computes coefficients c and d for cubic Hermite spline
+    // standard form:
+    // p(x) = c_k * t^3 + d_k * t^3 + m_k * t + f(x_k).
+    for (i = 0; i < n-1; i++)
+    {
+        c[i] = 2*(a[i] - a[i+1]) + (x[i+1] - x[i])*(b[i] + b[i+1]);
+        d[i] = 3*(a[i+1] - a[i]) - (x[i+1] - x[i])*(2*b[i] + b[i+1]);
+    }
+    
+    interp_s->N_cubic_spline_1d->a = a;
+    interp_s->N_cubic_spline_1d->b = b;
+    interp_s->N_cubic_spline_1d->c = c;
+    interp_s->N_cubic_spline_1d->d = d;
+    printf("Hermite splines prepared.\n");////////////////////////////////////
+}
+
+static double interpolation_Hermite_cubic_spline(Interpolation_T *const interp_s)
+{
+  // Executes cubic Hermite spline interpolation:
+  // f(x) ~ p(x) = h00(x)f(a) + h10(x)(b-a)m_k + h01(x)f(b) + h11(x)(b-a)m_k+1
+  //printf("Hermite cubic spline interpolation function.\n");/////////////////////////////////
+  if (!interp_s->N_cubic_spline_1d->Order)
+  order_arrays_natural_cubic_spline_1d(interp_s);
+    
+  const double *const x = interp_s->N_cubic_spline_1d->x;
+  const double *const a = interp_s->N_cubic_spline_1d->a;
+  const double *const b = interp_s->N_cubic_spline_1d->b;
+  const double *const c = interp_s->N_cubic_spline_1d->c;
+  const double *const d = interp_s->N_cubic_spline_1d->d;
+  const double h = interp_s->N_cubic_spline_1d->h;
+  const Uint N = interp_s->N_cubic_spline_1d->N;
+  double ret = DBL_MAX;/* it's important to be max double */
+  Uint i = 0;
+  Flag_T flg = NONE;
+  
+//printf("Checkpoint 1.3.\n");///////////////////////////////////
+  /* find the segment */
+  for (i = 0; i < N-1; ++i)
+  {
+    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+    {
+      flg = FOUND;
+      break;
+    }
+  }
+
+  if (flg != FOUND)
+  {
+    if (!interp_s->N_cubic_spline_1d->No_Warn)
+      Warning("The given point for the interpolation is out of the domain.\n");
+    
+    return ret;
+  }
+    //printf("Checkpoint 1.4.\n");///////////////////////////////////
+   // printf("Spline interval: %i\n", i);///////////////////////////////
+  //  printf("h = %E\n", h);///////////////////////////
+ //   printf("Interval: [%e, %e]\n", x[i], x[i+1]);///////////////
+  // Uses standard polynomial form with
+  // pre-computed coefficients for efficiency.
+printf("a[%i] = %e\n", i, a[i]);////////////////
+//printf("b[i] = %e\n", b[i]);////////////////
+//printf("c[i] = %e\n", c[i]);////////////////
+//printf("d[i] = %e\n", d[i]);////////////////
+  double t = (h - x[i]) / (x[i+1] - x[i]);
+  ret = c[i] * t*t*t + d[i] * t*t + b[i] * (h - x[i]) + a[i];
+  
+  //printf("Checkpoint 1.2.\n");///////////////////////////////////
+  return ret;
 }
 
 ////////////////////////////////////////////Clamped cubic spline
@@ -369,13 +477,13 @@ static double interpolation_clamped_cubic_spline_1d(Interpolation_T *const inter
 //////////////////////////////////////////////////Logarithmic interpolation
 static double interpolation_log_linear(Interpolation_T *const interp_s)
 {
-    if (!interp_s->log_interpolation_1d->Order)
+    if (!interp_s->N_cubic_spline_1d->Order)
         prepare_log_interpolation(interp_s);
         
-    const double *const x = interp_s->log_interpolation_1d->x;
-    const double *const log_f = interp_s->log_interpolation_1d->log_f;
-    const double h = interp_s->log_interpolation_1d->h;
-    const Uint N = interp_s->log_interpolation_1d->N;
+    const double *const x = interp_s->N_cubic_spline_1d->x;
+    const double *const log_f = interp_s->N_cubic_spline_1d->log_f;
+    const double h = interp_s->N_cubic_spline_1d->h;
+    const Uint N = interp_s->N_cubic_spline_1d->N;
     double ret = DBL_MAX;/* it's important to be max double */
     Uint i;
     Flag_T flg = NONE;
@@ -408,11 +516,11 @@ static double interpolation_log_linear(Interpolation_T *const interp_s)
 
 static void prepare_log_interpolation(Interpolation_T *const interp_s)
 {
-  double *x = interp_s->log_interpolation_1d->x;
-  double *f = interp_s->log_interpolation_1d->f;
+  double *x = interp_s->N_cubic_spline_1d->x;
+  double *f = interp_s->N_cubic_spline_1d->f;
   double *y;/* ordered x */
   double *g;/* ordered f */
-  const Uint N = interp_s->log_interpolation_1d->N;
+  const Uint N = interp_s->N_cubic_spline_1d->N;
   Uint i;
   
   if (EQL(x[0],x[N-1]))
@@ -421,7 +529,7 @@ static void prepare_log_interpolation(Interpolation_T *const interp_s)
   }
   if (GRT(x[0],x[N-1]))/* if the x's are in decreasing order */
   {
-    interp_s->log_interpolation_1d->Alloc_Mem = 1;
+    interp_s->N_cubic_spline_1d->Alloc_Mem = 1;
     y = alloc_double(N);
     g = alloc_double(N);
     
@@ -430,17 +538,17 @@ static void prepare_log_interpolation(Interpolation_T *const interp_s)
       y[i] = x[N-1-i];
       g[i] = f[N-1-i];
     }
-    interp_s->log_interpolation_1d->x = y;
-    interp_s->log_interpolation_1d->f = g;
+    interp_s->N_cubic_spline_1d->x = y;
+    interp_s->N_cubic_spline_1d->f = g;
   }
-  interp_s->log_interpolation_1d->Order = 1;
+  interp_s->N_cubic_spline_1d->Order = 1;
 
     double *log_f = alloc_double(N);
     for (i = 0; i < N; i++)
     {
-        log_f[i] = log(interp_s->log_interpolation_1d->f[i]);
+        log_f[i] = log(interp_s->N_cubic_spline_1d->f[i]);
     }
-    interp_s->log_interpolation_1d->log_f = log_f;
+    interp_s->N_cubic_spline_1d->log_f = log_f;
 }
 
 /////////////////////////////////////////Neville interpolation
@@ -779,12 +887,12 @@ void free_interpolation(Interpolation_T *interp_s)
   }
   else if (strstr_i(interp_s->method,"Log_Linear"))
   {
-    if (interp_s->log_interpolation_1d->log_f)
-      free(interp_s->log_interpolation_1d->log_f);
-    if (interp_s->log_interpolation_1d->Alloc_Mem)
+    if (interp_s->N_cubic_spline_1d->log_f)
+      free(interp_s->N_cubic_spline_1d->log_f);
+    if (interp_s->N_cubic_spline_1d->Alloc_Mem)
     {
-      free(interp_s->log_interpolation_1d->x);
-      free(interp_s->log_interpolation_1d->f);
+      free(interp_s->N_cubic_spline_1d->x);
+      free(interp_s->N_cubic_spline_1d->f);
     }
   }
   free(interp_s);

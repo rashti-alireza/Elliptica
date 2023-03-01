@@ -15,32 +15,7 @@ Uint get_sample_size(const char* const eos_file_name)
     fclose(eos_file);
     
     return lines;
-    //char character;
-    //while((character = fgetc(eos_file)) != EOF) { if (character == '\n') { lines++; } }
-    
-    //fclose(eos_file);
-    //return lines;
 }
-
-/*Removed due to removal of finite difference version of de/dh and drho0/dh.
-Uint find_h_interval(EoS_T *const eos)
-{
-    //Finds spline interval for enthalpy value (i.e. finds j such that hj <= h < hj+1).
-    //WARNING: Does not perform bounds checking for enthalpy value,
-    //will break if enthalpy is out of bounds.
-    Uint interval = 0;
-    Interpolation_T *const interpolation = (Interpolation_T*)eos->cubic_spline->interp_e;
-    
-    if (GRTEQL(eos->h, eos->cubic_spline->h_max)) { return eos->cubic_spline->sample_size; }
-    
-    while (GRT(eos->h, interpolation->N_cubic_spline_1d->x[interval+1])) { interval++; }
-    printf("Enthalpy (%E < %E < %E) interval: %i\n", 
-        interpolation->N_cubic_spline_1d->x[interval],
-        eos->h, interpolation->N_cubic_spline_1d->x[interval+1], interval);
-    
-    return interval;
-}
-*/
 
 //Calculates pressure from enthalpy by tabular EOS.
 double EoS_p_h_tab(EoS_T* const eos)
@@ -55,14 +30,7 @@ double EoS_p_h_tab(EoS_T* const eos)
     
     double p;  
     Interpolation_T *const interp_s = eos->cubic_spline->interp_p;
-  
-    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
-    { interp_s->N_cubic_spline_1d->h  = eos->h; }
-    else if (strstr_i(interp_s->method, "Log_Linear"))
-    { interp_s->log_interpolation_1d-> h = eos->h; }
-    else
-    { Error0("Failed to read enthalpy in tabular EOS pressure function.\n"); }
-    
+    interp_s->N_cubic_spline_1d->h  = eos->h;
     p = execute_interpolation(interp_s);
     
     return (LSSEQL(p,0.) || p == DBL_MAX ? 0. : p);
@@ -81,16 +49,9 @@ double EoS_rho0_h_tab(EoS_T* const eos)
   
     double rho0;  
     Interpolation_T *const interp_s = eos->cubic_spline->interp_rho0;
-  
-    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
-    { interp_s->N_cubic_spline_1d->h  = eos->h; }
-    else if (strstr_i(interp_s->method, "Log_Linear"))
-    { interp_s->log_interpolation_1d-> h = eos->h; }
-    else
-    { Error0("Failed to read enthalpy in tabular EOS rest-mass-density function.\n"); }
-    
+    interp_s->N_cubic_spline_1d->h  = eos->h;
     rho0 = execute_interpolation(interp_s);
-  
+
     return (LSSEQL(rho0,0.) || rho0 == DBL_MAX ? 0. : rho0);
 }
 
@@ -107,14 +68,7 @@ double EoS_e_h_tab(EoS_T* const eos)
 
     double e;
     Interpolation_T *const interp_s = eos->cubic_spline->interp_e;
-  
-    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
-    { interp_s->N_cubic_spline_1d->h  = eos->h; }
-    else if (strstr_i(interp_s->method, "Log_Linear"))
-    { interp_s->log_interpolation_1d-> h = eos->h; }
-    else
-    { Error0("Failed to read enthalpy in tabular EOS energy-density function.\n"); }
-    
+    interp_s->N_cubic_spline_1d->h  = eos->h;
     e = execute_interpolation(interp_s);
   
     return (LSSEQL(e,0.) || e == DBL_MAX ? 0. : e);
@@ -164,10 +118,10 @@ double EoS_de_dh_h_tab(EoS_T* const eos)
     {
     //Uses derivative of log-linear interpolation:
     // f'(x) ~ f(x) * ((log(f(x_k+1) _ log(f(x_k))/(x_k+1 - x_k))
-        double m = (log(interpolation->log_interpolation_1d->f[h_interval+1])
-                    - log(interpolation->log_interpolation_1d->f[h_interval])) /
-                    (interpolation->log_interpolation_1d->x[h_interval+1]
-                    - interpolation->log_interpolation_1d->x[h_interval]);
+        double m = (log(interpolation->N_cubic_spline_1d->f[h_interval+1])
+                    - log(interpolation->N_cubic_spline_1d->f[h_interval])) /
+                    (interpolation->N_cubic_spline_1d->x[h_interval+1]
+                    - interpolation->N_cubic_spline_1d->x[h_interval]);
         
         return EoS_e_h_tab(eos) * m;
     }
@@ -237,10 +191,10 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
     {
     //Uses derivative of log-linear interpolation:
     // f'(x) ~ f(x) * ((log(f(x_k+1) _ log(f(x_k))/(x_k+1 - x_k))
-        double m = (log(interpolation->log_interpolation_1d->f[h_interval+1])
-                    - log(interpolation->log_interpolation_1d->f[h_interval])) /
-                    (interpolation->log_interpolation_1d->x[h_interval+1]
-                    - interpolation->log_interpolation_1d->x[h_interval]);
+        double m = (log(interpolation->N_cubic_spline_1d->f[h_interval+1])
+                    - log(interpolation->N_cubic_spline_1d->f[h_interval])) /
+                    (interpolation->N_cubic_spline_1d->x[h_interval+1]
+                    - interpolation->N_cubic_spline_1d->x[h_interval]);
         
         return EoS_rho0_h_tab(eos) * m;
     }
