@@ -7,7 +7,8 @@
 ##
 ## a quick ad-hoc method to collect a subset of source files needed for ID reader
 ##
-## NOTE: check that all projects be in the working git branch (not testing ones)
+## NOTE: check all projects be in the working git branch (not testing ones)
+## NOTE: if renameing a file in ELLIPTICA you should rm the src dir in ID reader.
 ##
 
 E_TOP="$1"
