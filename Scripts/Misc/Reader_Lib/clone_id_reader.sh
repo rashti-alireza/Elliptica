@@ -60,7 +60,7 @@ PROJ_DIR="Src/Projects"
 SRC+=("${PROJ_DIR}/Includes")
 SRC+=("${PROJ_DIR}/Initial_Data_Reader")
 SRC+=("${PROJ_DIR}/BH_NS_Binary_Initial_Data")
-#SRC+=("${PROJ_DIR}/NS_NS_Binary_Initial_Data")
+SRC+=("${PROJ_DIR}/NS_NS_Binary_Initial_Data")
 SRC+=("${PROJ_DIR}/TOV_star")
 
 
