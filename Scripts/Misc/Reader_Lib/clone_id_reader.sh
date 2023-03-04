@@ -89,9 +89,15 @@ done
 
 ## remove redundant files
 rm -v ${IDR_TOP}/src/main.?
+
 rm -v ${IDR_TOP}/src/bhns_analyze.?
 rm -v ${IDR_TOP}/src/bhns_main.?
 rm -v ${IDR_TOP}/src/bhns_solve_eqs.?
+
+rm -v ${IDR_TOP}/src/nsns_analyze.?
+rm -v ${IDR_TOP}/src/nsns_main.?
+rm -v ${IDR_TOP}/src/nsns_solve_eqs.?
+
 rm -v ${IDR_TOP}/src/projects_data_base_MADE_BY_MAKE.?
 rm -v ${IDR_TOP}/src/pr_for_fields.?
 rm -v ${IDR_TOP}/src/solve_eqs_ddm_schur_complement.?
@@ -99,6 +105,8 @@ rm -v ${IDR_TOP}/src/solve_eqs.?
 rm -v ${IDR_TOP}/src/solvings_tests.?
 rm -v ${IDR_TOP}/src/solve_manager.?
 rm -v ${IDR_TOP}/src/dfs_df.?
+
+rm -v ${IDR_TOP}/src/AKV_lib.h
 
 ## remove uncalling func
 cd ${IDR_TOP}/src
