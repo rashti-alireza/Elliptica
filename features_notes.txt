@@ -1,6 +1,0 @@
-## This branch is composed of various features that are developed for other
-## branches while the branches themselves are abandoned or stale. But, as these
-## feature are useful I cherry-pick them here. So remember next time you want to
-## merge into the master branch, merge these features. Or simply rebase the
-## next dev branch from this branch.
-
