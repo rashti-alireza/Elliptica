@@ -33,9 +33,9 @@ double EoS_drho0_dh_h_tab(EoS_T *const eos);
 double EoS_de_dh_h_tab(EoS_T *const eos);
 double EoS_de_dh_h_tab(EoS_T *const eos);
 Uint get_sample_size(const char* const eos_file_name);
-//#define p_FACTOR 1.80162095578956E-39
-//#define rho0_FACTOR 2712069678583312E-3
-//#define e_FACTOR 1.619216164136643E-22 
+//#define p_FACTOR (1.80162095578956E-39)
+//#define rho0_FACTOR (2712069678583312E-3)
+//#define e_FACTOR (1.619216164136643E-22)
 /////////////////////////////////////////////////////
 
 EoS_T *init_EoS(Physics_T *const phys);

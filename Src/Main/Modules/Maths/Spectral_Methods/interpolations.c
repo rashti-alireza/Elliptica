@@ -310,7 +310,6 @@ static void find_coeffs_Hermite_cubic_spline(Interpolation_T *const interp_s)
     interp_s->N_cubic_spline_1d->b = b;
     interp_s->N_cubic_spline_1d->c = c;
     interp_s->N_cubic_spline_1d->d = d;
-    printf("Hermite splines prepared.\n");////////////////////////////////////
 }
 
 static double interpolation_Hermite_cubic_spline(Interpolation_T *const interp_s)
@@ -332,7 +331,6 @@ static double interpolation_Hermite_cubic_spline(Interpolation_T *const interp_s
   Uint i = 0;
   Flag_T flg = NONE;
   
-//printf("Checkpoint 1.3.\n");///////////////////////////////////
   /* find the segment */
   for (i = 0; i < N-1; ++i)
   {
@@ -350,20 +348,10 @@ static double interpolation_Hermite_cubic_spline(Interpolation_T *const interp_s
     
     return ret;
   }
-    //printf("Checkpoint 1.4.\n");///////////////////////////////////
-   // printf("Spline interval: %i\n", i);///////////////////////////////
-  //  printf("h = %E\n", h);///////////////////////////
- //   printf("Interval: [%e, %e]\n", x[i], x[i+1]);///////////////
-  // Uses standard polynomial form with
-  // pre-computed coefficients for efficiency.
-printf("a[%i] = %e\n", i, a[i]);////////////////
-//printf("b[i] = %e\n", b[i]);////////////////
-//printf("c[i] = %e\n", c[i]);////////////////
-//printf("d[i] = %e\n", d[i]);////////////////
+ 
   double t = (h - x[i]) / (x[i+1] - x[i]);
   ret = c[i] * t*t*t + d[i] * t*t + b[i] * (h - x[i]) + a[i];
   
-  //printf("Checkpoint 1.2.\n");///////////////////////////////////
   return ret;
 }
 
