@@ -1,6 +1,13 @@
 #ifndef ELLIPTICA_ID_READER_LIB_H
 #define ELLIPTICA_ID_READER_LIB_H
 
+// Expose it for C++ interfacing
+#ifdef __cplusplus
+extern "C" {
+#endif
+/* ---------------------------------------------------------------------- */
+
+
 /* NOTE: this is the header to be used for an evolution code */
 /* NOTE: unsigned is not used here in case there is any conflicts for evo codes. */
 
@@ -33,5 +40,10 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
 int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr);
 int elliptica_id_reader_free(Elliptica_ID_Reader_T *idr);
 
+
+/* ---------------------------------------------------------------------- */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
