@@ -2156,13 +2156,13 @@ static void calc_ADM_mass(Observe_T *const obs)
       if (IsIt("S+V,default"))
       {
         /* volume part */
-        region   = "outermost,filling_box,NS1,NS2_around,NS2,NS2_around";
+        region   = "outermost,filling_box,NS1,NS1_around,NS2,NS2_around";
         patches1 = collect_patches(grid,region,&N1);
       }
       else if (IsIt("S+V,conformal"))
       {
         /* volume part */
-        region   = "outermost,filling_box,NS1,NS2_around,NS2,NS2_around";
+        region   = "outermost,filling_box,NS1,NS1_around,NS2,NS2_around";
         patches1 = collect_patches(grid,region,&N1);
       }
       else if (IsIt("S_inf,default"))
