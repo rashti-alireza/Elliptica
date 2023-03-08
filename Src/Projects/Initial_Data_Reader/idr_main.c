@@ -48,7 +48,8 @@ idr->x_coords = a pointer to double type 1D(ijk) array of Cartesian x coord valu
 idr->y_coords = a pointer to double type 1D(ijk) array of Cartesian y coord values;
 idr->z_coords = a pointer to double type 1D(ijk) array of Cartesian z coord values;
 
-// set parameters for elliptica, for example:
+// set parameters for elliptica. These won't change Elliptica's checkpoint file.
+// example:
 idr->set_param("BHNS_filler_method","ChebTn_Ylm_perfect_s2",idr);
 idr->set_param("ADM_B1I_form","zero",idr);
 
