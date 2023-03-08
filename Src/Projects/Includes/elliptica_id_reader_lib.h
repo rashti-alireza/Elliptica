@@ -25,8 +25,10 @@ typedef struct ELLIPTICA_ID_READER_T
   double *y_coords;// Cartesian y coord values, y_coords[ijk] with length npoints
   double *z_coords;// Cartesian z coord values, z_coords[ijk] with length npoints
   unsigned (*indx)(const char *const fname);// find field index  
-  void (*param)(const char *const lv,const char *const rv,
-                struct ELLIPTICA_ID_READER_T *const idr);// set params from evo code
+  void (*set_param)(const char *const lv,const char *const rv,
+                    struct ELLIPTICA_ID_READER_T *const idr);// set params from evo code side
+  double (*get_param_dbl)(const char *const lv,
+                          struct ELLIPTICA_ID_READER_T *const idr);// get a double param from a checkpoint file
   char **params_lv;// left value,  params[0]="force_balance"
   char **params_rv;// right value, params[0]="on"
   unsigned nparams;// number of params

@@ -48,9 +48,12 @@ idr->x_coords = a pointer to double type 1D(ijk) array of Cartesian x coord valu
 idr->y_coords = a pointer to double type 1D(ijk) array of Cartesian y coord values;
 idr->z_coords = a pointer to double type 1D(ijk) array of Cartesian z coord values;
 
-// set parameter for elliptica, for example:
-idr->param("BHNS_filler_method","ChebTn_Ylm_perfect_s2",idr);
-idr->param("ADM_B1I_form","zero",idr);
+// set parameters for elliptica, for example:
+idr->set_param("BHNS_filler_method","ChebTn_Ylm_perfect_s2",idr);
+idr->set_param("ADM_B1I_form","zero",idr);
+
+// get double parameters for elliptica, for example:
+idr->set_param_dbl("BHNS_angular_velocity",idr);
 
 // interpolate
 elliptica_id_reader_interpolate(idr);
@@ -122,8 +125,9 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
   // set index finder
   idr->indx = find_field_index;
   
-  // settig param function
-  idr->param = set_param_from_evo;
+  // settig param functions
+  idr->set_param     = set_param_from_evo;
+  idr->get_param_dbl = get_param_double_from_checkpoint;
   
   // read checkpoint file
   file = Fopen(idr->checkpoint_path,"r");
@@ -133,7 +137,7 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
   assert(par);
   idr->system = dup_s(par->rv);
   // add a project parameter
-  idr->param("Project",idr->system,idr);
+  idr->set_param("Project",idr->system,idr);
   // which option
   idr->option = dup_s(option);
   
@@ -149,7 +153,7 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
   return idr;
 }
 
-/* set parameter for reader from evo code side.
+/* set parameter for reader from the evo code side.
 // e.g., set_param_from_evo("bh_filler", "on",idr); --> bh_filler = on. */
 static void set_param_from_evo(
           const char *const lv/* e.g., force_balance */, 
@@ -173,6 +177,33 @@ static void set_param_from_evo(
   idr->params_rv[nparams] = dup_s(rv);
   
   idr->nparams++;
+}
+
+/* get a double parameter from elliptica's checkpoint file. 
+// note: it opens the checkpint file and takes a query.
+// e.g.,  double Omega = get_param_double_from_evo("BHNS_angular_velocity",idr); */
+static double get_param_double_from_checkpoint( 
+          const char *const lv/* e.g., "BHNS_angular_velocity" */,
+          Elliptica_ID_Reader_T *const idr)
+{
+  double ret = DBL_MAX;
+  // check
+  if(!lv) return ret;
+  
+  FILE *file = 0;
+  Parameter_T *par = 0;
+
+  // read checkpoint file
+  file = Fopen(idr->checkpoint_path,"r");
+  par  = parameter_query_from_checkpoint(lv,file);
+  assert(par);
+  ret = strtod(par->rv,0);
+  
+  // free
+  free_given_parameter(par);
+  Fclose(file);
+  
+  return ret;
 }
 
 /* given the field name, it returns the index number of the field.
