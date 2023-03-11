@@ -45,7 +45,7 @@ char EQ__Temp2[EQ__STR__LEN0] = {'\0'};
 // this is working because while setting up the region on each equation 
 // only pertinent patches have been chosen. 
 // note: if X = system, it prefixes with system like "BHNS_" 
-// for BHNS system. */
+// for BHNS system. NOTE: the order matters. */
 #define EQ_Set_Prefix(X) \
 sprintf(EQ__Temp1,"%s1",X);\
 sprintf(EQ__Temp2,"%s2",X);\
@@ -57,9 +57,11 @@ else if (strstr(patch->CoordSysInfo->region,EQ__Temp2))\
   sprintf(EQ__param__prefix,"%s2",X);\
 else if (strcmp_i("system",X))\
   sprintf(EQ__param__prefix,"%s",Pgets(P_"system_prefix"));\
+else if (strstr(patch->CoordSysInfo->region,X))\
+  sprintf(EQ__param__prefix,"%s",X);\
 else \
-  sprintf(EQ__param__prefix,"%s",X);
-
+  Error0(NO_OPTION);
+  
 /* prefix given parameter X by EQ_prefix_par defined in 
 // EQ_Set_Prefix. */
 #define EQ_PrefixIt(X) \
