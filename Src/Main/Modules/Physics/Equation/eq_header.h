@@ -39,7 +39,7 @@ char EQ__Temp2[EQ__STR__LEN0] = {'\0'};
 // index when multiple objects involved and 
 // there are some paramters for each object for instance BHBH
 // system which has BH1 and BH2, in this case, for example,
-// if X is "BH" and patch->name is "grid1_BH2_around_IB_X0Y0Z0"
+// if X is "BH" and patch->CoordSysInfo->region contains "BH2"
 // EQ__param__prefix will be "BH2" according to the patch->name.
 // if given X has already index then EQ__param__prefix = X
 // this is working because while setting up the region on each equation 
