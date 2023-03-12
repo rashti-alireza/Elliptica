@@ -15,7 +15,7 @@
 
 ## gnu makes
 makefile
-MyConfig
+/MyConfig
 
 ## ctags
 /Src/tags
