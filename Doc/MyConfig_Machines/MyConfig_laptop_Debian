@@ -1,0 +1,167 @@
+############################################
+## The configurations is used by Makefile ##
+############################################
+
+######################
+## Name conventions ##
+######################
+
+## program name exe:
+EXEC := elliptica
+
+## exe directory:
+EXEC_DIR := $(TOP)/Exe
+
+############################
+## modules to be compiled ##
+############################
+
+## we need all of the the following modules:
+MODULE += $(MODULE_DIR)/Manifold
+MODULE += $(MODULE_DIR)/Fields
+MODULE += $(MODULE_DIR)/Error_Handlings
+MODULE += $(MODULE_DIR)/Text_and_File_Tools
+MODULE += $(MODULE_DIR)/Prints
+MODULE += $(MODULE_DIR)/Utilities
+MODULE += $(MODULE_DIR)/Checkpoint
+MODULE += $(MODULE_DIR)/Maths/Linear_Algebra
+MODULE += $(MODULE_DIR)/Maths/Field_Analysis
+MODULE += $(MODULE_DIR)/Maths/Equation_Solvings
+MODULE += $(MODULE_DIR)/Maths/Matrix_Solvers
+MODULE += $(MODULE_DIR)/Maths/General
+MODULE += $(MODULE_DIR)/Maths/Spectral_Methods
+MODULE += $(MODULE_DIR)/Maths/Special_Functions
+MODULE += $(MODULE_DIR)/Maths/Calculus
+MODULE += $(MODULE_DIR)/Maths/Complex
+MODULE += $(MODULE_DIR)/Maths/Diff_Geom
+MODULE += $(MODULE_DIR)/Physics
+MODULE += $(MODULE_DIR)/Physics/EoS
+MODULE += $(MODULE_DIR)/Physics/Observe
+MODULE += $(MODULE_DIR)/Physics/Transformation
+MODULE += $(MODULE_DIR)/Physics/StressEnergy_Tensor
+MODULE += $(MODULE_DIR)/Physics/Star
+MODULE += $(MODULE_DIR)/Physics/BlackHole
+MODULE += $(MODULE_DIR)/Physics/System
+MODULE += $(MODULE_DIR)/Physics/Free_Data
+MODULE += $(MODULE_DIR)/Physics/ADM
+MODULE += $(MODULE_DIR)/Physics/Equation
+
+## one can comment out these module(s):
+#MODULE += $(MODULE_DIR)/Prints/pr_hdf5_silo
+
+#############################
+## Projects to be compiled ##
+#############################
+
+#PROJECT += $(PROJECT_DIR)/Poissons/Poisson0
+#PROJECT += $(PROJECT_DIR)/Tests/Modules_Test
+PROJECT += $(PROJECT_DIR)/TOV_star
+PROJECT += $(PROJECT_DIR)/BH_NS_Binary_Initial_Data
+PROJECT += $(PROJECT_DIR)/NS_NS_Binary_Initial_Data
+PROJECT += $(PROJECT_DIR)/Initial_Data_Reader
+
+
+##########################
+## Compilation settings ##
+##########################
+
+### which compiler:
+#CC = clang
+#CC = icc
+CC = gcc
+
+### optimization
+OFLAGS += -g3
+#OFLAGS +=  -O3
+
+### activate open-mp
+OFLAGS += -fopenmp
+DFLAGS += -DPragma_OpenMP_2d -DPragma_OpenMP_1d -DPragma_OpenMP_Patch
+
+### activate inline calls:
+DFLAGS += -DINLINE_FUNC
+
+### matrix ccs reader optimizer
+DFLAGS += -DCCS_READER_OPTIMIZE
+
+### activate gsl blas matrix products, requires gsl libs
+#DFLAGS += -DMxM_GSL_BLAS
+
+### activate mkl blas matrix products, requires mkl libs
+#DFLAGS += -DMxM_MKL_BLAS
+
+### activate cblas matrix products, requires cblas libs
+#DFLAGS += -DMxM_C_BLAS
+
+############################
+## Includes and libraries ##
+############################
+
+### for omp for clang
+#SPECIAL_INCS += -I/usr/lib/gcc/x86_64-linux-gnu/6.3.0/include
+#SPECIAL_LIBS += -L/usr/lib/gcc/x86_64-linux-gnu/6.3.0
+
+### special includes for suit-sparse and related
+SPECIAL_INCS += -I/usr/include/suitesparse
+SPECIAL_LIBS += -lumfpack
+
+### special includes for gsl
+#SPECIAL_LIBS += -lgsl -lgslcblas
+
+### special includes for cblas
+#SPECIAL_LIBS += -lblas
+
+### special includes for mkl libs and headers
+### more info visit: https://software.intel.com
+#SPECIAL_INCS += -I/usr/include/mkl
+#SPECIAL_LIBS += -lmkl_intel_lp64 -lmkl_core -lmkl_gnu_thread -lpthread
+
+### special libraries for plotting and data file
+#SPECIAL_LIBS += -lsiloh5
+
+####################
+## test and debug ##
+####################
+
+### warninng flags for the compiler
+#WARN +=# no warnings
+
+#WARN += -Wfatal-errors
+
+#WARN += -std=c11 -pedantic -Wextra -Wall -W -Werror \
+#  -Wmissing-prototypes -Wstrict-prototypes \
+#  -Wconversion -Wshadow -Wpointer-arith \
+#  -Wcast-qual -Wcast-align -Wwrite-strings -Wnested-externs \
+#  -fshort-enums -fno-common -Wunsafe-loop-optimizations -Wundef
+
+
+#WARN += -std=c11 -pedantic -Wextra -Wall -W -Werror
+
+#WARN += -std=c99 -Wall -Wcast-qual -Wconversion -W -Werror \
+        -Wextra -Wfloat-equal -Wformat=2 -Winit-self \
+        -Winvalid-pch -Wmissing-include-dirs -Wno-c++-compat \
+        -Wno-format-nonliteral -Wshadow -Wundef -Wwrite-strings \
+        -pedantic -Wbad-function-cast -Wcast-align \
+        -Wdeclaration-after-statement -Wdisabled-optimization \
+        -Wmissing-declarations -Wmissing-prototypes -Wnested-externs \
+        -Wold-style-definition -Wpacked -Wredundant-decls \
+        -Wstrict-prototypes -Wswitch-enum -Wswitch-default \
+        -Wunused-macros -Wunsafe-loop-optimizations -Wlogical-op \
+        -Wlarger-than=2560 -Wsync-nand -Wframe-larger-than=16384 \
+        -Wpacked-bitfield-compat -Wstrict-overflow=5 -Wjump-misses-init \
+        -Wunsuffixed-float-constants -Wdouble-promotion -Wtrampolines \
+        -Wstack-usage=8192 -Wvector-operation-performance \
+        -Wdate-time -Warray-bounds=2 -Wc99-c11-compat \
+        -Wnull-dereference -Wunused-const-variable -Wduplicated-cond \
+        -Whsa -Wnormalized -Walloc-zero -Walloca -Wduplicated-branches \
+        -Wformat-overflow=2 -Wformat-truncation=2 \
+        -Wimplicit-fallthrough=5 -Wrestrict -ftrapv -fno-common \
+        -g -fno-omit-frame-pointer -Wno-aggregate-return -Wno-inline \
+        -Wno-missing-format-attribute -Wno-missing-noreturn \
+        -Wno-suggest-attribute=const -Wno-suggest-attribute=pure \
+        -Wno-suggest-attribute=noreturn -Wno-suggest-attribute=format -Og
+
+
+#############
+## The END ##
+#############
