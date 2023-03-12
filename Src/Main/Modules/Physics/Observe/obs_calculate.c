@@ -560,6 +560,13 @@ static void calc_ADM_J(Observe_T *const obs)
   {
     IFsc("ADM(J)|BHNS")
     {
+      /* NOTE: the "S_inf,default" and "S+V,Ossokine" methods predict the value of system's J 
+      // differently from the "S+V,constraint" and "S_obj1+S_obj2,default" methods.
+      // the default using the latter for J_ADM measure, and I believed they're the correct ones.
+      // however, further investigation in required to find the root cause of this
+      // difference. I should emphasize that this only affect the value of the system's J 
+      // at the post-processing step and has nothing to do with spins, P adms, or 
+      // the ID quality. ALL other quantities are measured accurately. */
       if (IsIt("S_inf,default"))
       {
         /* surface part */
@@ -596,6 +603,14 @@ static void calc_ADM_J(Observe_T *const obs)
     }
     else IFsc("ADM(J)|NSNS")
     {
+      /* NOTE: the "S_inf,default" and "S+V,Ossokine" methods predict the value of system's J 
+      // differently from the "S+V,constraint" and "S_obj1+S_obj2,default" methods.
+      // the default using the latter for J_ADM measure, and I believed they're the correct ones.
+      // however, further investigation in required to find the root cause of this
+      // difference. I should emphasize that this only affect the value of the system's J 
+      // at the post-processing step and has nothing to do with spins, P adms, or 
+      // the ID quality. ALL other quantities are measured accurately. */
+
       if (IsIt("S_inf,default"))
       {
         /* surface part */
