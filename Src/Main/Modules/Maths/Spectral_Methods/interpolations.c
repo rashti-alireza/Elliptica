@@ -139,6 +139,72 @@ static void order_arrays_natural_cubic_spline_1d(Interpolation_T *const interp_s
   interp_s->N_cubic_spline_1d->Order = 1;
 }
 
+///////////////////////////////////////Finite difference approximation////////////////////////
+static double interpolation_finite_difference(Interpolation_T *const interp_s)
+{
+  // Approximates f'(h) by finite difference method.
+  // Away from end points x[0], x[N-1], uses central finite difference.
+  // Near end points, uses forwards or backwards finite difference.
+  const double *const x = interp_s->N_cubic_spline_1d->x;
+  double *const f = interp_s->N_cubic_spline_1d->f;
+  const double h = interp_s->h;
+  const double N = interp_s->N_cubic_spline_1d->N;
+  Uint i = 0;
+  Uint order = interp_s->order;
+  double ret = DBL_MAX;/* it's important to be max double */
+  Flag_T flg = NONE;
+      
+  // Checks if we have enough data points for given order.
+  if (N <= order+1)
+  { Error0("Finite difference error: Not enough points for desired accuracy.\n"); }
+  
+  // Finds the data segment
+  for (i = 0; i < N-1; ++i)
+  {
+    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+    {
+      flg = FOUND;
+      break;
+    }
+  }
+
+  if (flg != FOUND)
+  {
+    if (!interp_s->N_cubic_spline_1d->No_Warn)
+      Warning("The given point for the interpolation is out of the domain.\n");
+    
+    return ret;
+  }
+  
+  if (order == 1)
+  { ret = (f[i+1] - f[i]) / (x[i+1] - x[i]); }
+  
+  // If we're too close to the left end to use the central method,
+  // we use the forward method instead:
+  if (i <= (order/2 + 1))
+  {
+    if (order == 2)
+    {
+        ret = 
+  
+  // If we're too close to the right end to use the central method,
+  // we use the backward method instead:
+  else if (N - i <= (order/2 + 1))
+  { print("\n");
+    }
+  // Otherwise we use the central finite difference:
+  else
+  {
+    if (order == 2)
+    {
+        print("\n");
+    }
+  }
+  
+  return ret;
+}
+   
+///////////////////////////////////////Natural cubic spline///////////////////////////////
 /* find a, b, c and d coeffs */
 static void find_coeffs_natural_cubic_spline_1d(Interpolation_T *const interp_s)
 {

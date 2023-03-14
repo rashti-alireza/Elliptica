@@ -24,6 +24,7 @@ typedef double fInterpolation_T(struct INTERPOLATION_T *const interp_s);
 typedef struct INTERPOLATION_T
 {
   const char *method;
+  Uint finite_diff_order;/* order of finite difference approximation */
   struct FIELD_T *field;/* interesting field for interpolation */
   fInterpolation_T *interpolation_func;/* interpolation function */
   double X,Y,Z;/* where interpolant calculated. 
