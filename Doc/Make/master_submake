@@ -4,17 +4,21 @@
 # April 2020     #
 ##################
 
-# a general submake file for each module or project.
-# this make file gathers all of c files and make object files
-# from them and put them in the specified directory. finally,
-# by using (AR) command, it archive all of the object files to later
-# be linked.
+# A general submake file for each module or project. This makefile IS CALLED BY
+# THE MAIN Makefile at the ROOT directory (not the user). 
+#
+# The purpose of this makefile is to collect all of the c files here, i.e., in this 
+# directory, and create object (binary) files. 
+# Subsequently, using (AR) command, it archives all of the object files to be linked 
+# later for the final executable.
+#
 # NOTE: local variables are in small words and exported variables
 # by the main Makefile are with capital words.
-#######################################################################
-#############
-## variables:
-#############
+## ---------------------------------------------------------------------- ##
+
+###############
+## variables ##
+###############
 # where I am:
 top   := $(shell pwd)
 # c directory
@@ -48,10 +52,10 @@ o_files:= \
 #           $(notdir $(f:.c=.d))\
 #          )\
 #        )
-#######################################################################
-###########
-## targets:
-###########
+
+#############
+## targets ##
+#############
 
 ## default target to make libaries out of object files
 make_lib: $(LIB_DIR)/$(lib_name)
@@ -89,10 +93,9 @@ clean:
 #
 #include $(wildcard $(d_dir)/*.d)
 
-########################################################################
-#############
-## functions:
-#############
+###############
+## functions ##
+###############
 
 # build and print objects, print error if happens otherwise succinctly.
 # useage:
@@ -134,3 +137,7 @@ endef
 
 # no export 
 unexport
+
+#############
+## The End ##
+#############
