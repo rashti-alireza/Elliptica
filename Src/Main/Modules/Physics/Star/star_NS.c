@@ -1155,9 +1155,9 @@ void star_populate_psi_alphaPsi_matter_fields_TOV
 
       FOR_ALL_ijk
       {
-        double x    = patch->node[ijk]->x[0]-NSx;
-        double y    = patch->node[ijk]->x[1]-NSy;
-        double z    = patch->node[ijk]->x[2]-NSz;
+        double x = patch->node[ijk]->x[0]-NSx;
+        double y = patch->node[ijk]->x[1]-NSy;
+        double z = patch->node[ijk]->x[2]-NSz;
         double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
         double alpha;
 
