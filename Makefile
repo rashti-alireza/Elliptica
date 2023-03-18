@@ -93,7 +93,7 @@ IDR_INC_DIR := $(TOP)/ID_Reader/include
 # ID reader library name
 IDR_LIB_NAME := libelliptica_id_reader.a
 # master sub-make file path
-MASTER_SUB_MAKE_FILE := $(TOP)/Doc/master_submake
+MASTER_SUB_MAKE_FILE := $(TOP)/Doc/Make/master_submake
 # sub-make file name stem in each directory
 SUB_MAKE_NAME_STEM := makefile
 # sub-make options:
@@ -316,7 +316,7 @@ $(O_DIRS):
 MyConfig:
 	@if [ ! -f MyConfig ];\
 	then \
-          cp Doc/MyConfig.example MyConfig; \
+          cp Doc/Make/MyConfig.example MyConfig; \
         fi
 ##
 ## clean Lib, auto generated files and dependency files in submake:
