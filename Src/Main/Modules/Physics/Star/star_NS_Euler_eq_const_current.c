@@ -22,6 +22,10 @@ double star_NS_current_Euler_eq_const(Physics_T *const phys)
   if (!IsItCovering(patch,cover))
     continue;
 
+/* NOTE: since we do n/2, for an even n we cannot get the same location for the
+// left NS and for the right NS (but for an odd n, we get an exact location from left and right).
+// As such, a minor difference for the Euler constant is expected for a symmetic BNS system.
+// That said, it's not an issue because this number is just for an initial guess. */
   Uint ijk = i_j_k_to_ijk(patch->n,patch->n[0]/2,patch->n[1]/2,patch->n[2]/2);
 
   Tij_NS_IF_XCTS_gConf_u0(patch);
