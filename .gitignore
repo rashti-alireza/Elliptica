@@ -14,7 +14,8 @@
 /Trash/*
 
 ## gnu makes
-makefile
+makefile ## for older versions
+.sub_makefile
 /MyConfig
 
 ## ctags
