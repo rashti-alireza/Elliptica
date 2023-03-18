@@ -95,7 +95,7 @@ IDR_LIB_NAME := libelliptica_id_reader.a
 # master sub-make file path
 MASTER_SUB_MAKE_FILE := $(TOP)/Doc/Make/master_submake
 # sub-make file name stem in each directory
-SUB_MAKE_NAME_STEM := makefile
+SUB_MAKE_NAME_STEM := .sub_makefile
 # sub-make options:
 SUB_MAKE_FLAGS := --no-print-directory
 SUB_MAKE_FLAGS += --warn-undefined-variables
@@ -243,7 +243,7 @@ $(EXEC): $(DEPENDENCY_FILES) $(auto_gen_c_file) $(SUB_MAKE_FILES) | $(LIB_DIR) $
 # --> invoke submakes with the default target
 	@for d in $(C_DIRS); \
 	  do \
-	    $(MAKE) $(SUB_MAKE_FLAGS) -C $$d; \
+	    $(MAKE) -f $(SUB_MAKE_NAME_STEM) $(SUB_MAKE_FLAGS) -C $$d; \
 	  done
 # --> link all of the libaries to build the EXEC:
 	@$(call cmd_and_pr_func, $(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS),$(EXEC))
@@ -334,7 +334,7 @@ clean:
 # --> invoke submakes to clean dependency files:
 	@for d in $(C_DIRS); \
 	  do \
-	    $(MAKE) $(SUB_MAKE_FLAGS) -C $$d $@; \
+	    $(MAKE) -f $(SUB_MAKE_NAME_STEM) $(SUB_MAKE_FLAGS) -C $$d $@; \
 	  done	 	
 .PHONY: clean
 
