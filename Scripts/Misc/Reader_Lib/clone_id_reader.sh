@@ -12,7 +12,10 @@
 ##
 
 E_TOP="$1"
+E_TOP=$(realpath ${E_TOP})
+
 IDR_TOP="$2"
+IDR_TOP=$(realpath ${IDR_TOP})
 
 ##### TEMP
 rm -rf ${IDR_TOP}/src/*
@@ -120,4 +123,44 @@ sed -i '/free_matrix/d' *.c
 sed -i '/eq_main/d' *.c
 sed -i '/sys_main/d' *.c
 
+
+## create NS_NS_Binary_Initial_Data function since we deleted this file and we need 
+## the following pieces to ensure the ID reader works.
+cd ${IDR_TOP}/src
+cat << EOF > nsns_main.c
+#include "nsns_header.h"
+
+int NS_NS_Binary_Initial_Data(void *vp);
+void nsns_export_id_generic(void *vp);
+
+int NS_NS_Binary_Initial_Data(void *vp)
+{
+  /* if this is a generic ID reader call */
+  if (strcmp_i(PgetsEZ("IDR_NSNS_export_id"),"generic"))
+    nsns_export_id_generic(vp);
+  else
+    Error1(NO_OPTION);
+}
+
+EOF
+
+## create BH_NS_Binary_Initial_Data function since we deleted this file and we need 
+## the following pieces to ensure the ID reader works.
+cd ${IDR_TOP}/src
+cat << EOF > bhns_main.c
+#include "bhns_header.h"
+
+int BH_NS_Binary_Initial_Data(void *vp);
+void bhns_export_id_generic(void *vp);
+
+int BH_NS_Binary_Initial_Data(void *vp)
+{
+  /* if this is a generic ID reader call */
+  if (strcmp_i(PgetsEZ("IDR_BHNS_export_id"),"generic"))
+    bhns_export_id_generic(vp);
+  else
+    Error1(NO_OPTION);
+}
+
+EOF
 
