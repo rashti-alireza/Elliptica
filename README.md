@@ -11,5 +11,7 @@ Clone the added projects:
 
 `$ make git_clone`
 
+Install:
+
 `$ make -j4`
 
