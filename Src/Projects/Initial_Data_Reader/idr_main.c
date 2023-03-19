@@ -135,7 +135,11 @@ Elliptica_ID_Reader_T *elliptica_id_reader_init (
 
   // which ID system
   par = parameter_query_from_checkpoint("Project",file);
-  assert(par);
+  if (!par)
+  {
+    Errors("I could not find the parameter name '%s'!","Project");
+  }
+  
   idr->system = dup_s(par->rv);
   // add a project parameter
   idr->set_param("Project",idr->system,idr);
@@ -197,7 +201,10 @@ static double get_param_double_from_checkpoint(
   // read checkpoint file
   file = Fopen(idr->checkpoint_path,"r");
   par  = parameter_query_from_checkpoint(lv,file);
-  assert(par);
+  if (!par)
+  {
+    Errors("I could not find the parameter name '%s'!",lv);
+  }
   ret = strtod(par->rv,0);
   
   // free
