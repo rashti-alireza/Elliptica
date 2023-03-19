@@ -271,7 +271,7 @@ static double interpolation_Neville_1d(Interpolation_T *const interp_s)
   const double h = interp_s->Neville_1d->h;
   double **q;
   double interp = 0;
-  Matrix_T *Q;
+  Matrix_T *Q   = 0;
   Uint N,i,j;
   Flag_T flg = NO;
   
