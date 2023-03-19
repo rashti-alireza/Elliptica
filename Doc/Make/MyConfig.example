@@ -12,9 +12,29 @@ EXEC := elliptica
 ## exe directory:
 EXEC_DIR := $(TOP)/Exe
 
-############################
-## Modules to be compiled ##
-############################
+#####################################
+## Projects of interest to compile ##
+#####################################
+
+#PROJECT += $(PROJECT_DIR)/Poissons/Poisson0
+#PROJECT += $(PROJECT_DIR)/Tests/Modules_Test
+#PROJECT += $(PROJECT_DIR)/Initial_Data_Reader
+#PROJECT += $(PROJECT_DIR)/BH_NS_Binary_Initial_Data
+#PROJECT += $(PROJECT_DIR)/NS_NS_Binary_Initial_Data
+PROJECT += $(PROJECT_DIR)/TOV_star
+
+#####################################
+## Project's repositories to clone ##
+#####################################
+## The repositories that listed below are only those needed, others exist already.
+
+PROJECT_REPO += '--depth=1 git@github.com:rashti-alireza/BH_NS_Binary_Initial_Data.git'
+PROJECT_REPO += '--depth=1 git@github.com:rashti-alireza/NS_NS_Binary_Initial_Data.git'
+
+
+########################
+## Modules to compile ##
+########################
 
 ## we need all of the the following modules:
 MODULE += $(MODULE_DIR)/Manifold
@@ -49,16 +69,6 @@ MODULE += $(MODULE_DIR)/Physics/Equation
 ## one can comment out these module(s):
 #MODULE += $(MODULE_DIR)/Prints/pr_hdf5_silo
 
-#############################
-## Projects to be compiled ##
-#############################
-
-#PROJECT += $(PROJECT_DIR)/Poissons/Poisson0
-#PROJECT += $(PROJECT_DIR)/Tests/Modules_Test
-#PROJECT += $(PROJECT_DIR)/Initial_Data_Reader
-#PROJECT += $(PROJECT_DIR)/BH_NS_Binary_Initial_Data
-#PROJECT += $(PROJECT_DIR)/NS_NS_Binary_Initial_Data
-PROJECT += $(PROJECT_DIR)/TOV_star
 
 ##########################
 ## Compilation settings ##

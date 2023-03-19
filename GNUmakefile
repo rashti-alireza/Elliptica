@@ -135,6 +135,7 @@ SYSTEM_LIBS = -lm
 # inlcude MyConfig for more options and c source files
 MODULE  =# to be determined in MyConfig
 PROJECT =# to be determined in MyConfig
+PROJECT_REPO=# to be set in MyConfig
 include MyConfig
 # MyConfig file path
 MyConfig_FILE := $(TOP)/MyConfig
@@ -318,6 +319,20 @@ MyConfig:
 	then \
           cp Doc/Make/MyConfig.example MyConfig; \
         fi
+
+
+##
+## git_clone the specified projects
+git_clone:
+# --> invoke git clone
+	@for p in $(PROJECT_REPO); \
+	  do \
+	    echo $(PR_F0) "git clone '$$p':";\
+	    cd $(PROJECT_DIR);\
+	    git clone $$p; \
+	  done
+.PHONY: git_clone
+
 ##
 ## clean Lib, auto generated files and dependency files in submake:
 clean:
@@ -347,7 +362,7 @@ id_reader:$(EXEC)
 	  do \
 	  	o=$$(find $$d -type f); \
 	  	$(AR) $(ARFLAGS) $(IDR_LIB_DIR)/$(IDR_LIB_NAME) $$o; \
-	   done;
+	   done
 ## --> empty command for print
 	@$(call cmd_and_pr_func, , $@)
 	@echo $(PR_L0)
