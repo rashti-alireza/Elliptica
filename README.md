@@ -15,3 +15,10 @@ Install:
 
 `$ make -j4`
 
+Run:
+
+`$ ./Exe/elliptica /path/to/the/parameter/file`
+
+
+
+
