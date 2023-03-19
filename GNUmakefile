@@ -168,7 +168,10 @@ SPECIAL_PR_MODULE_NAMES = $(notdir $(filter-out $(MODULE),$(required_mod)))
 ## required Projects
 SPECIAL_PR_PROJECT_NAMES =
 # if the following required project(s) has not been added:
-required_pro = $(PROJECT_DIR)/Approximate_Killing_Vector
+required_pro += $(PROJECT_DIR)/Approximate_Killing_Vector
+required_pro += $(PROJECT_DIR)/BH_NS_Binary_Initial_Data
+required_pro += $(PROJECT_DIR)/NS_NS_Binary_Initial_Data
+
 SPECIAL_PR_PROJECT_NAMES = $(notdir $(filter-out $(PROJECT),$(required_pro)))
 
 ########################################################################
