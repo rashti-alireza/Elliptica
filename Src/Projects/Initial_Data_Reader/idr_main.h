@@ -1,12 +1,9 @@
-#include "core_lib.h"
-#include "id_reader_lib.h"
-#include "elliptica_id_reader_lib.h"
+#include "idr_header.h"
 #include "checkpoint_lib.h"
 
-// add ID exporters for new projects here:
-void bhns_export_id_generic(Elliptica_ID_Reader_T *const idr);
-//void nsns_export_id_generic(Elliptica_ID_Reader_T *const idr);
-
+// add new projects here:
+int BH_NS_Binary_Initial_Data(void *vp);
+int NS_NS_Binary_Initial_Data(void *vp);
 
 int Initial_Data_Reader(void *vp);
 Elliptica_ID_Reader_T *elliptica_id_reader_init (

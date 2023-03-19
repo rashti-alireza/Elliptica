@@ -1,11 +1,6 @@
-#include "core_lib.h"
-#include "error_handling_lib.h"
-#include "manifold_lib.h"
-#include "maths_general_lib.h"
+#include "idr_header.h"
 #include "fields_lib.h"
 #include "maths_spectral_methods_lib.h"
-#include "id_reader_lib.h"
-#include "elliptica_id_reader_lib.h"
 
 #define STR_LEN_MAX (999)
 /* NOTE: HEADER and FOOTER and END_MSG must be consistent
