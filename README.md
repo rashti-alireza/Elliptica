@@ -1,5 +1,12 @@
 # A quick installation
 
+Requirements:
+- GNU make.
+- Git version control system.
+- A C programming compiler, for instance, `gcc`.
+- A compatible `openmp` library with the compiler.
+- The `UMFPACK` library (`suitesparse`).
+
 `$ git clone --depth=1 git@github.com:rashti-alireza/Elliptica.git`
 
 `$ make MyConfig`
