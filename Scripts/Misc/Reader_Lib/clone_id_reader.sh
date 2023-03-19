@@ -59,6 +59,7 @@ SRC+=("${MODULE_DIR}/Physics/ADM")
 SRC+=("${MODULE_DIR}/Includes")
 
 ## projects
+## NOTE: to make sure ID Reader compiles with no linking problem let's add all project.
 PROJ_DIR="Src/Projects"
 SRC+=("${PROJ_DIR}/Includes")
 SRC+=("${PROJ_DIR}/Initial_Data_Reader")
