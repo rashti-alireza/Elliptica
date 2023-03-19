@@ -21,7 +21,7 @@ C_macro2 = REALLOC_v_WRITE_v(name);
 `void obs_BH_irreducible_mass_CS(Observe_T *const obs)`
 `{`
 `  Physics_T *const phys = obs->phys;`
-`  Grid_T *const grid = mygrid(phys,"BH_around_IB");`
+`  Grid_T *const grid = mygrid(phys,Ftype("BH_around_IB"));`
 `  double A_AH = 0;`
 `  Uint p;`
 ``

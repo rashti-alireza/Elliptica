@@ -16,7 +16,7 @@ C_macro = READ_v_UNUSED(name);
 `double bh_calculate_expansion_on_AH(Physics_T *const phys)`
 `{`
 ` FUNC_TIC`
-` Grid_T *const grid = mygrid(phys,"BH_around_IB");`
+` Grid_T *const grid = mygrid(phys,Ftype("BH_around_IB"));`
 ` double max = 0.;`
 ``
 ` FOR_ALL_p(grid->np)`

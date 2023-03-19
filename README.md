@@ -1,13 +1,17 @@
 # A quick installation
 
-`$ git clone Elliptica`
+`$ git clone --depth=1 git@github.com:rashti-alireza/Elliptica.git`
 
-`$ git clone BH_NS_Binary_Initial_Data in Elliptica/Src/Projects/`
+`$ make MyConfig`
 
-Link UMFPACK library in MyConfig.
+Activate the projects of interest and link UMFPACK library in the `MyConfig` file.
+You should also activate the project's repositories if you need to clone them.
 
-Active the TOV_star and BH_NS_Binary_Initial_Data projects in MyConfig.
+Clone the added projects:
 
-`$ make`
+`$ make git_clone`
 
+Install:
+
+`$ make -j4`
 

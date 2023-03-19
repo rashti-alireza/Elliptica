@@ -11,14 +11,15 @@
 /parfile/*
 
 ## Trash directory
-Trash/*
+/Trash/*
 
 ## gnu makes
-makefile
-MyConfig
+makefile ## for older versions
+.sub_makefile
+/MyConfig
 
 ## ctags
-tags
+/Src/tags
 
 ## Lib and Exe
 /Lib

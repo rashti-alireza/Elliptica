@@ -1,9 +1,10 @@
-###############################################
-## My Configurations to be used for Makefile ##
-###############################################
-####################
-## name conventions:
-####################
+############################################
+## The configurations is used by Makefile ##
+############################################
+
+######################
+## Name conventions ##
+######################
 
 ## program name exe:
 EXEC := elliptica
@@ -11,10 +12,9 @@ EXEC := elliptica
 ## exe directory:
 EXEC_DIR := $(TOP)/Exe
 
-#######################################################################
-##########################
-## modules to be compiled:
-##########################
+############################
+## modules to be compiled ##
+############################
 
 ## we need all of the the following modules:
 MODULE += $(MODULE_DIR)/Manifold
@@ -46,32 +46,33 @@ MODULE += $(MODULE_DIR)/Physics/Free_Data
 MODULE += $(MODULE_DIR)/Physics/ADM
 MODULE += $(MODULE_DIR)/Physics/Equation
 
-# one can comment out these module(s):
+## one can comment out these module(s):
 #MODULE += $(MODULE_DIR)/Prints/pr_hdf5_silo
 
-########################################################################
-###########################
-## Projects to be compiled:
-###########################
+#############################
+## Projects to be compiled ##
+#############################
 
 #PROJECT += $(PROJECT_DIR)/Poissons/Poisson0
 #PROJECT += $(PROJECT_DIR)/Tests/Modules_Test
-#PROJECT += $(PROJECT_DIR)/TOV_star
-#PROJECT += $(PROJECT_DIR)/BH_NS_Binary_Initial_Data
+PROJECT += $(PROJECT_DIR)/TOV_star
+PROJECT += $(PROJECT_DIR)/BH_NS_Binary_Initial_Data
+PROJECT += $(PROJECT_DIR)/NS_NS_Binary_Initial_Data
+PROJECT += $(PROJECT_DIR)/Initial_Data_Reader
 
-########################################################################
+
 ##########################
-## compiler and its flags:
+## Compilation settings ##
 ##########################
 
-## which compiler:
+### which compiler:
 #CC = clang
 #CC = icc
 CC = gcc
 
 ### optimization
-#OFLAGS += -g3
-OFLAGS +=  -O3
+OFLAGS += -g3
+#OFLAGS +=  -O3
 
 ### activate open-mp
 OFLAGS += -fopenmp
@@ -92,52 +93,47 @@ DFLAGS += -DCCS_READER_OPTIMIZE
 ### activate cblas matrix products, requires cblas libs
 #DFLAGS += -DMxM_C_BLAS
 
+############################
+## Includes and libraries ##
+############################
 
-########################################################################
-##################################
-## special inlcudes and libraries:
-##################################
-
-# for Initial_Data_Reader project
-SPECIAL_INCS += -I/$(TOP)/Inc
-
-# for omp for clang
+### for omp for clang
 #SPECIAL_INCS += -I/usr/lib/gcc/x86_64-linux-gnu/6.3.0/include
 #SPECIAL_LIBS += -L/usr/lib/gcc/x86_64-linux-gnu/6.3.0
 
-# special includes for suit-sparse and related
+### special includes for suit-sparse and related
 SPECIAL_INCS += -I/usr/include/suitesparse
 SPECIAL_LIBS += -lumfpack
 
-# special includes for gsl
+### special includes for gsl
 #SPECIAL_LIBS += -lgsl -lgslcblas
 
-# special includes for cblas
+### special includes for cblas
 #SPECIAL_LIBS += -lblas
 
-# special includes for mkl libs and headers
-# more info visit: https://software.intel.com
+### special includes for mkl libs and headers
+### more info visit: https://software.intel.com
 #SPECIAL_INCS += -I/usr/include/mkl
 #SPECIAL_LIBS += -lmkl_intel_lp64 -lmkl_core -lmkl_gnu_thread -lpthread
 
-# special libraries for plotting and data file
+### special libraries for plotting and data file
 #SPECIAL_LIBS += -lsiloh5
 
-##################
-## test and debug:
-##################
+####################
+## test and debug ##
+####################
 
 ### warninng flags for the compiler
 #WARN +=# no warnings
 
 #WARN += -Wfatal-errors
 
-#WARN += -std=c11 -pedantic -Wextra -Werror -Wall -W \
-  -Wmissing-prototypes -Wstrict-prototypes\
-  -Wconversion -Wshadow -Wpointer-arith\
-  -Wcast-qual -Wcast-align\
-  -Wwrite-strings -Wnested-externs\
-  -fshort-enums -fno-common 
+#WARN += -std=c11 -pedantic -Wextra -Wall -W -Werror \
+#  -Wmissing-prototypes -Wstrict-prototypes \
+#  -Wconversion -Wshadow -Wpointer-arith \
+#  -Wcast-qual -Wcast-align -Wwrite-strings -Wnested-externs \
+#  -fshort-enums -fno-common -Wunsafe-loop-optimizations -Wundef
+
 
 #WARN += -std=c11 -pedantic -Wextra -Wall -W -Werror
 
@@ -165,4 +161,7 @@ SPECIAL_LIBS += -lumfpack
         -Wno-suggest-attribute=const -Wno-suggest-attribute=pure \
         -Wno-suggest-attribute=noreturn -Wno-suggest-attribute=format -Og
 
-########################################################################
+
+#############
+## The END ##
+#############

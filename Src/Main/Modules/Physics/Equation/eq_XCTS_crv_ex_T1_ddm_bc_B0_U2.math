@@ -29,9 +29,6 @@ Declare =
  # B1 in beta^i = B0^i+B1^i
  (obj = Field,name = B1_U2, rank = 0, C_macro);
 
- # inner BC
- (obj = Field,name = ibc_beta_U2, rank = 0, C_macro);
-
  # boost velocity
  #(obj = variable,name = v0_boost,none);
  #(obj = variable,name = v1_boost,none);
@@ -67,7 +64,12 @@ outerB_F = B0_U2-v2_boost;
 # INNER BOUNDARY LIKE BLACK HOLE HORIZON #
 `  else if (patch->innerB)/* at inner boundary */`;
 `  {`;
-
+Declare =
+{
+ # inner BC
+ (obj = Field,name = ibc_beta_U2, rank = 0, C_macro);
+}
+``
 `  DDM_SCHUR_BC_OPEN\n`;
 
 # bc equation for inner boundary at ijk point:

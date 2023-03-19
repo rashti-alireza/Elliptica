@@ -431,7 +431,7 @@ void bh_update_sConf_dsConf(Physics_T *const phys)
   if (!strcmp_i(Gets("surface_type"),"perfect_s2"))
     Error0(NO_OPTION);
   
-  Grid_T *const grid = mygrid(phys,"BH_around_IB");
+  Grid_T *const grid = mygrid(phys,Ftype("BH_around_IB"));
   const double BH_center_x = Getd("center_x");
   const double BH_center_y = Getd("center_y");
   const double BH_center_z = Getd("center_z");

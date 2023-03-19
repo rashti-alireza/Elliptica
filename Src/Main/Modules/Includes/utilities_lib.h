@@ -27,11 +27,12 @@
 /* converting a symmetric tuple (i,j) format to a liner format with dimension n. */
 #define i_j_to_ij_symmetric(n,i,j) i_j_to_ij_symmetric_row_major_order(n, i, j)
 
-/* converting a symmetric tuple (i,j) format to a liner format with dimension n
-// row major order. NOTE: we need second index, here j, to satisfy: j >= i >= 0. 
+/* converting a symmetric tuple (i,j) format to a liner format with the dimension n
+// in a row major order. NOTE: we need second index, here j, to satisfy: j >= i >= 0. 
 // in order to make the usage easy for the user, we impose this condition in the macro.
 // example:
-// the indices xx, xy, xz, yy, yz, and zz map to 0, 1, 2, 3, 4, and 5 (here n = 3). */
+// the indices xx, xy, xz, yy, yz, and zz map to 0, 1, 2, 3, 4, and 5;
+// here, n = 3, i.e., 3x3 symmetric matrix. */
 #define i_j_to_ij_symmetric_row_major_order(n,i,j) \
 ( j > i ? ((n)*(i) - (i)*((i)-1)/2 + ((j)-(i))) : ((n)*(j) - (j)*((j)-1)/2 + ((i)-(j))) )
 

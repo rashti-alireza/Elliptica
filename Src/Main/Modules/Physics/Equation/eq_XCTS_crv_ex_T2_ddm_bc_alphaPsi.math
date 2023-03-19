@@ -41,9 +41,6 @@ Declare =
  # coords from BH's center
  #(obj = Field,name = x, rank = U, none,C_arg1);
 
- # normal vector at the horizon
- (obj = Field,name = bh_sConf, rank = U, C_macro);
-
 }
 # symmetries for Cpi
 # no symmetry
@@ -68,6 +65,12 @@ outerB_F = alphaPsi - 1;
 # INNER BOUNDARY LIKE BLACK HOLE HORIZON #
 `  else if (patch->innerB)/* at inner boundary */`;
 `  {`
+
+Declare = 
+{
+ # normal vector at the horizon
+ (obj = Field,name = bh_sConf, rank = U, C_macro);
+}
 
 `  DDM_SCHUR_BC_OPEN\n`;
 ``

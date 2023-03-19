@@ -225,22 +225,27 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     /* boxes */ 
     populate_box_patch_SplitCS(grid,"central_box",ns_side1 ,"NS1");
     populate_box_patch_SplitCS(grid,"central_box",ns_side2 ,"NS2");
-    
-    #if USE_SCS_FILLING_BOX == 1
-    populate_box_patch_SplitCS(grid,"filling_box",UP   ,"filling_box");
-    populate_box_patch_SplitCS(grid,"filling_box",DOWN ,"filling_box");
-    populate_box_patch_SplitCS(grid,"filling_box",BACK ,"filling_box");
-    populate_box_patch_SplitCS(grid,"filling_box",FRONT,"filling_box");
-    #endif
-
+   
     /* cubed sphericals */
     populate_CS_patch_SplitCS(grid,"NS1",ns_side1);
     populate_CS_patch_SplitCS(grid,"NS1_around",ns_side1);
     populate_CS_patch_SplitCS(grid,"NS2",ns_side2);
     populate_CS_patch_SplitCS(grid,"NS2_around",ns_side2);
     
+    #if USE_SCS_FILLING_BOX == 1
+    populate_box_patch_SplitCS(grid,"filling_box",UP   ,"filling_box");
+    populate_box_patch_SplitCS(grid,"filling_box",DOWN ,"filling_box");
+    populate_box_patch_SplitCS(grid,"filling_box",BACK ,"filling_box");
+    populate_box_patch_SplitCS(grid,"filling_box",FRONT,"filling_box");
     if (!EQL(r_outermost,0))
       populate_CS_patch_SplitCS(grid,"outermost",NONE);
+    #endif
+
+    if (!EQL(r_outermost,0))
+    {
+      populate_CS_patch_SplitCS(grid,"outermost",LEFT);
+      populate_CS_patch_SplitCS(grid,"outermost",RIGHT);
+    }
  
   }
   else if (grid->kind == Grid_SplitCubedSpherical_BHBH)
@@ -273,21 +278,26 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
       Error0(NO_OPTION);
     }
     
+    /* cubed sphericals */
+    populate_CS_patch_SplitCS(grid,"BH1_around",bh_side1);
+    populate_CS_patch_SplitCS(grid,"BH2_around",bh_side2);
+    
     #if USE_SCS_FILLING_BOX == 1
     /* boxes */ 
     populate_box_patch_SplitCS(grid,"filling_box",UP   ,"filling_box");
     populate_box_patch_SplitCS(grid,"filling_box",DOWN ,"filling_box");
     populate_box_patch_SplitCS(grid,"filling_box",BACK ,"filling_box");
     populate_box_patch_SplitCS(grid,"filling_box",FRONT,"filling_box");
-    #endif
-    
-    /* cubed sphericals */
-    populate_CS_patch_SplitCS(grid,"BH1_around",bh_side1);
-    populate_CS_patch_SplitCS(grid,"BH2_around",bh_side2);
-    
     if (!EQL(r_outermost,0))
       populate_CS_patch_SplitCS(grid,"outermost",NONE);
+    #endif
     
+    if (!EQL(r_outermost,0))
+    {
+      populate_CS_patch_SplitCS(grid,"outermost",LEFT);
+      populate_CS_patch_SplitCS(grid,"outermost",RIGHT);
+    }
+ 
     /* NOTE: order matters */
     if (bh_filled == YES)
     {
@@ -524,6 +534,8 @@ populate_CS_patch_SplitCS
           {
             Error0(NO_OPTION);
           }
+          
+          // printf("patch region = %s\n",patch->CoordSysInfo->region);
           
           /* filling flags */
           patch->CoordSysInfo->CubedSphericalCoord->side = side;

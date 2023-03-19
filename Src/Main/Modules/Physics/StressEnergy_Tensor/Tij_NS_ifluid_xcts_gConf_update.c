@@ -11,7 +11,7 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
 {
   FUNC_TIC
   
-  Grid_T *const grid  = mygrid(phys,"NS");
+  Grid_T *const grid  = mygrid(phys,Ftype("NS"));
   Patch_T *patch      = 0;
   const int  neat = strstr_i(Gets("enthalpy_neat"),"yes");
   const double W  = (neat == 0 ? Getd("enthalpy_update_weight") : 0.);
@@ -52,9 +52,9 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
       dField_di(du0_D0);
       dField_di(du0_D1);
       dField_di(du0_D2);
-      /* NOTE: rho0 for pwp eos is C^1 so it is prone to Gibbs phenomenon
-      // specially where h ~ 1, close to NS's surface. 
-      // thus, drho0 must be calculated using chain rule. */
+      /* NOTE: rho0 for pwp eos is C^0 continuous so it is prone to Gibbs phenomenon
+      // in particular where h ~ 1, i.e., close to NS's surface. hence, calculating 
+      // drho0 using analytical values and thus chain rule is preferable. */
       READ_v(enthalpy)
       READ_v(denthalpy_D0)
       READ_v(denthalpy_D1)

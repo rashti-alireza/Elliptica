@@ -93,9 +93,9 @@ IDR_INC_DIR := $(TOP)/ID_Reader/include
 # ID reader library name
 IDR_LIB_NAME := libelliptica_id_reader.a
 # master sub-make file path
-MASTER_SUB_MAKE_FILE := $(TOP)/Doc/master_submake
+MASTER_SUB_MAKE_FILE := $(TOP)/Doc/Make/master_submake
 # sub-make file name stem in each directory
-SUB_MAKE_NAME_STEM := makefile
+SUB_MAKE_NAME_STEM := .sub_makefile
 # sub-make options:
 SUB_MAKE_FLAGS := --no-print-directory
 SUB_MAKE_FLAGS += --warn-undefined-variables
@@ -135,6 +135,7 @@ SYSTEM_LIBS = -lm
 # inlcude MyConfig for more options and c source files
 MODULE  =# to be determined in MyConfig
 PROJECT =# to be determined in MyConfig
+PROJECT_REPO=# to be set in MyConfig
 include MyConfig
 # MyConfig file path
 MyConfig_FILE := $(TOP)/MyConfig
@@ -243,7 +244,7 @@ $(EXEC): $(DEPENDENCY_FILES) $(auto_gen_c_file) $(SUB_MAKE_FILES) | $(LIB_DIR) $
 # --> invoke submakes with the default target
 	@for d in $(C_DIRS); \
 	  do \
-	    $(MAKE) $(SUB_MAKE_FLAGS) -C $$d; \
+	    $(MAKE) -f $(SUB_MAKE_NAME_STEM) $(SUB_MAKE_FLAGS) -C $$d; \
 	  done
 # --> link all of the libaries to build the EXEC:
 	@$(call cmd_and_pr_func, $(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS),$(EXEC))
@@ -316,8 +317,22 @@ $(O_DIRS):
 MyConfig:
 	@if [ ! -f MyConfig ];\
 	then \
-          cp Doc/MyConfig.example MyConfig; \
+          cp Doc/Make/MyConfig.example MyConfig; \
         fi
+
+
+##
+## git_clone the specified projects
+git_clone:
+# --> invoke git clone
+	@for p in $(PROJECT_REPO); \
+	  do \
+	    echo $(PR_F0) "git clone '$$p':";\
+	    cd $(PROJECT_DIR);\
+	    git clone $$p; \
+	  done
+.PHONY: git_clone
+
 ##
 ## clean Lib, auto generated files and dependency files in submake:
 clean:
@@ -334,7 +349,7 @@ clean:
 # --> invoke submakes to clean dependency files:
 	@for d in $(C_DIRS); \
 	  do \
-	    $(MAKE) $(SUB_MAKE_FLAGS) -C $$d $@; \
+	    $(MAKE) -f $(SUB_MAKE_NAME_STEM) $(SUB_MAKE_FLAGS) -C $$d $@; \
 	  done	 	
 .PHONY: clean
 
@@ -347,7 +362,7 @@ id_reader:$(EXEC)
 	  do \
 	  	o=$$(find $$d -type f); \
 	  	$(AR) $(ARFLAGS) $(IDR_LIB_DIR)/$(IDR_LIB_NAME) $$o; \
-	   done;
+	   done
 ## --> empty command for print
 	@$(call cmd_and_pr_func, , $@)
 	@echo $(PR_L0)

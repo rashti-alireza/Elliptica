@@ -4,12 +4,15 @@
 # April 2020     #
 ##################
 
-	Few important rubrics to add project:
-1. The name of the project function and project directory must 
-   be the same in order to be compiled correctly.
+A few important rubrics to add a new project:
 
-2. The include files used by the other projects, for instance TOV_lib.h,
-   must be put in the "Includes" directory.
+*. The name of the project function and the project directory must 
+   be the same to compile correctly.
+
+*. The include files used by the other projects, for instance, TOV_lib.h,
+   must be put in the "Src/Projects/Includes" directory w.r.t ELLIPTICA root
+   directory.
+
 
 
 

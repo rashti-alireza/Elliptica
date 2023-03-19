@@ -12,7 +12,7 @@ C_macro  = READ_v(name);
 # for each given Euler equation constant.
 `double star_NS_baryonic_gConf_mass(Physics_T *const phys,const double Euler_C)`
 `{`
-`  Grid_T *const grid = mygrid(phys,"NS");`
+`  Grid_T *const grid = mygrid(phys,Ftype("NS"));`
 `  double NS_baryonic_mass = 0;`
 ``
 `  FOR_ALL_p(grid->np)`

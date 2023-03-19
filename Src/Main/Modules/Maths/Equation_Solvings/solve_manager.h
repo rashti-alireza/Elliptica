@@ -13,6 +13,7 @@
 #define Prefix_BC     "bc_"
 #define Prefix_Jac_EQ "jacobian_eq_"
 #define Prefix_Jac_BC "jacobian_bc_"
+#define Alias_Field   "alias_field_"
 
 #define FORMAT_ER_PAR "Each field(s) for Solving_Order parameter "\
                           "must be written in a curly brackets {}\n"

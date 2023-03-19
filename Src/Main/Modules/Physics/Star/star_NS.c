@@ -14,7 +14,7 @@ int star_NS_keep_center_fixed(Physics_T *const phys)
 {
   FUNC_TIC
   
-  Grid_T *const grid = mygrid(phys,"NS");
+  Grid_T *const grid = mygrid(phys,Ftype("NS"));
   Patch_T *patch     = 0;
   const double NS_center[3] = {Getd("center_x"),
                                Getd("center_y"),
@@ -107,7 +107,7 @@ int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys)
 {
   FUNC_TIC
   
-  Grid_T *const grid = mygrid(phys,"NS");
+  Grid_T *const grid = mygrid(phys,Ftype("NS"));
   const double NS_center[3] = {Getd("center_x"),
                                Getd("center_y"),
                                Getd("center_z")};
@@ -508,7 +508,7 @@ static void force_balance_ddCM_Omega(Physics_T *const phys)
 /* find parameter par using force balance equation in direction dir */
 static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, const char *const par)
 {
-  Grid_T *const grid        = mygrid(phys,"NS");
+  Grid_T *const grid        = mygrid(phys,Ftype("NS"));
   const double D            = sysGetd("separation");
   const double Vr           = sysGetd("infall_velocity");
   const double NS_center[3] = {Getd("center_x"),
@@ -736,7 +736,7 @@ static void adjust_NS_center_interpolation(Physics_T *const phys)
 {
   FUNC_TIC
   
-  Grid_T *const grid  = mygrid(phys,"NS,NS_around");
+  Grid_T *const grid  = mygrid(phys,Ftype("NS,NS_around"));
   const double W1     = Getd("adjust_center_update_weight");
   const double W2     = 1.-W1;
   double NS_center[3] = {Getd("center_x"),
@@ -831,7 +831,7 @@ void star_NS_find_where_denthalpy_is_0(Physics_T *const phys,double xdh0[3])
 {
   FUNC_TIC
   
-  Grid_T *const grid = mygrid(phys,"NS");
+  Grid_T *const grid = mygrid(phys,Ftype("NS"));
   double *NS_center;
   struct NC_Center_RootFinder_S params[1] = {0};
   const double Residual = sqrt(Getd("RootFinder_Tolerance"));
@@ -989,7 +989,7 @@ static void adjust_NS_center_Taylor_expansion(Physics_T *const phys)
 {
   FUNC_TIC
   
-  Grid_T *const grid  = mygrid(phys,"NS,NS_around");
+  Grid_T *const grid  = mygrid(phys,Ftype("NS,NS_around"));
   const double W      = Getd("adjust_center_update_weight");
   double NS_center[3] = {Getd("center_x"),
                          Getd("center_y"),
@@ -1068,6 +1068,7 @@ void star_populate_psi_alphaPsi_matter_fields_TOV
   const double O_z   = Getd("omega_z");
   const double Omega = sysGetd("angular_velocity");
   const double y_CM  = sysGetd("y_CM");
+  const char *NS_region = Ftype("NS");
   
   /* find TOV solution */
   TOV_T *tov = TOV_init();
@@ -1081,7 +1082,7 @@ void star_populate_psi_alphaPsi_matter_fields_TOV
   {
     Patch_T *patch = grid->patch[p];
     
-    if (IsItCovering(patch,"NS"))
+    if (IsItCovering(patch,NS_region))
     {
       REALLOC_v_WRITE_v_STEM(psi,Psi)
       REALLOC_v_WRITE_v_STEM(alphaPsi,AlphaPsi)
@@ -1154,9 +1155,9 @@ void star_populate_psi_alphaPsi_matter_fields_TOV
 
       FOR_ALL_ijk
       {
-        double x    = patch->node[ijk]->x[0]-NSx;
-        double y    = patch->node[ijk]->x[1]-NSy;
-        double z    = patch->node[ijk]->x[2]-NSz;
+        double x = patch->node[ijk]->x[0]-NSx;
+        double y = patch->node[ijk]->x[1]-NSy;
+        double z = patch->node[ijk]->x[2]-NSz;
         double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
         double alpha;
 

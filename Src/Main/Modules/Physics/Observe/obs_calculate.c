@@ -555,10 +555,18 @@ static void calc_ADM_J(Observe_T *const obs)
   Uint n,ijk,nn;
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_NSNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
   {
     IFsc("ADM(J)|BHNS")
     {
+      /* NOTE: the "S_inf,default" and "S+V,Ossokine" methods predict the value of system's J 
+      // differently from the "S+V,constraint" and "S_obj1+S_obj2,default" methods.
+      // the default using the latter for J_ADM measure, and I believed they're the correct ones.
+      // however, further investigation in required to find the root cause of this
+      // difference. I should emphasize that this only affect the value of the system's J 
+      // at the post-processing step and has nothing to do with spins, P adms, or 
+      // the ID quality. ALL other quantities are measured accurately. */
       if (IsIt("S_inf,default"))
       {
         /* surface part */
@@ -593,12 +601,84 @@ static void calc_ADM_J(Observe_T *const obs)
         Error0(obs_err_msg);
       }
     }
+    else IFsc("ADM(J)|NSNS")
+    {
+      /* NOTE: the "S_inf,default" and "S+V,Ossokine" methods predict the value of system's J 
+      // differently from the "S+V,constraint" and "S_obj1+S_obj2,default" methods.
+      // the default using the latter for J_ADM measure, and I believed they're the correct ones.
+      // however, further investigation in required to find the root cause of this
+      // difference. I should emphasize that this only affect the value of the system's J 
+      // at the post-processing step and has nothing to do with spins, P adms, or 
+      // the ID quality. ALL other quantities are measured accurately. */
+
+      if (IsIt("S_inf,default"))
+      {
+        /* surface part */
+        region   = "outermost_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else if (IsIt("S+V,Ossokine"))
+      {
+        /* this method does not have volume integrals */
+        /* surface part */
+        region   = "outermost_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else if (IsIt("S+V,constraint"))
+      {
+        /* volume part */
+        region   = "outermost,filling_box,NS1_around,NS2_around";
+        patches1 = collect_patches(grid,region,&N1);
+        
+        /* surface part */
+        region   = "NS1_around_IB,NS2_around_IB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else if (IsIt("S_obj1+S_obj2,default"))
+      {
+        /* NOTE:for maximal slice and conformal flat metric 
+        // volume integral is 0. like the case we have for NSNS */
+        /* surface part */
+        region   = "NS1_OB,NS2_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
     else IFsc("ADM(J)|NS")
     {
       if (IsIt("S_obj,default"))
       {
         /* surface part */
         region   = "NS_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
+    else IFsc("ADM(J)|NS1")
+    {
+      if (IsIt("S_obj,default"))
+      {
+        /* surface part */
+        region   = "NS1_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
+    else IFsc("ADM(J)|NS2")
+    {
+      if (IsIt("S_obj,default"))
+      {
+        /* surface part */
+        region   = "NS2_OB";
         patches2 = collect_patches(grid,region,&N2);
       }
       else
@@ -632,22 +712,6 @@ static void calc_ADM_J(Observe_T *const obs)
         /* this method does not have volume integrals */
         /* surface part */
         region   = "outermost_OB";
-        patches2 = collect_patches(grid,region,&N2);
-      }
-      else
-      {
-        Error0(obs_err_msg);
-      }
-    }
-    else IFsc("ADM(J)|NSNS")
-    {
-      /* NOTE:for maximal slice and conformal flat metric 
-      // volume integral is 0. like the case we have for NSNS */
-      /* surface part */
-      if (IsIt("S_obj1+S_obj2,default"))
-      {
-        /* surface part */
-        region   = "NS1_OB,NS2_OB";
         patches2 = collect_patches(grid,region,&N2);
       }
       else
@@ -715,13 +779,26 @@ static void calc_ADM_J(Observe_T *const obs)
     adm[n]->g22 = g22;
     
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_NSNS ||
         grid->kind == Grid_SplitCubedSpherical_SBH)
     {
       IFsc("ADM(J)|BHNS")
       {
         ;/* nothing, to keep all options this empty if stays here */
       }
+      else IFsc("ADM(J)|NSNS")
+      {
+        ;/* nothing, to keep all options this empty if stays here */
+      }
       else IFsc("ADM(J)|NS")
+      {
+        ;/* nothing, to keep all options this empty if stays here */
+      }
+      else IFsc("ADM(J)|NS1")
+      {
+        ;/* nothing, to keep all options this empty if stays here */
+      }
+      else IFsc("ADM(J)|NS2")
       {
         ;/* nothing, to keep all options this empty if stays here */
       }
@@ -730,10 +807,6 @@ static void calc_ADM_J(Observe_T *const obs)
         ;/* nothing, to keep all options this empty if stays here */
       }
       else IFsc("ADM(J)|SBH")
-      {
-        ;/* nothing, to keep all options this empty if stays here */
-      }
-      else IFsc("ADM(J)|NSNS")
       {
         ;/* nothing, to keep all options this empty if stays here */
       }
@@ -792,6 +865,7 @@ static void calc_ADM_J(Observe_T *const obs)
     adm[n]->g22 = g22;
     
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_NSNS ||
         grid->kind == Grid_SplitCubedSpherical_SBH)
     {
       IFsc("ADM(J)|BHNS")
@@ -848,7 +922,89 @@ static void calc_ADM_J(Observe_T *const obs)
           Error0(obs_err_msg);
         }
       }
+      else IFsc("ADM(J)|NSNS")
+      {
+        if (IsIt("S_inf,default"))
+        {
+          adm[n]->surface_integration_flg = 1;
+          adm[n]->Z_surface = 1;
+          adm[n]->K = patch->n[2]-1;
+          n_physical_metric_around(adm[n],_c_);
+        }
+        else if (IsIt("S+V,Ossokine"))
+        {
+          Set_outermost_integral_S_SplitCS(adm)
+          n_physical_metric_around(adm[n],_c_);
+        }
+        else if (IsIt("S+V,constraint"))
+        {
+          if (IsItCovering(patch,"NS1_around_IB,NS2_around_IB"))
+          {
+            adm[n]->surface_integration_flg = 1;
+            adm[n]->Z_surface = 1;
+            adm[n]->K = 0;
+            n_physical_metric_around(adm[n],_c_);
+          }
+          else
+          {
+            Error0(obs_err_msg);
+          }
+        }
+        else if (IsIt("S_obj1+S_obj2,default"))
+        {
+          if (IsItCovering(patch,"NS1_OB"))
+          {
+            adm[n]->surface_integration_flg = 1;
+            adm[n]->Z_surface = 1;
+            adm[n]->K = patch->n[2]-1;
+            n_physical_metric_around(adm[n],_c_);
+          }
+          else if (IsItCovering(patch,"NS2_OB"))
+          {
+            adm[n]->surface_integration_flg = 1;
+            adm[n]->Z_surface = 1;
+            adm[n]->K = patch->n[2]-1;
+            n_physical_metric_around(adm[n],_c_);
+          }
+          else
+          {
+            Error0(obs_err_msg);
+          }
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
       else IFsc("ADM(J)|NS")
+      {
+        if (IsIt("S_obj,default"))
+        {
+          adm[n]->surface_integration_flg = 1;
+          adm[n]->Z_surface = 1;
+          adm[n]->K = patch->n[2]-1;
+          n_physical_metric_around(adm[n],_c_);
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
+      else IFsc("ADM(J)|NS1")
+      {
+        if (IsIt("S_obj,default"))
+        {
+          adm[n]->surface_integration_flg = 1;
+          adm[n]->Z_surface = 1;
+          adm[n]->K = patch->n[2]-1;
+          n_physical_metric_around(adm[n],_c_);
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
+      else IFsc("ADM(J)|NS2")
       {
         if (IsIt("S_obj,default"))
         {
@@ -895,20 +1051,6 @@ static void calc_ADM_J(Observe_T *const obs)
           Error0(obs_err_msg);
         }
       }
-      else IFsc("ADM(J)|NSNS")
-      {
-        if (IsIt("S_obj1+S_obj2,default"))
-        {
-          adm[n]->surface_integration_flg = 1;
-          adm[n]->Z_surface = 1;
-          adm[n]->K = patch->n[2]-1;
-          n_physical_metric_around(adm[n],_c_);
-        }
-        else
-        {
-          Error0(obs_err_msg);
-        }
-      }
       else
       {
         Error0(obs_err_msg);
@@ -923,6 +1065,7 @@ static void calc_ADM_J(Observe_T *const obs)
 
 
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_NSNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
   {
     if (IsIt("S_inf,default"))
@@ -974,6 +1117,7 @@ static void calc_ADM_P(Observe_T *const obs)
   Uint n,ijk,nn;
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_NSNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
   {
     IFsc("ADM(P)|BHNS")
@@ -1019,12 +1163,77 @@ static void calc_ADM_P(Observe_T *const obs)
         Error0(obs_err_msg);
       }
     }
+    else IFsc("ADM(P)|NSNS")
+    {
+      if (IsIt("S_inf,default"))
+      {
+        /* surface part */
+        region   = "outermost_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else if (IsIt("S+V,Ossokine"))
+      {
+        Collect_outermost_S_V_SplitCS
+      }
+      else if (IsIt("S+V,Rashti"))
+      {
+        /* volume part */
+        region   = "outermost,filling_box,NS1_around,NS1,NS2_around,NS2";
+        patches1 = collect_patches(grid,region,&N1);
+      }
+      else if (IsIt("S+V,constraint"))
+      {
+        /* volume part */
+        region   = "outermost,filling_box,NS1_around,NS1,NS2_around,NS2";
+        patches1 = collect_patches(grid,region,&N1);
+        
+        /* surface part */
+        region   = "NS1_around_IB,NS2_around_IB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else if (IsIt("S_obj1+S_obj2,default"))
+      {
+        /* surface part */
+        region   = "NS1_OB,NS2_OB,";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
     else IFsc("ADM(P)|NS")
     {
       if (IsIt("S_obj,default"))
       {
         /* surface part */
         region   = "NS_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
+    else IFsc("ADM(P)|NS1")
+    {
+      if (IsIt("S_obj,default"))
+      {
+        /* surface part */
+        region   = "NS1_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
+    else IFsc("ADM(P)|NS2")
+    {
+      if (IsIt("S_obj,default"))
+      {
+        /* surface part */
+        region   = "NS2_OB";
         patches2 = collect_patches(grid,region,&N2);
       }
       else
@@ -1065,19 +1274,6 @@ static void calc_ADM_P(Observe_T *const obs)
         
         /* surface part */
         region   = "BH_around_IB";
-        patches2 = collect_patches(grid,region,&N2);
-      }
-      else
-      {
-        Error0(obs_err_msg);
-      }
-    }
-    else IFsc("ADM(P)|NSNS")
-    {
-      if (IsIt("S_obj1+S_obj2,default"))
-      {
-        /* surface part */
-        region   = "NS1_OB,NS2_OB";
         patches2 = collect_patches(grid,region,&N2);
       }
       else
@@ -1145,13 +1341,26 @@ static void calc_ADM_P(Observe_T *const obs)
     adm[n]->g22 = g22;
     
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_NSNS ||
         grid->kind == Grid_SplitCubedSpherical_SBH)
     {
       IFsc("ADM(P)|BHNS")
       {
         ;/* nothing, to keep all options this empty if stays here */
       }
+      else IFsc("ADM(P)|NSNS")
+      {
+        ;/* nothing, to keep all options this empty if stays here */
+      }
       else IFsc("ADM(P)|NS")
+      {
+        ;/* nothing, to keep all options this empty if stays here */
+      }
+      else IFsc("ADM(P)|NS1")
+      {
+        ;/* nothing, to keep all options this empty if stays here */
+      }
+      else IFsc("ADM(P)|NS2")
       {
         ;/* nothing, to keep all options this empty if stays here */
       }
@@ -1218,6 +1427,7 @@ static void calc_ADM_P(Observe_T *const obs)
     adm[n]->g22 = g22;
     
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_NSNS ||
         grid->kind == Grid_SplitCubedSpherical_SBH)
     {
       IFsc("ADM(P)|BHNS")
@@ -1288,7 +1498,93 @@ static void calc_ADM_P(Observe_T *const obs)
           Error0(obs_err_msg);
         }
       }
+      else IFsc("ADM(P)|NSNS")
+      {
+        if (IsIt("S_inf,default"))
+        {
+          adm[n]->surface_integration_flg = 1;
+          adm[n]->Z_surface = 1;
+          adm[n]->K = patch->n[2]-1;
+          n_physical_metric_around(adm[n],_c_);
+        }
+        else if (IsIt("S+V,Ossokine"))
+        {
+          Set_outermost_integral_S_SplitCS(adm)
+          n_physical_metric_around(adm[n],_c_);
+        }
+        else if (IsIt("S+V,Rashti"))
+        {
+          ;
+        }
+        else if (IsIt("S+V,constraint"))
+        {
+          if (IsItCovering(patch,"NS1_around_IB,NS2_around_IB"))
+          {
+            adm[n]->surface_integration_flg = 1;
+            adm[n]->Z_surface = 1;
+            adm[n]->K = 0;
+            n_physical_metric_around(adm[n],_c_);
+          }
+          else
+          {
+            Error0(obs_err_msg);
+          }
+        }
+        else if (IsIt("S_obj1+S_obj2,default"))
+        {
+          if (IsItCovering(patch,"NS1_OB"))
+          {
+            adm[n]->surface_integration_flg = 1;
+            adm[n]->Z_surface = 1;
+            adm[n]->K = patch->n[2]-1;
+            n_physical_metric_around(adm[n],_c_);
+          }
+          else if (IsItCovering(patch,"NS2_OB"))
+          {
+            adm[n]->surface_integration_flg = 1;
+            adm[n]->Z_surface = 1;
+            adm[n]->K = patch->n[2]-1;
+            n_physical_metric_around(adm[n],_c_);
+          }
+          else
+          {
+            Error0(obs_err_msg);
+          }
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
       else IFsc("ADM(P)|NS")
+      {
+        if (IsIt("S_obj,default"))
+        {
+          adm[n]->surface_integration_flg = 1;
+          adm[n]->Z_surface = 1;
+          adm[n]->K = patch->n[2]-1;
+          n_physical_metric_around(adm[n],_c_);
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
+      else IFsc("ADM(P)|NS1")
+      {
+        if (IsIt("S_obj,default"))
+        {
+          adm[n]->surface_integration_flg = 1;
+          adm[n]->Z_surface = 1;
+          adm[n]->K = patch->n[2]-1;
+          n_physical_metric_around(adm[n],_c_);
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
+      else IFsc("ADM(P)|NS2")
       {
         if (IsIt("S_obj,default"))
         {
@@ -1356,6 +1652,7 @@ static void calc_ADM_P(Observe_T *const obs)
   
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_NSNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
   {
     if (IsIt("S_inf,default"))
@@ -1410,6 +1707,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
   Uint n,ijk,nn;
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_NSNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
   {
     IFsc("Komar(M)|BHNS")
@@ -1434,6 +1732,25 @@ static void calc_Kommar_mass(Observe_T *const obs)
         Error0(obs_err_msg);
       }
     }
+    else IFsc("Komar(M)|NSNS")
+    {
+      if (IsIt("S+V,default"))
+      {
+        /* volume part */
+        region   = "NS1,NS2";
+        patches1 = collect_patches(grid,region,&N1);
+      }
+      else if (IsIt("S_inf,default"))
+      {
+        /* surface part */
+        region   = "outermost_OB";
+        patches2 = collect_patches(grid,region,&N2);  
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
     else IFsc("Komar(M)|NS")
     {
       if (IsIt("V_obj,default"))
@@ -1446,6 +1763,44 @@ static void calc_Kommar_mass(Observe_T *const obs)
       {
         /* surface part */
         region = "NS_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
+    else IFsc("Komar(M)|NS1")
+    {
+      if (IsIt("V_obj,default"))
+      {
+        /* volume part */
+        region = "NS1";
+        patches1 = collect_patches(grid,region,&N1);
+      }
+      else if (IsIt("S_obj,default"))
+      {
+        /* surface part */
+        region = "NS1_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
+    else IFsc("Komar(M)|NS2")
+    {
+      if (IsIt("V_obj,default"))
+      {
+        /* volume part */
+        region = "NS2";
+        patches1 = collect_patches(grid,region,&N1);
+      }
+      else if (IsIt("S_obj,default"))
+      {
+        /* surface part */
+        region = "NS2_OB";
         patches2 = collect_patches(grid,region,&N2);
       }
       else
@@ -1582,6 +1937,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
     Komar[n]->g22 = g22;
     
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_NSNS ||
         grid->kind == Grid_SplitCubedSpherical_SBH)
     {
       IFsc("Komar(M)|BHNS")
@@ -1606,7 +1962,63 @@ static void calc_Kommar_mass(Observe_T *const obs)
           Error0(obs_err_msg);
         }
       }
+      else IFsc("Komar(M)|NSNS")
+      {
+        if (IsIt("S+V,default"))
+        {
+          ;
+        }
+        else if (IsIt("S_inf,default"))
+        {
+          /* NOTE: we can use a closer surface to the objects
+          // since Komar is independent of surface, so: */
+          Set_outermost_integral_S_SplitCS(Komar)
+          n_physical_metric_around(Komar[n],_c_);
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
       else IFsc("Komar(M)|NS")
+      {
+        if (IsIt("V_obj,default"))
+        {
+          ;
+        }
+        else if (IsIt("S_obj,default"))
+        {
+          /* surface integral */
+          Komar[n]->surface_integration_flg = 1;
+          Komar[n]->Z_surface = 1;
+          Komar[n]->K = patch->n[2]-1;
+          n_physical_metric_around(Komar[n],_c_);
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
+      else IFsc("Komar(M)|NS1")
+      {
+        if (IsIt("V_obj,default"))
+        {
+          ;
+        }
+        else if (IsIt("S_obj,default"))
+        {
+          /* surface integral */
+          Komar[n]->surface_integration_flg = 1;
+          Komar[n]->Z_surface = 1;
+          Komar[n]->K = patch->n[2]-1;
+          n_physical_metric_around(Komar[n],_c_);
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
+      else IFsc("Komar(M)|NS2")
       {
         if (IsIt("V_obj,default"))
         {
@@ -1668,6 +2080,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
   Free(patches2);
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_NSNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
   {
     if (IsIt("S+V,default"))
@@ -1719,6 +2132,7 @@ static void calc_ADM_mass(Observe_T *const obs)
   Uint n,ijk,nn;
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_NSNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
   {
     IFsc("ADM(M)|BHNS")
@@ -1752,11 +2166,60 @@ static void calc_ADM_mass(Observe_T *const obs)
         Error0(obs_err_msg);
       }
     }
+    else IFsc("ADM(M)|NSNS")
+    {
+      if (IsIt("S+V,default"))
+      {
+        /* volume part */
+        region   = "outermost,filling_box,NS1,NS1_around,NS2,NS2_around";
+        patches1 = collect_patches(grid,region,&N1);
+      }
+      else if (IsIt("S+V,conformal"))
+      {
+        /* volume part */
+        region   = "outermost,filling_box,NS1,NS1_around,NS2,NS2_around";
+        patches1 = collect_patches(grid,region,&N1);
+      }
+      else if (IsIt("S_inf,default"))
+      {
+        /* surface part */
+        region   = "outermost_OB";
+        patches2 = collect_patches(grid,region,&N2);  
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
     else IFsc("ADM(M)|NS")
     {
       if (IsIt("V_obj,default"))
       {
         region   = "NS";
+        patches1 = collect_patches(grid,region,&N1);
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
+    else IFsc("ADM(M)|NS1")
+    {
+      if (IsIt("V_obj,default"))
+      {
+        region   = "NS1";
+        patches1 = collect_patches(grid,region,&N1);
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
+    else IFsc("ADM(M)|NS2")
+    {
+      if (IsIt("V_obj,default"))
+      {
+        region   = "NS2";
         patches1 = collect_patches(grid,region,&N1);
       }
       else
@@ -1889,6 +2352,7 @@ static void calc_ADM_mass(Observe_T *const obs)
     adm[n]->g22 = g22;
     
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_NSNS ||
         grid->kind == Grid_SplitCubedSpherical_SBH)
     {
       IFsc("ADM(M)|BHNS")
@@ -1920,7 +2384,52 @@ static void calc_ADM_mass(Observe_T *const obs)
           Error0(obs_err_msg);
         }
       }
+      else IFsc("ADM(M)|NSNS")
+      {
+        if (IsIt("S+V,default"))
+        {
+          ;
+        }
+        else if (IsIt("S+V,conformal"))
+        {
+          ;
+        }
+        else if (IsIt("S_inf,default"))
+        {
+          /* surface integral */
+          adm[n]->surface_integration_flg = 1;
+          adm[n]->Z_surface = 1;
+          adm[n]->K = patch->n[2]-1;
+          n_physical_metric_around(adm[n],_c_);
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
       else IFsc("ADM(M)|NS")
+      {
+        if (IsIt("V_obj,default"))
+        {
+          ;
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
+      else IFsc("ADM(M)|NS1")
+      {
+        if (IsIt("V_obj,default"))
+        {
+          ;
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
+      else IFsc("ADM(M)|NS2")
       {
         if (IsIt("V_obj,default"))
         {
@@ -1964,6 +2473,7 @@ static void calc_ADM_mass(Observe_T *const obs)
   Free(patches2);
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_NSNS ||
       grid->kind == Grid_SplitCubedSpherical_SBH)
   {
     if (IsIt("S+V,default"))
@@ -2120,6 +2630,28 @@ static void calc_CM(Observe_T *const obs)
       Error0(obs_err_msg);
     }
   }
+  else IFsc("CM|NS1")
+  {
+    if (IsIt("V_obj,default"))
+    {
+      obs_Rc_NS(obs);
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
+  }
+  else IFsc("CM|NS2")
+  {
+    if (IsIt("V_obj,default"))
+    {
+      obs_Rc_NS(obs);
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
+  }
   else
   {
     Error0(obs_err_msg);
@@ -2151,6 +2683,44 @@ static void calc_spin(Observe_T *const obs)
     }
   }
   else IFsc("Spin|NS")
+  {
+    if (IsIt("S_obj,JRP"))
+    {
+      define_spin_JRP(obs);
+    }
+    else if (IsIt("S_obj,Campanelli"))
+    {
+      define_spin_campanelli(obs);
+    }
+    else if (IsIt("S_obj,AKV"))
+    {
+      define_spin_akv(obs);
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
+  }
+  else IFsc("Spin|NS1")
+  {
+    if (IsIt("S_obj,JRP"))
+    {
+      define_spin_JRP(obs);
+    }
+    else if (IsIt("S_obj,Campanelli"))
+    {
+      define_spin_campanelli(obs);
+    }
+    else if (IsIt("S_obj,AKV"))
+    {
+      define_spin_akv(obs);
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
+  }
+  else IFsc("Spin|NS2")
   {
     if (IsIt("S_obj,JRP"))
     {
