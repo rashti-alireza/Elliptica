@@ -181,18 +181,27 @@ static void find_coeffs_natural_cubic_spline_1d(Interpolation_T *const interp_s)
 
 /* tutorial:
 // =========
-// given function f(xi)'s and points xi's it calculates value of f(h)
+// given the values of the function f(x) for the points x_0, x_1, ... , and x_n,
+// it calculates the value of f(h) for an h in [x_0, x_n]
 // using Natural Cubic Spline method in 1-d
-// Note: this algothim doesn't work for arbitrty order of xi's
-// Only if the give xi's be in decreasing and increasing order
+//
+// NOTE: this algorithm doesn't work for an arbitrary order of x_i's.
+// so ensure x_i's are in a decreasing or an increasing order.
+//
+// NOTE: Cubic spline doesn't use the values of df(x)/dx at x_i's. 
+// hence, so in general, the interpolant derivatives don't match with the 
+// true value of the derivatives(df/dx).
+// if we need to include the derivative information, for instance,
+// in EoS where d(epsl)/d(rho) should be consistent with pressure at T = 0, 
+// we may want to use other methods such as Hermite which uses derivative.
 // 
 // ** filling the interpolation struct **
 // Interpolation_T *interp_s = init_interpolation();
-// interp_s->method         = "Natural_Cubic_Spline_1D";
-// interp_s->N_cubic_spline_1d->f   = f;
-// interp_s->N_cubic_spline_1d->x   = x;
-// interp_s->N_cubic_spline_1d->h   = h;// the point that we wanna interpolate f i.e. f(h)
-// interp_s->N_cubic_spline_1d->N   = 20;// dimention of array f and x
+// interp_s->method          = "Natural_Cubic_Spline_1D";
+// interp_s->N_cubic_spline_1d->f = f;
+// interp_s->N_cubic_spline_1d->x = x;
+// interp_s->N_cubic_spline_1d->h = h;// the point that we wanna interpolate f, i.e., f(h)
+// interp_s->N_cubic_spline_1d->N = 20;// the dimension of the array f and x
 // ** planning the appropriate function for interpolation **
 // plan_interpolation(interp_s);
 //
@@ -251,7 +260,7 @@ static double interpolation_natural_cubic_spline_1d(Interpolation_T *const inter
 // interp_s->Neville_1d->f   = f;
 // interp_s->Neville_1d->x   = x;
 // interp_s->Neville_1d->h   = h;// the point that we wanna interpolate f i.e. f(h)
-// interp_s->Neville_1d->N   = 20;// dimention of array f and x
+// interp_s->Neville_1d->N   = 20;// dimension of array f and x
 // interp_s->Neville_1d->max = 10;// 10 out of N used for interpolation
 // ** planning the appropriate function for interpolation **
 // plan_interpolation(interp_s);
