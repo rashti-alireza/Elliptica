@@ -35,6 +35,7 @@ void free_interpolation(Interpolation_T *interp_s);
 
 /////////////////////////////Extra interpolation methods.
 static double interpolation_finite_difference(Interpolation_T *const interp_s);
+static Uint FDM_min(Uint n, Uint M);
 static void find_coeffs_Hermite_cubic_spline(Interpolation_T *const interp_s);
 static double interpolation_Hermite_cubic_spline(Interpolation_T *const interp_s);
 static void find_coeffs_clamped_cubic_spline_1d(Interpolation_T *const interp_s);

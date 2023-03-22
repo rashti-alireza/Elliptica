@@ -18,6 +18,7 @@ void test_EoS(Physics_T *const phys)
   double s = (h_max-h_min)/(N-1);
   Uint i;
   
+  printf("path_par == %s\n", path_par);////////////////////////
   path = make_directory(path_par,"EoS_Tests");
   
   /* values */

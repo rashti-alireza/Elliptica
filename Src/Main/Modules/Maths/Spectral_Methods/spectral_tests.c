@@ -805,6 +805,57 @@ static int interpolation_tests_N_cubic_spline_1d(void)
   return TEST_SUCCESSFUL;
 }
 
+// Tests Hermite cubic spline for 1d arrays
+// Returns: result of test.
+static int interpolation_tests_Hermite_1d(void)
+{
+  Interpolation_T *interp_s = init_interpolation();
+  const Uint N = (Uint)PGeti("n_a");
+  double *f = alloc_double(N);
+  double *x = alloc_double(N);
+  const double a = 1, b = 10;/* an arbitrary interval  */
+  double s = (b-a)/(N-1);
+  double t,interp;
+  Flag_T flg = NONE;
+  Uint i;
+  
+  for (i = 0; i < N; ++i)
+  {
+    t = x[i] = a+i*s;
+    f[i] = log(t) * cos(t*t) + t;/* arbitrary function */
+  }
+  
+  interp_s->method         = "Hermite_Cubic_Spline";
+  interp_s->finite_diff_order      = 5;
+  interp_s->f                      = f;
+  interp_s->x                      = x;
+  interp_s->N                      = N;
+  plan_interpolation(interp_s);
+  
+  for (i = 0; i < N; ++i)
+  {
+    double diff;
+    t = hs[i];
+    interp_s->h = t;
+    interp = execute_interpolation(interp_s);
+    diff = interp-(log(t) * cos(t*t) + t);
+    
+    if (GRT(fabs(diff),s))
+    {
+      fprintf(stderr,"diff = %g\n",diff);
+      flg = FOUND;
+      break;
+    }
+  }
+  free_interpolation(interp_s);
+  free(f);
+  free(x);
+  
+  if (flg == FOUND)
+    return TEST_UNSUCCESSFUL;
+    
+  return TEST_SUCCESSFUL;
+} 
 
 /* test Neville iterative method for 1-d arrays.
 // ->return value: result of test. */

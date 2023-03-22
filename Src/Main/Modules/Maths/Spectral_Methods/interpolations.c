@@ -140,24 +140,33 @@ static void order_arrays_natural_cubic_spline_1d(Interpolation_T *const interp_s
 }
 
 ///////////////////////////////////////Finite difference approximation////////////////////////
+Uint FDM_min(Uint n, Uint M)
+{
+    if (M < n) { return M; }
+    return n;
+}
+
 static double interpolation_finite_difference(Interpolation_T *const interp_s)
 {
-  // Approximates f'(h) by finite difference method.
-  // Away from end points x[0], x[N-1], uses central finite difference.
-  // Near end points, uses forwards or backwards finite difference.
+  // Approximates M-th derivative of f(x)|x=h by finite difference method.
   const double *const x = interp_s->N_cubic_spline_1d->x;
   double *const f = interp_s->N_cubic_spline_1d->f;
   const double h = interp_s->h;
-  const double N = interp_s->N_cubic_spline_1d->N;
+  const Uint N = interp_s->N_cubic_spline_1d->N;
   Uint i = 0;
-  Uint order = interp_s->order;
+  //Uint Order = interp_s->Order;
+  const Uint n = interp_s->finite_diff_order;
+  const Uint M = interp_s->FDM_derivative;
   double ret = DBL_MAX;/* it's important to be max double */
   Flag_T flg = NONE;
       
   // Checks if we have enough data points for given order.
-  if (N <= order+1)
+  if (N <= n+M)
   { Error0("Finite difference error: Not enough points for desired accuracy.\n"); }
+  if (M >= n)
+  { Error0("Finite difference error: Degree of derivative must not exceed degree of accuracy.\n"); }
   
+  ////////////////////////Fixme: Add check for array ordering.////////////////////////////
   // Finds the data segment
   for (i = 0; i < N-1; ++i)
   {
@@ -176,31 +185,67 @@ static double interpolation_finite_difference(Interpolation_T *const interp_s)
     return ret;
   }
   
-  if (order == 1)
-  { ret = (f[i+1] - f[i]) / (x[i+1] - x[i]); }
+  // If we have enough points on either side of the desired point h,
+  // we can use a central finite difference. Otherwise, we must
+  // use a shifted finite difference (e.g. the forward finite difference
+  // if x[0] < = h < x[1]).
+  // Note: If the desired accuracy order is an odd integer, we assign the
+  // 'extra' point to the left of the point h.
   
-  // If we're too close to the left end to use the central method,
-  // we use the forward method instead:
-  if (i <= (order/2 + 1))
-  {
-    if (order == 2)
-    {
-        ret = 
+  // Selects subset of 'x' array to use for finite difference method,
+  int left_pt = (int)i - (int)floor((n+M)/2);
+  int right_pt = (int)i + (int)ceil((n+M)/2);
   
-  // If we're too close to the right end to use the central method,
-  // we use the backward method instead:
-  else if (N - i <= (order/2 + 1))
-  { print("\n");
-    }
-  // Otherwise we use the central finite difference:
-  else
+  // Shifts right if sub-array is too far left:
+  while (left_pt < 0)
   {
-    if (order == 2)
-    {
-        print("\n");
-    }
+    left_pt++;
+    right_pt++;
+  }
+  while ((Uint)right_pt >= N)
+  {
+    left_pt--;
+    right_pt--;
   }
   
+  // Allocates memory for delta coefficients
+  // Stores (M+1)x(n+m)x(n+m) 3D array 
+  // 'deltas' in linear format.
+  Uint p[2] = { M+1, n+M };
+  double* deltas = alloc_double((M+1)*(n+M)*(n+M));
+  
+  // Fornberg algorithm calculates the deltas.
+  deltas[i_j_k_to_ijk(p,0,0,0)] = 1;
+  double c1 = 1;
+  double c2 = 1;
+  double c3 = 1;
+  
+  for (Uint l=1; l<n+M; l++)
+  {
+    c2 = 1;
+    for (Uint v=0; v<l; v++)
+    {
+        c3 = x[l] - x[v];
+        c2 = c2*c3;
+        if (l <= M)
+        { deltas[i_j_k_to_ijk(p,l,l-1,v)] = 0; }
+        for (Uint m=0; m<=FDM_min(l,M); m++)
+        { deltas[i_j_k_to_ijk(p,m,l,v)] = (((x[l] - h)
+          *deltas[i_j_k_to_ijk(p,m,l-1,v)]
+          - (m ? m*deltas[i_j_k_to_ijk(p,m-1,l-1,v)] : 0))/c3); }
+    }
+    for (Uint m=0; m<=FDM_min(l,M); m++)
+    { deltas[i_j_k_to_ijk(p,m,l,l)] = ((c1/c2)*
+      ((m ? m*deltas[i_j_k_to_ijk(p,m-1,l-1,l-1)] : 0)
+      - (x[l-1]-h)*deltas[i_j_k_to_ijk(p,m,l-1,l-1)])); }
+  }
+  
+  // Approximates f^(m)|x=h using deltas.
+  ret = 0;
+  for (Uint v=0; v<=n; v++)
+  { ret += deltas[i_j_k_to_ijk(p,M,n,v)] * f[left_pt+(int)v]; }
+  
+  free(deltas);
   return ret;
 }
    
@@ -351,6 +396,7 @@ static void find_coeffs_Hermite_cubic_spline(Interpolation_T *const interp_s)
     double *const d = alloc_double(n); // spline coefficients
     Uint i = 0;
     
+    /* Old version: Uses 3-point finite difference on ends.
     // Estimates m_k by 3-point finite difference
     // except at end points, where 2-point
     // finite difference is used instead.
@@ -362,6 +408,17 @@ static void find_coeffs_Hermite_cubic_spline(Interpolation_T *const interp_s)
     }
     b[0] = (a[1]-a[0])/(x[1]-x[0]);
     b[n-1] = (a[n-1]-a[n-2])/(x[n-1]-x[n-2]);
+    */
+    
+    // Finds m values using Fornberg finite
+    // difference method; stores m values
+    // in 'b' array.
+    interp_s->FDM_derivative = 1;
+    for (i = 0; i < n; i++)
+    {
+        interp_s->h = x[i];
+        b[i] = interpolation_finite_difference(interp_s);
+    }
     
     // Pre-computes coefficients c and d for cubic Hermite spline
     // standard form:

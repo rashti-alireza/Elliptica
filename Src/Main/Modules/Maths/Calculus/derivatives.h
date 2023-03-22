@@ -44,3 +44,7 @@ static void get_SpecDerivative_func_1stOrder(const Patch_T *const patch,SpecDeri
 static void get_SpecDerivative_func_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **func);
 static Uint IsSecondOrderFormula(Field_T *const f,const Dd_T *const dir_e,const Uint Ndir);
 static Uint JacobianFormat_2ndOrder(const Patch_T *const patch,const Dd_T dir,Dd_T dp);
+
+/* Fornberg method */
+//double FDM_Fornberg(const double x0, const double* x, const double* f, const Uint N, const Uint n, const Uint m);
+//static double* Fornberg_coefficients(const double x0, const double* x, const Uint N, const Uint n, const Uint m);

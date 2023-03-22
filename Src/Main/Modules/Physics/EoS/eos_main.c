@@ -383,6 +383,14 @@ static void populate_EoS(EoS_T *const eos)
         interp_p->method = Gets(P_"Interpolation_Method");
         interp_e->method = Gets(P_"Interpolation_Method");
         interp_rho0->method = Gets(P_"Interpolation_Method");
+        printf("Interpolation method: %s\n", interp_p->method);//////////////////
+        if (strstr_i(Gets(P_"Interpolation_Method"), "Hermite_Cubic_Spline"))
+        {
+            printf("FDM order: %i\n", Geti(P_"finite_diff_order"));//////////////
+            interp_p->finite_diff_order = (Uint)Geti(P_"finite_diff_order");
+            interp_e->finite_diff_order = (Uint)Geti(P_"finite_diff_order");
+            interp_rho0->finite_diff_order = (Uint)Geti(P_"finite_diff_order");
+        }
         
         interp_p->N_cubic_spline_1d->f   = p_sample;
         interp_p->N_cubic_spline_1d->x   = h_sample;
