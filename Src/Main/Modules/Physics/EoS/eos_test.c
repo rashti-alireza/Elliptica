@@ -18,7 +18,6 @@ void test_EoS(Physics_T *const phys)
   double s = (h_max-h_min)/(N-1);
   Uint i;
   
-  printf("path_par == %s\n", path_par);////////////////////////
   path = make_directory(path_par,"EoS_Tests");
   
   /* values */
@@ -76,7 +75,7 @@ void test_EoS(Physics_T *const phys)
   }
   Fclose(file);
   
-  /*  
+    
   sprintf(file_name,"%s/%s",path,"drho0_dh");
   file = Fopen(file_name,"w+");
   fprintf(file,"# enthalpy  drho0_dh\n");  
@@ -96,7 +95,7 @@ void test_EoS(Physics_T *const phys)
     fprintf(file,"%0.15e %0.15e\n",eos->h,eos->de_dh(eos));
   }
   Fclose(file);
-  */
+  
    
   free_EoS(eos);
   free(path);

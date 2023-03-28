@@ -42,6 +42,12 @@ double execute_interpolation(Interpolation_T *const interp_struct)
   return interp_struct->interpolation_func(interp_struct);
 }
 
+/* interpolation function for derivatives */
+double execute_derivative_interpolation(Interpolation_T *const interp_struct)
+{
+  return interp_struct->interpolation_derivative_func(interp_struct);
+}
+
 /* planning interpolation function based on 
 // input file and patch and flags in interp_s. */
 void plan_interpolation(Interpolation_T *const interp_s)
@@ -59,18 +65,21 @@ void plan_interpolation(Interpolation_T *const interp_s)
     order_arrays_natural_cubic_spline_1d(interp_s);
     find_coeffs_natural_cubic_spline_1d(interp_s);
     interp_s->interpolation_func = interpolation_natural_cubic_spline_1d;
+    interp_s->interpolation_derivative_func = interpolation_NCS_derivative;
   }
   else if (strstr_i(interp_s->method,"Hermite_Cubic_Spline"))
   {
     order_arrays_natural_cubic_spline_1d(interp_s);
     find_coeffs_Hermite_cubic_spline(interp_s);
     interp_s->interpolation_func = interpolation_Hermite_cubic_spline;
+    interp_s->interpolation_derivative_func = interpolation_HCS_derivative;
   }
   else if (strstr_i(interp_s->method,"Clamped_Cubic_Spline_1D"))
   {
     order_arrays_natural_cubic_spline_1d(interp_s);
     find_coeffs_clamped_cubic_spline_1d(interp_s);
     interp_s->interpolation_func = interpolation_clamped_cubic_spline_1d;
+    interp_s->interpolation_derivative_func = interpolation_CCS_derivative;
   }
   else if ( strstr_i(interp_s->method,"Spectral") || 
        strstr_i(PgetsEZ("Interpolation_Method"),"Spectral"))
@@ -102,9 +111,19 @@ void plan_interpolation(Interpolation_T *const interp_s)
   {
     prepare_log_interpolation(interp_s);
     interp_s->interpolation_func = interpolation_log_linear;
+    interp_s->interpolation_derivative_func = interpolation_log_derivative;
   } 
   else
     Error0(INCOMPLETE_FUNC);
+    
+  // If finite difference derivative is manually assigned
+  if (PgetsEZ("interpolation_derivative_method") 
+      && strstr_i(PgetsEZ("interpolation_derivative_method"),
+                    "finite_difference"))
+  {
+    interp_s->interpolation_derivative_func = interpolation_finite_difference;
+    interp_s->finite_diff_order = (Uint)Pgeti("finite_diff_order");
+  }
   
 }
 
@@ -149,22 +168,34 @@ Uint FDM_min(Uint n, Uint M)
 static double interpolation_finite_difference(Interpolation_T *const interp_s)
 {
   // Approximates M-th derivative of f(x)|x=h by finite difference method.
-  const double *const x = interp_s->N_cubic_spline_1d->x;
-  double *const f = interp_s->N_cubic_spline_1d->f;
+  printf("Checkpoint 1\n");///////////////////////////
+  const double *const x = interp_s->x;
+  double *const f = interp_s->f;
   const double h = interp_s->h;
-  const Uint N = interp_s->N_cubic_spline_1d->N;
+  const Uint N = interp_s->N;
   Uint i = 0;
   //Uint Order = interp_s->Order;
   const Uint n = interp_s->finite_diff_order;
   const Uint M = interp_s->FDM_derivative;
   double ret = DBL_MAX;/* it's important to be max double */
   Flag_T flg = NONE;
-      
+  
+  printf("Checkpoint 2: N = %i\n",N);///////////////////////
+  printf("Checkpoint 2: M = %i\n",M);///////////////////////
+  printf("Checkpoint 2: n = %i\n",n);///////////////////////
   // Checks if we have enough data points for given order.
   if (N <= n+M)
-  { Error0("Finite difference error: Not enough points for desired accuracy.\n"); }
+  {
+    printf("Points: %i\n", N);
+    printf("Order of accuracy: %i\n", n);
+    Error0("Finite difference error: Not enough points for desired accuracy.\n");
+  }
   if (M >= n)
-  { Error0("Finite difference error: Degree of derivative must not exceed degree of accuracy.\n"); }
+  {
+    printf("Degree of derivative: %i\n", M);
+    printf("Order of accuracy: %i\n", n);
+    Error0("Finite difference error: Degree of derivative must not exceed degree of accuracy.\n");
+  }
   
   ////////////////////////Fixme: Add check for array ordering.////////////////////////////
   // Finds the data segment
@@ -176,6 +207,8 @@ static double interpolation_finite_difference(Interpolation_T *const interp_s)
       break;
     }
   }
+  //printf("Enthalpy found:\n x[%i] == %lf\n h == %lf\n, x[%i] == %lf\n",
+  //          i, x[i], h, i+1, x[i+1]);
 
   if (flg != FOUND)
   {
@@ -193,8 +226,8 @@ static double interpolation_finite_difference(Interpolation_T *const interp_s)
   // 'extra' point to the left of the point h.
   
   // Selects subset of 'x' array to use for finite difference method,
-  int left_pt = (int)i - (int)floor((n+M)/2);
-  int right_pt = (int)i + (int)ceil((n+M)/2);
+  int left_pt = (int)i - (int)floor((n+M)/2)+1;
+  int right_pt = (int)i + (int)ceil((n+M)/2)+1;
   
   // Shifts right if sub-array is too far left:
   while (left_pt < 0)
@@ -211,42 +244,91 @@ static double interpolation_finite_difference(Interpolation_T *const interp_s)
   // Allocates memory for delta coefficients
   // Stores (M+1)x(n+m)x(n+m) 3D array 
   // 'deltas' in linear format.
-  Uint p[2] = { M+1, n+M };
+  printf("Checkpoint 3\n");/////////////////////////
+  for (int k = 0; k < right_pt - left_pt; k++)
+  {
+    printf("x[%i] == %lf\n", left_pt+k, x[left_pt+k]);
+}
+  Uint p[3] = { 0, M+1, n+M };
   double* deltas = alloc_double((M+1)*(n+M)*(n+M));
   
   // Fornberg algorithm calculates the deltas.
   deltas[i_j_k_to_ijk(p,0,0,0)] = 1;
+    printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
+      printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
+        deltas[i_j_k_to_ijk(p,1,0,0)] = 5;
+        printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
+          printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
   double c1 = 1;
   double c2 = 1;
   double c3 = 1;
   
   for (Uint l=1; l<n+M; l++)
   {
+            printf("l == %i\n",l);////////////////////////
+            printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
     c2 = 1;
     for (Uint v=0; v<l; v++)
     {
-        c3 = x[l] - x[v];
+                printf("v == %i\n",v);//////////////////////
+                printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
+        c3 = x[(Uint)left_pt+l] - x[(Uint)left_pt+v];
+        printf("c3 == %E\n", c3);////////////////////////////////
         c2 = c2*c3;
         if (l <= M)
-        { deltas[i_j_k_to_ijk(p,l,l-1,v)] = 0; }
+        { 
+        printf("deltas[%i,%i,%i] == %E\n", l, l-1, v,  deltas[i_j_k_to_ijk(p,l,l-1,v)]);///////////// }
+        deltas[i_j_k_to_ijk(p,l,l-1,v)] = 0;
+                       printf("deltas[%i,%i,%i] == %E\n", l, l-1, v,  deltas[i_j_k_to_ijk(p,l,l-1,v)]);///////////// }
+                                       printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
+        }
         for (Uint m=0; m<=FDM_min(l,M); m++)
-        { deltas[i_j_k_to_ijk(p,m,l,v)] = (((x[l] - h)
+        { 
+        printf("m == %i\n",m);//////////////////////
+                printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
+        
+        deltas[i_j_k_to_ijk(p,m,l,v)] = (((x[(Uint)left_pt+l] - h)
           *deltas[i_j_k_to_ijk(p,m,l-1,v)]
-          - (m ? m*deltas[i_j_k_to_ijk(p,m-1,l-1,v)] : 0))/c3); }
+          - (m ? m*deltas[i_j_k_to_ijk(p,m-1,l-1,v)] : 0))/c3);
+               printf("deltas[%i,%i,%i] == %E\n", m, l, v,  deltas[i_j_k_to_ijk(p,m,l,v)]);/////////////
+               if (m == 1) printf("deltas[%i,%i,%i] == ((%E)*(%E) - (%i)*(%E))/(%E) == %E\n",
+               m,l,v, x[(Uint)left_pt+l] - h, deltas[i_j_k_to_ijk(p,m,l-1,v)], m, (m ? m*deltas[i_j_k_to_ijk(p,m-1,l-1,v)] : 0), c3, deltas[i_j_k_to_ijk(p,m,l,v)]);
+               }
     }
     for (Uint m=0; m<=FDM_min(l,M); m++)
     { deltas[i_j_k_to_ijk(p,m,l,l)] = ((c1/c2)*
       ((m ? m*deltas[i_j_k_to_ijk(p,m-1,l-1,l-1)] : 0)
-      - (x[l-1]-h)*deltas[i_j_k_to_ijk(p,m,l-1,l-1)])); }
+      - (x[(Uint)left_pt+l-1]-h)*deltas[i_j_k_to_ijk(p,m,l-1,l-1)])); 
+          printf("deltas[%i,%i,%i] == %E\n", m, l, l,  deltas[i_j_k_to_ijk(p,m,l,l)]);/////////////
+          }
+    c1 = c2;
+  }
+  for (Uint q = 0; q<=M; q++)
+  {
+    for (Uint r=0; r<n+M; r++)
+    {
+        for (Uint s=0; s<n+M; s++)
+        {
+            printf("deltas[%i,%i,%i] == %E\n", q,r,s,  deltas[i_j_k_to_ijk(p,q,r,s)]);/////////////
+        }
+    }
   }
   
+  printf("Checkpoint 3.5\n");////////////////////////////
+  printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
+  printf("Left pt: %i\n", left_pt);////////////////
+  printf("n == %i\n", n);////////////////////////
   // Approximates f^(m)|x=h using deltas.
   ret = 0;
   for (Uint v=0; v<=n; v++)
-  { ret += deltas[i_j_k_to_ijk(p,M,n,v)] * f[left_pt+(int)v]; }
+  { printf("v == %i\n", v);///////////////////
+    printf("deltas[%i,%i,%i] == %E\n", M, n, v,  deltas[i_j_k_to_ijk(p,M,n,v)]);/////////////
+    printf("f[%i] == %lf\n", left_pt+(int)v, f[left_pt+(int)v]);///////////////////
+  ret += deltas[i_j_k_to_ijk(p,M,n,v)] * f[left_pt+(int)v]; }
   
   free(deltas);
   return ret;
+  printf("Checkpoint 4\n");/////////////////////////
 }
    
 ///////////////////////////////////////Natural cubic spline///////////////////////////////
@@ -377,6 +459,44 @@ static double interpolation_natural_cubic_spline_1d(Interpolation_T *const inter
   return ret; 
 }
 
+// Interpolates f'(x) using derivative of natural cubic spline.
+static double interpolation_NCS_derivative(Interpolation_T *const interp_s)
+{
+  if (!interp_s->N_cubic_spline_1d->Order)
+  order_arrays_natural_cubic_spline_1d(interp_s);
+  
+  const double *const x = interp_s->N_cubic_spline_1d->x;
+  const double *const b = interp_s->N_cubic_spline_1d->b;
+  const double *const c = interp_s->N_cubic_spline_1d->c;
+  const double *const d = interp_s->N_cubic_spline_1d->d;
+  const double h = interp_s->N_cubic_spline_1d->h;
+  const double N = interp_s->N_cubic_spline_1d->N;
+  double ret = DBL_MAX;/* it's important to be max double */
+  Uint i = 0;
+  Flag_T flg = NONE;
+  
+  /* find the segment */
+  for (i = 0; i < N-1; ++i)
+  {
+    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+    {
+      flg = FOUND;
+      break;
+    }
+  }
+
+  if (flg != FOUND)
+  {
+    if (!interp_s->N_cubic_spline_1d->No_Warn)
+      Warning("The given point for the interpolation is out of the domain.\n");
+    
+    return ret;
+  }
+  
+  ret = b[i] + 2*c[i]*(h-x[i]) + 3*d[i]*Pow2(h-x[i]);
+  return ret; 
+}
+
 ////////////////////////////////////////////Cubic Hermite Spline///////////////////////////////////////////////////////////
 // Interpolates function f(x) over sub-intervals [a,b]
 // using linear combination of basis functions:
@@ -439,7 +559,6 @@ static double interpolation_Hermite_cubic_spline(Interpolation_T *const interp_s
 {
   // Executes cubic Hermite spline interpolation:
   // f(x) ~ p(x) = h00(x)f(a) + h10(x)(b-a)m_k + h01(x)f(b) + h11(x)(b-a)m_k+1
-  //printf("Hermite cubic spline interpolation function.\n");/////////////////////////////////
   if (!interp_s->N_cubic_spline_1d->Order)
   order_arrays_natural_cubic_spline_1d(interp_s);
     
@@ -474,6 +593,47 @@ static double interpolation_Hermite_cubic_spline(Interpolation_T *const interp_s
  
   double t = (h - x[i]) / (x[i+1] - x[i]);
   ret = c[i] * t*t*t + d[i] * t*t + b[i] * (h - x[i]) + a[i];
+  
+  return ret;
+}
+
+static double interpolation_HCS_derivative(Interpolation_T *const interp_s)
+{
+  // Returns f'(x) by derivative of cubic Hermite spline
+  if (!interp_s->N_cubic_spline_1d->Order)
+  order_arrays_natural_cubic_spline_1d(interp_s);
+    
+  const double *const x = interp_s->N_cubic_spline_1d->x;
+  const double *const b = interp_s->N_cubic_spline_1d->b;
+  const double *const c = interp_s->N_cubic_spline_1d->c;
+  const double *const d = interp_s->N_cubic_spline_1d->d;
+  const double h = interp_s->N_cubic_spline_1d->h;
+  const Uint N = interp_s->N_cubic_spline_1d->N;
+  double ret = DBL_MAX;/* it's important to be max double */
+  Uint i = 0;
+  Flag_T flg = NONE;
+  
+  /* find the segment */
+  for (i = 0; i < N-1; ++i)
+  {
+    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+    {
+      flg = FOUND;
+      break;
+    }
+  }
+
+  if (flg != FOUND)
+  {
+    if (!interp_s->N_cubic_spline_1d->No_Warn)
+      Warning("The given point for the interpolation is out of the domain.\n");
+    
+    return ret;
+  }
+ 
+  double t = (h - x[i]) / (x[i+1] - x[i]);
+  //ret = c[i] * t*t*t + d[i] * t*t + b[i] * (h - x[i]) + a[i];
+  ret = 3*c[i]*t*t / (x[i+1] - x[i]) + 2*d[i]*t / (x[i+1] - x[i]) + b[i];
   
   return ret;
 }
@@ -584,6 +744,43 @@ static double interpolation_clamped_cubic_spline_1d(Interpolation_T *const inter
   return ret; 
 }
 
+static double interpolation_CCS_derivative(Interpolation_T *const interp_s)
+{
+  if (!interp_s->N_cubic_spline_1d->Order)
+    order_arrays_natural_cubic_spline_1d(interp_s);
+    
+  const double *const x = interp_s->N_cubic_spline_1d->x;
+  const double *const b = interp_s->N_cubic_spline_1d->b;
+  const double *const c = interp_s->N_cubic_spline_1d->c;
+  const double *const d = interp_s->N_cubic_spline_1d->d;
+  const double h = interp_s->N_cubic_spline_1d->h;
+  const Uint N = interp_s->N_cubic_spline_1d->N;
+  double ret = DBL_MAX;/* it's important to be max double */
+  Uint i = 0;
+  Flag_T flg = NONE;
+  
+  /* find the segment */
+  for (i = 0; i < N-1; ++i)
+  {
+    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+    {
+      flg = FOUND;
+      break;
+    }
+  }
+
+  if (flg != FOUND)
+  {
+    if (!interp_s->N_cubic_spline_1d->No_Warn)
+      Warning("The given point for the interpolation is out of the domain.\n");
+    
+    return ret;
+  }
+  
+  ret = b[i] + 2*c[i]*(h-x[i]) + 3*d[i]*Pow2(h-x[i]);
+  return ret; 
+}
+
 //////////////////////////////////////////////////Logarithmic interpolation
 static double interpolation_log_linear(Interpolation_T *const interp_s)
 {
@@ -610,17 +807,53 @@ static double interpolation_log_linear(Interpolation_T *const interp_s)
 
     if (flg != FOUND)
     {
-        if (!interp_s->N_cubic_spline_1d->No_Warn)///////////////////////////////////////////////
+        if (!interp_s->N_cubic_spline_1d->No_Warn)
         {
           Warning("The given point for the interpolation is out of the domain.\n");
-          printf("Point: %lf\n", h);
-          printf("Domain: (%lf,%lf)\n", x[0], x[N-1]);
         }
         
         return ret;
     }
 
     ret = exp(log_f[i] + (h - x[i])*(log_f[i+1] - log_f[i])/(x[i+1] - x[i]));
+    return ret;
+}
+
+static double interpolation_log_derivative(Interpolation_T *const interp_s)
+{
+    if (!interp_s->N_cubic_spline_1d->Order)
+        prepare_log_interpolation(interp_s);
+        
+    const double *const x = interp_s->N_cubic_spline_1d->x;
+    const double *const log_f = interp_s->N_cubic_spline_1d->log_f;
+    const double h = interp_s->N_cubic_spline_1d->h;
+    const Uint N = interp_s->N_cubic_spline_1d->N;
+    double ret = DBL_MAX;/* it's important to be max double */
+    Uint i;
+    Flag_T flg = NONE;
+  
+    /* find the segment */
+    for (i = 0; i < N-1; ++i)
+    {
+        if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+        {
+            flg = FOUND;
+            break;
+        }
+    }
+
+    if (flg != FOUND)
+    {
+        if (!interp_s->N_cubic_spline_1d->No_Warn)
+        {
+          Warning("The given point for the interpolation is out of the domain.\n");
+        }
+        
+        return ret;
+    }
+
+    ret = (exp(log_f[i] + (h - x[i])*(log_f[i+1] - log_f[i])/(x[i+1] - x[i]))
+          * (log_f[i+1] - log_f[i])/(x[i+1] - x[i]));
     return ret;
 }
 

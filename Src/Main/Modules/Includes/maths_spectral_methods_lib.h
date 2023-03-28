@@ -33,6 +33,7 @@ typedef struct INTERPOLATION_T
   Uint FDM_derivative;/* order of derivative required from finite difference method */
   struct FIELD_T *field;/* interesting field for interpolation */
   fInterpolation_T *interpolation_func;/* interpolation function */
+  fInterpolation_T *interpolation_derivative_func;/* interpolation function for derivatives */
   double X,Y,Z;/* where interpolant calculated. 
                // MUST be provided in coords sys. used by patch.
                */
@@ -79,6 +80,7 @@ int fourier_transformation_tests(Grid_T *const grid);
 int Ylm_transformation_tests(Grid_T *const grid);
 Interpolation_T *init_interpolation(void);
 double execute_interpolation(Interpolation_T *const interp_s);
+double execute_derivative_interpolation(Interpolation_T *const interp_s);
 void plan_interpolation(Interpolation_T *const interp_s);
 void get_Ylm_coeffs(double *const realClm,double *const imagClm,const double *const f,const Uint Ntheta,const Uint Nphi,const Uint Lmax);
 double interpolation_Ylm(const double *const realClm,const double *const imagClm,const Uint Lmax, const double theta, const double phi);

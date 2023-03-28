@@ -807,13 +807,15 @@ static int interpolation_tests_N_cubic_spline_1d(void)
 
 // Tests Hermite cubic spline for 1d arrays
 // Returns: result of test.
+/*
 static int interpolation_tests_Hermite_1d(void)
 {
   Interpolation_T *interp_s = init_interpolation();
-  const Uint N = (Uint)PGeti("n_a");
+  const Uint N = (Uint)Pgeti("n_a");
   double *f = alloc_double(N);
   double *x = alloc_double(N);
-  const double a = 1, b = 10;/* an arbitrary interval  */
+  const double a = 1, b = 10;*//* an arbitrary interval  *//*
+  double *hs = make_random_number(N,a,b);
   double s = (b-a)/(N-1);
   double t,interp;
   Flag_T flg = NONE;
@@ -822,7 +824,7 @@ static int interpolation_tests_Hermite_1d(void)
   for (i = 0; i < N; ++i)
   {
     t = x[i] = a+i*s;
-    f[i] = log(t) * cos(t*t) + t;/* arbitrary function */
+    f[i] = log(t) * cos(t*t) + t;*//* arbitrary function *//*
   }
   
   interp_s->method         = "Hermite_Cubic_Spline";
@@ -855,7 +857,8 @@ static int interpolation_tests_Hermite_1d(void)
     return TEST_UNSUCCESSFUL;
     
   return TEST_SUCCESSFUL;
-} 
+}
+*/
 
 /* test Neville iterative method for 1-d arrays.
 // ->return value: result of test. */

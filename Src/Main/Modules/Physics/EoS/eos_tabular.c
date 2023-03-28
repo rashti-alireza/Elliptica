@@ -162,6 +162,20 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
         return 0.0;
     }
     
+    double drho0dh;
+    Interpolation_T *const interp_s = eos->cubic_spline->interp_rho0;
+    Interpolation_T *const interpolation = (Interpolation_T*)eos->cubic_spline->interp_rho0;////////////
+    interp_s->x  = interpolation->N_cubic_spline_1d->x;/////////////////////////
+    interp_s->N  = interpolation->N_cubic_spline_1d->N;///////////////////////////
+    interp_s->f  = interpolation->N_cubic_spline_1d->f;////////////////////////
+    interp_s->h  = eos->h;
+    interp_s->N_cubic_spline_1d->h = eos->h;
+    interp_s->FDM_derivative = 1;
+    drho0dh = execute_derivative_interpolation(interp_s);
+  
+    return (LSSEQL(drho0dh,0.) || drho0dh == DBL_MAX ? 0. : drho0dh);
+    
+    /* Manually-coded derivative methods
     Interpolation_T *const interpolation = (Interpolation_T*)eos->cubic_spline->interp_rho0;
     
     //Finds the spline interval
@@ -186,6 +200,13 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
         double hj = interpolation->N_cubic_spline_1d->x[h_interval];
 
         return bj + 2*cj*(eos->h-hj) + 3*dj*(eos->h-hj) * (eos->h-hj);
+    double drho0dh;
+    Interpolation_T *const interp_s = eos->cubic_spline->interp_rho0;
+    interp_s->N_cubic_spline_1d->h  = eos->h;
+    drho0dh = execute_derivative_interpolation(interp_s);
+  
+    return (LSSEQL(drho0dh,0.) || drho0dh == DBL_MAX ? 0. : drho0dh);
+    
     }
     else if (strstr_i(interpolation->method, "Log_Linear"))
     {
@@ -203,6 +224,7 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
         Error0("Tabular EOS function drho0/dh: Interpolation method not supported.\n");
         return 0;
     }
+    */
 }
 
 
