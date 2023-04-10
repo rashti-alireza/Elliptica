@@ -4,6 +4,7 @@
 */
 
 #include "spectral_tests.h"
+#include <time.h>
 #define ArgM(a) a,#a/*used for being more accurate in naming and fast */
 #define MAXSTR (400)
 
@@ -624,7 +625,6 @@ static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid)
 int interpolation_tests(Grid_T *const grid)
 {
   FUNC_TIC
-  
   Uint p;
   double *X,*Y,*Z;
   Field_T *field;
@@ -634,8 +634,10 @@ int interpolation_tests(Grid_T *const grid)
          "      polynomial is used, which might not get well resolved in \n"
          "      outermost patches which use compactification.\n\n");
   
-  FOR_ALL_PATCHES(p,grid)
+  // FOR_ALL_PATCHES(p,grid) //Un-comment for full tests.
   {
+  if (DO_NOT) { /////////////////Remove if(DO_NOT) to test functions other than
+                /////////////////1-D interpolation
     Patch_T *patch = grid->patch[p];
     const Uint *n = patch->n;
     const double *min = patch->min;
@@ -650,44 +652,44 @@ int interpolation_tests(Grid_T *const grid)
     Y = make_random_number(n[1],min[1],max[1]);
     Z = make_random_number(n[2],min[2],max[2]);
     
-    if (DO)
+    if (DO_NOT)
     {
       printf("Interpolation test:      X direction, patch %10s:\n",patch->name);
       status = interpolation_tests_X(field,X,n[0]);
       check_test_result(status);
     }
     
-    if (DO)
+    if (DO_NOT)
     {
       printf("Interpolation test:      Y direction, patch %10s:\n",patch->name);
       status = interpolation_tests_Y(field,Y,n[1]);
       check_test_result(status);
     }
-    if (DO)
+    if (DO_NOT)
     {
       printf("Interpolation test:      Z direction, patch %10s:\n",patch->name);
       status = interpolation_tests_Z(field,Z,n[2]);
       check_test_result(status);
     }
-    if (DO)
+    if (DO_NOT)
     {
       printf("Interpolation test: X & Y directions, patch %10s:\n",patch->name);
       status = interpolation_tests_XY(field,X,Y,n[0],n[1]);
       check_test_result(status);
     }
-    if (DO)
+    if (DO_NOT)
     {
       printf("Interpolation test: X & Z directions, patch %10s:\n",patch->name);
       status = interpolation_tests_XZ(field,X,Z,n[0],n[2]);
       check_test_result(status);
     } 
-    if (DO)
+    if (DO_NOT)
     {
       printf("Interpolation test: Y & Z directions, patch %10s:\n",patch->name);
       status = interpolation_tests_YZ(field,Y,Z,n[1],n[2]);
       check_test_result(status);
     }
-    if (DO)
+    if (DO_NOT)
     {
       printf("Interpolation test:              3-D, patch %10s:\n",patch->name);
       status = interpolation_tests_XYZ(field,X,Y,Z,n[0],n[1],n[2]);
@@ -700,23 +702,57 @@ int interpolation_tests(Grid_T *const grid)
     free(Y);
     free(Z);
     remove_field(field);
-  }
+  }}////////////////////////////
   
-  if (DO)
+  if (DO_NOT)
   {
       printf("Interpolation test:            Neville Iterative Method =>");
       status = interpolation_tests_Neville_1d();
       check_test_result(status);
   }
-  if (DO)
+  if (DO_NOT)
   {
       printf("Interpolation test:            Natural Cubic Spline Method =>");
       status = interpolation_tests_N_cubic_spline_1d();
       check_test_result(status);
   }
-  
+  if (DO_NOT)
+  {
+      printf("Interpolation test:            Hermite Cubic Spline Method =>");
+      status = interpolation_tests_Hermite_1d();
+      check_test_result(status);
+  }
+  // In order to test Fornberg FDM, 
+  // "interpolation_derivative_method = finite_difference"
+  // must be included in parameter file.
+  if (DO)
+  {
+      printf("Finite Difference test:         Fornberg Algorithm =>\n");
+      status = interpolation_tests_FDM();
+      check_test_result(status);
+  }
   FUNC_TOC
   return EXIT_SUCCESS;
+}
+   
+// Prints f(x) to text file for
+// visual confirmation of interpolation tests.
+static void print_arrays(const char *const fileName,
+                         double* x, double* f, double N)
+{
+  const char *const path_par = Pgets("top_directory");
+  char outName[1000]; //*path;
+  //path = make_directory(path_par,"Test_Data");
+  sprintf(outName, "%s/%s.txt", path_par, fileName);
+  FILE* outFile = fopen(outName, "w");
+  
+  if (outFile == NULL)
+  { printf("Error printing interpolation test data: could not open file.\n"); }
+  
+  for (Uint j = 0; j < N; j++)
+  { fprintf(outFile, "%E\t%E\n", x[j], f[j]); }
+  
+  fclose(outFile);
 }
 
 /* test Natural Cubic Spline method for 1-d arrays.
@@ -724,13 +760,23 @@ int interpolation_tests(Grid_T *const grid)
 static int interpolation_tests_N_cubic_spline_1d(void)
 {
   Interpolation_T *interp_s = init_interpolation();
-  const Uint N = (Uint)Pgeti("n_a");
+  const Uint N = (Uint)Pgeti("n_interp");
   double *f = alloc_double(N);
+  double *f_derivative = alloc_double(N);
   double *x = alloc_double(N);
+  double *error = alloc_double(N);
+  double *error_derivative = alloc_double(N);
+  double *interp_vals = alloc_double(N);
+  double *interp_vals_derivative = alloc_double(N);
+  double *x_vals = alloc_double(N);
   const double a = -M_PI, b = 3/4*M_PI;/* an arbitrary interval  */
   double *hs = make_random_number(N,a,b);
   double s = (b-a)/(N-1);
-  double t,interp;
+  double t,interp,interp_derivative;
+  double time;
+  double error_total = 0;
+  double error_total_derivative = 0;
+  clock_t time1 = clock();
   Flag_T flg = NONE;
   Uint i;
   
@@ -738,21 +784,35 @@ static int interpolation_tests_N_cubic_spline_1d(void)
   {
     t = x[i] = a+i*s;
     f[i] = cos(t)+t*t*t;/* arbitrary function */
+    f_derivative[i] = - sin(t) + 3*t*t; // Derivative
   }
-    
+  
   interp_s->method         = "Natural_Cubic_Spline_1D";
   interp_s->N_cubic_spline_1d->f   = f;
   interp_s->N_cubic_spline_1d->x   = x;
   interp_s->N_cubic_spline_1d->N   = N;
+  assign_interpolation_ptrs(interp_s);
+  *interp_s->f   = f;
+  *interp_s->x   = x;
+  *interp_s->N   = N;
   plan_interpolation(interp_s);
   
   for (i = 0; i < N; ++i)
   {
     double diff;
+    double diff_derivative;
     t = hs[i];
+    x_vals[i] = hs[i];
     interp_s->N_cubic_spline_1d->h = t;
     interp = execute_interpolation(interp_s);
+    interp_derivative = execute_derivative_interpolation(interp_s);
     diff = interp-(cos(t)+t*t*t);
+    error[i] = Pow2(diff);
+    diff_derivative = interp_derivative - (-sin(t) + 3*t*t);
+    error_derivative[i] = Pow2(diff_derivative);
+    
+    interp_vals[i] = interp;
+    interp_vals_derivative[i] = interp_derivative;
     
     if (GRT(fabs(diff),s))
     {
@@ -761,8 +821,29 @@ static int interpolation_tests_N_cubic_spline_1d(void)
       break;
     }
   }
-  free_interpolation(interp_s);
   
+  time = (double)(clock() - time1)/CLOCKS_PER_SEC;
+  printf("\nNCS test time: %E\n", time);
+  for (Uint j; j < N; j++)
+  { 
+    error_total += error[j];
+    error_total_derivative += error_derivative[j];
+  }
+  printf("Total sum-of-squares error: %E\n", error_total);
+  printf("Total sum-of-squares error for first derivative: %E\n",
+        error_total_derivative);
+  
+  if (strstr_i(PgetsEZ("print_interpolation_tests"), "yes"))
+  { 
+    print_arrays("NCS_Function", x, f, N);
+    print_arrays("NCS_Interp", x_vals, interp_vals, N);
+    print_arrays("NCS_Error", x_vals, error, N);
+    print_arrays("NCS_Derivative", x, f_derivative, N);
+    print_arrays("NCS_Interp_Derivative", x_vals, interp_vals_derivative, N);
+    print_arrays("NCS_Error_Derivative", x_vals, error_derivative, N);
+  }
+  
+  free_interpolation(interp_s);
   /* let's test the reveres order for x's */
   s = -(b-a)/(N-1);
   interp_s = init_interpolation();
@@ -793,72 +874,317 @@ static int interpolation_tests_N_cubic_spline_1d(void)
       break;
     }
   }
-  
   free_interpolation(interp_s);
   free(f);
+  free(f_derivative);
   free(x);
   free(hs);
+  free(x_vals);
+  free(interp_vals);
+  free(interp_vals_derivative);
+  free(error);
+  free(error_derivative);
   
   if (flg == FOUND)
     return TEST_UNSUCCESSFUL;
-    
   return TEST_SUCCESSFUL;
 }
 
 // Tests Hermite cubic spline for 1d arrays
 // Returns: result of test.
-/*
 static int interpolation_tests_Hermite_1d(void)
 {
   Interpolation_T *interp_s = init_interpolation();
-  const Uint N = (Uint)Pgeti("n_a");
+  const Uint N = (Uint)Pgeti("n_interp");
   double *f = alloc_double(N);
+  double *f_derivative = alloc_double(N);
   double *x = alloc_double(N);
-  const double a = 1, b = 10;*//* an arbitrary interval  *//*
+  double *error = alloc_double(N);
+  double *error_derivative = alloc_double(N);
+  double *interp_vals = alloc_double(N);
+  double *interp_vals_derivative = alloc_double(N);
+  double *x_vals = alloc_double(N);
+  const double a = 1, b = 4; // an arbitrary interval
   double *hs = make_random_number(N,a,b);
   double s = (b-a)/(N-1);
-  double t,interp;
+  double t,interp,interp_derivative;
+  double time;
+  double error_total = 0;
+  double error_total_derivative = 0;
+  clock_t time1 = clock();
   Flag_T flg = NONE;
   Uint i;
-  
   for (i = 0; i < N; ++i)
   {
     t = x[i] = a+i*s;
-    f[i] = log(t) * cos(t*t) + t;*//* arbitrary function *//*
+    f[i] = log(t) * cos(t) + t;// arbitrary function
+    f_derivative[i] = - log(t)*sin(t) + cos(t)/t + 1; // Derivative
   }
-  
+    
   interp_s->method         = "Hermite_Cubic_Spline";
-  interp_s->finite_diff_order      = 5;
-  interp_s->f                      = f;
-  interp_s->x                      = x;
-  interp_s->N                      = N;
+  assign_interpolation_ptrs(interp_s);
+  *interp_s->f   = f;
+  *interp_s->x   = x;
+  *interp_s->N   = N;
   plan_interpolation(interp_s);
-  
-  for (i = 0; i < N; ++i)
+  for (i = 2; i < N-2; ++i)
   {
     double diff;
+    double diff_derivative;
     t = hs[i];
-    interp_s->h = t;
+    x_vals[i] = hs[i];
+    *interp_s->h = t;
     interp = execute_interpolation(interp_s);
-    diff = interp-(log(t) * cos(t*t) + t);
+    interp_derivative = execute_derivative_interpolation(interp_s);
+    diff = interp - (log(t)*cos(t)+t);
+    error[i] = ABSd(diff);
+    diff_derivative = interp_derivative - (cos(t)/t - log(t)*sin(t) + 1);
+    error_derivative[i] = ABSd(diff_derivative);
+    
+    interp_vals[i] = interp;
+    interp_vals_derivative[i] = interp_derivative;
     
     if (GRT(fabs(diff),s))
     {
+      printf("Maximum error exceeded at t = %E.\n",t);
+      printf("Function value: %E\n", log(t)*cos(t)+t);
+      printf("Interpolated value: %E\n", interp);
+      printf("Difference: %E\n", diff);
       fprintf(stderr,"diff = %g\n",diff);
       flg = FOUND;
       break;
     }
   }
+  
+  time = (double)(clock() - time1)/CLOCKS_PER_SEC;
+  printf("\nHCS test time: %E\n", time);
+  
+  // Excises end values from arrays
+  // Note: doesn't use realloc() because that causes memory
+  // leaks on end of arrays.
+  double* f_2 = alloc_double(N-4);
+  double* f_derivative_2 = alloc_double(N-4);
+  double* x_2 = alloc_double(N-4);
+  double* x_vals_2 = alloc_double(N-4);
+  double* interp_vals_2 = alloc_double(N-4);
+  double* interp_vals_derivative_2 = alloc_double(N-4);
+  double* error_2 = alloc_double(N-4);
+  double* error_derivative_2 = alloc_double(N-4);
+  
+  for (Uint j=0; j<N-4; j++)
+  {
+    f_2[j] = f[j+2];
+    f_derivative_2[j] = f_derivative[j+2];
+    x_2[j] = x[j+2];
+    x_vals_2[j] = x_vals[j+2];
+    interp_vals_2[j] = interp_vals[j+2];
+    interp_vals_derivative_2[j] = interp_vals_derivative[j+2];
+    error_2[j] = error[j];
+    error_derivative_2[j] = error_derivative[j+2];
+  }
+  
+  for (Uint j=0; j < N-4; j++)
+  { 
+    error_total += error_2[j];
+    error_total_derivative += error_derivative_2[j];
+  }
+  printf("Cumulative error: %E\n", error_total);
+  printf("Cumulative error for first derivative: %E\n",
+        error_total_derivative);
+  
+  if (strstr_i(PgetsEZ("print_interpolation_tests"), "yes"))
+  { 
+    print_arrays("HCS_Function", x_2, f_2, N-4);
+    print_arrays("HCS_Interp", x_vals_2, interp_vals_2, N-4);
+    print_arrays("HCS_Error", x_vals_2, error_2, N-4);
+    print_arrays("HCS_Derivative", x_2, f_derivative_2, N-4);
+    print_arrays("HCS_Interp_Derivative", x_vals_2, interp_vals_derivative_2, N-4);
+    print_arrays("HCS_Error_Derivative", x_vals_2, error_derivative_2, N-4);
+  }
+  
   free_interpolation(interp_s);
   free(f);
+  free(f_2);
+  free(f_derivative);
+  free(f_derivative_2);
   free(x);
+  free(x_2);
+  free(hs);
+  free(x_vals);
+  free(x_vals_2);
+  free(interp_vals);
+  free(interp_vals_2);
+  free(interp_vals_derivative);
+  free(interp_vals_derivative_2);
+  free(error);
+  free(error_2);
+  free(error_derivative);
+  free(error_derivative_2);
+  
+  if (flg == FOUND)
+    return TEST_UNSUCCESSFUL;
+  return TEST_SUCCESSFUL;
+}
+
+// Tests 1D finite difference method
+// Note: FDM method for derivatives
+// must be set manually in parameter file for this test
+static int interpolation_tests_FDM(void)
+{
+  Interpolation_T *interp_s = init_interpolation();
+  const Uint N = (Uint)Pgeti("n_interp");
+  double *f = alloc_double(N);
+  double *f_derivative = alloc_double(N);
+  double *f_3_derivative = alloc_double(N);
+  double *x = alloc_double(N);
+  double *error_derivative = alloc_double(N);
+  double *error_3_derivative = alloc_double(N);
+  double *interp_vals_derivative = alloc_double(N);
+  double *interp_vals_3_derivative = alloc_double(N);
+  double *x_vals = alloc_double(N);
+  const double a = 1, b = 4;// an arbitrary interval
+  double *hs = make_random_number(N,a,b);
+  double s = (b-a)/(N-1);
+  double t,interp_derivative,interp_3_derivative;
+  double time;
+  double error_total_derivative = 0;
+  double error_total_3_derivative = 0;
+  clock_t time1 = clock();
+  Flag_T flg = NONE;
+  Uint i;
+  
+  //interp_s->FDM_derivative = 3;
+  for (i = 0; i < N; ++i)
+  {
+    t = x[i] = a+i*s;
+    f[i] = log(t) * cos(t) + t;// arbitrary function
+    f_derivative[i] = - log(t)*sin(t) + cos(t)/t + 1; // Derivative
+    f_3_derivative[i] = (2*cos(t)/Pow3(t) + 3*sin(t)/Pow2(t)
+                         - 3*cos(t)/t + log(t)*sin(t)); // 3rd derivative
+  }
+    
+  interp_s->method = "Hermite_Cubic_Spline";
+  assign_interpolation_ptrs(interp_s);
+  *interp_s->f   = f;
+  *interp_s->x   = x;
+  *interp_s->N   = N;
+  plan_interpolation(interp_s);
+  
+  double diff_derivative;
+  double diff_3_derivative;
+  for (i = 2; i < N-2; ++i)
+  { 
+    t = hs[i];
+    x_vals[i] = hs[i];
+    *interp_s->h = t;
+    interp_s->FDM_derivative = 1; // Take the 1st derivative
+    interp_derivative = execute_derivative_interpolation(interp_s);
+    interp_s->FDM_derivative = 3; // Take the 3rd derivative
+    interp_3_derivative = execute_derivative_interpolation(interp_s);
+    diff_derivative = interp_derivative - (cos(t)/t - log(t)*sin(t) + 1);
+    diff_3_derivative = interp_3_derivative - (2*cos(t)/Pow3(t) + 3*sin(t)/Pow2(t)
+                         - 3*cos(t)/t + log(t)*sin(t));
+    error_derivative[i] = ABSd(diff_derivative);
+    error_3_derivative[i] = ABSd(diff_3_derivative);
+    interp_vals_derivative[i] = interp_derivative;
+    interp_vals_3_derivative[i] = interp_3_derivative;
+    
+    if (GRT(fabs(diff_derivative),s))
+    {
+      printf("Maximum error exceeded for first derivative at t = %E.\n",t);
+      printf("Derivative value: %E\n", - log(t)*sin(t) + cos(t)/t + 1);
+      printf("Interpolated derivative value: %E\n", interp_derivative);
+      printf("Difference: %E\n", diff_derivative);
+      fprintf(stderr,"diff = %g\n",diff_derivative);
+      flg = FOUND;
+      break;
+    }
+    else if (GRT(fabs(diff_3_derivative),s))
+    {
+      printf("Maximum error exceeded for third derivative at t = %E.\n",t);
+      printf("Third derivative value: %E\n", (2*cos(t)/Pow3(t) + 3*sin(t)/Pow2(t) 
+                                              - 3*cos(t)/t + log(t)*sin(t)));
+      printf("Interpolated third derivative value: %E\n", interp_3_derivative);
+      printf("Difference: %E\n", diff_3_derivative);
+      fprintf(stderr,"diff = %g\n",diff_3_derivative);
+      flg = FOUND;
+      break;
+    }
+  }
+  
+  // Excises end values from arrays
+  // Note: doesn't use realloc() because that causes memory
+  // leaks on end of arrays.
+  double* f_2                         = alloc_double(N-4);
+  double* f_derivative_2              = alloc_double(N-4);
+  double* f_3_derivative_2            = alloc_double(N-4);
+  double* x_2                         = alloc_double(N-4);
+  double* x_vals_2                    = alloc_double(N-4);
+  double* interp_vals_derivative_2    = alloc_double(N-4);
+  double* interp_vals_3_derivative_2  = alloc_double(N-4);
+  double* error_derivative_2          = alloc_double(N-4);
+  double* error_3_derivative_2        = alloc_double(N-4);
+  
+  for (Uint j=0; j<N-4; j++)
+  {
+    f_2[j]                          = f[j+2];
+    f_derivative_2[j]               = f_derivative[j+2];
+    f_3_derivative_2[j]             = f_3_derivative[j+2];
+    x_2[j]                          = x[j+2];
+    x_vals_2[j]                     = x_vals[j+2];
+    interp_vals_derivative_2[j]     = interp_vals_derivative[j+2];
+    interp_vals_3_derivative_2[j]   = interp_vals_3_derivative[j+2];
+    error_derivative_2[j]           = error_derivative[j+2];
+    error_3_derivative_2[j]         = error_3_derivative[j+2];
+  }
+  
+  for (Uint j=0; j < N-4; j++)
+  { 
+    error_total_derivative += error_derivative_2[j];
+    error_total_3_derivative += error_3_derivative_2[j];
+  }
+  printf("Cumulative error for first derivative: %E\n",
+        error_total_derivative);
+  printf("Cumulative error for third derivative: %E\n",
+        error_total_derivative);
+  
+  if (strstr_i(PgetsEZ("print_interpolation_tests"), "yes"))
+  { 
+    print_arrays("FDM_Function", x_2, f_2, N-4);
+    print_arrays("FDM_Derivative", x_2, f_derivative_2, N-4);
+    print_arrays("FDM_3_Derivative", x_2, f_3_derivative_2, N-4);
+    print_arrays("FDM_Interp_Derivative", x_vals_2, interp_vals_derivative_2, N-4);
+    print_arrays("FDM_Interp_3_Derivative", x_vals_2, interp_vals_3_derivative_2, N-4);
+    print_arrays("HCS_Error_Derivative", x_vals_2, error_derivative_2, N-4);
+    print_arrays("HCS_Error_Derivative", x_vals_2, error_3_derivative_2, N-4);
+  }
+  
+  time = (double)(clock() - time1)/CLOCKS_PER_SEC;
+  printf("\nFDM test time: %E\n", time);
+  
+  free_interpolation(interp_s);
+  free(f);
+  free(f_derivative);
+  free(f_derivative_2);
+  free(f_3_derivative);
+  free(f_3_derivative_2);
+  free(x);
+  free(hs);
+  free(x_vals);
+  free(interp_vals_derivative);
+  free(interp_vals_derivative_2);
+  free(interp_vals_3_derivative);
+  free(interp_vals_3_derivative_2);
+  free(error_derivative);
+  free(error_derivative_2);
+  free(error_3_derivative);
+  free(error_3_derivative_2);
   
   if (flg == FOUND)
     return TEST_UNSUCCESSFUL;
     
   return TEST_SUCCESSFUL;
 }
-*/
 
 /* test Neville iterative method for 1-d arrays.
 // ->return value: result of test. */

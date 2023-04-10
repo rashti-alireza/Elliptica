@@ -383,29 +383,31 @@ static void populate_EoS(EoS_T *const eos)
         interp_p->method = Gets(P_"Interpolation_Method");
         interp_e->method = Gets(P_"Interpolation_Method");
         interp_rho0->method = Gets(P_"Interpolation_Method");
-        printf("Interpolation method: %s\n", interp_p->method);//////////////////
-        if (strstr_i(Gets(P_"Interpolation_Method"), "Hermite_Cubic_Spline"))
+        assign_interpolation_ptrs(interp_p);
+        assign_interpolation_ptrs(interp_e);
+        assign_interpolation_ptrs(interp_rho0);
+        if (strstr_i(Gets(P_"Interpolation_Method"), "Hermite_Cubic_Spline") || 
+            strstr_i(Gets(P_"Interpolation_Method"), "Clamped_Cubic_Spline"))
         {
-            printf("FDM order: %i\n", Geti(P_"finite_diff_order"));//////////////
             interp_p->finite_diff_order = (Uint)Geti(P_"finite_diff_order");
             interp_e->finite_diff_order = (Uint)Geti(P_"finite_diff_order");
             interp_rho0->finite_diff_order = (Uint)Geti(P_"finite_diff_order");
         }
         
-        interp_p->N_cubic_spline_1d->f   = p_sample;
-        interp_p->N_cubic_spline_1d->x   = h_sample;
-        interp_p->N_cubic_spline_1d->N   = sample_s;
-        interp_p->N_cubic_spline_1d->No_Warn = 1;/* suppress warning */
+        *interp_p->f = p_sample;
+        *interp_p->x = h_sample;
+        *interp_p->N = sample_s;
+        set_interp_warn_flag(interp_p, 1); // suppress warning
         
-        interp_e->N_cubic_spline_1d->f   = e_sample;
-        interp_e->N_cubic_spline_1d->x   = h_sample;
-        interp_e->N_cubic_spline_1d->N   = sample_s;
-        interp_e->N_cubic_spline_1d->No_Warn = 1;
-    
-        interp_rho0->N_cubic_spline_1d->f   = rho0_sample;
-        interp_rho0->N_cubic_spline_1d->x   = h_sample;
-        interp_rho0->N_cubic_spline_1d->N   = sample_s;
-        interp_rho0->N_cubic_spline_1d->No_Warn = 1;
+        *interp_e->f = p_sample;
+        *interp_e->x = h_sample;
+        *interp_e->N = sample_s;
+        set_interp_warn_flag(interp_e, 1); // suppress warning
+        
+        *interp_rho0->f = rho0_sample;
+        *interp_rho0->x = h_sample;
+        *interp_rho0->N = sample_s;
+        set_interp_warn_flag(interp_rho0, 1); // suppress warning
         
         plan_interpolation(interp_p);
         plan_interpolation(interp_e);
@@ -414,7 +416,62 @@ static void populate_EoS(EoS_T *const eos)
         eos->cubic_spline->interp_e = interp_e;
         eos->cubic_spline->interp_rho0 = interp_rho0;
         
-        /* assign functions for (p, e, rho0) */
+        // assign functions for (p, e, rho0)
+        eos->pressure          = EoS_p_h_tab;
+        eos->energy_density    = EoS_e_h_tab;
+        eos->rest_mass_density = EoS_rho0_h_tab;
+        eos->specific_internal_energy = EoS_e0_h_tab;
+        eos->de_dh    = EoS_de_dh_h_tab;
+        eos->drho0_dh = EoS_drho0_dh_h_tab;
+        
+        h_sample = 0;
+        p_sample = 0;
+        e_sample = 0;
+        rho0_sample = 0;
+        }
+        
+        /*
+        if (strstr_i(Gets(P_"Interpolation_Method"), "Natural_Cubic_Spline_1D"))
+        {
+          interp_p->N_cubic_spline_1d->f   = p_sample;
+          interp_p->N_cubic_spline_1d->x   = h_sample;
+          interp_p->N_cubic_spline_1d->N   = sample_s;
+          interp_p->N_cubic_spline_1d->No_Warn = 1;// suppress warning
+          
+          interp_e->N_cubic_spline_1d->f   = e_sample;
+          interp_e->N_cubic_spline_1d->x   = h_sample;
+          interp_e->N_cubic_spline_1d->N   = sample_s;
+          interp_e->N_cubic_spline_1d->No_Warn = 1;
+      
+          interp_rho0->N_cubic_spline_1d->f   = rho0_sample;
+          interp_rho0->N_cubic_spline_1d->x   = h_sample;
+          interp_rho0->N_cubic_spline_1d->N   = sample_s;
+          interp_rho0->N_cubic_spline_1d->No_Warn = 1;
+        }
+        
+        interp_p->f   = p_sample;
+        interp_p->x   = h_sample;
+        interp_p->N   = sample_s;
+        interp_p->No_Warn = 1;// suppress warning
+        
+        interp_e->f   = e_sample;
+        interp_e->x   = h_sample;
+        interp_e->N   = sample_s;
+        interp_e->No_Warn = 1;
+      
+        interp_rho0->f   = rho0_sample;
+        interp_rho0->x   = h_sample;
+        interp_rho0->N   = sample_s;
+        interp_rho0->No_Warn = 1;
+        
+        plan_interpolation(interp_p);
+        plan_interpolation(interp_e);
+        plan_interpolation(interp_rho0);
+        eos->cubic_spline->interp_p = interp_p;
+        eos->cubic_spline->interp_e = interp_e;
+        eos->cubic_spline->interp_rho0 = interp_rho0;
+        
+        // assign functions for (p, e, rho0)
         eos->pressure          = EoS_p_h_tab;
         eos->energy_density    = EoS_e_h_tab;
         eos->rest_mass_density = EoS_rho0_h_tab;
@@ -427,6 +484,7 @@ static void populate_EoS(EoS_T *const eos)
         e_sample = 0;
         rho0_sample = 0;
     }
+    */
     //////////////////////////////////////////////////////////////////////////////////////////
     
     else

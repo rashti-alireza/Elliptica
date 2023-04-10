@@ -48,6 +48,33 @@ double execute_derivative_interpolation(Interpolation_T *const interp_struct)
   return interp_struct->interpolation_derivative_func(interp_struct);
 }
 
+// Assigns pointer such as interp_s->f so that spline interpolation
+// functions can be used irrespective of spline method.
+void assign_interpolation_ptrs(Interpolation_T *const interp_s)
+{
+  if (strstr_i(interp_s->method,"Natural_Cubic_Spline_1D"))
+  {
+    interp_s->f = &interp_s->N_cubic_spline_1d->f;
+    interp_s->x = &interp_s->N_cubic_spline_1d->x;
+    interp_s->h = &interp_s->N_cubic_spline_1d->h;
+    interp_s->N = &interp_s->N_cubic_spline_1d->N;
+  }
+  else if (strstr_i(interp_s->method,"Hermite_Cubic_Spline"))
+  {
+    interp_s->f = &interp_s->H_cubic_spline_1d->f;
+    interp_s->x = &interp_s->H_cubic_spline_1d->x;
+    interp_s->h = &interp_s->H_cubic_spline_1d->h;
+    interp_s->N = &interp_s->H_cubic_spline_1d->N;
+  }
+  else if (strstr_i(interp_s->method,"Clamped_Cubic_Spline_1D"))
+  {
+    interp_s->f = &interp_s->H_cubic_spline_1d->f;
+    interp_s->x = &interp_s->H_cubic_spline_1d->x;
+    interp_s->h = &interp_s->H_cubic_spline_1d->h;
+    interp_s->N = &interp_s->H_cubic_spline_1d->N;
+  }
+}
+
 /* planning interpolation function based on 
 // input file and patch and flags in interp_s. */
 void plan_interpolation(Interpolation_T *const interp_s)
@@ -69,7 +96,8 @@ void plan_interpolation(Interpolation_T *const interp_s)
   }
   else if (strstr_i(interp_s->method,"Hermite_Cubic_Spline"))
   {
-    order_arrays_natural_cubic_spline_1d(interp_s);
+    order_arrays_spline_1d(interp_s);
+    interp_s->finite_diff_order = (Uint)Pgeti("finite_diff_order");
     find_coeffs_Hermite_cubic_spline(interp_s);
     interp_s->interpolation_func = interpolation_Hermite_cubic_spline;
     interp_s->interpolation_derivative_func = interpolation_HCS_derivative;
@@ -107,12 +135,6 @@ void plan_interpolation(Interpolation_T *const interp_s)
     */
     interp_s->interpolation_func = func(interp_s);
   }
-  else if (strstr_i(interp_s->method,"Log_Linear"))
-  {
-    prepare_log_interpolation(interp_s);
-    interp_s->interpolation_func = interpolation_log_linear;
-    interp_s->interpolation_derivative_func = interpolation_log_derivative;
-  } 
   else
     Error0(INCOMPLETE_FUNC);
     
@@ -158,6 +180,36 @@ static void order_arrays_natural_cubic_spline_1d(Interpolation_T *const interp_s
   interp_s->N_cubic_spline_1d->Order = 1;
 }
 
+static void order_arrays_spline_1d(Interpolation_T *const interp_s)
+{
+  double *x = *interp_s->x;
+  double *f = *interp_s->f;
+  double *y;/* ordered x */
+  double *g;/* ordered f */
+  const Uint N = *interp_s->N;
+  Uint i;
+  
+  if (EQL(x[0],x[N-1]))
+  {
+    Error0("Spline arrays: Periodic case has not been considered.\n");
+  }
+  if (GRT(x[0],x[N-1]))/* if the x's are in decreasing order */
+  {
+    y = alloc_double(N);
+    g = alloc_double(N);
+    
+    for (i = 0; i < N; ++i)
+    {
+      y[i] = x[N-1-i];
+      g[i] = f[N-1-i];
+    }
+    *interp_s->x = y;
+    *interp_s->f = g;
+  }
+  set_interp_order_flag(interp_s, 1);
+  set_interp_alloc_mem_flag(interp_s, 1);
+}
+
 ///////////////////////////////////////Finite difference approximation////////////////////////
 Uint FDM_min(Uint n, Uint M)
 {
@@ -168,21 +220,16 @@ Uint FDM_min(Uint n, Uint M)
 static double interpolation_finite_difference(Interpolation_T *const interp_s)
 {
   // Approximates M-th derivative of f(x)|x=h by finite difference method.
-  printf("Checkpoint 1\n");///////////////////////////
-  const double *const x = interp_s->x;
-  double *const f = interp_s->f;
-  const double h = interp_s->h;
-  const Uint N = interp_s->N;
+  const double *const x = *interp_s->x;
+  double *const f = *interp_s->f;
+  const double h = *interp_s->h;
+  const Uint N = *interp_s->N;
   Uint i = 0;
-  //Uint Order = interp_s->Order;
   const Uint n = interp_s->finite_diff_order;
   const Uint M = interp_s->FDM_derivative;
   double ret = DBL_MAX;/* it's important to be max double */
   Flag_T flg = NONE;
   
-  printf("Checkpoint 2: N = %i\n",N);///////////////////////
-  printf("Checkpoint 2: M = %i\n",M);///////////////////////
-  printf("Checkpoint 2: n = %i\n",n);///////////////////////
   // Checks if we have enough data points for given order.
   if (N <= n+M)
   {
@@ -197,7 +244,6 @@ static double interpolation_finite_difference(Interpolation_T *const interp_s)
     Error0("Finite difference error: Degree of derivative must not exceed degree of accuracy.\n");
   }
   
-  ////////////////////////Fixme: Add check for array ordering.////////////////////////////
   // Finds the data segment
   for (i = 0; i < N-1; ++i)
   {
@@ -207,8 +253,6 @@ static double interpolation_finite_difference(Interpolation_T *const interp_s)
       break;
     }
   }
-  //printf("Enthalpy found:\n x[%i] == %lf\n h == %lf\n, x[%i] == %lf\n",
-  //          i, x[i], h, i+1, x[i+1]);
 
   if (flg != FOUND)
   {
@@ -244,91 +288,43 @@ static double interpolation_finite_difference(Interpolation_T *const interp_s)
   // Allocates memory for delta coefficients
   // Stores (M+1)x(n+m)x(n+m) 3D array 
   // 'deltas' in linear format.
-  printf("Checkpoint 3\n");/////////////////////////
-  for (int k = 0; k < right_pt - left_pt; k++)
-  {
-    printf("x[%i] == %lf\n", left_pt+k, x[left_pt+k]);
-}
   Uint p[3] = { 0, M+1, n+M };
   double* deltas = alloc_double((M+1)*(n+M)*(n+M));
   
   // Fornberg algorithm calculates the deltas.
   deltas[i_j_k_to_ijk(p,0,0,0)] = 1;
-    printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
-      printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
-        deltas[i_j_k_to_ijk(p,1,0,0)] = 5;
-        printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
-          printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
   double c1 = 1;
   double c2 = 1;
   double c3 = 1;
   
   for (Uint l=1; l<n+M; l++)
   {
-            printf("l == %i\n",l);////////////////////////
-            printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
     c2 = 1;
     for (Uint v=0; v<l; v++)
     {
-                printf("v == %i\n",v);//////////////////////
-                printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
         c3 = x[(Uint)left_pt+l] - x[(Uint)left_pt+v];
-        printf("c3 == %E\n", c3);////////////////////////////////
         c2 = c2*c3;
         if (l <= M)
-        { 
-        printf("deltas[%i,%i,%i] == %E\n", l, l-1, v,  deltas[i_j_k_to_ijk(p,l,l-1,v)]);///////////// }
-        deltas[i_j_k_to_ijk(p,l,l-1,v)] = 0;
-                       printf("deltas[%i,%i,%i] == %E\n", l, l-1, v,  deltas[i_j_k_to_ijk(p,l,l-1,v)]);///////////// }
-                                       printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
-        }
+        { deltas[i_j_k_to_ijk(p,l,l-1,v)] = 0; }
         for (Uint m=0; m<=FDM_min(l,M); m++)
-        { 
-        printf("m == %i\n",m);//////////////////////
-                printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
-        
-        deltas[i_j_k_to_ijk(p,m,l,v)] = (((x[(Uint)left_pt+l] - h)
+        { deltas[i_j_k_to_ijk(p,m,l,v)] = (((x[(Uint)left_pt+l] - h)
           *deltas[i_j_k_to_ijk(p,m,l-1,v)]
-          - (m ? m*deltas[i_j_k_to_ijk(p,m-1,l-1,v)] : 0))/c3);
-               printf("deltas[%i,%i,%i] == %E\n", m, l, v,  deltas[i_j_k_to_ijk(p,m,l,v)]);/////////////
-               if (m == 1) printf("deltas[%i,%i,%i] == ((%E)*(%E) - (%i)*(%E))/(%E) == %E\n",
-               m,l,v, x[(Uint)left_pt+l] - h, deltas[i_j_k_to_ijk(p,m,l-1,v)], m, (m ? m*deltas[i_j_k_to_ijk(p,m-1,l-1,v)] : 0), c3, deltas[i_j_k_to_ijk(p,m,l,v)]);
-               }
+          - (m ? m*deltas[i_j_k_to_ijk(p,m-1,l-1,v)] : 0))/c3); }
     }
     for (Uint m=0; m<=FDM_min(l,M); m++)
     { deltas[i_j_k_to_ijk(p,m,l,l)] = ((c1/c2)*
       ((m ? m*deltas[i_j_k_to_ijk(p,m-1,l-1,l-1)] : 0)
-      - (x[(Uint)left_pt+l-1]-h)*deltas[i_j_k_to_ijk(p,m,l-1,l-1)])); 
-          printf("deltas[%i,%i,%i] == %E\n", m, l, l,  deltas[i_j_k_to_ijk(p,m,l,l)]);/////////////
-          }
+      - (x[(Uint)left_pt+l-1]-h)*deltas[i_j_k_to_ijk(p,m,l-1,l-1)])); }
     c1 = c2;
   }
-  for (Uint q = 0; q<=M; q++)
-  {
-    for (Uint r=0; r<n+M; r++)
-    {
-        for (Uint s=0; s<n+M; s++)
-        {
-            printf("deltas[%i,%i,%i] == %E\n", q,r,s,  deltas[i_j_k_to_ijk(p,q,r,s)]);/////////////
-        }
-    }
-  }
   
-  printf("Checkpoint 3.5\n");////////////////////////////
-  printf("deltas[0,0,0] == %E\n", deltas[i_j_k_to_ijk(p,0,0,0)]);//////////////////////
-  printf("Left pt: %i\n", left_pt);////////////////
-  printf("n == %i\n", n);////////////////////////
   // Approximates f^(m)|x=h using deltas.
   ret = 0;
   for (Uint v=0; v<=n; v++)
-  { printf("v == %i\n", v);///////////////////
-    printf("deltas[%i,%i,%i] == %E\n", M, n, v,  deltas[i_j_k_to_ijk(p,M,n,v)]);/////////////
-    printf("f[%i] == %lf\n", left_pt+(int)v, f[left_pt+(int)v]);///////////////////
-  ret += deltas[i_j_k_to_ijk(p,M,n,v)] * f[left_pt+(int)v]; }
+  { ret += deltas[i_j_k_to_ijk(p,M,n,v)] * f[left_pt+(int)v]; }
   
   free(deltas);
   return ret;
-  printf("Checkpoint 4\n");/////////////////////////
 }
    
 ///////////////////////////////////////Natural cubic spline///////////////////////////////
@@ -497,7 +493,7 @@ static double interpolation_NCS_derivative(Interpolation_T *const interp_s)
   return ret; 
 }
 
-////////////////////////////////////////////Cubic Hermite Spline///////////////////////////////////////////////////////////
+////////////////////////////////////////////Hermite Cubic Spline///////////////////////////////////////////////////////////
 // Interpolates function f(x) over sub-intervals [a,b]
 // using linear combination of basis functions:
 // f(x) ~ p(x) = h00(x)f(a) + h10(x)(b-a)m_k + h01(x)f(b) + h11(x)(b-a)m_k+1,
@@ -508,27 +504,13 @@ static void find_coeffs_Hermite_cubic_spline(Interpolation_T *const interp_s)
 {
     // Finds values of m0 and m1 for each sub-interval
     // using 3-point finite difference approximation.
-    const Uint n = interp_s->N_cubic_spline_1d->N-1;
-    const double *const x = interp_s->N_cubic_spline_1d->x;
-    double *const a = interp_s->N_cubic_spline_1d->f;
+    const Uint n = (*interp_s->N)-1;
+    const double *const x = interp_s->H_cubic_spline_1d->x;
+    double *const a = interp_s->H_cubic_spline_1d->f;
     double *const b = alloc_double(n); // m values
     double *const c = alloc_double(n); // spline coefficients
     double *const d = alloc_double(n); // spline coefficients
     Uint i = 0;
-    
-    /* Old version: Uses 3-point finite difference on ends.
-    // Estimates m_k by 3-point finite difference
-    // except at end points, where 2-point
-    // finite difference is used instead.
-    // Stores m values in N_cubic_spline_1d->b array.
-    for (i = 1; i < n-1; i++)
-    {
-        b[i] = 0.5 * ((a[i+1]-a[i])/(x[i+1]-x[i])
-             + (a[i]-a[i-1])/(x[i]-x[i-1]));
-    }
-    b[0] = (a[1]-a[0])/(x[1]-x[0]);
-    b[n-1] = (a[n-1]-a[n-2])/(x[n-1]-x[n-2]);
-    */
     
     // Finds m values using Fornberg finite
     // difference method; stores m values
@@ -536,7 +518,7 @@ static void find_coeffs_Hermite_cubic_spline(Interpolation_T *const interp_s)
     interp_s->FDM_derivative = 1;
     for (i = 0; i < n; i++)
     {
-        interp_s->h = x[i];
+        interp_s->H_cubic_spline_1d->h = x[i];
         b[i] = interpolation_finite_difference(interp_s);
     }
     
@@ -549,26 +531,26 @@ static void find_coeffs_Hermite_cubic_spline(Interpolation_T *const interp_s)
         d[i] = 3*(a[i+1] - a[i]) - (x[i+1] - x[i])*(2*b[i] + b[i+1]);
     }
     
-    interp_s->N_cubic_spline_1d->a = a;
-    interp_s->N_cubic_spline_1d->b = b;
-    interp_s->N_cubic_spline_1d->c = c;
-    interp_s->N_cubic_spline_1d->d = d;
+    interp_s->H_cubic_spline_1d->a = a;
+    interp_s->H_cubic_spline_1d->b = b;
+    interp_s->H_cubic_spline_1d->c = c;
+    interp_s->H_cubic_spline_1d->d = d;
 }
 
 static double interpolation_Hermite_cubic_spline(Interpolation_T *const interp_s)
 {
   // Executes cubic Hermite spline interpolation:
   // f(x) ~ p(x) = h00(x)f(a) + h10(x)(b-a)m_k + h01(x)f(b) + h11(x)(b-a)m_k+1
-  if (!interp_s->N_cubic_spline_1d->Order)
-  order_arrays_natural_cubic_spline_1d(interp_s);
+  if (!interp_s->H_cubic_spline_1d->Order)
+  order_arrays_spline_1d(interp_s);
     
-  const double *const x = interp_s->N_cubic_spline_1d->x;
-  const double *const a = interp_s->N_cubic_spline_1d->a;
-  const double *const b = interp_s->N_cubic_spline_1d->b;
-  const double *const c = interp_s->N_cubic_spline_1d->c;
-  const double *const d = interp_s->N_cubic_spline_1d->d;
-  const double h = interp_s->N_cubic_spline_1d->h;
-  const Uint N = interp_s->N_cubic_spline_1d->N;
+  const double *const x = interp_s->H_cubic_spline_1d->x;
+  const double *const a = interp_s->H_cubic_spline_1d->a;
+  const double *const b = interp_s->H_cubic_spline_1d->b;
+  const double *const c = interp_s->H_cubic_spline_1d->c;
+  const double *const d = interp_s->H_cubic_spline_1d->d;
+  const double h = interp_s->H_cubic_spline_1d->h;
+  const Uint N = interp_s->H_cubic_spline_1d->N;
   double ret = DBL_MAX;/* it's important to be max double */
   Uint i = 0;
   Flag_T flg = NONE;
@@ -585,7 +567,7 @@ static double interpolation_Hermite_cubic_spline(Interpolation_T *const interp_s
 
   if (flg != FOUND)
   {
-    if (!interp_s->N_cubic_spline_1d->No_Warn)
+    if (!interp_s->H_cubic_spline_1d->No_Warn)
       Warning("The given point for the interpolation is out of the domain.\n");
     
     return ret;
@@ -600,15 +582,15 @@ static double interpolation_Hermite_cubic_spline(Interpolation_T *const interp_s
 static double interpolation_HCS_derivative(Interpolation_T *const interp_s)
 {
   // Returns f'(x) by derivative of cubic Hermite spline
-  if (!interp_s->N_cubic_spline_1d->Order)
-  order_arrays_natural_cubic_spline_1d(interp_s);
+  if (!interp_s->H_cubic_spline_1d->Order)
+  order_arrays_spline_1d(interp_s);
     
-  const double *const x = interp_s->N_cubic_spline_1d->x;
-  const double *const b = interp_s->N_cubic_spline_1d->b;
-  const double *const c = interp_s->N_cubic_spline_1d->c;
-  const double *const d = interp_s->N_cubic_spline_1d->d;
-  const double h = interp_s->N_cubic_spline_1d->h;
-  const Uint N = interp_s->N_cubic_spline_1d->N;
+  const double *const x = interp_s->H_cubic_spline_1d->x;
+  const double *const b = interp_s->H_cubic_spline_1d->b;
+  const double *const c = interp_s->H_cubic_spline_1d->c;
+  const double *const d = interp_s->H_cubic_spline_1d->d;
+  const double h = interp_s->H_cubic_spline_1d->h;
+  const Uint N = interp_s->H_cubic_spline_1d->N;
   double ret = DBL_MAX;/* it's important to be max double */
   Uint i = 0;
   Flag_T flg = NONE;
@@ -625,14 +607,13 @@ static double interpolation_HCS_derivative(Interpolation_T *const interp_s)
 
   if (flg != FOUND)
   {
-    if (!interp_s->N_cubic_spline_1d->No_Warn)
+    if (!interp_s->H_cubic_spline_1d->No_Warn)
       Warning("The given point for the interpolation is out of the domain.\n");
     
     return ret;
   }
  
   double t = (h - x[i]) / (x[i+1] - x[i]);
-  //ret = c[i] * t*t*t + d[i] * t*t + b[i] * (h - x[i]) + a[i];
   ret = 3*c[i]*t*t / (x[i+1] - x[i]) + 2*d[i]*t / (x[i+1] - x[i]) + b[i];
   
   return ret;
@@ -644,9 +625,9 @@ static double interpolation_HCS_derivative(Interpolation_T *const interp_s)
 // Uses a finite difference approximation to find f'(a) and f'(b).
 static void find_coeffs_clamped_cubic_spline_1d(Interpolation_T *const interp_s)
 {
-  const Uint n = interp_s->N_cubic_spline_1d->N-1;
-  const double *const x = interp_s->N_cubic_spline_1d->x;
-  double *const a = interp_s->N_cubic_spline_1d->f;
+  const Uint n = interp_s->C_cubic_spline_1d->N-1;
+  const double *const x = interp_s->C_cubic_spline_1d->x;
+  double *const a = interp_s->C_cubic_spline_1d->f;
   double *const b = alloc_double(n);
   double *const c = alloc_double(n+1);
   double *const d = alloc_double(n);
@@ -693,10 +674,10 @@ static void find_coeffs_clamped_cubic_spline_1d(Interpolation_T *const interp_s)
   b[i] = (a[i+1]-a[i])/h[i]-h[i]*(c[i+1]+2.*c[i])/3.;
   d[i] = (c[i+1]-c[i])/3./h[i];
   
-  interp_s->N_cubic_spline_1d->a = a;
-  interp_s->N_cubic_spline_1d->b = b;
-  interp_s->N_cubic_spline_1d->c = c;
-  interp_s->N_cubic_spline_1d->d = d;
+  interp_s->C_cubic_spline_1d->a = a;
+  interp_s->C_cubic_spline_1d->b = b;
+  interp_s->C_cubic_spline_1d->c = c;
+  interp_s->C_cubic_spline_1d->d = d;
   
   free(h);
   free(l);
@@ -707,16 +688,16 @@ static void find_coeffs_clamped_cubic_spline_1d(Interpolation_T *const interp_s)
 
 static double interpolation_clamped_cubic_spline_1d(Interpolation_T *const interp_s)
 {
-  if (!interp_s->N_cubic_spline_1d->Order)
-    order_arrays_natural_cubic_spline_1d(interp_s);
+  if (!interp_s->C_cubic_spline_1d->Order)
+    order_arrays_spline_1d(interp_s);
     
-  const double *const x = interp_s->N_cubic_spline_1d->x;
-  const double *const a = interp_s->N_cubic_spline_1d->a;
-  const double *const b = interp_s->N_cubic_spline_1d->b;
-  const double *const c = interp_s->N_cubic_spline_1d->c;
-  const double *const d = interp_s->N_cubic_spline_1d->d;
-  const double h = interp_s->N_cubic_spline_1d->h;
-  const Uint N = interp_s->N_cubic_spline_1d->N;
+  const double *const x = interp_s->C_cubic_spline_1d->x;
+  const double *const a = interp_s->C_cubic_spline_1d->a;
+  const double *const b = interp_s->C_cubic_spline_1d->b;
+  const double *const c = interp_s->C_cubic_spline_1d->c;
+  const double *const d = interp_s->C_cubic_spline_1d->d;
+  const double h = interp_s->C_cubic_spline_1d->h;
+  const Uint N = interp_s->C_cubic_spline_1d->N;
   double ret = DBL_MAX;/* it's important to be max double */
   Uint i = 0;
   Flag_T flg = NONE;
@@ -733,7 +714,7 @@ static double interpolation_clamped_cubic_spline_1d(Interpolation_T *const inter
 
   if (flg != FOUND)
   {
-    if (!interp_s->N_cubic_spline_1d->No_Warn)
+    if (!interp_s->C_cubic_spline_1d->No_Warn)
       Warning("The given point for the interpolation is out of the domain.\n");
     
     return ret;
@@ -746,15 +727,15 @@ static double interpolation_clamped_cubic_spline_1d(Interpolation_T *const inter
 
 static double interpolation_CCS_derivative(Interpolation_T *const interp_s)
 {
-  if (!interp_s->N_cubic_spline_1d->Order)
-    order_arrays_natural_cubic_spline_1d(interp_s);
+  if (!interp_s->C_cubic_spline_1d->Order)
+    order_arrays_spline_1d(interp_s);
     
-  const double *const x = interp_s->N_cubic_spline_1d->x;
-  const double *const b = interp_s->N_cubic_spline_1d->b;
-  const double *const c = interp_s->N_cubic_spline_1d->c;
-  const double *const d = interp_s->N_cubic_spline_1d->d;
-  const double h = interp_s->N_cubic_spline_1d->h;
-  const Uint N = interp_s->N_cubic_spline_1d->N;
+  const double *const x = interp_s->C_cubic_spline_1d->x;
+  const double *const b = interp_s->C_cubic_spline_1d->b;
+  const double *const c = interp_s->C_cubic_spline_1d->c;
+  const double *const d = interp_s->C_cubic_spline_1d->d;
+  const double h = interp_s->C_cubic_spline_1d->h;
+  const Uint N = interp_s->C_cubic_spline_1d->N;
   double ret = DBL_MAX;/* it's important to be max double */
   Uint i = 0;
   Flag_T flg = NONE;
@@ -771,7 +752,7 @@ static double interpolation_CCS_derivative(Interpolation_T *const interp_s)
 
   if (flg != FOUND)
   {
-    if (!interp_s->N_cubic_spline_1d->No_Warn)
+    if (!interp_s->C_cubic_spline_1d->No_Warn)
       Warning("The given point for the interpolation is out of the domain.\n");
     
     return ret;
@@ -781,6 +762,7 @@ static double interpolation_CCS_derivative(Interpolation_T *const interp_s)
   return ret; 
 }
 
+/*
 //////////////////////////////////////////////////Logarithmic interpolation
 static double interpolation_log_linear(Interpolation_T *const interp_s)
 {
@@ -791,11 +773,11 @@ static double interpolation_log_linear(Interpolation_T *const interp_s)
     const double *const log_f = interp_s->N_cubic_spline_1d->log_f;
     const double h = interp_s->N_cubic_spline_1d->h;
     const Uint N = interp_s->N_cubic_spline_1d->N;
-    double ret = DBL_MAX;/* it's important to be max double */
+    double ret = DBL_MAX;
     Uint i;
     Flag_T flg = NONE;
   
-    /* find the segment */
+    // Finds the segment
     for (i = 0; i < N-1; ++i)
     {
         if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
@@ -828,11 +810,11 @@ static double interpolation_log_derivative(Interpolation_T *const interp_s)
     const double *const log_f = interp_s->N_cubic_spline_1d->log_f;
     const double h = interp_s->N_cubic_spline_1d->h;
     const Uint N = interp_s->N_cubic_spline_1d->N;
-    double ret = DBL_MAX;/* it's important to be max double */
+    double ret = DBL_MAX;
     Uint i;
     Flag_T flg = NONE;
   
-    /* find the segment */
+    // finds the segment
     for (i = 0; i < N-1; ++i)
     {
         if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
@@ -861,8 +843,8 @@ static void prepare_log_interpolation(Interpolation_T *const interp_s)
 {
   double *x = interp_s->N_cubic_spline_1d->x;
   double *f = interp_s->N_cubic_spline_1d->f;
-  double *y;/* ordered x */
-  double *g;/* ordered f */
+  double *y;// ordered x
+  double *g;// ordered f
   const Uint N = interp_s->N_cubic_spline_1d->N;
   Uint i;
   
@@ -870,7 +852,7 @@ static void prepare_log_interpolation(Interpolation_T *const interp_s)
   {
     Error0("Periodic case has not been considered.\n");
   }
-  if (GRT(x[0],x[N-1]))/* if the x's are in decreasing order */
+  if (GRT(x[0],x[N-1]))// if the x's are in decreasing order
   {
     interp_s->N_cubic_spline_1d->Alloc_Mem = 1;
     y = alloc_double(N);
@@ -893,7 +875,7 @@ static void prepare_log_interpolation(Interpolation_T *const interp_s)
     }
     interp_s->N_cubic_spline_1d->log_f = log_f;
 }
-
+*/
 /////////////////////////////////////////Neville interpolation
 /* tutorial:
 // =========
@@ -1228,6 +1210,7 @@ void free_interpolation(Interpolation_T *interp_s)
       free(interp_s->N_cubic_spline_1d->f);
     }
   }
+  /*
   else if (strstr_i(interp_s->method,"Log_Linear"))
   {
     if (interp_s->N_cubic_spline_1d->log_f)
@@ -1237,7 +1220,138 @@ void free_interpolation(Interpolation_T *interp_s)
       free(interp_s->N_cubic_spline_1d->x);
       free(interp_s->N_cubic_spline_1d->f);
     }
-  }
+  }*/
   free(interp_s);
+}
+
+// Getter and setter methods for bit-field flags in 1D interpolation
+// sub-structures. These are necessary since the bit-fields cannot
+// be accessed by reference.
+
+// Note: getter methods currently aren't being used anywhere.
+/*
+// Gets array order flag
+static Uint get_order_flag(Interpolation_T *const interp_s)
+{
+  if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
+  { return (int)interp_s->N_cubic_spline_1d->Order; }
+  else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
+  { return (int)interp_s->H_cubic_spline_1d->Order; }
+  else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
+  { return (int)interp_s->C_cubic_spline_1d->Order; }
+  
+  return 0;
+}
+
+static Uint get_warn_flag(Interpolation_T *const interp_s)
+{
+  if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
+  { return (int)interp_s->N_cubic_spline_1d->No_Warn; }
+  else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
+  { return (int)interp_s->H_cubic_spline_1d->No_Warn; }
+  else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
+  { return (int)interp_s->C_cubic_spline_1d->No_Warn; }
+  
+  return 0;
+}
+
+static Uint get_alloc_mem_flag(Interpolation_T *const interp_s)
+{
+  if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
+  { return (int)interp_s->N_cubic_spline_1d->Alloc_Mem; }
+  else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
+  { return (int)interp_s->H_cubic_spline_1d->Alloc_Mem; }
+  else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
+  { return (int)interp_s->C_cubic_spline_1d->Alloc_Mem; }
+  
+  return 0;
+}
+*/
+
+// Sets array order flag
+static void set_interp_order_flag(Interpolation_T *const interp_s, Uint flag)
+{
+  if (flag != 0 && flag != 1)
+  { Error0("set_order_flag: invalid flag value."); }
+  
+  // The if statements are necessary because the Order flag
+  // is a bit field and direct conversion of the flag value
+  // could be machine-dependent.
+  if (flag)
+  {
+    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
+    { interp_s->N_cubic_spline_1d->Order = 1; }
+    else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
+    { interp_s->H_cubic_spline_1d->Order = 1; }
+    else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
+    { interp_s->C_cubic_spline_1d->Order = 1; }
+  }
+  else
+  {
+    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
+    { interp_s->N_cubic_spline_1d->Order = 0; }
+    else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
+    { interp_s->H_cubic_spline_1d->Order = 0; }
+    else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
+    { interp_s->C_cubic_spline_1d->Order = 0; }
+  }
+}
+
+// Sets interpolation warning flag
+void set_interp_warn_flag(Interpolation_T *const interp_s, Uint flag)
+{
+  if (flag != 0 && flag != 1)
+  { Error0("set_order_flag: invalid flag value."); }
+  
+  // The if statements are necessary because the No_Warn flag
+  // is a bit field and direct conversion of the flag value
+  // could be machine-dependent.
+  if (flag)
+  {
+    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
+    { interp_s->N_cubic_spline_1d->No_Warn = 1; }
+    else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
+    { interp_s->H_cubic_spline_1d->No_Warn = 1; }
+    else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
+    { interp_s->C_cubic_spline_1d->No_Warn = 1; }
+  }
+  else
+  {
+    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
+    { interp_s->N_cubic_spline_1d->No_Warn = 0; }
+    else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
+    { interp_s->H_cubic_spline_1d->No_Warn = 0; }
+    else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
+    { interp_s->C_cubic_spline_1d->No_Warn = 0; }
+  }
+}
+
+// Sets interpolation alloc_mem flag
+static void set_interp_alloc_mem_flag(Interpolation_T *const interp_s, Uint flag)
+{
+  if (flag != 0 && flag != 1)
+  { Error0("set_order_flag: invalid flag value."); }
+  
+  // The if statements are necessary because the No_Warn flag
+  // is a bit field and direct conversion of the flag value
+  // could be machine-dependent.
+  if (flag)
+  {
+    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
+    { interp_s->N_cubic_spline_1d->Alloc_Mem = 1; }
+    else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
+    { interp_s->H_cubic_spline_1d->Alloc_Mem = 1; }
+    else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
+    { interp_s->C_cubic_spline_1d->Alloc_Mem = 1; }
+  }
+  else
+  {
+    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
+    { interp_s->N_cubic_spline_1d->Alloc_Mem = 0; }
+    else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
+    { interp_s->H_cubic_spline_1d->Alloc_Mem = 0; }
+    else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
+    { interp_s->C_cubic_spline_1d->Alloc_Mem = 0; }
+  }
 }
 

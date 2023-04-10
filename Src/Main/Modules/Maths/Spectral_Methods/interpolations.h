@@ -35,6 +35,14 @@ static double interpolation_Chebyshev_Tn_XYZ(Interpolation_T *const interp_s);
 void free_interpolation(Interpolation_T *interp_s);
 
 /////////////////////////////Extra interpolation methods.
+void assign_interpolation_ptrs(Interpolation_T *const interp_s);
+static void set_interp_order_flag(Interpolation_T *const interp_s, Uint flag);
+static void set_interp_alloc_mem_flag(Interpolation_T *const interp_s, Uint flag);
+void set_interp_warn_flag(Interpolation_T *const interp_s, Uint flag);
+//static Uint get_order_flag(Interpolation_T *const interp_s);
+//static Uint get_alloc_mem_flag(Interpolation_T *const interp_s);
+//static Uint get_warn_flag(Interpolation_T *const interp_s);
+static void order_arrays_spline_1d(Interpolation_T *const interp_s);
 static double interpolation_finite_difference(Interpolation_T *const interp_s);
 static Uint FDM_min(Uint n, Uint M);
 static void find_coeffs_Hermite_cubic_spline(Interpolation_T *const interp_s);
@@ -43,9 +51,9 @@ static double interpolation_HCS_derivative(Interpolation_T *const interp_s);
 static void find_coeffs_clamped_cubic_spline_1d(Interpolation_T *const interp_s);
 static double interpolation_clamped_cubic_spline_1d(Interpolation_T *const interp_s);
 static double interpolation_CCS_derivative(Interpolation_T *const interp_s);
-static double interpolation_log_linear(Interpolation_T *const interp_s);
-static double interpolation_log_derivative(Interpolation_T *const interp_s);
-static void prepare_log_interpolation(Interpolation_T *const interp_s);
+//static double interpolation_log_linear(Interpolation_T *const interp_s);
+//static double interpolation_log_derivative(Interpolation_T *const interp_s);
+//static void prepare_log_interpolation(Interpolation_T *const interp_s);
 
 
 

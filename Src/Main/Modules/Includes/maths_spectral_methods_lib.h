@@ -23,14 +23,16 @@ typedef double fInterpolation_T(struct INTERPOLATION_T *const interp_s);
 /* interpolation struct used in interpolation function */
 typedef struct INTERPOLATION_T
 {
-  double *f;/* f(xi)'s */
-  double *x;/* xi's, note: it must be x0 < x1 < ...< xN */
-  double h;/* desired point to interpolate f */
-  Uint N;/* number of xi's */
-  Uint Order: 1;/* if xi's in the order 1, otherwise 0 */
+  // Pointers to interior structures.
+  double **f;/* f(xi)'s */
+  double **x;/* xi's, note: it must be x0 < x1 < ...< xN */
+  double *h;/* desired point to interpolate f */
+  Uint *N;/* number of xi's */
+  
   const char *method;
   Uint finite_diff_order;/* order of finite difference approximation */
   Uint FDM_derivative;/* order of derivative required from finite difference method */
+  
   struct FIELD_T *field;/* interesting field for interpolation */
   fInterpolation_T *interpolation_func;/* interpolation function */
   fInterpolation_T *interpolation_derivative_func;/* interpolation function for derivatives */
@@ -62,12 +64,32 @@ typedef struct INTERPOLATION_T
    double h;/* desired point to interpolate f */
    Uint N;/* number of xi's */
    double *a,*b,*c,*d;/* coefficents in s(h) = a+b(h-xi)+c(h-xi)^2+d(h-xi)^3 */
-   /* *b, *c, and *d are also used as coefficients for cubic Hermite spline. */
-   double *log_f; /* used for log interpolation */
    Uint Order: 1;/* if xi's in the order 1, otherwise 0 */
    Uint Alloc_Mem: 1;/* if it allocates memory for x and f */
    Uint No_Warn: 1;/* if 1 it prints NO warning in case of an error */
   }N_cubic_spline_1d[1];/* natural cubic spline 1d */
+  struct
+  { 
+   double *f; // f(xi)
+   double *x; // coordinate grid
+   double h;  // point to interpolate
+   Uint N;    // number of grid points
+   double *a, *b, *c, *d; //Arrays for spline coefficients.
+   Uint Order: 1; // 1 iff x array in order
+   Uint Alloc_Mem: 1;
+   Uint No_Warn: 1;
+  }H_cubic_spline_1d[1]; //1D Hermite cubic spline
+  struct
+  { 
+   double *f; // f(xi)
+   double *x; // coordinate grid
+   double h;  // point to interpolate
+   Uint N;    // number of grid points
+   double *a, *b, *c, *d; //Arrays for spline coefficients.
+   Uint Order: 1; // 1 iff x array in order
+   Uint Alloc_Mem: 1;
+   Uint No_Warn: 1;
+  }C_cubic_spline_1d[1]; //1D clamped cubic spline
 }Interpolation_T;
 
 void rft_1d_ChebyshevExtrema_coeffs(double *const values ,double *const coeffs,const Uint n);
@@ -82,6 +104,10 @@ Interpolation_T *init_interpolation(void);
 double execute_interpolation(Interpolation_T *const interp_s);
 double execute_derivative_interpolation(Interpolation_T *const interp_s);
 void plan_interpolation(Interpolation_T *const interp_s);
+/////////////////////
+void set_interp_warn_flag(Interpolation_T *const interp_s, Uint flag);
+void assign_interpolation_ptrs(Interpolation_T *const interp_s);
+/////////////////////
 void get_Ylm_coeffs(double *const realClm,double *const imagClm,const double *const f,const Uint Ntheta,const Uint Nphi,const Uint Lmax);
 double interpolation_Ylm(const double *const realClm,const double *const imagClm,const Uint Lmax, const double theta, const double phi);
 double *df_dphi_Ylm(const double *const realClm,const double *const imagClm,const Uint Ntheta, const Uint Nphi,const Uint Lmax);
