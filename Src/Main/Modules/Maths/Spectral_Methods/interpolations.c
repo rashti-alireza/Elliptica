@@ -1210,17 +1210,35 @@ void free_interpolation(Interpolation_T *interp_s)
       free(interp_s->N_cubic_spline_1d->f);
     }
   }
-  /*
-  else if (strstr_i(interp_s->method,"Log_Linear"))
+  else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
   {
-    if (interp_s->N_cubic_spline_1d->log_f)
-      free(interp_s->N_cubic_spline_1d->log_f);
-    if (interp_s->N_cubic_spline_1d->Alloc_Mem)
+    if (interp_s->H_cubic_spline_1d->b)
+    { free(interp_s->H_cubic_spline_1d->b); }
+    if (interp_s->H_cubic_spline_1d->c)
+    { free(interp_s->H_cubic_spline_1d->c); }
+    if (interp_s->H_cubic_spline_1d->d)
+    { free(interp_s->H_cubic_spline_1d->d); }
+    if (interp_s->H_cubic_spline_1d->Alloc_Mem)
     {
-      free(interp_s->N_cubic_spline_1d->x);
-      free(interp_s->N_cubic_spline_1d->f);
+      free(interp_s->H_cubic_spline_1d->x);
+      free(interp_s->H_cubic_spline_1d->f);
     }
-  }*/
+  }
+  else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
+  {
+    if (interp_s->C_cubic_spline_1d->b)
+    { free(interp_s->C_cubic_spline_1d->b); }
+    if (interp_s->C_cubic_spline_1d->c)
+    { free(interp_s->C_cubic_spline_1d->c); }
+    if (interp_s->C_cubic_spline_1d->d)
+    { free(interp_s->C_cubic_spline_1d->d); }
+    if (interp_s->C_cubic_spline_1d->Alloc_Mem)
+    {
+      free(interp_s->C_cubic_spline_1d->x);
+      free(interp_s->C_cubic_spline_1d->f);
+    }
+  }
+  
   free(interp_s);
 }
 
@@ -1229,6 +1247,7 @@ void free_interpolation(Interpolation_T *interp_s)
 // be accessed by reference.
 
 // Note: getter methods currently aren't being used anywhere.
+// Might be useful in future applications.
 /*
 // Gets array order flag
 static Uint get_order_flag(Interpolation_T *const interp_s)

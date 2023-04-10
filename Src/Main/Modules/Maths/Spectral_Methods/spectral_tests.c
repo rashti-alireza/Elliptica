@@ -716,7 +716,7 @@ int interpolation_tests(Grid_T *const grid)
       status = interpolation_tests_N_cubic_spline_1d();
       check_test_result(status);
   }
-  if (DO_NOT)
+  if (DO)
   {
       printf("Interpolation test:            Hermite Cubic Spline Method =>");
       status = interpolation_tests_Hermite_1d();
@@ -725,7 +725,7 @@ int interpolation_tests(Grid_T *const grid)
   // In order to test Fornberg FDM, 
   // "interpolation_derivative_method = finite_difference"
   // must be included in parameter file.
-  if (DO)
+  if (DO_NOT)
   {
       printf("Finite Difference test:         Fornberg Algorithm =>\n");
       status = interpolation_tests_FDM();
@@ -1003,11 +1003,9 @@ static int interpolation_tests_Hermite_1d(void)
   }
   
   free_interpolation(interp_s);
-  free(f);
   free(f_2);
   free(f_derivative);
   free(f_derivative_2);
-  free(x);
   free(x_2);
   free(hs);
   free(x_vals);
@@ -1163,12 +1161,10 @@ static int interpolation_tests_FDM(void)
   printf("\nFDM test time: %E\n", time);
   
   free_interpolation(interp_s);
-  free(f);
   free(f_derivative);
   free(f_derivative_2);
   free(f_3_derivative);
   free(f_3_derivative_2);
-  free(x);
   free(hs);
   free(x_vals);
   free(interp_vals_derivative);
