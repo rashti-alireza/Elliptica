@@ -399,7 +399,7 @@ static void populate_EoS(EoS_T *const eos)
         *interp_p->N = sample_s;
         set_interp_warn_flag(interp_p, 1); // suppress warning
         
-        *interp_e->f = p_sample;
+        *interp_e->f = e_sample;
         *interp_e->x = h_sample;
         *interp_e->N = sample_s;
         set_interp_warn_flag(interp_e, 1); // suppress warning

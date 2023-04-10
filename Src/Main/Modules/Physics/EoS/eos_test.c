@@ -37,7 +37,7 @@ void test_EoS(Physics_T *const phys)
   /* continuity */
   sprintf(file_name,"%s/%s",path,"pressure");
   file = Fopen(file_name,"w+");
-  fprintf(file,"# enthalpy  pressure\n");  
+  fprintf(file,"# enthalpy  pressure\n");
   for (i = 0; i < N; ++i)
   {
     eos->h = h_min+s*i;

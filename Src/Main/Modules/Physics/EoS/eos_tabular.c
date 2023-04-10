@@ -91,15 +91,6 @@ double EoS_e_h_tab(EoS_T* const eos)
     *interp_s->h = eos->h;
     e = execute_interpolation(interp_s);
     return (LSSEQL(e,0.) || e == DBL_MAX ? 0. : e);
-    
-    /*
-    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
-    { interp_s->N_cubic_spline_1d->h  = eos->h; }
-    else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline_1D"))
-    { interp_s->H_cubic_spline_1d->h = eos->h; }
-    else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline_1D"))
-    { interp_s->C_cubic_spline_1d->h = eos->h; }
-    */
 }
 
 //Calculates specific internal energy in terms of enthalpy,
@@ -134,21 +125,10 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
     
     double drho0dh;
     Interpolation_T *const interp_s = eos->cubic_spline->interp_rho0;
-    //Interpolation_T *const interp_s = (Interpolation_T*)eos->cubic_spline->interp_rho0;
-    
     *interp_s->h = eos->h;
     interp_s->FDM_derivative = 1;
     drho0dh = execute_derivative_interpolation(interp_s);
     return (LSSEQL(drho0dh,0.) || drho0dh == DBL_MAX ? 0. : drho0dh);
-   
-    /*
-    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
-    { interp_s->N_cubic_spline_1d->h  = eos->h; }
-    else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline_1D"))
-    { interp_s->H_cubic_spline_1d->h = eos->h; }
-    else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline_1D"))
-    { interp_s->C_cubic_spline_1d->h = eos->h; }
-    */
 }
 
 //Calculates derivative of energy density wrt enthalpy, with enthalpy as the independent variable.
@@ -167,7 +147,7 @@ double EoS_de_dh_h_tab(EoS_T* const eos)
     Interpolation_T *const interp_s = eos->cubic_spline->interp_e;
     *interp_s->h = eos->h;
     interp_s->FDM_derivative = 1;
-    dedh = execute_interpolation(interp_s);
+    dedh = execute_derivative_interpolation(interp_s);
     
     return (LSSEQL(dedh,0.) || dedh == DBL_MAX ? 0. : dedh);
 }
