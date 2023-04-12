@@ -109,7 +109,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
     interp_s->interpolation_func = interpolation_clamped_cubic_spline_1d;
     interp_s->interpolation_derivative_func = interpolation_CCS_derivative;
   }
-  else if ( strstr_i(interp_s->method,"Spectral") || 
+  else if (strstr_i(interp_s->method,"Spectral") || 
        strstr_i(PgetsEZ("Interpolation_Method"),"Spectral"))
   {
     fPick_Func_T *func = 0;
@@ -147,6 +147,12 @@ void plan_interpolation(Interpolation_T *const interp_s)
     interp_s->finite_diff_order = (Uint)Pgeti("finite_diff_order");
   }
   
+  if (PgetsEZ("interpolation_FDM_manual")
+      && strstr_i(PgetsEZ("interpolation_FDM_manual"),"yes"))
+  {
+    interp_s->finite_diff_order = (Uint)Pgeti("finite_diff_order");
+    interp_s->interpolation_derivative_func = interpolation_manual_FDM;
+  }
 }
 
 /* xi's must be in increasing order, make sure this happens. */
@@ -326,7 +332,155 @@ static double interpolation_finite_difference(Interpolation_T *const interp_s)
   free(deltas);
   return ret;
 }
-   
+
+// Manually-coded finite difference methods,
+// only available for certain combinations of
+// derivative and accuracy orders.
+
+// Checks if method is available for given M, n.
+static Uint interpolation_check_manual_FDM(Interpolation_T *const interp_s)
+{
+  if (!interp_s->finite_diff_order)
+  { Error0("Interpolation finite difference error: Order of accuracy not assigned."); }
+  if (!interp_s->FDM_derivative)
+  { Error0("Interpolation finite difference error: Degree of derivative not assigned."); }
+  const Uint n = interp_s->finite_diff_order;
+  const Uint M = interp_s->FDM_derivative;
+  const Uint N = *interp_s->N;
+  
+  // Checks if we have enough data points for given order.
+  if (N <= n+M)
+  {
+    printf("Points: %i\n", N);
+    printf("Order of accuracy: %i\n", n);
+    Error0("Finite difference error: Not enough points for desired accuracy.\n");
+    return 0;
+  }
+  if (M >= n)
+  {
+    printf("Degree of derivative: %i\n", M);
+    printf("Order of accuracy: %i\n", n);
+    Error0("Finite difference error: Degree of derivative must not exceed degree of accuracy.\n");
+    return 0;
+  }
+  
+  // Return success iff method available.
+  if (M == 1)
+  {
+    if (n == 3)
+    {
+      return 1;
+    }
+  }
+  
+  printf("Manual FDM methods: %i-th derivative to order of accuracy %i not available.\n", M, n);
+  Error0("Manual FDM invalid parameters.");
+  return 0;
+}
+  
+static double interpolation_manual_FDM(Interpolation_T *const interp_s)
+{
+  // Approximates M-th derivative of f(x)|x=h by finite difference method,
+  // to order of accuracy n.
+  const double *const x = *interp_s->x;
+  double *const f = *interp_s->f;
+  const double h = *interp_s->h;
+  const Uint N_total = *interp_s->N;
+  Uint i = 0;
+  const Uint n = interp_s->finite_diff_order;
+  const Uint M = interp_s->FDM_derivative;
+  double ret = DBL_MAX;
+  Flag_T flg = NONE;
+  
+  if (!interpolation_check_manual_FDM(interp_s))
+  {
+    Error0("Interpolation: manual finite difference method failed.");
+    return 0;
+  }
+  
+  // First derivatives
+  if (M == 1)
+  {
+    if (n == 3)
+    {
+      int N = 4;
+      double d[16];
+      double p[16];
+      double q[4];
+      ret = 0;
+      
+      // Finds the data segment
+      for (i = 0; i < N_total-1; ++i)
+      {
+        if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+        {
+          flg = FOUND;
+          break;
+        }
+      }
+      if (flg != FOUND)
+      {
+        if (!interp_s->N_cubic_spline_1d->No_Warn)
+          Warning("The given point for the interpolation is out of the domain.\n");
+        
+        return ret;
+      }
+      
+      // Excise sub-arrays
+      // Selects subset of 'x' array to use for finite difference method,
+      // i.e. x[left_pt : right_pt].
+      int left_pt = (int)i - (int)floor((n+M)/2)+1;
+      int right_pt = (int)i + (int)ceil((n+M)/2)+1;
+      
+      // Shifts right if sub-array is too far left:
+      while (left_pt < 0)
+      {
+        left_pt++;
+        right_pt++;
+      }
+      while (right_pt >= N)
+      {
+        left_pt--;
+        right_pt--;
+      }
+       
+      int b; // j == b % N, m == floor(b/N)
+      int k;
+      for (b = 0; b < N*N; b++)
+      { d[b] = x[left_pt+(b%N)] - x[left_pt + (int)floor(b/N)]; }
+      
+      for (b = 0; b < N*N; b++)
+      {
+        p[b] = 1;
+        for (k = 0; k < N; k++)
+        {
+          if (!(k==(b%N)) && !(k==(int)floor(b/N)))
+          { p[b] *= (h - x[left_pt + k])/d[N*(b%N) + k]; }
+        }
+      }
+      
+      for (b = 0; b < N; b++)
+      {
+        q[b] = 0;
+        for (k = 0; k < N; k++)
+        {
+          if (k != b)
+          { q[b] += p[N*b + k] / d[N*b + k]; }
+        }
+      }
+      
+      ret = 0;
+      for (b = 0; b < N; b++)
+      { ret += f[left_pt + b] * q[b]; }
+      
+      return ret;
+    }
+  }
+  
+  Error0("Manual FDM error: no method executed.");
+  return ret;
+}
+     
 ///////////////////////////////////////Natural cubic spline///////////////////////////////
 /* find a, b, c and d coeffs */
 static void find_coeffs_natural_cubic_spline_1d(Interpolation_T *const interp_s)
@@ -1220,8 +1374,8 @@ void free_interpolation(Interpolation_T *interp_s)
     { free(interp_s->H_cubic_spline_1d->d); }
     if (interp_s->H_cubic_spline_1d->Alloc_Mem)
     {
-      free(interp_s->H_cubic_spline_1d->x);
-      free(interp_s->H_cubic_spline_1d->f);
+      //free(interp_s->H_cubic_spline_1d->x);
+      //free(interp_s->H_cubic_spline_1d->f);
     }
   }
   else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))

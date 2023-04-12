@@ -77,7 +77,7 @@ void test_EoS(Physics_T *const phys)
   
   sprintf(file_name,"%s/%s",path,"drho0_dh");
   file = Fopen(file_name,"w+");
-  fprintf(file,"# enthalpy  drho0_dh\n");  
+  fprintf(file,"# enthalpy  drho0_dh\n");
   for (i = 0; i < N; ++i)
   {
     eos->h = h_min+s*i;
@@ -87,7 +87,7 @@ void test_EoS(Physics_T *const phys)
       
   sprintf(file_name,"%s/%s",path,"de_dh");
   file = Fopen(file_name,"w+");
-  fprintf(file,"# enthalpy  de_dh\n");  
+  fprintf(file,"# enthalpy  de_dh\n");
   for (i = 0; i < N; ++i)
   {
     eos->h = h_min+s*i;
