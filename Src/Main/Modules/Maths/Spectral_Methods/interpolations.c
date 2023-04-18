@@ -146,9 +146,8 @@ void plan_interpolation(Interpolation_T *const interp_s)
     interp_s->interpolation_derivative_func = interpolation_finite_difference;
     interp_s->finite_diff_order = (Uint)Pgeti("finite_diff_order");
   }
-  
-  if (PgetsEZ("interpolation_FDM_manual")
-      && strstr_i(PgetsEZ("interpolation_FDM_manual"),"yes"))
+  if (PgetsEZ("interpolation_derivative_method")
+      && strstr_i(PgetsEZ("interpolation_derivative_method"), "manual_FDM"))
   {
     interp_s->finite_diff_order = (Uint)Pgeti("finite_diff_order");
     interp_s->interpolation_derivative_func = interpolation_manual_FDM;
@@ -290,7 +289,7 @@ static double interpolation_finite_difference(Interpolation_T *const interp_s)
     left_pt--;
     right_pt--;
   }
-  
+      
   // Allocates memory for delta coefficients
   // Stores (M+1)x(n+m)x(n+m) 3D array 
   // 'deltas' in linear format.
@@ -438,40 +437,54 @@ static double interpolation_manual_FDM(Interpolation_T *const interp_s)
         left_pt++;
         right_pt++;
       }
-      while (right_pt >= N)
+      while (right_pt >= (int)N_total)
       {
         left_pt--;
         right_pt--;
       }
-       
-      int b; // j == b % N, m == floor(b/N)
+      
+      // 2D arrays are stored in linear format.
+      // Array indices (j,k)
+      int j;
       int k;
-      for (b = 0; b < N*N; b++)
-      { d[b] = x[left_pt+(b%N)] - x[left_pt + (int)floor(b/N)]; }
+      int b;
       
-      for (b = 0; b < N*N; b++)
+      // Calculate d[j,k] array
+      for (j = 0; j < N; j++)
       {
-        p[b] = 1;
+        for (k = 0; k < N; k++)
+        { d[i_j_to_ij(N,j,k)] = x[left_pt + j] - x[left_pt + k]; }
+      }
+      
+      // Calculate p[j,k] array
+      for (j = 0; j < N; j++)
+      {
         for (k = 0; k < N; k++)
         {
-          if (!(k==(b%N)) && !(k==(int)floor(b/N)))
-          { p[b] *= (h - x[left_pt + k])/d[N*(b%N) + k]; }
+          p[i_j_to_ij(N,j,k)] = 1;
+          for (b = 0; b < N; b++)
+          {
+            if (j != k && b != k && b != j)
+            { p[i_j_to_ij(N,j,k)] *= (h - x[left_pt+b]) / d[i_j_to_ij(N,j,b)]; }
+          }
         }
       }
       
-      for (b = 0; b < N; b++)
+      // Calculate l'_j(h) (= h[j]) for each j
+      for (j = 0; j < N; j++)
       {
-        q[b] = 0;
+        q[j] = 0;
         for (k = 0; k < N; k++)
         {
-          if (k != b)
-          { q[b] += p[N*b + k] / d[N*b + k]; }
+          if (k != j)
+          { q[j] += p[i_j_to_ij(N,j,k)] / d[i_j_to_ij(N,j,k)]; }
         }
       }
       
+      // Calculate f'(h)
       ret = 0;
-      for (b = 0; b < N; b++)
-      { ret += f[left_pt + b] * q[b]; }
+      for (j = 0; j < N; j++)
+      ret += f[left_pt + j] * q[j];
       
       return ret;
     }

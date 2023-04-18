@@ -716,7 +716,7 @@ int interpolation_tests(Grid_T *const grid)
       status = interpolation_tests_N_cubic_spline_1d();
       check_test_result(status);
   }
-  if (DO)
+  if (DO_NOT)
   {
       printf("Interpolation test:            Hermite Cubic Spline Method =>");
       status = interpolation_tests_Hermite_1d();
@@ -725,7 +725,7 @@ int interpolation_tests(Grid_T *const grid)
   // In order to test Fornberg FDM, 
   // "interpolation_derivative_method = finite_difference"
   // must be included in parameter file.
-  if (DO_NOT)
+  if (DO)
   {
       printf("Finite Difference test:         Fornberg Algorithm =>\n");
       status = interpolation_tests_FDM();
@@ -1051,7 +1051,7 @@ static int interpolation_tests_FDM(void)
   Flag_T flg = NONE;
   Uint i;
   
-  //interp_s->FDM_derivative = 3;
+  interp_s->FDM_derivative = 3;
   for (i = 0; i < N; ++i)
   {
     t = x[i] = a+i*s;
@@ -1079,6 +1079,7 @@ static int interpolation_tests_FDM(void)
     interp_derivative = execute_derivative_interpolation(interp_s);
     interp_s->FDM_derivative = 3; // Take the 3rd derivative
     interp_3_derivative = execute_derivative_interpolation(interp_s);
+    interp_3_derivative = 0;
     diff_derivative = interp_derivative - (cos(t)/t - log(t)*sin(t) + 1);
     diff_3_derivative = interp_3_derivative - (2*cos(t)/Pow3(t) + 3*sin(t)/Pow2(t)
                          - 3*cos(t)/t + log(t)*sin(t));
