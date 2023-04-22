@@ -54,7 +54,7 @@ idr->set_param("BHNS_filler_method","ChebTn_Ylm_perfect_s2",idr);
 idr->set_param("ADM_B1I_form","zero",idr);
 
 // get double parameters for elliptica, for example:
-idr->set_param_dbl("BHNS_angular_velocity",idr);
+idr->get_param_dbl("BHNS_angular_velocity",idr);
 
 // interpolate
 elliptica_id_reader_interpolate(idr);
