@@ -89,7 +89,7 @@ static int set_free_data_params(Physics_T *const phys)
   //
   // 
   // name: "RollOff_function"
-  // the transition function to stich free data (same as w1 and w2).
+  // the transition function to stitch free data (same as w1 and w2).
   // options:
   // o.  "exp(-lambda*(r/rmax)^p):r<rmax". # 0 for r >= rmax.
   // o.  "exp(-lambda*(r/rmax)^p)". # no condition on r.
