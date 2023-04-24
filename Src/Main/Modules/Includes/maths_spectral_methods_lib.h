@@ -32,6 +32,7 @@ typedef struct INTERPOLATION_T
   const char *method;
   Uint finite_diff_order;/* order of finite difference approximation */
   Uint FDM_derivative;/* order of derivative required from finite difference method */
+  Uint Spline_Order; // Degree of interpolating polynomial
   
   struct FIELD_T *field;/* interesting field for interpolation */
   fInterpolation_T *interpolation_func;/* interpolation function */
@@ -70,15 +71,32 @@ typedef struct INTERPOLATION_T
   }N_cubic_spline_1d[1];/* natural cubic spline 1d */
   struct
   { 
+   double *f;             // f(xi)
+   double *fp;            // f'(xi) (first derivative of f)
+   double *x;             // coordinate grid
+   double h;              // point to interpolate
+   Uint N;                // number of grid points
+   double *a;             // Linearized 2D array for spline coefficients
+   //Uint Spline_Order;     // I.e. order of interpolating polynomial.
+   Uint Order: 1;         // 1 iff x array in order
+   Uint Alloc_Mem: 1;
+   Uint No_Warn: 1;
+  }Hermite_spline_1d[1];  //1D Hermite spline
+  /*
+  // Old Hermite cubic spline structure, kept temporarily for reference.
+  struct
+  { 
    double *f; // f(xi)
    double *x; // coordinate grid
    double h;  // point to interpolate
    Uint N;    // number of grid points
    double *a, *b, *c, *d; //Arrays for spline coefficients.
+   Uint Spline_Order;
    Uint Order: 1; // 1 iff x array in order
    Uint Alloc_Mem: 1;
    Uint No_Warn: 1;
-  }H_cubic_spline_1d[1]; //1D Hermite cubic spline
+  }Hermite_spline_1d[1]; //1D Hermite cubic spline
+  */
   struct
   { 
    double *f; // f(xi)
