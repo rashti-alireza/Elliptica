@@ -61,7 +61,7 @@ static int interpolation_tests_Neville_1d(void);
 static int interpolation_tests_N_cubic_spline_1d(void);
 static int interpolation_tests_Hermite_1d(void);
 static int interpolation_tests_FDM(void);
-//static int interpolation_tests_NCS_Convergence(void);
+static int interpolation_tests_NCS_Convergence(Uint tests, Uint N0, Uint Nf);
 static void print_arrays(const char *const fileName, double* x, double* f, double N);
 static Uint order_of_derivative(const enum FUNC_E fn);
 static double calculate_expected_precision_for_derivative(const Field_T *const func,const enum FUNC_E fn,const Patch_T *const patch);
