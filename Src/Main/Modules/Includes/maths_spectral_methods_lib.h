@@ -69,6 +69,7 @@ typedef struct INTERPOLATION_T
    Uint Alloc_Mem: 1;/* if it allocates memory for x and f */
    Uint No_Warn: 1;/* if 1 it prints NO warning in case of an error */
   }N_cubic_spline_1d[1];/* natural cubic spline 1d */
+  
   struct
   { 
    double *f;             // f(xi)
@@ -77,11 +78,12 @@ typedef struct INTERPOLATION_T
    double h;              // point to interpolate
    Uint N;                // number of grid points
    double *a;             // Linearized 2D array for spline coefficients
-   //Uint Spline_Order;     // I.e. order of interpolating polynomial.
+   Uint Spline_Order;     // I.e. order of interpolating polynomial.
    Uint Order: 1;         // 1 iff x array in order
    Uint Alloc_Mem: 1;
    Uint No_Warn: 1;
   }Hermite_spline_1d[1];  //1D Hermite spline
+  
   /*
   // Old Hermite cubic spline structure, kept temporarily for reference.
   struct
@@ -125,6 +127,8 @@ void plan_interpolation(Interpolation_T *const interp_s);
 /////////////////////
 void set_interp_warn_flag(Interpolation_T *const interp_s, Uint flag);
 void assign_interpolation_ptrs(Interpolation_T *const interp_s);
+double uniform_FDM_1_6(Interpolation_T *const interp_s);
+double uniform_FDM_3_6(Interpolation_T *const interp_s);
 /////////////////////
 void get_Ylm_coeffs(double *const realClm,double *const imagClm,const double *const f,const Uint Ntheta,const Uint Nphi,const Uint Lmax);
 double interpolation_Ylm(const double *const realClm,const double *const imagClm,const Uint Lmax, const double theta, const double phi);

@@ -358,9 +358,7 @@ static void populate_EoS(EoS_T *const eos)
             }
         }
         else
-        {
-            Error0("ERROR: Unrecognized EOS table format.\n");
-        }
+        { Error0("ERROR: Unrecognized EOS table format.\n"); }
         
         fclose(eos_table);
         //Sets interpolation bounds.
@@ -373,7 +371,7 @@ static void populate_EoS(EoS_T *const eos)
         eos->cubic_spline->p_sample    = p_sample;
         eos->cubic_spline->e_sample    = e_sample;
         eos->cubic_spline->rho0_sample = rho0_sample;
-        //eos->cubic_spline->h_floor     = Getd(P_"enthalpy_floor");
+        eos->cubic_spline->h_floor     = Getd(P_"enthalpy_floor");
         
         Interpolation_T *interp_p = init_interpolation();    //pressure
         Interpolation_T *interp_e = init_interpolation();    //energy density

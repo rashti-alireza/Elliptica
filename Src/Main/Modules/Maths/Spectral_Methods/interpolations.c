@@ -59,7 +59,8 @@ void assign_interpolation_ptrs(Interpolation_T *const interp_s)
     interp_s->h = &interp_s->N_cubic_spline_1d->h;
     interp_s->N = &interp_s->N_cubic_spline_1d->N;
   }
-  else if (strstr_i(interp_s->method,"Hermite_Cubic_Spline"))
+  else if (strstr_i(interp_s->method,"Hermite_Cubic_Spline") || strstr_i(interp_s->method,"Hermite_Spline")
+          || strstr_i(interp_s->method,"Hermite"))
   {
     interp_s->f = &interp_s->Hermite_spline_1d->f;
     interp_s->x = &interp_s->Hermite_spline_1d->x;
@@ -94,11 +95,12 @@ void plan_interpolation(Interpolation_T *const interp_s)
     interp_s->interpolation_func = interpolation_natural_cubic_spline_1d;
     interp_s->interpolation_derivative_func = interpolation_NCS_derivative;
   }
-  else if (strstr_i(interp_s->method,"Hermite_Cubic_Spline"))
+  else if (strstr_i(interp_s->method,"Hermite_Cubic_Spline") || strstr_i(interp_s->method,"Hermite_Spline")
+           || strstr_i(interp_s->method,"Hermite"))
   {
     order_arrays_spline_1d(interp_s);
-    interp_s->finite_diff_order = (Uint)Pgeti("finite_diff_order");
-    interp_s->Spline_Order = (Uint)Pgeti("spline_order");
+    interp_s->finite_diff_order = (Uint)Pgeti("Interpolation_finite_diff_order");
+    interp_s->Spline_Order = (Uint)Pgeti("Interpolation_spline_order");
     find_coeffs_Hermite_spline(interp_s);
     interp_s->interpolation_func = interpolation_Hermite_spline;
     interp_s->interpolation_derivative_func = interpolation_Hermite_derivative;
@@ -145,12 +147,12 @@ void plan_interpolation(Interpolation_T *const interp_s)
                     "finite_difference"))
   {
     interp_s->interpolation_derivative_func = interpolation_finite_difference;
-    interp_s->finite_diff_order = (Uint)Pgeti("finite_diff_order");
+    interp_s->finite_diff_order = (Uint)Pgeti("Interpolation_finite_diff_order");
   }
   if (PgetsEZ("interpolation_derivative_method")
       && strstr_i(PgetsEZ("interpolation_derivative_method"), "manual_FDM"))
   {
-    interp_s->finite_diff_order = (Uint)Pgeti("finite_diff_order");
+    interp_s->finite_diff_order = (Uint)Pgeti("Interpolation_finite_diff_order");
     interp_s->interpolation_derivative_func = interpolation_manual_FDM;
   }
 }
@@ -377,13 +379,90 @@ static Uint interpolation_check_manual_FDM(Interpolation_T *const interp_s)
   Error0("Manual FDM invalid parameters.");
   return 0;
 }
+
+// Uniform-grid FDM
+
+// First derivative, 6th-order accuracy
+double uniform_FDM_1_6(Interpolation_T *const interp_s)
+{
+  const double *const x = *interp_s->x;
+  const double *const f = *interp_s->f;
+  const double h = *interp_s->h;
+  const Uint N = *interp_s->N;
+  //Flag_T flg = NONE;
+  Uint i = 0;
+ 
+  // Find spline interval 
+  for (i = 0; i < N-1; ++i)
+  {
+    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+    {
+      //flg = FOUND;
+      break;
+    }
+  }
+  
+  // Do nothing if out of bounds
+  if (i < 3 || i > N - 4)
+  { return 0; }
+  
+  double ret = 0;
+  ret += -(1.0/60.0) * f[i-3];
+  ret += (3.0/20.0) * f[i-2];
+  ret += -(3.0/4.0) * f[i-1];
+  ret += (3.0/4.0) * f[i+1];
+  ret += -(3.0/20.0) * f[i+2];
+  ret += (1.0/60.0) * f[i+3];
+  ret /= fabs(x[i+1] - x[i]);
+  
+  return ret;
+}
+
+// Third derivative, 6th-order accuracy
+double uniform_FDM_3_6(Interpolation_T *const interp_s)
+{
+  const double *const x = *interp_s->x;
+  const double *const f = *interp_s->f;
+  const double h = *interp_s->h;
+  const Uint N = *interp_s->N;
+  //Flag_T flg = NONE;
+  Uint i = 0;
+ 
+  // Find spline interval 
+  for (i = 0; i < N-1; ++i)
+  {
+    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+    {
+      //flg = FOUND;
+      break;
+    }
+  }
+  
+  // Do nothing if out of bounds
+  if (i < 4 || i > N - 5)
+  { return 0; }
+  
+  double ret = 0;
+  ret += -(7.0/240.0)     * f[i-4];
+  ret += (3.0/10.0)       * f[i-3];
+  ret += -(169.0/120.0)   * f[i-2];
+  ret += (61.0/30.0)      * f[i-1];
+  ret += -(61.0/30.0)     * f[i+1];
+  ret += (169.0/120.0)    * f[i+2];
+  ret += -(3.0/10.0)      * f[i+3];
+  ret += (7.0/240.0)      * f[i+4];
+  ret /= Pow3(fabs(x[i+1] - x[i]));
+  
+  return ret;
+}
+ 
   
 static double interpolation_manual_FDM(Interpolation_T *const interp_s)
 {
   // Approximates M-th derivative of f(x)|x=h by finite difference method,
   // to order of accuracy n.
   const double *const x = *interp_s->x;
-  double *const f = *interp_s->f;
+  const double *const f = *interp_s->f;
   const double h = *interp_s->h;
   const Uint N_total = *interp_s->N;
   Uint i = 0;
@@ -690,16 +769,15 @@ static void find_coeffs_Hermite_spline(Interpolation_T *const interp_s)
   const double *const f = interp_s->Hermite_spline_1d->f;
   double *const fp = alloc_double(*interp_s->N);
   const int N = (int)interp_s->Hermite_spline_1d->N;
-  const int d = (int)interp_s->Spline_Order;
-  const int n = (d-1)/2;
-  double *const a = alloc_double(((Uint)N-1)*(2*(Uint)n+1));
+  const int n = (int)interp_s->Spline_Order - 1;
+  double *const a = alloc_double(((Uint)N-1)*(2*(Uint)n+2));
   // a[] is a linearized 2D array where a[i,j] is
-  // the i-th spline coefficient over interval j.
+  // the j-th spline coefficient over interval i.
   
   // Error if not enough data points for desired spline order.
-  if (d > N)
+  if (n+1 > N)
   { 
-    printf("Hermite spline order: %i\n", d);
+    printf("Hermite spline order: %i\n", n+1);
     printf("Hermite spline data points: %i\n", *interp_s->N);
     Error0("Hermite spline error: Not enough data points for desired spline order.");
   }
@@ -717,61 +795,54 @@ static void find_coeffs_Hermite_spline(Interpolation_T *const interp_s)
   
   // Calculates spline coefficients on each interval x[j] <= x < x[j+1].
   // Temporary arrays
-  double *Q = alloc_double((2*(Uint)n+1)*(2*(Uint)n+1));
-  double *z = alloc_double(2*(Uint)n+1);
+  double *Q = alloc_double((2*(Uint)n+2)*(2*(Uint)n+2));
+  double *z = alloc_double(2*(Uint)n+2);
   int l; // Left-most sub-array point
-  int r; // Right-most sub-array point
-  for (int j = 0; j < N-1; j++)
+  for (int j = 0; j < N; j++)
   {
-    // Excise sub-array from x[]. Shift left or right if out of bounds.
-    // If we have an odd spline-order, place the 'extra' point
-    // to the right of the central interval.
-    l = j - n/2;
-    r = j + n/2;
-    while (l < 0)
-    { l++; r++; }
-    while (r >= N)
-    { l--; r++; }
-    if (l < 0 || r >= N)
-    { Error0("Hermite spline generation: could not excise sub-array from domain."); }
+    // Excise sub-array from x[]. Shift left if out of bounds.
+    l = j;
+    /////////////////////////////////////////////
+    while (l >= N - (n+1))
+    { l--; }
     
-    // This is an inefficient, temporary way to compute the coefficients.
     //Step 1
     for (int i = 0; i <= n; i++)
     {
       //Step 2
-      z[2*i] = x[i];
-      z[2*i+1] = x[i];
-      Q[i_j_to_ij(2*n+1,2*i,0)] = f[i];
-      Q[i_j_to_ij(2*n+1,2*i+1,1)] = fp[i];
-      
+      z[2*i]                      = x[l+i];
+      z[2*i+1]                    = x[l+i];
+      Q[i_j_to_ij(2*n+1,2*i,0)]   = f[l+i];
+      Q[i_j_to_ij(2*n+1,2*i+1,0)] = f[l+i];
+      Q[i_j_to_ij(2*n+1,2*i+1,1)] = fp[l+i];
+
       //Step 3
-      if (i != 0)
+      if (i)
       { Q[i_j_to_ij(2*n+1,2*i,1)] = (Q[i_j_to_ij(2*n+1,2*i,0)]
       - Q[i_j_to_ij(2*n+1,2*i-1,0)]) / (z[2*i] - z[2*i-1]); }
     }
-      
-    //Step 4  
+    
+    //Step 4
     for (int b = 2; b <= 2*n+1; b++)
     {
       for (int k = 2; k <= b; k++)
       { Q[i_j_to_ij(2*n+1,b,k)] = (Q[i_j_to_ij(2*n+1,b,k-1)]
       - Q[i_j_to_ij(2*n+1,b-1,k-1)]) / (z[b] - z[b-k]); }
     }
-      
+
     //Step 5
     for (int b = 0; b <= 2*n+1; b++)
-    { a[i_j_to_ij(N-1,b,j)] = Q[i_j_to_ij(2*n+1,b,b)]; }
+    { a[i_j_to_ij(2*n+1,j,b)] = Q[i_j_to_ij(2*n+1,b,b)]; }
   }
-    
-    interp_s->Hermite_spline_1d->a = a;
-    //free(Q);
-    //free(z);/////////////////////////////////////
+  
+  interp_s->Hermite_spline_1d->a = a;
+  free(Q);
+  free(z);
 }
 
 static double interpolation_Hermite_spline(Interpolation_T *const interp_s)
 {
-  // Executes cubic Hermite spline interpolation:
+  // Executes Hermite spline interpolation:
   // f(h) ~ H(h) = Q00 + Q11(h-x0) + Q22(h-x0)^2
   //        + Q33(h-x0)^2(h-x1) + ... + Q2n+1,2n+1(h-x0)^2...(h-xn).
   if (!interp_s->Hermite_spline_1d->Order)
@@ -781,8 +852,7 @@ static double interpolation_Hermite_spline(Interpolation_T *const interp_s)
   const double *const a = interp_s->Hermite_spline_1d->a;
   const double h = interp_s->Hermite_spline_1d->h;
   const int N = (int)interp_s->Hermite_spline_1d->N;
-  const int d = (int)interp_s->Spline_Order;
-  const int n = (d-1)/2;
+  const int n = (int)interp_s->Spline_Order - 1;
   double ret = DBL_MAX;// it's important to be max double
   int i = 0;
   Flag_T flg = NONE;
@@ -805,27 +875,22 @@ static double interpolation_Hermite_spline(Interpolation_T *const interp_s)
     return ret;
   }
  
-  int l = i - n/2;
-  int r = i + n/2;
-  while (l < 0)
-  { l++; r++; }
-  while (r >= N)
-  { l--; r++; }
-  if (l < 0 || r >= N)
-  { Error0("Hermite spline: could not excise sub-array from domain."); }
+  int l = i;
+  while (l >= N - (n+1))
+  { l--; }
   
   ret = 0;
   double ret_term = 1;
+  // ADD COMMENT
   for (int j = 0; j <= 2*n+1; j++)
   {
-    ret += a[i_j_to_ij(2*n+1,j,l+j)]*ret_term;
+    ret += a[i_j_to_ij(2*n+1,l,j)]*ret_term;
     ret_term *= (h - x[l+(int)floor(j/2)]);
   }
   
   return ret;
 }
 
-// Unfinished
 static double interpolation_Hermite_derivative(Interpolation_T *const interp_s)
 {
   // Returns f'(x) by derivative of Hermite spline
@@ -1595,20 +1660,11 @@ void free_interpolation(Interpolation_T *interp_s)
   }
   else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
   {
-    if (interp_s->Hermite_spline_1d->a)
-    { free(interp_s->Hermite_spline_1d->a); }
-    /*
-    if (interp_s->Hermite_spline_1d->b)
-    { free(interp_s->Hermite_spline_1d->b); }
-    if (interp_s->Hermite_spline_1d->c)
-    { free(interp_s->Hermite_spline_1d->c); }
-    if (interp_s->Hermite_spline_1d->d)
-    { free(interp_s->Hermite_spline_1d->d); }
-    */
     if (interp_s->Hermite_spline_1d->Alloc_Mem)
     {
-      //free(interp_s->Hermite_spline_1d->x);
-      //free(interp_s->Hermite_spline_1d->f);
+      free(interp_s->Hermite_spline_1d->x);
+      free(interp_s->Hermite_spline_1d->f);
+      free(interp_s->Hermite_spline_1d->a);
     }
   }
   else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))

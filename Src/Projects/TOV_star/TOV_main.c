@@ -77,6 +77,45 @@ int TOV_star(void *vp)
     
   Fclose(file);
   
+  //////////////////////////////Mass-Radius curve//////////////////
+  // Option to generate mass radius curve. (ADM mass vs Schwarzschild radius
+  // in solar masses and kilometers).
+  if (strstr_i(PgetsEZ("mass_radius_curve"),"yes"))
+  {
+    double mass_initial = Pgetd("initial_mass");
+    double mass_final   = Pgetd("final_mass");
+    Uint stars          = (Uint)Pgeti("stars");
+    if (mass_final <= mass_initial || stars == 0)
+    { Error0("Error in mass-radius curve parameters.\n"); }
+    
+    double test_mass = mass_initial;
+    double delta_m = (mass_final - mass_initial) / stars;
+    double* radii = alloc_double(stars);
+    double* masses = alloc_double(stars);
+    tov->description = 0; // Must be 'off' to avoid print statements.
+    
+    for (Uint star = 0; star < stars; star++)
+    {
+      tov->bar_m = test_mass;
+      tov = TOV_solution(tov);
+      radii[star] = tov->r[tov->N-1];
+      masses[star] = tov->ADM_m;
+      test_mass += delta_m;
+    }
+    
+    // Print results to file
+    sprintf(file_name,"%s/mass_radius.txt",path);
+    file = Fopen(file_name,"w+");
+    fprintf(file,"#Radius (km) \t ADM Mass (solar masses)\n");
+    for (i = 0; i < stars; ++i)
+      { fprintf(file,"%E \t %E\n",radii[i],masses[i]); }
+    Fclose(file);
+    
+    free(radii);
+    free(masses);
+  }
+    
+  
   free_physics(phys);
   TOV_free(tov);
   free(path);

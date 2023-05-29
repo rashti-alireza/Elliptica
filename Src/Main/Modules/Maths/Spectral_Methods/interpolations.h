@@ -44,6 +44,8 @@ void set_interp_warn_flag(Interpolation_T *const interp_s, Uint flag);
 //static Uint get_warn_flag(Interpolation_T *const interp_s);
 static void order_arrays_spline_1d(Interpolation_T *const interp_s);
 static double interpolation_finite_difference(Interpolation_T *const interp_s);
+double uniform_FDM_1_6(Interpolation_T *const interp_s);
+double uniform_FDM_3_6(Interpolation_T *const interp_s);
 static double interpolation_manual_FDM(Interpolation_T *const interp_s);
 static Uint interpolation_check_manual_FDM(Interpolation_T *const interp_s);
 static Uint FDM_min(Uint n, Uint M);
