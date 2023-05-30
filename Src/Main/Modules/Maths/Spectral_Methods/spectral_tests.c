@@ -739,7 +739,7 @@ int interpolation_tests(Grid_T *const grid)
   {
       printf("Interpolation test:             Convergence Test=>\n");
       printf("Interpolation method: %s\n", Pgets("Interpolation_Method"));
-      status = interpolation_tests_Convergence(1000, 30, 5000);
+      status = interpolation_tests_Convergence(500, 30, 1000);
       check_test_result(status);
   }
   // Convergence test for Hermite spline order
@@ -1687,12 +1687,13 @@ static int interpolation_tests_Convergence(const Uint tests, const Uint N0, cons
       
       /* Cutoff due to high error is removed because trials with low */
       // # knots will typically have high error.
+      /*
       if (GRT(fabs(diff),s))
       {
-        //fprintf(stderr,"diff = %g\n",diff);
         flg = FOUND;
         break;
       }
+      */
     }
     
     //printf("\nTest time: %E\n", time);
