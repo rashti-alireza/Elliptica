@@ -716,7 +716,7 @@ int interpolation_tests(Grid_T *const grid)
       status = interpolation_tests_N_cubic_spline_1d();
       check_test_result(status);
   }
-  if (DO)
+  if (DO_NOT)
   {
       printf("Interpolation test:            Hermite Spline Method =>\n");
       status = interpolation_tests_Hermite_1d();
@@ -735,9 +735,10 @@ int interpolation_tests(Grid_T *const grid)
   // Convergence tests for 1D interpolation
   // Edit parameters for number of trials and number of
   // spline knots in each trial here.
-  if (DO_NOT)
+  if (DO)
   {
       printf("Interpolation test:             Convergence Test=>\n");
+      printf("Interpolation method: %s\n", Pgets("Interpolation_Method"));
       status = interpolation_tests_Convergence(1000, 30, 5000);
       check_test_result(status);
   }
@@ -745,7 +746,7 @@ int interpolation_tests(Grid_T *const grid)
   // (i.e. error vs order of interpolating polynomial).
   if (DO_NOT)
   {
-      printf("Interpolation test:             Hermite Spline Convergence=>\n");
+      printf("Interpolation test:             Hermite Order Convergence=>\n");
       status = interpolation_tests_Hermite_Convergence();
       check_test_result(status);
   }
@@ -1256,6 +1257,8 @@ static int interpolation_tests_FDM(void)
     uniform_error_derivative[i] = ABSd(uniform_vals_derivative[i] - (cos(t)/t - log(t)*sin(t) + 1));
     uniform_error_3_derivative[i] = ABSd(uniform_vals_3_derivative[i] - (2*cos(t)/Pow3(t) + 3*sin(t)/Pow2(t)
                          - 3*cos(t)/t + log(t)*sin(t)));
+                         
+    /////////////////////////REACTIVATE once HCS derivative finished./////////////////////
     /*
     if (GRT(fabs(diff_derivative),s))
     {
@@ -1710,8 +1713,8 @@ static int interpolation_tests_Convergence(const Uint tests, const Uint N0, cons
     N += delta_N;
     
     free_interpolation(interp_s);
-    //free(f); (Freed in free_interpolation().)
-    //free(x);
+    free(f);
+    free(x);
     free(f_derivative);
     free(hs);
     free(x_vals);

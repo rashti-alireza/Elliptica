@@ -1664,6 +1664,7 @@ void free_interpolation(Interpolation_T *interp_s)
     {
       free(interp_s->Hermite_spline_1d->x);
       free(interp_s->Hermite_spline_1d->f);
+      free(interp_s->Hermite_spline_1d->fp);
       free(interp_s->Hermite_spline_1d->a);
     }
   }
