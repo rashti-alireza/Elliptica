@@ -62,7 +62,7 @@ static int interpolation_tests_N_cubic_spline_1d(void);
 static int interpolation_tests_Hermite_1d(void);
 static int interpolation_tests_FDM(void);
 static int interpolation_tests_Convergence(Uint tests, Uint N0, Uint Nf);
-static int interpolation_tests_Hermite_Convergence(void);
+static int interpolation_tests_Hermite_Order(void);
 //static int interpolation_tests_NCS_Convergence(Uint tests, Uint N0, Uint Nf);
 static void print_arrays(const char *const fileName, double* x, double* f, double N);
 static Uint order_of_derivative(const enum FUNC_E fn);

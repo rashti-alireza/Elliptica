@@ -891,6 +891,7 @@ static double interpolation_Hermite_spline(Interpolation_T *const interp_s)
   return ret;
 }
 
+//UNFINISHED (disused in favor of finite difference methods)
 static double interpolation_Hermite_derivative(Interpolation_T *const interp_s)
 {
   // Returns f'(x) by derivative of Hermite spline

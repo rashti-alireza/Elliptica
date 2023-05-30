@@ -746,8 +746,8 @@ int interpolation_tests(Grid_T *const grid)
   // (i.e. error vs order of interpolating polynomial).
   if (DO_NOT)
   {
-      printf("Interpolation test:             Hermite Order Convergence=>\n");
-      status = interpolation_tests_Hermite_Convergence();
+      printf("Interpolation test:             Hermite Order Test=>\n");
+      status = interpolation_tests_Hermite_Order();
       check_test_result(status);
   }
   
@@ -1259,7 +1259,6 @@ static int interpolation_tests_FDM(void)
                          - 3*cos(t)/t + log(t)*sin(t)));
                          
     /////////////////////////REACTIVATE once HCS derivative finished./////////////////////
-    /*
     if (GRT(fabs(diff_derivative),s))
     {
       printf("Maximum error exceeded for first derivative at t = %E.\n",t);
@@ -1281,7 +1280,6 @@ static int interpolation_tests_FDM(void)
       flg = FOUND;
       break;
     }
-    */
   }
   
   // Excises first 2 and last 2 data points from arrays, since these are 'junk data'
@@ -1748,7 +1746,7 @@ static int interpolation_tests_Convergence(const Uint tests, const Uint N0, cons
   return TEST_SUCCESSFUL;
 }
 
-static int interpolation_tests_Hermite_Convergence(void)
+static int interpolation_tests_Hermite_Order(void)
 {
   Uint min_order = 3;
   Uint max_order = 10;
