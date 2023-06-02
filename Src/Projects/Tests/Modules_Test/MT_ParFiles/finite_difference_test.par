@@ -1,0 +1,77 @@
+#-----------------------------------------------------------------------#
+# Project:                                                              #
+#-----------------------------------------------------------------------#
+
+Project                               = Modules_Test
+Test_Derivative                       = no
+Test_CubedSpherical_Coordinates       = no
+Test_Interpolation                    = yes
+Test_d(interp_a)/df                   = no
+Test_Jacobian_Spectral_vs_Analytic    = no
+Test_Jacobian_Spectral_vs_FiniteDiff  = no
+Test_Jacobian_Spectral_vs_Spectral    = no
+Test_Jacobian_Elements_Js_Consistency = no
+Test_Matrix_Consistency               = no
+Test_Solver_Consistency               = no
+Test_Math_General                     = no
+Test_EoS                              = no
+Test_Integration                      = no
+Test_Ylm_Transformation               = no
+Test_FourierTransformation            = no
+
+#-----------------------------------------------------------------------#
+# Grid and Geometry:                                                    #
+#-----------------------------------------------------------------------#
+grid_kind                    = SplitCubedSpherical(BH+NS)
+grid_set_NS                  = left
+grid_set_BH                  = right,excised
+grid_box_length_ratio_NS     = 0.5
+grid_box_length_ratio_BH     = 0.5
+grid_outermost_radius        = 400
+grid_verbose                 = no
+#### resolutions:
+grid_SplitCS_max_n_a         = 140
+grid_SplitCS_max_n_b         = 140
+grid_SplitCS_max_n_c         = 140
+n_a                          = 8
+n_b                          = 8
+n_c                          = 8
+
+n_interp = 200 # Number of grid pts in 1D interpolation tests
+
+#### NS:
+NS_radius           = 6
+
+#### BH:
+BH_mass 	      = 6 
+BH_dimensionless_spin = 0.5
+
+#### system:
+BHNS_separation  = 25
+
+
+#-----------------------------------------------------------------------#
+# Solving_Settings and Methods:                                         #
+#-----------------------------------------------------------------------#
+
+Solve_Order                     = alpha
+Derivative_Method               = Spectral
+#Interpolation_Method            = Spectral (Set in spectral_tests.c)
+interpolation_finite_diff_order = 3
+interpolation_spline_order      = 6
+Fourier_Transformation_Method   = RFT 
+dF/du_for_Newton_Method         = Spectral 
+interpolation_derivative_method = finite_difference
+#interpolation_derivative_method = manual_FDM
+
+#-----------------------------------------------------------------------#
+# Print:                                                                #
+#-----------------------------------------------------------------------#
+
+print_coords     = no
+print_interfaces = no
+print_interpolation_tests = yes
+
+#-----------------------------------------------------------------------#
+# The End                                                               #
+#-----------------------------------------------------------------------#

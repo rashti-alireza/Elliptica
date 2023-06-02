@@ -1089,3 +1089,116 @@ static double *make_1Dcollocation_ChebNodes(const Uint N)
   return x;
 }
 
+
+////////////////////////Fornberg finite difference method
+double FDM_Fornberg(const double* const x, const double* const f, const double h, const Uint d, const Uint ord, const Uint N)
+{
+  // Approximates M-th derivative of f(x)|x=h by finite difference method,
+  // to order of accuracy n.
+  Uint i = 0;
+  const Uint n = ord;
+  const Uint M = d;
+  double ret = DBL_MAX;
+  Flag_T flg = NONE;
+  
+  // Checks if we have enough data points for given order.
+  if (N <= n+M)
+  {
+    printf("Points: %i\n", N);
+    printf("Order of accuracy: %i\n", n);
+    Error0("Finite difference error: Not enough points for desired accuracy.\n");
+  }
+  if (M >= n)
+  {
+    printf("Degree of derivative: %i\n", M);
+    printf("Order of accuracy: %i\n", n);
+    Error0("Finite difference error: Degree of derivative must not exceed degree of accuracy.\n");
+  }
+  
+  // Finds the data segment
+  for (i = 0; i < N-1; ++i)
+  {
+    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+    {
+      flg = FOUND;
+      break;
+    }
+  }
+
+  if (flg != FOUND)
+  {
+    Warning("The given point for the interpolation is out of the domain.\n");
+    return ret;
+  }
+  
+  // If we have enough points on either side of the desired point h,
+  // we can use a central finite difference. Otherwise, we must
+  // use a shifted finite difference (e.g. the forward finite difference
+  // if x[0] < = h < x[1]).
+  // Note: If the desired accuracy order is an odd integer, we assign the
+  // 'extra' point to the left of the point h.
+  
+  // Selects subset of 'x' array to use for finite difference method,
+  int left_pt = (int)i - (int)floor((n+M)/2)+1;
+  int right_pt = (int)i + (int)ceil((n+M)/2)+1;
+  
+  // Shifts right if sub-array is too far left:
+  while (left_pt < 0)
+  {
+    left_pt++;
+    right_pt++;
+  }
+  while ((Uint)right_pt >= N)
+  {
+    left_pt--;
+    right_pt--;
+  }
+      
+  // Allocates memory for delta coefficients
+  // Stores (M+1)x(n+m)x(n+m) 3D array 
+  // 'deltas' in linear format.
+  Uint p[3] = { 0, M+1, n+M };
+  double* deltas = alloc_double((M+1)*(n+M)*(n+M));
+  
+  // Fornberg algorithm calculates the deltas.
+  deltas[i_j_k_to_ijk(p,0,0,0)] = 1;
+  double c1 = 1;
+  double c2 = 1;
+  double c3 = 1;
+  
+  for (Uint l=1; l<n+M; l++)
+  {
+    c2 = 1;
+    for (Uint v=0; v<l; v++)
+    {
+        c3 = x[(Uint)left_pt+l] - x[(Uint)left_pt+v];
+        c2 = c2*c3;
+        if (l <= M)
+        { deltas[i_j_k_to_ijk(p,l,l-1,v)] = 0; }
+        for (Uint m=0; m<=(l < M ? l : M); m++)
+        { deltas[i_j_k_to_ijk(p,m,l,v)] = (((x[(Uint)left_pt+l] - h)
+          *deltas[i_j_k_to_ijk(p,m,l-1,v)]
+          - (m ? m*deltas[i_j_k_to_ijk(p,m-1,l-1,v)] : 0))/c3); }
+    }
+    for (Uint m=0; m<=(l < M ? l : M); m++)
+    { deltas[i_j_k_to_ijk(p,m,l,l)] = ((c1/c2)*
+      ((m ? m*deltas[i_j_k_to_ijk(p,m-1,l-1,l-1)] : 0)
+      - (x[(Uint)left_pt+l-1]-h)*deltas[i_j_k_to_ijk(p,m,l-1,l-1)])); }
+    c1 = c2;
+  }
+  
+  // Approximates f^(m)|x=h using deltas.
+  ret = 0;
+  for (Uint v=0; v<=n; v++)
+  { ret += deltas[i_j_k_to_ijk(p,M,n,v)] * f[left_pt+(int)v]; }
+  
+  free(deltas);
+  return ret;
+}
+
+
+
+
+
+
+

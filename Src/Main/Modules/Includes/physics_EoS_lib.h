@@ -46,6 +46,13 @@ typedef struct EquationOfState_T
    void *interp_p;/* spline interpolation struct for p */
    void *interp_e;/* spline interpolation struct for e */
    void *interp_rho0;/* spline interpolation struct for rho0 */
+   // Root finder approach
+   // Void pointer is cast to Root_Finder_T*
+   void *root_finder; // used for root finder approach to h(rho0).
+   void *interp_p_rho0; // For interpolating pressure from energy density
+   void *interp_e_rho0; // For interpolating total energy density from rest-mass density
+   double rho0; /* used for root finder approach */
+   double (*enthalpy_eqn[1])(void* eos, const double* params); // Eqn for root finder //
  }cubic_spline[1];
  
 }EoS_T;

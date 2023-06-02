@@ -152,9 +152,103 @@ double EoS_de_dh_h_tab(EoS_T* const eos)
     return (LSSEQL(dedh,0.) || dedh == DBL_MAX ? 0. : dedh);
 }
 
+///////////////Root finder approach////////////////////
+// Definition of enthalpy h: (e + p)/rho0 - h = 0.
+double EoS_enthalpy_def(void* eos, const double* const sol)
+{
+  // FIXME: See if there's a better way than eos_copy
+  EoS_T* eos_copy = (EoS_T* const)eos;
+  eos_copy->cubic_spline->rho0 = sol[0];
+  Interpolation_T* const interp_e_rho0 = eos_copy->cubic_spline->interp_e_rho0;
+  Interpolation_T* const interp_p_rho0 = eos_copy->cubic_spline->interp_p_rho0;
+  *interp_e_rho0->h = eos_copy->cubic_spline->rho0;
+  *interp_p_rho0->h = eos_copy->cubic_spline->rho0;
+  
+  double e = execute_interpolation(interp_e_rho0);
+  double p = execute_interpolation(interp_p_rho0);
+  
+  /*
+  printf("EoS_enthalpy_def:\n");
+  printf("\t h == %E\n", eos_copy->h);
+  printf("\t rho0 == %E\n", eos_copy->cubic_spline->rho0);
+  printf("\t p == %E\n", p);
+  printf("\t e == %E\n", e);
+  printf("\t return == %E\n", ((e + p) / eos_copy->cubic_spline->rho0) - eos_copy->h);
+  */
+  
+  if (eos_copy->h < Pgetd("NS_eos_enthalpy_floor")) { return 0; }
+  return ((e + p) / eos_copy->cubic_spline->rho0) - eos_copy->h;
+}
 
+// Finds rest-mass density from enthalpy, using root finder method
+// on enthalpy definition: (e(rho0) + p(rho0)) / rho0 - h = 0.
+// Also sets value of rho0 inside EoS object for use in other
+// thermodynamic functions.
+double EoS_rho0_RF(EoS_T *const eos)
+{
+  Root_Finder_T* root_finder = (Root_Finder_T*)eos->cubic_spline->root_finder;
+  double rho0 = *execute_root_finder(root_finder);
+  eos->cubic_spline->rho0 = rho0;
+  /*
+  Root_Finder_T* rf_copy = (Root_Finder_T*)eos->cubic_spline->root_finder;
+  printf("\nEoS_rho0_RF:\n");
+  printf("\t h == %E\n", eos->h);
+  printf("\t rho0 == %E\n", eos->cubic_spline->rho0);
+  printf("\t rho0 floor == %E\n", rf_copy->a_bisect);
+  printf("\t rho0 ceiling == %E\n", rf_copy->b_bisect);
+  */
+  return rho0;
+}
 
+// Interpolates pressure from rest-mass density, using root-finder method.
+double EoS_p_rho0_tab(EoS_T* const eos)
+{
+  // Determine rho0 using root finder, given enthalpy.
+  EoS_rho0_RF(eos);
+  // Having rho0, interpolate p(rho0).
+  double p = execute_interpolation(eos->cubic_spline->interp_p_rho0);
+  return p;
+}
 
+// Interpolates total energy density from rest-mass density,
+// using root-finder method.
+double EoS_e_rho0_tab(EoS_T* const eos)
+{
+  // Determine rho0 using root finder, given enthalpy.
+  EoS_rho0_RF(eos);
+  // Having rho0, interpolate e(rho0).
+  double e = execute_interpolation(eos->cubic_spline->interp_e_rho0);
+  return e;
+}
 
+// Interpolates specific internal energy from rest-mass density,
+// using root-finder method.
+// Equation: e0 = (e/rho0) - 1. 
+double EoS_e0_rho0_tab(EoS_T* const eos)
+{
+  // Determine e and rho0.
+  // (rho0 is set in eos->cubic_spline by EoS_e_rho0_tab.)
+  double e = EoS_e_rho0_tab(eos);
+  return (e / eos->cubic_spline->rho0) - 1;
+}
+
+/////////////////////UNFINISHED//////////////////////
+// Interpolates derivative of total energy density wrt enthalpy,
+// using root finder method for rho0.
+// Assumes thermodynamic relation de0 = -PdV
+// (i.e. T ~ 0  and composition term ~ 0).
+// Thus de0/drho0 = p / rho0^2.
+// May be invalid for some EoS.
+double EoS_de_dh_RF(EoS_T* const eos)
+{
+  UNUSED(eos);
+  return 0;
+}
+
+double EoS_drho0_dh_RF(EoS_T* const eos)
+{
+  UNUSED(eos);
+  return 0;
+}
 
 

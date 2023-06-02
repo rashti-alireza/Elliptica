@@ -380,83 +380,6 @@ static Uint interpolation_check_manual_FDM(Interpolation_T *const interp_s)
   return 0;
 }
 
-// Uniform-grid FDM
-
-// First derivative, 6th-order accuracy
-double uniform_FDM_1_6(Interpolation_T *const interp_s)
-{
-  const double *const x = *interp_s->x;
-  const double *const f = *interp_s->f;
-  const double h = *interp_s->h;
-  const Uint N = *interp_s->N;
-  //Flag_T flg = NONE;
-  Uint i = 0;
- 
-  // Find spline interval 
-  for (i = 0; i < N-1; ++i)
-  {
-    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
-    {
-      //flg = FOUND;
-      break;
-    }
-  }
-  
-  // Do nothing if out of bounds
-  if (i < 3 || i > N - 4)
-  { return 0; }
-  
-  double ret = 0;
-  ret += -(1.0/60.0) * f[i-3];
-  ret += (3.0/20.0) * f[i-2];
-  ret += -(3.0/4.0) * f[i-1];
-  ret += (3.0/4.0) * f[i+1];
-  ret += -(3.0/20.0) * f[i+2];
-  ret += (1.0/60.0) * f[i+3];
-  ret /= fabs(x[i+1] - x[i]);
-  
-  return ret;
-}
-
-// Third derivative, 6th-order accuracy
-double uniform_FDM_3_6(Interpolation_T *const interp_s)
-{
-  const double *const x = *interp_s->x;
-  const double *const f = *interp_s->f;
-  const double h = *interp_s->h;
-  const Uint N = *interp_s->N;
-  //Flag_T flg = NONE;
-  Uint i = 0;
- 
-  // Find spline interval 
-  for (i = 0; i < N-1; ++i)
-  {
-    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
-    {
-      //flg = FOUND;
-      break;
-    }
-  }
-  
-  // Do nothing if out of bounds
-  if (i < 4 || i > N - 5)
-  { return 0; }
-  
-  double ret = 0;
-  ret += -(7.0/240.0)     * f[i-4];
-  ret += (3.0/10.0)       * f[i-3];
-  ret += -(169.0/120.0)   * f[i-2];
-  ret += (61.0/30.0)      * f[i-1];
-  ret += -(61.0/30.0)     * f[i+1];
-  ret += (169.0/120.0)    * f[i+2];
-  ret += -(3.0/10.0)      * f[i+3];
-  ret += (7.0/240.0)      * f[i+4];
-  ret /= Pow3(fabs(x[i+1] - x[i]));
-  
-  return ret;
-}
- 
-  
 static double interpolation_manual_FDM(Interpolation_T *const interp_s)
 {
   // Approximates M-th derivative of f(x)|x=h by finite difference method,
@@ -835,6 +758,7 @@ static void find_coeffs_Hermite_spline(Interpolation_T *const interp_s)
     { a[i_j_to_ij(2*n+1,j,b)] = Q[i_j_to_ij(2*n+1,b,b)]; }
   }
   
+  interp_s->Hermite_spline_1d->Alloc_Mem = 1;
   interp_s->Hermite_spline_1d->a = a;
   free(Q);
   free(z);
@@ -1659,7 +1583,8 @@ void free_interpolation(Interpolation_T *interp_s)
       free(interp_s->N_cubic_spline_1d->f);
     }
   }
-  else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
+  else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline")
+           || strstr_i(interp_s->method, "Hermite"))
   {
     if (interp_s->Hermite_spline_1d->Alloc_Mem)
     {

@@ -722,20 +722,26 @@ int interpolation_tests(Grid_T *const grid)
       status = interpolation_tests_Hermite_1d();
       check_test_result(status);
   }
-  // In order to test Fornberg FDM, 
-  // "interpolation_derivative_method = finite_difference"
-  // must be included in parameter file.
+  
   if (DO_NOT)
   {
-      printf("Finite Difference test:         Fornberg Algorithm =>\n");
+      srand((Uint)time(NULL));
+      printf("Finite Difference test:         Fornberg and Uniform methods =>\n");
       status = interpolation_tests_FDM();
+      check_test_result(status);
+  }
+  if (DO)
+  {
+      srand((Uint)time(NULL));
+      printf("Finite difference test:         FDM Convergence =>\n");
+      status = interpolation_tests_FDM_convergence();
       check_test_result(status);
   }
   
   // Convergence tests for 1D interpolation
   // Edit parameters for number of trials and number of
   // spline knots in each trial here.
-  if (DO)
+  if (DO_NOT)
   {
       printf("Interpolation test:             Convergence Test=>\n");
       printf("Interpolation method: %s\n", Pgets("Interpolation_Method"));
@@ -774,6 +780,25 @@ static void print_arrays(const char *const fileName,
   
   fclose(outFile);
 }
+
+// Test function used in interpolation and FDM tests.
+static double test_fxn(double x)
+{ return log(x) * cos(x) + x; }
+
+// First derivative
+static double test_fxn_p(double x)
+{ return - log(x)*sin(x) + cos(x)/x + 1; }
+
+// Third derivative
+static double test_fxn_ppp(double x)
+{
+  return (2*cos(x)/Pow3(x) + 3*sin(x)/Pow2(x)
+         - 3*cos(x)/x + log(x)*sin(x));
+}
+
+// Returns random integer between a and b.
+static int randRange(int a, int b)
+{ return a + rand() % (b - a + 1); }
 
 /* test Natural Cubic Spline method for 1-d arrays.
 // ->return value: result of test. */
@@ -1045,372 +1070,315 @@ static int interpolation_tests_Hermite_1d(void)
   return TEST_SUCCESSFUL;
 }
 
-/* OLD VERSION for Hermite cubic spline
-// Tests Hermite cubic spline for 1d arrays
-// Returns: result of test.
-static int interpolation_tests_Hermite_1d(void)
+
+// Uniform-grid finite difference methods, only used for testing.
+static double FDM_Uniform_1_6(double* x, double* f, double h, Uint N)
 {
-  Interpolation_T *interp_s = init_interpolation();
-  const Uint N = (Uint)Pgeti("n_interp");
-  double *f = alloc_double(N);
-  double *f_derivative = alloc_double(N);
-  double *x = alloc_double(N);
-  double *error = alloc_double(N);
-  double *error_derivative = alloc_double(N);
-  double *interp_vals = alloc_double(N);
-  double *interp_vals_derivative = alloc_double(N);
-  double *x_vals = alloc_double(N);
-  const double a = 1, b = 4; // an arbitrary interval
-  double *hs = make_random_number(N,a,b);
-  double s = (b-a)/(N-1);
-  double t,interp,interp_derivative;
-  double time;
-  double error_total = 0;
-  double error_total_derivative = 0;
-  clock_t time1 = clock();
-  Flag_T flg = NONE;
-  Uint i;
-  for (i = 0; i < N; ++i)
+  Uint i = 0;
+ 
+  // Find interval 
+  for (i = 0; i < N-1; ++i)
   {
-    t = x[i] = a+i*s;
-    f[i] = log(t) * cos(t) + t;// arbitrary function
-    f_derivative[i] = - log(t)*sin(t) + cos(t)/t + 1; // Derivative
-  }
-    
-  interp_s->method         = "Hermite_Cubic_Spline";
-  assign_interpolation_ptrs(interp_s);
-  *interp_s->f   = f;
-  *interp_s->x   = x;
-  *interp_s->N   = N;
-  plan_interpolation(interp_s);
-  for (i = 2; i < N-2; ++i)
-  {
-    double diff;
-    double diff_derivative;
-    t = hs[i];
-    x_vals[i] = hs[i];
-    *interp_s->h = t;
-    interp = execute_interpolation(interp_s);
-    interp_derivative = execute_derivative_interpolation(interp_s);
-    diff = interp - (log(t)*cos(t)+t);
-    error[i] = ABSd(diff);
-    diff_derivative = interp_derivative - (cos(t)/t - log(t)*sin(t) + 1);
-    error_derivative[i] = ABSd(diff_derivative);
-    
-    interp_vals[i] = interp;
-    interp_vals_derivative[i] = interp_derivative;
-    
-    if (GRT(fabs(diff),s))
+    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
     {
-      printf("Maximum error exceeded at t = %E.\n",t);
-      printf("Function value: %E\n", log(t)*cos(t)+t);
-      printf("Interpolated value: %E\n", interp);
-      printf("Difference: %E\n", diff);
-      fprintf(stderr,"diff = %g\n",diff);
-      flg = FOUND;
+      //flg = FOUND;
       break;
     }
   }
   
-  time = (double)(clock() - time1)/CLOCKS_PER_SEC;
-  printf("\nHCS test time: %E\n", time);
-  
-  // Excises end values from arrays
-  // Note: doesn't use realloc() because that causes memory
-  // leaks on end of arrays.
-  double* f_2 = alloc_double(N-4);
-  double* f_derivative_2 = alloc_double(N-4);
-  double* x_2 = alloc_double(N-4);
-  double* x_vals_2 = alloc_double(N-4);
-  double* interp_vals_2 = alloc_double(N-4);
-  double* interp_vals_derivative_2 = alloc_double(N-4);
-  double* error_2 = alloc_double(N-4);
-  double* error_derivative_2 = alloc_double(N-4);
-  
-  for (Uint j=0; j<N-4; j++)
+  // Error if out of bounds
+  if (i < 3 || i > N - 4)
   {
-    f_2[j] = f[j+2];
-    f_derivative_2[j] = f_derivative[j+2];
-    x_2[j] = x[j+2];
-    x_vals_2[j] = x_vals[j+2];
-    interp_vals_2[j] = interp_vals[j+2];
-    interp_vals_derivative_2[j] = interp_vals_derivative[j+2];
-    error_2[j] = error[j];
-    error_derivative_2[j] = error_derivative[j+2];
+    printf("Uniform_FDM_1_6: Interval: %u\n", i);
+    printf("Uniform_FDM_1_6: Total points: %u\n", N); 
+    printf("First derivative at 6-th order accuracy requires " 
+           "3 grid points on either side of target point.\n");
+    Error0("Uniform FDM: out-of-bounds.");
   }
   
-  for (Uint j=0; j < N-4; j++)
-  { 
-    error_total += error_2[j];
-    error_total_derivative += error_derivative_2[j];
-  }
-  printf("Cumulative error: %E\n", error_total);
-  printf("Cumulative error for first derivative: %E\n",
-        error_total_derivative);
+  double ret = 0;
+  ret += -(1.0/60.0) * f[i-3];
+  ret += (3.0/20.0) * f[i-2];
+  ret += -(3.0/4.0) * f[i-1];
+  ret += (3.0/4.0) * f[i+1];
+  ret += -(3.0/20.0) * f[i+2];
+  ret += (1.0/60.0) * f[i+3];
+  ret /= fabs(x[i+1] - x[i]);
   
-  if (strstr_i(PgetsEZ("print_interpolation_tests"), "yes"))
-  { 
-    print_arrays("HCS_Function", x_2, f_2, N-4);
-    print_arrays("HCS_Interp", x_vals_2, interp_vals_2, N-4);
-    print_arrays("HCS_Error", x_vals_2, error_2, N-4);
-    print_arrays("HCS_Derivative", x_2, f_derivative_2, N-4);
-    print_arrays("HCS_Interp_Derivative", x_vals_2, interp_vals_derivative_2, N-4);
-    print_arrays("HCS_Error_Derivative", x_vals_2, error_derivative_2, N-4);
-  }
-  
-  free_interpolation(interp_s);
-  free(f_2);
-  free(f_derivative);
-  free(f_derivative_2);
-  free(x_2);
-  free(hs);
-  free(x_vals);
-  free(x_vals_2);
-  free(interp_vals);
-  free(interp_vals_2);
-  free(interp_vals_derivative);
-  free(interp_vals_derivative_2);
-  free(error);
-  free(error_2);
-  free(error_derivative);
-  free(error_derivative_2);
-  
-  if (flg == FOUND)
-    return TEST_UNSUCCESSFUL;
-  return TEST_SUCCESSFUL;
+  return ret;
 }
-*/
 
-// Tests 1D finite difference method
-// Note: FDM method for derivatives
-// must be set manually in parameter file for this test
+static double FDM_Uniform_3_6(double* x, double* f, double h, Uint N)
+{
+  Uint i = 0;
+ 
+  // Find spline interval 
+  for (i = 0; i < N-1; ++i)
+  {
+    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+    {
+      //flg = FOUND;
+      break;
+    }
+  }
+  
+  // Error if out of bounds
+  if (i < 4 || i > N - 5)
+  {
+    printf("Uniform_FDM_3_6: Interval: %u\n", i);
+    printf("Uniform_FDM_3_6: Total points: %u\n", N); 
+    printf("Third derivative at 6-th order accuracy requires " 
+           "4 grid points on either side of target point.\n");
+    Error0("Uniform FDM: out-of-bounds.");
+  }
+  
+  double ret = 0;
+  ret += -(7.0/240.0)     * f[i-4];
+  ret += (3.0/10.0)       * f[i-3];
+  ret += -(169.0/120.0)   * f[i-2];
+  ret += (61.0/30.0)      * f[i-1];
+  ret += -(61.0/30.0)     * f[i+1];
+  ret += (169.0/120.0)    * f[i+2];
+  ret += -(3.0/10.0)      * f[i+3];
+  ret += (7.0/240.0)      * f[i+4];
+  ret /= Pow3(fabs(x[i+1] - x[i]));
+  
+  return ret;
+}
+
+// Tests uniform-grid and Fornberg finite difference methods
+// against an analytical function by randomly sampling points 
+// from a uniform grid.
+// Plots approximated first and third derivatives of function,
+// and associated error vs analytical value.
 static int interpolation_tests_FDM(void)
 {
-  Interpolation_T *interp_s = init_interpolation();
-  const Uint N = (Uint)Pgeti("n_interp");
-  double *f                           = alloc_double(N);
-  double *f_derivative                = alloc_double(N);
-  double *f_3_derivative              = alloc_double(N);
-  double *x                           = alloc_double(N);
-  double *error_derivative            = alloc_double(N);
-  double *error_3_derivative          = alloc_double(N);
-  double *interp_vals_derivative      = alloc_double(N);
-  double *interp_vals_3_derivative    = alloc_double(N);
-  double *uniform_vals_derivative     = alloc_double(N);
-  double *uniform_vals_3_derivative   = alloc_double(N);
-  double *uniform_error_derivative    = alloc_double(N);
-  double *uniform_error_3_derivative  = alloc_double(N);
-  double *x_vals                      = alloc_double(N);
-  const double a = 1, b = 4;// an arbitrary interval
-  double s = (b-a)/(N-1);
-  double *hs = make_random_number(N,a + 6*s,b - 6*s);
-  double t,interp_derivative,interp_3_derivative;
-  double time;
-  double error_total_derivative = 0;
-  double error_total_3_derivative = 0;
-  double uniform_error_total_derivative = 0;
-  double uniform_error_total_3_derivative = 0;
-  clock_t time1 = clock();
-  Flag_T flg = NONE;
-  Uint i;
+  Uint N = 200;
+  Uint samples = 150;
+  double* x                 = alloc_double(N);
+  double* f                 = alloc_double(N);
+  double* f_p               = alloc_double(N);
+  double* f_ppp             = alloc_double(N);
+  double* x_samples         = alloc_double(samples);
+  double* f_p_uniform       = alloc_double(samples);
+  double* f_p_Fornberg      = alloc_double(samples);
+  double* f_ppp_uniform     = alloc_double(samples);
+  double* f_ppp_Fornberg    = alloc_double(samples);
+  double* err_p_uniform     = alloc_double(samples);
+  double* err_p_Fornberg    = alloc_double(samples);
+  double* err_ppp_uniform   = alloc_double(samples);
+  double* err_ppp_Fornberg  = alloc_double(samples);
+  double a = 1, b = 4;
+  Uint j;
   
-  interp_s->FDM_derivative = 3;
-  for (i = 0; i < N; ++i)
+  // Generate uniform grid from analytical function.
+  double dx = (b-a)/N;
+  for (j = 0; j < N; j++)
   {
-    t = x[i] = a+i*s;
-    f[i] = log(t) * cos(t) + t;// arbitrary function
-    f_derivative[i] = - log(t)*sin(t) + cos(t)/t + 1; // Derivative
-    f_3_derivative[i] = (2*cos(t)/Pow3(t) + 3*sin(t)/Pow2(t)
-                         - 3*cos(t)/t + log(t)*sin(t)); // 3rd derivative
-  }
-    
-  interp_s->method = "Natural_Cubic_Spline_1D";
-  assign_interpolation_ptrs(interp_s);
-  *interp_s->f   = f;
-  *interp_s->x   = x;
-  *interp_s->N   = N;
-  plan_interpolation(interp_s);
-  // Manually set FDM Order
-  interp_s->finite_diff_order = 6;
-  
-  double diff_derivative;
-  double diff_3_derivative;
-  for (i = 2; i < N-2; ++i)
-  { 
-    t = hs[i];
-    x_vals[i] = hs[i];
-    *interp_s->h = t;
-    interp_s->FDM_derivative = 1; // Take the 1st derivative
-    interp_derivative = execute_derivative_interpolation(interp_s);
-    interp_s->FDM_derivative = 3; // Take the 3rd derivative
-    interp_3_derivative = execute_derivative_interpolation(interp_s);
-    diff_derivative = interp_derivative - (cos(t)/t - log(t)*sin(t) + 1);
-    diff_3_derivative = interp_3_derivative - (2*cos(t)/Pow3(t) + 3*sin(t)/Pow2(t)
-                         - 3*cos(t)/t + log(t)*sin(t));
-    error_derivative[i] = ABSd(diff_derivative);
-    error_3_derivative[i] = ABSd(diff_3_derivative);
-    interp_vals_derivative[i] = interp_derivative;
-    interp_vals_3_derivative[i] = interp_3_derivative;
-    
-    uniform_vals_derivative[i] = uniform_FDM_1_6(interp_s);
-    uniform_vals_3_derivative[i] = uniform_FDM_3_6(interp_s);
-    uniform_error_derivative[i] = ABSd(uniform_vals_derivative[i] - (cos(t)/t - log(t)*sin(t) + 1));
-    uniform_error_3_derivative[i] = ABSd(uniform_vals_3_derivative[i] - (2*cos(t)/Pow3(t) + 3*sin(t)/Pow2(t)
-                         - 3*cos(t)/t + log(t)*sin(t)));
-                         
-    /////////////////////////REACTIVATE once HCS derivative finished./////////////////////
-    if (GRT(fabs(diff_derivative),s))
-    {
-      printf("Maximum error exceeded for first derivative at t = %E.\n",t);
-      printf("Derivative value: %E\n", - log(t)*sin(t) + cos(t)/t + 1);
-      printf("Interpolated derivative value: %E\n", interp_derivative);
-      printf("Difference: %E\n", diff_derivative);
-      fprintf(stderr,"diff = %g\n",diff_derivative);
-      flg = FOUND;
-      break;
-    }
-    else if (GRT(fabs(diff_3_derivative),s))
-    {
-      printf("Maximum error exceeded for third derivative at t = %E.\n",t);
-      printf("Third derivative value: %E\n", (2*cos(t)/Pow3(t) + 3*sin(t)/Pow2(t) 
-                                              - 3*cos(t)/t + log(t)*sin(t)));
-      printf("Interpolated third derivative value: %E\n", interp_3_derivative);
-      printf("Difference: %E\n", diff_3_derivative);
-      fprintf(stderr,"diff = %g\n",diff_3_derivative);
-      flg = FOUND;
-      break;
-    }
+    x[j]      = a + j*dx;
+    f[j]      = test_fxn(x[j]);
+    f_p[j]     = test_fxn_p(x[j]);
+    f_ppp[j]   = test_fxn_ppp(x[j]);
   }
   
-  // Excises first 2 and last 2 data points from arrays, since these are 'junk data'
-  // that cannot be calculated with the specified finite difference scheme.
-  // Also re-sizes data arrays to the same range as calculated arrays for easy comparison.
-  // E.g. new_array = old_array[2:-2].
-  memmove(x, x+2, N-4);
-  memmove(x_vals, x_vals+2, N-4);
-  memmove(f, f+2, N-4);
-  memmove(f_derivative, f_derivative+2, N-4);
-  memmove(interp_vals_derivative, interp_vals_derivative+2, N-4);
-  memmove(interp_vals_3_derivative, interp_vals_3_derivative+2, N-4);
-  memmove(error_derivative, error_derivative+2, N-4);
-  memmove(error_3_derivative, error_3_derivative+2, N-4);
-  memmove(uniform_vals_derivative, uniform_vals_derivative+2, N-4);
-  memmove(uniform_vals_3_derivative, uniform_vals_3_derivative+2, N-4);
-  memmove(uniform_error_derivative, uniform_error_derivative+2, N-4);
-  memmove(uniform_error_3_derivative, uniform_error_3_derivative+2, N-4);
-  
-  // Calculates and prints cumulative error, scaled by number of test points.
-  for (Uint j=0; j < N-4; j++)
-  { 
-    error_total_derivative           += error_derivative[j];
-    error_total_3_derivative         += error_3_derivative[j];
-    uniform_error_total_derivative   += uniform_error_derivative[j];
-    uniform_error_total_3_derivative += uniform_error_3_derivative[j];
-  }
-  error_total_derivative           = (error_total_derivative / (N-4));
-  error_total_3_derivative         = (error_total_3_derivative / (N-4));
-  uniform_error_total_derivative   = (uniform_error_total_derivative / (N-4));
-  uniform_error_total_3_derivative = (uniform_error_total_3_derivative / (N-4));
-  printf("Average error for first derivative (Fornberg): %E\n",
-        error_total_derivative);
-  printf("Average error for third derivative (Fornberg): %E\n",
-        error_total_3_derivative);
-  printf("Average error for first derivative (uniform): %E\n",
-        uniform_error_total_derivative);
-  printf("Average error for third derivative (uniform): %E\n",
-        uniform_error_total_3_derivative);
-        
-  // Prints results to files if specified in parameter file.
-  if (strstr_i(PgetsEZ("print_interpolation_tests"), "yes"))
-  { 
-    print_arrays("FDM_Function", x, f, N-4);
-    print_arrays("FDM_Derivative", x, f_derivative, N-4);
-    print_arrays("FDM_3_Derivative", x, f_3_derivative, N-4);
-    print_arrays("FDM_Interp_Derivative", x_vals, interp_vals_derivative, N-4);
-    print_arrays("FDM_Interp_3_Derivative", x_vals, interp_vals_3_derivative, N-4);
-    print_arrays("FDM_Uniform_Derivative", x_vals, uniform_vals_derivative, N-4);
-    print_arrays("FDM_Uniform_3_Derivative", x_vals, uniform_vals_3_derivative, N-4);
+  // Randomly sample grid points
+  // Note: The Fornberg method works anywhere on the x domain,
+  // but is restricted here to the sample points for comparison
+  // against the uniform-grid method. 
+  for (j = 0; j < samples; j++)
+  {
+    Uint r = (Uint)randRange(5, (int)N-5);
+    x_samples[j]        = x[r];
+    f_p_uniform[j]      = FDM_Uniform_1_6(x, f, x_samples[j], N);
+    f_p_Fornberg[j]     = FDM_Fornberg(x, f, x_samples[j], 1, 6, N);
+    f_ppp_uniform[j]    = FDM_Uniform_3_6(x, f, x_samples[j], N);
+    f_ppp_Fornberg[j]   = FDM_Fornberg(x, f, x_samples[j], 3, 6, N);
+    err_p_uniform[j]    = ABSd(f_p_uniform[j] - test_fxn_p(x_samples[j]));
+    err_p_Fornberg[j]   = ABSd(f_p_Fornberg[j] - test_fxn_p(x_samples[j]));
+    err_ppp_uniform[j]  = ABSd(f_ppp_uniform[j] - test_fxn_ppp(x_samples[j]));
+    err_ppp_Fornberg[j] = ABSd(f_ppp_Fornberg[j] - test_fxn_ppp(x_samples[j]));
   }
   
-  time = (double)(clock() - time1)/CLOCKS_PER_SEC;
-  printf("\nFDM test time: %E\n", time);
+  // Calculates cumulative error scaled by number of sample pts.
+  double total_err_p_uniform = 0;
+  double total_err_p_Fornberg = 0;
+  double total_err_ppp_uniform = 0;
+  double total_err_ppp_Fornberg = 0;
+  for (j = 0; j < samples; j++)
+  {
+    total_err_p_uniform += err_p_uniform[j];
+    total_err_p_Fornberg += err_p_Fornberg[j];
+    total_err_ppp_uniform += err_ppp_uniform[j];
+    total_err_ppp_Fornberg += err_ppp_Fornberg[j];
+  }
+  total_err_p_uniform /= samples;
+  total_err_p_Fornberg /= samples;
+  total_err_ppp_uniform /= samples;
+  total_err_ppp_Fornberg /= samples;
   
-  free_interpolation(interp_s);
-  free(f);
+  print_arrays("Analytical_f", x, f, N);
+  print_arrays("Analytical_f_p", x, f_p, N);
+  print_arrays("Analytical_f_ppp", x, f_ppp, N);
+  print_arrays("Uniform_f_p", x_samples, f_p_uniform, samples);
+  print_arrays("Fornberg_f_p", x_samples, f_p_Fornberg, samples);
+  print_arrays("Uniform_f_ppp", x_samples, f_ppp_uniform, samples);
+  print_arrays("Fornberg_f_ppp", x_samples, f_ppp_Fornberg, samples);
+  print_arrays("Error_uniform_f_p", x_samples, err_p_uniform, samples);
+  print_arrays("Error_Fornberg_f_p", x_samples, err_p_Fornberg, samples);
+  print_arrays("Error_uniform_f_ppp", x_samples, err_ppp_uniform, samples);
+  print_arrays("Error_Fornberg_f_ppp", x_samples, err_ppp_Fornberg, samples);
+  
+  printf("First derivative uniform method error: %E\n", total_err_p_uniform);
+  printf("First derivative Fornberg method error: %E\n", total_err_p_Fornberg);
+  printf("Third derivative uniform method error: %E\n", total_err_ppp_uniform);
+  printf("Third derivative Fornberg method error: %E\n", total_err_ppp_Fornberg);
+  
   free(x);
-  free(f_derivative);
-  free(f_3_derivative);
-  free(hs);
-  free(x_vals);
-  free(interp_vals_derivative);
-  free(interp_vals_3_derivative);
-  free(error_derivative);
-  free(error_3_derivative);
-  free(uniform_vals_derivative);
-  free(uniform_vals_3_derivative);
-  free(uniform_error_derivative);
-  free(uniform_error_3_derivative);
+  free(f);
+  free(f_p);
+  free(f_ppp);
+  free(x_samples);
+  free(f_p_uniform);
+  free(f_p_Fornberg);
+  free(f_ppp_uniform);
+  free(f_ppp_Fornberg);
+  free(err_p_uniform);
+  free(err_p_Fornberg);
+  free(err_ppp_uniform);
+  free(err_ppp_Fornberg);
   
-  if (flg == FOUND)
-    return TEST_UNSUCCESSFUL;
-    
   return TEST_SUCCESSFUL;
 }
 
-// Test to compare Fornberg finite difference method with standard
-// finite difference method on a uniform grid.
-/*
-static int interpolation_tests_uniform_FDM(void)
+// Tests error convergence for Fornberg and uniform-grid
+// finite difference methods.
+static int interpolation_tests_FDM_convergence(void)
 {
-  Interpolation_T *interp_s = init_interpolation();
-  const Uint N = (Uint)Pgeti("n_interp");
-  double *f = alloc_double(N);
-  double *f_derivative = alloc_double(N);
-  double *f_3_derivative = alloc_double(N);
-  double *x = alloc_double(N);
-  double *error_derivative = alloc_double(N);
-  double *error_3_derivative = alloc_double(N);
-  double *interp_vals_derivative = alloc_double(N);
-  double *interp_vals_3_derivative = alloc_double(N);
-  double *x_vals = alloc_double(N);
-  double *hs = make_random_number(N,a,b);
-  double s = (b-a)/(N-1);
-  double t,interp_derivative,interp_3_derivative;
-  double time;
-  double error_total_derivative = 0;
-  double error_total_3_derivative = 0;
-  clock_t time1 = clock();
-  Flag_T flg = NONE;
-  Uint i;
+  Uint trials = 100;
+  Uint samples;
+  Uint N0 = 20, Nf = 1000;
+  Uint dN = (Uint)ceil(((double)Nf-(double)N0)/(double)trials);
+  double a = 1, b = 4;
+  double* N_array = alloc_double(trials);
+  double* errors_p_uniform = alloc_double(trials);
+  double* errors_p_Fornberg = alloc_double(trials);
+  double* errors_ppp_uniform = alloc_double(trials);
+  double* errors_ppp_Fornberg = alloc_double(trials);
   
-  // Test Function: f(x) = x^2 * Sin(x)
-  double x0 = 0;
-  double xf = 4*3.14159;
-  double dx = (xf - x0) / (double)N;
-  for (i = 0; i < N; i++)
+  // For each trial, generate a uniform grid of
+  // analytical function values.
+  // Then calculate derivative values using finite difference
+  // methods on a random sample of grid points, and calculate
+  // error from analytical value.
+  // Find scaled cumulative error from each trial, and plot
+  // error vs number of grid points. 
+  Uint N;
+  double dx;
+  double* x;
+  double* f;
+  double* f_p;
+  double* f_ppp;
+  double* x_samples;
+  double* f_p_uniform;
+  double* f_p_Fornberg;
+  double* f_ppp_uniform;
+  double* f_ppp_Fornberg;
+  double err_p_uniform;
+  double err_p_Fornberg;
+  double err_ppp_uniform;
+  double err_ppp_Fornberg;
+  
+  Uint j, k, trial = 0;
+  for (N = N0; N <= Nf; N += dN)
   {
-    x[i] = x0 + i*dx;
-    f[i] = Pow2(x[i]) * sin(x[i]);
-    f_derivative[i] = 2*x[i] * sin(x[i]) + Pow2(x[i]) * cos(x[i]);
-    //f2 = 2 * sin + 2 * x * cos + 2*x*cos - x^2 * sin = (2-x^2) * sin + 4*x*cos 
-    f_3_derivative[i] = -(4+2*x[i])*sin(x[i]) + (6-Pow2(x[i]))*cos(x[i]);
+    samples = N;
+    x                 = alloc_double(N);
+    f                 = alloc_double(N);
+    f_p               = alloc_double(N);
+    f_ppp             = alloc_double(N);
+    x_samples         = alloc_double(samples);
+    f_p_uniform       = alloc_double(samples);
+    f_p_Fornberg      = alloc_double(samples);
+    f_ppp_uniform     = alloc_double(samples);
+    f_ppp_Fornberg    = alloc_double(samples);
+    err_p_uniform     = 0;
+    err_p_Fornberg    = 0;
+    err_ppp_uniform   = 0;
+    err_ppp_Fornberg  = 0;
+    
+    // Generate uniform grid
+    dx = (b - a) / N;
+    for (j = 0; j < N; j++)
+    {
+      x[j]      = a + j*dx;
+      f[j]      = test_fxn(x[j]);
+      f_p[j]    = test_fxn_p(x[j]);
+      f_ppp[j]  = test_fxn_ppp(x[j]);
+    }
+    
+    // Sample grid
+    for (j = 5; j < samples-5; j++)
+    {
+      //k = randRange(5, N-5);
+      k = j;
+      x_samples[j]        = x[k];
+      f_p_uniform[j]      = FDM_Uniform_1_6(x, f, x[k], N);
+      f_p_Fornberg[j]     = FDM_Fornberg(x, f, x[k], 1, 6, N);
+      f_ppp_uniform[j]    = FDM_Uniform_3_6(x, f, x[k], N);
+      f_ppp_Fornberg[j]   = FDM_Fornberg(x, f, x[k], 3, 6, N);
+      err_p_uniform       += ABSd(f_p_uniform[j] - test_fxn_p(x[k]));
+      err_p_Fornberg      += ABSd(f_p_Fornberg[j] - test_fxn_p(x[k]));
+      err_ppp_uniform     += ABSd(f_ppp_uniform[j] - test_fxn_ppp(x[k]));
+      err_ppp_Fornberg    += ABSd(f_ppp_Fornberg[j] - test_fxn_ppp(x[k]));
+    }
+    err_p_uniform     /= samples;
+    err_p_Fornberg    /= samples;
+    err_ppp_uniform   /= samples;
+    err_ppp_Fornberg  /= samples;
+    
+    //printf("Trial: %i\n", trial);//////////////////////
+    //printf("N == %i\n", N);//////////////////////
+    N_array[trial] = (double)N;
+    errors_p_uniform[trial] = err_p_uniform;
+    errors_p_Fornberg[trial] = err_p_Fornberg;
+    errors_ppp_uniform[trial] = err_ppp_uniform;
+    errors_ppp_Fornberg[trial] = err_ppp_Fornberg;
+    
+    free(x);
+    free(f);
+    free(f_p);
+    free(f_ppp);
+    free(x_samples);
+    free(f_p_uniform);
+    free(f_p_Fornberg);
+    free(f_ppp_uniform);
+    free(f_ppp_Fornberg);
+    
+    trial++;
   }
   
-  interp_s->method = "Hermite_Cubic_Spline";
-  assign_interpolation_ptrs(interp_s);
-  *interp_s->f   = f;
-  *interp_s->x   = x;
-  *interp_s->N   = N;
-  plan_interpolation(interp_s);
-
-*/
+  // Remove the junk end point
+  N_array[trials-1] = N_array[trials-2];
+  errors_p_uniform[trials-1] = errors_p_uniform[trials-2];
+  errors_p_Fornberg[trials-1] = errors_p_Fornberg[trials-2];
+  errors_ppp_uniform[trials-1] = errors_ppp_uniform[trials-2];
+  errors_ppp_Fornberg[trials-1] = errors_ppp_Fornberg[trials-2];
   
-////////////////////////////////////////////////////////////////////////////////////////////
+  // Write arrays to data files
+  print_arrays("Error_Uniform_p", N_array, errors_p_uniform, trials);
+  print_arrays("Error_Fornberg_p", N_array, errors_p_Fornberg, trials);
+  print_arrays("Error_Uniform_ppp", N_array, errors_ppp_uniform, trials);
+  print_arrays("Error_Fornberg_ppp", N_array, errors_ppp_Fornberg, trials);
   
+  free(N_array);
+  free(errors_p_uniform);
+  free(errors_p_Fornberg);
+  free(errors_ppp_uniform);
+  free(errors_ppp_Fornberg);
   
-  
-  
-  
+  return TEST_SUCCESSFUL;
+}
+    
 /* test Neville iterative method for 1-d arrays.
 // ->return value: result of test. */
 static int interpolation_tests_Neville_1d(void)
@@ -1464,153 +1432,6 @@ static int interpolation_tests_Neville_1d(void)
     
   return TEST_SUCCESSFUL;
 }
-
-/*
-// Tests error vs number of interpolated 
-// points for natural cubic spline
-static int interpolation_tests_NCS_Convergence(const Uint tests, const Uint N0, const Uint Nf)
-{
-  if (Nf <= N0 || N0 == 0 || Nf == 0 || tests == 0)
-  { Error0("Error with interpolation convergence test parameters.\n"); }
-  
-  Flag_T flg = NONE;
-  double* error_vals            = alloc_double(tests);
-  double* error_derivative_vals = alloc_double(tests);
-  double* times                 = alloc_double(tests);
-  double* N_array               = alloc_double(tests);
-  double time_total = 0;
-  Uint N = N0;
-  Uint delta_N = (Uint)floor((Nf-N0) / tests);
-  for (Uint test = 0; test < tests; test++)
-  {
-    Interpolation_T *interp_s = init_interpolation();
-    double *f                      = alloc_double(N);
-    double *f_derivative           = alloc_double(N);
-    double *x                      = alloc_double(N);
-    double *error                  = alloc_double(N);
-    double *error_derivative       = alloc_double(N);
-    double *interp_vals            = alloc_double(N);
-    double *interp_vals_derivative = alloc_double(N);
-    double *x_vals                 = alloc_double(N);
-    const double a = -M_PI, b = 3/4*M_PI;// an arbitrary interval
-    double *hs = make_random_number(N,a,b);
-    double s = (b-a)/(N-1);
-    double t,interp,interp_derivative;
-    double error_RMS = 0;
-    double error_RMS_derivative = 0;
-    clock_t time1 = clock();
-    Uint i;
-    
-    for (i = 0; i < N; ++i)
-    {
-      t = x[i] = a+i*s;
-      f[i] = cos(t)+t*t*t;// arbitrary function
-      f_derivative[i] = - sin(t) + 3*t*t; // Derivative
-    }
-    
-    interp_s->method = "Natural_Cubic_Spline_1D";
-    interp_s->N_cubic_spline_1d->f   = f;
-    interp_s->N_cubic_spline_1d->x   = x;
-    interp_s->N_cubic_spline_1d->N   = N;
-    assign_interpolation_ptrs(interp_s);
-    *interp_s->f   = f;
-    *interp_s->x   = x;
-    *interp_s->N   = N;
-    plan_interpolation(interp_s);
-    
-    for (i = 0; i < N; ++i)
-    {
-      double diff;
-      double diff_derivative;
-      t = hs[i];
-      x_vals[i] = hs[i];
-      interp_s->N_cubic_spline_1d->h = t;
-      interp = execute_interpolation(interp_s);
-      interp_derivative = execute_derivative_interpolation(interp_s);
-      diff = interp-(cos(t)+t*t*t);
-      error[i] = Pow2(diff);
-      diff_derivative = interp_derivative - (-sin(t) + 3*t*t);
-      error_derivative[i] = Pow2(diff_derivative);
-      
-      interp_vals[i] = interp;
-      interp_vals_derivative[i] = interp_derivative;
-      
-      if (GRT(fabs(diff),s))
-      {
-        fprintf(stderr,"diff = %g\n",diff);
-        flg = FOUND;
-        break;
-      }
-    }
-    
-    //printf("\nNCS test time: %E\n", time);
-    for (Uint j; j < N; j++)
-    { 
-      error_RMS += Pow2(error[j]);
-      error_RMS_derivative += Pow2(error_derivative[j]);
-    }
-    error_RMS /= N;
-    error_RMS_derivative /= N;
-    //printf("Total sum-of-squares error: %E\n", error_total);
-    //printf("Total sum-of-squares error for first derivative: %E\n",
-    //      error_total_derivative);
-    
-    */
-    /*
-    if (strstr_i(PgetsEZ("print_interpolation_tests"), "yes"))
-    { 
-      print_arrays("NCS_Function", x, f, N);
-      print_arrays("NCS_Interp", x_vals, interp_vals, N);
-      print_arrays("NCS_Error", x_vals, error, N);
-      print_arrays("NCS_Derivative", x, f_derivative, N);
-      print_arrays("NCS_Interp_Derivative", x_vals, interp_vals_derivative, N);
-      print_arrays("NCS_Error_Derivative", x_vals, error_derivative, N);
-    }
-    */
-    /*
-    
-    error_vals[test] = error_RMS;
-    error_derivative_vals[test] = error_RMS_derivative;
-    times[test] = (double)(clock() - time1)/CLOCKS_PER_SEC;
-    N_array[test] = (double)N;
-    N += delta_N;
-    
-    free_interpolation(interp_s);
-    free(f);
-    free(f_derivative);
-    free(x);
-    free(hs);
-    free(x_vals);
-    free(interp_vals);
-    free(interp_vals_derivative);
-    free(error);
-    free(error_derivative);
-  }
-  
-  for (Uint test = 0; test < tests; test++)
-  { time_total += times[test]; }
-  printf("Total time: %E\n", time_total);
-  
-  print_arrays("Error_Values", N_array, error_vals, tests);
-  print_arrays("Derivative_Error_Values",
-                N_array, error_derivative_vals, tests);
-  print_arrays("Times", N_array, times, tests);
-  
-  for (Uint test = 0; test < tests; test++)
-  { time_total += times[test]; }
-  printf("Total time: %E\n", time_total);
-  
-  free(error_vals);
-  free(error_derivative_vals);
-  free(times);
-  free(N_array);
-  
-  if (flg == FOUND)
-    return TEST_UNSUCCESSFUL;
-    
-  return TEST_SUCCESSFUL;
-}
-*/
 
 // Tests error versus number of interpolated points
 // for 1D interpolation methods.
@@ -1712,8 +1533,8 @@ static int interpolation_tests_Convergence(const Uint tests, const Uint N0, cons
     N += delta_N;
     
     free_interpolation(interp_s);
-    free(f);
-    free(x);
+    //free(f);
+    //free(x);
     free(f_derivative);
     free(hs);
     free(x_vals);

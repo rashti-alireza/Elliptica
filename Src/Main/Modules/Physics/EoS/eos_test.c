@@ -13,11 +13,10 @@ void test_EoS(Physics_T *const phys)
   char *path,file_name[1000];
   FILE *file = 0;
   Uint N = 1000;
-  const double h_max = 1.0001;// eos->h_th != 0 ? eos->h_th[eos->N-1]+1: 2; //NOTE: Original values h = [1,2]. (Andrew)
-  const double h_min = 1.75;                                            //Changed bounds to test tabular EOS with TOV solver project.
+  const double h_max = 1.75;// eos->h_th != 0 ? eos->h_th[eos->N-1]+1: 2; //NOTE: Original values h = [1,2].
+  const double h_min = 1.01;
   double s = (h_max-h_min)/(N-1);
   Uint i;
-  
   path = make_directory(path_par,"EoS_Tests");
   
   /* values */
@@ -33,7 +32,7 @@ void test_EoS(Physics_T *const phys)
       fprintf(file,"%u %0.15f %0.15f %0.15f %0.15f %0.15f\n",i,eos->K[i],eos->rho0_th[i],eos->gamma[i],eos->a[i],eos->h_th[i]-1);
     Fclose(file);
   }
-  
+    
   /* continuity */
   sprintf(file_name,"%s/%s",path,"pressure");
   file = Fopen(file_name,"w+");

@@ -1,5 +1,6 @@
 #include "eos_header.h"
 #include "maths_spectral_methods_lib.h"
+#include "maths_equation_solvings_lib.h"
 
 #define MAX_STR (400)
 
@@ -20,6 +21,7 @@ double EoS_e_h_pwp_ncs(EoS_T *const eos);
 double EoS_rho0_h_pwp_ncs(EoS_T *const eos);
 
 //////////////////////////////////////////////////Tabular EOS
+////////Interpolation method
 double EoS_rho0_h_tab(EoS_T *const eos);
 double EoS_p_h_tab(EoS_T *const eos);
 double EoS_e_h_tab(EoS_T *const eos);
@@ -33,6 +35,14 @@ double EoS_drho0_dh_h_tab(EoS_T *const eos);
 double EoS_de_dh_h_tab(EoS_T *const eos);
 double EoS_de_dh_h_tab(EoS_T *const eos);
 Uint get_sample_size(const char* const eos_file_name);
+//////////Root finder method
+double EoS_enthalpy_def(void* const eos, const double* const params);
+double EoS_rho0_RF(EoS_T *const eos);
+double EoS_p_rho0_tab(EoS_T *const eos);
+double EoS_e_rho0_tab(EoS_T *const eos);
+double EoS_e0_rho0_tab(EoS_T *const eos);
+double EoS_de_dh_RF(EoS_T *const eos);
+double EoS_drho0_dh_RF(EoS_T *const eos);
 /////////////////////////////////////////////////////
 
 EoS_T *init_EoS(Physics_T *const phys);
