@@ -1197,8 +1197,3 @@ double FDM_Fornberg(const double* const x, const double* const f, const double h
 }
 
 
-
-
-
-
-

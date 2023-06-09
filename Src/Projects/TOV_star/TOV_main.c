@@ -94,11 +94,14 @@ int TOV_star(void *vp)
     double* masses = alloc_double(stars);
     tov->description = 0; // Must be 'off' to avoid print statements.
     
+    // Geometric units to km conversion factor: (G * Msolar / c^2) / (10^3)
+    double r_FACTOR = 1.47667;
+    
     for (Uint star = 0; star < stars; star++)
     {
       tov->bar_m = test_mass;
       tov = TOV_solution(tov);
-      radii[star] = tov->r[tov->N-1];
+      radii[star] = tov->r[tov->N-1] * r_FACTOR;
       masses[star] = tov->ADM_m;
       test_mass += delta_m;
     }

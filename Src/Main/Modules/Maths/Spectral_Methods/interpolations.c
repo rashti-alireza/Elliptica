@@ -1586,12 +1586,18 @@ void free_interpolation(Interpolation_T *interp_s)
   else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline")
            || strstr_i(interp_s->method, "Hermite"))
   {
+    free(interp_s->Hermite_spline_1d->fp);
+    free(interp_s->Hermite_spline_1d->a);
     if (interp_s->Hermite_spline_1d->Alloc_Mem)
     {
       free(interp_s->Hermite_spline_1d->x);
       free(interp_s->Hermite_spline_1d->f);
-      free(interp_s->Hermite_spline_1d->fp);
-      free(interp_s->Hermite_spline_1d->a);
+      interp_s->Hermite_spline_1d->f = 0;
+      interp_s->Hermite_spline_1d->x = 0;
+      *interp_s->f = 0;
+      *interp_s->x = 0;
+      //free(interp_s->Hermite_spline_1d->fp);
+      //free(interp_s->Hermite_spline_1d->a);
     }
   }
   else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
@@ -1716,7 +1722,7 @@ void set_interp_warn_flag(Interpolation_T *const interp_s, Uint flag)
 }
 
 // Sets interpolation alloc_mem flag
-static void set_interp_alloc_mem_flag(Interpolation_T *const interp_s, Uint flag)
+void set_interp_alloc_mem_flag(Interpolation_T *const interp_s, Uint flag)
 {
   if (flag != 0 && flag != 1)
   { Error0("set_order_flag: invalid flag value."); }
@@ -1728,7 +1734,7 @@ static void set_interp_alloc_mem_flag(Interpolation_T *const interp_s, Uint flag
   {
     if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
     { interp_s->N_cubic_spline_1d->Alloc_Mem = 1; }
-    else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
+    else if (strstr_i(interp_s->method, "Hermite"))
     { interp_s->Hermite_spline_1d->Alloc_Mem = 1; }
     else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
     { interp_s->C_cubic_spline_1d->Alloc_Mem = 1; }
@@ -1737,7 +1743,7 @@ static void set_interp_alloc_mem_flag(Interpolation_T *const interp_s, Uint flag
   {
     if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
     { interp_s->N_cubic_spline_1d->Alloc_Mem = 0; }
-    else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
+    else if (strstr_i(interp_s->method, "Hermite"))
     { interp_s->Hermite_spline_1d->Alloc_Mem = 0; }
     else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
     { interp_s->C_cubic_spline_1d->Alloc_Mem = 0; }

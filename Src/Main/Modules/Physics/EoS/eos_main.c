@@ -68,6 +68,15 @@ void free_EoS(EoS_T *s)
   Free(s->cubic_spline->p_sample);
   Free(s->cubic_spline->e_sample);
   Free(s->cubic_spline->rho0_sample);
+  //Interpolation_T* interp_p = (Interpolation_T*)s->cubic_spline->interp_p;
+  //Interpolation_T* interp_e = (Interpolation_T*)s->cubic_spline->interp_e;
+  //Interpolation_T* interp_rho0 = (Interpolation_T*)s->cubic_spline->interp_rho0;
+  //interp_p->Alloc_Mem = 0;
+  //interp_e->Alloc_Mem = 0;
+  //interp_rho0->Alloc_Mem = 0;
+  set_interp_alloc_mem_flag(s->cubic_spline->interp_p, 0);
+  set_interp_alloc_mem_flag(s->cubic_spline->interp_e, 0);
+  set_interp_alloc_mem_flag(s->cubic_spline->interp_rho0, 0);
   free_interpolation(s->cubic_spline->interp_p);
   free_interpolation(s->cubic_spline->interp_e);
   free_interpolation(s->cubic_spline->interp_rho0);
@@ -313,8 +322,8 @@ static void populate_EoS(EoS_T *const eos)
         else if (strstr_i(PgetsEZ("EOS_table_format"), "Lorene"))
         {
             // Lorene format in columns
-            //      [line number] [number density] [internal energy density] [pressure].
-            // in units [1/fm^3] [g/cm^3] [dyn/cm^2].
+            //          [line number] [number density] [(total) energy density] [pressure].
+            // in units               [1/fm^3]         [g/cm^3]                 [dyn/cm^2].
             // Calculates rest-mass density (total) energy density, 
             // and specific enthalpy, and converts to geometrized units.
             
@@ -329,12 +338,12 @@ static void populate_EoS(EoS_T *const eos)
             char dummy_var_1;
             Uint dummy_var;
             // Pressure conversion factor: G^3 * M_solar^2 / (10 * c^8)
-            // Internal Energy density conversion factor: G^3  * M_solar^2 / (10 * c^6)
+            // Energy density conversion factor: G^3  * M_solar^2 / (10 * c^6)
             // Rest-mass conversion factor: 10^45 * neutron mass * G^3 * m_solar ^2 / (c^6)
             // (Rest-mass is calculated by multiplying the baryon density by the baryon mass.)
             const double p_FACTOR = 1.80162095578956E-39;
             const double rho0_FACTOR = 0.002712069678583313;
-            const double e_FACTOR = 1.619216164136643E-22;
+            const double e_FACTOR = 1.619216164136643E-18;
                
             Uint dummy_var_2;
             for (Uint ctr=0; ctr<5; ctr++)
@@ -358,9 +367,11 @@ static void populate_EoS(EoS_T *const eos)
                 
                 p_sample[line]      = p_point * p_FACTOR;
                 rho0_sample[line]   = n_point * rho0_FACTOR;
-                e_sample[line]      = n_point * rho0_FACTOR * (1.0+ e_point * e_FACTOR);
-                h_sample[line]      = (p_point*p_FACTOR + (n_point * rho0_FACTOR * (1.0+ e_point * e_FACTOR))) /
-                                      (n_point*rho0_FACTOR);
+                //e_sample[line]      = n_point * rho0_FACTOR * (1.0 + e_point * e_FACTOR);
+                e_sample[line]      = e_point * e_FACTOR;
+                //h_sample[line]      = (p_point*p_FACTOR + (n_point * rho0_FACTOR * (1.0+ e_point * e_FACTOR))) /
+                //                      (n_point*rho0_FACTOR);
+                h_sample[line]      = (p_sample[line] + e_sample[line]) / rho0_sample[line];
             }
         }
         else
