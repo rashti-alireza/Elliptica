@@ -46,6 +46,14 @@ typedef struct EquationOfState_T
    void *interp_p;/* spline interpolation struct for p */
    void *interp_e;/* spline interpolation struct for e */
    void *interp_rho0;/* spline interpolation struct for rho0 */
+   
+   // Data arrays for log-log interpolation
+   double *h_log;     // Specific enthalpy
+   double *p_log;     // Pressure
+   double *e_log;     // Total energy density
+   double *rho0_log;  // Rest-mass density
+   Uint use_log_approach: 1;
+   
    // Root finder approach
    // Void pointer is cast to Root_Finder_T*
    void *root_finder; // used for root finder approach to h(rho0).
@@ -53,6 +61,7 @@ typedef struct EquationOfState_T
    void *interp_e_rho0; // For interpolating total energy density from rest-mass density
    double rho0; /* used for root finder approach */
    double (*enthalpy_eqn[1])(void* eos, const double* params); // Eqn for root finder //
+   
  }cubic_spline[1];
  
 }EoS_T;

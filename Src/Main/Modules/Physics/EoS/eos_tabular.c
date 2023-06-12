@@ -31,18 +31,17 @@ double EoS_p_h_tab(EoS_T* const eos)
     double p;  
     Interpolation_T *const interp_s = eos->cubic_spline->interp_p;
     
-    *interp_s->h = eos->h;
-    p = execute_interpolation(interp_s);
+    if (eos->cubic_spline->use_log_approach)
+    {
+      *interp_s->h = log(eos->h);
+      p = exp(execute_interpolation(interp_s));
+    }
+    else
+    {
+      *interp_s->h = eos->h;
+      p = execute_interpolation(interp_s);
+    }
     return (LSSEQL(p,0.) || p == DBL_MAX ? 0. : p);
-    
-    /*
-    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
-    { interp_s->N_cubic_spline_1d->h  = eos->h; }
-    else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline_1D"))
-    { interp_s->H_cubic_spline_1d->h = eos->h; }
-    else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline_1D"))
-    { interp_s->C_cubic_spline_1d->h = eos->h; }
-    */
 }
 
 //Calculates rest-mass density from enthalpy by tabular EOS.
@@ -59,19 +58,17 @@ double EoS_rho0_h_tab(EoS_T* const eos)
     double rho0;  
     Interpolation_T *const interp_s = eos->cubic_spline->interp_rho0;
     
-    
-    *interp_s->h = eos->h;
-    rho0 = execute_interpolation(interp_s);
+    if (eos->cubic_spline->use_log_approach)
+    {
+      *interp_s->h = log(eos->h);
+      rho0 = exp(execute_interpolation(interp_s));
+    }
+    else
+    {
+      *interp_s->h = eos->h;
+      rho0 = execute_interpolation(interp_s);
+    }
     return (LSSEQL(rho0,0.) || rho0 == DBL_MAX ? 0. : rho0);
-    
-    /*
-    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
-    { interp_s->N_cubic_spline_1d->h  = eos->h; }
-    else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline_1D"))
-    { interp_s->H_cubic_spline_1d->h = eos->h; }
-    else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline_1D"))
-    { interp_s->C_cubic_spline_1d->h = eos->h; }
-    */
 }
 
 //Calculates energy density from enthalpy by tabular EOS.
@@ -88,8 +85,16 @@ double EoS_e_h_tab(EoS_T* const eos)
     double e;
     Interpolation_T *const interp_s = eos->cubic_spline->interp_e;
     
-    *interp_s->h = eos->h;
-    e = execute_interpolation(interp_s);
+    if (eos->cubic_spline->use_log_approach)
+    {
+      *interp_s->h = log(eos->h);
+      e = exp(execute_interpolation(interp_s));
+    }
+    else
+    {
+      *interp_s->h = eos->h;
+      e = execute_interpolation(interp_s);
+    }
     return (LSSEQL(e,0.) || e == DBL_MAX ? 0. : e);
 }
 
@@ -125,9 +130,18 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
     
     double drho0dh;
     Interpolation_T *const interp_s = eos->cubic_spline->interp_rho0;
-    *interp_s->h = eos->h;
     interp_s->FDM_derivative = 1;
-    drho0dh = execute_derivative_interpolation(interp_s);
+    
+    if (eos->cubic_spline->use_log_approach)
+    {
+      *interp_s->h = log(eos->h);
+      drho0dh = exp(execute_derivative_interpolation(interp_s));
+    }
+    else
+    {
+      *interp_s->h = eos->h;
+      drho0dh = execute_derivative_interpolation(interp_s);
+    }
     return (LSSEQL(drho0dh,0.) || drho0dh == DBL_MAX ? 0. : drho0dh);
 }
 
@@ -145,10 +159,18 @@ double EoS_de_dh_h_tab(EoS_T* const eos)
     
     double dedh;
     Interpolation_T *const interp_s = eos->cubic_spline->interp_e;
-    *interp_s->h = eos->h;
     interp_s->FDM_derivative = 1;
-    dedh = execute_derivative_interpolation(interp_s);
     
+    if (eos->cubic_spline->use_log_approach)
+    {
+      *interp_s->h = log(eos->h);
+      dedh = exp(execute_derivative_interpolation(interp_s));
+    }
+    else
+    {
+      *interp_s->h = eos->h;
+      dedh = execute_derivative_interpolation(interp_s);
+    }
     return (LSSEQL(dedh,0.) || dedh == DBL_MAX ? 0. : dedh);
 }
 
@@ -189,14 +211,6 @@ double EoS_rho0_RF(EoS_T *const eos)
   Root_Finder_T* root_finder = (Root_Finder_T*)eos->cubic_spline->root_finder;
   double rho0 = *execute_root_finder(root_finder);
   eos->cubic_spline->rho0 = rho0;
-  /*
-  Root_Finder_T* rf_copy = (Root_Finder_T*)eos->cubic_spline->root_finder;
-  printf("\nEoS_rho0_RF:\n");
-  printf("\t h == %E\n", eos->h);
-  printf("\t rho0 == %E\n", eos->cubic_spline->rho0);
-  printf("\t rho0 floor == %E\n", rf_copy->a_bisect);
-  printf("\t rho0 ceiling == %E\n", rf_copy->b_bisect);
-  */
   return rho0;
 }
 

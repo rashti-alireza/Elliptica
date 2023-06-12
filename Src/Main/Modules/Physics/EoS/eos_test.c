@@ -43,7 +43,7 @@ void test_EoS(Physics_T *const phys)
     fprintf(file,"%0.15e %0.15e\n",eos->h,eos->pressure(eos));
   }
   Fclose(file);
-    
+
   sprintf(file_name,"%s/%s",path,"rest_mass_density");
   file = Fopen(file_name,"w+");
   fprintf(file,"# enthalpy  rest_mass_density\n");  

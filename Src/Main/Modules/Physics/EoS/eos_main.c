@@ -68,12 +68,6 @@ void free_EoS(EoS_T *s)
   Free(s->cubic_spline->p_sample);
   Free(s->cubic_spline->e_sample);
   Free(s->cubic_spline->rho0_sample);
-  //Interpolation_T* interp_p = (Interpolation_T*)s->cubic_spline->interp_p;
-  //Interpolation_T* interp_e = (Interpolation_T*)s->cubic_spline->interp_e;
-  //Interpolation_T* interp_rho0 = (Interpolation_T*)s->cubic_spline->interp_rho0;
-  //interp_p->Alloc_Mem = 0;
-  //interp_e->Alloc_Mem = 0;
-  //interp_rho0->Alloc_Mem = 0;
   set_interp_alloc_mem_flag(s->cubic_spline->interp_p, 0);
   set_interp_alloc_mem_flag(s->cubic_spline->interp_e, 0);
   set_interp_alloc_mem_flag(s->cubic_spline->interp_rho0, 0);
@@ -293,6 +287,11 @@ static void populate_EoS(EoS_T *const eos)
         double *e_sample    = alloc_double(sample_s);
         double *rho0_sample = alloc_double(sample_s);
         
+        // Sets flag for log-log interpolation based on parameter file.
+        if (strstr_i(PgetsEZ("EOS_log_approach"), "yes"))
+        { eos->cubic_spline->use_log_approach = 1; }
+        else { eos->cubic_spline->use_log_approach = 0; }
+        
         //Reads EOS data from text file.
         double h_point;
         double p_point;
@@ -312,11 +311,22 @@ static void populate_EoS(EoS_T *const eos)
                     Error0("ERROR reading EOS data table.");
                     return;
                 }
-                
-                p_sample[line]      = p_point;
-                h_sample[line]      = h_point;
-                rho0_sample[line]   = rho0_point;
-                e_sample[line]      = e_point;
+
+                // If we're using log-log interpolation, fill arrays with log(values).
+                if (eos->cubic_spline->use_log_approach)
+                {
+                  p_sample[line]      = log(p_point);
+                  h_sample[line]      = log(h_point);
+                  rho0_sample[line]   = log(rho0_point);
+                  e_sample[line]      = log(e_point);
+                }
+                else
+                {
+                  p_sample[line]      = p_point;
+                  h_sample[line]      = h_point;
+                  rho0_sample[line]   = rho0_point;
+                  e_sample[line]      = e_point;
+                }
             }
         }
         else if (strstr_i(PgetsEZ("EOS_table_format"), "Lorene"))
@@ -365,13 +375,20 @@ static void populate_EoS(EoS_T *const eos)
                     return;
                 }
                 
-                p_sample[line]      = p_point * p_FACTOR;
-                rho0_sample[line]   = n_point * rho0_FACTOR;
-                //e_sample[line]      = n_point * rho0_FACTOR * (1.0 + e_point * e_FACTOR);
-                e_sample[line]      = e_point * e_FACTOR;
-                //h_sample[line]      = (p_point*p_FACTOR + (n_point * rho0_FACTOR * (1.0+ e_point * e_FACTOR))) /
-                //                      (n_point*rho0_FACTOR);
-                h_sample[line]      = (p_sample[line] + e_sample[line]) / rho0_sample[line];
+                if (eos->cubic_spline->use_log_approach)
+                {
+                  p_sample[line]      = log(p_point * p_FACTOR);
+                  rho0_sample[line]   = log(n_point * rho0_FACTOR);
+                  e_sample[line]      = log(e_point * e_FACTOR);
+                  h_sample[line]      = log((p_point * p_FACTOR + e_point * e_FACTOR) / (n_point * rho0_FACTOR));
+                }
+                else
+                {
+                  p_sample[line]      = p_point * p_FACTOR;
+                  rho0_sample[line]   = n_point * rho0_FACTOR;
+                  e_sample[line]      = e_point * e_FACTOR;
+                  h_sample[line]      = (p_sample[line] + e_sample[line]) / rho0_sample[line];
+                }
             }
         }
         else
@@ -379,8 +396,17 @@ static void populate_EoS(EoS_T *const eos)
         
         fclose(eos_table);
         //Sets interpolation bounds.
-        eos->cubic_spline->h_floor = h_sample[0];
-        eos->cubic_spline->h_max = h_sample[sample_s-1];
+        
+        if (eos->cubic_spline->use_log_approach)
+        {
+          eos->cubic_spline->h_floor = exp(h_sample[0]);
+          eos->cubic_spline->h_max = exp(h_sample[sample_s-1]);
+        }
+        else
+        {
+          eos->cubic_spline->h_floor = h_sample[0];
+          eos->cubic_spline->h_max = h_sample[sample_s-1];
+        }
         
         //Saves data points in EOS.
         eos->cubic_spline->sample_size = sample_s;

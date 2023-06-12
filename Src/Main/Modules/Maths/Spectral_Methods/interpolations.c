@@ -261,7 +261,7 @@ static double interpolation_finite_difference(Interpolation_T *const interp_s)
       break;
     }
   }
-
+  
   if (flg != FOUND)
   {
     if (!interp_s->N_cubic_spline_1d->No_Warn)
