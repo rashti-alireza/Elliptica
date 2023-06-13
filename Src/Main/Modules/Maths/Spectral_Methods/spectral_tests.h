@@ -67,6 +67,7 @@ static double FDM_Uniform_3_6(double* x, double *f, double h, Uint N);
 static int interpolation_tests_Neville_1d(void);
 static int interpolation_tests_N_cubic_spline_1d(void);
 static int interpolation_tests_spline_1d(void);
+static int interpolation_tests_single_interpolant(void);
 static int interpolation_tests_FDM(void);
 static int interpolation_tests_FDM_convergence(void);
 static int interpolation_tests_FDM_fixed(void);

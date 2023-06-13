@@ -794,7 +794,11 @@ static double interpolation_Hermite_spline(Interpolation_T *const interp_s)
   if (flg != FOUND)
   {
     if (!interp_s->Hermite_spline_1d->No_Warn)
+    {
+      printf("Domain: [%E, %E]\n", x[0], x[N-1]);
+      printf("Point for interpolation: %E\n", h);
       Warning("The given point for the interpolation is out of the domain.\n");
+    }
     
     return ret;
   }

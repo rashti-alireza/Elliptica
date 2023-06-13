@@ -724,6 +724,12 @@ int interpolation_tests(Grid_T *const grid)
       status = interpolation_tests_spline_1d();
       check_test_result(status);
   }
+  if (DO)
+  {
+      printf("Interpolation test:           Single Interpolant =>\n");
+      status = interpolation_tests_single_interpolant();
+      check_test_result(status);
+  }
   
   if (DO_NOT)
   {
@@ -739,7 +745,7 @@ int interpolation_tests(Grid_T *const grid)
       status = interpolation_tests_FDM_convergence();
       check_test_result(status);
   }
-  if (DO)
+  if (DO_NOT)
   {
       printf("Finite difference test:         Error Convergence =>\n");
       status = interpolation_tests_FDM_fixed();
@@ -792,30 +798,31 @@ static void print_arrays(const char *const fileName,
 // Test function used in interpolation and FDM tests.
 static double test_fxn(double x)
 {
-  //return x;
-  //return x*x*x - 2.0*x*x;
+  return x;
+  //return 3.0*x*x*x + 2.0*x*x - 4.0*x;
   //return x*x*x*x*x*x - 10.0*x*x*x*x*x + 20.0*x*x*x;
-  return log(x) * cos(x) + x;
+  //return log(x) * cos(x) + x;
 }
 
 // First derivative
 static double test_fxn_p(double x)
 {
-  //UNUSED(x);
-  //return 1.0;
-  //return 3.0*x*x - 4.0*x;
+  UNUSED(x);
+  return 1.0;
+  //return 9.0*x*x + 4.0*x -4.0;
   //return 6.0*x*x*x*x*x - 50.0*x*x*x*x + 60.0*x*x;
-  return - log(x)*sin(x) + cos(x)/x + 1;
+  //return - log(x)*sin(x) + cos(x)/x + 1;
 }
 
 // Third derivative
 static double test_fxn_ppp(double x)
 {
-  //UNUSED(x);
-  //return 6.0;
+  UNUSED(x);
+  return 0.0;
+  //return 18.0;
   //return 120.0*x*x*x - 600.0*x*x + 120.0;
-  return (2*cos(x)/Pow3(x) + 3*sin(x)/Pow2(x)
-        - 3*cos(x)/x + log(x)*sin(x));
+  //return (2*cos(x)/Pow3(x) + 3*sin(x)/Pow2(x)
+  //      - 3*cos(x)/x + log(x)*sin(x));
 }
 
 // Returns random integer between a and b.
@@ -1044,6 +1051,56 @@ static int interpolation_tests_spline_1d(void)
   return TEST_SUCCESSFUL;
 }
 
+static int interpolation_tests_single_interpolant(void)
+{
+  Interpolation_T* interp = init_interpolation();
+  Uint N = 4;
+  Uint test_pts = 100;
+  double a = -2, b = 1;
+  double* x_full = alloc_double(N);
+  double* f = alloc_double(N);
+  double* x_vals = alloc_double(test_pts);
+  double* analytical_vals = alloc_double(test_pts);
+  double* interp_vals = alloc_double(test_pts);
+  double* errors = alloc_double(test_pts);
+  Uint j;
+  
+  double dx = (b-a)/(double)(N-1);
+  // Create knots
+  for (j = 0; j < N; j++)
+  { 
+    x_full[j]  = a + j*dx;
+    f[j] = test_fxn(x_full[j]);
+  }
+  
+  interp->method = Pgets("Interpolation_method");
+  assign_interpolation_ptrs(interp);
+  *interp->f   = f;
+  *interp->x   = x_full;
+  *interp->N   = N;
+  plan_interpolation(interp);
+  
+  for (j = 0; j < test_pts; j++)
+  {
+    x_vals[j] = rand_double(a, b);
+    *interp->h = x_vals[j];
+    interp_vals[j] = execute_interpolation(interp);
+    analytical_vals[j] = test_fxn(x_vals[j]);
+    errors[j] = interp_vals[j] - analytical_vals[j];
+  }
+  
+  print_arrays("Analytical", x_vals, analytical_vals, test_pts);
+  print_arrays("Interpolation", x_vals, interp_vals, test_pts);
+  print_arrays("Error", x_vals, errors, test_pts);
+  
+  free_interpolation(interp);
+  free(x_vals);
+  free(interp_vals);
+  free(analytical_vals);
+  free(errors);
+  return TEST_SUCCESSFUL;
+}
+  
 // Uniform-grid finite difference methods, only used for testing.
 static double FDM_Uniform_1_6(double* x, double* f, double h, Uint N)
 {
