@@ -92,7 +92,7 @@ int TOV_star(void *vp)
     double delta_m = (mass_final - mass_initial) / stars;
     double* radii = alloc_double(stars);
     double* masses = alloc_double(stars);
-    tov->description = 0; // Must be 'off' to avoid print statements.
+    tov->description = 0; // Must be 'off' to avoid excessive print statements.
     
     // Geometric units to km conversion factor: (G * Msolar / c^2) / (10^3)
     double r_FACTOR = 1.47667;

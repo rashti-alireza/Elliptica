@@ -1091,13 +1091,19 @@ static double *make_1Dcollocation_ChebNodes(const Uint N)
 
 
 ////////////////////////Fornberg finite difference method
-double FDM_Fornberg(const double* const x, const double* const f, const double h, const Uint d, const Uint ord, const Uint N)
+double FDM_Fornberg(const double* const x, const double* const f, const double h, const Uint M, const Uint n, const Uint N)
 {
   // Approximates M-th derivative of f(x)|x=h by finite difference method,
   // to order of accuracy n.
+  // Parameters:
+  //        x: (double array) ordered 1D coordinate grid
+  //        f: (double array) function values such that f[j] = f(x[j])
+  //        h: (double) coordinate to evaluate
+  //        M: (unsigned int) degree of derivative to approximate
+  //        n: (unsigned int) order of approximation
+  //        N: (unsigned int) length of x and f arrays.
+  
   Uint i = 0;
-  const Uint n = ord;
-  const Uint M = d;
   double ret = DBL_MAX;
   Flag_T flg = NONE;
   

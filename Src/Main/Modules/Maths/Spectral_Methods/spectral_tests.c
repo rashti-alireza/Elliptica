@@ -1020,7 +1020,6 @@ static int interpolation_tests_spline_1d(void)
       printf("Difference: %E\n", diff);
       fprintf(stderr,"diff = %g\n",diff);
       flg = FOUND;
-      break;
     }
   }
   

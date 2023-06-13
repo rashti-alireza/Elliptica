@@ -46,14 +46,12 @@ static void order_arrays_spline_1d(Interpolation_T *const interp_s);
 static double interpolation_finite_difference(Interpolation_T *const interp_s);
 static double interpolation_manual_FDM(Interpolation_T *const interp_s);
 static Uint interpolation_check_manual_FDM(Interpolation_T *const interp_s);
-static Uint FDM_min(Uint n, Uint M);
 static void find_coeffs_Hermite_spline(Interpolation_T *const interp_s);
 static double interpolation_Hermite_spline(Interpolation_T *const interp_s);
-static double interpolation_Hermite_derivative(Interpolation_T *const interp_s);
 static void find_coeffs_clamped_cubic_spline_1d(Interpolation_T *const interp_s);
 static double interpolation_clamped_cubic_spline_1d(Interpolation_T *const interp_s);
 static double interpolation_CCS_derivative(Interpolation_T *const interp_s);
-
+double FDM_Fornberg(const double* const x, const double* const f, const double h, const Uint d, const Uint ord, const Uint N);
 
 
 

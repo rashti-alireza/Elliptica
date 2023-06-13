@@ -103,7 +103,6 @@ void plan_interpolation(Interpolation_T *const interp_s)
     interp_s->Spline_Order = (Uint)Pgeti("Interpolation_spline_order");
     find_coeffs_Hermite_spline(interp_s);
     interp_s->interpolation_func = interpolation_Hermite_spline;
-    interp_s->interpolation_derivative_func = interpolation_Hermite_derivative;
   }
   else if (strstr_i(interp_s->method,"Clamped_Cubic_Spline_1D"))
   {
@@ -219,12 +218,20 @@ static void order_arrays_spline_1d(Interpolation_T *const interp_s)
 }
 
 ///////////////////////////////////////Finite difference approximation////////////////////////
-Uint FDM_min(Uint n, Uint M)
+// Wrapper for FDM_Fornberg in derivatives.c (Fornberg finite difference method)
+static double interpolation_finite_difference(Interpolation_T *const interp_s)
 {
-    if (M < n) { return M; }
-    return n;
+  const double *const x = *interp_s->x;
+  const double *const f = *interp_s->f;
+  const double h = *interp_s->h;
+  const Uint N = *interp_s->N;
+  const Uint n = interp_s->finite_diff_order;
+  const Uint M = interp_s->FDM_derivative;
+  
+  return FDM_Fornberg(x, f, h, M, n, N);
 }
 
+/*
 static double interpolation_finite_difference(Interpolation_T *const interp_s)
 {
   // Approximates M-th derivative of f(x)|x=h by finite difference method.
@@ -235,7 +242,7 @@ static double interpolation_finite_difference(Interpolation_T *const interp_s)
   Uint i = 0;
   const Uint n = interp_s->finite_diff_order;
   const Uint M = interp_s->FDM_derivative;
-  double ret = DBL_MAX;/* it's important to be max double */
+  double ret = DBL_MAX;/
   Flag_T flg = NONE;
   
   // Checks if we have enough data points for given order.
@@ -334,6 +341,7 @@ static double interpolation_finite_difference(Interpolation_T *const interp_s)
   free(deltas);
   return ret;
 }
+*/
 
 // Manually-coded finite difference methods,
 // only available for certain combinations of
@@ -814,55 +822,6 @@ static double interpolation_Hermite_spline(Interpolation_T *const interp_s)
     ret += a[i_j_to_ij(2*n+1,l,j)]*ret_term;
     ret_term *= (h - x[l+(int)floor(j/2)]);
   }
-  
-  return ret;
-}
-
-//UNFINISHED (disused in favor of finite difference methods)
-static double interpolation_Hermite_derivative(Interpolation_T *const interp_s)
-{
-  // Returns f'(x) by derivative of Hermite spline
-  if (!interp_s->Hermite_spline_1d->Order)
-  order_arrays_spline_1d(interp_s);
-    
-  const double *const x = interp_s->Hermite_spline_1d->x;
-  //const double *const a = interp_s->Hermite_spline_1d->a;
-  const int d = (int)interp_s->Spline_Order;
-  const int n = (d-1)/2;
-  const double h = interp_s->Hermite_spline_1d->h;
-  const int N = (int)interp_s->Hermite_spline_1d->N;
-  double ret = DBL_MAX;
-  int i = 0;
-  Flag_T flg = NONE;
-  
-  // find the segment
-  for (i = 0; i < N-1; ++i)
-  {
-    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
-    {
-      flg = FOUND;
-      break;
-    }
-  }
-
-  if (flg != FOUND)
-  {
-    if (!interp_s->Hermite_spline_1d->No_Warn)
-      Warning("The given point for the interpolation is out of the domain.\n");
-    
-    return ret;
-  }
-  
-  int l = i - n/2;
-  int r = i + n/2;
-  while (l < 0)
-  { l++; r++; }
-  while (r >= N)
-  { l--; r++; }
-  if (l < 0 || r >= N)
-  { Error0("Hermite spline: could not excise sub-array from domain."); }
- 
-  ret = 0;
   
   return ret;
 }
