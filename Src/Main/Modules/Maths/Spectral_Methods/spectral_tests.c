@@ -724,7 +724,7 @@ int interpolation_tests(Grid_T *const grid)
       status = interpolation_tests_spline_1d();
       check_test_result(status);
   }
-  if (DO)
+  if (DO_NOT)
   {
       printf("Interpolation test:           Single Interpolant =>\n");
       status = interpolation_tests_single_interpolant();
@@ -755,7 +755,7 @@ int interpolation_tests(Grid_T *const grid)
   // Convergence tests for 1D interpolation
   // Edit parameters for number of trials and number of
   // spline knots in each trial here.
-  if (DO_NOT)
+  if (DO)
   {
       printf("Interpolation test:             Convergence Test=>\n");
       printf("Interpolation method: %s\n", Pgets("Interpolation_Method"));
@@ -798,8 +798,8 @@ static void print_arrays(const char *const fileName,
 // Test function used in interpolation and FDM tests.
 static double test_fxn(double x)
 {
-  return x;
-  //return 3.0*x*x*x + 2.0*x*x - 4.0*x;
+  //return x;
+  return 3.0*x*x*x + 2.0*x*x - 4.0*x;
   //return x*x*x*x*x*x - 10.0*x*x*x*x*x + 20.0*x*x*x;
   //return log(x) * cos(x) + x;
 }
@@ -807,9 +807,9 @@ static double test_fxn(double x)
 // First derivative
 static double test_fxn_p(double x)
 {
-  UNUSED(x);
-  return 1.0;
-  //return 9.0*x*x + 4.0*x -4.0;
+  //UNUSED(x);
+  //return 1.0;
+  return 9.0*x*x + 4.0*x - 4.0;
   //return 6.0*x*x*x*x*x - 50.0*x*x*x*x + 60.0*x*x;
   //return - log(x)*sin(x) + cos(x)/x + 1;
 }
@@ -818,8 +818,8 @@ static double test_fxn_p(double x)
 static double test_fxn_ppp(double x)
 {
   UNUSED(x);
-  return 0.0;
-  //return 18.0;
+  //return 0.0;
+  return 18.0;
   //return 120.0*x*x*x - 600.0*x*x + 120.0;
   //return (2*cos(x)/Pow3(x) + 3*sin(x)/Pow2(x)
   //      - 3*cos(x)/x + log(x)*sin(x));
@@ -1012,7 +1012,6 @@ static int interpolation_tests_spline_1d(void)
     error[i]            = ABSd(diff);
     interp_vals[i]      = interp;
     
-    /*
     if (GRT(fabs(diff),s))
     {
       printf("Maximum error exceeded at t = %E.\n",t);
@@ -1023,7 +1022,6 @@ static int interpolation_tests_spline_1d(void)
       flg = FOUND;
       break;
     }
-    */
   }
   
   time = (double)(clock() - time1)/CLOCKS_PER_SEC;
@@ -1493,8 +1491,6 @@ static int interpolation_tests_FDM_fixed(void)
   return TEST_SUCCESSFUL;
 }
     
-    
-    
 /* test Neville iterative method for 1-d arrays.
 // ->return value: result of test. */
 static int interpolation_tests_Neville_1d(void)
@@ -1770,7 +1766,7 @@ static int interpolation_tests_Hermite_Order(void)
     k++;
   }
   
-  printf("Hermite Convergence Test:\n");
+  printf("Hermite Order Test:\n");
   for (test = 0; test < max_order - min_order; test++)
   {
     printf("\nTest %i:\n", test);
