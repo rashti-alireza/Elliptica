@@ -103,6 +103,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
     interp_s->Spline_Order = (Uint)Pgeti("Interpolation_spline_order");
     find_coeffs_Hermite_spline(interp_s);
     interp_s->interpolation_func = interpolation_Hermite_spline;
+    interp_s->interpolation_derivative_func = interpolation_finite_difference;
   }
   else if (strstr_i(interp_s->method,"Clamped_Cubic_Spline_1D"))
   {

@@ -730,28 +730,12 @@ int interpolation_tests(Grid_T *const grid)
       status = interpolation_tests_single_interpolant();
       check_test_result(status);
   }
-  
   if (DO_NOT)
   {
-      srand((Uint)time(NULL));
-      printf("Finite Difference test:         Fornberg and Uniform methods =>\n");
-      status = interpolation_tests_FDM();
+      printf("Interpolation test:            Fixed Point =>\n");
+      status = interpolation_tests_fixed();
       check_test_result(status);
   }
-  if (DO_NOT)
-  {
-      srand((Uint)time(NULL));
-      printf("Finite difference test:         FDM Convergence =>\n");
-      status = interpolation_tests_FDM_convergence();
-      check_test_result(status);
-  }
-  if (DO_NOT)
-  {
-      printf("Finite difference test:         Error Convergence =>\n");
-      status = interpolation_tests_FDM_fixed();
-      check_test_result(status);
-  }
-  
   // Convergence tests for 1D interpolation
   // Edit parameters for number of trials and number of
   // spline knots in each trial here.
@@ -768,6 +752,28 @@ int interpolation_tests(Grid_T *const grid)
   {
       printf("Interpolation test:             Hermite Order Test=>\n");
       status = interpolation_tests_Hermite_Order();
+      check_test_result(status);
+  }
+  
+  ///////////////////////////////Finite difference tests////////////////////////////
+  if (DO_NOT)
+  {
+      srand((Uint)time(NULL));
+      printf("Finite Difference test:         Fornberg and Uniform methods =>\n");
+      status = interpolation_tests_FDM();
+      check_test_result(status);
+  }
+  if (DO_NOT)
+  {
+      srand((Uint)time(NULL));
+      printf("Finite difference test:         FDM Convergence =>\n");
+      status = interpolation_tests_FDM_convergence();
+      check_test_result(status);
+  }
+  if (DO_NOT)
+  {
+      printf("Finite difference test:         Fixed Point =>\n");
+      status = interpolation_tests_FDM_fixed();
       check_test_result(status);
   }
   
@@ -1097,6 +1103,79 @@ static int interpolation_tests_single_interpolant(void)
   free(errors);
   return TEST_SUCCESSFUL;
 }
+
+// Tests interpolation error vs grid refinement.
+static int interpolation_tests_fixed(void)
+{
+  const Uint MaxIter = 9;
+  double* K_vals = alloc_double(MaxIter-3);
+  Uint* N_array = malloc((MaxIter-3)*sizeof(*N_array));
+  //const Uint Nf = (Uint)pow(2, MaxIter) * N0;
+  const Uint N0 = 9;
+  const double a = 0.5, b = 1.5;
+  const double c = a + 0.5*(b-a); // Fixed central point
+  
+  // Each iteration:
+  // Generate uniformly spaced grid from a to b,
+  // with the halfway point fixed, and double the
+  // points of the last iteration/half the grid spacing.
+  Uint N = N0;
+  double interp_1 = 0;
+  double interp_2 = 0;
+  double interp_3 = 0;
+  for (Uint j = 0; j < MaxIter; j++)
+  {
+    N = 2*N-1;
+    double dx = (b-a)/(N-1);
+    double* x = alloc_double(N);
+    double* f = alloc_double(N);
+    
+    // Generate uniform grid
+    for (Uint k = 0; k < N; k++)
+    { 
+      x[k] = a + k*dx;
+      f[k] = test_fxn(x[k]);
+    }
+    
+    Interpolation_T* interp = init_interpolation();
+    interp->method = Pgets("interpolation_method");
+    assign_interpolation_ptrs(interp);
+    *interp->x = x;
+    *interp->f = f;
+    *interp->N = N;
+    plan_interpolation(interp);
+    
+    // Compute difference from previous approximation
+    // on more refined grid.
+    if (j > 2)
+    {
+      K_vals[j-3] = (log(ABSd((interp_2 - interp_1) / 
+                    (interp_3 - interp_2))) / log(2.0));
+      N_array[j-3] = N;
+    }
+    
+    *interp->h = c;
+    interp_1 = interp_2;
+    interp_2 = interp_3;
+    interp_3 = execute_interpolation(interp);
+    
+    printf("%i | %E | %E | %E\n", j, interp_1, interp_2, interp_3);///////////////
+    
+    free_interpolation(interp);
+    //free(x);
+    //free(f);
+  }
+  
+  // Print results
+  printf("i \t | N \t | K\n");
+  for (Uint j = 0; j < MaxIter-3; j++)
+  { printf("%i \t | %i \t | %E\n", j, N_array[j], K_vals[j]); }
+         
+  free(K_vals);
+  free(N_array);
+  return TEST_SUCCESSFUL;
+}
+    
   
 // Uniform-grid finite difference methods, only used for testing.
 static double FDM_Uniform_1_6(double* x, double* f, double h, Uint N)
@@ -1426,6 +1505,7 @@ static int interpolation_tests_FDM_fixed(void)
   const Uint N0 = 9;
   const double a = 0, b = 2;
   const double c = a + 0.5*(b-a); // Fixed central point
+  Uint order = 3; //Order of approximation
   
   // Each iteration:
   // Generate uniformly spaced grid from a to b,
@@ -1467,14 +1547,14 @@ static int interpolation_tests_FDM_fixed(void)
     f_p_uniform_2 = f_p_uniform_3;
     f_p_Fornberg_2 = f_p_Fornberg_3;
     f_p_uniform_3 = FDM_Uniform_1_6(x, f, c, N);
-    f_p_Fornberg_3 = FDM_Fornberg(x, f, c, 1, 6, N);
+    f_p_Fornberg_3 = FDM_Fornberg(x, f, c, 1, order, N);
     
     free(x);
     free(f);
   }
   
   // Print results
-  printf("FDM order of accuracy: %i\n", 6);
+  printf("FDM order of accuracy: %i\n", order);
   for (Uint j = 0; j < MaxIter-3; j++)
   { printf("N[%i] == %i\n", j, N_array[j]); }
   for (Uint j = 0; j < MaxIter-3; j++)
@@ -1563,8 +1643,6 @@ static int interpolation_tests_Convergence(const Uint tests, const Uint N0, cons
   Uint delta_N = (Uint)floor((Nf-N0) / tests);
   for (Uint test = 0; test < tests; test++)
   {
-    //if (!(test % 100))
-    //{ printf("Trial %i: %i points\n", test, N); }
     Interpolation_T *interp_s = init_interpolation();
     double *f                      = alloc_double(N);
     double *f_derivative           = alloc_double(N);
