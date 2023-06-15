@@ -739,7 +739,7 @@ int interpolation_tests(Grid_T *const grid)
   // Convergence tests for 1D interpolation
   // Edit parameters for number of trials and number of
   // spline knots in each trial here.
-  if (DO)
+  if (DO_NOT)
   {
       printf("Interpolation test:             Convergence Test=>\n");
       printf("Interpolation method: %s\n", Pgets("Interpolation_Method"));
@@ -761,6 +761,13 @@ int interpolation_tests(Grid_T *const grid)
       srand((Uint)time(NULL));
       printf("Finite Difference test:         Fornberg and Uniform methods =>\n");
       status = interpolation_tests_FDM();
+      check_test_result(status);
+  }
+  if (DO)
+  {
+      srand((Uint)time(NULL));
+      printf("Finite Difference test:         Fornberg method (random grid) =>\n");
+      status = interpolation_tests_Fornberg();
       check_test_result(status);
   }
   if (DO_NOT)
@@ -805,9 +812,9 @@ static void print_arrays(const char *const fileName,
 static double test_fxn(double x)
 {
   //return x;
-  return 3.0*x*x*x + 2.0*x*x - 4.0*x;
+  //return 3.0*x*x*x + 2.0*x*x - 4.0*x;
   //return x*x*x*x*x*x - 10.0*x*x*x*x*x + 20.0*x*x*x;
-  //return log(x) * cos(x) + x;
+  return log(x) * cos(x) + x;
 }
 
 // First derivative
@@ -815,20 +822,32 @@ static double test_fxn_p(double x)
 {
   //UNUSED(x);
   //return 1.0;
-  return 9.0*x*x + 4.0*x - 4.0;
+  //return 9.0*x*x + 4.0*x - 4.0;
   //return 6.0*x*x*x*x*x - 50.0*x*x*x*x + 60.0*x*x;
-  //return - log(x)*sin(x) + cos(x)/x + 1;
+  return - log(x)*sin(x) + cos(x)/x + 1;
 }
 
 // Third derivative
 static double test_fxn_ppp(double x)
 {
-  UNUSED(x);
+  //UNUSED(x);
   //return 0.0;
-  return 18.0;
+  //return 18.0;
   //return 120.0*x*x*x - 600.0*x*x + 120.0;
-  //return (2*cos(x)/Pow3(x) + 3*sin(x)/Pow2(x)
-  //      - 3*cos(x)/x + log(x)*sin(x));
+  return (2*cos(x)/Pow3(x) + 3*sin(x)/Pow2(x)
+        - 3*cos(x)/x + log(x)*sin(x));
+}
+
+// Wrapper which selects the desired derivative of test_fxn
+static double test_fxn_derivative(double x, Uint derivative)
+{
+  double (*fxns[4])(double a);
+  fxns[0] = test_fxn;
+  fxns[1] = test_fxn_p;
+  fxns[2] = NULL;
+  fxns[3] = test_fxn_ppp;
+  
+  return fxns[derivative](x);
 }
 
 // Returns random integer between a and b.
@@ -983,10 +1002,10 @@ static int interpolation_tests_spline_1d(void)
   const Uint test_pts                 = (Uint)Pgeti("Interpolation_test_points");
   double *f                           = alloc_double(N);
   double *x                           = alloc_double(N);
-  double *error                       = alloc_double(N);
-  double *interp_vals                 = alloc_double(N);
-  double *x_vals                      = alloc_double(N);
-  const double a = -4, b = 4; // an arbitrary interval
+  double *error                       = alloc_double(test_pts);
+  double *interp_vals                 = alloc_double(test_pts);
+  double *x_vals                      = alloc_double(test_pts);
+  const double a = 1, b = 4; // an arbitrary interval
   double *hs    = make_random_number(test_pts,a,b);
   double s      = (b-a)/(N-1);
   double t,interp;
@@ -1364,6 +1383,68 @@ static int interpolation_tests_FDM(void)
   
   return TEST_SUCCESSFUL;
 }
+
+// Needed solely for qsort
+static int qsort_compare(const void* a, const void* b)
+{ return (*(const double*)a == *(const double*)b ? 0 :
+         (*(const double*)a > *(const double*)b ? 1 : -1)); }
+
+// Tests Fornberg method on non-uniform grid, off grid points.
+static int interpolation_tests_Fornberg(void)
+{
+  Uint N            = (Uint)Pgeti("FDM_grid_points");
+  Uint test_pts     = (Uint)Pgeti("FDM_test_points");
+  Uint n            = (Uint)Pgeti("finite_diff_order");
+  Uint derivative   = 1; // Degree of derivative
+  double a = 1, b = 4;
+  double* x         = alloc_double(N);
+  double* f         = alloc_double(N);
+  double* f_p       = alloc_double(N);
+  double* x_vals    = alloc_double(test_pts);
+  double* FDM_vals  = alloc_double(test_pts);
+  double* error     = alloc_double(test_pts);
+  double avg_error  = 0;
+  Uint j;
+  
+  // Fill non-uniform analytical grid.
+  for (j = 0; j < N; j++)
+  { x[j] = rand_double(a, b); }
+  qsort(x, (size_t)N, sizeof(double), qsort_compare);
+  x[0] = a;
+  x[N-1] = b;
+  for (j = 0; j < N; j++)
+  {
+    f[j] = test_fxn(x[j]);
+    f_p[j] = test_fxn_derivative(x[j], derivative);
+  }
+  
+  // Test points at random
+  for (j = 0; j < test_pts; j++)
+  {
+    x_vals[j] = rand_double(a, b);
+    FDM_vals[j] = FDM_Fornberg(x, f, x_vals[j], derivative, n, N);
+    error[j] = FDM_vals[j] - test_fxn_derivative(x_vals[j], derivative);
+    avg_error += ABSd(error[j]);
+  }
+  avg_error /= (double)test_pts;
+  
+  print_arrays("Analytical_Function", x, f, N);
+  print_arrays("Analytical_Derivative", x, f_p, N);
+  print_arrays("FDM_Values", x_vals, FDM_vals, test_pts);
+  print_arrays("Error", x_vals, error, test_pts);
+  printf("\t Grid points: %i\n", N);
+  printf("\t Test points: %i\n", test_pts);
+  printf("\t Average error: %E\n", avg_error);
+
+  free(x);
+  free(f);
+  free(f_p);
+  free(x_vals);
+  free(FDM_vals);
+  free(error);
+    
+  return TEST_SUCCESSFUL;
+} 
 
 // Tests error convergence for Fornberg and uniform-grid
 // finite difference methods.

@@ -1124,7 +1124,7 @@ double FDM_Fornberg(const double* const x, const double* const f, const double h
   // Finds the data segment
   for (i = 0; i < N-1; ++i)
   {
-    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+    if ((h >= x[i]) && (h < x[i+1]))
     {
       flg = FOUND;
       break;
@@ -1133,6 +1133,8 @@ double FDM_Fornberg(const double* const x, const double* const f, const double h
 
   if (flg != FOUND)
   {
+    printf("Domain: [%E, %E]\n", x[0], x[N-1]);
+    printf("Point: %E\n", h);
     Warning("The given point for the interpolation is out of the domain.\n");
     return ret;
   }
@@ -1154,12 +1156,28 @@ double FDM_Fornberg(const double* const x, const double* const f, const double h
     left_pt++;
     right_pt++;
   }
-  while ((Uint)right_pt >= N)
+  while ((Uint)right_pt > N)///////////////
   {
     left_pt--;
     right_pt--;
   }
       
+  /* Useful for debugging grid excision
+  printf("\n/////////////////FORNBERG METHOD//////////////////\n");
+  printf("Global grid:\n");
+  printf("|    x[0]    | ... |    x[%i]    |      h     |    x[%i]    | ... |    x[N-1]    |\n", i, i+1);
+  printf("| %.4E | ... | %.4E | %.4E | %.4E | ... | %.4E |\n",
+        x[0], x[i], h, x[i+1], x[N-1]);
+  printf("Local grid:\n");
+  printf("|");
+  for (Uint u = (Uint)left_pt; u < (Uint)right_pt; u++)
+  { printf(" %i |", u); }
+  printf("\n|");
+  for (Uint u = (Uint)left_pt; u < (Uint)right_pt; u++)
+  { printf(" %.4E |", x[u]); }
+  printf("\n\n");
+  */
+  
   // Allocates memory for delta coefficients
   // Stores (M+1)x(n+m)x(n+m) 3D array 
   // 'deltas' in linear format.
