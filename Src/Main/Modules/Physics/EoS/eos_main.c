@@ -63,6 +63,14 @@ void free_EoS(EoS_T *s)
     free_root_finder(rf_copy);
   }
   
+  if (strstr_i(PgetsEZ(P_"log_approach"), "yes"))
+  {
+    free(s->cubic_spline->h_log);
+    free(s->cubic_spline->p_log);
+    free(s->cubic_spline->e_log);
+    free(s->cubic_spline->rho0_log);
+  }
+  
   /* free cubic spline struct */
   Free(s->cubic_spline->h_sample);
   Free(s->cubic_spline->p_sample);
@@ -286,20 +294,23 @@ static void populate_EoS(EoS_T *const eos)
         double *p_sample    = alloc_double(sample_s);
         double *e_sample    = alloc_double(sample_s);
         double *rho0_sample = alloc_double(sample_s);
+        double* h_log;
+        double* p_log;
+        double* e_log;
+        double* rho0_log;
         
         // Sets flag for log-log interpolation based on parameter file.
         if (strstr_i(PgetsEZ("EOS_log_approach"), "yes"))
         { eos->cubic_spline->use_log_approach = 1; }
         else { eos->cubic_spline->use_log_approach = 0; }
         
-        //if (eos->cubic_spline->use_log_approach)
-        //if (1) ///////////////FIXME: Won't compile unless arrays allocated
-        //{
-          double* h_log    = alloc_double(sample_s);
-          double* p_log    = alloc_double(sample_s);
-          double* e_log    = alloc_double(sample_s);
-          double* rho0_log = alloc_double(sample_s);
-        //}
+        if (eos->cubic_spline->use_log_approach)
+        {
+          h_log    = alloc_double(sample_s);
+          p_log    = alloc_double(sample_s);
+          e_log    = alloc_double(sample_s);
+          rho0_log = alloc_double(sample_s);
+        }
         
         //Reads EOS data from text file.
         double h_point;
