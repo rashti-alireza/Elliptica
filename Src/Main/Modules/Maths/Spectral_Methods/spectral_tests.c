@@ -739,7 +739,7 @@ int interpolation_tests(Grid_T *const grid)
   // Convergence tests for 1D interpolation
   // Edit parameters for number of trials and number of
   // spline knots in each trial here.
-  if (DO_NOT)
+  if (DO)
   {
       printf("Interpolation test:             Convergence Test=>\n");
       printf("Interpolation method: %s\n", Pgets("Interpolation_Method"));
@@ -763,7 +763,7 @@ int interpolation_tests(Grid_T *const grid)
       status = interpolation_tests_FDM();
       check_test_result(status);
   }
-  if (DO)
+  if (DO_NOT)
   {
       srand((Uint)time(NULL));
       printf("Finite Difference test:         Fornberg method (random grid) =>\n");
@@ -1734,7 +1734,7 @@ static int interpolation_tests_Convergence(const Uint tests, const Uint N0, cons
     double *interp_vals_derivative = alloc_double(N);
     double *x_vals                 = alloc_double(N);
     double *hs                     = alloc_double(N);
-    const double a = -10, b = 10;// an arbitrary interval
+    const double a = 1, b = 4;// an arbitrary interval
     //double *hs = make_random_number(N,a,b);
     double s = (b-a)/(N-1);
     double t,interp,interp_derivative;

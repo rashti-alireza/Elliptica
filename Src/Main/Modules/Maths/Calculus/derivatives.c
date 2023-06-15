@@ -1124,7 +1124,7 @@ double FDM_Fornberg(const double* const x, const double* const f, const double h
   // Finds the data segment
   for (i = 0; i < N-1; ++i)
   {
-    if ((h >= x[i]) && (h < x[i+1]))
+    if ((h >= x[i]) && (h <= x[i+1]))
     {
       flg = FOUND;
       break;
