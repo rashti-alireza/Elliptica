@@ -15,6 +15,8 @@ double EoS_drho0_dh_h_tab(EoS_T *const eos);
 double EoS_drho0_dh_h_tab(EoS_T *const eos);
 double EoS_de_dh_h_tab(EoS_T *const eos);
 double EoS_de_dh_h_tab(EoS_T *const eos);
+double FDM_Fornberg(const double* const x, const double* const f, const double h, const Uint M, const Uint n, const Uint N);
+// From calculus->derivatives.c
 /////////////////////////////////Root finder method
 double EoS_enthalpy_def(void* const eos, const double* const params);
 double EoS_rho0_RF(EoS_T *const eos);

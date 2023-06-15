@@ -292,6 +292,15 @@ static void populate_EoS(EoS_T *const eos)
         { eos->cubic_spline->use_log_approach = 1; }
         else { eos->cubic_spline->use_log_approach = 0; }
         
+        //if (eos->cubic_spline->use_log_approach)
+        //if (1) ///////////////FIXME: Won't compile unless arrays allocated
+        //{
+          double* h_log    = alloc_double(sample_s);
+          double* p_log    = alloc_double(sample_s);
+          double* e_log    = alloc_double(sample_s);
+          double* rho0_log = alloc_double(sample_s);
+        //}
+        
         //Reads EOS data from text file.
         double h_point;
         double p_point;
@@ -312,20 +321,18 @@ static void populate_EoS(EoS_T *const eos)
                     return;
                 }
 
+                p_sample[line]      = p_point;
+                rho0_sample[line]   = rho0_point;
+                e_sample[line]      = e_point;
+                h_sample[line]      = h_point;
+                
                 // If we're using log-log interpolation, fill arrays with log(values).
                 if (eos->cubic_spline->use_log_approach)
                 {
-                  p_sample[line]      = log(p_point);
-                  h_sample[line]      = log(h_point);
-                  rho0_sample[line]   = log(rho0_point);
-                  e_sample[line]      = log(e_point);
-                }
-                else
-                {
-                  p_sample[line]      = p_point;
-                  h_sample[line]      = h_point;
-                  rho0_sample[line]   = rho0_point;
-                  e_sample[line]      = e_point;
+                  p_log[line]      = log(p_point);
+                  rho0_log[line]   = log(rho0_point);
+                  e_log[line]      = log(e_point);
+                  h_log[line]      = log(h_point);
                 }
             }
         }
@@ -375,19 +382,17 @@ static void populate_EoS(EoS_T *const eos)
                     return;
                 }
                 
+                p_sample[line]      = p_point * p_FACTOR;
+                rho0_sample[line]   = n_point * rho0_FACTOR;
+                e_sample[line]      = e_point * e_FACTOR;
+                h_sample[line]      = (p_sample[line] + e_sample[line]) / rho0_sample[line];
+                
                 if (eos->cubic_spline->use_log_approach)
                 {
-                  p_sample[line]      = log(p_point * p_FACTOR);
-                  rho0_sample[line]   = log(n_point * rho0_FACTOR);
-                  e_sample[line]      = log(e_point * e_FACTOR);
-                  h_sample[line]      = log((p_point * p_FACTOR + e_point * e_FACTOR) / (n_point * rho0_FACTOR));
-                }
-                else
-                {
-                  p_sample[line]      = p_point * p_FACTOR;
-                  rho0_sample[line]   = n_point * rho0_FACTOR;
-                  e_sample[line]      = e_point * e_FACTOR;
-                  h_sample[line]      = (p_sample[line] + e_sample[line]) / rho0_sample[line];
+                  p_log[line]      = log(p_point * p_FACTOR);
+                  rho0_log[line]   = log(n_point * rho0_FACTOR);
+                  e_log[line]      = log(e_point * e_FACTOR);
+                  h_log[line]      = log((p_point * p_FACTOR + e_point * e_FACTOR) / (n_point * rho0_FACTOR));
                 }
             }
         }
@@ -415,6 +420,13 @@ static void populate_EoS(EoS_T *const eos)
         eos->cubic_spline->e_sample    = e_sample;
         eos->cubic_spline->rho0_sample = rho0_sample;
         eos->cubic_spline->h_floor     = Getd(P_"enthalpy_floor");
+        if (eos->cubic_spline->use_log_approach)
+        {
+          eos->cubic_spline->h_log    = h_log;
+          eos->cubic_spline->p_log    = p_log;
+          eos->cubic_spline->e_log    = e_log;
+          eos->cubic_spline->rho0_log = rho0_log;
+        }
         
         Interpolation_T *interp_p    = init_interpolation(); //pressure
         Interpolation_T *interp_e    = init_interpolation(); //energy density
@@ -427,7 +439,7 @@ static void populate_EoS(EoS_T *const eos)
         assign_interpolation_ptrs(interp_p);
         assign_interpolation_ptrs(interp_e);
         assign_interpolation_ptrs(interp_rho0);
-        if (strstr_i(Gets(P_"Interpolation_Method"), "Hermite_Cubic_Spline") || 
+        if (strstr_i(Gets(P_"Interpolation_Method"), "Hermite") || 
             strstr_i(Gets(P_"Interpolation_Method"), "Clamped_Cubic_Spline"))
         {
             interp_p->finite_diff_order    = (Uint)Pgeti("interpolation_finite_diff_order");
@@ -435,20 +447,31 @@ static void populate_EoS(EoS_T *const eos)
             interp_rho0->finite_diff_order = (Uint)Pgeti("interpolation_finite_diff_order");
         }
         
-        *interp_p->f = p_sample;
-        *interp_p->x = h_sample;
-        *interp_p->N = sample_s;
-        set_interp_warn_flag(interp_p, 1); // suppress warning
+        if (eos->cubic_spline->use_log_approach)
+        {
+          *interp_p->f    = p_log;
+          *interp_p->x    = h_log;
+          *interp_e->f    = e_log;
+          *interp_e->x    = h_log;
+          *interp_rho0->f = rho0_log;
+          *interp_rho0->x = h_log;
+        }
+        else
+        {
+          *interp_p->f    = p_sample;
+          *interp_p->x    = h_sample;
+          *interp_e->f    = e_sample;
+          *interp_e->x    = h_sample;
+          *interp_rho0->f = rho0_sample;
+          *interp_rho0->x = h_sample;
+        }
         
-        *interp_e->f = e_sample;
-        *interp_e->x = h_sample;
-        *interp_e->N = sample_s;
-        set_interp_warn_flag(interp_e, 1); // suppress warning
-        
-        *interp_rho0->f = rho0_sample;
-        *interp_rho0->x = h_sample;
+        *interp_p->N    = sample_s;
+        *interp_e->N    = sample_s;
         *interp_rho0->N = sample_s;
-        set_interp_warn_flag(interp_rho0, 1); // suppress warning
+        set_interp_warn_flag(interp_p, 1); // suppress warning
+        set_interp_warn_flag(interp_e, 1);
+        set_interp_warn_flag(interp_rho0, 1);
         
         plan_interpolation(interp_p);
         plan_interpolation(interp_e);

@@ -134,8 +134,12 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
     
     if (eos->cubic_spline->use_log_approach)
     {
-      *interp_s->h = log(eos->h);
-      drho0dh = exp(execute_derivative_interpolation(interp_s));
+      drho0dh = FDM_Fornberg(eos->cubic_spline->h_sample,
+                             eos->cubic_spline->rho0_sample,
+                             eos->h,
+                             1,
+                             interp_s->finite_diff_order,
+                             eos->cubic_spline->sample_size);
     }
     else
     {
@@ -163,8 +167,12 @@ double EoS_de_dh_h_tab(EoS_T* const eos)
     
     if (eos->cubic_spline->use_log_approach)
     {
-      *interp_s->h = log(eos->h);
-      dedh = exp(execute_derivative_interpolation(interp_s));
+      dedh = FDM_Fornberg(eos->cubic_spline->h_sample,
+                             eos->cubic_spline->e_sample,
+                             eos->h,
+                             1,
+                             interp_s->finite_diff_order,
+                             eos->cubic_spline->sample_size);
     }
     else
     {
