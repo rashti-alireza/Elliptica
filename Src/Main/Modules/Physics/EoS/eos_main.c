@@ -72,16 +72,19 @@ void free_EoS(EoS_T *s)
   }
   
   /* free cubic spline struct */
-  Free(s->cubic_spline->h_sample);
-  Free(s->cubic_spline->p_sample);
-  Free(s->cubic_spline->e_sample);
-  Free(s->cubic_spline->rho0_sample);
-  set_interp_alloc_mem_flag(s->cubic_spline->interp_p, 0);
-  set_interp_alloc_mem_flag(s->cubic_spline->interp_e, 0);
-  set_interp_alloc_mem_flag(s->cubic_spline->interp_rho0, 0);
-  free_interpolation(s->cubic_spline->interp_p);
-  free_interpolation(s->cubic_spline->interp_e);
-  free_interpolation(s->cubic_spline->interp_rho0);
+  if (strcmp_i(s->type, "tabular"))
+  {
+    Free(s->cubic_spline->h_sample);
+    Free(s->cubic_spline->p_sample);
+    Free(s->cubic_spline->e_sample);
+    Free(s->cubic_spline->rho0_sample);
+    set_interp_alloc_mem_flag(s->cubic_spline->interp_p, 0);
+    set_interp_alloc_mem_flag(s->cubic_spline->interp_e, 0);
+    set_interp_alloc_mem_flag(s->cubic_spline->interp_rho0, 0);
+    free_interpolation(s->cubic_spline->interp_p);
+    free_interpolation(s->cubic_spline->interp_e);
+    free_interpolation(s->cubic_spline->interp_rho0);
+  }
   
   free(s);
 }
@@ -397,6 +400,8 @@ static void populate_EoS(EoS_T *const eos)
                 rho0_sample[line]   = n_point * rho0_FACTOR;
                 e_sample[line]      = e_point * e_FACTOR;
                 h_sample[line]      = (p_sample[line] + e_sample[line]) / rho0_sample[line];
+                //printf("%i | %.4E | %.4E | %.4E | %.4E\n",
+                //      line, p_sample[line], rho0_sample[line], e_sample[line], h_sample[line]);
                 
                 if (eos->cubic_spline->use_log_approach)
                 {

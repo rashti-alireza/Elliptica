@@ -13,8 +13,8 @@ void test_EoS(Physics_T *const phys)
   char *path,file_name[1000];
   FILE *file = 0;
   Uint N = 1000;
-  const double h_max = 1.75;// eos->h_th != 0 ? eos->h_th[eos->N-1]+1: 2; //NOTE: Original values h = [1,2].
-  const double h_min = 1.01;
+  const double h_max = 1.5;
+  const double h_min = 1.00;
   double s = (h_max-h_min)/(N-1);
   Uint i;
   path = make_directory(path_par,"EoS_Tests");
