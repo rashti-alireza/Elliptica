@@ -35,7 +35,7 @@ int TOV_star(void *vp)
   char *path =  make_directory(path_par,"TOV_Star");
   char file_name[STR_LEN_MAX];
   FILE *file;
-  const double *p,*m,*r,*rbar;
+  const double *p,*e,*rho0, *eps,*m,*m0,*r,*rbar;
   const Uint N = (Uint)Pgeti("TOV_Star_n");
   Uint i;
   
@@ -55,6 +55,39 @@ int TOV_star(void *vp)
   
   Fclose(file);
   
+  /* print energy density */
+  e = tov->e;
+  sprintf(file_name,"%s/energy_density.2d",path);
+  file = Fopen(file_name,"w+");
+  fprintf(file,"#Schwarzchild_r  energy_density\n");
+  
+  for (i = 0; i < N; ++i)
+    fprintf(file,"%-15e  %e\n",r[i],e[i]);
+  
+  Fclose(file);
+  
+  /* print rest mass density */
+  rho0 = tov->rho0;
+  sprintf(file_name,"%s/rest_mass_density.2d",path);
+  file = Fopen(file_name,"w+");
+  fprintf(file,"#Schwarzchild_r  rest_mass_density\n");
+  
+  for (i = 0; i < N; ++i)
+    fprintf(file,"%-15e  %e\n",r[i],rho0[i]);
+  
+  Fclose(file);
+  
+  /* print specific internal energy */
+  eps = tov->eps;
+  sprintf(file_name,"%s/internal_energy.2d",path);
+  file = Fopen(file_name,"w+");
+  fprintf(file,"#Schwarzchild_r  specific internal energy\n");
+  
+  for (i = 0; i < N; ++i)
+    fprintf(file,"%-15e  %e\n",r[i],eps[i]);
+  
+  Fclose(file);
+  
   /* print mass */
   m = tov->m;
   sprintf(file_name,"%s/mass.2d",path);
@@ -63,6 +96,17 @@ int TOV_star(void *vp)
   
   for (i = 0; i < N; ++i)
     fprintf(file,"%-15e  %e\n",r[i],m[i]);
+    
+  Fclose(file);
+  
+  /* print rest mass */
+  m0 = tov->m0;
+  sprintf(file_name,"%s/rest_mass.2d",path);
+  file = Fopen(file_name,"w+");
+  fprintf(file,"#Schwarzchild_r  rest_mass\n");
+  
+  for (i = 0; i < N; ++i)
+    fprintf(file,"%-15e  %e\n",r[i],m0[i]);
     
   Fclose(file);
   

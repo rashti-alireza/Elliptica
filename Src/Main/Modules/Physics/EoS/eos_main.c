@@ -609,7 +609,7 @@ static void fill_K(EoS_T *const eos)
     K[i] = K[i-1]*pow(rho0[i],(n[i]-n[i-1])/(n[i-1]*n[i]));
   }
   
-  for(i = 0; i < eos->N; ++i) { printf("K%i == %E\n", i, K[i]); }
+  //for(i = 0; i < eos->N; ++i) { printf("K%i == %E\n", i, K[i]); }
 }
 
 /* filling a by requiring the continuity of energy density */
