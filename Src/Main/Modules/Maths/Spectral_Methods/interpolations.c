@@ -732,6 +732,8 @@ static void find_coeffs_Hermite_spline(Interpolation_T *const interp_s)
   int l; // Left-most sub-array point
   for (int j = 0; j < N; j++)
   {
+    for (Uint c = 0; c < (2*(Uint)n+2)*(2*(Uint)n+2); c++)
+    { Q[c] = 0; }
     // Excise sub-array from x[]. Shift left if out of bounds.
     l = j;
     while (l >= N - (n+1))

@@ -637,8 +637,12 @@ void TOV_free(TOV_T *TOV)
     return;
     
   Free(TOV->m);
+  Free(TOV->m0);
   Free(TOV->r);
   Free(TOV->p);
+  Free(TOV->e);
+  Free(TOV->rho0);
+  Free(TOV->eps);
   Free(TOV->h);
   Free(TOV->phi);
   Free(TOV->rbar);
