@@ -429,7 +429,7 @@ void bh_update_sConf_dsConf(Physics_T *const phys)
 {
   /* it assumes perfect S2 to use analytic formulae */
   if (!strcmp_i(Gets("surface_type"),"perfect_s2"))
-    Error0(NO_OPTION);
+    Warning("this function only supports 'surface_type = perfect_s2'!");
   
   Grid_T *const grid = mygrid(phys,Ftype("BH_around_IB"));
   const double BH_center_x = Getd("center_x");
