@@ -636,9 +636,9 @@ int interpolation_tests(Grid_T *const grid)
          "      polynomial is used, which might not get well resolved in \n"
          "      outermost patches which use compactification.\n\n");
   
-  // FOR_ALL_PATCHES(p,grid) //Un-comment for full tests.
+  FOR_ALL_PATCHES(p,grid) //Un-comment for full tests.
   {
-  if (DO_NOT) { /////////////////Remove if(DO_NOT) to test functions other than
+  if (DO) { /////////////////Remove if(DO_NOT) to test functions other than
                 /////////////////1-D interpolation
     Patch_T *patch = grid->patch[p];
     const Uint *n = patch->n;
@@ -654,44 +654,44 @@ int interpolation_tests(Grid_T *const grid)
     Y = make_random_number(n[1],min[1],max[1]);
     Z = make_random_number(n[2],min[2],max[2]);
     
-    if (DO_NOT)
+    if (DO)
     {
       printf("Interpolation test:      X direction, patch %10s:\n",patch->name);
       status = interpolation_tests_X(field,X,n[0]);
       check_test_result(status);
     }
     
-    if (DO_NOT)
+    if (DO)
     {
       printf("Interpolation test:      Y direction, patch %10s:\n",patch->name);
       status = interpolation_tests_Y(field,Y,n[1]);
       check_test_result(status);
     }
-    if (DO_NOT)
+    if (DO)
     {
       printf("Interpolation test:      Z direction, patch %10s:\n",patch->name);
       status = interpolation_tests_Z(field,Z,n[2]);
       check_test_result(status);
     }
-    if (DO_NOT)
+    if (DO)
     {
       printf("Interpolation test: X & Y directions, patch %10s:\n",patch->name);
       status = interpolation_tests_XY(field,X,Y,n[0],n[1]);
       check_test_result(status);
     }
-    if (DO_NOT)
+    if (DO)
     {
       printf("Interpolation test: X & Z directions, patch %10s:\n",patch->name);
       status = interpolation_tests_XZ(field,X,Z,n[0],n[2]);
       check_test_result(status);
     } 
-    if (DO_NOT)
+    if (DO)
     {
       printf("Interpolation test: Y & Z directions, patch %10s:\n",patch->name);
       status = interpolation_tests_YZ(field,Y,Z,n[1],n[2]);
       check_test_result(status);
     }
-    if (DO_NOT)
+    if (DO)
     {
       printf("Interpolation test:              3-D, patch %10s:\n",patch->name);
       status = interpolation_tests_XYZ(field,X,Y,Z,n[0],n[1],n[2]);
@@ -739,7 +739,7 @@ int interpolation_tests(Grid_T *const grid)
   // Convergence tests for 1D interpolation
   // Edit parameters for number of trials and number of
   // spline knots in each trial here.
-  if (DO)
+  if (DO_NOT)
   {
       printf("Interpolation test:             Convergence Test=>\n");
       printf("Interpolation method: %s\n", Pgets("Interpolation_Method"));
@@ -2009,9 +2009,19 @@ static int interpolation_tests_X(Field_T *const field,const double *const X,cons
   interp_s->X_dir_flag = 1;
   plan_interpolation(interp_s);
   
+  //////////
+  //printf("\ninterpolation_tests_x:\n");
+  //printf("\tpatch total nodes: %i\n", patch->nn);
+  //Uint l;
+  //FOR_ALL_POINTS(l, patch)
+  //{ printf("\t\tfield->v[%i] == %E\n", l, field->v[l]); }
+  //////////
+  
+  
   flg = NONE;
   for (j = 0; j < N; ++j)/* -> choose different slices for testing */
   {
+    //printf("\nj == %i\n", j);//////////
     interp_s->J = (Uint) floor(random_double(0,n[1],j));
     interp_s->K = (Uint) floor(random_double(0,n[2],1));
     
@@ -2026,7 +2036,15 @@ static int interpolation_tests_X(Field_T *const field,const double *const X,cons
       Xc[0] = X[i];
       x_of_X(xc,Xc,patch);
       
-      diff = poly5_f_point(xc[0],xc[1],xc[2])-execute_interpolation(interp_s);
+      //diff = poly5_f_point(xc[0],xc[1],xc[2])-execute_interpolation(interp_s);
+      double a = execute_interpolation(interp_s);//////////
+      diff = poly5_f_point(xc[0],xc[1],xc[2])-a;//////////
+      //////////
+      //printf("\ni == %i\n", i);
+      //printf("\tCoords: (%.4E, %.4E, %.4E)\n", xc[0], xc[1], xc[2]);
+      //printf("\tInterpolation: %E\n", a);
+      //printf("\tDiff: %E\n", diff);
+      //printf("----------------------\n");
       if (GRT(fabs(diff),tol))
       {
         flg = FOUND; max = (max<fabs(diff)?fabs(diff):max);

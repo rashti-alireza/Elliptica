@@ -95,12 +95,12 @@ void plan_interpolation(Interpolation_T *const interp_s)
     interp_s->interpolation_func = interpolation_natural_cubic_spline_1d;
     interp_s->interpolation_derivative_func = interpolation_NCS_derivative;
   }
-  else if (strstr_i(interp_s->method,"Hermite_Cubic_Spline") || strstr_i(interp_s->method,"Hermite_Spline")
-           || strstr_i(interp_s->method,"Hermite"))
+  else if (strstr_i(interp_s->method,"Hermite"))
   {
     order_arrays_spline_1d(interp_s);
-    interp_s->finite_diff_order = (Uint)Pgeti("Interpolation_finite_diff_order");
-    interp_s->Spline_Order = (Uint)Pgeti("Interpolation_spline_order");
+    
+    if (!&interp_s->finite_diff_order) { interp_s->finite_diff_order = (Uint)Pgeti("Interpolation_finite_diff_order"); }
+    if (!&interp_s->Spline_Order) { interp_s->Spline_Order = (Uint)Pgeti("Interpolation_spline_order"); }
     find_coeffs_Hermite_spline(interp_s);
     interp_s->interpolation_func = interpolation_Hermite_spline;
     interp_s->interpolation_derivative_func = interpolation_finite_difference;
@@ -1107,6 +1107,7 @@ static fInterpolation_T *interpolation_Chebyshev_Tn(Interpolation_T *const inter
 */
 static double interpolation_Chebyshev_Tn_X(Interpolation_T *const interp_s)
 {
+  //printf("\tinterpolation_Chebyshev_Tn_X:\n");//////////
   Field_T *const field = interp_s->field;/* interesting field */
   const double X = General2ChebyshevExtrema(interp_s->X,0,field->patch);/* X coord of the interesting point */
   const Uint *const n = interp_s->field->patch->n;
@@ -1120,7 +1121,12 @@ static double interpolation_Chebyshev_Tn_X(Interpolation_T *const interp_s)
   C = field->v2;
   
   for (i = 0; i < n[0]; ++i)
+  {
     interp_v += C[i_j_k_to_ijk(n,i,J,K)]*Tx(i,X);
+    //printf("\t\tC[%i][%i][%i] == %E\n", i, J, K, C[i]);//////////
+    //printf("\t\tTx(%i,X) == %E\n", i, Tx(i,X));//////////
+    //printf("\t\tinterp == %E\n", interp_v);//////////
+  }
   
   return interp_v;
 }

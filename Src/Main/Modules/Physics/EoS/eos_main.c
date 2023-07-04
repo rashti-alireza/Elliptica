@@ -285,12 +285,12 @@ static void populate_EoS(EoS_T *const eos)
     //Generates tabular EOS
     else if (strcmp_i(eos->type, "tabular") || strcmp_i(eos->type, "tab"))
     {
-        FILE* eos_table = fopen(Pgets("eos_table_name"),"r");        //Name of EOS table
+        FILE* eos_table = fopen(Gets(P_"table_name"),"r");        //Name of EOS table
         if (!eos_table) { Error0("ERROR: Could not open EOS table."); }
         
         //Reads number of data points in EOS file.
-        Uint sample_s = get_sample_size(Pgets("eos_table_name"));    //Defined in eos_tabular.c
-        if (strstr_i(Pgets("EOS_table_format"), "Lorene")) { sample_s -= 9; }
+        Uint sample_s = get_sample_size(Gets(P_"table_name"));    //Defined in eos_tabular.c
+        if (strstr_i(Gets(P_"table_format"), "Lorene")) { sample_s -= 9; }
         
         eos->cubic_spline->sample_size = sample_s;
         double *h_sample    = alloc_double(sample_s); //Arrays for tabular data points
@@ -303,9 +303,10 @@ static void populate_EoS(EoS_T *const eos)
         double* rho0_log;
         
         // Sets flag for log-log interpolation based on parameter file.
-        if (strstr_i(PgetsEZ("EOS_log_approach"), "yes"))
+	if (PgetsEZ(P_"log_approach")) {
+        if (strstr_i(Gets(P_"log_approach"), "yes"))
         { eos->cubic_spline->use_log_approach = 1; }
-        else { eos->cubic_spline->use_log_approach = 0; }
+        else { eos->cubic_spline->use_log_approach = 0; } }
         
         if (eos->cubic_spline->use_log_approach)
         {
@@ -321,9 +322,7 @@ static void populate_EoS(EoS_T *const eos)
         double rho0_point;
         double e_point;
         
-        if (!PgetsEZ("EOS_table_format"))
-        { Error0("ERROR: EOS table format not specified.\n"); }
-        else if (strstr_i(PgetsEZ("EOS_table_format"), "Elliptica"))
+        if (strstr_i(Gets(P_"table_format"), "Elliptica"))
         {
             // Default format in columns [pressure] [rest-mass density] [energy density] [enthalpy]
             // in geometrized (G = c = solar mass = 1) units.
@@ -350,7 +349,7 @@ static void populate_EoS(EoS_T *const eos)
                 }
             }
         }
-        else if (strstr_i(PgetsEZ("EOS_table_format"), "Lorene"))
+        else if (strstr_i(Gets(P_"table_tormat"), "Lorene"))
         {
             // Lorene format in columns
             //          [line number] [number density] [(total) energy density] [pressure].
@@ -455,12 +454,14 @@ static void populate_EoS(EoS_T *const eos)
         assign_interpolation_ptrs(interp_p);
         assign_interpolation_ptrs(interp_e);
         assign_interpolation_ptrs(interp_rho0);
-        if (strstr_i(Gets(P_"Interpolation_Method"), "Hermite") || 
-            strstr_i(Gets(P_"Interpolation_Method"), "Clamped_Cubic_Spline"))
+        if (strstr_i(Gets(P_"Interpolation_Method"), "Hermite"))
         {
-            interp_p->finite_diff_order    = (Uint)Pgeti("interpolation_finite_diff_order");
-            interp_e->finite_diff_order    = (Uint)Pgeti("interpolation_finite_diff_order");
-            interp_rho0->finite_diff_order = (Uint)Pgeti("interpolation_finite_diff_order");
+            interp_p->finite_diff_order    = (Uint)Geti(P_"finite_diff_order");
+            interp_e->finite_diff_order    = (Uint)Geti(P_"finite_diff_order");
+            interp_rho0->finite_diff_order = (Uint)Geti(P_"finite_diff_order");
+            interp_p->Spline_Order         = (Uint)Geti(P_"spline_order");
+            interp_e->Spline_Order         = (Uint)Geti(P_"spline_order");
+            interp_rho0->Spline_Order      = (Uint)Geti(P_"spline_order");
         }
         
         if (eos->cubic_spline->use_log_approach)
