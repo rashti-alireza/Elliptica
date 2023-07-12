@@ -57,8 +57,11 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   /* find enthalpy at the center of NS such that 
   // the baryonic mass reaches the desired value.
   // the spirit of the approach is bisection method in root finders */
+
   while (!EQL(m,TOV->bar_m) && iter < MAX_iter)
   {
+    printf("Bisection %i\n", iter);////////
+    printf("Central enthalpy: %E\n", h_cent_new);////////
     TOV->h_cent = h_cent_new;
     solve_ODE_enthalpy_approach(TOV);
     m = calculate_baryonic_mass(TOV);

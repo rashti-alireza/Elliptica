@@ -132,10 +132,11 @@ int TOV_star(void *vp)
     if (mass_final <= mass_initial || stars == 0)
     { Error0("Error in mass-radius curve parameters.\n"); }
     
-    double test_mass = mass_initial;
-    double delta_m = (mass_final - mass_initial) / stars;
-    double* radii = alloc_double(stars);
-    double* masses = alloc_double(stars);
+    double test_mass           = mass_initial;
+    double delta_m             = (mass_final - mass_initial) / stars;
+    double* radii              = alloc_double(stars);
+    double* masses             = alloc_double(stars);
+    double* central_enthalpies = alloc_double(stars);
     
     // Geometric units to km conversion factor: (G * Msolar / c^2) / (10^3)
     //double r_FACTOR = 1.47667;
@@ -150,17 +151,27 @@ int TOV_star(void *vp)
       tov_star              = TOV_solution(tov_star);
       radii[star]           = tov_star->r[tov->N-1];
       masses[star]          = tov_star->ADM_m;
+      central_enthalpies[star] = tov_star->h[0];
       
       TOV_free(tov_star);
       test_mass += delta_m;
     }
     
     // Print results to file
+    // mass vs radius
     sprintf(file_name,"%s/mass_radius.txt",path);
     file = Fopen(file_name,"w+");
-    fprintf(file,"#Radius (km) \t ADM Mass (solar masses)\n");
+    fprintf(file,"#Radius (km) \t ADM Mass\n");
     for (i = 0; i < stars; ++i)
       { fprintf(file,"%E \t %E\n",radii[i],masses[i]); }
+    Fclose(file);
+    
+    // mass vs central enthalpy
+    sprintf(file_name,"%s/mass_enthalpy.txt",path);
+    file = Fopen(file_name,"w+");
+    fprintf(file,"#Central Enthalpy \t ADM Mass\n");
+    for (i = 0; i < stars; ++i)
+      { fprintf(file,"%E \t %E\n",central_enthalpies[i],masses[i]); }
     Fclose(file);
     
     free(radii);
