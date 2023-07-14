@@ -1796,8 +1796,6 @@ static int interpolation_tests_Convergence(const Uint tests, const Uint N0, cons
     plan_interpolation(interp_s);
     
     Uint cutoff = 6; // # knots we do not attempt to interpolate
-    // (since methods such as clamped spline cannot
-    // interpolate end points).
     for (i = cutoff; i < N-cutoff; ++i)
     {
       double diff;

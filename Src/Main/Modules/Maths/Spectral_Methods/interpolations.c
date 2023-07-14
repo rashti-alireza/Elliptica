@@ -67,13 +67,6 @@ void assign_interpolation_ptrs(Interpolation_T *const interp_s)
     interp_s->h = &interp_s->Hermite_spline_1d->h;
     interp_s->N = &interp_s->Hermite_spline_1d->N;
   }
-  else if (strstr_i(interp_s->method,"Clamped_Cubic_Spline_1D"))
-  {
-    interp_s->f = &interp_s->C_cubic_spline_1d->f;
-    interp_s->x = &interp_s->C_cubic_spline_1d->x;
-    interp_s->h = &interp_s->C_cubic_spline_1d->h;
-    interp_s->N = &interp_s->C_cubic_spline_1d->N;
-  }
 }
 
 /* planning interpolation function based on 
@@ -104,13 +97,6 @@ void plan_interpolation(Interpolation_T *const interp_s)
     find_coeffs_Hermite_spline(interp_s);
     interp_s->interpolation_func = interpolation_Hermite_spline;
     interp_s->interpolation_derivative_func = interpolation_finite_difference;
-  }
-  else if (strstr_i(interp_s->method,"Clamped_Cubic_Spline_1D"))
-  {
-    order_arrays_natural_cubic_spline_1d(interp_s);
-    find_coeffs_clamped_cubic_spline_1d(interp_s);
-    interp_s->interpolation_func = interpolation_clamped_cubic_spline_1d;
-    interp_s->interpolation_derivative_func = interpolation_CCS_derivative;
   }
   else if (strstr_i(interp_s->method,"Spectral") || 
        strstr_i(PgetsEZ("Interpolation_Method"),"Spectral"))
@@ -829,149 +815,6 @@ static double interpolation_Hermite_spline(Interpolation_T *const interp_s)
   return ret;
 }
 
-////////////////////////////////////////////Clamped cubic spline
-// Uses the same principle as natural cubic spline on the interval [a,b],
-// but with S_0'(a) = f'(a) and S_n-1'(b) = f'(b).
-// Uses a finite difference approximation to find f'(a) and f'(b).
-static void find_coeffs_clamped_cubic_spline_1d(Interpolation_T *const interp_s)
-{
-  const Uint n = interp_s->C_cubic_spline_1d->N-1;
-  const double *const x = interp_s->C_cubic_spline_1d->x;
-  double *const a = interp_s->C_cubic_spline_1d->f;
-  double *const b = alloc_double(n);
-  double *const c = alloc_double(n+1);
-  double *const d = alloc_double(n);
-  double *h  = alloc_double(n),
-         *l  = alloc_double(n+1),
-         *z  = alloc_double(n+1),
-         *al = alloc_double(n),
-         *mu = alloc_double(n);
-  Uint i;
-  
-  for (i = 0; i < n; ++i)
-    h[i] = x[i+1]-x[i];
-    
-  // Set clamped ends using f'(0) = 0, f'(n) = 0.
-  double dfdx0 = 0;
-  double dfdxn = 0;
-  al[0] = 3*(a[1] - a[0])/h[0] - 3*dfdx0;
-  al[n] = -3*(a[n] - a[n-1])/h[n-1] + 3*dfdxn;
-  
-  for (i = 1; i < n; ++i)
-    al[i] = 3*(a[i+1]-a[i])/h[i]-3*(a[i]-a[i-1])/h[i-1];
-  
-  l[0]  = 1;
-  mu[0] = 0;
-  z[0]  = 0;
-  for (i = 1; i < n; ++i)
-  {
-    l[i] = 2*(x[i+1]-x[i-1])-h[i-1]*mu[i-1];
-    mu[i] = h[i]/l[i];
-    z[i] = (al[i]-h[i-1]*z[i-1])/l[i];
-  }
-  l[n] = 1;
-  z[n] = 0;
-  c[n] = 0;
-  
-  for (i = n-1; i >= 1; --i)
-  {
-    c[i] = z[i]-mu[i]*c[i+1];
-    b[i] = (a[i+1]-a[i])/h[i]-h[i]*(c[i+1]+2.*c[i])/3.;
-    d[i] = (c[i+1]-c[i])/3./h[i];
-  }
-  i = 0;
-  c[i] = z[i]-mu[i]*c[i+1];
-  b[i] = (a[i+1]-a[i])/h[i]-h[i]*(c[i+1]+2.*c[i])/3.;
-  d[i] = (c[i+1]-c[i])/3./h[i];
-  
-  interp_s->C_cubic_spline_1d->a = a;
-  interp_s->C_cubic_spline_1d->b = b;
-  interp_s->C_cubic_spline_1d->c = c;
-  interp_s->C_cubic_spline_1d->d = d;
-  
-  free(h);
-  free(l);
-  free(z);
-  free(mu);
-  free(al);
-}
-
-static double interpolation_clamped_cubic_spline_1d(Interpolation_T *const interp_s)
-{
-  if (!interp_s->C_cubic_spline_1d->Order)
-    order_arrays_spline_1d(interp_s);
-    
-  const double *const x = interp_s->C_cubic_spline_1d->x;
-  const double *const a = interp_s->C_cubic_spline_1d->a;
-  const double *const b = interp_s->C_cubic_spline_1d->b;
-  const double *const c = interp_s->C_cubic_spline_1d->c;
-  const double *const d = interp_s->C_cubic_spline_1d->d;
-  const double h = interp_s->C_cubic_spline_1d->h;
-  const Uint N = interp_s->C_cubic_spline_1d->N;
-  double ret = DBL_MAX;/* it's important to be max double */
-  Uint i = 0;
-  Flag_T flg = NONE;
-  
-  /* find the segment */
-  for (i = 0; i < N-1; ++i)
-  {
-    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
-    {
-      flg = FOUND;
-      break;
-    }
-  }
-
-  if (flg != FOUND)
-  {
-    if (!interp_s->C_cubic_spline_1d->No_Warn)
-      Warning("The given point for the interpolation is out of the domain.\n");
-    
-    return ret;
-  }
-  
-  ret = a[i]+b[i]*(h-x[i])+c[i]*Pow2(h-x[i])+d[i]*Pow3(h-x[i]);
-  
-  return ret; 
-}
-
-static double interpolation_CCS_derivative(Interpolation_T *const interp_s)
-{
-  if (!interp_s->C_cubic_spline_1d->Order)
-    order_arrays_spline_1d(interp_s);
-    
-  const double *const x = interp_s->C_cubic_spline_1d->x;
-  const double *const b = interp_s->C_cubic_spline_1d->b;
-  const double *const c = interp_s->C_cubic_spline_1d->c;
-  const double *const d = interp_s->C_cubic_spline_1d->d;
-  const double h = interp_s->C_cubic_spline_1d->h;
-  const Uint N = interp_s->C_cubic_spline_1d->N;
-  double ret = DBL_MAX;/* it's important to be max double */
-  Uint i = 0;
-  Flag_T flg = NONE;
-  
-  /* find the segment */
-  for (i = 0; i < N-1; ++i)
-  {
-    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
-    {
-      flg = FOUND;
-      break;
-    }
-  }
-
-  if (flg != FOUND)
-  {
-    if (!interp_s->C_cubic_spline_1d->No_Warn)
-      Warning("The given point for the interpolation is out of the domain.\n");
-    
-    return ret;
-  }
-  
-  ret = b[i] + 2*c[i]*(h-x[i]) + 3*d[i]*Pow2(h-x[i]);
-  return ret; 
-}
-
 /////////////////////////////////////////Neville interpolation
 /* tutorial:
 // =========
@@ -1329,20 +1172,6 @@ void free_interpolation(Interpolation_T *interp_s)
       //free(interp_s->Hermite_spline_1d->a);
     }
   }
-  else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
-  {
-    if (interp_s->C_cubic_spline_1d->b)
-    { free(interp_s->C_cubic_spline_1d->b); }
-    if (interp_s->C_cubic_spline_1d->c)
-    { free(interp_s->C_cubic_spline_1d->c); }
-    if (interp_s->C_cubic_spline_1d->d)
-    { free(interp_s->C_cubic_spline_1d->d); }
-    if (interp_s->C_cubic_spline_1d->Alloc_Mem)
-    {
-      free(interp_s->C_cubic_spline_1d->x);
-      free(interp_s->C_cubic_spline_1d->f);
-    }
-  }
   
   free(interp_s);
 }
@@ -1361,8 +1190,6 @@ static Uint get_order_flag(Interpolation_T *const interp_s)
   { return (int)interp_s->N_cubic_spline_1d->Order; }
   else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
   { return (int)interp_s->Hermite_spline_1d->Order; }
-  else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
-  { return (int)interp_s->C_cubic_spline_1d->Order; }
   
   return 0;
 }
@@ -1373,8 +1200,6 @@ static Uint get_warn_flag(Interpolation_T *const interp_s)
   { return (int)interp_s->N_cubic_spline_1d->No_Warn; }
   else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
   { return (int)interp_s->Hermite_spline_1d->No_Warn; }
-  else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
-  { return (int)interp_s->C_cubic_spline_1d->No_Warn; }
   
   return 0;
 }
@@ -1385,8 +1210,6 @@ static Uint get_alloc_mem_flag(Interpolation_T *const interp_s)
   { return (int)interp_s->N_cubic_spline_1d->Alloc_Mem; }
   else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
   { return (int)interp_s->Hermite_spline_1d->Alloc_Mem; }
-  else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
-  { return (int)interp_s->C_cubic_spline_1d->Alloc_Mem; }
   
   return 0;
 }
@@ -1407,8 +1230,6 @@ static void set_interp_order_flag(Interpolation_T *const interp_s, Uint flag)
     { interp_s->N_cubic_spline_1d->Order = 1; }
     else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
     { interp_s->Hermite_spline_1d->Order = 1; }
-    else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
-    { interp_s->C_cubic_spline_1d->Order = 1; }
   }
   else
   {
@@ -1416,8 +1237,6 @@ static void set_interp_order_flag(Interpolation_T *const interp_s, Uint flag)
     { interp_s->N_cubic_spline_1d->Order = 0; }
     else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
     { interp_s->Hermite_spline_1d->Order = 0; }
-    else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
-    { interp_s->C_cubic_spline_1d->Order = 0; }
   }
 }
 
@@ -1436,8 +1255,6 @@ void set_interp_warn_flag(Interpolation_T *const interp_s, Uint flag)
     { interp_s->N_cubic_spline_1d->No_Warn = 1; }
     else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
     { interp_s->Hermite_spline_1d->No_Warn = 1; }
-    else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
-    { interp_s->C_cubic_spline_1d->No_Warn = 1; }
   }
   else
   {
@@ -1445,8 +1262,6 @@ void set_interp_warn_flag(Interpolation_T *const interp_s, Uint flag)
     { interp_s->N_cubic_spline_1d->No_Warn = 0; }
     else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
     { interp_s->Hermite_spline_1d->No_Warn = 0; }
-    else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
-    { interp_s->C_cubic_spline_1d->No_Warn = 0; }
   }
 }
 
@@ -1465,8 +1280,6 @@ void set_interp_alloc_mem_flag(Interpolation_T *const interp_s, Uint flag)
     { interp_s->N_cubic_spline_1d->Alloc_Mem = 1; }
     else if (strstr_i(interp_s->method, "Hermite"))
     { interp_s->Hermite_spline_1d->Alloc_Mem = 1; }
-    else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
-    { interp_s->C_cubic_spline_1d->Alloc_Mem = 1; }
   }
   else
   {
@@ -1474,8 +1287,6 @@ void set_interp_alloc_mem_flag(Interpolation_T *const interp_s, Uint flag)
     { interp_s->N_cubic_spline_1d->Alloc_Mem = 0; }
     else if (strstr_i(interp_s->method, "Hermite"))
     { interp_s->Hermite_spline_1d->Alloc_Mem = 0; }
-    else if (strstr_i(interp_s->method, "Clamped_Cubic_Spline"))
-    { interp_s->C_cubic_spline_1d->Alloc_Mem = 0; }
   }
 }
 

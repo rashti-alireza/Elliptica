@@ -84,32 +84,6 @@ typedef struct INTERPOLATION_T
    Uint No_Warn: 1;
   }Hermite_spline_1d[1];  //1D Hermite spline
   
-  /*
-  // Old Hermite cubic spline structure, kept temporarily for reference.
-  struct
-  { 
-   double *f; // f(xi)
-   double *x; // coordinate grid
-   double h;  // point to interpolate
-   Uint N;    // number of grid points
-   double *a, *b, *c, *d; //Arrays for spline coefficients.
-   Uint Spline_Order;
-   Uint Order: 1; // 1 iff x array in order
-   Uint Alloc_Mem: 1;
-   Uint No_Warn: 1;
-  }Hermite_spline_1d[1]; //1D Hermite cubic spline
-  */
-  struct
-  { 
-   double *f; // f(xi)
-   double *x; // coordinate grid
-   double h;  // point to interpolate
-   Uint N;    // number of grid points
-   double *a, *b, *c, *d; //Arrays for spline coefficients.
-   Uint Order: 1; // 1 iff x array in order
-   Uint Alloc_Mem: 1;
-   Uint No_Warn: 1;
-  }C_cubic_spline_1d[1]; //1D clamped cubic spline
 }Interpolation_T;
 
 void rft_1d_ChebyshevExtrema_coeffs(double *const values ,double *const coeffs,const Uint n);
