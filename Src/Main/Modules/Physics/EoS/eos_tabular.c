@@ -20,12 +20,21 @@ Uint get_sample_size(const char* const eos_file_name)
 //Calculates pressure from enthalpy by tabular EOS.
 double EoS_p_h_tab(EoS_T* const eos)
 {
-    if (LSS(eos->h, eos->cubic_spline->h_floor) || GRT(eos->h, eos->cubic_spline->h_max))
+    double h_copy = eos->h;
+    if (GRT(eos->h, eos->cubic_spline->h_max))
     {
-        printf("ERROR: tabular p(h): enthalpy (%E) out of bounds (%E, %E).\n",
+        printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
              eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
         Error0("Exit");
         return 0.0;
+    }
+    else if (LSS(eos->h, eos->cubic_spline->h_floor))
+    {
+        // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
+        printf("WARNING: EoS_p_h_tab (eos_tabular.c): Enthalpy (%E) below enthalpy floor (%E).\n",
+               eos->h, eos->cubic_spline->h_floor);
+        printf("Using enthalpy value h = %E\n", eos->cubic_spline->h_floor);
+        eos->h = eos->cubic_spline->h_floor;
     }
     
     double p;  
@@ -41,18 +50,29 @@ double EoS_p_h_tab(EoS_T* const eos)
       *interp_s->h = eos->h;
       p = execute_interpolation(interp_s);
     }
+    
+    eos->h = h_copy;
     return (LSSEQL(p,0.) || p == DBL_MAX ? 0. : p);
 }
 
 //Calculates rest-mass density from enthalpy by tabular EOS.
 double EoS_rho0_h_tab(EoS_T* const eos)
 {
-    if (LSS(eos->h, eos->cubic_spline->h_floor) || GRT(eos->h, eos->cubic_spline->h_max))
+    double h_copy = eos->h;
+    if (GRT(eos->h, eos->cubic_spline->h_max))
     {
-        printf("ERROR: tabular rho0(h): enthalpy (%E) out of bounds (%E, %E).\n",
+        printf("ERROR: EoS_rho0_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
              eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
         Error0("Exit");
         return 0.0;
+    }
+    else if (LSS(eos->h, eos->cubic_spline->h_floor))
+    {
+        // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
+        printf("WARNING: EoS_rho0_h_tab (eos_tabular.c): Enthalpy (%E) below enthalpy floor (%E).\n",
+               eos->h, eos->cubic_spline->h_floor);
+        printf("Using enthalpy value h = %E\n", eos->cubic_spline->h_floor);
+        eos->h = eos->cubic_spline->h_floor;
     }
   
     double rho0;  
@@ -68,18 +88,29 @@ double EoS_rho0_h_tab(EoS_T* const eos)
       *interp_s->h = eos->h;
       rho0 = execute_interpolation(interp_s);
     }
+    
+    eos->h = h_copy;
     return (LSSEQL(rho0,0.) || rho0 == DBL_MAX ? 0. : rho0);
 }
 
 //Calculates energy density from enthalpy by tabular EOS.
 double EoS_e_h_tab(EoS_T* const eos)
 {
-    if (LSS(eos->h, eos->cubic_spline->h_floor) || GRT(eos->h, eos->cubic_spline->h_max))
+    double h_copy = eos->h;
+    if (GRT(eos->h, eos->cubic_spline->h_max))
     {
-        printf("ERROR: tabular e(h): enthalpy (%E) out of bounds (%E, %E).\n",
+        printf("ERROR: EoS_e_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
              eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
         Error0("Exit");
         return 0.0;
+    }
+    else if (LSS(eos->h, eos->cubic_spline->h_floor))
+    {
+        // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
+        printf("WARNING: EoS_e_h_tab (eos_tabular.c): Enthalpy (%E) below enthalpy floor (%E).\n",
+               eos->h, eos->cubic_spline->h_floor);
+        printf("Using enthalpy value h = %E\n", eos->cubic_spline->h_floor);
+        eos->h = eos->cubic_spline->h_floor;
     }
 
     double e;
@@ -95,6 +126,8 @@ double EoS_e_h_tab(EoS_T* const eos)
       *interp_s->h = eos->h;
       e = execute_interpolation(interp_s);
     }
+    
+    eos->h = h_copy;
     return (LSSEQL(e,0.) || e == DBL_MAX ? 0. : e);
 }
 
@@ -103,29 +136,48 @@ double EoS_e_h_tab(EoS_T* const eos)
 //Dependent upon p(h) and rho0(h)
 double EoS_e0_h_tab(EoS_T* const eos)
 {
-    if (LSS(eos->h, eos->cubic_spline->h_floor) || GRT(eos->h, eos->cubic_spline->h_max))
+    double h_copy = eos->h;
+    if (GRT(eos->h, eos->cubic_spline->h_max))
     {
-        printf("ERROR: e0(h): enthalpy (%E) out of bounds (%E, %E).\n",
+        printf("ERROR: EoS_e0_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
              eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
         Error0("Exit");
         return 0.0;
     }
+    else if (LSS(eos->h, eos->cubic_spline->h_floor))
+    {
+        // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
+        printf("WARNING: EoS_e0_h_tab (eos_tabular.c): Enthalpy (%E) below enthalpy floor (%E).\n",
+               eos->h, eos->cubic_spline->h_floor);
+        printf("Using enthalpy value h = %E\n", eos->cubic_spline->h_floor);
+        eos->h = eos->cubic_spline->h_floor;
+    }
     
     double rho0_floor = 1.0E-7; //FIXME: Make dynamic parameter
     
+    eos->h = h_copy;
     return (EoS_e_h_tab(eos) / (EoS_rho0_h_tab(eos) + rho0_floor)) - 1.0; 
 }
 
 //Calculates derivative of rest-mass density wrt enthalpy, with enthalpy as the independent variable.
 double EoS_drho0_dh_h_tab(EoS_T* const eos)
 {
+    double h_copy = eos->h;
     //Check bounds for enthalpy
-    if (LSS(eos->h, eos->cubic_spline->h_floor) || GRT(eos->h, eos->cubic_spline->h_max))
+    if (GRT(eos->h, eos->cubic_spline->h_max))
     {
-        printf("ERROR: drho0/dh(h): enthalpy (%E) out of bounds (%E, %E).\n",
+        printf("ERROR: EoS_drho0_dh_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
              eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
          Error0("Exit");
         return 0.0;
+    }
+    else if (LSS(eos->h, eos->cubic_spline->h_floor))
+    {
+        // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
+        printf("WARNING: EoS_drho0_dh_h_tab (eos_tabular.c): Enthalpy (%E) below enthalpy floor (%E).\n",
+               eos->h, eos->cubic_spline->h_floor);
+        printf("Using enthalpy value h = %E\n", eos->cubic_spline->h_floor);
+        eos->h = eos->cubic_spline->h_floor;
     }
     
     double drho0dh;
@@ -146,19 +198,30 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
       *interp_s->h = eos->h;
       drho0dh = execute_derivative_interpolation(interp_s);
     }
+    
+    eos->h = h_copy;
     return (LSSEQL(drho0dh,0.) || drho0dh == DBL_MAX ? 0. : drho0dh);
 }
 
 //Calculates derivative of energy density wrt enthalpy, with enthalpy as the independent variable.
 double EoS_de_dh_h_tab(EoS_T* const eos)
 {
+    double h_copy = eos->h;
     //Check bounds for enthalpy
-    if (LSS(eos->h, eos->cubic_spline->h_floor) || GRT(eos->h, eos->cubic_spline->h_max))
+    if (GRT(eos->h, eos->cubic_spline->h_max))
     {
-        printf("ERROR: de/dh(h): enthalpy (%E) out of bounds (%E, %E).\n",
+        printf("ERROR: EoS_de_dh_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
              eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
          Error0("Exit");
         return 0.0;
+    }
+    else if (LSS(eos->h, eos->cubic_spline->h_floor))
+    {
+        // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
+        printf("WARNING: EoS_de_dh_h_tab (eos_tabular.c): Enthalpy (%E) below enthalpy floor (%E).\n",
+               eos->h, eos->cubic_spline->h_floor);
+        printf("Using enthalpy value h = %E\n", eos->cubic_spline->h_floor);
+        eos->h = eos->cubic_spline->h_floor;
     }
     
     double dedh;
@@ -179,6 +242,8 @@ double EoS_de_dh_h_tab(EoS_T* const eos)
       *interp_s->h = eos->h;
       dedh = execute_derivative_interpolation(interp_s);
     }
+    
+    eos->h = h_copy;
     return (LSSEQL(dedh,0.) || dedh == DBL_MAX ? 0. : dedh);
 }
 

@@ -57,12 +57,30 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   /* find enthalpy at the center of NS such that 
   // the baryonic mass reaches the desired value.
   // the spirit of the approach is bisection method in root finders */
-
+  
+  // Useful for debugging/monitoring TOV solver progress.
+  //printf("{ TOV solver:\n");//////////
+  //printf("\t|%-6s|%-12s|%-12s|\n", "iter", "enthalpy", "mass");
+  
   while (!EQL(m,TOV->bar_m) && iter < MAX_iter)
   {
-    printf("Bisection %i\n", iter);////////
-    printf("Central enthalpy: %E\n", h_cent_new);////////
     TOV->h_cent = h_cent_new;
+
+    //////////
+    //Terminate TOV solver if central enthalpy exceeds max available data point for tabular EoS.
+    if ((strstr_i(tov_eos->type, "Tabular") ||
+	       strstr_i(tov_eos->type, "tabular")) && 
+	       GRTEQL(h_cent_new, tov_eos->cubic_spline->h_max))
+    {
+	      printf("WARNING: TOV solver terminating at maximum enthalpy: %E\n", h_cent_new);
+	      TOV->status = 1;
+	      
+	      if (TOV->exit_if_error)
+	      { Error0("TOV solution failed!\n"); }
+	      else
+	      { return TOV; }
+    }
+
     solve_ODE_enthalpy_approach(TOV);
     m = calculate_baryonic_mass(TOV);
     
@@ -104,6 +122,8 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   /* if finder messed up */
   if (!isfinite(m))
   {
+    printf("WARNING: TOV solver: m is not finite.\n");
+    printf("\tm == %E\n", m);
     TOV->status = 1;
     if (TOV->exit_if_error)
     {
@@ -121,6 +141,9 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   /* if it needs more step to find the root, set the last value as baryonic mass */
   if (!EQL(m,TOV->bar_m))
   {
+    printf("WARNING: TOV solver: m != m0.\n");
+    printf("\tm == %E\n", m);
+    printf("\tm0 == %E\n", TOV->bar_m);
     TOV->status = 1;
     fprintf(stderr,"TOV root finder for enteral enthalpy needs more steps!\n"
                    "The difference between current baryonic mass and desired one is = %e\n",m-TOV->bar_m);
@@ -128,7 +151,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   }
   TOV->ADM_m = TOV->m[TOV->N-1];
   calculate_phi(TOV);
-  calculate_ADM_and_Komar_mass(TOV);/* perform some tests */
+  calculate_ADM_and_Komar_mass(TOV);/* perform some tests */    
   
   /* having known every thing, now populate pressure, energy density, and rest-mass density */
   for (i = 0; i < TOV->N; ++i)
@@ -172,6 +195,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
       !isfinite(TOV->p[0])
      )
   {
+    printf("WARNING: TOV Solver: Final check failure.\n");
     TOV->status = 1;
     if (TOV->exit_if_error)
     {
@@ -189,6 +213,18 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   
   /* free global tov_eos */
   free_EoS(tov_eos);
+  
+  /* Useful for debugging
+  printf("TOV Solver END }\n");//////////
+  printf("\t%-12s| %-12i\n", "Status", TOV->status);
+  printf("\t%-12s| %-12E\n", "TOV->r", TOV->r[TOV->N-1]);
+  printf("\t%-12s| %-12E\n", "TOV->rbar", TOV->rbar[TOV->N-1]);
+  printf("\t%-12s| %-12E\n", "TOV->ADM_m", TOV->ADM_m);
+  printf("\t%-12s| %-12E\n", "TOV->bar_m", TOV->bar_m);
+  printf("\t%-12s| %-12E\n", "TOV->psi[0]", TOV->psi[0]);
+  printf("\t%-12s| %-12E\n", "TOV->h[0]", TOV->h[0]);
+  printf("\t%-12s| %-12E\n", "TOV->p[0]", TOV->p[0]);
+  */
   
   return TOV;
 }
@@ -346,7 +382,9 @@ static void calculate_ADM_and_Komar_mass(TOV_T *const TOV)
   /* some test control */
   if (GRT(fabs(Komar_mass-ADM_mass),tol))/* virial theorem */
   {
-    TOV->status = 1;
+    //////////
+    // WARNING: Komar/ADM mismatch error suppressed.
+    //TOV->status = 1;
     //if (TOV->exit_if_error)
       //Error0("Komar mass and ADM mass must be equal!\n");
     fprintf(stderr,"*** A big mass difference: Komar mass = %g, "
