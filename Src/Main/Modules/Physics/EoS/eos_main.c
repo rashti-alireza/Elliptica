@@ -349,7 +349,7 @@ static void populate_EoS(EoS_T *const eos)
                 }
             }
         }
-        else if (strstr_i(Gets(P_"table_tormat"), "Lorene"))
+        else if (strstr_i(Gets(P_"table_format"), "Lorene"))
         {
             // Lorene format in columns
             //          [line number] [number density] [(total) energy density] [pressure].
