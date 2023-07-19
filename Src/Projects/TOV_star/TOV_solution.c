@@ -115,6 +115,18 @@ TOV_T *TOV_solution(TOV_T *const TOV)
         a = h_cent_new;
       }
       h_cent_new = a+0.5*(b-a);
+      
+      //////////
+      // Cap central enthalpy at max given in table, if applicable.
+      if ((strstr_i(tov_eos->type, "Tabular") ||
+	       strstr_i(tov_eos->type, "tabular")) && 
+	       GRTEQL(h_cent_new, tov_eos->cubic_spline->h_max))
+      { 
+        printf("WARNING: TOV solver encountered maximum enthalpy available in table.\n");
+        printf("\tCentral enthalpy: %E\n", h_cent_new);
+        printf("\tMaximum enthalpy data: %E\n", tov_eos->cubic_spline->h_max);
+        h_cent_new = tov_eos->cubic_spline->h_max; 
+      }
     }
     iter++;
   }

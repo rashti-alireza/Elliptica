@@ -139,7 +139,7 @@ int TOV_star(void *vp)
     double* central_enthalpies = alloc_double(stars);
     
     // Geometric units to km conversion factor: (G * Msolar / c^2) / (10^3)
-    //double r_FACTOR = 1.47667;
+    double r_FACTOR = 1.47667;
     
     TOV_T* tov_star;
     for (Uint star = 0; star < stars; star++)
@@ -149,7 +149,7 @@ int TOV_star(void *vp)
       tov_star->phys        = phys;
       tov_star->bar_m       = test_mass;
       tov_star              = TOV_solution(tov_star);
-      radii[star]           = tov_star->r[tov->N-1];
+      radii[star]           = tov_star->r[tov->N-1]*r_FACTOR;
       masses[star]          = tov_star->ADM_m;
       central_enthalpies[star] = tov_star->h[0];
       
