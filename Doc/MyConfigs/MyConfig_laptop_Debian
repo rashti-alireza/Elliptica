@@ -117,7 +117,7 @@ SPECIAL_LIBS += -lumfpack
 #SPECIAL_LIBS += -lmkl_intel_lp64 -lmkl_core -lmkl_gnu_thread -lpthread
 
 ### special libraries for plotting and data file
-#SPECIAL_LIBS += -lsiloh5
+#SPECIAL_LIBS += -lsiloh5 -lstdc++
 
 ####################
 ## test and debug ##
