@@ -44,6 +44,8 @@ double EoS_p_h_tab(EoS_T* const eos)
     {
       *interp_s->h = log(eos->h);
       p = exp(execute_interpolation(interp_s));
+      //printf("log(p) == %E\n", execute_interpolation(interp_s));/////////
+      //printf("p == %E\n", p);//////////
     }
     else
     {
@@ -52,7 +54,10 @@ double EoS_p_h_tab(EoS_T* const eos)
     }
     
     eos->h = h_copy;
-    return (LSSEQL(p,0.) || p == DBL_MAX ? 0. : p);
+    double p_floor = 1.0E-12;
+    
+    //////////
+    return (LSSEQL(p, p_floor) || p == DBL_MAX ? 0. : p);
 }
 
 //Calculates rest-mass density from enthalpy by tabular EOS.
@@ -90,7 +95,10 @@ double EoS_rho0_h_tab(EoS_T* const eos)
     }
     
     eos->h = h_copy;
-    return (LSSEQL(rho0,0.) || rho0 == DBL_MAX ? 0. : rho0);
+    double rho0_floor = 1.0E-12;
+    //if (LSSEQL(rho0, rho0_floor)) { rho0 = rho0_floor; }
+    //return (LSSEQL(rho0,0.) || rho0 == DBL_MAX ? 0. : rho0);
+    return (LSSEQL(rho0, rho0_floor) || rho0 == DBL_MAX ? 0. : rho0);
 }
 
 //Calculates energy density from enthalpy by tabular EOS.
@@ -128,7 +136,10 @@ double EoS_e_h_tab(EoS_T* const eos)
     }
     
     eos->h = h_copy;
-    return (LSSEQL(e,0.) || e == DBL_MAX ? 0. : e);
+    double e_floor = 1.0E-12;
+    //if (LSSEQL(e, e_floor)) { e = e_floor; }
+    //return (LSSEQL(e,0.) || e == DBL_MAX ? 0. : e);
+    return (LSSEQL(e,e_floor) || e == DBL_MAX ? 0. : e);
 }
 
 //Calculates specific internal energy in terms of enthalpy,

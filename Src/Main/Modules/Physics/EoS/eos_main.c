@@ -303,10 +303,11 @@ static void populate_EoS(EoS_T *const eos)
         double* rho0_log;
         
         // Sets flag for log-log interpolation based on parameter file.
-	if (PgetsEZ(P_"log_approach")) {
-        if (strstr_i(Gets(P_"log_approach"), "yes"))
-        { eos->cubic_spline->use_log_approach = 1; }
-        else { eos->cubic_spline->use_log_approach = 0; } }
+	      if (Gets(P_"log_approach")) {
+          if (strstr_i(Gets(P_"log_approach"), "yes"))
+          {  eos->cubic_spline->use_log_approach = 1; }
+          else
+          {  eos->cubic_spline->use_log_approach = 0; } }
         
         if (eos->cubic_spline->use_log_approach)
         {
@@ -410,9 +411,24 @@ static void populate_EoS(EoS_T *const eos)
                   h_log[line]      = log((p_point * p_FACTOR + e_point * e_FACTOR) / (n_point * rho0_FACTOR));
                 }
             }
+            
         }
         else
         { Error0("ERROR: Unrecognized EOS table format.\n"); }
+        
+        // Floor p, rho0, and e values if they are 0 at lowest enthalpy.
+            if (Gets(P_"log_approach"))
+            {
+              if (strstr_i(Gets(P_"log_approach"), "yes"))
+              {
+                if (p_log[0] <= 0)
+                { p_log[0] = 0.5*p_log[1]; }
+                if (rho0_log[0] <= 0)
+                { rho0_log[0] = 0.5*rho0_log[1]; }
+                if (e_log[0] <= 0)
+                { e_log[0] = 0.5*e_log[1]; }
+              }
+            }
         
         fclose(eos_table);
         //Sets interpolation bounds.
