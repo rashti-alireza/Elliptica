@@ -203,6 +203,7 @@ static double get_param_double_from_checkpoint(
   par  = parameter_query_from_checkpoint(lv,file);
   if (!par)
   {
+    Fclose(file);
     Errors("I could not find the parameter name '%s'!",lv);
   }
   ret = strtod(par->rv,0);
