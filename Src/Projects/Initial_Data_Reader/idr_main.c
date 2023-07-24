@@ -73,6 +73,35 @@ for(i,j,k)
 // free
 elliptica_id_reader_free(idr);
 
+// note: for optimization inside the for(i,j,k) loop, 
+// one can save the field indices beforehand like:
+
+const int iell_alpha     = idr->indx("alpha");
+const int iell_betax     = idr->indx("betax");
+const int iell_betay     = idr->indx("betay");
+const int iell_betaz     = idr->indx("betaz");
+
+const int iell_adm_gxx   = idr->indx("adm_gxx");
+const int iell_adm_gxy   = idr->indx("adm_gxy");
+const int iell_adm_gxz   = idr->indx("adm_gxz");
+const int iell_adm_gyy   = idr->indx("adm_gyy");
+const int iell_adm_gyz   = idr->indx("adm_gyz");
+const int iell_adm_gzz   = idr->indx("adm_gzz");
+
+const int iell_adm_Kxx   = idr->indx("adm_Kxx");
+const int iell_adm_Kxy   = idr->indx("adm_Kxy");
+const int iell_adm_Kxz   = idr->indx("adm_Kxz");
+const int iell_adm_Kyy   = idr->indx("adm_Kyy");
+const int iell_adm_Kyz   = idr->indx("adm_Kyz");
+const int iell_adm_Kzz   = idr->indx("adm_Kzz");
+
+const int iell_grhd_rho  = idr->indx("grhd_rho");
+const int iell_grhd_epsl = idr->indx("grhd_epsl");
+const int iell_grhd_p    = idr->indx("grhd_p");
+const int iell_grhd_vx   = idr->indx("grhd_vx");
+const int iell_grhd_vy   = idr->indx("grhd_vy");
+const int iell_grhd_vz   = idr->indx("grhd_vz");
+
 */
 
 // for adding project
