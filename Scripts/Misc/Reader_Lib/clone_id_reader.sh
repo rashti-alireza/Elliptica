@@ -169,3 +169,10 @@ int BH_NS_Binary_Initial_Data(void *vp)
 
 EOF
 
+## resolving known name conflicts
+cd ${IDR_TOP}/src
+## for bam:
+sed -i -E 's/\bdot *\(\b/elliptica_dot\(/g' *
+sed -i -E 's/\balloc_grid\b *\(/elliptica_alloc_grid\(/g' *
+sed -i -E 's/\bfree_grid *\(\b/elliptica_free_grid\(/g' *
+
