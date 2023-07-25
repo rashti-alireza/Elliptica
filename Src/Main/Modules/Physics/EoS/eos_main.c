@@ -469,6 +469,9 @@ static void populate_EoS(EoS_T *const eos)
           eos->cubic_spline->h_max = h_sample[sample_s-1];
         }
         
+        //////////
+        printf("\nEnthalpy bounds: [%E, %E]\n", eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
+        
         //Saves data points in EOS.
         eos->cubic_spline->sample_size = sample_s;
         eos->cubic_spline->h_sample    = h_sample;
