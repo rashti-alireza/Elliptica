@@ -433,8 +433,31 @@ static void populate_EoS(EoS_T *const eos)
         */
         
         fclose(eos_table);
-        //Sets interpolation bounds.
         
+        //Prints data arrays for debugging.
+        //////////
+        printf("\n{\nThermo arrays:\n");
+        printf("{\n");
+        printf("Line | p | rho0 | e | h |\n");
+        for (Uint line = 0; line < sample_s; line++)
+        {
+          printf("| %.3i | %.4E | %.4E | %.4E | %.4E |\n",
+                  line, p_sample[line], rho0_sample[line],
+                  e_sample[line], h_sample[line]);
+        }
+        printf("}\n");
+        printf("{\n");
+        printf("\nLine | log(p) | log(rho0) | log(e) | log(h) |\n");
+        for (Uint line = 0; line < sample_s; line++)
+        {
+          printf("| %.3i | %.4E | %.4E | %.4E | %.4E |\n",
+                  line, p_sample[line], rho0_sample[line],
+                  e_sample[line], h_sample[line]);
+        }
+        printf("}\n");
+        printf("}\n");
+        
+        //Sets interpolation bounds.
         if (eos->cubic_spline->use_log_approach)
         {
           eos->cubic_spline->h_floor = exp(h_sample[0]);
