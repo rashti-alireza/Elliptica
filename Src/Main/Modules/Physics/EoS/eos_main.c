@@ -416,6 +416,7 @@ static void populate_EoS(EoS_T *const eos)
         else
         { Error0("ERROR: Unrecognized EOS table format.\n"); }
         
+        /*
         // Floor p, rho0, and e values if they are 0 at lowest enthalpy.
             if (Gets(P_"log_approach"))
             {
@@ -429,6 +430,7 @@ static void populate_EoS(EoS_T *const eos)
                 { e_log[0] = 0.5*e_log[1]; }
               }
             }
+        */
         
         fclose(eos_table);
         //Sets interpolation bounds.
