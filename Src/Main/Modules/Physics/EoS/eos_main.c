@@ -451,8 +451,8 @@ static void populate_EoS(EoS_T *const eos)
         for (Uint line = 0; line < sample_s; line++)
         {
           printf("| %.3i | %.4E | %.4E | %.4E | %.4E |\n",
-                  line, p_sample[line], rho0_sample[line],
-                  e_sample[line], h_sample[line]);
+                  line, p_log[line], rho0_log[line],
+                  e_log[line], h_log[line]);
         }
         printf("}\n");
         printf("}\n");
