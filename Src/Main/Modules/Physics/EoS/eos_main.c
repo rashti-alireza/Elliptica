@@ -458,16 +458,16 @@ static void populate_EoS(EoS_T *const eos)
         printf("}\n");
         
         //Sets interpolation bounds.
-        if (eos->cubic_spline->use_log_approach)
-        {
-          eos->cubic_spline->h_floor = exp(h_sample[0]);
-          eos->cubic_spline->h_max = exp(h_sample[sample_s-1]);
-        }
-        else
-        {
-          eos->cubic_spline->h_floor = h_sample[0];
-          eos->cubic_spline->h_max = h_sample[sample_s-1];
-        }
+        //if (eos->cubic_spline->use_log_approach)
+        //{
+          //eos->cubic_spline->h_floor = exp(h_sample[0]);
+          //eos->cubic_spline->h_max = exp(h_sample[sample_s-1]);
+        //}
+        //else
+        //{
+        eos->cubic_spline->h_floor = h_sample[0];
+        eos->cubic_spline->h_max = h_sample[sample_s-1];
+        //}
         
         //////////
         printf("\nEnthalpy bounds: [%E, %E]\n", eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
