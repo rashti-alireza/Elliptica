@@ -434,6 +434,7 @@ static void populate_EoS(EoS_T *const eos)
         
         fclose(eos_table);
         
+        /*
         //Prints data arrays for debugging.
         //////////
         printf("\n{\nThermo arrays:\n");
@@ -456,6 +457,7 @@ static void populate_EoS(EoS_T *const eos)
         }
         printf("}\n");
         printf("}\n");
+        */
         
         //Sets interpolation bounds.
         //if (eos->cubic_spline->use_log_approach)
@@ -470,7 +472,7 @@ static void populate_EoS(EoS_T *const eos)
         //}
         
         //////////
-        printf("\nEnthalpy bounds: [%E, %E]\n", eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
+        //printf("\nEnthalpy bounds: [%E, %E]\n", eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
         
         //Saves data points in EOS.
         eos->cubic_spline->sample_size = sample_s;
