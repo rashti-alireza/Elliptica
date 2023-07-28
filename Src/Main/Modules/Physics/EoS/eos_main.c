@@ -301,6 +301,7 @@ static void populate_EoS(EoS_T *const eos)
         double* p_log;
         double* e_log;
         double* rho0_log;
+        Uint zero_rows = 0; // Number of rows with any non-positive entries.
         
         // Sets flag for log-log interpolation based on parameter file.
 	      if (Gets(P_"log_approach")) {
@@ -308,14 +309,6 @@ static void populate_EoS(EoS_T *const eos)
           {  eos->cubic_spline->use_log_approach = 1; }
           else
           {  eos->cubic_spline->use_log_approach = 0; } }
-        
-        if (eos->cubic_spline->use_log_approach)
-        {
-          h_log    = alloc_double(sample_s);
-          p_log    = alloc_double(sample_s);
-          e_log    = alloc_double(sample_s);
-          rho0_log = alloc_double(sample_s);
-        }
         
         //Reads EOS data from text file.
         double h_point;
@@ -327,27 +320,20 @@ static void populate_EoS(EoS_T *const eos)
         {
             // Default format in columns [pressure] [rest-mass density] [energy density] [enthalpy]
             // in geometrized (G = c = solar mass = 1) units.
-            for (unsigned int line=0; line<sample_s; line++)
+            for (Uint line=0; line<sample_s; line++)
             {
                 if (fscanf(eos_table, "%lf %lf %lf %lf\n", &p_point, &rho0_point, &e_point, &h_point) != 4)
                 {
                     Error0("ERROR reading EOS data table.");
                     return;
                 }
-
+                if (LSSEQL(p_point, 0.0) || LSSEQL(rho0_point, 0.0) || LSSEQL(e_point, 0.0))
+                { zero_rows++; }
+                
                 p_sample[line]      = p_point;
                 rho0_sample[line]   = rho0_point;
                 e_sample[line]      = e_point;
                 h_sample[line]      = h_point;
-                
-                // If we're using log-log interpolation, fill arrays with log(values).
-                if (eos->cubic_spline->use_log_approach)
-                {
-                  p_log[line]      = log(p_point);
-                  rho0_log[line]   = log(rho0_point);
-                  e_log[line]      = log(e_point);
-                  h_log[line]      = log(h_point);
-                }
             }
         }
         else if (strstr_i(Gets(P_"table_format"), "Lorene"))
@@ -395,42 +381,46 @@ static void populate_EoS(EoS_T *const eos)
                     Error0("ERROR reading EOS data table.");
                     return;
                 }
+                if (LSSEQL(p_point, 0.0) || LSSEQL(n_point, 0.0) || LSSEQL(e_point, 0.0))
+                { zero_rows++; }
                 
                 p_sample[line]      = p_point * p_FACTOR;
                 rho0_sample[line]   = n_point * rho0_FACTOR;
                 e_sample[line]      = e_point * e_FACTOR;
                 h_sample[line]      = (p_sample[line] + e_sample[line]) / rho0_sample[line];
-                //printf("%i | %.4E | %.4E | %.4E | %.4E\n",
-                //      line, p_sample[line], rho0_sample[line], e_sample[line], h_sample[line]);
-                
-                if (eos->cubic_spline->use_log_approach)
-                {
-                  p_log[line]      = log(p_point * p_FACTOR);
-                  rho0_log[line]   = log(n_point * rho0_FACTOR);
-                  e_log[line]      = log(e_point * e_FACTOR);
-                  h_log[line]      = log((p_point * p_FACTOR + e_point * e_FACTOR) / (n_point * rho0_FACTOR));
-                }
             }
             
         }
         else
         { Error0("ERROR: Unrecognized EOS table format.\n"); }
         
-        /*
-        // Floor p, rho0, and e values if they are 0 at lowest enthalpy.
-            if (Gets(P_"log_approach"))
+        // Fill arrays with log values if we're using log-log interpolation.
+        if (eos->cubic_spline->use_log_approach)
+        {
+          // Determine number of rows with <= 0.00 data,
+          // allocate log arrays to avoid these rows.
+          //if (zero_rows) { printf("Tabular EoS: Removed %i row(s) with non-positive data.\n", zero_rows); }
+          if (sample_s - zero_rows <= 1) { Error0("Tabular EoS: No valid data remaining after removal of non-positive entries."); }
+          
+          p_log    = alloc_double(sample_s - zero_rows - 1);
+          rho0_log = alloc_double(sample_s - zero_rows - 1);
+          e_log    = alloc_double(sample_s - zero_rows - 1);
+          h_log    = alloc_double(sample_s - zero_rows - 1);
+          
+          // Fill log arrays with only positive data.
+          Uint entry = 0;
+          for (Uint line = 0; line < sample_s; line++)
+          {
+            if (!(LSSEQL(p_sample[line], 0.) || LSSEQL(rho0_sample[line], 0.) || LSSEQL(e_sample[line], 0.)))
             {
-              if (strstr_i(Gets(P_"log_approach"), "yes"))
-              {
-                if (p_log[0] <= 0)
-                { p_log[0] = 0.5*p_log[1]; }
-                if (rho0_log[0] <= 0)
-                { rho0_log[0] = 0.5*rho0_log[1]; }
-                if (e_log[0] <= 0)
-                { e_log[0] = 0.5*e_log[1]; }
-              }
+              p_log[entry]      = log(p_sample[line]);
+              rho0_log[entry]   = log(rho0_sample[line]);
+              e_log[entry]      = log(e_sample[line]);
+              h_log[entry]      = log(h_sample[line]);
+              entry++;
             }
-        */
+          }
+        }
         
         fclose(eos_table);
         
@@ -449,7 +439,7 @@ static void populate_EoS(EoS_T *const eos)
         printf("}\n");
         printf("{\n");
         printf("\nLine | log(p) | log(rho0) | log(e) | log(h) |\n");
-        for (Uint line = 0; line < sample_s; line++)
+        for (Uint line = 0; line < sample_s - zero_rows; line++)
         {
           printf("| %.3i | %.4E | %.4E | %.4E | %.4E |\n",
                   line, p_log[line], rho0_log[line],
@@ -459,20 +449,18 @@ static void populate_EoS(EoS_T *const eos)
         printf("}\n");
         */
         
-        //Sets interpolation bounds.
-        //if (eos->cubic_spline->use_log_approach)
-        //{
-          //eos->cubic_spline->h_floor = exp(h_sample[0]);
-          //eos->cubic_spline->h_max = exp(h_sample[sample_s-1]);
-        //}
-        //else
-        //{
-        eos->cubic_spline->h_floor = h_sample[0];
-        eos->cubic_spline->h_max = h_sample[sample_s-1];
-        //}
         
-        //////////
-        //printf("\nEnthalpy bounds: [%E, %E]\n", eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
+        //Sets interpolation bounds.
+        if (eos->cubic_spline->use_log_approach)
+        {
+          eos->cubic_spline->h_floor = exp(h_log[0]);
+          eos->cubic_spline->h_max = exp(h_log[sample_s - zero_rows - 1]);
+        }
+        else
+        {
+          eos->cubic_spline->h_floor = h_sample[0];
+          eos->cubic_spline->h_max = h_sample[sample_s-1];
+        }
         
         //Saves data points in EOS.
         eos->cubic_spline->sample_size = sample_s;
@@ -480,7 +468,7 @@ static void populate_EoS(EoS_T *const eos)
         eos->cubic_spline->p_sample    = p_sample;
         eos->cubic_spline->e_sample    = e_sample;
         eos->cubic_spline->rho0_sample = rho0_sample;
-        eos->cubic_spline->h_floor     = Getd(P_"enthalpy_floor");
+        //eos->cubic_spline->h_floor     = Getd(P_"enthalpy_floor");
         if (eos->cubic_spline->use_log_approach)
         {
           eos->cubic_spline->h_log    = h_log;
@@ -529,9 +517,18 @@ static void populate_EoS(EoS_T *const eos)
           *interp_rho0->x = h_sample;
         }
         
-        *interp_p->N    = sample_s;
-        *interp_e->N    = sample_s;
-        *interp_rho0->N = sample_s;
+        if (eos->cubic_spline->use_log_approach)
+        {
+          *interp_p->N    = sample_s - zero_rows;
+          *interp_e->N    = sample_s - zero_rows;
+          *interp_rho0->N = sample_s - zero_rows;
+        }
+        else
+        {
+          *interp_p->N    = sample_s;
+          *interp_e->N    = sample_s;
+          *interp_rho0->N = sample_s;
+        }
         set_interp_warn_flag(interp_p, 1); // suppress warning
         set_interp_warn_flag(interp_e, 1);
         set_interp_warn_flag(interp_rho0, 1);
