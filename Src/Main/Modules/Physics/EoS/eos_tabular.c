@@ -39,8 +39,8 @@ double EoS_p_h_tab(EoS_T* const eos)
     
     if (eos->cubic_spline->use_log_approach)
     {
-      *interp_s->h = log(eos->h);
-      p = exp(execute_interpolation(interp_s));
+      *interp_s->h = log(eos->h + eos->cubic_spline->lc);
+      p = exp(execute_interpolation(interp_s)) * exp(-eos->cubic_spline->lc);
     }
     else
     {
@@ -76,8 +76,8 @@ double EoS_rho0_h_tab(EoS_T* const eos)
     
     if (eos->cubic_spline->use_log_approach)
     {
-      *interp_s->h = log(eos->h);
-      rho0 = exp(execute_interpolation(interp_s));
+      *interp_s->h = log(eos->h + eos->cubic_spline->lc);
+      rho0 = exp(execute_interpolation(interp_s)) * exp(-eos->cubic_spline->lc);
     }
     else
     {
@@ -114,8 +114,8 @@ double EoS_e_h_tab(EoS_T* const eos)
     
     if (eos->cubic_spline->use_log_approach)
     {
-      *interp_s->h = log(eos->h);
-      e = exp(execute_interpolation(interp_s));
+      *interp_s->h = log(eos->h + eos->cubic_spline->lc);
+      e = exp(execute_interpolation(interp_s)) * exp(-eos->cubic_spline->lc);
     }
     else
     {
@@ -149,7 +149,7 @@ double EoS_e0_h_tab(EoS_T* const eos)
         eos->h = eos->cubic_spline->h_floor;
     }
     
-    double rho0_floor = 1.0E-7; //FIXME: Make dynamic parameter
+    double rho0_floor = 1.0E-15; //FIXME: Make dynamic parameter
     
     eos->h = h_copy;
     return (EoS_e_h_tab(eos) / (EoS_rho0_h_tab(eos) + rho0_floor)) - 1.0; 
@@ -179,12 +179,16 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
     
     if (eos->cubic_spline->use_log_approach)
     {
-      drho0dh = FDM_Fornberg(eos->cubic_spline->h_sample,
-                             eos->cubic_spline->rho0_sample,
-                             eos->h,
+      // Via chain rule: df/dh = (f(x)/x) * d(log(f))/d(log(x))
+      // d(log(rho0))/d(log(h))
+      double dlog_log = FDM_Fornberg(eos->cubic_spline->h_log,
+                             eos->cubic_spline->rho0_log,
+                             log(eos->h),
                              1,
                              interp_s->finite_diff_order,
                              eos->cubic_spline->sample_size);
+      *interp_s->h = eos->h;
+      drho0dh = dlog_log * EoS_rho0_h_tab(eos) / eos->h;
     }
     else
     {
@@ -220,12 +224,16 @@ double EoS_de_dh_h_tab(EoS_T* const eos)
     
     if (eos->cubic_spline->use_log_approach)
     {
-      dedh = FDM_Fornberg(eos->cubic_spline->h_sample,
-                             eos->cubic_spline->e_sample,
-                             eos->h,
+      // Via chain rule: df/dh = (f(x)/x) * d(log(f))/d(log(x))
+      // d(log(e))/d(log(h))
+      double dlog_log = FDM_Fornberg(eos->cubic_spline->h_log,
+                             eos->cubic_spline->e_log,
+                             log(eos->h),
                              1,
                              interp_s->finite_diff_order,
                              eos->cubic_spline->sample_size);
+      *interp_s->h = eos->h;
+      dedh = dlog_log * EoS_e_h_tab(eos) / eos->h;
     }
     else
     {

@@ -43,6 +43,8 @@ void test_EoS(Physics_T *const phys)
     fprintf(file,"%0.15e %0.15e\n",eos->h,eos->pressure(eos));
   }
   Fclose(file);
+  
+  printf("Pressure finished.\n");//////////
 
   sprintf(file_name,"%s/%s",path,"rest_mass_density");
   file = Fopen(file_name,"w+");
@@ -74,6 +76,8 @@ void test_EoS(Physics_T *const phys)
   }
   Fclose(file);
   
+  printf("SPE finished.\n");//////////
+  
   sprintf(file_name,"%s/%s",path,"drho0_dh");
   file = Fopen(file_name,"w+");
   fprintf(file,"# enthalpy  drho0_dh\n");
@@ -94,6 +98,8 @@ void test_EoS(Physics_T *const phys)
   }
   Fclose(file);
  
+  printf("de_dh finished.\n");//////////
+  
   free_EoS(eos);
   free(path);
   UNUSED(grid);
