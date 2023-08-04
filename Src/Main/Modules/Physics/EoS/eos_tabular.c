@@ -39,8 +39,8 @@ double EoS_p_h_tab(EoS_T* const eos)
     
     if (eos->cubic_spline->use_log_approach)
     {
-      *interp_s->h = log(eos->h + eos->cubic_spline->lc);
-      p = exp(execute_interpolation(interp_s)) * exp(-eos->cubic_spline->lc);
+      *interp_s->h = log(eos->h);
+      p = exp(execute_interpolation(interp_s)) * exp(-eos->cubic_spline->c_p);
     }
     else
     {
@@ -49,7 +49,8 @@ double EoS_p_h_tab(EoS_T* const eos)
     }
     
     eos->h = h_copy;
-    double p_floor = 1.0E-12;
+    //double p_floor = 1.0E-12;
+    double p_floor = 0.0;
     
     return (LSSEQL(p, p_floor) || p == DBL_MAX ? 0. : p);
 }
@@ -76,8 +77,8 @@ double EoS_rho0_h_tab(EoS_T* const eos)
     
     if (eos->cubic_spline->use_log_approach)
     {
-      *interp_s->h = log(eos->h + eos->cubic_spline->lc);
-      rho0 = exp(execute_interpolation(interp_s)) * exp(-eos->cubic_spline->lc);
+      *interp_s->h = log(eos->h);
+      rho0 = exp(execute_interpolation(interp_s)) * exp(-eos->cubic_spline->c_e);
     }
     else
     {
@@ -86,7 +87,8 @@ double EoS_rho0_h_tab(EoS_T* const eos)
     }
     
     eos->h = h_copy;
-    double rho0_floor = 1.0E-12;
+    //double rho0_floor = 1.0E-12;
+    double rho0_floor = 0.0;
     //if (LSSEQL(rho0, rho0_floor)) { rho0 = rho0_floor; }
     //return (LSSEQL(rho0,0.) || rho0 == DBL_MAX ? 0. : rho0);
     return (LSSEQL(rho0, rho0_floor) || rho0 == DBL_MAX ? 0. : rho0);
@@ -114,8 +116,8 @@ double EoS_e_h_tab(EoS_T* const eos)
     
     if (eos->cubic_spline->use_log_approach)
     {
-      *interp_s->h = log(eos->h + eos->cubic_spline->lc);
-      e = exp(execute_interpolation(interp_s)) * exp(-eos->cubic_spline->lc);
+      *interp_s->h = log(eos->h);
+      e = exp(execute_interpolation(interp_s)) * exp(-eos->cubic_spline->c_e);
     }
     else
     {
@@ -124,7 +126,8 @@ double EoS_e_h_tab(EoS_T* const eos)
     }
     
     eos->h = h_copy;
-    double e_floor = 1.0E-12;
+    //double e_floor = 1.0E-12;
+    double e_floor = 0.0;
     //if (LSSEQL(e, e_floor)) { e = e_floor; }
     //return (LSSEQL(e,0.) || e == DBL_MAX ? 0. : e);
     return (LSSEQL(e,e_floor) || e == DBL_MAX ? 0. : e);
@@ -149,10 +152,12 @@ double EoS_e0_h_tab(EoS_T* const eos)
         eos->h = eos->cubic_spline->h_floor;
     }
     
-    double rho0_floor = 1.0E-15; //FIXME: Make dynamic parameter
+    double floor = 1.0E-15; //FIXME: Make dynamic parameter
+    double rho0 = EoS_rho0_h_tab(eos);
+    double e = EoS_e_h_tab(eos);
     
     eos->h = h_copy;
-    return (EoS_e_h_tab(eos) / (EoS_rho0_h_tab(eos) + rho0_floor)) - 1.0; 
+    return ((LSSEQL(e, floor) ? floor: e) / (LSSEQL(rho0, floor) ? floor : rho0)) - 1.0; 
 }
 
 //Calculates derivative of rest-mass density wrt enthalpy, with enthalpy as the independent variable.

@@ -302,7 +302,6 @@ static void populate_EoS(EoS_T *const eos)
         double* e_log;
         double* rho0_log;
         //Uint zero_rows = 0; // Number of rows with any non-positive entries.
-        eos->cubic_spline->lc = 1.0E-10; // Constant added to data to avoid log(0).
         // Sets flag for log-log interpolation based on parameter file.
 	      if (Gets(P_"log_approach")) {
           if (strstr_i(Gets(P_"log_approach"), "yes"))
@@ -394,36 +393,6 @@ static void populate_EoS(EoS_T *const eos)
         else
         { Error0("ERROR: Unrecognized EOS table format.\n"); }
         
-        /*
-        // Fill arrays with log values if we're using log-log interpolation.
-        if (eos->cubic_spline->use_log_approach)
-        {
-          // Determine number of rows with <= 0.00 data,
-          // allocate log arrays to avoid these rows.
-          //if (zero_rows) { printf("Tabular EoS: Removed %i row(s) with non-positive data.\n", zero_rows); }
-          if (sample_s - zero_rows <= 1) { Error0("Tabular EoS: No valid data remaining after removal of non-positive entries."); }
-          
-          p_log    = alloc_double(sample_s - zero_rows - 1);
-          rho0_log = alloc_double(sample_s - zero_rows - 1);
-          e_log    = alloc_double(sample_s - zero_rows - 1);
-          h_log    = alloc_double(sample_s - zero_rows - 1);
-          
-          // Fill log arrays with only positive data.
-          Uint entry = 0;
-          for (Uint line = 0; line < sample_s; line++)
-          {
-            if (!(LSSEQL(p_sample[line], 0.) || LSSEQL(rho0_sample[line], 0.) || LSSEQL(e_sample[line], 0.)))
-            {
-              p_log[entry]      = log(p_sample[line]);
-              rho0_log[entry]   = log(rho0_sample[line]);
-              e_log[entry]      = log(e_sample[line]);
-              h_log[entry]      = log(h_sample[line]);
-              entry++;
-            }
-          }
-        }
-        */
-        
         // Fill arrays with log(values) if we're using log-log interpolation.
         if (eos->cubic_spline->use_log_approach)
         {
@@ -431,19 +400,22 @@ static void populate_EoS(EoS_T *const eos)
           rho0_log = alloc_double(sample_s);
           e_log    = alloc_double(sample_s);
           h_log    = alloc_double(sample_s);
+          eos->cubic_spline->c_p = (p_sample[1] - p_sample[0]) * p_sample[1];
+          eos->cubic_spline->c_rho0 = (rho0_sample[1] - rho0_sample[0]) * rho0_sample[1];
+          eos->cubic_spline->c_e = (e_sample[1] - e_sample[0]) * e_sample[1];
           
           for (Uint line = 0; line < sample_s; line++)
           {
-            p_log[line]      = log(p_sample[line] + eos->cubic_spline->lc);
-            rho0_log[line]   = log(rho0_sample[line] + eos->cubic_spline->lc);
-            e_log[line]      = log(e_sample[line] + eos->cubic_spline->lc);
-            h_log[line]      = log(h_sample[line] + eos->cubic_spline->lc);
+            p_log[line]      = log(p_sample[line] + eos->cubic_spline->c_p);
+            rho0_log[line]   = log(rho0_sample[line] + eos->cubic_spline->c_rho0);
+            e_log[line]      = log(e_sample[line] + eos->cubic_spline->c_e);
+            h_log[line]      = log(h_sample[line]);
           }
         }
         
         fclose(eos_table);
         
-        
+        /*
         //Prints data arrays for debugging.
         //////////
         printf("\n{\nThermo arrays:\n");
@@ -466,7 +438,7 @@ static void populate_EoS(EoS_T *const eos)
         }
         printf("}\n");
         printf("}\n");
-        
+        */
         
         /*
         //Sets interpolation bounds.

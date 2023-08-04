@@ -52,7 +52,9 @@ typedef struct EquationOfState_T
    double *p_log;     // Pressure
    double *e_log;     // Total energy density
    double *rho0_log;  // Rest-mass density
-   double lc;         // Constant added to data to avoid log(0).
+   double c_p;        // Constants added to data to avoid log(0).
+   double c_rho0;     
+   double c_e;        
    Uint use_log_approach: 1;
    
    // Root finder approach
