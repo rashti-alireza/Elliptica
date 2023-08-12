@@ -55,7 +55,9 @@ void obs_calculate(Observe_T *const obs)
     calc_spin(obs);
   }
   else
+  {
     Errors("There is no such '%s' plan.\n",obs->quantity);
+  }
     
 }
 
