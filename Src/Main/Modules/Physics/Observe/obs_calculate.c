@@ -1901,7 +1901,8 @@ static void calc_Kommar_mass(Observe_T *const obs)
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_NSNS ||
-      grid->kind == Grid_SplitCubedSpherical_SBH)
+      grid->kind == Grid_SplitCubedSpherical_SBH  ||
+      grid->kind == Grid_SplitCubedSpherical_SNS)
   {
     IFsc("Komar(M)|BHNS")
     {
@@ -1931,6 +1932,25 @@ static void calc_Kommar_mass(Observe_T *const obs)
       {
         /* volume part */
         region   = "NS1,NS2";
+        patches1 = collect_patches(grid,region,&N1);
+      }
+      else if (IsIt("S_inf,default"))
+      {
+        /* surface part */
+        region   = "outermost_OB";
+        patches2 = collect_patches(grid,region,&N2);  
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
+    else IFsc("Komar(M)|SNS")
+    {
+      if (IsIt("S+V,default"))
+      {
+        /* volume part */
+        region   = "NS";
         patches1 = collect_patches(grid,region,&N1);
       }
       else if (IsIt("S_inf,default"))
@@ -2131,7 +2151,9 @@ static void calc_Kommar_mass(Observe_T *const obs)
     
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
         grid->kind == Grid_SplitCubedSpherical_NSNS ||
-        grid->kind == Grid_SplitCubedSpherical_SBH)
+        grid->kind == Grid_SplitCubedSpherical_SBH  ||
+        grid->kind == Grid_SplitCubedSpherical_SNS)
+        
     {
       IFsc("Komar(M)|BHNS")
       {
@@ -2156,6 +2178,24 @@ static void calc_Kommar_mass(Observe_T *const obs)
         }
       }
       else IFsc("Komar(M)|NSNS")
+      {
+        if (IsIt("S+V,default"))
+        {
+          ;
+        }
+        else if (IsIt("S_inf,default"))
+        {
+          /* NOTE: we can use a closer surface to the objects
+          // since Komar is independent of surface, so: */
+          Set_outermost_integral_S_SplitCS(Komar)
+          n_physical_metric_around(Komar[n],_c_);
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
+      else IFsc("Komar(M)|SNS")
       {
         if (IsIt("S+V,default"))
         {
@@ -2274,7 +2314,9 @@ static void calc_Kommar_mass(Observe_T *const obs)
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_NSNS ||
-      grid->kind == Grid_SplitCubedSpherical_SBH)
+      grid->kind == Grid_SplitCubedSpherical_SBH  ||
+      grid->kind == Grid_SplitCubedSpherical_SNS)
+      
   {
     if (IsIt("S+V,default"))
     {
