@@ -556,7 +556,8 @@ static void calc_ADM_J(Observe_T *const obs)
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_NSNS ||
-      grid->kind == Grid_SplitCubedSpherical_SBH)
+      grid->kind == Grid_SplitCubedSpherical_SBH  ||
+      grid->kind == Grid_SplitCubedSpherical_SNS)
   {
     IFsc("ADM(J)|BHNS")
     {
@@ -640,6 +641,44 @@ static void calc_ADM_J(Observe_T *const obs)
         // volume integral is 0. like the case we have for NSNS */
         /* surface part */
         region   = "NS1_OB,NS2_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
+    else IFsc("ADM(J)|SNS")
+    {
+      if (IsIt("S_inf,default"))
+      {
+        /* surface part */
+        region   = "outermost_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else if (IsIt("S+V,Ossokine"))
+      {
+        /* this method does not have volume integrals */
+        /* surface part */
+        region   = "outermost_OB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else if (IsIt("S+V,constraint"))
+      {
+        /* volume part */
+        region   = "outermost,filling_box,NS_around";
+        patches1 = collect_patches(grid,region,&N1);
+        
+        /* surface part */
+        region   = "NS_around_IB";
+        patches2 = collect_patches(grid,region,&N2);
+      }
+      else if (IsIt("S_obj,default"))
+      {
+        /* NOTE:for maximal slice and conformal flat metric 
+        // volume integral is 0. like the case we have for NSNS */
+        /* surface part */
+        region   = "NS_OB";
         patches2 = collect_patches(grid,region,&N2);
       }
       else
@@ -780,13 +819,19 @@ static void calc_ADM_J(Observe_T *const obs)
     
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
         grid->kind == Grid_SplitCubedSpherical_NSNS ||
-        grid->kind == Grid_SplitCubedSpherical_SBH)
+        grid->kind == Grid_SplitCubedSpherical_SBH  ||
+        grid->kind == Grid_SplitCubedSpherical_SNS)
+        
     {
       IFsc("ADM(J)|BHNS")
       {
         ;/* nothing, to keep all options this empty if stays here */
       }
       else IFsc("ADM(J)|NSNS")
+      {
+        ;/* nothing, to keep all options this empty if stays here */
+      }
+      else IFsc("ADM(J)|SNS")
       {
         ;/* nothing, to keep all options this empty if stays here */
       }
@@ -866,7 +911,9 @@ static void calc_ADM_J(Observe_T *const obs)
     
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
         grid->kind == Grid_SplitCubedSpherical_NSNS ||
-        grid->kind == Grid_SplitCubedSpherical_SBH)
+        grid->kind == Grid_SplitCubedSpherical_SBH  ||
+        grid->kind == Grid_SplitCubedSpherical_SNS)
+        
     {
       IFsc("ADM(J)|BHNS")
       {
@@ -976,6 +1023,53 @@ static void calc_ADM_J(Observe_T *const obs)
           Error0(obs_err_msg);
         }
       }
+      else IFsc("ADM(J)|SNS")
+      {
+        if (IsIt("S_inf,default"))
+        {
+          adm[n]->surface_integration_flg = 1;
+          adm[n]->Z_surface = 1;
+          adm[n]->K = patch->n[2]-1;
+          n_physical_metric_around(adm[n],_c_);
+        }
+        else if (IsIt("S+V,Ossokine"))
+        {
+          Set_outermost_integral_S_SplitCS(adm)
+          n_physical_metric_around(adm[n],_c_);
+        }
+        else if (IsIt("S+V,constraint"))
+        {
+          if (IsItCovering(patch,"NS_around_IB"))
+          {
+            adm[n]->surface_integration_flg = 1;
+            adm[n]->Z_surface = 1;
+            adm[n]->K = 0;
+            n_physical_metric_around(adm[n],_c_);
+          }
+          else
+          {
+            Error0(obs_err_msg);
+          }
+        }
+        else if (IsIt("S_obj,default"))
+        {
+          if (IsItCovering(patch,"NS_OB"))
+          {
+            adm[n]->surface_integration_flg = 1;
+            adm[n]->Z_surface = 1;
+            adm[n]->K = patch->n[2]-1;
+            n_physical_metric_around(adm[n],_c_);
+          }
+          else
+          {
+            Error0(obs_err_msg);
+          }
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
       else IFsc("ADM(J)|NS")
       {
         if (IsIt("S_obj,default"))
@@ -1066,7 +1160,9 @@ static void calc_ADM_J(Observe_T *const obs)
 
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_NSNS ||
-      grid->kind == Grid_SplitCubedSpherical_SBH)
+      grid->kind == Grid_SplitCubedSpherical_SBH  ||
+      grid->kind == Grid_SplitCubedSpherical_SNS)
+      
   {
     if (IsIt("S_inf,default"))
     {
