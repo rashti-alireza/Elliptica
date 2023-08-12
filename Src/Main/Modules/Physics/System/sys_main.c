@@ -70,7 +70,9 @@ static int initialize_fields(Physics_T *const phys)
       free_physics(bh);
     }
     else
+    {
       Error0(NO_OPTION);
+    }
   }
   else if(phys->sys == SBH                            &&
           Pcmps(P_"initialize","one_exact_ConfKerrSchild"))
@@ -84,7 +86,9 @@ static int initialize_fields(Physics_T *const phys)
       free_physics(bh);
     }
     else
+    {
       Error0(NO_OPTION);
+    }
   }
   else if(phys->sys == SBH                          &&
           Pcmps(P_"initialize","one_exact_IsoSchild"))
@@ -98,7 +102,9 @@ static int initialize_fields(Physics_T *const phys)
       free_physics(bh);
     }
     else
+    {
       Error0(NO_OPTION);
+    }
   }
   else if(phys->sys == SBH                          &&
           Pcmps(P_"initialize","one_exact_PGSchild"))
@@ -112,7 +118,9 @@ static int initialize_fields(Physics_T *const phys)
       free_physics(bh);
     }
     else
+    {
       Error0(NO_OPTION);
+    }
   }
   else if(phys->sys == BHNS                    &&
           Pcmps(P_"initialize","TOV+KerrSchild"))
@@ -150,8 +158,9 @@ static int initialize_fields(Physics_T *const phys)
       
     }
     else
-        Error0(NO_OPTION);
-      
+    {
+      Error0(NO_OPTION);
+    }
   }
   else if(phys->sys == BHNS                    &&
           Pcmps(P_"initialize","TOV+IsoSchild"))
@@ -188,7 +197,9 @@ static int initialize_fields(Physics_T *const phys)
         "psi_is,alphaPsi_is,psi_tov,alphaPsi_tov");
     }
     else
+    {
       Error0(NO_OPTION);
+    }
   }
   else if(phys->sys == NSNS                &&
           Pcmps(P_"initialize","TOV+TOV"))
@@ -233,10 +244,41 @@ static int initialize_fields(Physics_T *const phys)
         "psi_tov1,alphaPsi_tov1,psi_tov2,alphaPsi_tov2");
     }
     else
+    {
       Error0(NO_OPTION);
+    }
+  }
+  else if(phys->sys == SNS                &&
+          Pcmps(P_"initialize","TOV"))
+  {
+    if(Pcmps(P_"initialize_fields","XCTS"))
+    {
+      /* important to have dedicated NS physics to read correct parameters */
+      Physics_T *const ns = init_physics(phys,NS);
+      star_populate_psi_alphaPsi_matter_fields_TOV
+        (ns,".*","psi","alphaPsi","enthalpy","rho0","phi","W");
+      
+      /* alse we need NS spin vector */
+      star_W_spin_vector_idealfluid_update(ns,"NS");
+      free_physics(ns);
+
+      /* set beta^i = 0. */
+      superimpose_simple(mygrid(phys,".*"),
+                        "beta_U0",0,0,0);
+      superimpose_simple(mygrid(phys,".*"),
+                        "beta_U1",0,0,0);
+      superimpose_simple(mygrid(phys,".*"),
+                        "beta_U2",0,0,0);
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
   }
   else
+  {
     Error0(NO_OPTION);
+  }
   
   FUNC_TOC
   return EXIT_SUCCESS;
