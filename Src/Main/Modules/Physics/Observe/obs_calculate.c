@@ -1571,7 +1571,9 @@ static void calc_ADM_P(Observe_T *const obs)
     
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
         grid->kind == Grid_SplitCubedSpherical_NSNS ||
-        grid->kind == Grid_SplitCubedSpherical_SBH)
+        grid->kind == Grid_SplitCubedSpherical_SBH  ||
+        grid->kind == Grid_SplitCubedSpherical_SNS)
+        
     {
       IFsc("ADM(P)|BHNS")
       {
