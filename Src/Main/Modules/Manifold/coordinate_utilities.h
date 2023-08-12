@@ -61,7 +61,7 @@ static const char *const Dictionary_SCS =
        "(NS_OB)(NS1_OB)(NS2_OB)"
        "(outermost)(outermost_IB)(outermost_OB)"
        "(filling_box)"
-       "(left_central_box),(right_central_box)"
+       "(left_central_box)(right_central_box)(center_central_box)"
        "(NS)(NS1)(NS2)(BH)(BH1)(BH2)";
 
 
