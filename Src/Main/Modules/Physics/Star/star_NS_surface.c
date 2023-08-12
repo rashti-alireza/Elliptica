@@ -1099,9 +1099,10 @@ double star_NS_mass_shedding_indicator(Physics_T *const phys)
     Uint Np;
     
     /* opposite */
-    if      (phys->pos == LEFT)  side = "right";
-    else if (phys->pos == RIGHT) side = "left";
-    else                         Error0(NO_OPTION);
+    if      (phys->pos == LEFT)   side = "right";
+    else if (phys->pos == RIGHT)  side = "left";
+    else if (phys->pos == CENTER) side = "left";// since assumed symm. doesn't matter which side
+    else                          Error0(NO_OPTION);
     
     /* approx. equator value  (X,Y,Z)=(0,0,1) */
     sprintf(regex,".*%s_%s_%s.*",phys->spos,phys->stype,side);
