@@ -146,7 +146,7 @@ init_physics
     phys->sys  = SBH;
     phys->ssys = "SBH";/* important to have different name for system */
   }
-  else if (Pcmps("project","Sinlge_NS_initial_data"))
+  else if (Pcmps("project","Single_NS_initial_data"))
   {
     phys->sys  = SNS;
     phys->ssys = "SNS";/* important to have different name for system */
@@ -302,6 +302,21 @@ init_physics
       phys->ctype = SBH;
       phys->stype = "SBH";
       spos = Pgets("grid_set_BH");
+      if (strstr_i(spos,"center"))
+      {
+        phys->pos  = CENTER;
+        phys->spos = "center";
+      }
+      else
+      {
+        Error0(NO_OPTION);
+      }
+    break;
+    
+    case SNS:
+      phys->ctype = SNS;
+      phys->stype = "SNS";
+      spos = Pgets("grid_set_NS");
       if (strstr_i(spos,"center"))
       {
         phys->pos  = CENTER;
