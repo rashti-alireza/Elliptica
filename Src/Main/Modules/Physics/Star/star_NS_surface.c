@@ -1113,6 +1113,7 @@ double star_NS_mass_shedding_indicator(Physics_T *const phys)
     patch = X_in_which_patch(X,patches,Np);
     Free(patches);
     assert(patch);
+    x_of_X(x,X,patch);
     x[0] -= NS_center[0];
     x[1] -= NS_center[1];
     x[2] -= NS_center[2];
