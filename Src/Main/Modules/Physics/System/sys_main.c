@@ -201,6 +201,94 @@ static int initialize_fields(Physics_T *const phys)
       Error0(NO_OPTION);
     }
   }
+  else if(phys->sys == BHBH  &&
+          Pcmps(P_"initialize","KerrSchild+KerrSchild"))
+  {
+    if(Pcmps(P_"initialize_fields","XCTS"))
+    {
+      /* add some auxiliary fields */
+      add_aux_fields(mygrid(phys,".*"),
+        "psi_bh1,alphaPsi_bh1,beta_bh1_U0,beta_bh1_U1,beta_bh1_U2"
+        "psi_bh2,alphaPsi_bh2,beta_bh2_U0,beta_bh2_U1,beta_bh2_U2");
+      
+      /* important to have dedicated BH physics to read correct parameters */
+      Physics_T *const bh1 = init_physics(phys,BH1);
+      fd_populate_psi_alphaPsi_beta_KerrSchild
+        (bh1,".*","psi_bh1","alphaPsi_bh1","beta_bh1",0);
+      free_physics(bh1);
+      
+      Physics_T *const bh2 = init_physics(phys,BH2);
+      fd_populate_psi_alphaPsi_beta_KerrSchild
+        (bh2,".*","psi_bh2","alphaPsi_bh2","beta_bh2",0);
+      free_physics(bh2);
+      
+      /* superimpose add f = f1 + f2 -1. */
+      superimpose_simple(mygrid(phys,".*"),
+                         "psi","psi_bh1","psi_bh2",-1.);
+      superimpose_simple(mygrid(phys,".*"),
+                        "alphaPsi","alphaPsi_bh1","alphaPsi_bh2",-1.);
+      superimpose_simple(mygrid(phys,".*"),
+                        "beta_U0","beta_bh1_U0","beta_bh2_U0",-1.);
+      superimpose_simple(mygrid(phys,".*"),
+                        "beta_U1","beta_bh1_U1","beta_bh2_U1",-1.);
+      superimpose_simple(mygrid(phys,".*"),
+                        "beta_U2","beta_bh1_U2","beta_bh2_U2",-1.);
+      
+      /* remove auxiliary fields */
+      remove_aux_fields(mygrid(phys,".*"),
+        "psi_bh1,alphaPsi_bh1,beta_bh1_U0,beta_bh1_U1,beta_bh1_U2"
+        "psi_bh2,alphaPsi_bh2,beta_bh2_U0,beta_bh2_U1,beta_bh2_U2");
+      
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
+  }
+  else if(phys->sys == BHBH  &&
+          Pcmps(P_"initialize","IsoSchild+IsoSchild"))
+  {
+    if(Pcmps(P_"initialize_fields","XCTS"))
+    {
+      /* add some auxiliary fields */
+      add_aux_fields(mygrid(phys,".*"),
+        "psi_bh1,alphaPsi_bh1,beta_bh1_U0,beta_bh1_U1,beta_bh1_U2"
+        "psi_bh2,alphaPsi_bh2,beta_bh2_U0,beta_bh2_U1,beta_bh2_U2");
+      
+      /* important to have dedicated BH physics to read correct parameters */
+      Physics_T *const bh1 = init_physics(phys,BH1);
+      fd_populate_psi_alphaPsi_beta_IsoSchild
+        (bh1,".*","psi_bh1","alphaPsi_bh1","beta_bh1",0);
+      free_physics(bh1);
+      
+      Physics_T *const bh2 = init_physics(phys,BH2);
+      fd_populate_psi_alphaPsi_beta_IsoSchild
+        (bh2,".*","psi_bh2","alphaPsi_bh2","beta_bh2",0);
+      free_physics(bh2);
+      
+      /* superimpose add f = f1 + f2 -1. */
+      superimpose_simple(mygrid(phys,".*"),
+                         "psi","psi_bh1","psi_bh2",-1.);
+      superimpose_simple(mygrid(phys,".*"),
+                        "alphaPsi","alphaPsi_bh1","alphaPsi_bh2",-1.);
+      superimpose_simple(mygrid(phys,".*"),
+                        "beta_U0","beta_bh1_U0","beta_bh2_U0",-1.);
+      superimpose_simple(mygrid(phys,".*"),
+                        "beta_U1","beta_bh1_U1","beta_bh2_U1",-1.);
+      superimpose_simple(mygrid(phys,".*"),
+                        "beta_U2","beta_bh1_U2","beta_bh2_U2",-1.);
+      
+      /* remove auxiliary fields */
+      remove_aux_fields(mygrid(phys,".*"),
+        "psi_bh1,alphaPsi_bh1,beta_bh1_U0,beta_bh1_U1,beta_bh1_U2"
+        "psi_bh2,alphaPsi_bh2,beta_bh2_U0,beta_bh2_U1,beta_bh2_U2");
+      
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
+  }
   else if(phys->sys == NSNS                &&
           Pcmps(P_"initialize","TOV+TOV"))
   {
