@@ -3335,6 +3335,7 @@ static void calc_irreducible_BH_mass(Observe_T *const obs)
   if (IsIt("S_obj,default"))
   {
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+        grid->kind == Grid_SplitCubedSpherical_BHBH ||
         grid->kind == Grid_SplitCubedSpherical_SBH)
     {
       obs_BH_irreducible_mass_CS(obs);
@@ -3358,6 +3359,28 @@ static void calc_CM(Observe_T *const obs)
   SET_MSG
   
   IFsc("CM|BH")
+  {
+    if (IsIt("S_obj,default"))
+    {
+      Rc_BH(obs);
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
+  }
+  else IFsc("CM|BH1")
+  {
+    if (IsIt("S_obj,default"))
+    {
+      Rc_BH(obs);
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
+  }
+  else IFsc("CM|BH2")
   {
     if (IsIt("S_obj,default"))
     {
@@ -3413,6 +3436,44 @@ static void calc_spin(Observe_T *const obs)
   SET_MSG
   
   IFsc("Spin|BH")
+  {
+    if (IsIt("S_obj,JRP"))
+    {
+      define_spin_JRP(obs);
+    }
+    else if (IsIt("S_obj,Campanelli"))
+    {
+      define_spin_campanelli(obs);
+    }
+    else if (IsIt("S_obj,AKV"))
+    {
+      define_spin_akv(obs);
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
+  }
+  else IFsc("Spin|BH1")
+  {
+    if (IsIt("S_obj,JRP"))
+    {
+      define_spin_JRP(obs);
+    }
+    else if (IsIt("S_obj,Campanelli"))
+    {
+      define_spin_campanelli(obs);
+    }
+    else if (IsIt("S_obj,AKV"))
+    {
+      define_spin_akv(obs);
+    }
+    else
+    {
+      Error0(obs_err_msg);
+    }
+  }
+  else IFsc("Spin|BH2")
   {
     if (IsIt("S_obj,JRP"))
     {
