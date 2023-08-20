@@ -208,7 +208,7 @@ static int initialize_fields(Physics_T *const phys)
     {
       /* add some auxiliary fields */
       add_aux_fields(mygrid(phys,".*"),
-        "psi_bh1,alphaPsi_bh1,beta_bh1_U0,beta_bh1_U1,beta_bh1_U2"
+        "psi_bh1,alphaPsi_bh1,beta_bh1_U0,beta_bh1_U1,beta_bh1_U2,"
         "psi_bh2,alphaPsi_bh2,beta_bh2_U0,beta_bh2_U1,beta_bh2_U2");
       
       /* important to have dedicated BH physics to read correct parameters */
@@ -236,7 +236,7 @@ static int initialize_fields(Physics_T *const phys)
       
       /* remove auxiliary fields */
       remove_aux_fields(mygrid(phys,".*"),
-        "psi_bh1,alphaPsi_bh1,beta_bh1_U0,beta_bh1_U1,beta_bh1_U2"
+        "psi_bh1,alphaPsi_bh1,beta_bh1_U0,beta_bh1_U1,beta_bh1_U2,"
         "psi_bh2,alphaPsi_bh2,beta_bh2_U0,beta_bh2_U1,beta_bh2_U2");
       
     }
@@ -252,7 +252,7 @@ static int initialize_fields(Physics_T *const phys)
     {
       /* add some auxiliary fields */
       add_aux_fields(mygrid(phys,".*"),
-        "psi_bh1,alphaPsi_bh1,beta_bh1_U0,beta_bh1_U1,beta_bh1_U2"
+        "psi_bh1,alphaPsi_bh1,beta_bh1_U0,beta_bh1_U1,beta_bh1_U2,"
         "psi_bh2,alphaPsi_bh2,beta_bh2_U0,beta_bh2_U1,beta_bh2_U2");
       
       /* important to have dedicated BH physics to read correct parameters */
@@ -280,7 +280,7 @@ static int initialize_fields(Physics_T *const phys)
       
       /* remove auxiliary fields */
       remove_aux_fields(mygrid(phys,".*"),
-        "psi_bh1,alphaPsi_bh1,beta_bh1_U0,beta_bh1_U1,beta_bh1_U2"
+        "psi_bh1,alphaPsi_bh1,beta_bh1_U0,beta_bh1_U1,beta_bh1_U2,"
         "psi_bh2,alphaPsi_bh2,beta_bh2_U0,beta_bh2_U1,beta_bh2_U2");
       
     }
