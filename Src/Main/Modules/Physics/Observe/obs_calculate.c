@@ -2228,6 +2228,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_NSNS ||
+      grid->kind == Grid_SplitCubedSpherical_BHBH ||
       grid->kind == Grid_SplitCubedSpherical_SBH  ||
       grid->kind == Grid_SplitCubedSpherical_SNS)
   {
@@ -2240,6 +2241,25 @@ static void calc_Kommar_mass(Observe_T *const obs)
         patches1 = collect_patches(grid,region,&N1);
         /* surface part */
         region   = "BH_around_IB";
+        patches2 = collect_patches(grid,region,&N2); 
+      }
+      else if (IsIt("S_inf,default"))
+      {
+        /* surface part */
+        region   = "outermost_OB";
+        patches2 = collect_patches(grid,region,&N2);  
+      }
+      else
+      {
+        Error0(obs_err_msg);
+      }
+    }
+    else IFsc("Komar(M)|BHBH")
+    {
+      if (IsIt("S+V,default"))
+      {
+        /* surface part */
+        region   = "BH1_around_IB,BH2_around_IB";
         patches2 = collect_patches(grid,region,&N2); 
       }
       else if (IsIt("S_inf,default"))
@@ -2352,6 +2372,18 @@ static void calc_Kommar_mass(Observe_T *const obs)
     {
       /* surface part */
       region   = "BH_around_IB";
+      patches2 = collect_patches(grid,region,&N2); 
+    }
+    else IFsc("Komar(M)|BH1")
+    {
+      /* surface part */
+      region   = "BH1_around_IB";
+      patches2 = collect_patches(grid,region,&N2); 
+    }
+    else IFsc("Komar(M)|BH2")
+    {
+      /* surface part */
+      region   = "BH2_around_IB";
       patches2 = collect_patches(grid,region,&N2); 
     }
     else IFsc("Komar(M)|SBH")
@@ -2478,11 +2510,34 @@ static void calc_Kommar_mass(Observe_T *const obs)
     
     if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
         grid->kind == Grid_SplitCubedSpherical_NSNS ||
+        grid->kind == Grid_SplitCubedSpherical_BHBH ||
         grid->kind == Grid_SplitCubedSpherical_SBH  ||
         grid->kind == Grid_SplitCubedSpherical_SNS)
         
     {
       IFsc("Komar(M)|BHNS")
+      {
+        if (IsIt("S+V,default"))
+        {
+          /* surface integral */
+          Komar[n]->surface_integration_flg = 1;
+          Komar[n]->Z_surface = 1;
+          Komar[n]->K = 0;
+          n_physical_metric_around(Komar[n],_c_);
+        }
+        else if (IsIt("S_inf,default"))
+        {
+          /* NOTE: we can use a closer surface to the objects
+          // since Komar is independent of surface, so: */
+          Set_outermost_integral_S_SplitCS(Komar)
+          n_physical_metric_around(Komar[n],_c_);
+        }
+        else
+        {
+          Error0(obs_err_msg);
+        }
+      }
+      else IFsc("Komar(M)|BHBH")
       {
         if (IsIt("S+V,default"))
         {
@@ -2605,6 +2660,22 @@ static void calc_Kommar_mass(Observe_T *const obs)
         Komar[n]->K = 0;
         n_physical_metric_around(Komar[n],_c_);
       }
+      else IFsc("Komar(M)|BH1")
+      {
+        /* surface integral */
+        Komar[n]->surface_integration_flg = 1;
+        Komar[n]->Z_surface = 1;
+        Komar[n]->K = 0;
+        n_physical_metric_around(Komar[n],_c_);
+      }
+      else IFsc("Komar(M)|BH2")
+      {
+        /* surface integral */
+        Komar[n]->surface_integration_flg = 1;
+        Komar[n]->Z_surface = 1;
+        Komar[n]->K = 0;
+        n_physical_metric_around(Komar[n],_c_);
+      }
       else IFsc("Komar(M)|SBH")
       {
         if (IsIt("S_obj,default"))
@@ -2641,6 +2712,7 @@ static void calc_Kommar_mass(Observe_T *const obs)
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_NSNS ||
+      grid->kind == Grid_SplitCubedSpherical_BHBH ||
       grid->kind == Grid_SplitCubedSpherical_SBH  ||
       grid->kind == Grid_SplitCubedSpherical_SNS)
       
