@@ -400,9 +400,16 @@ static void populate_EoS(EoS_T *const eos)
           rho0_log = alloc_double(sample_s);
           e_log    = alloc_double(sample_s);
           h_log    = alloc_double(sample_s);
-          eos->cubic_spline->c_p = (p_sample[1] - p_sample[0]) * p_sample[1];
-          eos->cubic_spline->c_rho0 = (rho0_sample[1] - rho0_sample[0]) * rho0_sample[1];
-          eos->cubic_spline->c_e = (e_sample[1] - e_sample[0]) * e_sample[1];
+          //eos->cubic_spline->c_p = (p_sample[1] - p_sample[0]) * p_sample[1];
+          //eos->cubic_spline->c_rho0 = (rho0_sample[1] - rho0_sample[0]) * rho0_sample[1];
+          //eos->cubic_spline->c_e = (e_sample[1] - e_sample[0]) * e_sample[1];
+          
+          /////////////////////
+          //eos->cubic_spline->c_p = p_sample[1];
+          eos->cubic_spline->c_p = 1E-3;
+          eos->cubic_spline->c_e = 1E-3;
+          eos->cubic_spline->c_rho0 = 1E-3;
+          
           
           for (Uint line = 0; line < sample_s; line++)
           {

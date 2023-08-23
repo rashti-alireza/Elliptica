@@ -40,7 +40,8 @@ double EoS_p_h_tab(EoS_T* const eos)
     if (eos->cubic_spline->use_log_approach)
     {
       *interp_s->h = log(eos->h);
-      p = exp(execute_interpolation(interp_s)) * exp(-eos->cubic_spline->c_p);
+      //p = exp(execute_interpolation(interp_s)) * exp(-eos->cubic_spline->c_p);
+      p = exp(execute_interpolation(interp_s)) - eos->cubic_spline->c_p;
     }
     else
     {
@@ -78,7 +79,7 @@ double EoS_rho0_h_tab(EoS_T* const eos)
     if (eos->cubic_spline->use_log_approach)
     {
       *interp_s->h = log(eos->h);
-      rho0 = exp(execute_interpolation(interp_s)) * exp(-eos->cubic_spline->c_e);
+      rho0 = exp(execute_interpolation(interp_s)) - eos->cubic_spline->c_e;
     }
     else
     {
@@ -117,7 +118,7 @@ double EoS_e_h_tab(EoS_T* const eos)
     if (eos->cubic_spline->use_log_approach)
     {
       *interp_s->h = log(eos->h);
-      e = exp(execute_interpolation(interp_s)) * exp(-eos->cubic_spline->c_e);
+      e = exp(execute_interpolation(interp_s)) - eos->cubic_spline->c_e;
     }
     else
     {
@@ -185,7 +186,7 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
     if (eos->cubic_spline->use_log_approach)
     {
       // Via chain rule: df/dh = (f(x)/x) * d(log(f))/d(log(x))
-      // d(log(rho0))/d(log(h))
+      // d(log(rho0))/d(log(h)):
       double dlog_log = FDM_Fornberg(eos->cubic_spline->h_log,
                              eos->cubic_spline->rho0_log,
                              log(eos->h),
@@ -193,7 +194,7 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
                              interp_s->finite_diff_order,
                              eos->cubic_spline->sample_size);
       *interp_s->h = eos->h;
-      drho0dh = dlog_log * EoS_rho0_h_tab(eos) / eos->h;
+      drho0dh = dlog_log * (EoS_rho0_h_tab(eos) + eos->cubic_spline->c_rho0) / eos->h;
     }
     else
     {
@@ -230,7 +231,7 @@ double EoS_de_dh_h_tab(EoS_T* const eos)
     if (eos->cubic_spline->use_log_approach)
     {
       // Via chain rule: df/dh = (f(x)/x) * d(log(f))/d(log(x))
-      // d(log(e))/d(log(h))
+      // d(log(e))/d(log(h)):
       double dlog_log = FDM_Fornberg(eos->cubic_spline->h_log,
                              eos->cubic_spline->e_log,
                              log(eos->h),
@@ -238,7 +239,7 @@ double EoS_de_dh_h_tab(EoS_T* const eos)
                              interp_s->finite_diff_order,
                              eos->cubic_spline->sample_size);
       *interp_s->h = eos->h;
-      dedh = dlog_log * EoS_e_h_tab(eos) / eos->h;
+      dedh = dlog_log * (EoS_e_h_tab(eos) + eos->cubic_spline->c_e)/ eos->h;
     }
     else
     {
