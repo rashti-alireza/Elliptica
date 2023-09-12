@@ -48,6 +48,7 @@ static double interpolation_manual_FDM(Interpolation_T *const interp_s);
 static Uint interpolation_check_manual_FDM(Interpolation_T *const interp_s);
 static void find_coeffs_Hermite_spline(Interpolation_T *const interp_s);
 static double interpolation_Hermite_spline(Interpolation_T *const interp_s);
+static double interpolation_Hermite_derivative(Interpolation_T *const interp_s);
 double FDM_Fornberg(const double* const x, const double* const f, const double h, const Uint d, const Uint ord, const Uint N);
 
 

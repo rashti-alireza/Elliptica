@@ -638,7 +638,7 @@ int interpolation_tests(Grid_T *const grid)
   
   FOR_ALL_PATCHES(p,grid) //Un-comment for full tests.
   {
-  if (DO) { /////////////////Remove if(DO_NOT) to test functions other than
+  if (DO_NOT) { /////////////////Remove if(DO_NOT) to test functions other than
                 /////////////////1-D interpolation
     Patch_T *patch = grid->patch[p];
     const Uint *n = patch->n;
@@ -752,6 +752,13 @@ int interpolation_tests(Grid_T *const grid)
   {
       printf("Interpolation test:             Hermite Order Test=>\n");
       status = interpolation_tests_Hermite_Order();
+      check_test_result(status);
+  }
+  
+  if (DO)
+  {
+      printf("Interpolation test:             Hermite derivative test=>\n");
+      status = interpolation_tests_Hermite_Derivative();
       check_test_result(status);
   }
   
@@ -1088,6 +1095,99 @@ static int interpolation_tests_spline_1d(void)
   return TEST_SUCCESSFUL;
 }
 
+static int interpolation_tests_Hermite_Derivative(void)
+{
+  printf("Check 1\n");////////
+  Interpolation_T *interp_s = init_interpolation();
+  const Uint N                        = (Uint)Pgeti("Interpolation_grid_points");
+  const Uint test_pts                 = (Uint)Pgeti("Interpolation_test_points");
+  double *f                           = alloc_double(N);        // Analytical spline knots
+  double *f_p                         = alloc_double(N);        // Analytical derivative values
+  double *x                           = alloc_double(N);        // Grid points
+  double *error                       = alloc_double(test_pts); // Error vs x points
+  double *interp_vals                 = alloc_double(test_pts); // Interpolated values
+  double *x_vals                      = alloc_double(test_pts); // For test grid points.
+  const double a = 1, b = 4; // an arbitrary interval
+  double *hs    = make_random_number(test_pts,a,b);
+  double s      = (b-a)/(N-1);
+  double t,interp;
+  double time;
+  double error_total = 0; // Cumulative error
+  clock_t time1 = clock();
+  Flag_T flg = NONE;
+  Uint i;
+  
+  printf("Check 2\n");////////
+  // Generate grid and spline knots
+  for (i = 0; i < N; ++i)
+  {
+    t = x[i] = a+i*s;
+    f[i] = test_fxn(t);   // Analytical function
+    f_p[i] = test_fxn_p(t); // Analytical derivative
+  }
+  
+  printf("Check 3\n");////////
+  // Set up interpolation
+  interp_s->method = "Hermite";
+  assign_interpolation_ptrs(interp_s);
+  *interp_s->f   = f;
+  *interp_s->x   = x;
+  *interp_s->N   = N;
+  printf("Check 4\n");////////
+  plan_interpolation(interp_s);
+  printf("Check 5\n");////////
+  
+  // Interpolate over random grid
+  for (i = 0; i < test_pts; ++i)
+  {
+    double diff;
+    t                   = hs[i];
+    x_vals[i]           = hs[i];
+    *interp_s->h        = t;
+    interp              = execute_derivative_interpolation(interp_s);
+    diff                = interp - test_fxn_p(t);
+    error[i]            = ABSd(diff);
+    interp_vals[i]      = interp;
+    
+    // Failure in case of really high error
+    if (GRT(fabs(diff),s))
+    {
+      printf("Maximum error exceeded at t = %E.\n",t);
+      printf("Function value: %E\n", test_fxn(t));
+      printf("Interpolated value: %E\n", interp);
+      printf("Difference: %E\n", diff);
+      fprintf(stderr,"diff = %g\n",diff);
+      flg = FOUND;
+    }
+  }
+  
+  time = (double)(clock() - time1)/CLOCKS_PER_SEC;
+  printf("\nSpline test time: %E\n", time);
+  
+  for (Uint j=0; j < test_pts; j++)
+  { error_total += error[j]; }
+  printf("Cumulative error: %E\n", error_total);
+  
+  // Output arrays to files
+  if (strstr_i(PgetsEZ("print_interpolation_tests"), "yes"))
+  { 
+    print_arrays("Analytical", x, f_p, N);
+    print_arrays("Interpolated", x_vals, interp_vals, test_pts);
+    print_arrays("Error", x_vals, error, test_pts);
+  }
+  
+  free_interpolation(interp_s);
+  free(f_p);
+  free(hs);
+  free(x_vals);
+  free(interp_vals);
+  free(error);
+  
+  if (flg == FOUND)
+    return TEST_UNSUCCESSFUL;
+  return TEST_SUCCESSFUL;
+}
+
 // Test single spline interval.
 // Useful for checking exact agreement between interpolant
 // and low-degree polynomials.
@@ -1212,7 +1312,6 @@ static int interpolation_tests_fixed(void)
   return TEST_SUCCESSFUL;
 }
     
-  
 // Uniform-grid finite difference methods, only used for testing
 // (e.g. in comparison with Fornberg or semi-fixed FDM).
 // Use fixed coefficients and central finite difference.

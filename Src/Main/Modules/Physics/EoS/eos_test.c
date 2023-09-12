@@ -13,7 +13,7 @@ void test_EoS(Physics_T *const phys)
   char *path,file_name[1000];
   FILE *file = 0;
   Uint N = 1000;
-  const double h_max = 3.00;
+  const double h_max = 2.16;
   const double h_min = 1.00;
   double s = (h_max-h_min)/(N-1);
   Uint i;
@@ -43,8 +43,6 @@ void test_EoS(Physics_T *const phys)
     fprintf(file,"%0.15e %0.15e\n",eos->h,eos->pressure(eos));
   }
   Fclose(file);
-  
-  printf("Pressure finished.\n");//////////
 
   sprintf(file_name,"%s/%s",path,"rest_mass_density");
   file = Fopen(file_name,"w+");
@@ -76,8 +74,6 @@ void test_EoS(Physics_T *const phys)
   }
   Fclose(file);
   
-  printf("SPE finished.\n");//////////
-  
   sprintf(file_name,"%s/%s",path,"drho0_dh");
   file = Fopen(file_name,"w+");
   fprintf(file,"# enthalpy  drho0_dh\n");
@@ -98,8 +94,6 @@ void test_EoS(Physics_T *const phys)
   }
   Fclose(file);
  
-  printf("de_dh finished.\n");//////////
-  
   free_EoS(eos);
   free(path);
   UNUSED(grid);

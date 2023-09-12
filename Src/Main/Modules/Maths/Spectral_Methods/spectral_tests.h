@@ -73,6 +73,7 @@ static int interpolation_tests_single_interpolant(void);
 static int interpolation_tests_fixed(void);
 static int interpolation_tests_Convergence(Uint tests, Uint N0, Uint Nf);
 static int interpolation_tests_Hermite_Order(void);
+static int interpolation_tests_Hermite_Derivative(void);
 static int interpolation_tests_FDM(void);
 static int interpolation_tests_Fornberg(void);
 static int interpolation_tests_FDM_convergence(void);
