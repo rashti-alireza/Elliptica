@@ -37,6 +37,7 @@ typedef struct EquationOfState_T
  struct
  {
    double h_floor;/* set some themodynamics var to 0 if h < h_floor. */
+   double h_ceil;/* set some thermodynamics vars to constant if h > h_ceil. */
    double h_max; /*Used in tabular EOS to prevent extrapolation. */
    Uint sample_size;/* the number of points for a spline fit */
    double *h_sample;/* enthalpy sample values */

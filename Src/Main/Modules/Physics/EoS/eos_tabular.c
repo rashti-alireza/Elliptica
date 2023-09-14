@@ -21,17 +21,22 @@ Uint get_sample_size(const char* const eos_file_name)
 double EoS_p_h_tab(EoS_T* const eos)
 {
     double h_copy = eos->h;
-    if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
+    if (LSS(eos->h, eos->cubic_spline->h_floor))
+    {
+        // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
+        eos->h = eos->cubic_spline->h_floor;
+    }
+    else if (GRT(eos->h, eos->cubic_spline->h_ceil))
+    {
+        // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
+        eos->h = eos->cubic_spline->h_ceil;
+    }
+    else if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
     {
         printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
              eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
         Error0("Exit");
         return 0.0;
-    }
-    else if (LSS(eos->h, eos->cubic_spline->h_floor))
-    {
-        // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
-        eos->h = eos->cubic_spline->h_floor;
     }
     
     double p;  
@@ -60,17 +65,22 @@ double EoS_p_h_tab(EoS_T* const eos)
 double EoS_rho0_h_tab(EoS_T* const eos)
 {
     double h_copy = eos->h;
-    if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
-    {
-        printf("ERROR: EoS_rho0_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
-        Error0("Exit");
-        return 0.0;
-    }
-    else if (LSS(eos->h, eos->cubic_spline->h_floor))
+    if (LSS(eos->h, eos->cubic_spline->h_floor))
     {
         // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
         eos->h = eos->cubic_spline->h_floor;
+    }
+    else if (GRT(eos->h, eos->cubic_spline->h_ceil))
+    {
+        // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
+        eos->h = eos->cubic_spline->h_ceil;
+    }
+    else if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
+    {
+        printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
+             eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
+        Error0("Exit");
+        return 0.0;
     }
   
     double rho0;  
@@ -99,17 +109,22 @@ double EoS_rho0_h_tab(EoS_T* const eos)
 double EoS_e_h_tab(EoS_T* const eos)
 {
     double h_copy = eos->h;
-    if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
-    {
-        printf("ERROR: EoS_e_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
-        Error0("Exit");
-        return 0.0;
-    }
-    else if (LSS(eos->h, eos->cubic_spline->h_floor))
+    if (LSS(eos->h, eos->cubic_spline->h_floor))
     {
         // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
         eos->h = eos->cubic_spline->h_floor;
+    }
+    else if (GRT(eos->h, eos->cubic_spline->h_ceil))
+    {
+        // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
+        eos->h = eos->cubic_spline->h_ceil;
+    }
+    else if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
+    {
+        printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
+             eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
+        Error0("Exit");
+        return 0.0;
     }
 
     double e;
@@ -140,17 +155,22 @@ double EoS_e_h_tab(EoS_T* const eos)
 double EoS_e0_h_tab(EoS_T* const eos)
 {
     double h_copy = eos->h;
-    if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
-    {
-        printf("ERROR: EoS_e0_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
-        Error0("Exit");
-        return 0.0;
-    }
-    else if (LSS(eos->h, eos->cubic_spline->h_floor))
+    if (LSS(eos->h, eos->cubic_spline->h_floor))
     {
         // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
         eos->h = eos->cubic_spline->h_floor;
+    }
+    else if (GRT(eos->h, eos->cubic_spline->h_ceil))
+    {
+        // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
+        eos->h = eos->cubic_spline->h_ceil;
+    }
+    else if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
+    {
+        printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
+             eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
+        Error0("Exit");
+        return 0.0;
     }
     
     double floor = 1.0E-15; //FIXME: Make dynamic parameter
@@ -166,17 +186,22 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
 {
     double h_copy = eos->h;
     //Check bounds for enthalpy
-    if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
-    {
-        printf("ERROR: EoS_drho0_dh_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
-         Error0("Exit");
-        return 0.0;
-    }
-    else if (LSS(eos->h, eos->cubic_spline->h_floor))
+    if (LSS(eos->h, eos->cubic_spline->h_floor))
     {
         // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
         eos->h = eos->cubic_spline->h_floor;
+    }
+    else if (GRT(eos->h, eos->cubic_spline->h_ceil))
+    {
+        // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
+        eos->h = eos->cubic_spline->h_ceil;
+    }
+    else if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
+    {
+        printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
+             eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
+        Error0("Exit");
+        return 0.0;
     }
     
     double drho0dh;
@@ -211,17 +236,22 @@ double EoS_de_dh_h_tab(EoS_T* const eos)
 {
     double h_copy = eos->h;
     //Check bounds for enthalpy
-    if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
-    {
-        printf("ERROR: EoS_de_dh_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
-         Error0("Exit");
-        return 0.0;
-    }
-    else if (LSS(eos->h, eos->cubic_spline->h_floor))
+    if (LSS(eos->h, eos->cubic_spline->h_floor))
     {
         // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
         eos->h = eos->cubic_spline->h_floor;
+    }
+    else if (GRT(eos->h, eos->cubic_spline->h_ceil))
+    {
+        // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
+        eos->h = eos->cubic_spline->h_ceil;
+    }
+    else if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
+    {
+        printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
+             eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
+        Error0("Exit");
+        return 0.0;
     }
     
     double dedh;

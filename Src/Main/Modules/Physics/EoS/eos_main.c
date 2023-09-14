@@ -470,7 +470,9 @@ static void populate_EoS(EoS_T *const eos)
         eos->cubic_spline->p_sample    = p_sample;
         eos->cubic_spline->e_sample    = e_sample;
         eos->cubic_spline->rho0_sample = rho0_sample;
-        //eos->cubic_spline->h_floor     = Getd(P_"enthalpy_floor");
+        eos->cubic_spline->h_floor     = Getd(P_"enthalpy_floor");
+        eos->cubic_spline->h_ceil      = Getd(P_"enthalpy_ceiling");
+        
         if (eos->cubic_spline->use_log_approach)
         {
           eos->cubic_spline->h_log    = h_log;
