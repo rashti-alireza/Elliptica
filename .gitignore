@@ -1,8 +1,9 @@
-## stand alone project:
+## projects
 /Src/Projects/NS_NS_Binary_Initial_Data
+/Src/Projects/BH_BH_Binary_Initial_Data/
+/Src/Projects/BH_NS_Binary_Initial_Data
 /Src/Projects/Single_BH_Initial_Data
 /Src/Projects/Single_NS_Initial_Data
-/Src/Projects/BH_NS_Binary_Initial_Data
 /Src/Projects/Approximate_Killing_Vector
 
 ## parameter directory
@@ -30,4 +31,3 @@ makefile ## for older versions
 ## auto-generated things:
 projects_data_base_MADE_BY_MAKE.c
 DEADJOE
-
