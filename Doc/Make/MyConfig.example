@@ -21,16 +21,22 @@ EXEC_DIR := $(TOP)/Exe
 #PROJECT += $(PROJECT_DIR)/Initial_Data_Reader
 #PROJECT += $(PROJECT_DIR)/BH_NS_Binary_Initial_Data
 #PROJECT += $(PROJECT_DIR)/NS_NS_Binary_Initial_Data
+#PROJECT += $(PROJECT_DIR)/BH_BH_Binary_Initial_Data
+#PROJECT += $(PROJECT_DIR)/Single_BH_Initial_Data
+#PROJECT += $(PROJECT_DIR)/Single_NS_Initial_Data
+
 PROJECT += $(PROJECT_DIR)/TOV_star
 
 #####################################
 ## Project's repositories to clone ##
 #####################################
-## The repositories that listed below are only those needed, others exist already.
+## specify any repo that you want to clone by `make git_clone`
 
 PROJECT_REPO += '--depth=1 git@github.com:rashti-alireza/BH_NS_Binary_Initial_Data.git'
 PROJECT_REPO += '--depth=1 git@github.com:rashti-alireza/NS_NS_Binary_Initial_Data.git'
-
+PROJECT_REPO += '--depth=1 git@github.com:rashti-alireza/BH_BH_Binary_Initial_Data.git'
+PROJECT_REPO += '--depth=1 git@github.com:rashti-alireza/Single_BH_Initial_Data'
+PROJECT_REPO += '--depth=1 git@github.com:rashti-alireza/Single_NS_Initial_Data'
 
 ########################
 ## Modules to compile ##
