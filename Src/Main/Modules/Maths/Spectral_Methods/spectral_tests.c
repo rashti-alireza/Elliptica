@@ -859,19 +859,22 @@ static double rand_double(double a, double b)
 { return a + (rand() * (b-a) / RAND_MAX); }
 
 /* test Natural Cubic Spline method for 1-d arrays.
+// Generates spline knots from analytical test function,
+// then attempts to interpolate points on random grid.
+// Prints results to files.
 // ->return value: result of test. */
 static int interpolation_tests_N_cubic_spline_1d(void)
 {
   Interpolation_T *interp_s = init_interpolation();
-  const Uint N = (Uint)Pgeti("n_interp");
-  double *f = alloc_double(N);
-  double *f_derivative = alloc_double(N);
-  double *x = alloc_double(N);
-  double *error = alloc_double(N);
-  double *error_derivative = alloc_double(N);
-  double *interp_vals = alloc_double(N);
-  double *interp_vals_derivative = alloc_double(N);
-  double *x_vals = alloc_double(N);
+  const Uint N                    = (Uint)Pgeti("n_interp");
+  double *f                       = alloc_double(N);
+  double *f_derivative            = alloc_double(N);
+  double *x                       = alloc_double(N);
+  double *error                   = alloc_double(N);
+  double *error_derivative        = alloc_double(N);
+  double *interp_vals             = alloc_double(N);
+  double *interp_vals_derivative  = alloc_double(N);
+  double *x_vals                  = alloc_double(N);
   const double a = -M_PI, b = 3/4*M_PI;/* an arbitrary interval  */
   double *hs = make_random_number(N,a,b);
   double s = (b-a)/(N-1);
@@ -994,38 +997,48 @@ static int interpolation_tests_N_cubic_spline_1d(void)
 }
 
 // Tests spline for 1d arrays
+// Available for multiple interpolation methods.
+// Generates spline knots from analytical test function,
+// then interpolates over random grid.
+// Outputs analytical function, interpolated function,
+// and error to files.
 // Returns: result of test.
 static int interpolation_tests_spline_1d(void)
 {
   Interpolation_T *interp_s = init_interpolation();
   const Uint N                        = (Uint)Pgeti("Interpolation_grid_points");
   const Uint test_pts                 = (Uint)Pgeti("Interpolation_test_points");
-  double *f                           = alloc_double(N);
-  double *x                           = alloc_double(N);
-  double *error                       = alloc_double(test_pts);
-  double *interp_vals                 = alloc_double(test_pts);
-  double *x_vals                      = alloc_double(test_pts);
+  double *f                           = alloc_double(N);        // Analytical spline knots
+  double *x                           = alloc_double(N);        // Grid points
+  double *error                       = alloc_double(test_pts); // Error vs x points
+  double *interp_vals                 = alloc_double(test_pts); // Interpolated values
+  double *x_vals                      = alloc_double(test_pts); // For test grid points.
   const double a = 1, b = 4; // an arbitrary interval
   double *hs    = make_random_number(test_pts,a,b);
   double s      = (b-a)/(N-1);
   double t,interp;
   double time;
-  double error_total = 0;
+  double error_total = 0; // Cumulative error
   clock_t time1 = clock();
   Flag_T flg = NONE;
   Uint i;
+  
+  // Generate grid and spline knots
   for (i = 0; i < N; ++i)
   {
     t = x[i] = a+i*s;
     f[i] = test_fxn(t);   // Analytical function
   }
   
+  // Set up interpolation
   interp_s->method = Pgets("Interpolation_method");
   assign_interpolation_ptrs(interp_s);
   *interp_s->f   = f;
   *interp_s->x   = x;
   *interp_s->N   = N;
   plan_interpolation(interp_s);
+  
+  // Interpolate over random grid
   for (i = 0; i < test_pts; ++i)
   {
     double diff;
@@ -1037,6 +1050,7 @@ static int interpolation_tests_spline_1d(void)
     error[i]            = ABSd(diff);
     interp_vals[i]      = interp;
     
+    // Failure in case of really high error
     if (GRT(fabs(diff),s))
     {
       printf("Maximum error exceeded at t = %E.\n",t);
@@ -1055,6 +1069,7 @@ static int interpolation_tests_spline_1d(void)
   { error_total += error[j]; }
   printf("Cumulative error: %E\n", error_total);
   
+  // Output arrays to files
   if (strstr_i(PgetsEZ("print_interpolation_tests"), "yes"))
   { 
     print_arrays("Analytical", x, f, N);
@@ -1073,6 +1088,9 @@ static int interpolation_tests_spline_1d(void)
   return TEST_SUCCESSFUL;
 }
 
+// Test single spline interval.
+// Useful for checking exact agreement between interpolant
+// and low-degree polynomials.
 static int interpolation_tests_single_interpolant(void)
 {
   Interpolation_T* interp = init_interpolation();
@@ -1124,6 +1142,9 @@ static int interpolation_tests_single_interpolant(void)
 }
 
 // Tests interpolation error vs grid refinement.
+// Each iteration, double the number of grid points.
+// Track error on fixed middle points vs number of grid points
+// to test convergence.
 static int interpolation_tests_fixed(void)
 {
   const Uint MaxIter = 9;
@@ -1178,11 +1199,7 @@ static int interpolation_tests_fixed(void)
     interp_2 = interp_3;
     interp_3 = execute_interpolation(interp);
     
-    printf("%i | %E | %E | %E\n", j, interp_1, interp_2, interp_3);///////////////
-    
     free_interpolation(interp);
-    //free(x);
-    //free(f);
   }
   
   // Print results
@@ -1196,7 +1213,16 @@ static int interpolation_tests_fixed(void)
 }
     
   
-// Uniform-grid finite difference methods, only used for testing.
+// Uniform-grid finite difference methods, only used for testing
+// (e.g. in comparison with Fornberg or semi-fixed FDM).
+// Use fixed coefficients and central finite difference.
+
+// 1st derivative, 6th-order accuracy.
+// Parameters:
+//    x: Array of evenly-spaced grid points.
+//    f: Array of analytical function values f[j] = f(x[j])
+//    h: Interpolation point x[0] < h < x[last]
+//    N: length of x and f arrays, i.e. number of total grid points.
 static double FDM_Uniform_1_6(double* x, double* f, double h, Uint N)
 {
   Uint i = 0;
@@ -1205,10 +1231,7 @@ static double FDM_Uniform_1_6(double* x, double* f, double h, Uint N)
   for (i = 0; i < N-1; i++)
   {
     if (GRTEQL(h,x[i]) && LSS(h,x[i+1]))
-    {
-      //flg = FOUND;
-      break;
-    }
+    { break; }
   }
   
   // Error if out of bounds
@@ -1233,6 +1256,13 @@ static double FDM_Uniform_1_6(double* x, double* f, double h, Uint N)
   return ret;
 }
 
+// 3rd derivative, 6th-order accuracy.
+// Parameters:
+//    x: Array of evenly-spaced grid points.
+//    f: Array of analytical function values f[j] = f(x[j])
+//    h: Interpolation point x[4] < h < x[last-4]
+//    N: length of x and f arrays, i.e. number of total grid points.
+// Only valid for h = x[j] for some 
 static double FDM_Uniform_3_6(double* x, double* f, double h, Uint N)
 {
   Uint i = 0;
@@ -1280,22 +1310,22 @@ static int interpolation_tests_FDM(void)
 {
   Uint N = (Uint)Pgeti("n_interp");
   Uint samples = N-2*4;
-  double* x                 = alloc_double(N);
-  double* f                 = alloc_double(N);
-  double* f_p               = alloc_double(N);
-  double* f_ppp             = alloc_double(N);
-  double* x_samples         = alloc_double(samples);
-  double* f_p_uniform       = alloc_double(samples);
-  double* f_p_Fornberg      = alloc_double(samples);
-  double* f_ppp_uniform     = alloc_double(samples);
-  double* f_ppp_Fornberg    = alloc_double(samples);
-  double* err_p_uniform     = alloc_double(samples);
-  double* err_p_Fornberg    = alloc_double(samples);
-  double* err_ppp_uniform   = alloc_double(samples);
-  double* err_ppp_Fornberg  = alloc_double(samples);
-  double* difference        = alloc_double(samples);
-  double* difference_p      = alloc_double(samples);
-  double a = 1, b = 4;
+  double* x                 = alloc_double(N);        // Uniform grid
+  double* f                 = alloc_double(N);        // Analytical values
+  double* f_p               = alloc_double(N);        // Analytical values for 1st derivative
+  double* f_ppp             = alloc_double(N);        // Analytical values for 3rd derivative
+  double* x_samples         = alloc_double(samples);  // Test points
+  double* f_p_uniform       = alloc_double(samples);  // Estimated 1st derivative points via uniform method
+  double* f_p_Fornberg      = alloc_double(samples);  // Estimated 1st derivative points via Fornberg method
+  double* f_ppp_uniform     = alloc_double(samples);  // Estimated 3rd derivative points via uniform method
+  double* f_ppp_Fornberg    = alloc_double(samples);  // Estimated 3rd derivative points via Fornberg method
+  double* err_p_uniform     = alloc_double(samples);  // Error for 1st derivative via uniform method
+  double* err_p_Fornberg    = alloc_double(samples);  // Error for 1st derivative via Fornberg method
+  double* err_ppp_uniform   = alloc_double(samples);  // Error for 3rd derivative via uniform method
+  double* err_ppp_Fornberg  = alloc_double(samples);  // Error for 3rd derivative via Fornberg method
+  double* difference        = alloc_double(samples);  // 1st-derivative differences between uniform and Fornberg methods
+  double* difference_p      = alloc_double(samples);  // 3rd-derivative differences between uniform and Fornberg methods
+  double a = 1, b = 4;                                // Grid end points
   Uint j;
   
   // Generate uniform grid from analytical function.
@@ -1329,7 +1359,7 @@ static int interpolation_tests_FDM(void)
     difference_p[j]     = f_ppp_Fornberg[j] - f_ppp_uniform[j];
   }
   
-  // Calculates cumulative error scaled by number of sample pts.
+  // Calculates cumulative error scaled by number of sample points.
   double total_err_p_uniform = 0;
   double total_err_p_Fornberg = 0;
   double total_err_ppp_uniform = 0;
@@ -1346,6 +1376,7 @@ static int interpolation_tests_FDM(void)
   total_err_ppp_uniform /= samples;
   total_err_ppp_Fornberg /= samples;
   
+  // Write results to files.
   print_arrays("Analytical_f", x, f, N);
   print_arrays("Analytical_f_p", x, f_p, N);
   print_arrays("Analytical_f_ppp", x, f_ppp, N);
@@ -1390,6 +1421,12 @@ static int qsort_compare(const void* a, const void* b)
          (*(const double*)a > *(const double*)b ? 1 : -1)); }
 
 // Tests Fornberg method on non-uniform grid, off grid points.
+// Similar to interpolation, the Fornberg method can estimate derivatives
+// for points in between grid points, i.e. points h such that x[j] < h < x[j+1],
+// in contrast to other finite difference methods that are only valid on
+// grid points x[j] = h.
+// The Fornberg method also works on non-uniform grid spacings, which is also
+// tested here.
 static int interpolation_tests_Fornberg(void)
 {
   Uint N            = (Uint)Pgeti("FDM_grid_points");
@@ -1418,7 +1455,7 @@ static int interpolation_tests_Fornberg(void)
     f_p[j] = test_fxn_derivative(x[j], derivative);
   }
   
-  // Test points at random
+  // Test points at random and calculate error vs analytical function.
   for (j = 0; j < test_pts; j++)
   {
     x_vals[j] = rand_double(a, b);
@@ -1428,6 +1465,7 @@ static int interpolation_tests_Fornberg(void)
   }
   avg_error /= (double)test_pts;
   
+  // Write arrays to files.
   print_arrays("Analytical_Function", x, f, N);
   print_arrays("Analytical_Derivative", x, f_p, N);
   print_arrays("FDM_Values", x_vals, FDM_vals, test_pts);
@@ -1446,8 +1484,15 @@ static int interpolation_tests_Fornberg(void)
   return TEST_SUCCESSFUL;
 } 
 
-// Tests error convergence for Fornberg and uniform-grid
-// finite difference methods.
+// Tests error convergence (error vs number of grid points)
+// for Fornberg and uniform-grid finite difference methods.
+// For each trial, generate a uniform grid of
+// analytical function values.
+// Then calculate derivative values using finite difference
+// methods on a random sample of grid points, and calculate
+// error from analytical value.
+// Find scaled cumulative error from each trial, and plot
+// error vs number of grid points. 
 static int interpolation_tests_FDM_convergence(void)
 {
   Uint trials = 100;
@@ -1456,33 +1501,26 @@ static int interpolation_tests_FDM_convergence(void)
   Uint dN = (Uint)ceil(((double)Nf-(double)N0)/(double)trials);
   double a = 1, b = 4;
   double* N_array = alloc_double(trials);
-  double* errors_p_uniform = alloc_double(trials);
-  double* errors_p_Fornberg = alloc_double(trials);
-  double* errors_ppp_uniform = alloc_double(trials);
-  double* errors_ppp_Fornberg = alloc_double(trials);
-  
-  // For each trial, generate a uniform grid of
-  // analytical function values.
-  // Then calculate derivative values using finite difference
-  // methods on a random sample of grid points, and calculate
-  // error from analytical value.
-  // Find scaled cumulative error from each trial, and plot
-  // error vs number of grid points. 
+  double* errors_p_uniform = alloc_double(trials);    // 1st-derivative error for uniform method vs # grid points
+  double* errors_p_Fornberg = alloc_double(trials);   // 1st-derivative error for Fornberg method vs # grid points
+  double* errors_ppp_uniform = alloc_double(trials);  // 3rd-derivative error for uniform method vs # gird points
+  double* errors_ppp_Fornberg = alloc_double(trials); // 3rd-derivative error for Fornberg method vs # grid points
+
   Uint N;
   double dx;
-  double* x;
-  double* f;
-  double* f_p;
-  double* f_ppp;
-  double* x_samples;
-  double* f_p_uniform;
-  double* f_p_Fornberg;
-  double* f_ppp_uniform;
-  double* f_ppp_Fornberg;
-  double err_p_uniform;
-  double err_p_Fornberg;
-  double err_ppp_uniform;
-  double err_ppp_Fornberg;
+  double* x;                // Grid values
+  double* f;                // Analytical values f[j] = f(x[j])
+  double* f_p;              // Analytical values for 1st derivative
+  double* f_ppp;            // Analytical values for 3rd derivative
+  double* x_samples;        // Grid samples for testing
+  double* f_p_uniform;      // 1st-derivative estimates via uniform method
+  double* f_p_Fornberg;     // 1st-derivative estimates via Fornberg method
+  double* f_ppp_uniform;    // 3rd-derivative estimates via uniform method
+  double* f_ppp_Fornberg;   // 3rd-derivative 
+  double err_p_uniform;     // Cumulative error for 1st derivative via uniform method
+  double err_p_Fornberg;    // Cumulative error for 1st derivative via Fornberg method
+  double err_ppp_uniform;   // Cumulative error for 3rd derivative via uniform method
+  double err_ppp_Fornberg;  // Cumulative error for 3rd derivative via Fornberg method
   
   Uint j, k, trial = 0;
   for (N = N0; N <= Nf; N += dN)
@@ -1512,7 +1550,7 @@ static int interpolation_tests_FDM_convergence(void)
       f_ppp[j]  = test_fxn_ppp(x[j]);
     }
     
-    // Sample grid
+    // Sample grid and compute error vs analytical
     for (j = 5; j < samples-5; j++)
     {
       //k = randRange(5, N-5);
@@ -1582,7 +1620,6 @@ static int interpolation_tests_FDM_fixed(void)
   double* K_uniform = alloc_double(MaxIter-3);
   double* K_Fornberg = alloc_double(MaxIter-3);
   Uint* N_array = malloc((MaxIter-3)*sizeof(*N_array));
-  //const Uint Nf = (Uint)pow(2, MaxIter) * N0;
   const Uint N0 = 9;
   const double a = 0, b = 2;
   const double c = a + 0.5*(b-a); // Fixed central point
@@ -1707,8 +1744,8 @@ static int interpolation_tests_Neville_1d(void)
 
 // Tests error versus number of interpolated points
 // for 1D interpolation methods.
-// Interpolation methods must be specified in the parameter
-// file, as well as interpolation parameters (e.g. derivative type).
+// Interpolation methods must be specified in the parameter file,
+// as well as interpolation parameters (e.g. derivative type).
 static int interpolation_tests_Convergence(const Uint tests, const Uint N0, const Uint Nf)
 {
   if (Nf <= N0 || N0 == 0 || Nf == 0 || tests == 0)
