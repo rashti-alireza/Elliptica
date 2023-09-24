@@ -6,11 +6,12 @@
 /Src/Projects/Single_NS_Initial_Data
 /Src/Projects/Approximate_Killing_Vector
 
-## parameter directory
+# Ignore testing dirs:
 /Parfiles/*
 /parfiles/*
 /Parfile/*
 /parfile/*
+/Testing
 
 ## Trash directory
 /Trash/*
