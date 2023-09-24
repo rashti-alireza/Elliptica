@@ -65,9 +65,8 @@ SRC+=("${PROJ_DIR}/Includes")
 SRC+=("${PROJ_DIR}/Initial_Data_Reader")
 SRC+=("${PROJ_DIR}/BH_NS_Binary_Initial_Data")
 SRC+=("${PROJ_DIR}/NS_NS_Binary_Initial_Data")
+SRC+=("${PROJ_DIR}/BH_BH_Binary_Initial_Data")
 SRC+=("${PROJ_DIR}/TOV_star")
-
-
 
 ## src dir
 mkdir -vp ${IDR_TOP}/src
@@ -102,6 +101,10 @@ rm -v ${IDR_TOP}/src/nsns_analyze.?
 rm -v ${IDR_TOP}/src/nsns_main.?
 rm -v ${IDR_TOP}/src/nsns_solve_eqs.?
 
+rm -v ${IDR_TOP}/src/bhbh_analyze.?
+rm -v ${IDR_TOP}/src/bhbh_main.?
+rm -v ${IDR_TOP}/src/bhbh_solve_eqs.?
+
 rm -v ${IDR_TOP}/src/projects_data_base_MADE_BY_MAKE.?
 rm -v ${IDR_TOP}/src/pr_for_fields.?
 rm -v ${IDR_TOP}/src/solve_eqs_ddm_schur_complement.?
@@ -125,7 +128,7 @@ sed -i '/eq_main/d' *.c
 sed -i '/sys_main/d' *.c
 
 
-## create NS_NS_Binary_Initial_Data function since we deleted this file and we need 
+## create NS_NS_Binary_Initial_Data function since we deleted this file and we need
 ## the following pieces to ensure the ID reader works.
 cd ${IDR_TOP}/src
 cat << EOF > nsns_main.c
@@ -141,13 +144,13 @@ int NS_NS_Binary_Initial_Data(void *vp)
     nsns_export_id_generic(vp);
   else
     Error1(NO_OPTION);
-    
+
   return EXIT_SUCCESS;
 }
 
 EOF
 
-## create BH_NS_Binary_Initial_Data function since we deleted this file and we need 
+## create BH_NS_Binary_Initial_Data function since we deleted this file and we need
 ## the following pieces to ensure the ID reader works.
 cd ${IDR_TOP}/src
 cat << EOF > bhns_main.c
@@ -163,11 +166,34 @@ int BH_NS_Binary_Initial_Data(void *vp)
     bhns_export_id_generic(vp);
   else
     Error1(NO_OPTION);
-  
+
   return EXIT_SUCCESS;
 }
 
 EOF
+
+## create BH_BH_Binary_Initial_Data function since we deleted this file and we need
+## the following pieces to ensure the ID reader works.
+cd ${IDR_TOP}/src
+cat << EOF > bhbh_main.c
+#include "bhbh_header.h"
+
+int BH_BH_Binary_Initial_Data(void *vp);
+void bhbh_export_id_generic(void *vp);
+
+int BH_BH_Binary_Initial_Data(void *vp)
+{
+  /* if this is a generic ID reader call */
+  if (strcmp_i(PgetsEZ("IDR_BHBH_export_id"),"generic"))
+    bhbh_export_id_generic(vp);
+  else
+    Error1(NO_OPTION);
+
+  return EXIT_SUCCESS;
+}
+
+EOF
+
 
 ## resolving known name conflicts
 cd ${IDR_TOP}/src
