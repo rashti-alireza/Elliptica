@@ -334,6 +334,12 @@ init_physics
       phys->pos   = NONE;
     break;
     
+    case BHBH:
+      phys->ctype = BHBH;
+      phys->stype = "BHBH";
+      phys->pos   = NONE;
+    break;
+    
     case NSNS:
       phys->ctype = NSNS;
       phys->stype = "NSNS";
