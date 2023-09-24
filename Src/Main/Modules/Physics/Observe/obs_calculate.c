@@ -7,6 +7,8 @@
 /* NOTE: please keep the format of implantation (with all of the ifs elses)
 //       the same so later one can add new situations and cases easily. */
 
+/* TODO: put each system into its own project dir. for better modularity. */
+
 #include "obs_calculate.h"
 
 /* plan and populate items_S sturct and obs struct
@@ -654,12 +656,15 @@ static void calc_ADM_J(Observe_T *const obs)
     {
       if (IsIt("S_inf,default"))
       {
+        /* BUG: this method doesn't evaluate the correct J value.
+                maybe has to do with the gauges. */
         /* surface part */
         region   = "outermost_OB";
         patches2 = collect_patches(grid,region,&N2);
       }
       else if (IsIt("S+V,Ossokine"))
       {
+        /* BUG: this method doesn't evaluate the correct J value. */
         /* this method does not have volume integrals */
         /* surface part */
         region   = "outermost_OB";
