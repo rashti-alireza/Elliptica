@@ -5,6 +5,7 @@ TODO: @Alireza
 . change fopen to Fopen for conformity.
 . cleanup trailing whitespaces
 . add example param files for tab. eos.
+. change %E to %e for conformity.
 
 
 ## ---------------------------------------------------------------------- ##
