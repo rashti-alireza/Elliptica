@@ -1,9 +1,10 @@
 # $ git diff eb91ab30 --name-only
 
 TODO: @Alireza
+. in tab eos test, save the eos table after conversion and its derivatives.
 . change fopen to Fopen for conformity.
 . cleanup trailing whitespaces
-.
+. add example param files for tab. eos.
 
 
 ## ---------------------------------------------------------------------- ##
@@ -45,7 +46,9 @@ TODO: @Andrew
 . clean up of the left over comments and functions in 
   Src/Main/Modules/Maths/Spectral_Methods/interpolations.c and
 . Src/Main/Modules/Maths/Spectral_Methods/spectral_tests.c
-  
+
+BUG: @Andrew
+. in Src/Main/Modules/Maths/Spectral_Methods/interpolations.c: you used x[-1]? is it safe?
 
 TODO: @Alireza
 . why func set_interp_order_flag in Src/Main/Modules/Maths/Spectral_Methods/interpolations.c
@@ -64,8 +67,8 @@ Src/Main/Modules/Physics/EoS/eos_test.c
 
 TODO: @Andrew
 . Src/Main/Modules/Physics/EoS/eos_main.c: skip line '#' when reading tabulated file
-.
-.
+. clean up leftover comments and experimental codes.
+. Src/Main/Modules/Physics/EoS/eos_main.c: bad naming for vars like dummy_var_2.
 
 TODO: @Alireza
 . manage Src/Main/Modules/Physics/EoS/eos_main.c as it got too long with too many ifs.
