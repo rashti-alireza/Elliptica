@@ -1,0 +1,106 @@
+# $ git diff eb91ab30 --name-only
+
+TODO: @Alireza
+. change fopen to Fopen for conformity.
+. cleanup trailing whitespaces
+.
+
+
+## ---------------------------------------------------------------------- ##
+Src/Main/Modules/Includes/maths_calculus_lib.h
+Src/Main/Modules/Includes/maths_spectral_methods_lib.h
+Src/Main/Modules/Includes/physics_EoS_lib.h
+
+TODO: @Andrew
+. some comments missing for c_rho0, c_e, etc in Src/Main/Modules/Includes/physics_EoS_lib.h
+. please use /* comments */ comment style in the header files for the conformity.
+. in Src/Main/Modules/Includes/maths_spectral_methods_lib.h: when we use the funcs: 
+  uniform_FDM_1_6 and uniform_FDM_3_6 ? if we don't use them, remove them.
+
+TODO: @Alireza
+. better design for the compartment of EoS_T
+. decoupling interpolation and derivativce in Src/Main/Modules/Includes/maths_spectral_methods_lib.h
+. all newly added vars. in Src/Main/Modules/Includes/maths_spectral_methods_lib.h
+  should be included in their own sub-structure.
+. Src/Main/Modules/Includes/maths_spectral_methods_lib.h: we should not need these
+	+void set_interp_warn_flag(Interpolation_T *const interp_s, Uint flag);
+	+void set_interp_alloc_mem_flag(Interpolation_T *const interp_s, Uint flag);
+	+void assign_interpolation_ptrs(Interpolation_T *const interp_s);
+
++double uniform_FDM_1_6(Interpolation_T *const interp_s);
++double uniform_FDM_3_6(Interpolation_T *const interp_s);
+
+## ---------------------------------------------------------------------- ##
+Src/Main/Modules/Maths/Calculus/derivatives.c
+Src/Main/Modules/Maths/Calculus/derivatives.h
+Src/Main/Modules/Maths/Spectral_Methods/interpolations.c
+Src/Main/Modules/Maths/Spectral_Methods/interpolations.h
+Src/Main/Modules/Maths/Spectral_Methods/spectral_tests.c
+Src/Main/Modules/Maths/Spectral_Methods/spectral_tests.h
+
+TODO: @Andrew
+. in Src/Main/Modules/Maths/Spectral_Methods/interpolations.c, do we have
+  a Fornberg method like the one in Src/Main/Modules/Maths/Calculus/derivatives.c?
+  we should not have code repeated.
+. clean up of the left over comments and functions in 
+  Src/Main/Modules/Maths/Spectral_Methods/interpolations.c and
+. Src/Main/Modules/Maths/Spectral_Methods/spectral_tests.c
+  
+
+TODO: @Alireza
+. why func set_interp_order_flag in Src/Main/Modules/Maths/Spectral_Methods/interpolations.c
+  is called in Src/Main/Modules/Physics/EoS/eos_main.c.
+. in Src/Main/Modules/Maths/Spectral_Methods/spectral_tests.c: return back DO_NOT to DO
+. run all the tests
+. separate derivate tests from interpolation tests.
+.
+
+## ---------------------------------------------------------------------- ##
+Src/Main/Modules/Physics/EoS/eos_main.c
+Src/Main/Modules/Physics/EoS/eos_main.h
+Src/Main/Modules/Physics/EoS/eos_tabular.c
+Src/Main/Modules/Physics/EoS/eos_tabular.h
+Src/Main/Modules/Physics/EoS/eos_test.c
+
+TODO: @Andrew
+. Src/Main/Modules/Physics/EoS/eos_main.c: skip line '#' when reading tabulated file
+.
+.
+
+TODO: @Alireza
+. manage Src/Main/Modules/Physics/EoS/eos_main.c as it got too long with too many ifs.
+. better names for Gets(P_"table_format"), "Lorene/Elliptica"
+.
+
+## ---------------------------------------------------------------------- ##
+Src/Projects/Includes/TOV_lib.h
+Src/Projects/TOV_star/TOV_main.c
+Src/Projects/TOV_star/TOV_solution.c
+Src/Projects/TOV_star/TOV_solution.h
+
+TODO @Andrew
+. added more diagnostics m0,e,rho0, and eps; why do we need these?
+. added RK eq for m0, is the approx. dm0_dh correct?
+. why komar mass check turned off?
+. encapsulate mass-radius into a sperate function call with its own
+  dedicated param names and default value.
+. two columns of radius one with km and the other in geom. unit.
+. only 1 space between columns of the output file to separate numbers - not tab.
+.
+
+## ---------------------------------------------------------------------- ##
+Src/Projects/Tests/Modules_Test/MT_ParFiles/finite_difference_test.par
+
+TODO @Alireza
+. add a separate routine for FD test
+. clean up param file
+
+## ---------------------------------------------------------------------- ##
+Scripts/Combine_Tables.py
+Scripts/Generate_EOS_Table.py
+
+TODO @Andrew
+. organize scripts
+. add a readme for them so we know when to use them
+
+## ---------------------------------------------------------------------- ##
