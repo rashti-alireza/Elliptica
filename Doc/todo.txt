@@ -29,9 +29,6 @@ TODO: @Alireza
 	+void set_interp_alloc_mem_flag(Interpolation_T *const interp_s, Uint flag);
 	+void assign_interpolation_ptrs(Interpolation_T *const interp_s);
 
-+double uniform_FDM_1_6(Interpolation_T *const interp_s);
-+double uniform_FDM_3_6(Interpolation_T *const interp_s);
-
 ## ---------------------------------------------------------------------- ##
 Src/Main/Modules/Maths/Calculus/derivatives.c
 Src/Main/Modules/Maths/Calculus/derivatives.h
@@ -70,11 +67,19 @@ TODO: @Andrew
 . Src/Main/Modules/Physics/EoS/eos_main.c: skip line '#' when reading tabulated file
 . clean up leftover comments and experimental codes.
 . Src/Main/Modules/Physics/EoS/eos_main.c: bad naming for vars like dummy_var_2.
+. add a check if h<1 in the table and then exit.
 
 TODO: @Alireza
 . manage Src/Main/Modules/Physics/EoS/eos_main.c as it got too long with too many ifs.
 . better names for Gets(P_"table_format"), "Lorene/Elliptica"
-.
+. change param 'table_name' to 'table_path'
+. is fscanf is the best way to read the table? make it more general.
+. Src/Main/Modules/Physics/EoS/eos_main.c: 
+  * change NO_JOB to NO_OPTION
+  * its a global func and need to be eos prefix get_sample_size, do we really need this?
+. clean up ////////////////////////////////////// separations.
+. put different eos type into their own files.
+. add 'table' type as one of the words to be checked for tabular eos.
 
 ## ---------------------------------------------------------------------- ##
 Src/Projects/Includes/TOV_lib.h
