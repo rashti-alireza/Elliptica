@@ -80,6 +80,9 @@ TODO: @Alireza
 . clean up ////////////////////////////////////// separations.
 . put different eos type into their own files.
 . add 'table' type as one of the words to be checked for tabular eos.
+. Src/Main/Modules/Physics/EoS/eos_tabular.c: too many ifs and branches and
+  constants like h = 0.9, floor should suffice.
+. when we use EoS_Unit in tabular?
 
 ## ---------------------------------------------------------------------- ##
 Src/Projects/Includes/TOV_lib.h
