@@ -99,7 +99,9 @@ void test_EoS(Physics_T *const phys)
   }
   Fclose(file);
  
-  if (strcmp_i(eos->type, "tabular") || strcmp_i(eos->type, "tab"))
+  if (strcmp_i(eos->type, "tabular") || 
+      strcmp_i(eos->type, "tab")     || 
+      strcmp_i(eos->type, "table"))
   {
     sprintf(file_name,"%s/%s_tabular.txt",path,eos->description);
     file = Fopen(file_name,"w");
