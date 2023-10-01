@@ -280,343 +280,115 @@ static void populate_EoS(EoS_T *const eos)
       eos->de_dh                    = EoS_de_dh_h_p;
       eos->drho0_dh                 = EoS_drho0_dh_h_p;
     }
-    
-    ////////////////////////////////////////////////////////////////////////////////Tabular EOS
-    //Generates tabular EOS
-    else if (strcmp_i(eos->type, "tabular") || strcmp_i(eos->type, "tab"))
+    else if (strcmp_i(eos->type, "tabular") || 
+             strcmp_i(eos->type, "tab")     || 
+             strcmp_i(eos->type, "table"))
     {
-        FILE* eos_table = fopen(Gets(P_"table_name"),"r");        //Name of EOS table
-        if (!eos_table) { Error0("ERROR: Could not open EOS table."); }
-        
-        //Reads number of data points in EOS file.
-        Uint sample_s = get_sample_size(Gets(P_"table_name"));    //Defined in eos_tabular.c
-        if (strstr_i(Gets(P_"table_format"), "Lorene")) { sample_s -= 9; }
-        
-        eos->cubic_spline->sample_size = sample_s;
-        double *h_sample    = alloc_double(sample_s); //Arrays for tabular data points
-        double *p_sample    = alloc_double(sample_s);
-        double *e_sample    = alloc_double(sample_s);
-        double *rho0_sample = alloc_double(sample_s);
-        double* h_log;
-        double* p_log;
-        double* e_log;
-        double* rho0_log;
-        //Uint zero_rows = 0; // Number of rows with any non-positive entries.
-        // Sets flag for log-log interpolation based on parameter file.
-	      if (Gets(P_"log_approach")) {
-          if (strstr_i(Gets(P_"log_approach"), "yes"))
-          {  eos->cubic_spline->use_log_approach = 1; }
-          else
-          {  eos->cubic_spline->use_log_approach = 0; } }
-        
-        //Reads EOS data from text file.
-        double h_point;
-        double p_point;
-        double rho0_point;
-        double e_point;
-        
-        if (strstr_i(Gets(P_"table_format"), "Elliptica"))
-        {
-            // Default format in columns [pressure] [rest-mass density] [energy density] [enthalpy]
-            // in geometrized (G = c = solar mass = 1) units.
-            for (Uint line=0; line<sample_s; line++)
-            {
-                if (fscanf(eos_table, "%lf %lf %lf %lf\n", &p_point, &rho0_point, &e_point, &h_point) != 4)
-                {
-                    Error0("ERROR reading EOS data table.");
-                    return;
-                }
-                //if (LSSEQL(p_point, 0.0) || LSSEQL(rho0_point, 0.0) || LSSEQL(e_point, 0.0))
-                //{ zero_rows++; }
-                
-                p_sample[line]      = p_point;
-                rho0_sample[line]   = rho0_point;
-                e_sample[line]      = e_point;
-                h_sample[line]      = h_point;
-            }
-        }
-        else if (strstr_i(Gets(P_"table_format"), "Lorene"))
-        {
-            // Lorene format in columns
-            //          [line number] [number density] [(total) energy density] [pressure].
-            // in units               [1/fm^3]         [g/cm^3]                 [dyn/cm^2].
-            // Calculates rest-mass density (total) energy density, 
-            // and specific enthalpy, and converts to geometrized units.
-            
-            // Physical constants from 2018 CODATA values.
-            //double G_const = 6.67430E-11;          // Gravitational constant in m^3/(kg s^2)
-            //double c_const = 299792458;            // Speed of light in m/s
-            //double M_const = 1.98841E30;           // Solar mass in kg
-            //double mn_const = 1.67492749804E-27;   // Neutron mass in kg
-            // Lorene data is converted to SI units then geometrized.
-            
-            double n_point;
-            char dummy_var_1;
-            Uint dummy_var;
-            // Pressure conversion factor: G^3 * M_solar^2 / (10 * c^8)
-            // Energy density conversion factor: G^3  * M_solar^2 / (10 * c^6)
-            // Rest-mass conversion factor: 10^45 * neutron mass * G^3 * m_solar ^2 / (c^6)
-            // (Rest-mass is calculated by multiplying the baryon density by the baryon mass.)
-            const double p_FACTOR = 1.80162095578956E-39;
-            const double rho0_FACTOR = 0.002712069678583313;
-            const double e_FACTOR = 1.619216164136643E-18;
-               
-            Uint dummy_var_2;
-            for (Uint ctr=0; ctr<5; ctr++)
-            {
-                dummy_var_2 = (Uint)fscanf(eos_table, "%c\n", &dummy_var_1);
-                dummy_var_2 += 1;
-            }
-            dummy_var_2 = (Uint)fscanf(eos_table, "%u\n", &dummy_var);
-            for (Uint ctr=0; ctr<3; ctr++)
-            {
-                dummy_var_2 = (Uint)fscanf(eos_table, "%c\n", &dummy_var_1);
-                dummy_var_2 += 1;
-            }
-            for (Uint line=0; line<sample_s; line++)
-            {
-                if (fscanf(eos_table, "%u %lf %lf %lf\n", &dummy_var, &n_point, &e_point, &p_point) != 4)
-                {
-                    Error0("ERROR reading EOS data table.");
-                    return;
-                }
-                //if (LSSEQL(p_point, 0.0) || LSSEQL(n_point, 0.0) || LSSEQL(e_point, 0.0))
-                //{ zero_rows++; }
-                
-                p_sample[line]      = p_point * p_FACTOR;
-                rho0_sample[line]   = n_point * rho0_FACTOR;
-                e_sample[line]      = e_point * e_FACTOR;
-                h_sample[line]      = (p_sample[line] + e_sample[line]) / rho0_sample[line];
-            }
-            
-        }
-        else
-        { Error0("ERROR: Unrecognized EOS table format.\n"); }
-        
-        // Fill arrays with log(values) if we're using log-log interpolation.
-        if (eos->cubic_spline->use_log_approach)
-        {
-          p_log    = alloc_double(sample_s);
-          rho0_log = alloc_double(sample_s);
-          e_log    = alloc_double(sample_s);
-          h_log    = alloc_double(sample_s);
-          //eos->cubic_spline->c_p = (p_sample[1] - p_sample[0]) * p_sample[1];
-          //eos->cubic_spline->c_rho0 = (rho0_sample[1] - rho0_sample[0]) * rho0_sample[1];
-          //eos->cubic_spline->c_e = (e_sample[1] - e_sample[0]) * e_sample[1];
-          
-          /////////////////////
-          //eos->cubic_spline->c_p = p_sample[1];
-          eos->cubic_spline->c_p = 1E-3;
-          eos->cubic_spline->c_e = 1E-3;
-          eos->cubic_spline->c_rho0 = 1E-3;
-          
-          
-          for (Uint line = 0; line < sample_s; line++)
-          {
-            p_log[line]      = log(p_sample[line] + eos->cubic_spline->c_p);
-            rho0_log[line]   = log(rho0_sample[line] + eos->cubic_spline->c_rho0);
-            e_log[line]      = log(e_sample[line] + eos->cubic_spline->c_e);
-            h_log[line]      = log(h_sample[line]);
-          }
-        }
-        
-        fclose(eos_table);
-        
-        /*
-        //Prints data arrays for debugging.
-        //////////
-        printf("\n{\nThermo arrays:\n");
-        printf("{\n");
-        printf("Line | p | rho0 | e | h |\n");
-        for (Uint line = 0; line < sample_s; line++)
-        {
-          printf("| %.3i | %.4E | %.4E | %.4E | %.4E |\n",
-                  line, p_sample[line], rho0_sample[line],
-                  e_sample[line], h_sample[line]);
-        }
-        printf("}\n");
-        printf("{\n");
-        printf("\nLine | log(p) | log(rho0) | log(e) | log(h) |\n");
-        for (Uint line = 0; line < sample_s; line++)
-        {
-          printf("| %.3i | %.4E | %.4E | %.4E | %.4E |\n",
-                  line, p_log[line], rho0_log[line],
-                  e_log[line], h_log[line]);
-        }
-        printf("}\n");
-        printf("}\n");
-        */
-        
-        /*
-        //Sets interpolation bounds.
-        if (eos->cubic_spline->use_log_approach)
-        {
-          eos->cubic_spline->h_floor = exp(h_log[0]);
-          //eos->cubic_spline->h_max = exp(h_log[sample_s - zero_rows - 1]);
-          eos->cubic_spline->h_max = exp(h_log[sample_s]);
-        }
-        else
-        {
-          eos->cubic_spline->h_floor = h_sample[0];
-          eos->cubic_spline->h_max = h_sample[sample_s-1];
-        }
-        */
-        eos->cubic_spline->h_floor = h_sample[0];
-        eos->cubic_spline->h_max = h_sample[sample_s-1];
-        
-        //Saves data points in EOS.
-        eos->cubic_spline->sample_size = sample_s;
-        eos->cubic_spline->h_sample    = h_sample;
-        eos->cubic_spline->p_sample    = p_sample;
-        eos->cubic_spline->e_sample    = e_sample;
-        eos->cubic_spline->rho0_sample = rho0_sample;
-        eos->cubic_spline->h_floor     = Getd(P_"enthalpy_floor");
-        eos->cubic_spline->h_ceil      = Getd(P_"enthalpy_ceiling");
-        
-        if (eos->cubic_spline->use_log_approach)
-        {
-          eos->cubic_spline->h_log    = h_log;
-          eos->cubic_spline->p_log    = p_log;
-          eos->cubic_spline->e_log    = e_log;
-          eos->cubic_spline->rho0_log = rho0_log;
-        }
-        
-        Interpolation_T *interp_p    = init_interpolation(); //pressure
-        Interpolation_T *interp_e    = init_interpolation(); //energy density
-        Interpolation_T *interp_rho0 = init_interpolation(); //rest-mass density
+      eos_read_table(eos);
+      Uint sample_size = eos->cubic_spline->sample_size;
+      
+      eos->pressure                 = EoS_p_h_tab;
+      eos->energy_density           = EoS_e_h_tab;
+      eos->rest_mass_density        = EoS_rho0_h_tab;
+      eos->specific_internal_energy = EoS_e0_h_tab;
+      eos->de_dh                    = EoS_de_dh_h_tab;
+      eos->drho0_dh                 = EoS_drho0_dh_h_tab;
+      eos->cubic_spline->h_floor = Getd(P_"enthalpy_floor");
+      eos->cubic_spline->h_ceil  = Getd(P_"enthalpy_ceiling");
 
+      // Fill arrays with log(values) if we're using log-log interpolation.
+      if (Pcmps(Gets(P_"log_approach"),"yes"))
+      {
+        eos->cubic_spline->use_log_approach = 1;
+        double *h_log = alloc_double(sample_size);
+        double *p_log = alloc_double(sample_size);
+        double *e_log = alloc_double(sample_size);
+        double *rho0_log = alloc_double(sample_size);
 
-        interp_p->method    = Gets(P_"Interpolation_Method");
-        interp_e->method    = Gets(P_"Interpolation_Method");
-        interp_rho0->method = Gets(P_"Interpolation_Method");
+        // shifting to avoid log(0)
+        eos->cubic_spline->c_p = 1E-3;
+        eos->cubic_spline->c_e = 1E-3;
+        eos->cubic_spline->c_rho0 = 1E-3;
+        
+        for (i = 0; i < sample_size; i++)
+        {
+          p_log[i]    = log(eos->cubic_spline->p_sample[i]    + eos->cubic_spline->c_p);
+          rho0_log[i] = log(eos->cubic_spline->rho0_sample[i] + eos->cubic_spline->c_rho0);
+          e_log[i]    = log(eos->cubic_spline->e_sample[i]    + eos->cubic_spline->c_e);
+          h_log[i]    = log(eos->cubic_spline->h_sample[i]);
+        }
+        
+        eos->cubic_spline->h_log    = h_log;
+        eos->cubic_spline->p_log    = p_log;
+        eos->cubic_spline->e_log    = e_log;
+        eos->cubic_spline->rho0_log = rho0_log;
+        p_log = 0;
+        e_log = 0;
+        rho0_log = 0;
+        h_log = 0;
+      }
+
+      // NOTE: we assume each is a function of the enthalpy h. */
+      // p:
+      Interpolation_T *interp_p             = init_interpolation();
+      interp_p->method                      = Gets(P_"Interpolation_Method");
+      interp_p->N_cubic_spline_1d->f        = eos->cubic_spline->p_sample;
+      interp_p->N_cubic_spline_1d->x        = eos->cubic_spline->h_sample;
+      if (eos->cubic_spline->use_log_approach)
+      {
+        interp_p->N_cubic_spline_1d->f = eos->cubic_spline->p_log;
+        interp_p->N_cubic_spline_1d->x = eos->cubic_spline->h_log;
+      }
+      interp_p->N_cubic_spline_1d->N        = sample_size;
+      interp_p->N_cubic_spline_1d->No_Warn  = 1;/* suppress warning */
+      eos->cubic_spline->interp_p           = interp_p;
+      
+      // e:
+      Interpolation_T *interp_e             = init_interpolation();
+      interp_e->method                      = Gets(P_"Interpolation_Method");
+      interp_e->N_cubic_spline_1d->f        = eos->cubic_spline->e_sample;
+      interp_e->N_cubic_spline_1d->x        = eos->cubic_spline->h_sample;
+      if (eos->cubic_spline->use_log_approach)
+      {
+        interp_p->N_cubic_spline_1d->f = eos->cubic_spline->e_log;
+        interp_p->N_cubic_spline_1d->x = eos->cubic_spline->h_log;
+      }
+      interp_e->N_cubic_spline_1d->N        = sample_size;
+      interp_e->N_cubic_spline_1d->No_Warn  = 1;/* suppress warning */
+      eos->cubic_spline->interp_e           = interp_e;
+      
+      // rho0:
+      Interpolation_T *interp_rho0              = init_interpolation();
+      interp_rho0->method                       = Gets(P_"Interpolation_Method");
+      interp_rho0->N_cubic_spline_1d->f         = eos->cubic_spline->rho0_sample;
+      interp_rho0->N_cubic_spline_1d->x         = eos->cubic_spline->h_sample;
+      if (eos->cubic_spline->use_log_approach)
+      {
+        interp_p->N_cubic_spline_1d->f = eos->cubic_spline->rho0_log;
+        interp_p->N_cubic_spline_1d->x = eos->cubic_spline->h_log;
+      }
+      interp_rho0->N_cubic_spline_1d->N         = sample_size;
+      interp_rho0->N_cubic_spline_1d->No_Warn   = 1;/* suppress warning */
+      eos->cubic_spline->interp_rho0            = interp_rho0;
+      
+      if (Pcmps(Gets(P_"Interpolation_Method"), "Hermite"))
+      {
+        interp_p->finite_diff_order    = (Uint)Geti(P_"finite_diff_order");
+        interp_e->finite_diff_order    = (Uint)Geti(P_"finite_diff_order");
+        interp_rho0->finite_diff_order = (Uint)Geti(P_"finite_diff_order");
+        interp_p->Spline_Order         = (Uint)Geti(P_"spline_order");
+        interp_e->Spline_Order         = (Uint)Geti(P_"spline_order");
+        interp_rho0->Spline_Order      = (Uint)Geti(P_"spline_order");
+      }
+        
         assign_interpolation_ptrs(interp_p);
         assign_interpolation_ptrs(interp_e);
         assign_interpolation_ptrs(interp_rho0);
-        if (strstr_i(Gets(P_"Interpolation_Method"), "Hermite"))
-        {
-            interp_p->finite_diff_order    = (Uint)Geti(P_"finite_diff_order");
-            interp_e->finite_diff_order    = (Uint)Geti(P_"finite_diff_order");
-            interp_rho0->finite_diff_order = (Uint)Geti(P_"finite_diff_order");
-            interp_p->Spline_Order         = (Uint)Geti(P_"spline_order");
-            interp_e->Spline_Order         = (Uint)Geti(P_"spline_order");
-            interp_rho0->Spline_Order      = (Uint)Geti(P_"spline_order");
-        }
-        
-        if (eos->cubic_spline->use_log_approach)
-        {
-          *interp_p->f    = p_log;
-          *interp_p->x    = h_log;
-          *interp_e->f    = e_log;
-          *interp_e->x    = h_log;
-          *interp_rho0->f = rho0_log;
-          *interp_rho0->x = h_log;
-        }
-        else
-        {
-          *interp_p->f    = p_sample;
-          *interp_p->x    = h_sample;
-          *interp_e->f    = e_sample;
-          *interp_e->x    = h_sample;
-          *interp_rho0->f = rho0_sample;
-          *interp_rho0->x = h_sample;
-        }
-        
-        *interp_p->N    = sample_s;
-        *interp_e->N    = sample_s;
-        *interp_rho0->N = sample_s;
-        
-        /*
-        if (eos->cubic_spline->use_log_approach)
-        {
-          *interp_p->N    = sample_s - zero_rows;
-          *interp_e->N    = sample_s - zero_rows;
-          *interp_rho0->N = sample_s - zero_rows;
-        }
-        else
-        {
-          *interp_p->N    = sample_s;
-          *interp_e->N    = sample_s;
-          *interp_rho0->N = sample_s;
-        }
-        */
-        set_interp_warn_flag(interp_p, 1); // suppress warning
-        set_interp_warn_flag(interp_e, 1);
-        set_interp_warn_flag(interp_rho0, 1);
         
         plan_interpolation(interp_p);
         plan_interpolation(interp_e);
         plan_interpolation(interp_rho0);
-        eos->cubic_spline->interp_p = interp_p;
-        eos->cubic_spline->interp_e = interp_e;
-        eos->cubic_spline->interp_rho0 = interp_rho0;
-        
-        // assign functions for (p, e, rho0)
-        eos->pressure                 = EoS_p_h_tab;
-        eos->energy_density           = EoS_e_h_tab;
-        eos->rest_mass_density        = EoS_rho0_h_tab;
-        eos->specific_internal_energy = EoS_e0_h_tab;
-        eos->de_dh                    = EoS_de_dh_h_tab;
-        eos->drho0_dh                 = EoS_drho0_dh_h_tab;
-        
-        /////////////////////////Root finder approach to EOS//////////////////
-        // The general approach is to invert rho0(h) using the equation
-        // (e(rho0) + p(rho0)) / rho0 - h = 0,
-        // and use rho0 as the independent variable by interpolating
-        // e(rho0) and p(rho0).
-        if (strstr_i(PgetsEZ(P_"Approach"), "Root_Finder"))
-        {
-          // Set up interpolation for p(rho0) and e(rho0)
-          Interpolation_T* interp_p_rho0 = init_interpolation(); // Pressure from rest-mass
-          Interpolation_T* interp_e_rho0 = init_interpolation(); // Total energy from rest-mass
-          interp_p_rho0->method = Gets(P_"Interpolation_Method");
-          interp_e_rho0->method = Gets(P_"Interpolation_Method");
-          assign_interpolation_ptrs(interp_p_rho0);
-          assign_interpolation_ptrs(interp_e_rho0);
-          *interp_p_rho0->x = rho0_sample;
-          *interp_e_rho0->x = rho0_sample;
-          *interp_p_rho0->f = p_sample;
-          *interp_e_rho0->f = e_sample;
-          *interp_p_rho0->N = sample_s;
-          *interp_e_rho0->N = sample_s;
-          set_interp_warn_flag(interp_p_rho0, 1); // suppress warnings
-          set_interp_warn_flag(interp_e_rho0, 1);
-          plan_interpolation(interp_p_rho0);
-          plan_interpolation(interp_e_rho0);
-          eos->cubic_spline->interp_p_rho0    = interp_p_rho0;
-          eos->cubic_spline->interp_e_rho0    = interp_e_rho0;
-          eos->cubic_spline->enthalpy_eqn[0]  = EoS_enthalpy_def;
-          
-          // Set up root finder for (e(rho0) + p(rho0)) / rho0 - h = 0
-          Root_Finder_T* root_finder  = init_root_finder(1);
-          root_finder->type           = "Bisect_Single";
-          root_finder->f[0]           = *eos->cubic_spline->enthalpy_eqn;
-          root_finder->params         = eos;
-          root_finder->tolerance      = 1E-8;  //FIXME: Make dynamic pars
-          root_finder->MaxIter        = 100;
-          // FIXME: Errors near h ~ 1.0, temporary solution /////////////
-          root_finder->a_bisect       = rho0_sample[1];///////////////////////////
-          /////////////////////////////////////////////////////
-          root_finder->b_bisect       = rho0_sample[sample_s-1];
-          root_finder->verbose = 0;
-          root_finder->x_sol[0]       = eos->cubic_spline->rho0;
-          plan_root_finder(root_finder);
-          
-          eos->cubic_spline->root_finder    = root_finder;
-          eos->rest_mass_density            = EoS_rho0_RF;
-          eos->pressure                     = EoS_p_rho0_tab;
-          eos->energy_density               = EoS_e_rho0_tab;
-          eos->specific_internal_energy     = EoS_e0_rho0_tab;
-          eos->de_dh                        = EoS_de_dh_RF;
-          eos->drho0_dh                     = EoS_drho0_dh_RF;
-        }
-        
-        h_sample = 0;
-        p_sample = 0;
-        e_sample = 0;
-        rho0_sample = 0;
     }
-    //////////////////////////////////////////////////////////////////////////////////////////
-    
     else
     {
       Error0(NO_JOB);

@@ -372,4 +372,181 @@ double EoS_drho0_dh_RF(EoS_T* const eos)
   return 0;
 }
 
+// read thermo. vars. from a given table
+void eos_read_table(EoS_T* const eos)
+{
+  enum tab_format {
+  UTab_format, // undef
+  UTab_f1,     // "line,number_density,total_energy_density,pressure"
+  UTab_f2,     // "rest_mass_density,specific_internal_energy,pressure"
+  };
+  
+  Physics_T *const phys = eos->phys;
+  enum tab_format format = UTab_format;
+  FILE* table_file = Fopen(Gets(P_"table_path"),"r");
+  double *p_tab    = alloc_double(EOS_MAX_NUM_ROW_TABLE);
+  double *e_tab    = alloc_double(EOS_MAX_NUM_ROW_TABLE);
+  double *rho0_tab = alloc_double(EOS_MAX_NUM_ROW_TABLE);
+  double *h_tab    = 0;
+  Uint num_tab_row = 0;
+  double rho0_pnt = DBL_MAX;
+  double e_pnt = DBL_MAX;
+  double p_pnt = DBL_MAX;
+  char line[EOS_MAX_NUM_COL_TABLE] = {'\0'};
+  
+  // open and read eos table
+  if (!Pcmps(Gets(P_"table_format"), 
+       "line,number_density,total_energy_density,pressure"))
+  {
+    format = UTab_f1;
+    num_tab_row = 0;
+    while (fgets(line, sizeof(line), table_file))
+    {
+      // skip empty lines
+      if (strspn(line, " \t\r\n") == strlen(line))
+      {
+        continue;
+      }
+      // skip comment lines
+      if (line[0] == '#')
+      {
+        continue;
+      }
+      // skip table num. of lines
+      if (scanf(line,"%u") == 1)
+      {
+        continue;
+      }
+      // populate thermo. vars.
+      Uint l;
+      if (scanf(line,"%u %0.15e %0.15e %0.15e",&l, &rho0_pnt, &e_pnt, &p_pnt) == 4)
+      {
+        rho0_tab[num_tab_row] = rho0_pnt;
+        e_tab[num_tab_row]    = e_pnt;
+        p_tab[num_tab_row]    = p_pnt;
+        num_tab_row++;
+        if (num_tab_row >= EOS_MAX_NUM_ROW_TABLE)
+        {
+          Error0("number of table's row exceeds the max value. "
+                 "please increase the macro EOS_MAX_NUM_ROW_TABLE.");
+        }
+      }
+      else
+      {
+        Errors("Cannot read eos line: %s.",line);
+      }
+    }
+  }
+  else if (!Pcmps(Gets(P_"table_format"), 
+                  "rest_mass_density,specific_internal_energy,pressure"))
+  {
+    format = UTab_f2;
+    num_tab_row = 0;
+    while (fgets(line, sizeof(line), table_file))
+    {
+      Uint l;
+      // skip empty lines
+      if (strspn(line, " \t\r\n") == strlen(line))
+      {
+        continue;
+      }
+      // skip comment lines
+      if (line[0] == '#')
+      {
+        continue;
+      }
+      // skip table num. of lines
+      if (scanf(line,"%u",&l) == 1)
+      {
+        continue;
+      }
+      // populate thermo. vars.
+      if (scanf(line,"%0.15e %0.15e %0.15e",&rho0_pnt, &e_pnt, &p_pnt) == 3)
+      {
+        rho0_tab[num_tab_row] = rho0_pnt;
+        e_tab[num_tab_row]    = e_pnt;
+        p_tab[num_tab_row]    = p_pnt;
+        num_tab_row++;
+        if (num_tab_row >= EOS_MAX_NUM_ROW_TABLE)
+        {
+          Error0("number of table's row exceeds the max value. "
+                 "please increase the macro EOS_MAX_NUM_ROW_TABLE.");
+        }
+      }
+      else
+      {
+        Errors("Cannot read eos line: %s.",line);
+      }
+    }
+  }
+  else
+  {
+    Error0(NO_OPTION);
+  }
+  Fclose(table_file);
+  
+  // adjust to the actual size
+  p_tab = realloc(p_tab,num_tab_row*sizeof(*p_tab)); IsNull(p_tab);
+  e_tab = realloc(p_tab,num_tab_row*sizeof(*e_tab)); IsNull(e_tab);
+  rho0_tab = realloc(p_tab,num_tab_row*sizeof(*rho0_tab)); IsNull(rho0_tab);
+  h_tab    = alloc_double(num_tab_row);
+  
+  // unit conversion
+  if (strcmp_i(eos->unit,"compose") && format == UTab_f1)
+  {
+    /* compose format in columns
+    *          [line number] [number density] [(total) energy density] [pressure].
+    * in units               [1/fm^3]         [g/cm^3]                 [dyn/cm^2].
+    * Calculates rest-mass density (total) energy density, 
+    * and specific enthalpy, and converts to geometrized units.
+    *
+    * Physical constants from 2018 CODATA values.
+    * G_const = 6.67430E-11;          // Gravitational constant in m^3/(kg s^2)
+    * c_const = 299792458;            // Speed of light in m/s
+    * M_const = 1.98841E30;           // Solar mass in kg
+    * mn_const = 1.67492749804E-27;   // Neutron mass in kg
+    * compose data is converted to SI units then geometrized.
+    * Pressure conversion factor: G^3 * M_solar^2 / (10 * c^8)
+    * Energy density conversion factor: G^3  * M_solar^2 / (10 * c^6)
+    * Rest-mass conversion factor: 10^45 * neutron mass * G^3 * m_solar ^2 / (c^6)
+    * (Rest-mass is calculated by multiplying the baryon density by the baryon mass.)
+    */
+    const double p_FACTOR    = 1.80162095578956E-39;
+    const double rho0_FACTOR = 0.002712069678583313;
+    const double e_FACTOR    = 1.619216164136643E-18;
 
+    for (Uint i = 0; i < num_tab_row; i++)
+    {
+      p_tab[i]    *= p_FACTOR;
+      rho0_tab[i] *= rho0_FACTOR;
+      e_tab[i]    *= e_FACTOR;
+    }
+  }
+  else if (strcmp_i(eos->unit,"geo") && format == UTab_f2)
+  {
+    for (Uint i = 0; i < num_tab_row; i++)
+    {
+      e_tab[i] = e_tab[i]*rho0_tab[i]+rho0_tab[i];
+    }
+  }
+  else
+  {
+    Error0(NO_OPTION);
+  }
+  
+  // now everything is in correct format, set enthalpy
+  for (Uint i = 0; i < num_tab_row; i++)
+  {
+    h_tab[i] = (p_tab[i] + e_tab[i]) / rho0_tab[i];
+  }
+  
+  eos->cubic_spline->h_sample    = h_tab;
+  eos->cubic_spline->p_sample    = p_tab;
+  eos->cubic_spline->e_sample    = e_tab;
+  eos->cubic_spline->rho0_sample = rho0_tab;
+  eos->cubic_spline->sample_size = num_tab_row;
+  
+  h_tab = 0;
+  p_tab = 0;
+  rho0_tab = 0;
+}

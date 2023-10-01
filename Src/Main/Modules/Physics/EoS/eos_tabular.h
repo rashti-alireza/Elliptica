@@ -2,6 +2,14 @@
 #include "maths_spectral_methods_lib.h"
 #include "maths_equation_solvings_lib.h"
 
+// max number of eos table's row
+#define EOS_MAX_NUM_ROW_TABLE (4000)
+
+// max number of eos table's column char
+#define EOS_MAX_NUM_COL_TABLE (1000)
+
+void eos_read_table(EoS_T* const eos);
+
 //////////////////////////////////Interpolation method
 double EoS_rho0_h_tab(EoS_T *const eos);
 double EoS_p_h_tab(EoS_T *const eos);
