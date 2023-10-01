@@ -395,7 +395,7 @@ void eos_read_table(EoS_T* const eos)
   char line[EOS_MAX_NUM_COL_TABLE] = {'\0'};
   
   // open and read eos table
-  if (!Pcmps(Gets(P_"table_format"), 
+  if (strcmp_i(Gets(P_"table_format"), 
        "line,number_density,total_energy_density,pressure"))
   {
     format = UTab_f1;
@@ -437,7 +437,7 @@ void eos_read_table(EoS_T* const eos)
       }
     }
   }
-  else if (!Pcmps(Gets(P_"table_format"), 
+  else if (strcmp_i(Gets(P_"table_format"), 
                   "rest_mass_density,specific_internal_energy,pressure"))
   {
     format = UTab_f2;
