@@ -25,7 +25,6 @@ TODO: @Alireza
 . all newly added vars. in Src/Main/Modules/Includes/maths_spectral_methods_lib.h
   should be included in their own sub-structure.
 . Src/Main/Modules/Includes/maths_spectral_methods_lib.h: we should not need these
-	+void set_interp_warn_flag(Interpolation_T *const interp_s, Uint flag);
 	+void set_interp_alloc_mem_flag(Interpolation_T *const interp_s, Uint flag);
 	+void assign_interpolation_ptrs(Interpolation_T *const interp_s);
 . Src/Main/Modules/Includes/physics_EoS_lib.h: rename cubic_spline to be more general.

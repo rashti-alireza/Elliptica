@@ -59,8 +59,7 @@ void assign_interpolation_ptrs(Interpolation_T *const interp_s)
     interp_s->h = &interp_s->N_cubic_spline_1d->h;
     interp_s->N = &interp_s->N_cubic_spline_1d->N;
   }
-  else if (strstr_i(interp_s->method,"Hermite_Cubic_Spline") || strstr_i(interp_s->method,"Hermite_Spline")
-          || strstr_i(interp_s->method,"Hermite"))
+  else if (strstr_i(interp_s->method,"Hermite"))
   {
     interp_s->f = &interp_s->Hermite_spline_1d->f;
     interp_s->x = &interp_s->Hermite_spline_1d->x;
@@ -92,14 +91,18 @@ void plan_interpolation(Interpolation_T *const interp_s)
   {
     order_arrays_spline_1d(interp_s);
     
-    //if (!&interp_s->finite_diff_order) { interp_s->finite_diff_order = (Uint)Pgeti("Interpolation_finite_diff_order"); printf("Getting FDM order.\n"); }
-    //if (!&interp_s->Spline_Order) { interp_s->Spline_Order = (Uint)Pgeti("Interpolation_spline_order");  printf("Getting spline order.\n"); }
-    if (!interp_s->finite_diff_order) { interp_s->finite_diff_order = (Uint)Pgeti("Interpolation_finite_diff_order"); }
-    if (!interp_s->Spline_Order) { interp_s->Spline_Order = (Uint)Pgeti("Interpolation_spline_order"); }
-    //printf("\tFDM order == %i\n", (Uint)Pgeti("Interpolation_finite_diff_order"));
-    //printf("\tSpline order == %i\n", (Uint)Pgeti("Interpolation_spline_order"));
+    if (!interp_s->finite_diff_order)
+    {
+      Error0("no finite difference order is set for Hermit method");
+    }
+    if (!interp_s->Spline_Order)
+    {
+      Error0("no Spline order is set for Hermit method");
+    }
+    
     find_coeffs_Hermite_spline(interp_s);
     interp_s->interpolation_func = interpolation_Hermite_spline;
+    
     // Changed to analytical derivative of Hermite interpolant.
     ////////
     //interp_s->interpolation_derivative_func = interpolation_finite_difference;
@@ -1323,31 +1326,6 @@ static void set_interp_order_flag(Interpolation_T *const interp_s, Uint flag)
     { interp_s->N_cubic_spline_1d->Order = 0; }
     else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
     { interp_s->Hermite_spline_1d->Order = 0; }
-  }
-}
-
-// Sets interpolation warning flag
-void set_interp_warn_flag(Interpolation_T *const interp_s, Uint flag)
-{
-  if (flag != 0 && flag != 1)
-  { Error0("set_order_flag: invalid flag value."); }
-  
-  // The if statements are necessary because the No_Warn flag
-  // is a bit field and direct conversion of the flag value
-  // could be machine-dependent.
-  if (flag)
-  {
-    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
-    { interp_s->N_cubic_spline_1d->No_Warn = 1; }
-    else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
-    { interp_s->Hermite_spline_1d->No_Warn = 1; }
-  }
-  else
-  {
-    if (strstr_i(interp_s->method, "Natural_Cubic_Spline_1D"))
-    { interp_s->N_cubic_spline_1d->No_Warn = 0; }
-    else if (strstr_i(interp_s->method, "Hermite_Cubic_Spline"))
-    { interp_s->Hermite_spline_1d->No_Warn = 0; }
   }
 }
 

@@ -38,7 +38,6 @@ void free_interpolation(Interpolation_T *interp_s);
 void assign_interpolation_ptrs(Interpolation_T *const interp_s);
 static void set_interp_order_flag(Interpolation_T *const interp_s, Uint flag);
 void set_interp_alloc_mem_flag(Interpolation_T *const interp_s, Uint flag);
-void set_interp_warn_flag(Interpolation_T *const interp_s, Uint flag);
 //static Uint get_order_flag(Interpolation_T *const interp_s);
 //static Uint get_alloc_mem_flag(Interpolation_T *const interp_s);
 //static Uint get_warn_flag(Interpolation_T *const interp_s);

@@ -99,7 +99,6 @@ double execute_interpolation(Interpolation_T *const interp_s);
 double execute_derivative_interpolation(Interpolation_T *const interp_s);
 void plan_interpolation(Interpolation_T *const interp_s);
 /////////////////////
-void set_interp_warn_flag(Interpolation_T *const interp_s, Uint flag);
 void set_interp_alloc_mem_flag(Interpolation_T *const interp_s, Uint flag);
 void assign_interpolation_ptrs(Interpolation_T *const interp_s);
 double uniform_FDM_1_6(Interpolation_T *const interp_s);
