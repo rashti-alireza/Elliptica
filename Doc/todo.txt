@@ -28,6 +28,8 @@ TODO: @Alireza
 	+void set_interp_warn_flag(Interpolation_T *const interp_s, Uint flag);
 	+void set_interp_alloc_mem_flag(Interpolation_T *const interp_s, Uint flag);
 	+void assign_interpolation_ptrs(Interpolation_T *const interp_s);
+. Src/Main/Modules/Includes/physics_EoS_lib.h: rename cubic_spline to be more general.
+
 
 ## ---------------------------------------------------------------------- ##
 Src/Main/Modules/Maths/Calculus/derivatives.c
@@ -54,7 +56,6 @@ TODO: @Alireza
 . in Src/Main/Modules/Maths/Spectral_Methods/spectral_tests.c: return back DO_NOT to DO
 . run all the tests
 . separate derivate tests from interpolation tests.
-.
 
 ## ---------------------------------------------------------------------- ##
 Src/Main/Modules/Physics/EoS/eos_main.c
