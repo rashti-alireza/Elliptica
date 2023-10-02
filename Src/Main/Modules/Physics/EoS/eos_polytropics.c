@@ -215,11 +215,11 @@ static Uint find_threshold_number_h(const EoS_T *const eos)
 // ->return value: p(h) */
 double EoS_p_h_pwp_ncs(EoS_T *const eos)
 {
-  if (LSSEQL(eos->h, eos->cubic_spline->h_floor))
+  if (LSSEQL(eos->h, eos->spline->h_floor))
     return 0.;
 
   double p;  
-  Interpolation_T *const interp_s = eos->cubic_spline->interp_p;
+  Interpolation_T *const interp_s = eos->spline->interp_p;
   
   interp_s->N_cubic_spline_1d->h  = eos->h;
   p = execute_interpolation(interp_s);
@@ -231,11 +231,11 @@ double EoS_p_h_pwp_ncs(EoS_T *const eos)
 // ->return value: rho(h) */
 double EoS_rho0_h_pwp_ncs(EoS_T *const eos)
 {
-  if (LSSEQL(eos->h, eos->cubic_spline->h_floor))
+  if (LSSEQL(eos->h, eos->spline->h_floor))
     return 0.;
   
   double rho0;  
-  Interpolation_T *const interp_s = eos->cubic_spline->interp_rho0;
+  Interpolation_T *const interp_s = eos->spline->interp_rho0;
   
   interp_s->N_cubic_spline_1d->h  = eos->h;
   rho0 = execute_interpolation(interp_s);
@@ -247,11 +247,11 @@ double EoS_rho0_h_pwp_ncs(EoS_T *const eos)
 // ->return value: e(h) */
 double EoS_e_h_pwp_ncs(EoS_T *const eos)
 {
-  if (LSSEQL(eos->h, eos->cubic_spline->h_floor))
+  if (LSSEQL(eos->h, eos->spline->h_floor))
     return 0.;
 
   double e;
-  Interpolation_T *const interp_s = eos->cubic_spline->interp_e;
+  Interpolation_T *const interp_s = eos->spline->interp_e;
   
   interp_s->N_cubic_spline_1d->h  = eos->h;
   e = execute_interpolation(interp_s);

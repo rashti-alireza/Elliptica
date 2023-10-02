@@ -70,7 +70,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
     //Terminate TOV solver if central enthalpy exceeds max available data point for tabular EoS.
     if ((strstr_i(tov_eos->type, "Tabular") ||
 	       strstr_i(tov_eos->type, "tabular")) && 
-	       GRTEQL(h_cent_new, tov_eos->cubic_spline->h_max))
+	       GRTEQL(h_cent_new, tov_eos->spline->h_max))
     {
 	      printf("WARNING: TOV solver terminating at maximum enthalpy: %E\n", h_cent_new);
 	      TOV->status = 1;
@@ -120,12 +120,12 @@ TOV_T *TOV_solution(TOV_T *const TOV)
       // Cap central enthalpy at max given in table, if applicable.
       if ((strstr_i(tov_eos->type, "Tabular") ||
 	       strstr_i(tov_eos->type, "tabular")) && 
-	       GRTEQL(h_cent_new, tov_eos->cubic_spline->h_max))
+	       GRTEQL(h_cent_new, tov_eos->spline->h_max))
       { 
         printf("WARNING: TOV solver encountered maximum enthalpy available in table.\n");
         printf("\tCentral enthalpy: %E\n", h_cent_new);
-        printf("\tMaximum enthalpy data: %E\n", tov_eos->cubic_spline->h_max);
-        h_cent_new = tov_eos->cubic_spline->h_max; 
+        printf("\tMaximum enthalpy data: %E\n", tov_eos->spline->h_max);
+        h_cent_new = tov_eos->spline->h_max; 
       }
     }
     iter++;

@@ -73,7 +73,7 @@ typedef struct EquationOfState_T
    void *interp_e_rho0; // For interpolating total energy density from rest-mass density
    double rho0; /* used for root finder approach */
    double (*enthalpy_eqn[1])(void* eos, const double* params); // Eqn for root finder //
- }cubic_spline[1];
+ }spline[1];
  
 }EoS_T;
 #undef EOS_MAX_STR

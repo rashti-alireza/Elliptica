@@ -57,33 +57,33 @@ void free_EoS(EoS_T *s)
   
   if (strstr_i(PgetsEZ(P_"Approach"), "Root_Finder"))
   {
-    free_interpolation(s->cubic_spline->interp_e_rho0);
-    free_interpolation(s->cubic_spline->interp_p_rho0);
-    Root_Finder_T* rf_copy = (Root_Finder_T*)(s->cubic_spline->root_finder);
+    free_interpolation(s->spline->interp_e_rho0);
+    free_interpolation(s->spline->interp_p_rho0);
+    Root_Finder_T* rf_copy = (Root_Finder_T*)(s->spline->root_finder);
     free_root_finder(rf_copy);
   }
   
   if (strstr_i(PgetsEZ(P_"log_approach"), "yes"))
   {
-    free(s->cubic_spline->h_log);
-    free(s->cubic_spline->p_log);
-    free(s->cubic_spline->e_log);
-    free(s->cubic_spline->rho0_log);
+    free(s->spline->h_log);
+    free(s->spline->p_log);
+    free(s->spline->e_log);
+    free(s->spline->rho0_log);
   }
   
   /* free cubic spline struct */
   if (strcmp_i(s->type, "tabular"))
   {
-    Free(s->cubic_spline->h_sample);
-    Free(s->cubic_spline->p_sample);
-    Free(s->cubic_spline->e_sample);
-    Free(s->cubic_spline->rho0_sample);
-    set_interp_alloc_mem_flag(s->cubic_spline->interp_p, 0);
-    set_interp_alloc_mem_flag(s->cubic_spline->interp_e, 0);
-    set_interp_alloc_mem_flag(s->cubic_spline->interp_rho0, 0);
-    free_interpolation(s->cubic_spline->interp_p);
-    free_interpolation(s->cubic_spline->interp_e);
-    free_interpolation(s->cubic_spline->interp_rho0);
+    Free(s->spline->h_sample);
+    Free(s->spline->p_sample);
+    Free(s->spline->e_sample);
+    Free(s->spline->rho0_sample);
+    set_interp_alloc_mem_flag(s->spline->interp_p, 0);
+    set_interp_alloc_mem_flag(s->spline->interp_e, 0);
+    set_interp_alloc_mem_flag(s->spline->interp_rho0, 0);
+    free_interpolation(s->spline->interp_p);
+    free_interpolation(s->spline->interp_e);
+    free_interpolation(s->spline->interp_rho0);
   }
   
   free(s);
@@ -216,12 +216,12 @@ static void populate_EoS(EoS_T *const eos)
       rho0_sample[i] = eos->rest_mass_density(eos);
     }
     /* save samples: */
-    eos->cubic_spline->sample_size = sample_s;
-    eos->cubic_spline->h_sample    = h_sample;
-    eos->cubic_spline->p_sample    = p_sample;
-    eos->cubic_spline->e_sample    = e_sample;
-    eos->cubic_spline->rho0_sample = rho0_sample;
-    eos->cubic_spline->h_floor     = Getd(P_"enthalpy_floor");
+    eos->spline->sample_size = sample_s;
+    eos->spline->h_sample    = h_sample;
+    eos->spline->p_sample    = p_sample;
+    eos->spline->e_sample    = e_sample;
+    eos->spline->rho0_sample = rho0_sample;
+    eos->spline->h_floor     = Getd(P_"enthalpy_floor");
     
     /* find and save spline coeffs for (p, e, rho0).
     // NOTE: we assume each is a function of the enthalpy h. */
@@ -233,7 +233,7 @@ static void populate_EoS(EoS_T *const eos)
     interp_p->N_cubic_spline_1d->N        = sample_s;
     interp_p->N_cubic_spline_1d->No_Warn  = 1;/* suppress warning */
     plan_interpolation(interp_p);
-    eos->cubic_spline->interp_p           = interp_p;
+    eos->spline->interp_p = interp_p;
     
     // e:
     Interpolation_T *interp_e             = init_interpolation();
@@ -243,7 +243,7 @@ static void populate_EoS(EoS_T *const eos)
     interp_e->N_cubic_spline_1d->N        = sample_s;
     interp_e->N_cubic_spline_1d->No_Warn  = 1;/* suppress warning */
     plan_interpolation(interp_e);
-    eos->cubic_spline->interp_e           = interp_e;
+    eos->spline->interp_e = interp_e;
     
     // rho0:
     Interpolation_T *interp_rho0              = init_interpolation();
@@ -253,7 +253,7 @@ static void populate_EoS(EoS_T *const eos)
     interp_rho0->N_cubic_spline_1d->N         = sample_s;
     interp_rho0->N_cubic_spline_1d->No_Warn   = 1;/* suppress warning */
     plan_interpolation(interp_rho0);
-    eos->cubic_spline->interp_rho0            = interp_rho0;
+    eos->spline->interp_rho0            = interp_rho0;
     
     /* assign functions for (p, e, rho0) */
     eos->pressure                 = EoS_p_h_pwp_ncs;
@@ -273,7 +273,7 @@ static void populate_EoS(EoS_T *const eos)
   }// end else if (strcmp_i(eos->type,"pwp_natural_cubic_spline"))
   
   else if (strcmp_i(eos->type,"polytropic") ||
-           strcmp_i(eos->type,"polytrop"))
+           strcmp_i(eos->type,"polytrope"))
   {
     if (!strcmp_i(eos->unit,"geo"))
     {

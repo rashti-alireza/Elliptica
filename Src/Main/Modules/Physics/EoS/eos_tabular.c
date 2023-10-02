@@ -21,32 +21,32 @@ Uint get_sample_size(const char* const eos_file_name)
 double EoS_p_h_tab(EoS_T* const eos)
 {
     double h_copy = eos->h;
-    if (LSS(eos->h, eos->cubic_spline->h_floor))
+    if (LSS(eos->h, eos->spline->h_floor))
     {
         // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
-        eos->h = eos->cubic_spline->h_floor;
+        eos->h = eos->spline->h_floor;
     }
-    else if (GRT(eos->h, eos->cubic_spline->h_ceil))
+    else if (GRT(eos->h, eos->spline->h_ceil))
     {
         // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
-        eos->h = eos->cubic_spline->h_ceil;
+        eos->h = eos->spline->h_ceil;
     }
-    else if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
+    else if (GRT(eos->h, eos->spline->h_max) || LSS(eos->h, 0.90))
     {
         printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
+             eos->h, eos->spline->h_floor, eos->spline->h_max);
         Error0("Exit");
         return 0.0;
     }
     
     double p;  
-    Interpolation_T *const interp_s = eos->cubic_spline->interp_p;
+    Interpolation_T *const interp_s = eos->spline->interp_p;
     
-    if (eos->cubic_spline->use_log_approach)
+    if (eos->spline->use_log_approach)
     {
       *interp_s->h = log(eos->h);
-      //p = exp(execute_interpolation(interp_s)) * exp(-eos->cubic_spline->c_p);
-      p = exp(execute_interpolation(interp_s)) - eos->cubic_spline->c_p;
+      //p = exp(execute_interpolation(interp_s)) * exp(-eos->spline->c_p);
+      p = exp(execute_interpolation(interp_s)) - eos->spline->c_p;
     }
     else
     {
@@ -65,31 +65,31 @@ double EoS_p_h_tab(EoS_T* const eos)
 double EoS_rho0_h_tab(EoS_T* const eos)
 {
     double h_copy = eos->h;
-    if (LSS(eos->h, eos->cubic_spline->h_floor))
+    if (LSS(eos->h, eos->spline->h_floor))
     {
         // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
-        eos->h = eos->cubic_spline->h_floor;
+        eos->h = eos->spline->h_floor;
     }
-    else if (GRT(eos->h, eos->cubic_spline->h_ceil))
+    else if (GRT(eos->h, eos->spline->h_ceil))
     {
         // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
-        eos->h = eos->cubic_spline->h_ceil;
+        eos->h = eos->spline->h_ceil;
     }
-    else if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
+    else if (GRT(eos->h, eos->spline->h_max) || LSS(eos->h, 0.90))
     {
         printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
+             eos->h, eos->spline->h_floor, eos->spline->h_max);
         Error0("Exit");
         return 0.0;
     }
   
     double rho0;  
-    Interpolation_T *const interp_s = eos->cubic_spline->interp_rho0;
+    Interpolation_T *const interp_s = eos->spline->interp_rho0;
     
-    if (eos->cubic_spline->use_log_approach)
+    if (eos->spline->use_log_approach)
     {
       *interp_s->h = log(eos->h);
-      rho0 = exp(execute_interpolation(interp_s)) - eos->cubic_spline->c_e;
+      rho0 = exp(execute_interpolation(interp_s)) - eos->spline->c_e;
     }
     else
     {
@@ -109,31 +109,31 @@ double EoS_rho0_h_tab(EoS_T* const eos)
 double EoS_e_h_tab(EoS_T* const eos)
 {
     double h_copy = eos->h;
-    if (LSS(eos->h, eos->cubic_spline->h_floor))
+    if (LSS(eos->h, eos->spline->h_floor))
     {
         // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
-        eos->h = eos->cubic_spline->h_floor;
+        eos->h = eos->spline->h_floor;
     }
-    else if (GRT(eos->h, eos->cubic_spline->h_ceil))
+    else if (GRT(eos->h, eos->spline->h_ceil))
     {
         // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
-        eos->h = eos->cubic_spline->h_ceil;
+        eos->h = eos->spline->h_ceil;
     }
-    else if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
+    else if (GRT(eos->h, eos->spline->h_max) || LSS(eos->h, 0.90))
     {
         printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
+             eos->h, eos->spline->h_floor, eos->spline->h_max);
         Error0("Exit");
         return 0.0;
     }
 
     double e;
-    Interpolation_T *const interp_s = eos->cubic_spline->interp_e;
+    Interpolation_T *const interp_s = eos->spline->interp_e;
     
-    if (eos->cubic_spline->use_log_approach)
+    if (eos->spline->use_log_approach)
     {
       *interp_s->h = log(eos->h);
-      e = exp(execute_interpolation(interp_s)) - eos->cubic_spline->c_e;
+      e = exp(execute_interpolation(interp_s)) - eos->spline->c_e;
     }
     else
     {
@@ -155,20 +155,20 @@ double EoS_e_h_tab(EoS_T* const eos)
 double EoS_e0_h_tab(EoS_T* const eos)
 {
     double h_copy = eos->h;
-    if (LSS(eos->h, eos->cubic_spline->h_floor))
+    if (LSS(eos->h, eos->spline->h_floor))
     {
         // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
-        eos->h = eos->cubic_spline->h_floor;
+        eos->h = eos->spline->h_floor;
     }
-    else if (GRT(eos->h, eos->cubic_spline->h_ceil))
+    else if (GRT(eos->h, eos->spline->h_ceil))
     {
         // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
-        eos->h = eos->cubic_spline->h_ceil;
+        eos->h = eos->spline->h_ceil;
     }
-    else if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
+    else if (GRT(eos->h, eos->spline->h_max) || LSS(eos->h, 0.90))
     {
         printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
+             eos->h, eos->spline->h_floor, eos->spline->h_max);
         Error0("Exit");
         return 0.0;
     }
@@ -186,40 +186,40 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
 {
     double h_copy = eos->h;
     //Check bounds for enthalpy
-    if (LSS(eos->h, eos->cubic_spline->h_floor))
+    if (LSS(eos->h, eos->spline->h_floor))
     {
         // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
-        eos->h = eos->cubic_spline->h_floor;
+        eos->h = eos->spline->h_floor;
     }
-    else if (GRT(eos->h, eos->cubic_spline->h_ceil))
+    else if (GRT(eos->h, eos->spline->h_ceil))
     {
         // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
-        eos->h = eos->cubic_spline->h_ceil;
+        eos->h = eos->spline->h_ceil;
     }
-    else if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
+    else if (GRT(eos->h, eos->spline->h_max) || LSS(eos->h, 0.90))
     {
         printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
+             eos->h, eos->spline->h_floor, eos->spline->h_max);
         Error0("Exit");
         return 0.0;
     }
     
     double drho0dh;
-    Interpolation_T *const interp_s = eos->cubic_spline->interp_rho0;
+    Interpolation_T *const interp_s = eos->spline->interp_rho0;
     interp_s->FDM_derivative = 1;
     
-    if (eos->cubic_spline->use_log_approach)
+    if (eos->spline->use_log_approach)
     {
       // Via chain rule: df/dh = (f(x)/x) * d(log(f))/d(log(x))
       // d(log(rho0))/d(log(h)):
-      double dlog_log = FDM_Fornberg(eos->cubic_spline->h_log,
-                             eos->cubic_spline->rho0_log,
+      double dlog_log = FDM_Fornberg(eos->spline->h_log,
+                             eos->spline->rho0_log,
                              log(eos->h),
                              1,
                              interp_s->finite_diff_order,
-                             eos->cubic_spline->sample_size);
+                             eos->spline->sample_size);
       *interp_s->h = eos->h;
-      drho0dh = dlog_log * (EoS_rho0_h_tab(eos) + eos->cubic_spline->c_rho0) / eos->h;
+      drho0dh = dlog_log * (EoS_rho0_h_tab(eos) + eos->spline->c_rho0) / eos->h;
     }
     else
     {
@@ -236,40 +236,40 @@ double EoS_de_dh_h_tab(EoS_T* const eos)
 {
     double h_copy = eos->h;
     //Check bounds for enthalpy
-    if (LSS(eos->h, eos->cubic_spline->h_floor))
+    if (LSS(eos->h, eos->spline->h_floor))
     {
         // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
-        eos->h = eos->cubic_spline->h_floor;
+        eos->h = eos->spline->h_floor;
     }
-    else if (GRT(eos->h, eos->cubic_spline->h_ceil))
+    else if (GRT(eos->h, eos->spline->h_ceil))
     {
         // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
-        eos->h = eos->cubic_spline->h_ceil;
+        eos->h = eos->spline->h_ceil;
     }
-    else if (GRT(eos->h, eos->cubic_spline->h_max) || LSS(eos->h, 0.90))
+    else if (GRT(eos->h, eos->spline->h_max) || LSS(eos->h, 0.90))
     {
         printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->cubic_spline->h_floor, eos->cubic_spline->h_max);
+             eos->h, eos->spline->h_floor, eos->spline->h_max);
         Error0("Exit");
         return 0.0;
     }
     
     double dedh;
-    Interpolation_T *const interp_s = eos->cubic_spline->interp_e;
+    Interpolation_T *const interp_s = eos->spline->interp_e;
     interp_s->FDM_derivative = 1;
     
-    if (eos->cubic_spline->use_log_approach)
+    if (eos->spline->use_log_approach)
     {
       // Via chain rule: df/dh = (f(x)/x) * d(log(f))/d(log(x))
       // d(log(e))/d(log(h)):
-      double dlog_log = FDM_Fornberg(eos->cubic_spline->h_log,
-                             eos->cubic_spline->e_log,
+      double dlog_log = FDM_Fornberg(eos->spline->h_log,
+                             eos->spline->e_log,
                              log(eos->h),
                              1,
                              interp_s->finite_diff_order,
-                             eos->cubic_spline->sample_size);
+                             eos->spline->sample_size);
       *interp_s->h = eos->h;
-      dedh = dlog_log * (EoS_e_h_tab(eos) + eos->cubic_spline->c_e)/ eos->h;
+      dedh = dlog_log * (EoS_e_h_tab(eos) + eos->spline->c_e)/ eos->h;
     }
     else
     {
@@ -287,11 +287,11 @@ double EoS_enthalpy_def(void* eos, const double* const sol)
 {
   // FIXME: See if there's a better way than eos_copy
   EoS_T* eos_copy = (EoS_T* const)eos;
-  eos_copy->cubic_spline->rho0 = sol[0];
-  Interpolation_T* const interp_e_rho0 = eos_copy->cubic_spline->interp_e_rho0;
-  Interpolation_T* const interp_p_rho0 = eos_copy->cubic_spline->interp_p_rho0;
-  *interp_e_rho0->h = eos_copy->cubic_spline->rho0;
-  *interp_p_rho0->h = eos_copy->cubic_spline->rho0;
+  eos_copy->spline->rho0 = sol[0];
+  Interpolation_T* const interp_e_rho0 = eos_copy->spline->interp_e_rho0;
+  Interpolation_T* const interp_p_rho0 = eos_copy->spline->interp_p_rho0;
+  *interp_e_rho0->h = eos_copy->spline->rho0;
+  *interp_p_rho0->h = eos_copy->spline->rho0;
   
   double e = execute_interpolation(interp_e_rho0);
   double p = execute_interpolation(interp_p_rho0);
@@ -299,14 +299,14 @@ double EoS_enthalpy_def(void* eos, const double* const sol)
   /*
   printf("EoS_enthalpy_def:\n");
   printf("\t h == %E\n", eos_copy->h);
-  printf("\t rho0 == %E\n", eos_copy->cubic_spline->rho0);
+  printf("\t rho0 == %E\n", eos_copy->spline->rho0);
   printf("\t p == %E\n", p);
   printf("\t e == %E\n", e);
-  printf("\t return == %E\n", ((e + p) / eos_copy->cubic_spline->rho0) - eos_copy->h);
+  printf("\t return == %E\n", ((e + p) / eos_copy->spline->rho0) - eos_copy->h);
   */
   
   if (eos_copy->h < Pgetd("NS_eos_enthalpy_floor")) { return 0; }
-  return ((e + p) / eos_copy->cubic_spline->rho0) - eos_copy->h;
+  return ((e + p) / eos_copy->spline->rho0) - eos_copy->h;
 }
 
 // Finds rest-mass density from enthalpy, using root finder method
@@ -315,9 +315,9 @@ double EoS_enthalpy_def(void* eos, const double* const sol)
 // thermodynamic functions.
 double EoS_rho0_RF(EoS_T *const eos)
 {
-  Root_Finder_T* root_finder = (Root_Finder_T*)eos->cubic_spline->root_finder;
+  Root_Finder_T* root_finder = (Root_Finder_T*)eos->spline->root_finder;
   double rho0 = *execute_root_finder(root_finder);
-  eos->cubic_spline->rho0 = rho0;
+  eos->spline->rho0 = rho0;
   return rho0;
 }
 
@@ -327,7 +327,7 @@ double EoS_p_rho0_tab(EoS_T* const eos)
   // Determine rho0 using root finder, given enthalpy.
   EoS_rho0_RF(eos);
   // Having rho0, interpolate p(rho0).
-  double p = execute_interpolation(eos->cubic_spline->interp_p_rho0);
+  double p = execute_interpolation(eos->spline->interp_p_rho0);
   return p;
 }
 
@@ -338,7 +338,7 @@ double EoS_e_rho0_tab(EoS_T* const eos)
   // Determine rho0 using root finder, given enthalpy.
   EoS_rho0_RF(eos);
   // Having rho0, interpolate e(rho0).
-  double e = execute_interpolation(eos->cubic_spline->interp_e_rho0);
+  double e = execute_interpolation(eos->spline->interp_e_rho0);
   return e;
 }
 
@@ -348,9 +348,9 @@ double EoS_e_rho0_tab(EoS_T* const eos)
 double EoS_e0_rho0_tab(EoS_T* const eos)
 {
   // Determine e and rho0.
-  // (rho0 is set in eos->cubic_spline by EoS_e_rho0_tab.)
+  // (rho0 is set in eos->spline by EoS_e_rho0_tab.)
   double e = EoS_e_rho0_tab(eos);
-  return (e / eos->cubic_spline->rho0) - 1;
+  return (e / eos->spline->rho0) - 1;
 }
 
 /////////////////////UNFINISHED//////////////////////
@@ -540,11 +540,11 @@ void eos_tab_read_table(EoS_T* const eos)
     h_tab[i] = (p_tab[i] + e_tab[i]) / rho0_tab[i];
   }
   
-  eos->cubic_spline->h_sample    = h_tab;
-  eos->cubic_spline->p_sample    = p_tab;
-  eos->cubic_spline->e_sample    = e_tab;
-  eos->cubic_spline->rho0_sample = rho0_tab;
-  eos->cubic_spline->sample_size = num_tab_row;
+  eos->spline->h_sample    = h_tab;
+  eos->spline->p_sample    = p_tab;
+  eos->spline->e_sample    = e_tab;
+  eos->spline->rho0_sample = rho0_tab;
+  eos->spline->sample_size = num_tab_row;
   
   h_tab = 0;
   p_tab = 0;
@@ -555,7 +555,7 @@ void eos_tab_read_table(EoS_T* const eos)
 void eos_tab_set_hermite(EoS_T* const eos)
 {
   Physics_T *const phys = eos->phys;
-  const Uint sample_size = eos->cubic_spline->sample_size;
+  const Uint sample_size = eos->spline->sample_size;
   
   eos->pressure                 = EoS_p_h_tab;
   eos->energy_density           = EoS_e_h_tab;
@@ -563,35 +563,36 @@ void eos_tab_set_hermite(EoS_T* const eos)
   eos->specific_internal_energy = EoS_e0_h_tab;
   eos->de_dh                    = EoS_de_dh_h_tab;
   eos->drho0_dh                 = EoS_drho0_dh_h_tab;
-  eos->cubic_spline->h_floor = Getd(P_"enthalpy_floor");
-  eos->cubic_spline->h_ceil  = Getd(P_"enthalpy_ceiling");
+  eos->spline->h_floor = Getd(P_"enthalpy_floor");
+  eos->spline->h_ceil  = Getd(P_"enthalpy_ceiling");
 
   // Fill arrays with log(values) if we're using log-log interpolation.
   if (Pcmps(Gets(P_"log_approach"),"yes"))
   {
-    eos->cubic_spline->use_log_approach = 1;
+    eos->spline->use_log_approach = 1;
     double *h_log = alloc_double(sample_size);
     double *p_log = alloc_double(sample_size);
     double *e_log = alloc_double(sample_size);
     double *rho0_log = alloc_double(sample_size);
 
     // shifting to avoid log(0)
-    eos->cubic_spline->c_p = 1E-3;
-    eos->cubic_spline->c_e = 1E-3;
-    eos->cubic_spline->c_rho0 = 1E-3;
+    // TODO: are they the best number?
+    eos->spline->c_p = 1E-3;
+    eos->spline->c_e = 1E-3;
+    eos->spline->c_rho0 = 1E-3;
     
     for (Uint i = 0; i < sample_size; i++)
     {
-      p_log[i]    = log(eos->cubic_spline->p_sample[i]    + eos->cubic_spline->c_p);
-      rho0_log[i] = log(eos->cubic_spline->rho0_sample[i] + eos->cubic_spline->c_rho0);
-      e_log[i]    = log(eos->cubic_spline->e_sample[i]    + eos->cubic_spline->c_e);
-      h_log[i]    = log(eos->cubic_spline->h_sample[i]);
+      p_log[i]    = log(eos->spline->p_sample[i]    + eos->spline->c_p);
+      rho0_log[i] = log(eos->spline->rho0_sample[i] + eos->spline->c_rho0);
+      e_log[i]    = log(eos->spline->e_sample[i]    + eos->spline->c_e);
+      h_log[i]    = log(eos->spline->h_sample[i]);
     }
     
-    eos->cubic_spline->h_log    = h_log;
-    eos->cubic_spline->p_log    = p_log;
-    eos->cubic_spline->e_log    = e_log;
-    eos->cubic_spline->rho0_log = rho0_log;
+    eos->spline->h_log    = h_log;
+    eos->spline->p_log    = p_log;
+    eos->spline->e_log    = e_log;
+    eos->spline->rho0_log = rho0_log;
     p_log = 0;
     e_log = 0;
     rho0_log = 0;
@@ -604,16 +605,16 @@ void eos_tab_set_hermite(EoS_T* const eos)
   interp_p->method               = Gets(P_"Interpolation_Method");
   interp_p->finite_diff_order    = (Uint)Geti(P_"finite_diff_order");
   interp_p->Spline_Order         = (Uint)Geti(P_"spline_order");
-  interp_p->N_cubic_spline_1d->f = eos->cubic_spline->p_sample;
-  interp_p->N_cubic_spline_1d->x = eos->cubic_spline->h_sample;
-  if (eos->cubic_spline->use_log_approach)
+  interp_p->N_cubic_spline_1d->f = eos->spline->p_sample;
+  interp_p->N_cubic_spline_1d->x = eos->spline->h_sample;
+  if (eos->spline->use_log_approach)
   {
-    interp_p->N_cubic_spline_1d->f = eos->cubic_spline->p_log;
-    interp_p->N_cubic_spline_1d->x = eos->cubic_spline->h_log;
+    interp_p->N_cubic_spline_1d->f = eos->spline->p_log;
+    interp_p->N_cubic_spline_1d->x = eos->spline->h_log;
   }
   interp_p->N_cubic_spline_1d->N        = sample_size;
   interp_p->N_cubic_spline_1d->No_Warn  = 1;/* suppress warning */
-  eos->cubic_spline->interp_p           = interp_p;
+  eos->spline->interp_p = interp_p;
   plan_interpolation(interp_p);
   
   // e:
@@ -621,16 +622,16 @@ void eos_tab_set_hermite(EoS_T* const eos)
   interp_e->method               = Gets(P_"Interpolation_Method");
   interp_e->finite_diff_order    = (Uint)Geti(P_"finite_diff_order");
   interp_e->Spline_Order         = (Uint)Geti(P_"spline_order");
-  interp_e->N_cubic_spline_1d->f = eos->cubic_spline->e_sample;
-  interp_e->N_cubic_spline_1d->x = eos->cubic_spline->h_sample;
-  if (eos->cubic_spline->use_log_approach)
+  interp_e->N_cubic_spline_1d->f = eos->spline->e_sample;
+  interp_e->N_cubic_spline_1d->x = eos->spline->h_sample;
+  if (eos->spline->use_log_approach)
   {
-    interp_p->N_cubic_spline_1d->f = eos->cubic_spline->e_log;
-    interp_p->N_cubic_spline_1d->x = eos->cubic_spline->h_log;
+    interp_p->N_cubic_spline_1d->f = eos->spline->e_log;
+    interp_p->N_cubic_spline_1d->x = eos->spline->h_log;
   }
   interp_e->N_cubic_spline_1d->N        = sample_size;
   interp_e->N_cubic_spline_1d->No_Warn  = 1;/* suppress warning */
-  eos->cubic_spline->interp_e           = interp_e;
+  eos->spline->interp_e = interp_e;
   plan_interpolation(interp_e);
   
   // rho0:
@@ -638,16 +639,16 @@ void eos_tab_set_hermite(EoS_T* const eos)
   interp_rho0->method               = Gets(P_"Interpolation_Method");
   interp_rho0->finite_diff_order    = (Uint)Geti(P_"finite_diff_order");
   interp_rho0->Spline_Order         = (Uint)Geti(P_"spline_order");
-  interp_rho0->N_cubic_spline_1d->f = eos->cubic_spline->rho0_sample;
-  interp_rho0->N_cubic_spline_1d->x = eos->cubic_spline->h_sample;
-  if (eos->cubic_spline->use_log_approach)
+  interp_rho0->N_cubic_spline_1d->f = eos->spline->rho0_sample;
+  interp_rho0->N_cubic_spline_1d->x = eos->spline->h_sample;
+  if (eos->spline->use_log_approach)
   {
-    interp_p->N_cubic_spline_1d->f = eos->cubic_spline->rho0_log;
-    interp_p->N_cubic_spline_1d->x = eos->cubic_spline->h_log;
+    interp_p->N_cubic_spline_1d->f = eos->spline->rho0_log;
+    interp_p->N_cubic_spline_1d->x = eos->spline->h_log;
   }
   interp_rho0->N_cubic_spline_1d->N         = sample_size;
   interp_rho0->N_cubic_spline_1d->No_Warn   = 1;/* suppress warning */
-  eos->cubic_spline->interp_rho0            = interp_rho0;
+  eos->spline->interp_rho0 = interp_rho0;
   plan_interpolation(interp_rho0);
     
     assign_interpolation_ptrs(interp_p);
