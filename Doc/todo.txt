@@ -28,7 +28,7 @@ TODO: @Alireza
 	+void set_interp_alloc_mem_flag(Interpolation_T *const interp_s, Uint flag);
 	+void assign_interpolation_ptrs(Interpolation_T *const interp_s);
 . Src/Main/Modules/Includes/physics_EoS_lib.h: rename cubic_spline to be more general.
-
+. Src/Main/Modules/Includes/physics_EoS_lib.h: do we need root finder here?
 
 ## ---------------------------------------------------------------------- ##
 Src/Main/Modules/Maths/Calculus/derivatives.c
@@ -79,6 +79,7 @@ TODO: @Alireza
 . Src/Main/Modules/Physics/EoS/eos_tabular.c: too many ifs and branches and
   constants like h = 0.9, floor should suffice.
 . when we use EoS_Unit in tabular?
+. Src/Main/Modules/Physics/EoS/eos_main.c: clean up free_EoS
 
 ## ---------------------------------------------------------------------- ##
 Src/Projects/Includes/TOV_lib.h
@@ -95,6 +96,9 @@ TODO @Andrew
 . two columns of radius one with km and the other in geom. unit.
 . only 1 space between columns of the output file to separate numbers - not tab.
 .
+
+TODO @Alireza
+. why Src/Projects/TOV_star/TOV_solution.c use eos->spline.  better arrangement.
 
 ## ---------------------------------------------------------------------- ##
 Src/Projects/Tests/Modules_Test/MT_ParFiles/finite_difference_test.par
