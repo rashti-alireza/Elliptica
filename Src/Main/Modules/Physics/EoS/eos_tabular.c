@@ -373,7 +373,7 @@ double EoS_drho0_dh_RF(EoS_T* const eos)
 }
 
 // read thermo. vars. from a given table
-void eos_read_table(EoS_T* const eos)
+void eos_tab_read_table(EoS_T* const eos)
 {
   enum tab_format {
   UTab_format, // undef

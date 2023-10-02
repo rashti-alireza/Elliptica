@@ -284,7 +284,7 @@ static void populate_EoS(EoS_T *const eos)
              strcmp_i(eos->type, "tab")     || 
              strcmp_i(eos->type, "table"))
     {
-      eos_read_table(eos);
+      eos_tab_read_table(eos);
       Uint sample_size = eos->cubic_spline->sample_size;
       
       eos->pressure                 = EoS_p_h_tab;
