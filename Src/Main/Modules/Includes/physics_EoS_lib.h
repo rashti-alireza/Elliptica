@@ -14,14 +14,7 @@ typedef struct EquationOfState_T
  char description[EOS_MAX_STR];
  char type[EOS_MAX_STR];
  char unit[EOS_MAX_STR];
- double *K;/* polytropic constant */
- double *rho0_th;/* thresholds of rest mass density */
- double *h_th;/* enthalpy thresholds */
- double *n;/* polytropic index n = 1/(gamma-1) */
- double *gamma;/* polytropic index */
- double *a;/* constant coefficient to ensure continuity */
- double h;/* specific enthalpy, h = (total_energy_density + pressure)/rest_mass_density */
- Uint N;/* number of intervals i.e number of pieces */
+ 
  /* some flags for extra checks:
  // the default value is 0, so initially they are inactive, 
  // but when someone puts them 1, they become active. */
@@ -32,13 +25,28 @@ typedef struct EquationOfState_T
  double (*specific_internal_energy)(struct EquationOfState_T *const eos);
  double (*de_dh)(struct EquationOfState_T *const eos);/* d(energy_density)/dh */
  double (*drho0_dh)(struct EquationOfState_T *const eos);/* d(rest_mass_density)/dh */
- /* save coeffs for spline interpolation */
- /* Note: this structure is also used for logarithmic interpolation */
+
+ ///////////////
+ // polytrope //
+ ///////////////
+ double *K;/* polytropic constant */
+ double *rho0_th;/* thresholds of rest mass density */
+ double *h_th;/* enthalpy thresholds */
+ double *n;/* polytropic index n = 1/(gamma-1) */
+ double *gamma;/* polytropic index */
+ double *a;/* constant coefficient to ensure continuity */
+ double h;/* specific enthalpy, h = (total_energy_density + pressure)/rest_mass_density */
+ Uint N;/* number of intervals i.e number of pieces */
+ 
+ //////////////
+ // discrete //
+ //////////////
+ /* spline interpolation when eos format is discrete like table */
  struct
  {
    double h_floor;/* set some themodynamics var to 0 if h < h_floor. */
    double h_ceil;/* set some thermodynamics vars to constant if h > h_ceil. */
-   double h_max; /*Used in tabular EOS to prevent extrapolation. */
+   double h_max; /* Used in tabular EOS to prevent extrapolation. */
    Uint sample_size;/* the number of points for a spline fit */
    double *h_sample;/* enthalpy sample values */
    double *p_sample;/* pressure sample values */
@@ -53,9 +61,9 @@ typedef struct EquationOfState_T
    double *p_log;     // Pressure
    double *e_log;     // Total energy density
    double *rho0_log;  // Rest-mass density
-   double c_p;        // Constants added to data to avoid log(0).
-   double c_rho0;     
-   double c_e;        
+   double c_p;        // Constant added to data to avoid log(0) in p.
+   double c_rho0;     // Constant added to data to avoid log(0) in rho0.
+   double c_e;        // Constant added to data to avoid log(0) in e.
    Uint use_log_approach: 1;
    
    // Root finder approach
@@ -65,7 +73,6 @@ typedef struct EquationOfState_T
    void *interp_e_rho0; // For interpolating total energy density from rest-mass density
    double rho0; /* used for root finder approach */
    double (*enthalpy_eqn[1])(void* eos, const double* params); // Eqn for root finder //
-   
  }cubic_spline[1];
  
 }EoS_T;
