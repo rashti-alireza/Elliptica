@@ -21,6 +21,7 @@ double EoS_e_h_pwp_ncs(EoS_T *const eos);
 double EoS_rho0_h_pwp_ncs(EoS_T *const eos);
 // tabular
 void eos_tab_read_table(EoS_T* const eos);
+void eos_tab_set_hermite(EoS_T* const eos);
 double EoS_rho0_h_tab(EoS_T *const eos);
 double EoS_p_h_tab(EoS_T *const eos);
 double EoS_e_h_tab(EoS_T *const eos);

@@ -9,6 +9,7 @@
 #define EOS_MAX_NUM_COL_TABLE (1000)
 
 void eos_tab_read_table(EoS_T* const eos);
+void eos_tab_set_hermite(EoS_T* const eos);
 
 //////////////////////////////////Interpolation method
 double EoS_rho0_h_tab(EoS_T *const eos);

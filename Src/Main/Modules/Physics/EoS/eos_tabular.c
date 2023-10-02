@@ -550,3 +550,108 @@ void eos_tab_read_table(EoS_T* const eos)
   p_tab = 0;
   rho0_tab = 0;
 }
+
+// set spline eos struct for Hermite interpolation method
+void eos_tab_set_hermite(EoS_T* const eos)
+{
+  Physics_T *const phys = eos->phys;
+  const Uint sample_size = eos->cubic_spline->sample_size;
+  
+  eos->pressure                 = EoS_p_h_tab;
+  eos->energy_density           = EoS_e_h_tab;
+  eos->rest_mass_density        = EoS_rho0_h_tab;
+  eos->specific_internal_energy = EoS_e0_h_tab;
+  eos->de_dh                    = EoS_de_dh_h_tab;
+  eos->drho0_dh                 = EoS_drho0_dh_h_tab;
+  eos->cubic_spline->h_floor = Getd(P_"enthalpy_floor");
+  eos->cubic_spline->h_ceil  = Getd(P_"enthalpy_ceiling");
+
+  // Fill arrays with log(values) if we're using log-log interpolation.
+  if (Pcmps(Gets(P_"log_approach"),"yes"))
+  {
+    eos->cubic_spline->use_log_approach = 1;
+    double *h_log = alloc_double(sample_size);
+    double *p_log = alloc_double(sample_size);
+    double *e_log = alloc_double(sample_size);
+    double *rho0_log = alloc_double(sample_size);
+
+    // shifting to avoid log(0)
+    eos->cubic_spline->c_p = 1E-3;
+    eos->cubic_spline->c_e = 1E-3;
+    eos->cubic_spline->c_rho0 = 1E-3;
+    
+    for (Uint i = 0; i < sample_size; i++)
+    {
+      p_log[i]    = log(eos->cubic_spline->p_sample[i]    + eos->cubic_spline->c_p);
+      rho0_log[i] = log(eos->cubic_spline->rho0_sample[i] + eos->cubic_spline->c_rho0);
+      e_log[i]    = log(eos->cubic_spline->e_sample[i]    + eos->cubic_spline->c_e);
+      h_log[i]    = log(eos->cubic_spline->h_sample[i]);
+    }
+    
+    eos->cubic_spline->h_log    = h_log;
+    eos->cubic_spline->p_log    = p_log;
+    eos->cubic_spline->e_log    = e_log;
+    eos->cubic_spline->rho0_log = rho0_log;
+    p_log = 0;
+    e_log = 0;
+    rho0_log = 0;
+    h_log = 0;
+  }
+
+  // NOTE: we assume each is a function of the enthalpy h. */
+  // p:
+  Interpolation_T *interp_p      = init_interpolation();
+  interp_p->method               = Gets(P_"Interpolation_Method");
+  interp_p->finite_diff_order    = (Uint)Geti(P_"finite_diff_order");
+  interp_p->Spline_Order         = (Uint)Geti(P_"spline_order");
+  interp_p->N_cubic_spline_1d->f = eos->cubic_spline->p_sample;
+  interp_p->N_cubic_spline_1d->x = eos->cubic_spline->h_sample;
+  if (eos->cubic_spline->use_log_approach)
+  {
+    interp_p->N_cubic_spline_1d->f = eos->cubic_spline->p_log;
+    interp_p->N_cubic_spline_1d->x = eos->cubic_spline->h_log;
+  }
+  interp_p->N_cubic_spline_1d->N        = sample_size;
+  interp_p->N_cubic_spline_1d->No_Warn  = 1;/* suppress warning */
+  eos->cubic_spline->interp_p           = interp_p;
+  plan_interpolation(interp_p);
+  
+  // e:
+  Interpolation_T *interp_e      = init_interpolation();
+  interp_e->method               = Gets(P_"Interpolation_Method");
+  interp_e->finite_diff_order    = (Uint)Geti(P_"finite_diff_order");
+  interp_e->Spline_Order         = (Uint)Geti(P_"spline_order");
+  interp_e->N_cubic_spline_1d->f = eos->cubic_spline->e_sample;
+  interp_e->N_cubic_spline_1d->x = eos->cubic_spline->h_sample;
+  if (eos->cubic_spline->use_log_approach)
+  {
+    interp_p->N_cubic_spline_1d->f = eos->cubic_spline->e_log;
+    interp_p->N_cubic_spline_1d->x = eos->cubic_spline->h_log;
+  }
+  interp_e->N_cubic_spline_1d->N        = sample_size;
+  interp_e->N_cubic_spline_1d->No_Warn  = 1;/* suppress warning */
+  eos->cubic_spline->interp_e           = interp_e;
+  plan_interpolation(interp_e);
+  
+  // rho0:
+  Interpolation_T *interp_rho0      = init_interpolation();
+  interp_rho0->method               = Gets(P_"Interpolation_Method");
+  interp_rho0->finite_diff_order    = (Uint)Geti(P_"finite_diff_order");
+  interp_rho0->Spline_Order         = (Uint)Geti(P_"spline_order");
+  interp_rho0->N_cubic_spline_1d->f = eos->cubic_spline->rho0_sample;
+  interp_rho0->N_cubic_spline_1d->x = eos->cubic_spline->h_sample;
+  if (eos->cubic_spline->use_log_approach)
+  {
+    interp_p->N_cubic_spline_1d->f = eos->cubic_spline->rho0_log;
+    interp_p->N_cubic_spline_1d->x = eos->cubic_spline->h_log;
+  }
+  interp_rho0->N_cubic_spline_1d->N         = sample_size;
+  interp_rho0->N_cubic_spline_1d->No_Warn   = 1;/* suppress warning */
+  eos->cubic_spline->interp_rho0            = interp_rho0;
+  plan_interpolation(interp_rho0);
+    
+    assign_interpolation_ptrs(interp_p);
+    assign_interpolation_ptrs(interp_e);
+    assign_interpolation_ptrs(interp_rho0);
+    
+}
