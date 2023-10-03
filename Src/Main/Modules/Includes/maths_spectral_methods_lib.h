@@ -34,6 +34,9 @@ typedef struct INTERPOLATION_T
   Uint FDM_derivative;/* order of derivative required from finite difference method */
   Uint Spline_Order; // Degree of interpolating polynomial
   
+  //////////////
+  // spectral //
+  //////////////
   struct FIELD_T *field;/* interesting field for interpolation */
   fInterpolation_T *interpolation_func;/* interpolation function */
   fInterpolation_T *interpolation_derivative_func;/* interpolation function for derivatives */
@@ -50,6 +53,10 @@ typedef struct INTERPOLATION_T
   Uint I;/* the index held constant in case of interpolation in 1-D and 2-D */
   Uint J;/* the index held constant in case of interpolation in 1-D and 2-D */
   Uint K;/* the index held constant in case of interpolation in 1-D and 2-D */
+  
+  /////////////
+  // Neville //
+  /////////////
   struct
   {
    const double *f;/* f(xi)'s */
@@ -58,6 +65,10 @@ typedef struct INTERPOLATION_T
    Uint N;/* number of xi's */
    Uint max;/* desired number of xi to be used, if 0 then the value N is picked */
   }Neville_1d[1];/* the method is Neville's iterated interpolation */
+  
+  //////////////////
+  // cubic spline //
+  //////////////////
   struct
   {
    double *f;/* f(xi)'s */
@@ -70,6 +81,9 @@ typedef struct INTERPOLATION_T
    Uint No_Warn: 1;/* if 1 it prints NO warning in case of an error */
   }N_cubic_spline_1d[1];/* natural cubic spline 1d */
   
+  ////////////////////
+  // Hermite spline //
+  ////////////////////
   struct
   { 
    double *f;             // f(xi)
