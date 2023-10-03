@@ -2030,7 +2030,7 @@ static int interpolation_tests_Hermite_Order(void)
     interp->finite_diff_order = (Uint)Pgeti("Interpolation_finite_diff_order");
     find_coeffs_Hermite_1d(interp);
     interp->interpolation_func = interpolation_Hermite_1d;
-    interp->interpolation_derivative_func = interpolation_Hermite_derivative;
+    interp->interpolation_derivative_func = derivative_Hermite_1d;
     ///////////////////////////////////////////////////////////////////////////////
     */
     

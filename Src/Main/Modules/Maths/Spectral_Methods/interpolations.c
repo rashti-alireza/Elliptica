@@ -105,7 +105,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
     // Changed to analytical derivative of Hermite interpolant.
     ////////
     //interp_s->interpolation_derivative_func = interpolation_finite_difference;
-    interp_s->interpolation_derivative_func = interpolation_Hermite_derivative;
+    interp_s->interpolation_derivative_func = derivative_Hermite_1d;
   }
   else
   {
