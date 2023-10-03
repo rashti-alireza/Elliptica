@@ -212,7 +212,7 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
     {
       // Via chain rule: df/dh = (f(x)/x) * d(log(f))/d(log(x))
       // d(log(rho0))/d(log(h)):
-      double dlog_log = FDM_Fornberg(eos->spline->h_log,
+      double dlog_log = finite_difference_Fornberg(eos->spline->h_log,
                              eos->spline->rho0_log,
                              log(eos->h),
                              1,
@@ -262,7 +262,7 @@ double EoS_de_dh_h_tab(EoS_T* const eos)
     {
       // Via chain rule: df/dh = (f(x)/x) * d(log(f))/d(log(x))
       // d(log(e))/d(log(h)):
-      double dlog_log = FDM_Fornberg(eos->spline->h_log,
+      double dlog_log = finite_difference_Fornberg(eos->spline->h_log,
                              eos->spline->e_log,
                              log(eos->h),
                              1,

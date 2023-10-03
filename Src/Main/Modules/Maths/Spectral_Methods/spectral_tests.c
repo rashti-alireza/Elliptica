@@ -1447,9 +1447,9 @@ static int interpolation_tests_FDM(void)
     UNUSED(randRange);
     x_samples[j]        = x[j+4];
     f_p_uniform[j]      = FDM_Uniform_1_6(x, f, x_samples[j], N);
-    f_p_Fornberg[j]     = FDM_Fornberg(x, f, x_samples[j], 1, 6, N);
+    f_p_Fornberg[j]     = finite_difference_Fornberg(x, f, x_samples[j], 1, 6, N);
     f_ppp_uniform[j]    = FDM_Uniform_3_6(x, f, x_samples[j], N);
-    f_ppp_Fornberg[j]   = FDM_Fornberg(x, f, x_samples[j], 3, 6, N);
+    f_ppp_Fornberg[j]   = finite_difference_Fornberg(x, f, x_samples[j], 3, 6, N);
     err_p_uniform[j]    = ABSd(f_p_uniform[j] - test_fxn_p(x_samples[j]));
     err_p_Fornberg[j]   = ABSd(f_p_Fornberg[j] - test_fxn_p(x_samples[j]));
     err_ppp_uniform[j]  = ABSd(f_ppp_uniform[j] - test_fxn_ppp(x_samples[j]));
@@ -1558,7 +1558,7 @@ static int interpolation_tests_Fornberg(void)
   for (j = 0; j < test_pts; j++)
   {
     x_vals[j] = rand_double(a, b);
-    FDM_vals[j] = FDM_Fornberg(x, f, x_vals[j], derivative, n, N);
+    FDM_vals[j] = finite_difference_Fornberg(x, f, x_vals[j], derivative, n, N);
     error[j] = FDM_vals[j] - test_fxn_derivative(x_vals[j], derivative);
     avg_error += ABSd(error[j]);
   }
@@ -1656,9 +1656,9 @@ static int interpolation_tests_FDM_convergence(void)
       k = j;
       x_samples[j]        = x[k];
       f_p_uniform[j]      = FDM_Uniform_1_6(x, f, x[k], N);
-      f_p_Fornberg[j]     = FDM_Fornberg(x, f, x[k], 1, 6, N);
+      f_p_Fornberg[j]     = finite_difference_Fornberg(x, f, x[k], 1, 6, N);
       f_ppp_uniform[j]    = FDM_Uniform_3_6(x, f, x[k], N);
-      f_ppp_Fornberg[j]   = FDM_Fornberg(x, f, x[k], 3, 6, N);
+      f_ppp_Fornberg[j]   = finite_difference_Fornberg(x, f, x[k], 3, 6, N);
       err_p_uniform       += ABSd(f_p_uniform[j] - test_fxn_p(x[k]));
       err_p_Fornberg      += ABSd(f_p_Fornberg[j] - test_fxn_p(x[k]));
       err_ppp_uniform     += ABSd(f_ppp_uniform[j] - test_fxn_ppp(x[k]));
@@ -1764,7 +1764,7 @@ static int interpolation_tests_FDM_fixed(void)
     f_p_uniform_2 = f_p_uniform_3;
     f_p_Fornberg_2 = f_p_Fornberg_3;
     f_p_uniform_3 = FDM_Uniform_1_6(x, f, c, N);
-    f_p_Fornberg_3 = FDM_Fornberg(x, f, c, 1, order, N);
+    f_p_Fornberg_3 = finite_difference_Fornberg(x, f, c, 1, order, N);
     
     free(x);
     free(f);

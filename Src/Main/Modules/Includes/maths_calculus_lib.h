@@ -73,7 +73,7 @@ void init_dLegendre_dx(void);
 void partial_derivative_regex(Patch_T *const patch,
                                    const char *const regex_list);
                                    
-double FDM_Fornberg(const double* const x, const double* const f, const double h, const Uint d, const Uint ord, const Uint N);
+double finite_difference_Fornberg(const double* const x, const double* const f, const double h, const Uint d, const Uint ord, const Uint N);
 
 #endif
 

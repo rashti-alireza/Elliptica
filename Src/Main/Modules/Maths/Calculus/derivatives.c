@@ -1089,9 +1089,10 @@ static double *make_1Dcollocation_ChebNodes(const Uint N)
   return x;
 }
 
-
-////////////////////////Fornberg finite difference method
-double FDM_Fornberg(const double* const x, const double* const f, const double h, const Uint M, const Uint n, const Uint N)
+/* finite difference using Fornberg method
+// -> return : derivative evaluated at the coordinate value = h. */
+double finite_difference_Fornberg(const double *const x, const double *const f, 
+                    const double h, const Uint M, const Uint n, const Uint N)
 {
   // Approximates M-th derivative of f(x)|x=h by finite difference method,
   // to order of accuracy n.
@@ -1110,15 +1111,15 @@ double FDM_Fornberg(const double* const x, const double* const f, const double h
   // Checks if we have enough data points for given order.
   if (N <= n+M)
   {
-    printf("Points: %i\n", N);
-    printf("Order of accuracy: %i\n", n);
+    fprintf(stderr,"Points: %u\n", N);
+    fprintf(stderr,"Order of accuracy: %u\n", n);
     Error0("Finite difference error: Not enough points for desired accuracy.\n");
   }
   if (M >= n)
   {
-    printf("Degree of derivative: %i\n", M);
-    printf("Order of accuracy: %i\n", n);
-    Error0("Finite difference error: Degree of derivative must not exceed degree of accuracy.\n");
+    fprintf(stderr,"Degree of derivative: %u\n", M);
+    fprintf(stderr,"Order of accuracy: %u\n", n);
+    Error0(stderr,"Finite difference error: Degree of derivative must not exceed degree of accuracy.\n");
   }
   
   // Finds the data segment
@@ -1133,9 +1134,9 @@ double FDM_Fornberg(const double* const x, const double* const f, const double h
 
   if (flg != FOUND)
   {
-    printf("Domain: [%E, %E]\n", x[0], x[N-1]);
-    printf("Point: %E\n", h);
-    Warning("The given point for the interpolation is out of the domain.\n");
+    fprintf(stderr,"Domain: [%e, %e]\n", x[0], x[N-1]);
+    fprintf(stderr,"Point: %e\n", h);
+    Error0("The given point for the interpolation is out of the domain.\n");
     return ret;
   }
   
@@ -1162,7 +1163,8 @@ double FDM_Fornberg(const double* const x, const double* const f, const double h
     right_pt--;
   }
       
-  /* Useful for debugging grid excision
+  /* Useful for debugging grid excision */
+  #if 0
   printf("\n/////////////////FORNBERG METHOD//////////////////\n");
   printf("Global grid:\n");
   printf("|    x[0]    | ... |    x[%i]    |      h     |    x[%i]    | ... |    x[N-1]    |\n", i, i+1);
@@ -1176,7 +1178,7 @@ double FDM_Fornberg(const double* const x, const double* const f, const double h
   for (Uint u = (Uint)left_pt; u < (Uint)right_pt; u++)
   { printf(" %.4E |", x[u]); }
   printf("\n\n");
-  */
+  #endif
   
   // Allocates memory for delta coefficients
   // Stores (M+1)x(n+m)x(n+m) 3D array 
@@ -1219,5 +1221,3 @@ double FDM_Fornberg(const double* const x, const double* const f, const double h
   free(deltas);
   return ret;
 }
-
-

@@ -46,4 +46,4 @@ static Uint IsSecondOrderFormula(Field_T *const f,const Dd_T *const dir_e,const 
 static Uint JacobianFormat_2ndOrder(const Patch_T *const patch,const Dd_T dir,Dd_T dp);
 
 /* Fornberg and uniform-grid methods */
-double FDM_Fornberg(const double* const x, const  double* const f, const double h, const Uint d, const Uint ord, const Uint N);
+double finite_difference_Fornberg(const double* const x, const  double* const f, const double h, const Uint d, const Uint ord, const Uint N);
