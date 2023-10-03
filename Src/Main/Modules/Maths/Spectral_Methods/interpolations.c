@@ -95,7 +95,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
     {
       Error0("no finite difference order is set for Hermit method");
     }
-    if (!interp_s->Spline_Order)
+    if (!interp_s->spline_order)
     {
       Error0("no Spline order is set for Hermit method");
     }
@@ -697,7 +697,7 @@ static void find_coeffs_Hermite_spline(Interpolation_T *const interp_s)
   const double *const f = interp_s->Hermite_spline_1d->f;
   double *const fp = alloc_double(*interp_s->N);
   const int N = (int)interp_s->Hermite_spline_1d->N;
-  const int n = (int)interp_s->Spline_Order - 1;
+  const int n = (int)interp_s->spline_order - 1;
   double *const a = alloc_double(((Uint)N-1)*(2*(Uint)n+2));
   // a[] is a linearized 2D array where a[i,j] is
   // the j-th spline coefficient over interval i.
@@ -781,7 +781,7 @@ static double interpolation_Hermite_spline(Interpolation_T *const interp_s)
   const double *const a = interp_s->Hermite_spline_1d->a;
   const double h = interp_s->Hermite_spline_1d->h;
   const int N = (int)interp_s->Hermite_spline_1d->N;
-  const int n = (int)interp_s->Spline_Order - 1;
+  const int n = (int)interp_s->spline_order - 1;
   double ret = DBL_MAX;// it's important to be max double
   int i = 0;
   Flag_T flg = NONE;
@@ -835,7 +835,7 @@ static double interpolation_Hermite_derivative(Interpolation_T *const interp_s)
   const double *const a = interp_s->Hermite_spline_1d->a;
   const double h = interp_s->Hermite_spline_1d->h;
   const int N = (int)interp_s->Hermite_spline_1d->N;
-  const int n = (int)interp_s->Spline_Order - 1;
+  const int n = (int)interp_s->spline_order - 1;
   double ret = DBL_MAX;// it's important to be max double
   int i = 0;
   Flag_T flg = NONE;
