@@ -206,7 +206,7 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
     
     double drho0dh;
     Interpolation_T *const interp_s = eos->spline->interp_rho0;
-    interp_s->FDM_derivative = 1;
+    interp_s->fd_derivative_order = 1;
     
     if (eos->spline->use_log_approach)
     {
@@ -216,7 +216,7 @@ double EoS_drho0_dh_h_tab(EoS_T* const eos)
                              eos->spline->rho0_log,
                              log(eos->h),
                              1,
-                             interp_s->finite_diff_order,
+                             interp_s->fd_accuracy_order,
                              eos->spline->sample_size);
       *interp_s->h = eos->h;
       drho0dh = dlog_log * (EoS_rho0_h_tab(eos) + eos->spline->c_rho0) / eos->h;
@@ -256,7 +256,7 @@ double EoS_de_dh_h_tab(EoS_T* const eos)
     
     double dedh;
     Interpolation_T *const interp_s = eos->spline->interp_e;
-    interp_s->FDM_derivative = 1;
+    interp_s->fd_derivative_order = 1;
     
     if (eos->spline->use_log_approach)
     {
@@ -266,7 +266,7 @@ double EoS_de_dh_h_tab(EoS_T* const eos)
                              eos->spline->e_log,
                              log(eos->h),
                              1,
-                             interp_s->finite_diff_order,
+                             interp_s->fd_accuracy_order,
                              eos->spline->sample_size);
       *interp_s->h = eos->h;
       dedh = dlog_log * (EoS_e_h_tab(eos) + eos->spline->c_e)/ eos->h;
@@ -603,7 +603,7 @@ void eos_tab_set_hermite(EoS_T* const eos)
   // p:
   Interpolation_T *interp_p      = init_interpolation();
   interp_p->method               = Gets(P_"Interpolation_Method");
-  interp_p->finite_diff_order    = (Uint)Geti(P_"finite_diff_order");
+  interp_p->fd_accuracy_order    = (Uint)Geti(P_"fd_accuracy_order");
   interp_p->spline_order         = (Uint)Geti(P_"spline_order");
   interp_p->N_cubic_spline_1d->f = eos->spline->p_sample;
   interp_p->N_cubic_spline_1d->x = eos->spline->h_sample;
@@ -620,7 +620,7 @@ void eos_tab_set_hermite(EoS_T* const eos)
   // e:
   Interpolation_T *interp_e      = init_interpolation();
   interp_e->method               = Gets(P_"Interpolation_Method");
-  interp_e->finite_diff_order    = (Uint)Geti(P_"finite_diff_order");
+  interp_e->fd_accuracy_order    = (Uint)Geti(P_"fd_accuracy_order");
   interp_e->spline_order         = (Uint)Geti(P_"spline_order");
   interp_e->N_cubic_spline_1d->f = eos->spline->e_sample;
   interp_e->N_cubic_spline_1d->x = eos->spline->h_sample;
@@ -637,7 +637,7 @@ void eos_tab_set_hermite(EoS_T* const eos)
   // rho0:
   Interpolation_T *interp_rho0      = init_interpolation();
   interp_rho0->method               = Gets(P_"Interpolation_Method");
-  interp_rho0->finite_diff_order    = (Uint)Geti(P_"finite_diff_order");
+  interp_rho0->fd_accuracy_order    = (Uint)Geti(P_"fd_accuracy_order");
   interp_rho0->spline_order         = (Uint)Geti(P_"spline_order");
   interp_rho0->N_cubic_spline_1d->f = eos->spline->rho0_sample;
   interp_rho0->N_cubic_spline_1d->x = eos->spline->h_sample;

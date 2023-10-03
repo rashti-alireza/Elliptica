@@ -30,8 +30,8 @@ typedef struct INTERPOLATION_T
   Uint *N;/* number of xi's */
   
   const char *method;
-  Uint finite_diff_order;/* order of finite difference approximation */
-  Uint FDM_derivative;/* order of derivative required from finite difference method */
+  Uint fd_accuracy_order;/* order of finite difference approximation */
+  Uint fd_derivative_order;/* order of derivative required from finite difference method */
   Uint spline_order; // Degree of interpolating polynomial
   
   //////////////
@@ -92,6 +92,8 @@ typedef struct INTERPOLATION_T
    double h;              // point to interpolate
    Uint N;                // number of grid points
    double *a;             // Linearized 2D array for spline coefficients
+   Uint fd_accuracy_order;// order of finite difference approximation
+   Uint fd_derivative_order;   // order of derivative required from finite difference method
    Uint spline_order;     // I.e. order of interpolating polynomial.
    Uint Order: 1;         // 1 iff x array in order
    Uint Alloc_Mem: 1;

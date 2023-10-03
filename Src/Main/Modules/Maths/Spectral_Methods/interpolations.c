@@ -88,9 +88,8 @@ void plan_interpolation(Interpolation_T *const interp_s)
   }
   else if (strstr_i(interp_s->method,"Hermite_1d"))
   {
-    order_arrays_Hermite_1d(interp_s);
-    
-    if (interp_s->Hermite_1d->finite_diff_order == 0)
+    // some checks
+    if (interp_s->Hermite_1d->fd_accuracy_order == 0)
     {
       Error0("no finite difference order is set for Hermit 1d method.");
     }
@@ -98,6 +97,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
     {
       Error0("no spline order is set for Hermit method");
     }
+    order_arrays_Hermite_1d(interp_s);
     
     find_coeffs_Hermite_1d(interp_s);
     interp_s->interpolation_func = interpolation_Hermite_1d;
@@ -124,6 +124,7 @@ static void order_arrays_natural_cubic_spline_1d(Interpolation_T *const interp_s
   const Uint N = interp_s->N_cubic_spline_1d->N;
   Uint i;
   
+  assert(N >= 1);
   if (EQL(x[0],x[N-1]))
   {
     Error0("Periodic case has not been considered.\n");
@@ -608,3 +609,137 @@ void free_interpolation(Interpolation_T *interp_s)
   free(interp_s);
 }
 
+/* ---------------------------------------------------------------------- */
+////////////////
+// Hermite 1d //
+////////////////
+
+static void order_arrays_Hermite_1d(Interpolation_T *const interp_s)
+{
+  double *x = interp_s->Hermite_1d->x;
+  double *f = interp_s->Hermite_1d->f;
+  double *y;/* ordered x */
+  double *g;/* ordered f */
+  const Uint N = interp_s->Hermite_1d->N;
+  Uint i;
+  
+  assert(N >= 1);
+  if (EQL(x[0],x[N-1]))
+  {
+    Error0("Periodic case has not been considered.\n");
+  }
+  if (GRT(x[0],x[N-1]))/* if the x's are in decreasing order */
+  {
+    interp_s->Hermite_1d->Alloc_Mem = 1;
+    y = alloc_double(N);
+    g = alloc_double(N);
+    
+    for (i = 0; i < N; ++i)
+    {
+      y[i] = x[N-1-i];
+      g[i] = f[N-1-i];
+    }
+    interp_s->Hermite_1d->x = y;
+    interp_s->Hermite_1d->f = g;
+  }
+  interp_s->Hermite_1d->Order = 1;
+}
+
+// Interpolates function f(x) over sub-intervals [a,b] of x domain.
+// Given arrays for f(x) and x, each of length N,
+// an n-th order Hermite spline will split the x domain into (N-1)overlapping
+// sub-intervals of (n+1) points each, and construct an n-th degree interpolating
+// polynomial Hj(x) on each sub-interval j (i.e. interval such that
+// x[j] <= x < x[j+1]). Then f(x[j] <= h < x[j+1]) ~ Hj(h),
+// and f(h) = Hj(h) exactly whenever h = x[j].
+// The Hermite spline also interpolates the first derivative, i.e.
+// f'(h) = Hj'(h) exactly whenever h = x[j].
+//
+// While generating the spline, 
+// f'(x) can be estimated using finite difference methods.
+//
+// The spline order n must be greater than 2 (i.e. the lowest available
+// spline is cubic). A very high n (n > 8 or so) is likely to result in
+// oscillatory behavior and poor accuracy.
+// A higher-order spline takes more time and memory to generate and store,
+// and slightly longer to access once generated.
+static void find_coeffs_Hermite_1d(Interpolation_T *const interp_s)
+{
+  // Finds values of the Hermite spline coefficients for each sub-interval,
+  // For a spline of order G,
+  // Hj(h) = a[0,j] + a[1,j]*(h-x0) + a[2,j]*(h-x0)^2 + a[3,j]*(h-x0)*(h-x1) + ...
+  const double *const x = interp_s->Hermite_1d->x;
+  const double *const f = interp_s->Hermite_1d->f;
+  double *const fp = alloc_double(interp_s->Hermite_1d->N);
+  const int N = (int)interp_s->Hermite_1d->N;
+  const int n = (int)interp_s->spline_order - 1;
+  double *const a = alloc_double(((Uint)N-1)*(2*(Uint)n+2));
+  // a[] is a linearized 2D array where a[i,j] is
+  // the j-th spline coefficient over interval i.
+  
+  // Error if not enough data points for desired spline order.
+  if (n+1 > N)
+  { 
+    fprintf(strerr,"Hermite spline 1d order: %i\n", n+1);
+    fprintf(strerr,"Numbere of data points : %u\n", interp_s->Hermite_1d->N);
+    Error0("Hermite spline error: Not enough data points for desired spline order.");
+  }
+  
+  // Estimates f'(x) for each point in the domain x
+  // using finite difference method.
+  // Stores them for later use in generating the Hermite spline.
+  interp_s->Hermite_1d->fd_derivative_order = 1;
+  for (int i = 0; i < N; i++)
+  {
+    interp_s->Hermite_1d->h = x[i];
+    fp[i] = interpolation_finite_difference(interp_s);
+  }
+  interp_s->Hermite_1d->fp = fp;
+  // Calculates spline coefficients on each interval x[j] <= x < x[j+1].
+  // Temporary arrays
+  double *Q = alloc_double((2*(Uint)n+2)*(2*(Uint)n+2));
+  double *z = alloc_double(2*(Uint)n+2);
+  int l; // Left-most sub-array point
+  for (int j = 0; j < N; j++)
+  {
+    for (Uint c = 0; c < (2*(Uint)n+2)*(2*(Uint)n+2); c++)
+    { Q[c] = 0; }
+    // Excise sub-array from x[]. Shift left if out of bounds.
+    l = j;
+    while (l >= N - (n+1))
+    { l--; }
+    
+    //Step 1
+    for (int i = 0; i <= n; i++)
+    {
+      //Step 2
+      z[2*i]                      = x[l+i];
+      z[2*i+1]                    = x[l+i];
+      Q[i_j_to_ij(2*n+1,2*i,0)]   = f[l+i];
+      Q[i_j_to_ij(2*n+1,2*i+1,0)] = f[l+i];
+      Q[i_j_to_ij(2*n+1,2*i+1,1)] = fp[l+i];
+
+      //Step 3
+      if (i)
+      { Q[i_j_to_ij(2*n+1,2*i,1)] = (Q[i_j_to_ij(2*n+1,2*i,0)]
+      - Q[i_j_to_ij(2*n+1,2*i-1,0)]) / (z[2*i] - z[2*i-1]); }
+    }
+    
+    //Step 4
+    for (int b = 2; b <= 2*n+1; b++)
+    {
+      for (int k = 2; k <= b; k++)
+      { Q[i_j_to_ij(2*n+1,b,k)] = (Q[i_j_to_ij(2*n+1,b,k-1)]
+      - Q[i_j_to_ij(2*n+1,b-1,k-1)]) / (z[b] - z[b-k]); }
+    }
+
+    //Step 5
+    for (int b = 0; b <= 2*n+1; b++)
+    { a[i_j_to_ij(2*n+1,j,b)] = Q[i_j_to_ij(2*n+1,b,b)]; }
+  }
+  
+  interp_s->Hermite_1d->Alloc_Mem = 1;
+  interp_s->Hermite_1d->a = a;
+  free(Q);
+  free(z);
+}
