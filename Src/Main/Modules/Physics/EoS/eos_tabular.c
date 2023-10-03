@@ -4,19 +4,6 @@
 
 //FIXME: Add warning when enthalpy value out of table bounds.
 
-Uint get_sample_size(const char* const eos_file_name)
-{
-    //Takes name of tabular EOS file; returns the number of lines/EOS data points in the file.
-    FILE* eos_file = fopen(eos_file_name, "r");
-    Uint lines = 0;
-    int character;
-    
-    while ((character = fgetc(eos_file)) != EOF) { if (character == '\n') { lines++; } }
-    fclose(eos_file);
-    
-    return lines;
-}
-
 //Calculates pressure from enthalpy by tabular EOS.
 double EoS_p_h_tab(EoS_T* const eos)
 {

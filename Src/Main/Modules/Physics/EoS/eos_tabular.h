@@ -34,5 +34,3 @@ double EoS_e_rho0_tab(EoS_T *const eos);
 double EoS_e0_rho0_tab(EoS_T *const eos);
 double EoS_de_dh_RF(EoS_T *const eos);
 double EoS_drho0_dh_RF(EoS_T *const eos);
-/////////////////////////////////////////////////////
-Uint get_sample_size(const char* const eos_file_name);

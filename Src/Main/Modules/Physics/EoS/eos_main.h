@@ -34,7 +34,6 @@ double EoS_drho0_dh_h_tab(EoS_T *const eos);
 double EoS_drho0_dh_h_tab(EoS_T *const eos);
 double EoS_de_dh_h_tab(EoS_T *const eos);
 double EoS_de_dh_h_tab(EoS_T *const eos);
-Uint get_sample_size(const char* const eos_file_name);
 //////////Root finder method
 double EoS_enthalpy_def(void* const eos, const double* const params);
 double EoS_rho0_RF(EoS_T *const eos);
