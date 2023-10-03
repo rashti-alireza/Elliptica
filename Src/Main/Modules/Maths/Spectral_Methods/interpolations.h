@@ -8,6 +8,7 @@
 #include "fields_lib.h"
 #include "maths_linear_algebra_lib.h"
 #include "maths_spectral_methods_lib.h"
+#include "maths_calculus_lib.h"
 
 #define Tx(i,x) T(n[0],i,x)
 #define Ty(j,y) T(n[1],j,y)
@@ -33,13 +34,7 @@ static double interpolation_Chebyshev_Tn_YZ(Interpolation_T *const interp_s);
 static double interpolation_Chebyshev_Tn_XYZ(Interpolation_T *const interp_s);
 void free_interpolation(Interpolation_T *interp_s);
 
-
-
-
-
-
-
-
-
+static void order_arrays_Hermite_1d(Interpolation_T *const interp_s);
+static void find_coeffs_Hermite_1d(Interpolation_T *const interp_s);
 
 
