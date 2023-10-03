@@ -2028,8 +2028,8 @@ static int interpolation_tests_Hermite_Order(void)
     interp->Hermite_1d->spline_order = test;
     order_arrays_spline_1d(interp);
     interp->finite_diff_order = (Uint)Pgeti("Interpolation_finite_diff_order");
-    find_coeffs_Hermite_spline(interp);
-    interp->interpolation_func = interpolation_Hermite_spline;
+    find_coeffs_Hermite_1d(interp);
+    interp->interpolation_func = interpolation_Hermite_1d;
     interp->interpolation_derivative_func = interpolation_Hermite_derivative;
     ///////////////////////////////////////////////////////////////////////////////
     */

@@ -99,8 +99,8 @@ void plan_interpolation(Interpolation_T *const interp_s)
       Error0("no spline order is set for Hermit method");
     }
     
-    find_coeffs_Hermite_spline(interp_s);
-    interp_s->interpolation_func = interpolation_Hermite_spline;
+    find_coeffs_Hermite_1d(interp_s);
+    interp_s->interpolation_func = interpolation_Hermite_1d;
     
     // Changed to analytical derivative of Hermite interpolant.
     ////////
