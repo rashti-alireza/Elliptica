@@ -96,7 +96,7 @@ typedef struct INTERPOLATION_T
    Uint Order: 1;         // 1 iff x array in order
    Uint Alloc_Mem: 1;
    Uint No_Warn: 1;
-  }Hermite_spline_1d[1];  //1D Hermite spline
+  }Hermite_1d[1];  //1D Hermite spline
   
 }Interpolation_T;
 

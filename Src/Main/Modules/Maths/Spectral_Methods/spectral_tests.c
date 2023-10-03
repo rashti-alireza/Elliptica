@@ -2025,7 +2025,7 @@ static int interpolation_tests_Hermite_Order(void)
     ////////////////////COMMENT OUT WHEN NOT IN USE///////////////////////////
     // We have to manually plan the interpolation to override the parameter file.
     interp->spline_order = test;
-    interp->Hermite_spline_1d->spline_order = test;
+    interp->Hermite_1d->spline_order = test;
     order_arrays_spline_1d(interp);
     interp->finite_diff_order = (Uint)Pgeti("Interpolation_finite_diff_order");
     find_coeffs_Hermite_spline(interp);
@@ -2037,7 +2037,7 @@ static int interpolation_tests_Hermite_Order(void)
     error = 0;
     for (j = 0; j < test_pts; j++)
     {
-      interp->Hermite_spline_1d->h = hs[j];
+      interp->Hermite_1d->h = hs[j];
       *interp->h = hs[j];
       
       if (test == 5)
@@ -2052,8 +2052,8 @@ static int interpolation_tests_Hermite_Order(void)
     times[k] = (double)(clock() - time1)/CLOCKS_PER_SEC;
     time_total += times[k];
     
-    free(interp->Hermite_spline_1d->a);
-    free(interp->Hermite_spline_1d->fp);
+    free(interp->Hermite_1d->a);
+    free(interp->Hermite_1d->fp);
     free(interp);
     k++;
   }

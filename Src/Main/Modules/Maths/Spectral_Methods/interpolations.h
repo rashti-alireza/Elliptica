@@ -22,7 +22,6 @@ static double T(const Uint n,const Uint i,const double x);
 static fInterpolation_T *interpolation_Chebyshev_Tn(Interpolation_T *const interp_s);
 static double interpolation_Neville_1d(Interpolation_T *const interp_s);
 static double interpolation_natural_cubic_spline_1d(Interpolation_T *const interp_s);
-static double interpolation_NCS_derivative(Interpolation_T *const interp_s);
 static void find_coeffs_natural_cubic_spline_1d(Interpolation_T *const interp_s);
 static void order_arrays_natural_cubic_spline_1d(Interpolation_T *const interp_s);
 static double interpolation_Chebyshev_Tn_X(Interpolation_T *const interp_s);
@@ -34,21 +33,8 @@ static double interpolation_Chebyshev_Tn_YZ(Interpolation_T *const interp_s);
 static double interpolation_Chebyshev_Tn_XYZ(Interpolation_T *const interp_s);
 void free_interpolation(Interpolation_T *interp_s);
 
-/////////////////////////////Extra interpolation methods.
-void assign_interpolation_ptrs(Interpolation_T *const interp_s);
-static void set_interp_order_flag(Interpolation_T *const interp_s, Uint flag);
-void set_interp_alloc_mem_flag(Interpolation_T *const interp_s, Uint flag);
-//static Uint get_order_flag(Interpolation_T *const interp_s);
-//static Uint get_alloc_mem_flag(Interpolation_T *const interp_s);
-//static Uint get_warn_flag(Interpolation_T *const interp_s);
-static void order_arrays_spline_1d(Interpolation_T *const interp_s);
-static double interpolation_finite_difference(Interpolation_T *const interp_s);
-static double interpolation_manual_FDM(Interpolation_T *const interp_s);
-static Uint interpolation_check_manual_FDM(Interpolation_T *const interp_s);
-static void find_coeffs_Hermite_spline(Interpolation_T *const interp_s);
-static double interpolation_Hermite_spline(Interpolation_T *const interp_s);
-static double interpolation_Hermite_derivative(Interpolation_T *const interp_s);
-double FDM_Fornberg(const double* const x, const double* const f, const double h, const Uint d, const Uint ord, const Uint N);
+
+
 
 
 
