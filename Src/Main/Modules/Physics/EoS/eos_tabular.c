@@ -601,58 +601,53 @@ void eos_tab_set_hermite(EoS_T* const eos)
 
   // NOTE: we assume each is a function of the enthalpy h. */
   // p:
-  Interpolation_T *interp_p      = init_interpolation();
-  interp_p->method               = Gets(P_"Interpolation_Method");
-  interp_p->fd_accuracy_order    = (Uint)Geti(P_"fd_accuracy_order");
-  interp_p->spline_order         = (Uint)Geti(P_"spline_order");
-  interp_p->N_cubic_spline_1d->f = eos->spline->p_sample;
-  interp_p->N_cubic_spline_1d->x = eos->spline->h_sample;
+  Interpolation_T *interp_p = init_interpolation();
+  interp_p->method = Gets(P_"Interpolation_Method");
+  interp_p->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"fd_accuracy_order");
+  interp_p->Hermite_1d->spline_order      = (Uint)Geti(P_"spline_order");
+  interp_p->Hermite_1d->f = eos->spline->p_sample;
+  interp_p->Hermite_1d->x = eos->spline->h_sample;
   if (eos->spline->use_log_approach)
   {
-    interp_p->N_cubic_spline_1d->f = eos->spline->p_log;
-    interp_p->N_cubic_spline_1d->x = eos->spline->h_log;
+    interp_p->Hermite_1d->f = eos->spline->p_log;
+    interp_p->Hermite_1d->x = eos->spline->h_log;
   }
-  interp_p->N_cubic_spline_1d->N        = sample_size;
-  interp_p->N_cubic_spline_1d->No_Warn  = 1;/* suppress warning */
+  interp_p->Hermite_1d->N        = sample_size;
+  interp_p->Hermite_1d->No_Warn  = 1;/* suppress warning */
   eos->spline->interp_p = interp_p;
   plan_interpolation(interp_p);
   
   // e:
-  Interpolation_T *interp_e      = init_interpolation();
-  interp_e->method               = Gets(P_"Interpolation_Method");
-  interp_e->fd_accuracy_order    = (Uint)Geti(P_"fd_accuracy_order");
-  interp_e->spline_order         = (Uint)Geti(P_"spline_order");
-  interp_e->N_cubic_spline_1d->f = eos->spline->e_sample;
-  interp_e->N_cubic_spline_1d->x = eos->spline->h_sample;
+  Interpolation_T *interp_e = init_interpolation();
+  interp_e->method = Gets(P_"Interpolation_Method");
+  interp_e->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"fd_accuracy_order");
+  interp_e->Hermite_1d->spline_order      = (Uint)Geti(P_"spline_order");
+  interp_e->Hermite_1d->f = eos->spline->e_sample;
+  interp_e->Hermite_1d->x = eos->spline->h_sample;
   if (eos->spline->use_log_approach)
   {
-    interp_p->N_cubic_spline_1d->f = eos->spline->e_log;
-    interp_p->N_cubic_spline_1d->x = eos->spline->h_log;
+    interp_e->Hermite_1d->f = eos->spline->e_log;
+    interp_e->Hermite_1d->x = eos->spline->h_log;
   }
-  interp_e->N_cubic_spline_1d->N        = sample_size;
-  interp_e->N_cubic_spline_1d->No_Warn  = 1;/* suppress warning */
+  interp_e->Hermite_1d->N = sample_size;
+  interp_e->Hermite_1d->No_Warn = 1;/* suppress warning */
   eos->spline->interp_e = interp_e;
   plan_interpolation(interp_e);
   
   // rho0:
-  Interpolation_T *interp_rho0      = init_interpolation();
-  interp_rho0->method               = Gets(P_"Interpolation_Method");
-  interp_rho0->fd_accuracy_order    = (Uint)Geti(P_"fd_accuracy_order");
-  interp_rho0->spline_order         = (Uint)Geti(P_"spline_order");
-  interp_rho0->N_cubic_spline_1d->f = eos->spline->rho0_sample;
-  interp_rho0->N_cubic_spline_1d->x = eos->spline->h_sample;
+  Interpolation_T *interp_rho0 = init_interpolation();
+  interp_rho0->method  = Gets(P_"Interpolation_Method");
+  interp_rho0->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"fd_accuracy_order");
+  interp_rho0->Hermite_1d->spline_order      = (Uint)Geti(P_"spline_order");
+  interp_rho0->Hermite_1d->f = eos->spline->rho0_sample;
+  interp_rho0->Hermite_1d->x = eos->spline->h_sample;
   if (eos->spline->use_log_approach)
   {
-    interp_p->N_cubic_spline_1d->f = eos->spline->rho0_log;
-    interp_p->N_cubic_spline_1d->x = eos->spline->h_log;
+    interp_rho0->Hermite_1d->f = eos->spline->rho0_log;
+    interp_rho0->Hermite_1d->x = eos->spline->h_log;
   }
-  interp_rho0->N_cubic_spline_1d->N         = sample_size;
-  interp_rho0->N_cubic_spline_1d->No_Warn   = 1;/* suppress warning */
+  interp_rho0->Hermite_1d->N       = sample_size;
+  interp_rho0->Hermite_1d->No_Warn = 1;/* suppress warning */
   eos->spline->interp_rho0 = interp_rho0;
   plan_interpolation(interp_rho0);
-    
-    assign_interpolation_ptrs(interp_p);
-    assign_interpolation_ptrs(interp_e);
-    assign_interpolation_ptrs(interp_rho0);
-    
 }
