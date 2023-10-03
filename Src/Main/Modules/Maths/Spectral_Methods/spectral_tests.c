@@ -2026,7 +2026,7 @@ static int interpolation_tests_Hermite_Order(void)
     // We have to manually plan the interpolation to override the parameter file.
     interp->spline_order = test;
     interp->Hermite_1d->spline_order = test;
-    order_arrays_spline_1d(interp);
+    order_arrays_Hermite_1d(interp);
     interp->finite_diff_order = (Uint)Pgeti("Interpolation_finite_diff_order");
     find_coeffs_Hermite_1d(interp);
     interp->interpolation_func = interpolation_Hermite_1d;

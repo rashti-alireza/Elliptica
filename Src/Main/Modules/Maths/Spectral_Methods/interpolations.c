@@ -88,7 +88,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
   }
   else if (strstr_i(interp_s->method,"Hermite_1d"))
   {
-    order_arrays_spline_1d(interp_s);
+    order_arrays_Hermite_1d(interp_s);
     
     if (interp_s->Hermite_1d->finite_diff_order == 0)
     {
