@@ -60,7 +60,6 @@ void plan_interpolation(Interpolation_T *const interp_s)
     find_coeffs_natural_cubic_spline_1d(interp_s);
     interp_s->interpolation_func = interpolation_natural_cubic_spline_1d;
     interp_s->interpolation_func = derivative_natural_cubic_spline_1d;
-    
   }
   else if (strstr_i(interp_s->method,"Spectral") || 
            strstr_i(PgetsEZ("Interpolation_Method"),"Spectral"))
@@ -103,7 +102,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
     
     find_coeffs_Hermite_1d(interp_s);
     interp_s->interpolation_func = interpolation_Hermite_1d;
-    //interp_s->interpolation_derivative_func = interpolation_finite_difference;
+    // interp_s->interpolation_derivative_func = fd_1st_deriv_3rd_order_hermite_1d;
     interp_s->interpolation_derivative_func = derivative_Hermite_1d;
   }
   else
@@ -730,7 +729,7 @@ static void find_coeffs_Hermite_1d(Interpolation_T *const interp_s)
   for (int i = 0; i < N; i++)
   {
     interp_s->Hermite_1d->h = x[i];
-    fp[i] = interpolation_finite_difference(interp_s);
+    fp[i] = fd_Fornberg_Hermite_1d(interp_s);
   }
   interp_s->Hermite_1d->fp = fp;
   // Calculates spline coefficients on each interval x[j] <= x < x[j+1].
@@ -860,4 +859,160 @@ static double derivative_Hermite_1d(Interpolation_T *const interp_s)
   }
     
   return ret;
+}
+
+// a Wrapper for finite_difference_Fornberg finite difference method
+static double fd_Fornberg_Hermite_1d(Interpolation_T *const interp_s)
+{
+  const double *const x = interp_s->Hermite_1d->x;
+  const double *const f = interp_s->Hermite_1d->f;
+  const double h = interp_s->Hermite_1d->h;
+  const Uint N = interp_s->Hermite_1d->N;
+  const Uint n = interp_s->Hermite_1d->fd_accuracy_order;
+  const Uint M = interp_s->Hermite_1d->fd_derivative_order;
+  
+  return finite_difference_Fornberg(x, f, h, M, n, N);
+}
+
+// Approximates M-th derivative of f(x)|x=h by finite difference method,
+// to order of accuracy n.
+// TODO: test this func.
+static double fd_1st_deriv_3rd_order_hermite_1d(Interpolation_T *const interp_s)
+{
+  const double *const x = interp_s->Hermite_1d->x;
+  const double *const f = interp_s->Hermite_1d->f;
+  const double h = interp_s->Hermite_1d->h;
+  const Uint N_total = interp_s->Hermite_1d->N;
+  const Uint n = interp_s->Hermite_1d->fd_accuracy_order;
+  const Uint M = interp_s->Hermite_1d->fd_derivative_order;
+  const int N  = 4;
+  double d[16] = {0};
+  double p[16] = {0};
+  double q[4]  = {0};
+  double ret = DBL_MAX;
+  Uint i = 0;
+  Flag_T flg = NONE;
+  
+  // First derivatives
+  if (M != 1 || n != 3 )
+  {
+    Error0("Only supports first order derivative with 3rd order accuracy.");
+  }
+  
+  // Checks if we have enough data points for given order.
+  if (N <= n+M)
+  {
+    printf("Points: %u\n", N);
+    printf("Order of accuracy: %u\n", n);
+    Error0("Not enough points for desired accuracy.\n");
+  }
+  if (M >= n)
+  {
+    printf("Degree of derivative: %u\n", M);
+    printf("Order of accuracy: %u\n", n);
+    Error0("Degree of derivative must not exceed degree of accuracy.\n");
+  }
+  
+  ret = 0;
+  
+  // Finds the data segment
+  for (i = 0; i < N_total-1; ++i)
+  {
+    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+    {
+      flg = FOUND;
+      break;
+    }
+  }
+  if (flg != FOUND)
+  {
+    if (!interp_s->N_cubic_spline_1d->No_Warn)
+      Warning("The given point for the interpolation is out of the domain.\n");
+    
+    return ret;
+  }
+  
+  // Excise sub-arrays
+  // Selects subset of 'x' array to use for finite difference method,
+  // i.e. x[left_pt : right_pt].
+  int left_pt = (int)i - (int)floor((n+M)/2)+1;
+  int right_pt = (int)i + (int)ceil((n+M)/2)+1;
+  
+  // Shifts right if sub-array is too far left:
+  while (left_pt < 0)
+  {
+    left_pt++;
+    right_pt++;
+  }
+  while (right_pt >= (int)N_total)
+  {
+    left_pt--;
+    right_pt--;
+  }
+  
+  // 2D arrays are stored in linear format.
+  // Array indices (j,k)
+  int j;
+  int k;
+  int b;
+  
+  // Calculate d[j,k] array
+  for (j = 0; j < N; j++)
+  {
+    for (k = 0; k < N; k++)
+    { d[i_j_to_ij(N,j,k)] = x[left_pt + j] - x[left_pt + k]; }
+  }
+  
+  // Calculate p[j,k] array
+  for (j = 0; j < N; j++)
+  {
+    for (k = 0; k < N; k++)
+    {
+      p[i_j_to_ij(N,j,k)] = 1;
+      for (b = 0; b < N; b++)
+      {
+        if (j != k && b != k && b != j)
+        { p[i_j_to_ij(N,j,k)] *= (h - x[left_pt+b]) / d[i_j_to_ij(N,j,b)]; }
+      }
+    }
+  }
+  
+  // Calculate l'_j(h) (= h[j]) for each j
+  for (j = 0; j < N; j++)
+  {
+    q[j] = 0;
+    for (k = 0; k < N; k++)
+    {
+      if (k != j)
+      { q[j] += p[i_j_to_ij(N,j,k)] / d[i_j_to_ij(N,j,k)]; }
+    }
+  }
+  
+  // Calculate f'(h)
+  ret = 0;
+  for (j = 0; j < N; j++)
+  ret += f[left_pt + j] * q[j];
+  
+  return ret;
+}  
+
+// Checks if method is available for given M, n.
+static Uint interpolation_check_manual_FDM(Interpolation_T *const interp_s)
+{
+  const Uint n = interp_s->fd_accuracy_order;
+  const Uint M = interp_s->fd_derivative_order;
+  const Uint N = *interp_s->N;
+  
+  // Return success iff method available.
+  if (M == 1)
+  {
+    if (n == 3)
+    {
+      return 1;
+    }
+  }
+  
+  printf("Manual FDM methods: %i-th derivative to order of accuracy %i not available.\n", M, n);
+  Error0("Manual FDM invalid parameters.");
+  return 0;
 }

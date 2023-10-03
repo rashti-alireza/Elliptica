@@ -38,5 +38,7 @@ void free_interpolation(Interpolation_T *interp_s);
 static void order_arrays_Hermite_1d(Interpolation_T *const interp_s);
 static void find_coeffs_Hermite_1d(Interpolation_T *const interp_s);
 static double derivative_Hermite_1d(Interpolation_T *const interp_s);
+static double fd_Fornberg_Hermite_1d(Interpolation_T *const interp_s);
+static double fd_1st_deriv_3rd_order_hermite_1d(Interpolation_T *const interp_s);
 
 
