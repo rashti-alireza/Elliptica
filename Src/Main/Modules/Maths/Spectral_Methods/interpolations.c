@@ -59,6 +59,8 @@ void plan_interpolation(Interpolation_T *const interp_s)
     order_arrays_natural_cubic_spline_1d(interp_s);
     find_coeffs_natural_cubic_spline_1d(interp_s);
     interp_s->interpolation_func = interpolation_natural_cubic_spline_1d;
+    interp_s->interpolation_func = derivative_natural_cubic_spline_1d;
+    
   }
   else if (strstr_i(interp_s->method,"Spectral") || 
            strstr_i(PgetsEZ("Interpolation_Method"),"Spectral"))
@@ -101,9 +103,6 @@ void plan_interpolation(Interpolation_T *const interp_s)
     
     find_coeffs_Hermite_1d(interp_s);
     interp_s->interpolation_func = interpolation_Hermite_1d;
-    
-    // Changed to analytical derivative of Hermite interpolant.
-    ////////
     //interp_s->interpolation_derivative_func = interpolation_finite_difference;
     interp_s->interpolation_derivative_func = derivative_Hermite_1d;
   }
@@ -609,6 +608,45 @@ void free_interpolation(Interpolation_T *interp_s)
   free(interp_s);
 }
 
+// Interpolates f'(x) using derivative of natural cubic spline.
+static double derivative_natural_cubic_spline_1d(Interpolation_T *const interp_s)
+{
+  if (!interp_s->N_cubic_spline_1d->Order)
+  order_arrays_natural_cubic_spline_1d(interp_s);
+  
+  const double *const x = interp_s->N_cubic_spline_1d->x;
+  const double *const b = interp_s->N_cubic_spline_1d->b;
+  const double *const c = interp_s->N_cubic_spline_1d->c;
+  const double *const d = interp_s->N_cubic_spline_1d->d;
+  const double h = interp_s->N_cubic_spline_1d->h;
+  const double N = interp_s->N_cubic_spline_1d->N;
+  double ret = DBL_MAX;/* it's important to be max double */
+  Uint i = 0;
+  Flag_T flg = NONE;
+  
+  /* find the segment */
+  for (i = 0; i < N-1; ++i)
+  {
+    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+    {
+      flg = FOUND;
+      break;
+    }
+  }
+
+  if (flg != FOUND)
+  {
+    if (!interp_s->N_cubic_spline_1d->No_Warn)
+      Warning("The given point for the interpolation is out of the domain.\n");
+    
+    return ret;
+  }
+  
+  ret = b[i] + 2*c[i]*(h-x[i]) + 3*d[i]*Pow2(h-x[i]);
+  return ret; 
+}
+
+
 /* ---------------------------------------------------------------------- */
 ////////////////
 // Hermite 1d //
@@ -742,4 +780,84 @@ static void find_coeffs_Hermite_1d(Interpolation_T *const interp_s)
   interp_s->Hermite_1d->a = a;
   free(Q);
   free(z);
+}
+
+// Given Hermite spline for f(x), finds f'(h) by taking
+// analytical derivative of Hermite interpolant.
+static double derivative_Hermite_1d(Interpolation_T *const interp_s)
+{
+  if (!interp_s->Hermite_1d->Order)
+  order_arrays_Hermite_1d(interp_s);
+
+  const double *const x = interp_s->Hermite_1d->x;
+  const double *const a = interp_s->Hermite_1d->a;
+  const double h = interp_s->Hermite_1d->h;
+  const int N = (int)interp_s->Hermite_1d->N;
+  const int n = (int)interp_s->spline_order - 1;
+  double ret = DBL_MAX;// it's important to be max double
+  int i = 0;
+  Flag_T flg = NONE;
+
+  // Finds the spline interval
+  for (i = 0; i < N-1; ++i)
+  {
+    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+    {
+      flg = FOUND;
+      break;
+    }
+  }
+
+  if (flg != FOUND)
+  {
+    if (!interp_s->Hermite_1d->No_Warn)
+    {
+      printf("Domain: [%e, %e]\n", x[0], x[N-1]);
+      printf("Point for interpolation: %e\n", h);
+      Warning("The given point for the interpolation is out of the domain.\n");
+    }
+
+    return ret;
+  }
+
+  int l = i;
+  while (l >= N - (n+1))
+  { l--; }
+  
+  double termA = 0, termB = 0, termA_2 = 0;
+  Uint m, v, b;
+  
+  ret = a[i_j_to_ij(2*n+1,l,1)];
+  for (Uint j = 2; j <= 2*(Uint)n+1; j++)
+  {
+    m = (Uint)(ceil(((float)j)/2.0) - 1);
+    b = (Uint)(j/2);
+    
+    termA = 0;
+    for (Uint g = 0; g < b; g++)
+    {
+      termA_2 = 1;
+      for (Uint q = 0; q <= m; q++)
+      {
+	      if (j % 2)
+	      { v = (q == g || q == m)? 1 : 2; }
+	      else
+	      { v = (q == g)? 1 : 2; }
+	      termA_2 *= pow((h - x[(Uint)l+q]), v);
+      }
+    	termA += 2*termA_2;
+  	}
+	
+	  if (j%2)
+    {
+      termB = 1;
+	    for (Uint g = 0; g <= m; g++)
+	    { termB *= pow(h - x[(Uint)l+g], 2); }
+    }
+    else
+    { termB = 0; }
+    ret += a[i_j_to_ij(2*(Uint)n+1,(Uint)l,j)] * (termA + termB);
+  }
+    
+  return ret;
 }

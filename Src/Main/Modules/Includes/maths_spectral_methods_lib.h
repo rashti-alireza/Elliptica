@@ -29,8 +29,8 @@ typedef struct INTERPOLATION_T
   // spectral //
   //////////////
   struct FIELD_T *field;/* interesting field for interpolation */
-  fInterpolation_T *interpolation_func;/* interpolation function */
-  fInterpolation_T *interpolation_derivative_func;/* interpolation function for derivatives */
+  fInterpolation_T *interpolation_func;/* interpolation function (interpolant) */
+  fInterpolation_T *interpolation_derivative_func;/* derivatives of the interpolant */
   double X,Y,Z;/* where interpolant calculated. 
                // MUST be provided in coords sys. used by patch.
                */

@@ -23,6 +23,7 @@ static double T(const Uint n,const Uint i,const double x);
 static fInterpolation_T *interpolation_Chebyshev_Tn(Interpolation_T *const interp_s);
 static double interpolation_Neville_1d(Interpolation_T *const interp_s);
 static double interpolation_natural_cubic_spline_1d(Interpolation_T *const interp_s);
+static double derivative_natural_cubic_spline_1d(Interpolation_T *const interp_s);
 static void find_coeffs_natural_cubic_spline_1d(Interpolation_T *const interp_s);
 static void order_arrays_natural_cubic_spline_1d(Interpolation_T *const interp_s);
 static double interpolation_Chebyshev_Tn_X(Interpolation_T *const interp_s);
@@ -36,5 +37,6 @@ void free_interpolation(Interpolation_T *interp_s);
 
 static void order_arrays_Hermite_1d(Interpolation_T *const interp_s);
 static void find_coeffs_Hermite_1d(Interpolation_T *const interp_s);
+static double derivative_Hermite_1d(Interpolation_T *const interp_s);
 
 
