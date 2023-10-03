@@ -23,17 +23,8 @@ typedef double fInterpolation_T(struct INTERPOLATION_T *const interp_s);
 /* interpolation struct used in interpolation function */
 typedef struct INTERPOLATION_T
 {
-  // Pointers to interior structures.
-  double **f;/* f(xi)'s */
-  double **x;/* xi's, note: it must be x0 < x1 < ...< xN */
-  double *h;/* desired point to interpolate f */
-  Uint *N;/* number of xi's */
-  
   const char *method;
-  Uint fd_accuracy_order;/* order of finite difference approximation */
-  Uint fd_derivative_order;/* order of derivative required from finite difference method */
-  Uint spline_order; // Degree of interpolating polynomial
-  
+
   //////////////
   // spectral //
   //////////////
@@ -92,8 +83,8 @@ typedef struct INTERPOLATION_T
    double h;              // point to interpolate
    Uint N;                // number of grid points
    double *a;             // Linearized 2D array for spline coefficients
-   Uint fd_accuracy_order;// order of finite difference approximation
-   Uint fd_derivative_order;   // order of derivative required from finite difference method
+   Uint fd_accuracy_order;// order of finite difference accuracy
+   Uint fd_derivative_order;// order of derivative required from finite difference method
    Uint spline_order;     // I.e. order of interpolating polynomial.
    Uint Order: 1;         // 1 iff x array in order
    Uint Alloc_Mem: 1;
