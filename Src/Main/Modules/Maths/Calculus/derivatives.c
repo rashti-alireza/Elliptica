@@ -1119,7 +1119,7 @@ double finite_difference_Fornberg(const double *const x, const double *const f,
   {
     fprintf(stderr,"Degree of derivative: %u\n", M);
     fprintf(stderr,"Order of accuracy: %u\n", n);
-    Error0(stderr,"Finite difference error: Degree of derivative must not exceed degree of accuracy.\n");
+    Error0("Finite difference error: Degree of derivative must not exceed degree of accuracy.\n");
   }
   
   // Finds the data segment
