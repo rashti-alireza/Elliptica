@@ -48,44 +48,27 @@ void free_EoS(EoS_T *s)
   if (!s)
     return;
     
-  if (s->K)      free(s->K);
-  if (s->rho0_th) free(s->rho0_th);
-  if (s->h_th)   free(s->h_th);
-  if (s->n)      free(s->n);
-  if (s->a)      free(s->a);
-  if (s->gamma)  free(s->gamma);
+  Free(s->K);
+  Free(s->rho0_th);
+  Free(s->h_th);
+  Free(s->n);
+  Free(s->a);
+  Free(s->gamma);
   
-  if (strstr_i(PgetsEZ(P_"Approach"), "Root_Finder"))
-  {
-    free_interpolation(s->spline->interp_e_rho0);
-    free_interpolation(s->spline->interp_p_rho0);
-    Root_Finder_T* rf_copy = (Root_Finder_T*)(s->spline->root_finder);
-    free_root_finder(rf_copy);
-  }
+  // spline
+  Free(s->spline->h_sample);
+  Free(s->spline->p_sample);
+  Free(s->spline->e_sample);
+  Free(s->spline->rho0_sample);
+  Free(s->spline->h_log);
+  Free(s->spline->p_log);
+  Free(s->spline->e_log);
+  Free(s->spline->rho0_log);
   
-  if (strstr_i(PgetsEZ(P_"log_approach"), "yes"))
-  {
-    free(s->spline->h_log);
-    free(s->spline->p_log);
-    free(s->spline->e_log);
-    free(s->spline->rho0_log);
-  }
-  
-  /* free cubic spline struct */
-  if (strcmp_i(s->type, "tabular"))
-  {
-    Free(s->spline->h_sample);
-    Free(s->spline->p_sample);
-    Free(s->spline->e_sample);
-    Free(s->spline->rho0_sample);
-    set_interp_alloc_mem_flag(s->spline->interp_p, 0);
-    set_interp_alloc_mem_flag(s->spline->interp_e, 0);
-    set_interp_alloc_mem_flag(s->spline->interp_rho0, 0);
-    free_interpolation(s->spline->interp_p);
-    free_interpolation(s->spline->interp_e);
-    free_interpolation(s->spline->interp_rho0);
-  }
-  
+  free_interpolation(s->spline->interp_p);
+  free_interpolation(s->spline->interp_e);
+  free_interpolation(s->spline->interp_rho0);
+
   free(s);
 }
 
