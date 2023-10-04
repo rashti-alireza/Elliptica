@@ -11,13 +11,14 @@
 
 void eos_tab_read_table(EoS_T* const eos);
 void eos_tab_set_hermite(EoS_T* const eos);
+void eos_tab_set_hermite_log(EoS_T* const eos);
 static double logy_of_logh_hermite(EoS_T* const eos, 
                                  Interpolation_T *const interp_s,
-                                 const double c_y/* shifting constant */
+                                 const double c_y/* shifting constant */,
                                  const double y_floor);
 static double p_of_h_hermite_log(EoS_T* const eos);
 static double e_of_h_hermite_log(EoS_T* const eos);
-static double rho0_of_h_hermite_log(EoS_T* const eos);
+static double rho0_of_h_hermite_log(EoS_T* const eos) __attribute__((unused));
 static double rho0_e_p_h(EoS_T* const eos);
 static double e0_of_e_and_rho0(EoS_T* const eos);
 static double dp_dh_hermite_log(EoS_T* const eos);

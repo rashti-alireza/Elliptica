@@ -6,7 +6,7 @@
 // ->return: y(in non log format)
 static double logy_of_logh_hermite(EoS_T* const eos, 
                                  Interpolation_T *const interp_s,
-                                 const double c_y/* shifting constant */
+                                 const double c_y/* shifting constant */,
                                  const double y_floor)
 {
   const double h_floor = eos->spline->h_floor;
@@ -33,7 +33,8 @@ static double logy_of_logh_hermite(EoS_T* const eos,
 static double p_of_h_hermite_log(EoS_T* const eos)
 {
   return
-    logy_of_logh_hermite(eos, eos->interp_p, eos->spline->c_p, eos->p_floor);
+    logy_of_logh_hermite(eos, eos->spline->interp_p,
+                         eos->spline->c_p, eos->spline->p_floor);
 }
 
 // assumes log(e) = hermite(log(h))
@@ -41,7 +42,8 @@ static double p_of_h_hermite_log(EoS_T* const eos)
 static double e_of_h_hermite_log(EoS_T* const eos)
 {
   return
-    logy_of_logh_hermite(eos, eos->interp_e, eos->spline->c_e, eos->e_floor);
+    logy_of_logh_hermite(eos, eos->spline->interp_e,
+                         eos->spline->c_e, eos->spline->e_floor);
 }
 
 // assumes log(rho0) = hermite(log(h))
@@ -49,7 +51,8 @@ static double e_of_h_hermite_log(EoS_T* const eos)
 static double rho0_of_h_hermite_log(EoS_T* const eos)
 {
   return 
-    logy_of_logh_hermite(eos, eos->interp_rho0, eos->spline->c_rho0, eos->rho0_floor);
+    logy_of_logh_hermite(eos, eos->spline->interp_rho0,
+                         eos->spline->c_rho0, eos->spline->rho0_floor);
 }
 
 // assumes rho0 = (e+p)/h
@@ -65,7 +68,7 @@ static double rho0_e_p_h(EoS_T* const eos)
 static double e0_of_e_and_rho0(EoS_T* const eos)
 {
   double rho0 = eos->rest_mass_density(eos);
-  double e    = eos->energy_density(eos)
+  double e    = eos->energy_density(eos);
   double e0   = e/rho0 - 1.;
 
   // the following should also capture when rho0 = 0.
@@ -89,7 +92,7 @@ static double dp_dh_hermite_log(EoS_T* const eos)
 // chain rule: df/dh = ( f(h) / h ) * d(log(f)) / d(log(h)
 static double de_dh_hermite_log(EoS_T* const eos)
 {
-  const double e = eos->energy_density(eos);
+  const double f = eos->energy_density(eos);
   const double h = eos->h;
   const double dlogf_dlogh = execute_derivative_interpolation(eos->spline->interp_e);
   
@@ -309,6 +312,11 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   eos->spline->use_log_approach = 1;
   eos->spline->h_floor = Getd(P_"enthalpy_floor");
   eos->spline->h_ceil  = Getd(P_"enthalpy_ceiling");
+  // TODO: are they fine?
+  eos->spline->p_floor = 0.;
+  eos->spline->e_floor = 0.;
+  eos->spline->rho0_floor = 0.;
+  
   // shifting to avoid log(0)
   // TODO: are they the best number?
   eos->spline->c_p = 1E-3;
@@ -385,7 +393,11 @@ void eos_tab_set_hermite(EoS_T* const eos)
   eos->drho0_dh                 = 0;
   eos->spline->h_floor = Getd(P_"enthalpy_floor");
   eos->spline->h_ceil  = Getd(P_"enthalpy_ceiling");
-
+  // TODO: are they fine?
+  eos->spline->p_floor = 0.;
+  eos->spline->e_floor = 0.;
+  eos->spline->rho0_floor = 0.;
+  
   // NOTE: we assume each is a function of the enthalpy h. */
   // p:
   Interpolation_T *interp_p = init_interpolation();

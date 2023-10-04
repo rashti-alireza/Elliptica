@@ -44,8 +44,11 @@ typedef struct EquationOfState_T
  /* spline interpolation when eos format is discrete like table */
  struct
  {
-   double h_floor;/* set some themodynamics var to 0 if h < h_floor. */
-   double h_ceil;/* set some thermodynamics vars to constant if h > h_ceil. */
+   double h_floor;/* set h to h_floor if h < h_floor */
+   double h_ceil;/* set h to h_ceil if h > h_ceil */
+   double p_floor;/* set p to p_floor if p < p_floor */
+   double e_floor;/* set e to e_floor if e < e_floor */
+   double rho0_floor;/* set rho0 to rho0_floor if rho0 < rho0_floor */
    Uint sample_size;/* the number of points for a spline fit */
    double *h_sample;/* enthalpy sample values */
    double *p_sample;/* pressure sample values */
