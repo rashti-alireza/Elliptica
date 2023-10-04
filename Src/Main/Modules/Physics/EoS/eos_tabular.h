@@ -11,26 +11,15 @@
 
 void eos_tab_read_table(EoS_T* const eos);
 void eos_tab_set_hermite(EoS_T* const eos);
-
-//////////////////////////////////Interpolation method
-double EoS_rho0_h_tab(EoS_T *const eos);
-double EoS_p_h_tab(EoS_T *const eos);
-double EoS_e_h_tab(EoS_T *const eos);
-double EoS_e0_h_tab(EoS_T *const eos);
-double EoS_rho0_h_tab(EoS_T *const eos);
-double EoS_p_h_tab(EoS_T *const eos);
-double EoS_e_h_tab(EoS_T *const eos);
-double EoS_e0_h_tab(EoS_T *const eos);
-double EoS_drho0_dh_h_tab(EoS_T *const eos);
-double EoS_drho0_dh_h_tab(EoS_T *const eos);
-double EoS_de_dh_h_tab(EoS_T *const eos);
-double EoS_de_dh_h_tab(EoS_T *const eos);
-
-/////////////////////////////////Root finder method
-double EoS_enthalpy_def(void* const eos, const double* const params);
-double EoS_rho0_RF(EoS_T *const eos);
-double EoS_p_rho0_tab(EoS_T *const eos);
-double EoS_e_rho0_tab(EoS_T *const eos);
-double EoS_e0_rho0_tab(EoS_T *const eos);
-double EoS_de_dh_RF(EoS_T *const eos);
-double EoS_drho0_dh_RF(EoS_T *const eos);
+static double logy_of_logh_hermite(EoS_T* const eos, 
+                                 Interpolation_T *const interp_s,
+                                 const double c_y/* shifting constant */
+                                 const double y_floor);
+static double p_of_h_hermite_log(EoS_T* const eos);
+static double e_of_h_hermite_log(EoS_T* const eos);
+static double rho0_of_h_hermite_log(EoS_T* const eos);
+static double rho0_e_p_h(EoS_T* const eos);
+static double e0_of_e_and_rho0(EoS_T* const eos);
+static double dp_dh_hermite_log(EoS_T* const eos);
+static double de_dh_hermite_log(EoS_T* const eos);
+static double drho0_dh_e_p_h(EoS_T* const eos);

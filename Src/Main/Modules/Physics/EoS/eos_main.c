@@ -315,7 +315,14 @@ static void populate_EoS(EoS_T *const eos)
     
     if (Pcmps(Gets(P_"Interpolation_Method"), "Hermite_1d"))
     {
-      eos_tab_set_hermite(eos);
+      if (Pcmps(Gets(P_"log_approach"),"yes"))
+      {
+        eos_tab_set_hermite_log(eos);
+      }
+      else
+      {
+        eos_tab_set_hermite(eos);
+      }
     }
     else
     {

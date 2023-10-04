@@ -1,362 +1,113 @@
 #include "eos_tabular.h"
 
-//Implements thermodynamic functions for a tabular equation of state.
+// Implements thermodynamic functions for a tabular equation of state.
 
-//FIXME: Add warning when enthalpy value out of table bounds.
-
-//Calculates pressure from enthalpy by tabular EOS.
-double EoS_p_h_tab(EoS_T* const eos)
+// assumes a generic Hermite interpolant in log, log(y) = log(y(log(h)))
+// ->return: y(in non log format)
+static double logy_of_logh_hermite(EoS_T* const eos, 
+                                 Interpolation_T *const interp_s,
+                                 const double c_y/* shifting constant */
+                                 const double y_floor)
 {
-    double h_copy = eos->h;
-    if (LSS(eos->h, eos->spline->h_floor))
-    {
-        // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
-        eos->h = eos->spline->h_floor;
-    }
-    else if (GRT(eos->h, eos->spline->h_ceil))
-    {
-        // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
-        eos->h = eos->spline->h_ceil;
-    }
-    else if (GRT(eos->h, eos->spline->h_max) || LSS(eos->h, 0.90))
-    {
-        printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->spline->h_floor, eos->spline->h_max);
-        Error0("Exit");
-        return 0.0;
-    }
-    
-    double p;  
-    Interpolation_T *const interp_s = eos->spline->interp_p;
-    
-    if (eos->spline->use_log_approach)
-    {
-      *interp_s->h = log(eos->h);
-      //p = exp(execute_interpolation(interp_s)) * exp(-eos->spline->c_p);
-      p = exp(execute_interpolation(interp_s)) - eos->spline->c_p;
-    }
-    else
-    {
-      *interp_s->h = eos->h;
-      p = execute_interpolation(interp_s);
-    }
-    
-    eos->h = h_copy;
-    //double p_floor = 1.0E-12;
-    double p_floor = 0.0;
-    
-    return (LSSEQL(p, p_floor) || p == DBL_MAX ? 0. : p);
-}
-
-//Calculates rest-mass density from enthalpy by tabular EOS.
-double EoS_rho0_h_tab(EoS_T* const eos)
-{
-    double h_copy = eos->h;
-    if (LSS(eos->h, eos->spline->h_floor))
-    {
-        // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
-        eos->h = eos->spline->h_floor;
-    }
-    else if (GRT(eos->h, eos->spline->h_ceil))
-    {
-        // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
-        eos->h = eos->spline->h_ceil;
-    }
-    else if (GRT(eos->h, eos->spline->h_max) || LSS(eos->h, 0.90))
-    {
-        printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->spline->h_floor, eos->spline->h_max);
-        Error0("Exit");
-        return 0.0;
-    }
+  const double h_floor = eos->spline->h_floor;
+  const double h_ceil  = eos->spline->h_ceil;
+  double h = eos->h;
+  double y = DBL_MAX;
   
-    double rho0;  
-    Interpolation_T *const interp_s = eos->spline->interp_rho0;
-    
-    if (eos->spline->use_log_approach)
-    {
-      *interp_s->h = log(eos->h);
-      rho0 = exp(execute_interpolation(interp_s)) - eos->spline->c_e;
-    }
-    else
-    {
-      *interp_s->h = eos->h;
-      rho0 = execute_interpolation(interp_s);
-    }
-    
-    eos->h = h_copy;
-    //double rho0_floor = 1.0E-12;
-    double rho0_floor = 0.0;
-    //if (LSSEQL(rho0, rho0_floor)) { rho0 = rho0_floor; }
-    //return (LSSEQL(rho0,0.) || rho0 == DBL_MAX ? 0. : rho0);
-    return (LSSEQL(rho0, rho0_floor) || rho0 == DBL_MAX ? 0. : rho0);
-}
-
-//Calculates energy density from enthalpy by tabular EOS.
-double EoS_e_h_tab(EoS_T* const eos)
-{
-    double h_copy = eos->h;
-    if (LSS(eos->h, eos->spline->h_floor))
-    {
-        // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
-        eos->h = eos->spline->h_floor;
-    }
-    else if (GRT(eos->h, eos->spline->h_ceil))
-    {
-        // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
-        eos->h = eos->spline->h_ceil;
-    }
-    else if (GRT(eos->h, eos->spline->h_max) || LSS(eos->h, 0.90))
-    {
-        printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->spline->h_floor, eos->spline->h_max);
-        Error0("Exit");
-        return 0.0;
-    }
-
-    double e;
-    Interpolation_T *const interp_s = eos->spline->interp_e;
-    
-    if (eos->spline->use_log_approach)
-    {
-      *interp_s->h = log(eos->h);
-      e = exp(execute_interpolation(interp_s)) - eos->spline->c_e;
-    }
-    else
-    {
-      *interp_s->h = eos->h;
-      e = execute_interpolation(interp_s);
-    }
-    
-    eos->h = h_copy;
-    //double e_floor = 1.0E-12;
-    double e_floor = 0.0;
-    //if (LSSEQL(e, e_floor)) { e = e_floor; }
-    //return (LSSEQL(e,0.) || e == DBL_MAX ? 0. : e);
-    return (LSSEQL(e,e_floor) || e == DBL_MAX ? 0. : e);
-}
-
-//Calculates specific internal energy in terms of enthalpy,
-//using equation e0 = e / rho0 - 1
-//Dependent upon p(h) and rho0(h)
-double EoS_e0_h_tab(EoS_T* const eos)
-{
-    double h_copy = eos->h;
-    if (LSS(eos->h, eos->spline->h_floor))
-    {
-        // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
-        eos->h = eos->spline->h_floor;
-    }
-    else if (GRT(eos->h, eos->spline->h_ceil))
-    {
-        // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
-        eos->h = eos->spline->h_ceil;
-    }
-    else if (GRT(eos->h, eos->spline->h_max) || LSS(eos->h, 0.90))
-    {
-        printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->spline->h_floor, eos->spline->h_max);
-        Error0("Exit");
-        return 0.0;
-    }
-    
-    double floor = 1.0E-15; //FIXME: Make dynamic parameter
-    double rho0 = EoS_rho0_h_tab(eos);
-    double e = EoS_e_h_tab(eos);
-    
-    eos->h = h_copy;
-    return ((LSSEQL(e, floor) ? floor: e) / (LSSEQL(rho0, floor) ? floor : rho0)) - 1.0; 
-}
-
-//Calculates derivative of rest-mass density wrt enthalpy, with enthalpy as the independent variable.
-double EoS_drho0_dh_h_tab(EoS_T* const eos)
-{
-    double h_copy = eos->h;
-    //Check bounds for enthalpy
-    if (LSS(eos->h, eos->spline->h_floor))
-    {
-        // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
-        eos->h = eos->spline->h_floor;
-    }
-    else if (GRT(eos->h, eos->spline->h_ceil))
-    {
-        // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
-        eos->h = eos->spline->h_ceil;
-    }
-    else if (GRT(eos->h, eos->spline->h_max) || LSS(eos->h, 0.90))
-    {
-        printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->spline->h_floor, eos->spline->h_max);
-        Error0("Exit");
-        return 0.0;
-    }
-    
-    double drho0dh;
-    Interpolation_T *const interp_s = eos->spline->interp_rho0;
-    interp_s->fd_derivative_order = 1;
-    
-    if (eos->spline->use_log_approach)
-    {
-      // Via chain rule: df/dh = (f(x)/x) * d(log(f))/d(log(x))
-      // d(log(rho0))/d(log(h)):
-      double dlog_log = finite_difference_Fornberg(eos->spline->h_log,
-                             eos->spline->rho0_log,
-                             log(eos->h),
-                             1,
-                             interp_s->fd_accuracy_order,
-                             eos->spline->sample_size);
-      *interp_s->h = eos->h;
-      drho0dh = dlog_log * (EoS_rho0_h_tab(eos) + eos->spline->c_rho0) / eos->h;
-    }
-    else
-    {
-      *interp_s->h = eos->h;
-      drho0dh = execute_derivative_interpolation(interp_s);
-    }
-    
-    eos->h = h_copy;
-    return (LSSEQL(drho0dh,0.) || drho0dh == DBL_MAX ? 0. : drho0dh);
-}
-
-//Calculates derivative of energy density wrt enthalpy, with enthalpy as the independent variable.
-double EoS_de_dh_h_tab(EoS_T* const eos)
-{
-    double h_copy = eos->h;
-    //Check bounds for enthalpy
-    if (LSS(eos->h, eos->spline->h_floor))
-    {
-        // Iff h < enthalpy floor, set h = enthalpy floor temporarily.
-        eos->h = eos->spline->h_floor;
-    }
-    else if (GRT(eos->h, eos->spline->h_ceil))
-    {
-        // Iff h > enthalpy ceiling, set h = enthalpy ceiling temporarily.
-        eos->h = eos->spline->h_ceil;
-    }
-    else if (GRT(eos->h, eos->spline->h_max) || LSS(eos->h, 0.90))
-    {
-        printf("ERROR: EoS_p_h_tab (eos_tabular.c): enthalpy (%E) out of bounds (%E, %E).\n",
-             eos->h, eos->spline->h_floor, eos->spline->h_max);
-        Error0("Exit");
-        return 0.0;
-    }
-    
-    double dedh;
-    Interpolation_T *const interp_s = eos->spline->interp_e;
-    interp_s->fd_derivative_order = 1;
-    
-    if (eos->spline->use_log_approach)
-    {
-      // Via chain rule: df/dh = (f(x)/x) * d(log(f))/d(log(x))
-      // d(log(e))/d(log(h)):
-      double dlog_log = finite_difference_Fornberg(eos->spline->h_log,
-                             eos->spline->e_log,
-                             log(eos->h),
-                             1,
-                             interp_s->fd_accuracy_order,
-                             eos->spline->sample_size);
-      *interp_s->h = eos->h;
-      dedh = dlog_log * (EoS_e_h_tab(eos) + eos->spline->c_e)/ eos->h;
-    }
-    else
-    {
-      *interp_s->h = eos->h;
-      dedh = execute_derivative_interpolation(interp_s);
-    }
-    
-    eos->h = h_copy;
-    return (LSSEQL(dedh,0.) || dedh == DBL_MAX ? 0. : dedh);
-}
-
-///////////////Root finder approach////////////////////
-// Definition of enthalpy h: (e + p)/rho0 - h = 0.
-double EoS_enthalpy_def(void* eos, const double* const sol)
-{
-  // FIXME: See if there's a better way than eos_copy
-  EoS_T* eos_copy = (EoS_T* const)eos;
-  eos_copy->spline->rho0 = sol[0];
-  Interpolation_T* const interp_e_rho0 = eos_copy->spline->interp_e_rho0;
-  Interpolation_T* const interp_p_rho0 = eos_copy->spline->interp_p_rho0;
-  *interp_e_rho0->h = eos_copy->spline->rho0;
-  *interp_p_rho0->h = eos_copy->spline->rho0;
+  h = (h <= h_floor) ? h_floor : h;
+  h = (h >= h_ceil)  ? h_ceil  : h;
+  // NOTE: we modify eos->h here:
+  eos->h = h;
+  interp_s->Hermite_1d->h = log(h);
+  y = exp(execute_interpolation(interp_s)) - c_y;
   
-  double e = execute_interpolation(interp_e_rho0);
-  double p = execute_interpolation(interp_p_rho0);
+  // TODO: DEBUG
+  assert(y != DBL_MAX);
+  assert(y > y_floor);
   
-  /*
-  printf("EoS_enthalpy_def:\n");
-  printf("\t h == %E\n", eos_copy->h);
-  printf("\t rho0 == %E\n", eos_copy->spline->rho0);
-  printf("\t p == %E\n", p);
-  printf("\t e == %E\n", e);
-  printf("\t return == %E\n", ((e + p) / eos_copy->spline->rho0) - eos_copy->h);
-  */
+  return (y <= y_floor || y == DBL_MAX) ? 0. : y;
+}
+
+// assumes log(p) = hermite(log(h))
+// ->return: p (pressure)
+static double p_of_h_hermite_log(EoS_T* const eos)
+{
+  return
+    logy_of_logh_hermite(eos, eos->interp_p, eos->spline->c_p, eos->p_floor);
+}
+
+// assumes log(e) = hermite(log(h))
+// ->return: e (energy density)
+static double e_of_h_hermite_log(EoS_T* const eos)
+{
+  return
+    logy_of_logh_hermite(eos, eos->interp_e, eos->spline->c_e, eos->e_floor);
+}
+
+// assumes log(rho0) = hermite(log(h))
+// ->return: rho0 (rest mass density)
+static double rho0_of_h_hermite_log(EoS_T* const eos)
+{
+  return 
+    logy_of_logh_hermite(eos, eos->interp_rho0, eos->spline->c_rho0, eos->rho0_floor);
+}
+
+// assumes rho0 = (e+p)/h
+// ->return: rho0 (rest mass density)
+static double rho0_e_p_h(EoS_T* const eos)
+{
+  return ( eos->pressure(eos) + eos->energy_density(eos) ) / eos->h;
+}
+
+// Calculates specific internal energy(e0) in terms of enthalpy,
+// using equation e0 = e / rho0 - 1
+// Dependent upon e(h) and rho0(h)
+static double e0_of_e_and_rho0(EoS_T* const eos)
+{
+  double rho0 = eos->rest_mass_density(eos);
+  double e    = eos->energy_density(eos)
+  double e0   = e/rho0 - 1.;
+
+  // the following should also capture when rho0 = 0.
+  e0 = EQL(rho0,e) ? 0.0 : e0;
+
+  return e0;
+}
+
+// dp/dh when we have interpolant log(p) = Hermite(log(h))
+// chain rule: df/dh = ( f(h) / h ) * d(log(f)) / d(log(h)
+static double dp_dh_hermite_log(EoS_T* const eos)
+{
+  const double f = eos->pressure(eos);
+  const double h = eos->h;
+  const double dlogf_dlogh = execute_derivative_interpolation(eos->spline->interp_p);
   
-  if (eos_copy->h < Pgetd("NS_eos_enthalpy_floor")) { return 0; }
-  return ((e + p) / eos_copy->spline->rho0) - eos_copy->h;
+  return (f / h ) * dlogf_dlogh;
 }
 
-// Finds rest-mass density from enthalpy, using root finder method
-// on enthalpy definition: (e(rho0) + p(rho0)) / rho0 - h = 0.
-// Also sets value of rho0 inside EoS object for use in other
-// thermodynamic functions.
-double EoS_rho0_RF(EoS_T *const eos)
+// de/dh when we have interpolant log(e) = Hermite(log(h))
+// chain rule: df/dh = ( f(h) / h ) * d(log(f)) / d(log(h)
+static double de_dh_hermite_log(EoS_T* const eos)
 {
-  Root_Finder_T* root_finder = (Root_Finder_T*)eos->spline->root_finder;
-  double rho0 = *execute_root_finder(root_finder);
-  eos->spline->rho0 = rho0;
-  return rho0;
+  const double e = eos->energy_density(eos);
+  const double h = eos->h;
+  const double dlogf_dlogh = execute_derivative_interpolation(eos->spline->interp_e);
+  
+  return (f / h ) * dlogf_dlogh;
 }
 
-// Interpolates pressure from rest-mass density, using root-finder method.
-double EoS_p_rho0_tab(EoS_T* const eos)
+// Calculates derivative of rest-mass density wrt enthalpy, 
+// when drho0/dh = d{(e+p)/h}/dh.
+static double drho0_dh_e_p_h(EoS_T* const eos)
 {
-  // Determine rho0 using root finder, given enthalpy.
-  EoS_rho0_RF(eos);
-  // Having rho0, interpolate p(rho0).
-  double p = execute_interpolation(eos->spline->interp_p_rho0);
-  return p;
-}
-
-// Interpolates total energy density from rest-mass density,
-// using root-finder method.
-double EoS_e_rho0_tab(EoS_T* const eos)
-{
-  // Determine rho0 using root finder, given enthalpy.
-  EoS_rho0_RF(eos);
-  // Having rho0, interpolate e(rho0).
-  double e = execute_interpolation(eos->spline->interp_e_rho0);
-  return e;
-}
-
-// Interpolates specific internal energy from rest-mass density,
-// using root-finder method.
-// Equation: e0 = (e/rho0) - 1. 
-double EoS_e0_rho0_tab(EoS_T* const eos)
-{
-  // Determine e and rho0.
-  // (rho0 is set in eos->spline by EoS_e_rho0_tab.)
-  double e = EoS_e_rho0_tab(eos);
-  return (e / eos->spline->rho0) - 1;
-}
-
-/////////////////////UNFINISHED//////////////////////
-// Interpolates derivative of total energy density wrt enthalpy,
-// using root finder method for rho0.
-// Assumes thermodynamic relation de0 = -PdV
-// (i.e. T ~ 0  and composition term ~ 0).
-// Thus de0/drho0 = p / rho0^2.
-// May be invalid for some EoS.
-double EoS_de_dh_RF(EoS_T* const eos)
-{
-  UNUSED(eos);
-  return 0;
-}
-
-double EoS_drho0_dh_RF(EoS_T* const eos)
-{
-  UNUSED(eos);
-  return 0;
+  const double e     = eos->energy_density(eos);
+  const double de_dh = eos->de_dh(eos);
+  const double p     = eos->pressure(eos);
+  const double dp_dh = dp_dh_hermite_log(eos);
+  const double h     = eos->h;
+  double drho0_dh    = ( de_dh + dp_dh - ( e + p ) / h ) / h;
+  
+  return drho0_dh;
 }
 
 // read thermo. vars. from a given table
@@ -539,52 +290,101 @@ void eos_tab_read_table(EoS_T* const eos)
 }
 
 // set spline eos struct for Hermite interpolation method
+void eos_tab_set_hermite_log(EoS_T* const eos)
+{
+  Physics_T *const phys = eos->phys;
+  const Uint sample_size = eos->spline->sample_size;
+  double *h_log = alloc_double(sample_size);
+  double *p_log = alloc_double(sample_size);
+  double *e_log = alloc_double(sample_size);
+  double *rho0_log = alloc_double(sample_size);
+
+  eos->pressure                 = p_of_h_hermite_log;
+  eos->energy_density           = e_of_h_hermite_log;
+  eos->rest_mass_density        = rho0_e_p_h;// NOTE: using consistency eq.
+  eos->specific_internal_energy = e0_of_e_and_rho0;// NOTE: using consistency eq.
+  eos->de_dh                    = de_dh_hermite_log;
+  eos->drho0_dh                 = drho0_dh_e_p_h;// NOTE: using consistency eq.
+
+  eos->spline->use_log_approach = 1;
+  eos->spline->h_floor = Getd(P_"enthalpy_floor");
+  eos->spline->h_ceil  = Getd(P_"enthalpy_ceiling");
+  // shifting to avoid log(0)
+  // TODO: are they the best number?
+  eos->spline->c_p = 1E-3;
+  eos->spline->c_e = 1E-3;
+  eos->spline->c_rho0 = 1E-3;
+  
+  for (Uint i = 0; i < sample_size; i++)
+  {
+    p_log[i]    = log(eos->spline->p_sample[i]    + eos->spline->c_p);
+    rho0_log[i] = log(eos->spline->rho0_sample[i] + eos->spline->c_rho0);
+    e_log[i]    = log(eos->spline->e_sample[i]    + eos->spline->c_e);
+    h_log[i]    = log(eos->spline->h_sample[i]);
+  }
+  eos->spline->h_log    = h_log;
+  eos->spline->p_log    = p_log;
+  eos->spline->e_log    = e_log;
+  eos->spline->rho0_log = rho0_log;
+  p_log = 0;
+  e_log = 0;
+  rho0_log = 0;
+  h_log = 0;
+
+  // NOTE: we assume each is a function of the enthalpy h. */
+  // p:
+  Interpolation_T *interp_p = init_interpolation();
+  interp_p->method = Gets(P_"Interpolation_Method");
+  interp_p->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"fd_accuracy_order");
+  interp_p->Hermite_1d->spline_order      = (Uint)Geti(P_"spline_order");
+  interp_p->Hermite_1d->f = eos->spline->p_log;
+  interp_p->Hermite_1d->x = eos->spline->h_log;
+  interp_p->Hermite_1d->N = sample_size;
+  interp_p->Hermite_1d->No_Warn  = 1;/* suppress warning */
+  eos->spline->interp_p = interp_p;
+  plan_interpolation(interp_p);
+  
+  // e:
+  Interpolation_T *interp_e = init_interpolation();
+  interp_e->method = Gets(P_"Interpolation_Method");
+  interp_e->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"fd_accuracy_order");
+  interp_e->Hermite_1d->spline_order      = (Uint)Geti(P_"spline_order");
+  interp_e->Hermite_1d->f = eos->spline->e_log;
+  interp_e->Hermite_1d->x = eos->spline->h_log;
+  interp_e->Hermite_1d->N = sample_size;
+  interp_e->Hermite_1d->No_Warn = 1;/* suppress warning */
+  eos->spline->interp_e = interp_e;
+  plan_interpolation(interp_e);
+  
+  // rho0:
+  Interpolation_T *interp_rho0 = init_interpolation();
+  interp_rho0->method  = Gets(P_"Interpolation_Method");
+  interp_rho0->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"fd_accuracy_order");
+  interp_rho0->Hermite_1d->spline_order      = (Uint)Geti(P_"spline_order");
+  interp_rho0->Hermite_1d->f = eos->spline->rho0_log;
+  interp_rho0->Hermite_1d->x = eos->spline->h_log;
+  interp_rho0->Hermite_1d->N = sample_size;
+  interp_rho0->Hermite_1d->No_Warn = 1;/* suppress warning */
+  eos->spline->interp_rho0 = interp_rho0;
+  plan_interpolation(interp_rho0);
+}
+
+// set spline eos struct for Hermite interpolation method
 void eos_tab_set_hermite(EoS_T* const eos)
 {
   Physics_T *const phys = eos->phys;
   const Uint sample_size = eos->spline->sample_size;
   
-  eos->pressure                 = EoS_p_h_tab;
-  eos->energy_density           = EoS_e_h_tab;
-  eos->rest_mass_density        = EoS_rho0_h_tab;
-  eos->specific_internal_energy = EoS_e0_h_tab;
-  eos->de_dh                    = EoS_de_dh_h_tab;
-  eos->drho0_dh                 = EoS_drho0_dh_h_tab;
+  // TODO: if needed in future set these:
+  Error0(NO_OPTION);
+  eos->pressure                 = 0;
+  eos->energy_density           = 0;
+  eos->rest_mass_density        = 0;
+  eos->specific_internal_energy = 0;
+  eos->de_dh                    = 0;
+  eos->drho0_dh                 = 0;
   eos->spline->h_floor = Getd(P_"enthalpy_floor");
   eos->spline->h_ceil  = Getd(P_"enthalpy_ceiling");
-
-  // Fill arrays with log(values) if we're using log-log interpolation.
-  if (Pcmps(Gets(P_"log_approach"),"yes"))
-  {
-    eos->spline->use_log_approach = 1;
-    double *h_log = alloc_double(sample_size);
-    double *p_log = alloc_double(sample_size);
-    double *e_log = alloc_double(sample_size);
-    double *rho0_log = alloc_double(sample_size);
-
-    // shifting to avoid log(0)
-    // TODO: are they the best number?
-    eos->spline->c_p = 1E-3;
-    eos->spline->c_e = 1E-3;
-    eos->spline->c_rho0 = 1E-3;
-    
-    for (Uint i = 0; i < sample_size; i++)
-    {
-      p_log[i]    = log(eos->spline->p_sample[i]    + eos->spline->c_p);
-      rho0_log[i] = log(eos->spline->rho0_sample[i] + eos->spline->c_rho0);
-      e_log[i]    = log(eos->spline->e_sample[i]    + eos->spline->c_e);
-      h_log[i]    = log(eos->spline->h_sample[i]);
-    }
-    
-    eos->spline->h_log    = h_log;
-    eos->spline->p_log    = p_log;
-    eos->spline->e_log    = e_log;
-    eos->spline->rho0_log = rho0_log;
-    p_log = 0;
-    e_log = 0;
-    rho0_log = 0;
-    h_log = 0;
-  }
 
   // NOTE: we assume each is a function of the enthalpy h. */
   // p:
@@ -594,12 +394,7 @@ void eos_tab_set_hermite(EoS_T* const eos)
   interp_p->Hermite_1d->spline_order      = (Uint)Geti(P_"spline_order");
   interp_p->Hermite_1d->f = eos->spline->p_sample;
   interp_p->Hermite_1d->x = eos->spline->h_sample;
-  if (eos->spline->use_log_approach)
-  {
-    interp_p->Hermite_1d->f = eos->spline->p_log;
-    interp_p->Hermite_1d->x = eos->spline->h_log;
-  }
-  interp_p->Hermite_1d->N        = sample_size;
+  interp_p->Hermite_1d->N = sample_size;
   interp_p->Hermite_1d->No_Warn  = 1;/* suppress warning */
   eos->spline->interp_p = interp_p;
   plan_interpolation(interp_p);
@@ -611,11 +406,6 @@ void eos_tab_set_hermite(EoS_T* const eos)
   interp_e->Hermite_1d->spline_order      = (Uint)Geti(P_"spline_order");
   interp_e->Hermite_1d->f = eos->spline->e_sample;
   interp_e->Hermite_1d->x = eos->spline->h_sample;
-  if (eos->spline->use_log_approach)
-  {
-    interp_e->Hermite_1d->f = eos->spline->e_log;
-    interp_e->Hermite_1d->x = eos->spline->h_log;
-  }
   interp_e->Hermite_1d->N = sample_size;
   interp_e->Hermite_1d->No_Warn = 1;/* suppress warning */
   eos->spline->interp_e = interp_e;
@@ -628,11 +418,6 @@ void eos_tab_set_hermite(EoS_T* const eos)
   interp_rho0->Hermite_1d->spline_order      = (Uint)Geti(P_"spline_order");
   interp_rho0->Hermite_1d->f = eos->spline->rho0_sample;
   interp_rho0->Hermite_1d->x = eos->spline->h_sample;
-  if (eos->spline->use_log_approach)
-  {
-    interp_rho0->Hermite_1d->f = eos->spline->rho0_log;
-    interp_rho0->Hermite_1d->x = eos->spline->h_log;
-  }
   interp_rho0->Hermite_1d->N       = sample_size;
   interp_rho0->Hermite_1d->No_Warn = 1;/* suppress warning */
   eos->spline->interp_rho0 = interp_rho0;
