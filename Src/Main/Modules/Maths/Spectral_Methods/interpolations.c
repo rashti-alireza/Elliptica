@@ -102,7 +102,6 @@ void plan_interpolation(Interpolation_T *const interp_s)
     
     find_coeffs_Hermite_1d(interp_s);
     interp_s->interpolation_func = interpolation_Hermite_1d;
-    // interp_s->interpolation_derivative_func = fd_1st_deriv_3rd_order_hermite_1d;
     interp_s->interpolation_derivative_func = derivative_Hermite_1d;
   }
   else
@@ -883,128 +882,6 @@ static double fd_Fornberg_Hermite_1d(Interpolation_T *const interp_s)
   
   return finite_difference_Fornberg(x, f, h, M, n, N);
 }
-
-// Approximates M-th derivative of f(x)|x=h by finite difference method,
-// to order of accuracy n.
-// TODO: test this func.
-static double fd_1st_deriv_3rd_order_hermite_1d(Interpolation_T *const interp_s)
-{
-  const double *const x = interp_s->Hermite_1d->x;
-  const double *const f = interp_s->Hermite_1d->f;
-  const double h = interp_s->Hermite_1d->h;
-  const Uint N_total = interp_s->Hermite_1d->N;
-  const Uint n = interp_s->Hermite_1d->fd_accuracy_order;
-  const Uint M = interp_s->Hermite_1d->fd_derivative_order;
-  const int N  = 4;
-  double d[16] = {0};
-  double p[16] = {0};
-  double q[4]  = {0};
-  double ret = DBL_MAX;
-  Uint i = 0;
-  Flag_T flg = NONE;
-  
-  // First derivatives
-  if (M != 1 || n != 3 )
-  {
-    Error0("Only supports first order derivative with 3rd order accuracy.");
-  }
-  
-  // Checks if we have enough data points for given order.
-  if (N <= n+M)
-  {
-    printf("Points: %u\n", N);
-    printf("Order of accuracy: %u\n", n);
-    Error0("Not enough points for desired accuracy.\n");
-  }
-  if (M >= n)
-  {
-    printf("Degree of derivative: %u\n", M);
-    printf("Order of accuracy: %u\n", n);
-    Error0("Degree of derivative must not exceed degree of accuracy.\n");
-  }
-  
-  ret = 0;
-  
-  // Finds the data segment
-  for (i = 0; i < N_total-1; ++i)
-  {
-    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
-    {
-      flg = FOUND;
-      break;
-    }
-  }
-  if (flg != FOUND)
-  {
-    if (!interp_s->N_cubic_spline_1d->No_Warn)
-      Warning("The given point for the interpolation is out of the domain.\n");
-    
-    return ret;
-  }
-  
-  // Excise sub-arrays
-  // Selects subset of 'x' array to use for finite difference method,
-  // i.e. x[left_pt : right_pt].
-  int left_pt = (int)i - (int)floor((n+M)/2)+1;
-  int right_pt = (int)i + (int)ceil((n+M)/2)+1;
-  
-  // Shifts right if sub-array is too far left:
-  while (left_pt < 0)
-  {
-    left_pt++;
-    right_pt++;
-  }
-  while (right_pt >= (int)N_total)
-  {
-    left_pt--;
-    right_pt--;
-  }
-  
-  // 2D arrays are stored in linear format.
-  // Array indices (j,k)
-  int j;
-  int k;
-  int b;
-  
-  // Calculate d[j,k] array
-  for (j = 0; j < N; j++)
-  {
-    for (k = 0; k < N; k++)
-    { d[i_j_to_ij(N,j,k)] = x[left_pt + j] - x[left_pt + k]; }
-  }
-  
-  // Calculate p[j,k] array
-  for (j = 0; j < N; j++)
-  {
-    for (k = 0; k < N; k++)
-    {
-      p[i_j_to_ij(N,j,k)] = 1;
-      for (b = 0; b < N; b++)
-      {
-        if (j != k && b != k && b != j)
-        { p[i_j_to_ij(N,j,k)] *= (h - x[left_pt+b]) / d[i_j_to_ij(N,j,b)]; }
-      }
-    }
-  }
-  
-  // Calculate l'_j(h) (= h[j]) for each j
-  for (j = 0; j < N; j++)
-  {
-    q[j] = 0;
-    for (k = 0; k < N; k++)
-    {
-      if (k != j)
-      { q[j] += p[i_j_to_ij(N,j,k)] / d[i_j_to_ij(N,j,k)]; }
-    }
-  }
-  
-  // Calculate f'(h)
-  ret = 0;
-  for (j = 0; j < N; j++)
-  ret += f[left_pt + j] * q[j];
-  
-  return ret;
-}  
 
 // Executes Hermite spline interpolation:
 // f(h) ~ H(h) = Q00 + Q11(h-x0) + Q22(h-x0)^2
