@@ -617,7 +617,8 @@ void free_interpolation(Interpolation_T *interp_s)
   }
   else if (strstr_i(interp_s->method,"Hermite_1d"))
   {
-    
+    Free(interp_s->Hermite_1d->a);
+    Free(interp_s->Hermite_1d->fp);
     if (interp_s->Hermite_1d->Alloc_Mem)
     {
       free(interp_s->Hermite_1d->x);
@@ -795,7 +796,6 @@ static void find_coeffs_Hermite_1d(Interpolation_T *const interp_s)
     { a[i_j_to_ij(2*n+1,j,b)] = Q[i_j_to_ij(2*n+1,b,b)]; }
   }
   
-  interp_s->Hermite_1d->Alloc_Mem = 1;
   interp_s->Hermite_1d->a = a;
   free(Q);
   free(z);
