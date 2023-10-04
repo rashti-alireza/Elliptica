@@ -46,41 +46,16 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   h_cent_new = 1.5;
   TOV->N = (Uint)Pgeti("TOV_Star_n");
   TOV->m = alloc_double(TOV->N);
-  TOV->m0 = alloc_double(TOV->N);
   TOV->r = alloc_double(TOV->N);
   TOV->h = alloc_double(TOV->N);
   TOV->p = alloc_double(TOV->N);
-  TOV->e = alloc_double(TOV->N);
-  TOV->rho0 = alloc_double(TOV->N);
-  TOV->eps = alloc_double(TOV->N);
   
   /* find enthalpy at the center of NS such that 
   // the baryonic mass reaches the desired value.
   // the spirit of the approach is bisection method in root finders */
-  
-  // Useful for debugging/monitoring TOV solver progress.
-  //printf("{ TOV solver:\n");//////////
-  //printf("\t|%-6s|%-12s|%-12s|\n", "iter", "enthalpy", "mass");
-  
   while (!EQL(m,TOV->bar_m) && iter < MAX_iter)
   {
     TOV->h_cent = h_cent_new;
-
-    //////////
-    //Terminate TOV solver if central enthalpy exceeds max available data point for tabular EoS.
-    if ((strstr_i(tov_eos->type, "Tabular") ||
-	       strstr_i(tov_eos->type, "tabular")) && 
-	       GRTEQL(h_cent_new, tov_eos->spline->h_max))
-    {
-	      printf("WARNING: TOV solver terminating at maximum enthalpy: %E\n", h_cent_new);
-	      TOV->status = 1;
-	      
-	      if (TOV->exit_if_error)
-	      { Error0("TOV solution failed!\n"); }
-	      else
-	      { return TOV; }
-    }
-
     solve_ODE_enthalpy_approach(TOV);
     m = calculate_baryonic_mass(TOV);
     
@@ -115,18 +90,6 @@ TOV_T *TOV_solution(TOV_T *const TOV)
         a = h_cent_new;
       }
       h_cent_new = a+0.5*(b-a);
-      
-      //////////
-      // Cap central enthalpy at max given in table, if applicable.
-      if ((strstr_i(tov_eos->type, "Tabular") ||
-	       strstr_i(tov_eos->type, "tabular")) && 
-	       GRTEQL(h_cent_new, tov_eos->spline->h_max))
-      { 
-        printf("WARNING: TOV solver encountered maximum enthalpy available in table.\n");
-        printf("\tCentral enthalpy: %E\n", h_cent_new);
-        printf("\tMaximum enthalpy data: %E\n", tov_eos->spline->h_max);
-        h_cent_new = tov_eos->spline->h_max; 
-      }
     }
     iter++;
   }
@@ -134,8 +97,6 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   /* if finder messed up */
   if (!isfinite(m))
   {
-    printf("WARNING: TOV solver: m is not finite.\n");
-    printf("\tm == %E\n", m);
     TOV->status = 1;
     if (TOV->exit_if_error)
     {
@@ -153,9 +114,6 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   /* if it needs more step to find the root, set the last value as baryonic mass */
   if (!EQL(m,TOV->bar_m))
   {
-    printf("WARNING: TOV solver: m != m0.\n");
-    printf("\tm == %E\n", m);
-    printf("\tm0 == %E\n", TOV->bar_m);
     TOV->status = 1;
     fprintf(stderr,"TOV root finder for enteral enthalpy needs more steps!\n"
                    "The difference between current baryonic mass and desired one is = %e\n",m-TOV->bar_m);
@@ -163,16 +121,13 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   }
   TOV->ADM_m = TOV->m[TOV->N-1];
   calculate_phi(TOV);
-  calculate_ADM_and_Komar_mass(TOV);/* perform some tests */    
+  calculate_ADM_and_Komar_mass(TOV);/* perform some tests */
   
-  /* having known every thing, now populate pressure, energy density, and rest-mass density */
+  /* having known every thing, now populate pressure */
   for (i = 0; i < TOV->N; ++i)
   {
     tov_eos->h = TOV->h[i];
     TOV->p[i] = tov_eos->pressure(tov_eos);
-    TOV->e[i] = tov_eos->energy_density(tov_eos);
-    TOV->rho0[i] = tov_eos->rest_mass_density(tov_eos);
-    TOV->eps[i] = tov_eos->specific_internal_energy(tov_eos);
   }
   
   isotropic_coords_transformation(TOV);
@@ -207,7 +162,6 @@ TOV_T *TOV_solution(TOV_T *const TOV)
       !isfinite(TOV->p[0])
      )
   {
-    printf("WARNING: TOV Solver: Final check failure.\n");
     TOV->status = 1;
     if (TOV->exit_if_error)
     {
@@ -225,18 +179,6 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   
   /* free global tov_eos */
   free_EoS(tov_eos);
-  
-  /* Useful for debugging
-  printf("TOV Solver END }\n");//////////
-  printf("\t%-12s| %-12i\n", "Status", TOV->status);
-  printf("\t%-12s| %-12E\n", "TOV->r", TOV->r[TOV->N-1]);
-  printf("\t%-12s| %-12E\n", "TOV->rbar", TOV->rbar[TOV->N-1]);
-  printf("\t%-12s| %-12E\n", "TOV->ADM_m", TOV->ADM_m);
-  printf("\t%-12s| %-12E\n", "TOV->bar_m", TOV->bar_m);
-  printf("\t%-12s| %-12E\n", "TOV->psi[0]", TOV->psi[0]);
-  printf("\t%-12s| %-12E\n", "TOV->h[0]", TOV->h[0]);
-  printf("\t%-12s| %-12E\n", "TOV->p[0]", TOV->p[0]);
-  */
   
   return TOV;
 }
@@ -394,9 +336,7 @@ static void calculate_ADM_and_Komar_mass(TOV_T *const TOV)
   /* some test control */
   if (GRT(fabs(Komar_mass-ADM_mass),tol))/* virial theorem */
   {
-    //////////
-    // WARNING: Komar/ADM mismatch error suppressed.
-    //TOV->status = 1;
+    TOV->status = 1;
     //if (TOV->exit_if_error)
       //Error0("Komar mass and ADM mass must be equal!\n");
     fprintf(stderr,"*** A big mass difference: Komar mass = %g, "
@@ -509,7 +449,6 @@ static void solve_ODE_enthalpy_approach(TOV_T *const TOV)
 {
   double *const r = TOV->r;
   double *const m = TOV->m;
-  double *const m0 = TOV->m0;
   double *const h = TOV->h;
   const double b = 1;/* h at the NS surface */
   const double a = TOV->h_cent;/* h at the center of NS */
@@ -519,7 +458,7 @@ static void solve_ODE_enthalpy_approach(TOV_T *const TOV)
                                // of h compare to the NS's surface. */
   double t;/* independent variable h, we conventionally called it t */
   Uint i;
-  enum {R = 0,M = 1, M0 = 2};
+  enum {R = 0,M = 1};
   
   /* initialization */
   h[0] = a;/* h at center */
@@ -528,37 +467,29 @@ static void solve_ODE_enthalpy_approach(TOV_T *const TOV)
   r[1] = r_approx(h[1],a);
   m[0] = 0;/* m at center is 0 */
   m[1] = m_approx(h[1],a);
-  m0[0] = 0;/* m0 at center is 0 */
-  m0[1] = m0_approx(h[1],a);
   t = h[1];
   
   /* for all points */
   for (i = 2; i < TOV->N; ++i)
   {
-    double k1[3],k2[3],k3[3],k4[3];/* variables for Runge-Kutta method of 4th order */
+    double k1[2],k2[2],k3[2],k4[2];/* variables for Runge-Kutta method of 4th order */
     
     /* dr/dh and dm/dh equations: */
     k1[R] = s*dr_dh(t,r[i-1],m[i-1]);
     k1[M] = s*dm_dh(t,r[i-1],m[i-1]);
-    k1[M0] = s*dm0_dh(t,r[i-1],m[i-1]);
     
     k2[R] = s*dr_dh(t+s/2,r[i-1]+k1[R]/2,m[i-1]+k1[M]/2);
     k2[M] = s*dm_dh(t+s/2,r[i-1]+k1[R]/2,m[i-1]+k1[M]/2);
-    k2[M0] = s*dm0_dh(t+s/2,r[i-1]+k1[R]/2,m[i-1]+k1[M]/2);
     
     k3[R] = s*dr_dh(t+s/2,r[i-1]+k2[R]/2,m[i-1]+k2[M]/2);
     k3[M] = s*dm_dh(t+s/2,r[i-1]+k2[R]/2,m[i-1]+k2[M]/2);
-    k3[M0] = s*dm0_dh(t+s/2,r[i-1]+k2[R]/2,m[i-1]+k2[M]/2);
     
     k4[R] = s*dr_dh(t+s,r[i-1]+k3[R],m[i-1]+k3[M]);
     k4[M] = s*dm_dh(t+s,r[i-1]+k3[R],m[i-1]+k3[M]);
-    k4[M0] = s*dm0_dh(t+s,r[i-1]+k3[R],m[i-1]+k3[M]);
     
     /* updating the values */
     r[i] = r[i-1]+(k1[R]+2*k2[R]+2*k3[R]+k4[R])/6;
     m[i] = m[i-1]+(k1[M]+2*k2[M]+2*k3[M]+k4[M])/6;
-    m0[i] = m0[i-1]+(k1[M0]+2*k2[M0]+2*k3[M0]+k4[M0])/6;
-    
     t = a+i*s;
     h[i] = t;
   }
@@ -596,23 +527,6 @@ static double m_approx(const double h,const double h_c/* central enthalpy */)
       (1-3./5.*de_dh*(h_c-h)/e);
   
   return m;
-}
-
-/* ->return value: approximate m0 near center of star */
-static double m0_approx(const double h, const double h_c/* central enthalpy */)
-{
-  double m0 = 0;
-  double e,de_dh;
-  
-  tov_eos->h = h_c;
-  e = tov_eos->energy_density(tov_eos);
-  de_dh = tov_eos->de_dh(tov_eos);
-  
-  // NOTE: Uses same approximation as m(r), neglecting denominator.
-  m0 = 4*M_PI/3*e*pow(r_approx(h,h_c),3)*
-      (1-3./5.*de_dh*(h_c-h)/e);
-      
-  return m0;
 }
 
 /* rbar equation:
@@ -660,21 +574,6 @@ static double dm_dh(const double h,const double r, const double m)
   return f;
 }
 
-/* m0 (rest-mass) eqn:
-// \frac {dm0}{dh} = \frac{4\pi r^{2}e}{\sqrt{1 - \frac{2m}{r}} \frac {dr}{dh}\\. */
-static double dm0_dh(const double h, const double r, const double m)
-{
-  double f;
-  double e;/* energy density */
-  const double r2 = r*r;
-  
-  tov_eos->h = h;
-  e = tov_eos->energy_density(tov_eos);
-  f = (4*M_PI*r2*e*dr_dh(h,r,m)) / sqrt(1 - 2*m/r);
-  
-  return f;
-}
-
 /* ->return value: a pristine TOV struct */
 TOV_T *TOV_init(void)
 {
@@ -690,12 +589,8 @@ void TOV_free(TOV_T *TOV)
     return;
     
   Free(TOV->m);
-  Free(TOV->m0);
   Free(TOV->r);
   Free(TOV->p);
-  Free(TOV->e);
-  Free(TOV->rho0);
-  Free(TOV->eps);
   Free(TOV->h);
   Free(TOV->phi);
   Free(TOV->rbar);
