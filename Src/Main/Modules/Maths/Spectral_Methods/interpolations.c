@@ -45,7 +45,7 @@ double execute_interpolation(Interpolation_T *const interp_struct)
 /* compute a derivative of the interpolant function at the given point h */
 double execute_1st_deriv_interpolation(Interpolation_T *const interp_struct)
 {
-  return interp_struct->interpolation_derivative_func(interp_struct);
+  return interp_struct->interpolation_1st_deriv(interp_struct);
 }
 
 /* planning interpolation function based on 
@@ -65,7 +65,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
     order_arrays_natural_cubic_spline_1d(interp_s);
     find_coeffs_natural_cubic_spline_1d(interp_s);
     interp_s->interpolation_func = interpolation_natural_cubic_spline_1d;
-    interp_s->interpolation_derivative_func = derivative_natural_cubic_spline_1d;
+    interp_s->interpolation_1st_deriv = derivative_natural_cubic_spline_1d;
   }
   else if (strstr_i(interp_s->method,"Spectral") || 
            strstr_i(PgetsEZ("Interpolation_Method"),"Spectral"))
@@ -108,7 +108,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
     
     find_coeffs_Hermite_1d(interp_s);
     interp_s->interpolation_func = interpolation_Hermite_1d;
-    interp_s->interpolation_derivative_func = derivative_Hermite_1d;
+    interp_s->interpolation_1st_deriv = derivative_Hermite_1d;
   }
   else
   {

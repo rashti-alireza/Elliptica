@@ -24,13 +24,13 @@ typedef double fInterpolation_T(struct INTERPOLATION_T *const interp_s);
 typedef struct INTERPOLATION_T
 {
   const char *method;
+  fInterpolation_T *interpolation_func;/* interpolation function (interpolant) */
+  fInterpolation_T *interpolation_1st_deriv;/* first derivative of the interpolant(if available) */
 
   //////////////
   // spectral //
   //////////////
   struct FIELD_T *field;/* interesting field for interpolation */
-  fInterpolation_T *interpolation_func;/* interpolation function (interpolant) */
-  fInterpolation_T *interpolation_derivative_func;/* derivatives of the interpolant */
   double X,Y,Z;/* where interpolant calculated. 
                // MUST be provided in coords sys. used by patch.
                */
