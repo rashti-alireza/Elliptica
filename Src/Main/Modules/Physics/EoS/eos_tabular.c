@@ -144,22 +144,13 @@ void eos_tab_read_table(EoS_T* const eos)
     while (fgets(line, sizeof(line), table_file))
     {
       Uint l;
-      // skip empty lines
-      if (strspn(line, " \t\r\n") == strlen(line))
-      {
-        continue;
-      }
       // skip comment lines
       if (line[0] == '#')
       {
         continue;
       }
-      // skip table num. of lines
-      if (sscanf(line,"%u",&l) == 1)
-      {
-        continue;
-      }
       // populate thermo. vars.
+      // NOTE: it only reads the matching lines.
       if (sscanf(line,"%u %lf %lf %lf",&l, &rho0_pnt, &e_pnt, &p_pnt) == 4)
       {
         rho0_tab[num_tab_row] = rho0_pnt;
@@ -172,10 +163,6 @@ void eos_tab_read_table(EoS_T* const eos)
                  "please increase the macro EOS_MAX_NUM_ROW_TABLE.");
         }
       }
-      else
-      {
-        Errors("Cannot read eos line: %s.",line);
-      }
     }
   }
   else if (strcmp_i(Gets(P_"table_format"), 
@@ -185,25 +172,15 @@ void eos_tab_read_table(EoS_T* const eos)
     num_tab_row = 0;
     while (fgets(line, sizeof(line), table_file))
     {
-      Uint l;
-      // skip empty lines
-      if (strspn(line, " \t\r\n") == strlen(line))
-      {
-        continue;
-      }
       // skip comment lines
       if (line[0] == '#')
-      {
-        continue;
-      }
-      // skip table num. of lines
-      if (sscanf(line,"%u",&l) == 1)
       {
         continue;
       }
       // populate thermo. vars.
       if (sscanf(line,"%lf %lf %lf",&rho0_pnt, &e_pnt, &p_pnt) == 3)
       {
+        //printf("read line = %s\n",line);
         rho0_tab[num_tab_row] = rho0_pnt;
         e_tab[num_tab_row]    = e_pnt;
         p_tab[num_tab_row]    = p_pnt;
@@ -214,10 +191,6 @@ void eos_tab_read_table(EoS_T* const eos)
                  "please increase the macro EOS_MAX_NUM_ROW_TABLE.");
         }
       }
-      else
-      {
-        Errors("Cannot read eos line: %s.",line);
-      }
     }
   }
   else
@@ -226,6 +199,10 @@ void eos_tab_read_table(EoS_T* const eos)
   }
   Fclose(table_file);
   
+  if (num_tab_row == 0)
+  {
+    Error0("nothing read from the table.");
+  }
   // adjust to the actual size
   p_tab = realloc(p_tab,num_tab_row*sizeof(*p_tab)); IsNull(p_tab);
   e_tab = realloc(p_tab,num_tab_row*sizeof(*e_tab)); IsNull(e_tab);
