@@ -103,7 +103,7 @@ int fourier_transformation_tests(Grid_T *const grid);
 int Ylm_transformation_tests(Grid_T *const grid);
 Interpolation_T *init_interpolation(void);
 double execute_interpolation(Interpolation_T *const interp_s);
-double execute_derivative_interpolation(Interpolation_T *const interp_s);
+double execute_1st_deriv_interpolation(Interpolation_T *const interp_s);
 void plan_interpolation(Interpolation_T *const interp_s);
 void get_Ylm_coeffs(double *const realClm,double *const imagClm,const double *const f,const Uint Ntheta,const Uint Nphi,const Uint Lmax);
 double interpolation_Ylm(const double *const realClm,const double *const imagClm,const Uint Lmax, const double theta, const double phi);

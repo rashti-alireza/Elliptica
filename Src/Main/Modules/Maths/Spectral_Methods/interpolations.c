@@ -43,7 +43,7 @@ double execute_interpolation(Interpolation_T *const interp_struct)
 }
 
 /* compute a derivative of the interpolant function at the given point h */
-double execute_derivative_interpolation(Interpolation_T *const interp_struct)
+double execute_1st_deriv_interpolation(Interpolation_T *const interp_struct)
 {
   return interp_struct->interpolation_derivative_func(interp_struct);
 }
@@ -236,7 +236,7 @@ static void find_coeffs_natural_cubic_spline_1d(Interpolation_T *const interp_s)
 // value = execute_interpolation(interp_s);
 //
 // ** evaluating the first order derivative of the interpolant at h **
-// df_dh = execute_derivative_interpolation(interp_s);
+// df_dh = execute_1st_deriv_interpolation(interp_s);
 //
 // ** freeing **
 // free_interpolation(interp_s);
@@ -919,7 +919,7 @@ static double fd_Fornberg_Hermite_1d(Interpolation_T *const interp_s)
 // value = execute_interpolation(interp_s);
 //
 // ** evaluating the first order derivative of the interpolant at h **
-// df_dh = execute_derivative_interpolation(interp_s);
+// df_dh = execute_1st_deriv_interpolation(interp_s);
 //
 // ** freeing **
 // free_interpolation(interp_s);

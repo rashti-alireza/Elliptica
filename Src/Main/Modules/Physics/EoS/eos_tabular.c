@@ -83,7 +83,7 @@ static double dp_dh_hermite_log(EoS_T* const eos)
 {
   const double f = eos->pressure(eos);
   const double h = eos->h;
-  const double dlogf_dlogh = execute_derivative_interpolation(eos->spline->interp_p);
+  const double dlogf_dlogh = execute_1st_deriv_interpolation(eos->spline->interp_p);
   
   return (f / h ) * dlogf_dlogh;
 }
@@ -94,7 +94,7 @@ static double de_dh_hermite_log(EoS_T* const eos)
 {
   const double f = eos->energy_density(eos);
   const double h = eos->h;
-  const double dlogf_dlogh = execute_derivative_interpolation(eos->spline->interp_e);
+  const double dlogf_dlogh = execute_1st_deriv_interpolation(eos->spline->interp_e);
   
   return (f / h ) * dlogf_dlogh;
 }
