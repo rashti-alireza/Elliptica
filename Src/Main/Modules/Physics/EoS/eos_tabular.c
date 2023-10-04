@@ -143,6 +143,7 @@ void eos_tab_read_table(EoS_T* const eos)
     num_tab_row = 0;
     while (fgets(line, sizeof(line), table_file))
     {
+      Uint l;
       // skip empty lines
       if (strspn(line, " \t\r\n") == strlen(line))
       {
@@ -154,13 +155,12 @@ void eos_tab_read_table(EoS_T* const eos)
         continue;
       }
       // skip table num. of lines
-      if (scanf(line,"%u") == 1)
+      if (sscanf(line,"%u",&l) == 1)
       {
         continue;
       }
       // populate thermo. vars.
-      Uint l;
-      if (scanf(line,"%u %0.15e %0.15e %0.15e",&l, &rho0_pnt, &e_pnt, &p_pnt) == 4)
+      if (sscanf(line,"%u %lf %lf %lf",&l, &rho0_pnt, &e_pnt, &p_pnt) == 4)
       {
         rho0_tab[num_tab_row] = rho0_pnt;
         e_tab[num_tab_row]    = e_pnt;
@@ -197,12 +197,12 @@ void eos_tab_read_table(EoS_T* const eos)
         continue;
       }
       // skip table num. of lines
-      if (scanf(line,"%u",&l) == 1)
+      if (sscanf(line,"%u",&l) == 1)
       {
         continue;
       }
       // populate thermo. vars.
-      if (scanf(line,"%0.15e %0.15e %0.15e",&rho0_pnt, &e_pnt, &p_pnt) == 3)
+      if (sscanf(line,"%lf %lf %lf",&rho0_pnt, &e_pnt, &p_pnt) == 3)
       {
         rho0_tab[num_tab_row] = rho0_pnt;
         e_tab[num_tab_row]    = e_pnt;
