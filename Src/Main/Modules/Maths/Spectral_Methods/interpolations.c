@@ -589,19 +589,27 @@ static double T(const Uint n,const Uint i,const double x)
 void free_interpolation(Interpolation_T *interp_s)
 {
   if (!interp_s)
+  {
     return;
+  }
   if (strstr_i(interp_s->method,"Natural_Cubic_Spline_1D"))
   {
-    if (interp_s->N_cubic_spline_1d->b)
-      free(interp_s->N_cubic_spline_1d->b);
-    if (interp_s->N_cubic_spline_1d->c)
-      free(interp_s->N_cubic_spline_1d->c);
-    if (interp_s->N_cubic_spline_1d->d)
-      free(interp_s->N_cubic_spline_1d->d);
+    Free(interp_s->N_cubic_spline_1d->b);
+    Free(interp_s->N_cubic_spline_1d->c);
+    Free(interp_s->N_cubic_spline_1d->d);
     if (interp_s->N_cubic_spline_1d->Alloc_Mem)
     {
       free(interp_s->N_cubic_spline_1d->x);
       free(interp_s->N_cubic_spline_1d->f);
+    }
+  }
+  else if (strstr_i(interp_s->method,"Hermite_1d"))
+  {
+    
+    if (interp_s->Hermite_1d->Alloc_Mem)
+    {
+      free(interp_s->Hermite_1d->x);
+      free(interp_s->Hermite_1d->f);
     }
   }
   free(interp_s);
@@ -709,7 +717,7 @@ static void find_coeffs_Hermite_1d(Interpolation_T *const interp_s)
   const double *const f = interp_s->Hermite_1d->f;
   double *const fp = alloc_double(interp_s->Hermite_1d->N);
   const int N = (int)interp_s->Hermite_1d->N;
-  const int n = (int)interp_s->spline_order - 1;
+  const int n = (int)interp_s->Hermite_1d->spline_order - 1;
   double *const a = alloc_double(((Uint)N-1)*(2*(Uint)n+2));
   // a[] is a linearized 2D array where a[i,j] is
   // the j-th spline coefficient over interval i.
@@ -717,8 +725,8 @@ static void find_coeffs_Hermite_1d(Interpolation_T *const interp_s)
   // Error if not enough data points for desired spline order.
   if (n+1 > N)
   { 
-    fprintf(strerr,"Hermite spline 1d order: %i\n", n+1);
-    fprintf(strerr,"Numbere of data points : %u\n", interp_s->Hermite_1d->N);
+    printf("Hermite spline 1d order: %i\n", n+1);
+    printf("Numbere of data points : %u\n", interp_s->Hermite_1d->N);
     Error0("Hermite spline error: Not enough data points for desired spline order.");
   }
   
@@ -786,13 +794,15 @@ static void find_coeffs_Hermite_1d(Interpolation_T *const interp_s)
 static double derivative_Hermite_1d(Interpolation_T *const interp_s)
 {
   if (!interp_s->Hermite_1d->Order)
-  order_arrays_Hermite_1d(interp_s);
+  {
+    order_arrays_Hermite_1d(interp_s);
+  }
 
   const double *const x = interp_s->Hermite_1d->x;
   const double *const a = interp_s->Hermite_1d->a;
   const double h = interp_s->Hermite_1d->h;
   const int N = (int)interp_s->Hermite_1d->N;
-  const int n = (int)interp_s->spline_order - 1;
+  const int n = (int)interp_s->Hermite_1d->spline_order - 1;
   double ret = DBL_MAX;// it's important to be max double
   int i = 0;
   Flag_T flg = NONE;
@@ -996,23 +1006,57 @@ static double fd_1st_deriv_3rd_order_hermite_1d(Interpolation_T *const interp_s)
   return ret;
 }  
 
-// Checks if method is available for given M, n.
-static Uint interpolation_check_manual_FDM(Interpolation_T *const interp_s)
+// Executes Hermite spline interpolation:
+// f(h) ~ H(h) = Q00 + Q11(h-x0) + Q22(h-x0)^2
+//        + Q33(h-x0)^2(h-x1) + ... + Q2n+1,2n+1(h-x0)^2...(h-xn).
+static double interpolation_Hermite_1d(Interpolation_T *const interp_s)
 {
-  const Uint n = interp_s->fd_accuracy_order;
-  const Uint M = interp_s->fd_derivative_order;
-  const Uint N = *interp_s->N;
-  
-  // Return success iff method available.
-  if (M == 1)
+  if (!interp_s->Hermite_1d->Order)
   {
-    if (n == 3)
+    order_arrays_Hermite_1d(interp_s);
+  }
+  const double *const x = interp_s->Hermite_1d->x;
+  const double *const a = interp_s->Hermite_1d->a;
+  const double h = interp_s->Hermite_1d->h;
+  const int N = (int)interp_s->Hermite_1d->N;
+  const int n = (int)interp_s->spline_order - 1;
+  double ret = DBL_MAX;// it's important to be max double
+  int i = 0;
+  Flag_T flg = NONE;
+  
+  // Finds the spline interval
+  for (i = 0; i < N-1; ++i)
+  {
+    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
     {
-      return 1;
+      flg = FOUND;
+      break;
     }
   }
+
+  if (flg != FOUND)
+  {
+    if (!interp_s->Hermite_1d->No_Warn)
+    {
+      printf("Domain: [%e, %e]\n", x[-1], x[N-1]);
+      printf("Point for interpolation: %e\n", h);
+      Warning("The given point for the interpolation is out of the domain.\n");
+    }
+    return ret;
+  }
+ 
+  int l = i;
+  while (l >= N - (n+1))
+  { l--; }
   
-  printf("Manual FDM methods: %i-th derivative to order of accuracy %i not available.\n", M, n);
-  Error0("Manual FDM invalid parameters.");
-  return 0;
+  ret = 0;
+  double ret_term = 1;
+  // TODO: add comment
+  for (int j = 0; j <= 2*n+1; j++)
+  {
+    ret += a[i_j_to_ij(2*n+1,l,j)]*ret_term;
+    ret_term *= (h - x[l+(int)floor(j/2)]);
+  }
+  
+  return ret;
 }
