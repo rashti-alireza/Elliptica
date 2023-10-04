@@ -22,7 +22,7 @@
 //
 // ** evaluating interpolation **
 // value = execute_interpolation(interp_s);
-// 
+//
 // ** freeing **
 // free_interpolation(interp_s);
 */
@@ -42,6 +42,12 @@ double execute_interpolation(Interpolation_T *const interp_struct)
   return interp_struct->interpolation_func(interp_struct);
 }
 
+/* compute a derivative of the interpolant function at the given point h */
+double execute_derivative_interpolation(Interpolation_T *const interp_struct)
+{
+  return interp_struct->interpolation_derivative_func(interp_struct);
+}
+
 /* planning interpolation function based on 
 // input file and patch and flags in interp_s. */
 void plan_interpolation(Interpolation_T *const interp_s)
@@ -59,7 +65,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
     order_arrays_natural_cubic_spline_1d(interp_s);
     find_coeffs_natural_cubic_spline_1d(interp_s);
     interp_s->interpolation_func = interpolation_natural_cubic_spline_1d;
-    interp_s->interpolation_func = derivative_natural_cubic_spline_1d;
+    interp_s->interpolation_derivative_func = derivative_natural_cubic_spline_1d;
   }
   else if (strstr_i(interp_s->method,"Spectral") || 
            strstr_i(PgetsEZ("Interpolation_Method"),"Spectral"))
@@ -87,7 +93,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
     */
     interp_s->interpolation_func = func(interp_s);
   }
-  else if (strstr_i(interp_s->method,"Hermite_1d"))
+  else if (strstr_i(interp_s->method,"Hermite_1D"))
   {
     // some checks
     if (interp_s->Hermite_1d->fd_accuracy_order == 0)
@@ -228,6 +234,10 @@ static void find_coeffs_natural_cubic_spline_1d(Interpolation_T *const interp_s)
 //
 // ** evaluating interpolation **
 // value = execute_interpolation(interp_s);
+//
+// ** evaluating the first order derivative of the interpolant at h **
+// df_dh = execute_derivative_interpolation(interp_s);
+//
 // ** freeing **
 // free_interpolation(interp_s);
 */
@@ -883,9 +893,37 @@ static double fd_Fornberg_Hermite_1d(Interpolation_T *const interp_s)
   return finite_difference_Fornberg(x, f, h, M, n, N);
 }
 
-// Executes Hermite spline interpolation:
+/* tutorial:
+// =========
+// given the values of the function f(x) for the points x_0, x_1, ... , and x_n,
+// it calculates the value of f(h) for an h in [x_0, x_n]
+// using Hermit in 1-d:
 // f(h) ~ H(h) = Q00 + Q11(h-x0) + Q22(h-x0)^2
 //        + Q33(h-x0)^2(h-x1) + ... + Q2n+1,2n+1(h-x0)^2...(h-xn).
+//
+// NOTE: this algorithm doesn't work for an arbitrary order of x_i's.
+// so ensure x_i's are in a decreasing or an increasing order.
+//
+// ** filling the interpolation struct **
+// Interpolation_T *interp_s = init_interpolation();
+// interp_s->method          = "Hermite_1D";
+// interp_s->Hermite_1d->f = f;
+// interp_s->Hermite_1d->x = x;
+// interp_s->Hermite_1d->h = h;// the point that we wanna interpolate f, i.e., f(h)
+// interp_s->Hermite_1d->N = 20;// the dimension of the array f and x
+//
+// ** planning the appropriate function for interpolation **
+// plan_interpolation(interp_s);
+//
+// ** evaluating interpolation **
+// value = execute_interpolation(interp_s);
+//
+// ** evaluating the first order derivative of the interpolant at h **
+// df_dh = execute_derivative_interpolation(interp_s);
+//
+// ** freeing **
+// free_interpolation(interp_s);
+*/
 static double interpolation_Hermite_1d(Interpolation_T *const interp_s)
 {
   if (!interp_s->Hermite_1d->Order)
