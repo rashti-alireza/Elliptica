@@ -896,7 +896,7 @@ static double interpolation_Hermite_1d(Interpolation_T *const interp_s)
   const double *const a = interp_s->Hermite_1d->a;
   const double h = interp_s->Hermite_1d->h;
   const int N = (int)interp_s->Hermite_1d->N;
-  const int n = (int)interp_s->spline_order - 1;
+  const int n = (int)interp_s->Hermite_1d->spline_order - 1;
   double ret = DBL_MAX;// it's important to be max double
   int i = 0;
   Flag_T flg = NONE;
