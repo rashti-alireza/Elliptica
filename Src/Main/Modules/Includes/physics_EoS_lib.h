@@ -51,10 +51,6 @@ typedef struct EquationOfState_T
    double *p_sample;/* pressure sample values */
    double *e_sample;/* energy_density sample values */
    double *rho0_sample;/* rest_mass_density sample values */
-   void *interp_p;/* spline interpolation struct for p */
-   void *interp_e;/* spline interpolation struct for e */
-   void *interp_rho0;/* spline interpolation struct for rho0 */
-   
    // Data arrays for log-log interpolation
    double *h_log;     // Specific enthalpy
    double *p_log;     // Pressure
@@ -64,14 +60,9 @@ typedef struct EquationOfState_T
    double c_rho0;     // Constant added to data to avoid log(0) in rho0.
    double c_e;        // Constant added to data to avoid log(0) in e.
    Uint use_log_approach: 1;
-   
-   // Root finder approach
-   // Void pointer is cast to Root_Finder_T*
-   void *root_finder; // used for root finder approach to h(rho0).
-   void *interp_p_rho0; // For interpolating pressure from energy density
-   void *interp_e_rho0; // For interpolating total energy density from rest-mass density
-   double rho0; /* used for root finder approach */
-   double (*enthalpy_eqn[1])(void* eos, const double* params); // Eqn for root finder //
+   void *interp_p;/* spline interpolation struct for p */
+   void *interp_e;/* spline interpolation struct for e */
+   void *interp_rho0;/* spline interpolation struct for rho0 */
  }spline[1];
  
 }EoS_T;
