@@ -180,7 +180,6 @@ void eos_tab_read_table(EoS_T* const eos)
       // populate thermo. vars.
       if (sscanf(line,"%lf %lf %lf",&rho0_pnt, &e_pnt, &p_pnt) == 3)
       {
-        //printf("read line = %s\n",line);
         rho0_tab[num_tab_row] = rho0_pnt;
         e_tab[num_tab_row]    = e_pnt;
         p_tab[num_tab_row]    = p_pnt;
@@ -205,8 +204,8 @@ void eos_tab_read_table(EoS_T* const eos)
   }
   // adjust to the actual size
   p_tab = realloc(p_tab,num_tab_row*sizeof(*p_tab)); IsNull(p_tab);
-  e_tab = realloc(p_tab,num_tab_row*sizeof(*e_tab)); IsNull(e_tab);
-  rho0_tab = realloc(p_tab,num_tab_row*sizeof(*rho0_tab)); IsNull(rho0_tab);
+  e_tab = realloc(e_tab,num_tab_row*sizeof(*e_tab)); IsNull(e_tab);
+  rho0_tab = realloc(rho0_tab,num_tab_row*sizeof(*rho0_tab)); IsNull(rho0_tab);
   h_tab    = alloc_double(num_tab_row);
   
   // unit conversion
