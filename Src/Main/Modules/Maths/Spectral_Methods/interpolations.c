@@ -55,7 +55,10 @@ void plan_interpolation(Interpolation_T *const interp_s)
   Uint i;
   Patch_T *patch;
   /* choose method of interpolation based on inputs and patch
-  // and narrow down the options. */
+  // and narrow down the options.
+  // NOTE: the order matters. if no method matches and the general parameter
+  // "Interpolation_Method" is set to "spectral", then the spectral method kicks in.
+  */
   if (strstr_i(interp_s->method,"Neville_1D"))
   {
     interp_s->interpolation_func = interpolation_Neville_1d;
@@ -66,6 +69,23 @@ void plan_interpolation(Interpolation_T *const interp_s)
     find_coeffs_natural_cubic_spline_1d(interp_s);
     interp_s->interpolation_func = interpolation_natural_cubic_spline_1d;
     interp_s->interpolation_1st_deriv = derivative_natural_cubic_spline_1d;
+  }
+  else if (strstr_i(interp_s->method,"Hermite_1D"))
+  {
+    // some checks
+    if (interp_s->Hermite_1d->fd_accuracy_order == 0)
+    {
+      Error0("no finite difference order is set for Hermit 1d method.");
+    }
+    if (interp_s->Hermite_1d->spline_order == 0)
+    {
+      Error0("no spline order is set for Hermit method");
+    }
+    order_arrays_Hermite_1d(interp_s);
+    
+    find_coeffs_Hermite_1d(interp_s);
+    interp_s->interpolation_func = interpolation_Hermite_1d;
+    interp_s->interpolation_1st_deriv = derivative_Hermite_1d;
   }
   else if (strstr_i(interp_s->method,"Spectral") || 
            strstr_i(PgetsEZ("Interpolation_Method"),"Spectral"))
@@ -92,23 +112,6 @@ void plan_interpolation(Interpolation_T *const interp_s)
     // and then assign which function should be called.
     */
     interp_s->interpolation_func = func(interp_s);
-  }
-  else if (strstr_i(interp_s->method,"Hermite_1D"))
-  {
-    // some checks
-    if (interp_s->Hermite_1d->fd_accuracy_order == 0)
-    {
-      Error0("no finite difference order is set for Hermit 1d method.");
-    }
-    if (interp_s->Hermite_1d->spline_order == 0)
-    {
-      Error0("no spline order is set for Hermit method");
-    }
-    order_arrays_Hermite_1d(interp_s);
-    
-    find_coeffs_Hermite_1d(interp_s);
-    interp_s->interpolation_func = interpolation_Hermite_1d;
-    interp_s->interpolation_1st_deriv = derivative_Hermite_1d;
   }
   else
   {
