@@ -2,8 +2,8 @@
 
 // Implements thermodynamic functions for a tabular equation of state.
 
-// assumes a generic Hermite interpolant in log, log(y) = log(y(log(h)))
-// ->return: y(in non log format)
+// assumes a generic Hermite interpolant in Table_Log, Table_Log(y) = Table_Log(y(Table_Log(h)))
+// ->return: y(in non Table_Log format)
 static double logy_of_logh_hermite(EoS_T* const eos, 
                                  Interpolation_T *const interp_s,
                                  const double y_shift/* shifting constant */,
@@ -19,7 +19,7 @@ static double logy_of_logh_hermite(EoS_T* const eos,
   h = (h >= h_ceil)  ? h_ceil  : h;
   // NOTE: we modify eos->h here:
   eos->h = h;
-  interp_s->Hermite_1d->h = log(h);
+  interp_s->Hermite_1d->h = Table_Log(h);
   y = exp(execute_interpolation(interp_s)) - y_shift;
   
   // TODO: DEBUG, why this happens(if any)?
@@ -29,7 +29,7 @@ static double logy_of_logh_hermite(EoS_T* const eos,
   return (y < y_floor || y == DBL_MAX) ? 0. : y;
 }
 
-// assumes log(p) = hermite(log(h))
+// assumes Table_Log(p) = hermite(Table_Log(h))
 // ->return: p (pressure)
 static double p_of_h_hermite_log(EoS_T* const eos)
 {
@@ -38,7 +38,7 @@ static double p_of_h_hermite_log(EoS_T* const eos)
                          eos->spline->p_shift, eos->spline->p_floor);
 }
 
-// assumes log(e) = hermite(log(h))
+// assumes Table_Log(e) = hermite(Table_Log(h))
 // ->return: e (energy density)
 static double e_of_h_hermite_log(EoS_T* const eos)
 {
@@ -47,7 +47,7 @@ static double e_of_h_hermite_log(EoS_T* const eos)
                          eos->spline->e_shift, eos->spline->e_floor);
 }
 
-// assumes log(rho0) = hermite(log(h))
+// assumes Table_Log(rho0) = hermite(Table_Log(h))
 // ->return: rho0 (rest mass density)
 static double rho0_of_h_hermite_log(EoS_T* const eos)
 {
@@ -78,8 +78,8 @@ static double e0_of_e_and_rho0(EoS_T* const eos)
   return e0;
 }
 
-// dp/dh when we have interpolant log(p) = Hermite(log(h))
-// chain rule: df/dh = ( f(h) / h ) * d(log(f)) / d(log(h)
+// dp/dh when we have interpolant Table_Log(p) = Hermite(Table_Log(h))
+// chain rule: df/dh = ( f(h) / h ) * d(Table_Log(f)) / d(Table_Log(h)
 static double dp_dh_hermite_log(EoS_T* const eos)
 {
   const double f = eos->pressure(eos);
@@ -89,8 +89,8 @@ static double dp_dh_hermite_log(EoS_T* const eos)
   return (f / h ) * dlogf_dlogh;
 }
 
-// de/dh when we have interpolant log(e) = Hermite(log(h))
-// chain rule: df/dh = ( f(h) / h ) * d(log(f)) / d(log(h)
+// de/dh when we have interpolant Table_Log(e) = Hermite(Table_Log(h))
+// chain rule: df/dh = ( f(h) / h ) * d(Table_Log(f)) / d(Table_Log(h)
 static double de_dh_hermite_log(EoS_T* const eos)
 {
   const double f = eos->energy_density(eos);
@@ -297,7 +297,7 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   eos->spline->e_floor = 0.;
   eos->spline->rho0_floor = 0.;
   
-  // shifting to avoid log(0)
+  // shifting to avoid Table_Log(0)
   // TODO: are they the best numbers?
   eos->spline->p_shift = 1E-3;
   eos->spline->e_shift = 1E-3;
@@ -305,10 +305,10 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   
   for (Uint i = 0; i < sample_size; i++)
   {
-    p_log[i]    = log(eos->spline->p_sample[i]    + eos->spline->p_shift);
-    rho0_log[i] = log(eos->spline->rho0_sample[i] + eos->spline->rho0_shift);
-    e_log[i]    = log(eos->spline->e_sample[i]    + eos->spline->e_shift);
-    h_log[i]    = log(eos->spline->h_sample[i]);
+    p_log[i]    = Table_Log(eos->spline->p_sample[i]    + eos->spline->p_shift);
+    rho0_log[i] = Table_Log(eos->spline->rho0_sample[i] + eos->spline->rho0_shift);
+    e_log[i]    = Table_Log(eos->spline->e_sample[i]    + eos->spline->e_shift);
+    h_log[i]    = Table_Log(eos->spline->h_sample[i]);
   }
   eos->spline->h_log    = h_log;
   eos->spline->p_log    = p_log;
