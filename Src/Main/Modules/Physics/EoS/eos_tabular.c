@@ -114,7 +114,9 @@ static double drho0_dh_e_p_h(EoS_T* const eos)
   return drho0_dh;
 }
 
-// read thermo. vars. from a given table
+// 1) read thermo. vars. from a given table
+// 2) convert to geometrised units
+// 3) populate pressure, rest mass density, total energy density, and enthalpy
 void eos_tab_read_table(EoS_T* const eos)
 {
   enum tab_format {
@@ -287,6 +289,7 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   eos->drho0_dh                 = drho0_dh_e_p_h;// NOTE: using consistency eq.
 
   eos->spline->use_log = 1;
+  // TODO: one can set these values from the table?
   eos->spline->h_floor = Getd(P_"enthalpy_floor");
   eos->spline->h_ceil  = Getd(P_"enthalpy_ceiling");
   // TODO: are they fine?
@@ -295,7 +298,7 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   eos->spline->rho0_floor = 0.;
   
   // shifting to avoid log(0)
-  // TODO: are they the best number?
+  // TODO: are they the best numbers?
   eos->spline->p_shift = 1E-3;
   eos->spline->e_shift = 1E-3;
   eos->spline->rho0_shift = 1E-3;
@@ -325,7 +328,7 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   interp_p->Hermite_1d->f = eos->spline->p_log;
   interp_p->Hermite_1d->x = eos->spline->h_log;
   interp_p->Hermite_1d->N = sample_size;
-  interp_p->Hermite_1d->No_Warn  = 1;/* suppress warning */
+  //interp_p->Hermite_1d->No_Warn  = 1;/* suppress warning */
   eos->spline->interp_p = interp_p;
   plan_interpolation(interp_p);
   
@@ -337,7 +340,7 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   interp_e->Hermite_1d->f = eos->spline->e_log;
   interp_e->Hermite_1d->x = eos->spline->h_log;
   interp_e->Hermite_1d->N = sample_size;
-  interp_e->Hermite_1d->No_Warn = 1;/* suppress warning */
+  //interp_e->Hermite_1d->No_Warn = 1;/* suppress warning */
   eos->spline->interp_e = interp_e;
   plan_interpolation(interp_e);
   
@@ -349,7 +352,7 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   interp_rho0->Hermite_1d->f = eos->spline->rho0_log;
   interp_rho0->Hermite_1d->x = eos->spline->h_log;
   interp_rho0->Hermite_1d->N = sample_size;
-  interp_rho0->Hermite_1d->No_Warn = 1;/* suppress warning */
+  ///interp_rho0->Hermite_1d->No_Warn = 1;/* suppress warning */
   eos->spline->interp_rho0 = interp_rho0;
   plan_interpolation(interp_rho0);
 }
@@ -384,7 +387,7 @@ void eos_tab_set_hermite(EoS_T* const eos)
   interp_p->Hermite_1d->f = eos->spline->p_sample;
   interp_p->Hermite_1d->x = eos->spline->h_sample;
   interp_p->Hermite_1d->N = sample_size;
-  interp_p->Hermite_1d->No_Warn  = 1;/* suppress warning */
+  //interp_p->Hermite_1d->No_Warn  = 1;/* suppress warning */
   eos->spline->interp_p = interp_p;
   plan_interpolation(interp_p);
   
@@ -396,7 +399,7 @@ void eos_tab_set_hermite(EoS_T* const eos)
   interp_e->Hermite_1d->f = eos->spline->e_sample;
   interp_e->Hermite_1d->x = eos->spline->h_sample;
   interp_e->Hermite_1d->N = sample_size;
-  interp_e->Hermite_1d->No_Warn = 1;/* suppress warning */
+  //interp_e->Hermite_1d->No_Warn = 1;/* suppress warning */
   eos->spline->interp_e = interp_e;
   plan_interpolation(interp_e);
   
@@ -408,7 +411,7 @@ void eos_tab_set_hermite(EoS_T* const eos)
   interp_rho0->Hermite_1d->f = eos->spline->rho0_sample;
   interp_rho0->Hermite_1d->x = eos->spline->h_sample;
   interp_rho0->Hermite_1d->N = sample_size;
-  interp_rho0->Hermite_1d->No_Warn = 1;/* suppress warning */
+  //interp_rho0->Hermite_1d->No_Warn = 1;/* suppress warning */
   eos->spline->interp_rho0 = interp_rho0;
   plan_interpolation(interp_rho0);
 }
