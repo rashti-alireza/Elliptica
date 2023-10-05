@@ -956,7 +956,7 @@ static double interpolation_Hermite_1d(Interpolation_T *const interp_s)
   {
     if (!interp_s->Hermite_1d->No_Warn)
     {
-      printf("Domain: [%e, %e]\n", x[-1], x[N-1]);
+      printf("Domain: [%e, %e]\n", x[0], x[N-1]);
       printf("Point for interpolation: %e\n", h);
       Warning("The given point for the interpolation is out of the domain.\n");
     }
