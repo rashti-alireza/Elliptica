@@ -59,9 +59,9 @@ typedef struct EquationOfState_T
    double *p_log;     // Pressure
    double *e_log;     // Total energy density
    double *rho0_log;  // Rest-mass density
-   double c_p;        // Constant added to data to avoid log(0) in p.
-   double c_rho0;     // Constant added to data to avoid log(0) in rho0.
-   double c_e;        // Constant added to data to avoid log(0) in e.
+   double p_shift;    // Constant added to data to avoid log(0) in p.
+   double rho0_shift; // Constant added to data to avoid log(0) in rho0.
+   double e_shift;    // Constant added to data to avoid log(0) in e.
    Uint use_log: 1;
    void *interp_p;/* spline interpolation struct for p */
    void *interp_e;/* spline interpolation struct for e */

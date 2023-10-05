@@ -6,7 +6,7 @@
 // ->return: y(in non log format)
 static double logy_of_logh_hermite(EoS_T* const eos, 
                                  Interpolation_T *const interp_s,
-                                 const double c_y/* shifting constant */,
+                                 const double y_shift/* shifting constant */,
                                  const double y_floor)
 {
   const double h_floor = eos->spline->h_floor;
@@ -20,7 +20,7 @@ static double logy_of_logh_hermite(EoS_T* const eos,
   // NOTE: we modify eos->h here:
   eos->h = h;
   interp_s->Hermite_1d->h = log(h);
-  y = exp(execute_interpolation(interp_s)) - c_y;
+  y = exp(execute_interpolation(interp_s)) - y_shift;
   
   // TODO: DEBUG, why this happens(if any)?
   assert(y != DBL_MAX);
@@ -35,7 +35,7 @@ static double p_of_h_hermite_log(EoS_T* const eos)
 {
   return
     logy_of_logh_hermite(eos, eos->spline->interp_p,
-                         eos->spline->c_p, eos->spline->p_floor);
+                         eos->spline->p_shift, eos->spline->p_floor);
 }
 
 // assumes log(e) = hermite(log(h))
@@ -44,7 +44,7 @@ static double e_of_h_hermite_log(EoS_T* const eos)
 {
   return
     logy_of_logh_hermite(eos, eos->spline->interp_e,
-                         eos->spline->c_e, eos->spline->e_floor);
+                         eos->spline->e_shift, eos->spline->e_floor);
 }
 
 // assumes log(rho0) = hermite(log(h))
@@ -53,7 +53,7 @@ static double rho0_of_h_hermite_log(EoS_T* const eos)
 {
   return 
     logy_of_logh_hermite(eos, eos->spline->interp_rho0,
-                         eos->spline->c_rho0, eos->spline->rho0_floor);
+                         eos->spline->rho0_shift, eos->spline->rho0_floor);
 }
 
 // assumes rho0 = (e+p)/h
@@ -296,15 +296,15 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   
   // shifting to avoid log(0)
   // TODO: are they the best number?
-  eos->spline->c_p = 1E-3;
-  eos->spline->c_e = 1E-3;
-  eos->spline->c_rho0 = 1E-3;
+  eos->spline->p_shift = 1E-3;
+  eos->spline->e_shift = 1E-3;
+  eos->spline->rho0_shift = 1E-3;
   
   for (Uint i = 0; i < sample_size; i++)
   {
-    p_log[i]    = log(eos->spline->p_sample[i]    + eos->spline->c_p);
-    rho0_log[i] = log(eos->spline->rho0_sample[i] + eos->spline->c_rho0);
-    e_log[i]    = log(eos->spline->e_sample[i]    + eos->spline->c_e);
+    p_log[i]    = log(eos->spline->p_sample[i]    + eos->spline->p_shift);
+    rho0_log[i] = log(eos->spline->rho0_sample[i] + eos->spline->rho0_shift);
+    e_log[i]    = log(eos->spline->e_sample[i]    + eos->spline->e_shift);
     h_log[i]    = log(eos->spline->h_sample[i]);
   }
   eos->spline->h_log    = h_log;

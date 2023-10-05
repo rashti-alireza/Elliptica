@@ -14,7 +14,7 @@ void eos_tab_set_hermite(EoS_T* const eos);
 void eos_tab_set_hermite_log(EoS_T* const eos);
 static double logy_of_logh_hermite(EoS_T* const eos, 
                                  Interpolation_T *const interp_s,
-                                 const double c_y/* shifting constant */,
+                                 const double y_shift/* shifting constant */,
                                  const double y_floor);
 static double p_of_h_hermite_log(EoS_T* const eos);
 static double e_of_h_hermite_log(EoS_T* const eos);
