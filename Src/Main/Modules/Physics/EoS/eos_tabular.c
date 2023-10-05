@@ -2,6 +2,11 @@
 
 // Implements thermodynamic functions for a tabular equation of state.
 
+// log for table data
+#define Table_Log(x) log10(x)
+// log inverse for table data(note exp10 is only part of GNU_SOURCE)
+#define Table_Log_Inv(x) pow(10.0,x)
+
 // assumes a generic Hermite interpolant in Table_Log, Table_Log(y) = Table_Log(y(Table_Log(h)))
 // ->return: y(in non Table_Log format)
 static double logy_of_logh_hermite(EoS_T* const eos, 
@@ -20,7 +25,8 @@ static double logy_of_logh_hermite(EoS_T* const eos,
   // NOTE: we modify eos->h here:
   eos->h = h;
   interp_s->Hermite_1d->h = Table_Log(h);
-  y = exp(execute_interpolation(interp_s)) - y_shift;
+  
+  y = Table_Log_Inv(execute_interpolation(interp_s)) - y_shift;
   
   // TODO: DEBUG, why this happens(if any)?
   assert(y != DBL_MAX);
