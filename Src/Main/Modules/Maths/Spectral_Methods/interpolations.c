@@ -70,7 +70,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
     interp_s->interpolation_func = interpolation_natural_cubic_spline_1d;
     interp_s->interpolation_1st_deriv = derivative_natural_cubic_spline_1d;
   }
-  else if (strstr_i(interp_s->method,"Hermite_1D"))
+  else if (strstr_i(interp_s->method,"Hermite1D"))
   {
     // some checks
     if (interp_s->Hermite_1d->fd_accuracy_order == 0)
@@ -615,7 +615,7 @@ void free_interpolation(Interpolation_T *interp_s)
       free(interp_s->N_cubic_spline_1d->f);
     }
   }
-  else if (strstr_i(interp_s->method,"Hermite_1d"))
+  else if (strstr_i(interp_s->method,"Hermite1D"))
   {
     Free(interp_s->Hermite_1d->a);
     Free(interp_s->Hermite_1d->fp);
@@ -909,7 +909,7 @@ static double fd_Fornberg_Hermite_1d(Interpolation_T *const interp_s)
 //
 // ** filling the interpolation struct **
 // Interpolation_T *interp_s = init_interpolation();
-// interp_s->method          = "Hermite_1D";
+// interp_s->method          = "Hermite1D";
 // interp_s->Hermite_1d->f = f;
 // interp_s->Hermite_1d->x = x;
 // interp_s->Hermite_1d->h = h;// the point that we wanna interpolate f, i.e., f(h)

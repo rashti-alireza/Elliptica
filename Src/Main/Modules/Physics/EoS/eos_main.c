@@ -296,9 +296,9 @@ static void populate_EoS(EoS_T *const eos)
   {
     eos_tab_read_table(eos);
     
-    if (strcmp_i(Gets(P_"Interpolation_Method"), "Hermite_1d"))
+    if (strcmp_i(Gets(P_"Interpolation_Method"), "Hermite1D"))
     {
-      if (strcmp_i(Gets(P_"log_approach"),"yes"))
+      if (strcmp_i(Gets(P_"interpolation_use_log"),"yes"))
       {
         eos_tab_set_hermite_log(eos);
       }

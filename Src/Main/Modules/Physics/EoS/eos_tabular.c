@@ -14,6 +14,7 @@ static double logy_of_logh_hermite(EoS_T* const eos,
   double h = eos->h;
   double y = DBL_MAX;
   
+  // TODO: why this happens(if any)?
   h = (h <= h_floor) ? h_floor : h;
   h = (h >= h_ceil)  ? h_ceil  : h;
   // NOTE: we modify eos->h here:
@@ -21,11 +22,11 @@ static double logy_of_logh_hermite(EoS_T* const eos,
   interp_s->Hermite_1d->h = log(h);
   y = exp(execute_interpolation(interp_s)) - c_y;
   
-  // TODO: DEBUG
+  // TODO: DEBUG, why this happens(if any)?
   assert(y != DBL_MAX);
-  assert(y > y_floor);
+  assert(y >= y_floor);
   
-  return (y <= y_floor || y == DBL_MAX) ? 0. : y;
+  return (y < y_floor || y == DBL_MAX) ? 0. : y;
 }
 
 // assumes log(p) = hermite(log(h))
@@ -118,8 +119,8 @@ void eos_tab_read_table(EoS_T* const eos)
 {
   enum tab_format {
   UTab_format, // undef
-  UTab_f1,     // "line,number_density,total_energy_density,pressure"
-  UTab_f2,     // "rest_mass_density,specific_internal_energy,pressure"
+  Tab_Format1, // "line,number_density,total_energy_density,pressure"
+  Tab_Format2, // "rest_mass_density,specific_internal_energy,pressure"
   };
   
   Physics_T *const phys = eos->phys;
@@ -139,7 +140,7 @@ void eos_tab_read_table(EoS_T* const eos)
   if (strcmp_i(Gets(P_"table_format"), 
        "line,number_density,total_energy_density,pressure"))
   {
-    format = UTab_f1;
+    format = Tab_Format1;
     num_tab_row = 0;
     while (fgets(line, sizeof(line), table_file))
     {
@@ -168,7 +169,7 @@ void eos_tab_read_table(EoS_T* const eos)
   else if (strcmp_i(Gets(P_"table_format"), 
                   "rest_mass_density,specific_internal_energy,pressure"))
   {
-    format = UTab_f2;
+    format = Tab_Format2;
     num_tab_row = 0;
     while (fgets(line, sizeof(line), table_file))
     {
@@ -209,7 +210,7 @@ void eos_tab_read_table(EoS_T* const eos)
   h_tab    = alloc_double(num_tab_row);
   
   // unit conversion
-  if (strcmp_i(eos->unit,"compose") && format == UTab_f1)
+  if (strcmp_i(eos->unit,"compose") && format == Tab_Format1)
   {
     /* compose format in columns
     *          [line number] [number density] [(total) energy density] [pressure].
@@ -239,7 +240,7 @@ void eos_tab_read_table(EoS_T* const eos)
       e_tab[i]    *= e_FACTOR;
     }
   }
-  else if (strcmp_i(eos->unit,"geo") && format == UTab_f2)
+  else if (strcmp_i(eos->unit,"geo") && format == Tab_Format2)
   {
     for (Uint i = 0; i < num_tab_row; i++)
     {
@@ -285,7 +286,7 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   eos->de_dh                    = de_dh_hermite_log;
   eos->drho0_dh                 = drho0_dh_e_p_h;// NOTE: using consistency eq.
 
-  eos->spline->use_log_approach = 1;
+  eos->spline->use_log = 1;
   eos->spline->h_floor = Getd(P_"enthalpy_floor");
   eos->spline->h_ceil  = Getd(P_"enthalpy_ceiling");
   // TODO: are they fine?
@@ -318,9 +319,9 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   // NOTE: we assume each is a function of the enthalpy h. */
   // p:
   Interpolation_T *interp_p = init_interpolation();
-  interp_p->method = Gets(P_"Interpolation_Method");
-  interp_p->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"fd_accuracy_order");
-  interp_p->Hermite_1d->spline_order      = (Uint)Geti(P_"spline_order");
+  interp_p->method = "Hermite1D";
+  interp_p->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"Hermite1D_FD_accuracy");
+  interp_p->Hermite_1d->spline_order      = (Uint)Geti(P_"Hermite1D_order");
   interp_p->Hermite_1d->f = eos->spline->p_log;
   interp_p->Hermite_1d->x = eos->spline->h_log;
   interp_p->Hermite_1d->N = sample_size;
@@ -330,9 +331,9 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   
   // e:
   Interpolation_T *interp_e = init_interpolation();
-  interp_e->method = Gets(P_"Interpolation_Method");
-  interp_e->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"fd_accuracy_order");
-  interp_e->Hermite_1d->spline_order      = (Uint)Geti(P_"spline_order");
+  interp_e->method = "Hermite1D";
+  interp_e->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"Hermite1D_FD_accuracy");
+  interp_e->Hermite_1d->spline_order      = (Uint)Geti(P_"Hermite1D_order");
   interp_e->Hermite_1d->f = eos->spline->e_log;
   interp_e->Hermite_1d->x = eos->spline->h_log;
   interp_e->Hermite_1d->N = sample_size;
@@ -342,9 +343,9 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   
   // rho0:
   Interpolation_T *interp_rho0 = init_interpolation();
-  interp_rho0->method  = Gets(P_"Interpolation_Method");
-  interp_rho0->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"fd_accuracy_order");
-  interp_rho0->Hermite_1d->spline_order      = (Uint)Geti(P_"spline_order");
+  interp_rho0->method = "Hermite1D";
+  interp_rho0->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"Hermite1D_FD_accuracy");
+  interp_rho0->Hermite_1d->spline_order      = (Uint)Geti(P_"Hermite1D_order");
   interp_rho0->Hermite_1d->f = eos->spline->rho0_log;
   interp_rho0->Hermite_1d->x = eos->spline->h_log;
   interp_rho0->Hermite_1d->N = sample_size;
@@ -377,9 +378,9 @@ void eos_tab_set_hermite(EoS_T* const eos)
   // NOTE: we assume each is a function of the enthalpy h. */
   // p:
   Interpolation_T *interp_p = init_interpolation();
-  interp_p->method = Gets(P_"Interpolation_Method");
-  interp_p->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"fd_accuracy_order");
-  interp_p->Hermite_1d->spline_order      = (Uint)Geti(P_"spline_order");
+  interp_p->method = "Hermite1D";
+  interp_p->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"Hermite1D_FD_accuracy");
+  interp_p->Hermite_1d->spline_order      = (Uint)Geti(P_"Hermite1D_order");
   interp_p->Hermite_1d->f = eos->spline->p_sample;
   interp_p->Hermite_1d->x = eos->spline->h_sample;
   interp_p->Hermite_1d->N = sample_size;
@@ -389,9 +390,9 @@ void eos_tab_set_hermite(EoS_T* const eos)
   
   // e:
   Interpolation_T *interp_e = init_interpolation();
-  interp_e->method = Gets(P_"Interpolation_Method");
-  interp_e->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"fd_accuracy_order");
-  interp_e->Hermite_1d->spline_order      = (Uint)Geti(P_"spline_order");
+  interp_e->method = "Hermite1D";
+  interp_e->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"Hermite1D_FD_accuracy");
+  interp_e->Hermite_1d->spline_order      = (Uint)Geti(P_"Hermite1D_order");
   interp_e->Hermite_1d->f = eos->spline->e_sample;
   interp_e->Hermite_1d->x = eos->spline->h_sample;
   interp_e->Hermite_1d->N = sample_size;
@@ -401,12 +402,12 @@ void eos_tab_set_hermite(EoS_T* const eos)
   
   // rho0:
   Interpolation_T *interp_rho0 = init_interpolation();
-  interp_rho0->method  = Gets(P_"Interpolation_Method");
-  interp_rho0->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"fd_accuracy_order");
-  interp_rho0->Hermite_1d->spline_order      = (Uint)Geti(P_"spline_order");
+  interp_rho0->method = "Hermite1D";
+  interp_rho0->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"Hermite1D_FD_accuracy");
+  interp_rho0->Hermite_1d->spline_order      = (Uint)Geti(P_"Hermite1D_order");
   interp_rho0->Hermite_1d->f = eos->spline->rho0_sample;
   interp_rho0->Hermite_1d->x = eos->spline->h_sample;
-  interp_rho0->Hermite_1d->N       = sample_size;
+  interp_rho0->Hermite_1d->N = sample_size;
   interp_rho0->Hermite_1d->No_Warn = 1;/* suppress warning */
   eos->spline->interp_rho0 = interp_rho0;
   plan_interpolation(interp_rho0);

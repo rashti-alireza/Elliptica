@@ -62,7 +62,7 @@ typedef struct EquationOfState_T
    double c_p;        // Constant added to data to avoid log(0) in p.
    double c_rho0;     // Constant added to data to avoid log(0) in rho0.
    double c_e;        // Constant added to data to avoid log(0) in e.
-   Uint use_log_approach: 1;
+   Uint use_log: 1;
    void *interp_p;/* spline interpolation struct for p */
    void *interp_e;/* spline interpolation struct for e */
    void *interp_rho0;/* spline interpolation struct for rho0 */
