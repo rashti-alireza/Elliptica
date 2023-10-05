@@ -282,6 +282,7 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
 {
   Physics_T *const phys = eos->phys;
   const Uint sample_size = eos->spline->sample_size;
+  const Uint shift_row   = 3; // pick this row to shift the numbers
   double *h_log = alloc_double(sample_size);
   double *p_log = alloc_double(sample_size);
   double *e_log = alloc_double(sample_size);
@@ -304,10 +305,12 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   eos->spline->rho0_floor = 0.;
   
   // shifting to avoid Table_Log(0)
-  // TODO: are they the best numbers?
-  eos->spline->p_shift = 1E-3;
-  eos->spline->e_shift = 1E-3;
-  eos->spline->rho0_shift = 1E-3;
+  eos->spline->p_shift    = eos->spline->p_sample[shift_row];
+  eos->spline->e_shift    = eos->spline->e_sample[shift_row];
+  eos->spline->rho0_shift = eos->spline->rho0_sample[shift_row];
+  assert(!EQL(eos->spline->p_shift,0.0));
+  assert(!EQL(eos->spline->e_shift,0.0));
+  assert(!EQL(eos->spline->rho0_shift,0.0));
   
   for (Uint i = 0; i < sample_size; i++)
   {
