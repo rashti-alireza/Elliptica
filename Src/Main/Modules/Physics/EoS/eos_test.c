@@ -106,7 +106,7 @@ void test_EoS(Physics_T *const phys)
     sprintf(file_name,"%s/%s_tabular.txt",path,eos->description);
     file = Fopen(file_name,"w");
     // header
-    fprintf(file,"# [1]enthalpy(h) [2]:pressure(p) [3]:rest_mass_density(rho0) "
+    fprintf(file,"# [1]:enthalpy(h) [2]:pressure(p) [3]:rest_mass_density(rho0) "
                  "[4]:energy_density(e) [5]:specific_internal_energy(e0) "
                  "[6]:drho0/dh [7]:de/dh\n");
                  
