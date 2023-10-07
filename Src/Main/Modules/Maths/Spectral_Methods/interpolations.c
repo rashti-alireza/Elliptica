@@ -901,8 +901,8 @@ static double fd_Fornberg_Hermite_1d(Interpolation_T *const interp_s)
 // given the values of the function f(x) for the points x_0, x_1, ... , and x_n,
 // it calculates the value of f(h) for an h in [x_0, x_n]
 // using Hermit in 1-d:
-// f(h) ~ H(h) = Q_{00} + Q_{11} (h-x_0) + Q_{22} (h-x_0)^2 +
-//               Q_{33}(h-x_0)^2(h-x_1) + ... + Q_{2n+1,2n+1} (h-x_0)^2...(h-x_n).
+// f(h) ~ H(h) = q_{00} + q_{11} (h-x_0) + q_{22} (h-x_0)^2 +
+//               q_{33}(h-x_0)^2(h-x_1) + ... + q_{2n+1,2n+1} (h-x_0)^2...(h-x_n).
 //
 // NOTE: this algorithm doesn't work for an arbitrary order of x_i's.
 // so ensure x_i's are in a decreasing or an increasing order.
@@ -935,48 +935,27 @@ static double interpolation_Hermite_1d(Interpolation_T *const interp_s)
   {
     order_arrays_Hermite_1d(interp_s);
   }
-  const double *const x = interp_s->Hermite_1d->x;
-  const double *const a = interp_s->Hermite_1d->a;
-  const double h = interp_s->Hermite_1d->h;
-  const int N = (int)interp_s->Hermite_1d->N;
-  const int n = (int)interp_s->Hermite_1d->spline_order - 1;
-  double ret = DBL_MAX;// it's important to be max double
-  int i = 0;
-  Flag_T flg = NONE;
-  
-  // Finds the spline interval
-  for (i = 0; i < N-1; ++i)
-  {
-    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
-    {
-      flg = FOUND;
-      break;
-    }
-  }
 
-  if (flg != FOUND)
+  const double *const x = interp_s->Hermite_1d->x;
+  const double h = interp_s->Hermite_1d->h;
+  const Uint s_order = interp_s->Hermite_1d->spline_order;
+  Uint offset = 0; // where h takes place in x[offset ] <= h <= x[offset+n]
+  double *q = find_coeffs_Hermite_1d(interp_s, &offset);
+  Uint i = offset;
+  Uint p = 0;
+  double ret = 0.0;
+  double h_x = 1.; // (h-x_i)
+
+  ret += q[0]*h_x;
+  for (Uint o = 1; o < 2*s_order+1; ++o)
   {
-    if (!interp_s->Hermite_1d->No_Warn)
-    {
-      printf("Domain: [%e, %e]\n", x[0], x[N-1]);
-      printf("Point for interpolation: %e\n", h);
-      Warning("The given point for the interpolation is out of the domain.\n");
-    }
-    return ret;
-  }
- 
-  int l = i;
-  while (l >= N - (n+1))
-  { l--; }
-  
-  ret = 0;
-  double ret_term = 1;
-  // TODO: add comment
-  for (int j = 0; j <= 2*n+1; j++)
-  {
-    ret += a[i_j_to_ij(2*n+1,l,j)]*ret_term;
-    ret_term *= (h - x[l+(int)floor(j/2)]);
+    h_x *= (h-x[i])
+    ret += q[o]*h_x;
+    p++;
+    i = (p%2 == 0) ? i ; i+1;
   }
   
+  Free(q);
+
   return ret;
 }
