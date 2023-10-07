@@ -901,8 +901,8 @@ static double fd_Fornberg_Hermite_1d(Interpolation_T *const interp_s)
 // given the values of the function f(x) for the points x_0, x_1, ... , and x_n,
 // it calculates the value of f(h) for an h in [x_0, x_n]
 // using Hermit in 1-d:
-// f(h) ~ H(h) = Q00 + Q11(h-x0) + Q22(h-x0)^2
-//        + Q33(h-x0)^2(h-x1) + ... + Q2n+1,2n+1(h-x0)^2...(h-xn).
+// f(h) ~ H(h) = Q_{00} + Q_{11} (h-x_0) + Q_{22} (h-x_0)^2 +
+//               Q_{33}(h-x_0)^2(h-x_1) + ... + Q_{2n+1,2n+1} (h-x_0)^2...(h-x_n).
 //
 // NOTE: this algorithm doesn't work for an arbitrary order of x_i's.
 // so ensure x_i's are in a decreasing or an increasing order.
@@ -910,10 +910,12 @@ static double fd_Fornberg_Hermite_1d(Interpolation_T *const interp_s)
 // ** filling the interpolation struct **
 // Interpolation_T *interp_s = init_interpolation();
 // interp_s->method          = "Hermite1D";
-// interp_s->Hermite_1d->f = f;
-// interp_s->Hermite_1d->x = x;
+// interp_s->Hermite_1d->f = f;// f(x_i)'s
+// interp_s->Hermite_1d->x = x;// x_i's
 // interp_s->Hermite_1d->h = h;// the point that we wanna interpolate f, i.e., f(h)
-// interp_s->Hermite_1d->N = 20;// the dimension of the array f and x
+// interp_s->Hermite_1d->N = N;// the dimension of the array f and x
+// interp_s->Hermite_1d->fd_accuracy_order = o;// finite diff. order of accuracy to calc. f'(x_i)'s
+// interp_s->Hermite_1d->spline_order = n;// hermite order n, it goes like x^{2n+1}
 //
 // ** planning the appropriate function for interpolation **
 // plan_interpolation(interp_s);
