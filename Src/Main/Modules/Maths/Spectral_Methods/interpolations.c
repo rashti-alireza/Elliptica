@@ -73,9 +73,10 @@ void plan_interpolation(Interpolation_T *const interp_s)
   else if (strstr_i(interp_s->method,"Hermite1D"))
   {
     // some sanity checks
-    if (interp_s->Hermite_1d->fd_accuracy_order == 0)
+    if (!interp_s->Hermite_1d->fp && !interp_s->Hermite_1d->fd_accuracy_order)
     {
-      Error0("no finite difference order is set for Hermit 1d method.");
+      Error0("no derivative is given and no finite difference order is set "
+             "for Hermit 1d method.");
     }
     if (interp_s->Hermite_1d->num_points == 0)
     {
