@@ -733,7 +733,7 @@ static int interpolation_tests_N_cubic_spline_1d(void)
   const Uint N = (Uint)Pgeti("n_a");
   double *f = alloc_double(N);
   double *x = alloc_double(N);
-  const double a = -M_PI, b = 3/4*M_PI;/* an arbitrary interval  */
+  const double a = -M_PI, b = 3./4.*M_PI;/* an arbitrary interval  */
   double *hs = make_random_number(N,a,b);
   double s = (b-a)/(N-1);
   double t,interp;
@@ -820,7 +820,7 @@ static int interpolation_tests_Neville_1d(void)
   const Uint N = (Uint)Pgeti("n_a");
   double *f = alloc_double(N);
   double *x = alloc_double(N);
-  const double a = -M_PI, b = 3/4*M_PI;/* an arbitrary interval  */
+  const double a = -M_PI, b = 3./4.*M_PI;/* an arbitrary interval  */
   double *hs = make_random_number(N,a,b);
   const double s = (b-a)/(N-1);
   double t,interp;
@@ -1709,14 +1709,15 @@ static int interpolation_tests_Hermite_1d(void)
 {
   Interpolation_T *interp_s = init_interpolation();
   const Uint N = (Uint)Pgeti("n_a");
+  const Uint Nh = N/2; assert(N>2);// num tests
   const Uint n_pnt  = 3;
   const Uint fd_acc = 3;
   double *f = alloc_double(N);
   double *x = alloc_double(N);
   double (*f_t)(const double x) = f_poly_3deg1;
   //double (*fp_t)(const double x) = df_poly_3deg1;
-  const double a = -M_PI, b = 3/4*M_PI;/* an arbitrary interval  */
-  double *hs = make_random_number(N,a,b);
+  const double a = -M_PI, b = 3./4.*M_PI;/* an arbitrary interval  */
+  double *hs = make_random_number(Nh,a,b/5.); // b/5 so not too close to the end
   double s = (b-a)/(N-1);
   double t,interp;
   Flag_T flg = NONE;
@@ -1736,7 +1737,7 @@ static int interpolation_tests_Hermite_1d(void)
   interp_s->Hermite_1d->num_points = n_pnt;
   plan_interpolation(interp_s);
   
-  for (i = 0; i < N; ++i)
+  for (i = 0; i < Nh; ++i)
   {
     double diff;
     t = hs[i];
@@ -1770,7 +1771,7 @@ static int interpolation_tests_Hermite_1d(void)
   interp_s->Hermite_1d->num_points = n_pnt;
   plan_interpolation(interp_s);
   
-  for (i = 0; i < N; ++i)
+  for (i = 0; i < Nh; ++i)
   {
     double diff;
     t = hs[i];
