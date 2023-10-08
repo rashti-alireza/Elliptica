@@ -764,7 +764,9 @@ static double* find_coeffs_Hermite_1d(Interpolation_T *const interp_s, Uint *con
     if (i)
     {
       q[i_j_to_ij(Ncoeffs,2*i,1)] = 
-        ( q[i_j_to_ij(Ncoeffs,2*i,0)] - q[i_j_to_ij(Ncoeffs,2*i-1,0)] ) / ( z[2*i] - z[2*i-1] );
+        ( q[i_j_to_ij(Ncoeffs,2*i,0)] - q[i_j_to_ij(Ncoeffs,2*i-1,0)] )
+          /
+        ( z[2*i] - z[2*i-1] );
     }
   }
   
@@ -773,7 +775,9 @@ static double* find_coeffs_Hermite_1d(Interpolation_T *const interp_s, Uint *con
     for (Uint j = 2; j <= i; ++j)
     {
       q[i_j_to_ij(Ncoeffs,i,j)] = 
-        ( q[i_j_to_ij(Ncoeffs,i,j-1)] - q[i_j_to_ij(Ncoeffs,i-1,j-1)]) / (z[i] - z[i-j]);
+        ( q[i_j_to_ij(Ncoeffs,i,j-1)] - q[i_j_to_ij(Ncoeffs,i-1,j-1)])
+          /
+        (z[i] - z[i-j]);
     }
   }
   
