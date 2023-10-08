@@ -85,6 +85,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
     {
       Error0("spline order is greater than the total number of data points.");
     }
+    // NOTE: the order matters
     order_arrays_Hermite_1d(interp_s);
     set_derivative_array_Hermite_1d(interp_s);
     interp_s->interpolation_func = interpolation_Hermite_1d;
@@ -677,12 +678,15 @@ static double derivative_natural_cubic_spline_1d(Interpolation_T *const interp_s
 // Hermite 1d //
 ////////////////
 
+// order x in the increasing order, hence f and fp;
 static void order_arrays_Hermite_1d(Interpolation_T *const interp_s)
 {
   double *x = interp_s->Hermite_1d->x;
   double *f = interp_s->Hermite_1d->f;
+  double *fp= interp_s->Hermite_1d->fp;
   double *y;/* ordered x */
   double *g;/* ordered f */
+  double *gp;/* ordered fp if fp given */
   const Uint N = interp_s->Hermite_1d->N;
   Uint i;
   
@@ -704,6 +708,18 @@ static void order_arrays_Hermite_1d(Interpolation_T *const interp_s)
     }
     interp_s->Hermite_1d->x = y;
     interp_s->Hermite_1d->f = g;
+    
+    // fp is given so we need to order this too.
+    if (fp)
+    {
+      interp_s->Hermite_1d->Alloc_fp = 1;
+      gp = alloc_double(N);
+      for (i = 0; i < N; ++i)
+      {
+        gp[i] = fp[N-1-i];
+      }
+      interp_s->Hermite_1d->fp = gp;
+    }
   }
   interp_s->Hermite_1d->Order = 1;
 }
