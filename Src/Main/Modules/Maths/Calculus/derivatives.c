@@ -8,6 +8,9 @@
 #define COMMA ','
 #define MAX_STR_LEN (100)
 
+// find min{a,b}
+#define MIN(a,b) ( (a) < (b) ? (a) : (b) )
+
 /* taking partial derivatives using a regex comma separated list.
 // using the regex, it finds the field->name match and take derivative
 // according to the name. please read notes about partial_derivative.
@@ -1090,135 +1093,60 @@ static double *make_1Dcollocation_ChebNodes(const Uint N)
 }
 
 /* finite difference using Fornberg method
+// ref: MATHEMATICS OF COMPUTATION, VOLUME 51, NUMBER 184, OCTOBER 1988, PAGES 699-706
+//      Generation of Finite Difference Formulas on Arbitrarily Spaced Grids by Bengt Fornberg
 // NOTE: we assume x is in increasing order.
+// NOTE: x0 must be one of the grid points.
 // -> return : derivative evaluated at the coordinate value = h. */
-double finite_difference_Fornberg(const double *const x, const double *const f, 
-                    const double h, const Uint M, const Uint n, const Uint N)
+double finite_difference_Fornberg(
+  const double *const f /* function values such that f[j] = f(x[j]) */, 
+  const double *const x /* ordered 1D coordinate grid */, 
+  const double x0 /* d^m f(x)/dx^m| x=x0 */,
+  const Uint Nx /* length of x and f arrays */,
+  const Uint fd_order /* finite diff order */,
+  const Uint fd_acc /* finite diff. accuracy */ )
 {
-  // Approximates M-th derivative of f(x)|x=h by finite difference method,
-  // to order of accuracy n.
-  // Parameters:
-  //        x: (double array) ordered 1D coordinate grid
-  //        f: (double array) function values such that f[j] = f(x[j])
-  //        h: (double) coordinate to evaluate
-  //        M: (unsigned int) degree of derivative to approximate
-  //        n: (unsigned int) order of approximation
-  //        N: (unsigned int) length of x and f arrays.
-  
-  Uint i = 0;
+  const Uint M = fd_order;
+  const Uint N = Nx - 1;
+  const Uint S = fd_acc - 1 + fd_order;
+  double delta[M+1][N+1][Nx];// delta^{m}_{n,nu} // TODO: dynamic alloc
+  double c1,c2,c3;
   double ret = DBL_MAX;
-  Flag_T flg = NONE;
   
-  // Checks if we have enough data points for given order.
-  if (N <= n+M)
+  // find delta's
+  delta[0][0][0] = 1.;
+  c1 = 1.;
+  for (Uint n = 1; n <= N; ++n)
   {
-    fprintf(stderr,"Points: %u\n", N);
-    fprintf(stderr,"Order of accuracy: %u\n", n);
-    Error0("Finite difference error: Not enough points for desired accuracy.\n");
-  }
-  if (M >= n)
-  {
-    fprintf(stderr,"Degree of derivative: %u\n", M);
-    fprintf(stderr,"Order of accuracy: %u\n", n);
-    Error0("Finite difference error: Degree of derivative must not exceed degree of accuracy.\n");
-  }
-  
-  // Finds the data segment
-  for (i = 0; i < N-1; ++i)
-  {
-    if ((h >= x[i]) && (h <= x[i+1]))
+    c2 = 1.;
+    for (Uint nu = 0; nu <= n-1; ++nu)
     {
-      flg = FOUND;
-      break;
-    }
-  }
-
-  if (flg != FOUND)
-  {
-    fprintf(stderr,"Domain: [%e, %e]\n", x[0], x[N-1]);
-    fprintf(stderr,"Point: %e\n", h);
-    Error0("The given point for the interpolation is out of the domain.\n");
-    return ret;
-  }
-  
-  // If we have enough points on either side of the desired point h,
-  // we can use a central finite difference. Otherwise, we must
-  // use a shifted finite difference (e.g. the forward finite difference
-  // if x[0] < = h < x[1]).
-  // Note: If the desired accuracy order is an odd integer, we assign the
-  // 'extra' point to the left of the point h.
-  
-  // Selects subset of 'x' array to use for finite difference method,
-  int left_pt = (int)i - (int)floor((n+M)/2)+1;
-  int right_pt = (int)i + (int)ceil((n+M)/2)+1;
-  
-  // Shifts right if sub-array is too far left:
-  while (left_pt < 0)
-  {
-    left_pt++;
-    right_pt++;
-  }
-  while ((Uint)right_pt > N)///////////////
-  {
-    left_pt--;
-    right_pt--;
-  }
+      c3 = x[n] - x[nu];
+      c2 *= c3;
       
-  /* Useful for debugging grid excision */
-  #if 0
-  printf("\n/////////////////FORNBERG METHOD//////////////////\n");
-  printf("Global grid:\n");
-  printf("|    x[0]    | ... |    x[%i]    |      h     |    x[%i]    | ... |    x[N-1]    |\n", i, i+1);
-  printf("| %.4E | ... | %.4E | %.4E | %.4E | ... | %.4E |\n",
-        x[0], x[i], h, x[i+1], x[N-1]);
-  printf("Local grid:\n");
-  printf("|");
-  for (Uint u = (Uint)left_pt; u < (Uint)right_pt; u++)
-  { printf(" %i |", u); }
-  printf("\n|");
-  for (Uint u = (Uint)left_pt; u < (Uint)right_pt; u++)
-  { printf(" %.4E |", x[u]); }
-  printf("\n\n");
-  #endif
-  
-  // Allocates memory for delta coefficients
-  // Stores (M+1)x(n+m)x(n+m) 3D array 
-  // 'deltas' in linear format.
-  Uint p[3] = { 0, M+1, n+M };
-  double* deltas = alloc_double((M+1)*(n+M)*(n+M));
-  
-  // Fornberg algorithm calculates the deltas.
-  deltas[i_j_k_to_ijk(p,0,0,0)] = 1;
-  double c1 = 1;
-  double c2 = 1;
-  double c3 = 1;
-  
-  for (Uint l=1; l<n+M; l++)
-  {
-    c2 = 1;
-    for (Uint v=0; v<l; v++)
+      if (n <= M)
+      {
+        delta[n][n-1][nu] = 0.;
+      }  
+      for (Uint m = 0; m <= MIN(n,M); m++)
+      {
+        delta[m][n][nu] = ( ( x[n] - x0 ) * delta[m][n-1][nu] - 
+                           m * delta[m-1][n-1][nu] ) / c3;
+      }
+    }// end of for (Uint nu = 0; nu <= n-1; ++nu)
+    for (Uint m = 0; m <= MIN(n,M); m++)
     {
-        c3 = x[(Uint)left_pt+l] - x[(Uint)left_pt+v];
-        c2 = c2*c3;
-        if (l <= M)
-        { deltas[i_j_k_to_ijk(p,l,l-1,v)] = 0; }
-        for (Uint m=0; m<=(l < M ? l : M); m++)
-        { deltas[i_j_k_to_ijk(p,m,l,v)] = (((x[(Uint)left_pt+l] - h)
-          *deltas[i_j_k_to_ijk(p,m,l-1,v)]
-          - (m ? m*deltas[i_j_k_to_ijk(p,m-1,l-1,v)] : 0))/c3); }
+      delta[m][n][n] = c1/c2 * ( m*delta[m-1][n-1][n-1] - 
+                                 (x[n-1] - x0)*delta[m][n-1][n-1] );
     }
-    for (Uint m=0; m<=(l < M ? l : M); m++)
-    { deltas[i_j_k_to_ijk(p,m,l,l)] = ((c1/c2)*
-      ((m ? m*deltas[i_j_k_to_ijk(p,m-1,l-1,l-1)] : 0)
-      - (x[(Uint)left_pt+l-1]-h)*deltas[i_j_k_to_ijk(p,m,l-1,l-1)])); }
     c1 = c2;
+  }// end of for (Uint n = 1; n <= N; ++n)
+  
+  // d^m f(x) / dx^m = sum_{0}^{n} delta^{m}_{n,nu} f(x_{nu})
+  ret = 0.;
+  for (Uint nu = 0; nu <= S; ++nu)
+  {
+    ret += delta[M][S][nu]*f[nu];
   }
-  
-  // Approximates f^(m)|x=h using deltas.
-  ret = 0;
-  for (Uint v=0; v<=n; v++)
-  { ret += deltas[i_j_k_to_ijk(p,M,n,v)] * f[left_pt+(int)v]; }
-  
-  free(deltas);
   return ret;
 }
