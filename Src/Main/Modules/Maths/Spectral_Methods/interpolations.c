@@ -920,7 +920,7 @@ static void set_derivative_array_Hermite_1d(Interpolation_T *const interp_s)
     
   for (Uint i = 0; i < N; ++i)
   {
-    fp[i] = finite_difference_Fornberg(x, f, x[i], 1, fd_acc, N);
+    fp[i] = finite_difference_Fornberg(f, x, x[i], N, 1, fd_acc);
   }
   interp_s->Hermite_1d->fp = fp;
   interp_s->Hermite_1d->Alloc_fp = 1;
