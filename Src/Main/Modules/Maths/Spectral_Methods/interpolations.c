@@ -847,34 +847,37 @@ static double interpolation_Hermite_1d(Interpolation_T *const interp_s)
   Uint i = offset;
   Uint p = 0;
   double ret = 0.0;
-  double h_x = 1.; // (h-x_i)
-  char h_str[10000]  = {'\0'};
-  char r_str[10000]  = {'\0'};
-  char h_sstr[100] = {'\0'};
-  char r_sstr[100] = {'\0'};
+  double h_x = 1.;// (h-x_i)
   
   ret += q[i_j_to_ij(Ncoeffs,0,0)]*h_x;
-  strcat(h_str,"1");
-  strcat(r_str,"q[0]*1");
-  
   for (Uint o = 1; o <= 2*s_order+1; ++o)
   {
     h_x *= (h-x[i]);
     ret += q[i_j_to_ij(Ncoeffs,o,o)]*h_x;
-    
+    p++;
+    i = (p%2 != 0) ? i : i+1;
+  }
+
+// debug mimicking above loop with string to see what's going on.
+#if 0  
+  char h_str[10000]= {'\0'};// == h_x var
+  char r_str[10000]= {'\0'};// == ret var
+  char h_sstr[100] = {'\0'}; 
+  char r_sstr[100] = {'\0'};
+  strcat(h_str,"1");
+  strcat(r_str,"q[0]*1");
+  for (Uint o = 1; o <= 2*s_order+1; ++o)
+  {
     sprintf(h_sstr,"*(h-x[%u])",i-offset);
     strcat(h_str,h_sstr);
     sprintf(r_sstr,"+q[%u]*%s",o,h_str);
     strcat(r_str,r_sstr);
-    
     p++;
     i = (p%2 != 0) ? i : i+1;
   }
-  
   printf("ret = %s\n",r_str);
   printf("h = %s\n",h_str);
-  
-  //Error0("DONE!");
+#endif
   
   Free(q);
 
