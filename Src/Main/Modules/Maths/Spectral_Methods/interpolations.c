@@ -79,7 +79,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
     }
     if (interp_s->Hermite_1d->spline_order == 0)
     {
-      Error0("no spline order is set for Hermit method");
+      Error0("the spline order is set to 0.");
     }
     if (interp_s->Hermite_1d->spline_order > interp_s->Hermite_1d->N)
     {
@@ -720,9 +720,9 @@ static double* find_coeffs_Hermite_1d(Interpolation_T *const interp_s, Uint *con
   const double *const fp = interp_s->Hermite_1d->fp;
   const double *const x = interp_s->Hermite_1d->x;
   const double h = interp_s->Hermite_1d->h;
-  const Uint s_order = interp_s->Hermite_1d->spline_order;
+  const Uint s_order = interp_s->Hermite_1d->spline_order-1;
   const Uint N = interp_s->Hermite_1d->N;
-  const Uint Ncoeffs = (2*s_order+1);
+  const Uint Ncoeffs = (2*s_order+1)+1;
   double *q = alloc_double(Ncoeffs*Ncoeffs);
   double *z = alloc_double(Ncoeffs);
   
@@ -739,31 +739,38 @@ static double* find_coeffs_Hermite_1d(Interpolation_T *const interp_s, Uint *con
   // check if found
   if (*offset == UINT_MAX)
   {
-    printf("%g is not in [%g,%g]\n", h, x[0], x[N-1]);
+    printf("%g is not in [%g,%g].\n", h, x[0], x[N-1]);
     Error0("The interpolation point is outside the range.");
   }
-  
-  for (Uint i = 0; i < s_order; ++i)
+  // check if point is too far right
+  if (*offset + s_order >= N)
   {
-    Uint ind = i + *offset;
-    z[2*i] = z[2*i+1] = x[ind];
+    Error0("point is too close to the right end of the interval.");
+  }
+  
+  for (Uint i = 0; i <= s_order; ++i)
+  {
+    Uint ind = *offset + i;
+    z[2*i]   = 
+    z[2*i+1] = x[ind];
     
-    q[i_j_to_ij(Ncoeffs,2*i,0)] = q[i_j_to_ij(Ncoeffs,2*i+1,0)] = f[ind];
+    q[i_j_to_ij(Ncoeffs,2*i,0)]   = 
+    q[i_j_to_ij(Ncoeffs,2*i+1,0)] = f[ind];
     q[i_j_to_ij(Ncoeffs,2*i+1,1)] = fp[ind];
     
     if (i)
     {
       q[i_j_to_ij(Ncoeffs,2*i,1)] = 
-        ( q[i_j_to_ij(Ncoeffs,2*i,0)] -  q[i_j_to_ij(Ncoeffs,2*i-1,0)] ) / ( z[2*i] - z[2*i-1] );
+        ( q[i_j_to_ij(Ncoeffs,2*i,0)] - q[i_j_to_ij(Ncoeffs,2*i-1,0)] ) / ( z[2*i] - z[2*i-1] );
     }
   }
   
-  for (Uint i = 2; i < 2*s_order+1; ++i)
+  for (Uint i = 2; i <= 2*s_order+1; ++i)
   {
     for (Uint j = 2; j <= i; ++j)
     {
       q[i_j_to_ij(Ncoeffs,i,j)] = 
-        ( q[i_j_to_ij(Ncoeffs,i,j-1)] -  q[i_j_to_ij(Ncoeffs,i-1,j-1)]) / (z[i] - z[i-j]);
+        ( q[i_j_to_ij(Ncoeffs,i,j-1)] - q[i_j_to_ij(Ncoeffs,i-1,j-1)]) / (z[i] - z[i-j]);
     }
   }
   
@@ -829,8 +836,8 @@ static double interpolation_Hermite_1d(Interpolation_T *const interp_s)
 {
   const double *const x = interp_s->Hermite_1d->x;
   const double h = interp_s->Hermite_1d->h;
-  const Uint s_order = interp_s->Hermite_1d->spline_order;
-  Uint offset = 0; // where h takes place in x[offset ] <= h <= x[offset+n]
+  const Uint s_order = interp_s->Hermite_1d->spline_order-1;
+  Uint offset = 0; // where h takes place in x[offset ] <= h < x[offset+n]
   double *q = find_coeffs_Hermite_1d(interp_s, &offset);
   Uint i = offset;
   Uint p = 0;
@@ -838,7 +845,7 @@ static double interpolation_Hermite_1d(Interpolation_T *const interp_s)
   double h_x = 1.; // (h-x_i)
 
   ret += q[0]*h_x;
-  for (Uint o = 1; o < 2*s_order+1; ++o)
+  for (Uint o = 1; o <= 2*s_order+1; ++o)
   {
     h_x *= (h-x[i]);
     ret += q[o]*h_x;
