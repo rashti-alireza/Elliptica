@@ -1284,18 +1284,18 @@ int derivative_tests(Grid_T *const grid)
 {
   if (DO)
   {
-    return derivative_tests_spectral_method(grid);
+    derivative_tests_spectral_method(grid);
   }
   if (DO)
   {
-    return derivative_tests_finite_diff_method(grid);
+    derivative_tests_finite_diff_method(grid);
   }
   
   return EXIT_SUCCESS;
 }
 
 // testing finite difference derivatives
-static int derivative_tests_finite_diff_method(Grid_T *const grid)
+static void derivative_tests_finite_diff_method(Grid_T *const grid)
 {
   const Uint N = (Uint)Pgeti("n_a");
   const Uint fd_acc = 3;
@@ -1334,9 +1334,7 @@ static int derivative_tests_finite_diff_method(Grid_T *const grid)
   Free(f);
   Free(fp);
   Free(fpp);
-
   UNUSED(grid);
-  return EXIT_SUCCESS;
 }
 
 /* testing:
@@ -1348,9 +1346,8 @@ static int derivative_tests_finite_diff_method(Grid_T *const grid)
 // note: the results will be printed accordingly in 
 // "Derivative_Tests" folder.
 // note: only those patches that use basis will be compared.
-// ->return value: EXIT_SUCCESS;
 */
-static int derivative_tests_spectral_method(Grid_T *const grid)
+static void derivative_tests_spectral_method(Grid_T *const grid)
 {
   sFunc_Patch2Pdouble_T **DataBase_func;
   
@@ -1532,8 +1529,6 @@ static int derivative_tests_spectral_method(Grid_T *const grid)
   
   free_func_Patch2Pdouble(DataBase_func);
   free(path);
-  
-  return EXIT_SUCCESS;
 }
 
 /* get a function and based on its name, find all of its 

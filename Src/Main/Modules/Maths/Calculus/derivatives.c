@@ -1118,6 +1118,7 @@ double finite_difference_Fornberg(
   c1 = 1.;
   for (Uint n = 1; n <= N; ++n)
   {
+    Uint m;
     c2 = 1.;
     for (Uint nu = 0; nu <= n-1; ++nu)
     {
@@ -1127,18 +1128,24 @@ double finite_difference_Fornberg(
       if (n <= M)
       {
         delta[n][n-1][nu] = 0.;
-      }  
-      for (Uint m = 0; m <= MIN(n,M); m++)
+      }
+      
+      for (m = 1; m <= MIN(n,M); m++)
       {
         delta[m][n][nu] = ( ( x[n] - x0 ) * delta[m][n-1][nu] - 
                            m * delta[m-1][n-1][nu] ) / c3;
       }
+      // for m = 0
+      delta[m][n][nu] = ( ( x[n] - x0 ) * delta[m][n-1][nu] ) / c3;
     }// end of for (Uint nu = 0; nu <= n-1; ++nu)
-    for (Uint m = 0; m <= MIN(n,M); m++)
+    
+    for (m = 1; m <= MIN(n,M); m++)
     {
       delta[m][n][n] = c1/c2 * ( m*delta[m-1][n-1][n-1] - 
                                  (x[n-1] - x0)*delta[m][n-1][n-1] );
     }
+    // for m = 0
+    delta[m][n][n] = c1/c2 * ( (x[n-1] - x0)*delta[m][n-1][n-1] );
     c1 = c2;
   }// end of for (Uint n = 1; n <= N; ++n)
   

@@ -73,8 +73,8 @@ static int interpolation_tests_Hermite_1d(void);
 static double f_poly_3deg1(const double x) __attribute__((unused));
 static double df_poly_3deg1(const double x) __attribute__((unused));
 static double ddf_poly_3deg1(const double x) __attribute__((unused));
-static int derivative_tests_spectral_method(Grid_T *const grid);
-static int derivative_tests_finite_diff_method(Grid_T *const grid);
+static void derivative_tests_spectral_method(Grid_T *const grid);
+static void derivative_tests_finite_diff_method(Grid_T *const grid);
 
 
 
