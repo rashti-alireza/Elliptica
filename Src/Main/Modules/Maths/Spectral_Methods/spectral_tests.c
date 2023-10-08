@@ -714,6 +714,12 @@ int interpolation_tests(Grid_T *const grid)
       status = interpolation_tests_N_cubic_spline_1d();
       check_test_result(status);
   }
+  if (DO)
+  {
+      printf("Interpolation test:            Hermite 1D Method =>");
+      status = interpolation_tests_Hermite_1d();
+      check_test_result(status);
+  }
   
   FUNC_TOC
   return EXIT_SUCCESS;
@@ -1695,5 +1701,111 @@ static void free_func_Patch2Pdouble(sFunc_Patch2Pdouble_T **func)
   }
   
   free(func);
+}
+
+/* test Hermite 1-d method
+// ->return value: result of test. */
+static int interpolation_tests_Hermite_1d(void)
+{
+  Interpolation_T *interp_s = init_interpolation();
+  const Uint N = (Uint)Pgeti("n_a");
+  const Uint n_pnt  = 3;
+  const Uint fd_acc = 3;
+  double *f = alloc_double(N);
+  double *x = alloc_double(N);
+  double (*f_t)(const double x) = f_poly_3deg1;
+  //double (*fp_t)(const double x) = df_poly_3deg1;
+  const double a = -M_PI, b = 3/4*M_PI;/* an arbitrary interval  */
+  double *hs = make_random_number(N,a,b);
+  double s = (b-a)/(N-1);
+  double t,interp;
+  Flag_T flg = NONE;
+  Uint i;
+  
+  for (i = 0; i < N; ++i)
+  {
+    t = x[i] = a+i*s;
+    f[i] = f_t(t);
+  }
+    
+  interp_s->method = "Hermite1D";
+  interp_s->Hermite_1d->f = f;
+  interp_s->Hermite_1d->x = x;
+  interp_s->Hermite_1d->N = N;
+  interp_s->Hermite_1d->fd_accuracy_order = fd_acc;
+  interp_s->Hermite_1d->num_points = n_pnt;
+  plan_interpolation(interp_s);
+  
+  for (i = 0; i < N; ++i)
+  {
+    double diff;
+    t = hs[i];
+    interp_s->Hermite_1d->h = t;
+    interp = execute_interpolation(interp_s);
+    diff = interp-f_t(t);
+    
+    if (GRT(fabs(diff),s))
+    {
+      fprintf(stderr,"diff = %g\n",diff);
+      flg = FOUND;
+      break;
+    }
+  }
+  free_interpolation(interp_s);
+  
+  /* let's test the reveres order for x's */
+  s = -(b-a)/(N-1);
+  interp_s = init_interpolation();
+  for (i = 0; i < N; ++i)
+  {
+    t = x[i] = b+i*s;
+    f[i] = f_t(t);/* arbitrary function */
+  }
+  
+  interp_s->method = "Hermite1D";
+  interp_s->Hermite_1d->f = f;
+  interp_s->Hermite_1d->x = x;
+  interp_s->Hermite_1d->N = N;
+  interp_s->Hermite_1d->fd_accuracy_order = fd_acc;
+  interp_s->Hermite_1d->num_points = n_pnt;
+  plan_interpolation(interp_s);
+  
+  for (i = 0; i < N; ++i)
+  {
+    double diff;
+    t = hs[i];
+    interp_s->Hermite_1d->h = t;
+    interp = execute_interpolation(interp_s);
+    diff = interp-f_t(t);
+    
+    if (GRT(fabs(diff),-s))
+    {
+      fprintf(stderr,"diff = %g\n",diff);
+      flg = FOUND;
+      break;
+    }
+  }
+  
+  free_interpolation(interp_s);
+  free(f);
+  free(x);
+  free(hs);
+  
+  if (flg == FOUND)
+    return TEST_UNSUCCESSFUL;
+    
+  return TEST_SUCCESSFUL;
+}
+
+// an arbitray 3rd degree polynomial
+static double f_poly_3deg1(const double x)
+{
+  return 1.33*pow(x,3.) + 0.33*pow(x,2.) + 5.2;
+}
+
+// the 1st derivative of an arbitray 3rd degree polynomial
+static double df_poly_3deg1(const double x)
+{
+  return 3*1.33*pow(x,2.) + 2*0.33*pow(x,1.);
 }
 
