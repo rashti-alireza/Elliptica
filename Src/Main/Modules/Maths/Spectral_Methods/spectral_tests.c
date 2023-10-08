@@ -1713,9 +1713,10 @@ static int interpolation_tests_Hermite_1d(void)
   const Uint n_pnt  = 3;
   const Uint fd_acc = 3;
   double *f = alloc_double(N);
+  double *fp = alloc_double(N);
   double *x = alloc_double(N);
   double (*f_t)(const double x) = f_poly_3deg1;
-  //double (*fp_t)(const double x) = df_poly_3deg1;
+  double (*fp_t)(const double x) = df_poly_3deg1;
   const double a = -M_PI, b = 3./4.*M_PI;/* an arbitrary interval  */
   double *hs = make_random_number(Nh,a,b/5.); // b/5 so not too close to the end
   double s = (b-a)/(N-1);
@@ -1728,7 +1729,8 @@ static int interpolation_tests_Hermite_1d(void)
     t = x[i] = a+i*s;
     f[i] = f_t(t);
   }
-    
+  
+  // with the internal derivatives  
   interp_s->method = "Hermite1D";
   interp_s->Hermite_1d->f = f;
   interp_s->Hermite_1d->x = x;
@@ -1760,14 +1762,16 @@ static int interpolation_tests_Hermite_1d(void)
   for (i = 0; i < N; ++i)
   {
     t = x[i] = b+i*s;
-    f[i] = f_t(t);/* arbitrary function */
+    f[i] = f_t(t);
+    fp[i] = fp_t(t);
   }
   
+  // with given derivative
   interp_s->method = "Hermite1D";
   interp_s->Hermite_1d->f = f;
+  interp_s->Hermite_1d->fp = fp;
   interp_s->Hermite_1d->x = x;
   interp_s->Hermite_1d->N = N;
-  interp_s->Hermite_1d->fd_accuracy_order = fd_acc;
   interp_s->Hermite_1d->num_points = n_pnt;
   plan_interpolation(interp_s);
   
@@ -1789,6 +1793,7 @@ static int interpolation_tests_Hermite_1d(void)
   
   free_interpolation(interp_s);
   free(f);
+  free(fp);
   free(x);
   free(hs);
   
@@ -1807,6 +1812,6 @@ static double f_poly_3deg1(const double x)
 // the 1st derivative of an arbitray 3rd degree polynomial
 static double df_poly_3deg1(const double x)
 {
-  return 3*1.33*pow(x,2.) + 2*0.33*pow(x,1.);
+  return 3.*1.33*pow(x,2.) + 2.*0.33*pow(x,1.);
 }
 
