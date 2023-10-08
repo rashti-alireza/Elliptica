@@ -77,20 +77,19 @@ typedef struct INTERPOLATION_T
   ////////////////////
   struct
   { 
-   double *f;             // f(xi)
-   double *fp;            // f'(xi) (first derivative of f)
-   double *x;             // coordinate grid
-   double h;              // point to interpolate
-   Uint N;                // number of grid points
-   double *a;             // Linearized 2D array for spline coefficients
+   double *f;// f(xi)
+   double *fp;// df(xi)/dx
+   double *x;// coordinate grid
+   double h;// point to interpolate
+   Uint N;// number of grid points
    Uint fd_accuracy_order;// order of finite difference accuracy
    Uint fd_derivative_order;// order of derivative required from finite difference method
-   Uint spline_order;     // I.e. order of interpolating polynomial.
-   Uint Order: 1;         // 1 iff x array in order
-   Uint Alloc_Mem: 1;
-   Uint No_Warn: 1;
-  }Hermite_1d[1];  //1D Hermite spline
-  
+   Uint spline_order;// here we mean the number of points being used for the interpolant, 
+                     // namely, polynomial of order (2*spline_order+1)
+   Uint Order: 1;// 1 if x array in order
+   Uint Alloc_Mem: 1;// internal memory flag
+   Uint No_Warn: 1;// emit warning if 0
+  }Hermite_1d[1];
 }Interpolation_T;
 
 void rft_1d_ChebyshevExtrema_coeffs(double *const values ,double *const coeffs,const Uint n);

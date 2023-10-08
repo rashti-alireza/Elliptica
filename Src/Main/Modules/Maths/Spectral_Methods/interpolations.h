@@ -34,10 +34,9 @@ static double interpolation_Chebyshev_Tn_XY(Interpolation_T *const interp_s);
 static double interpolation_Chebyshev_Tn_XZ(Interpolation_T *const interp_s);
 static double interpolation_Chebyshev_Tn_YZ(Interpolation_T *const interp_s);
 static double interpolation_Chebyshev_Tn_XYZ(Interpolation_T *const interp_s);
-static void order_arrays_Hermite_1d(Interpolation_T *const interp_s);
-static void find_coeffs_Hermite_1d(Interpolation_T *const interp_s);
-static double derivative_Hermite_1d(Interpolation_T *const interp_s);
-static double fd_Fornberg_Hermite_1d(Interpolation_T *const interp_s);
 static double interpolation_Hermite_1d(Interpolation_T *const interp_s);
-
+static double* find_coeffs_Hermite_1d(Interpolation_T *const interp_s, Uint *const offset);
+static void order_arrays_Hermite_1d(Interpolation_T *const interp_s);
+static double derivative_Hermite_1d_ncs(Interpolation_T *const interp_s);
+static void set_derivative_array_Hermite_1d(Interpolation_T *const interp_s);
 
