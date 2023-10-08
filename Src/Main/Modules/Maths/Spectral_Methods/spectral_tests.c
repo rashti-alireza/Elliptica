@@ -1280,6 +1280,65 @@ static int interpolation_tests_XYZ(Field_T *const field,const double *const X,co
   return TEST_SUCCESSFUL;
 }
 
+int derivative_tests(Grid_T *const grid)
+{
+  if (DO)
+  {
+    return derivative_tests_spectral_method(grid);
+  }
+  if (DO)
+  {
+    return derivative_tests_finite_diff_method(grid);
+  }
+  
+  return EXIT_SUCCESS;
+}
+
+// testing finite difference derivatives
+static int derivative_tests_finite_diff_method(Grid_T *const grid)
+{
+  const Uint N = (Uint)Pgeti("n_a");
+  const Uint fd_acc = 3;
+  double *f   = alloc_double(N);
+  double *fp  = alloc_double(N);
+  double *fpp = alloc_double(N);
+  double *x   = alloc_double(N);
+  double (*f_t)(const double x) = f_poly_3deg1;
+  double (*fp_t)(const double x) = df_poly_3deg1;
+  double (*fpp_t)(const double x) = ddf_poly_3deg1;
+  const double a = -M_PI, b = 3./4.*M_PI;/* an arbitrary interval  */
+  double s = (b-a)/(N-1);
+  double t;
+  Uint i;
+  
+  for (i = 0; i < N; ++i)
+  {
+    x[i]   = 
+    t      = a+i*s;
+    f[i]   = f_t(t);
+    fp[i]  = fp_t(t);
+    fpp[i] = fpp_t(t);
+  }
+  
+  for (i = 0; i < N; ++i)
+  {
+    t = a+i*s;
+    double df_an  = finite_difference_Fornberg(f,x,t,N,1,fd_acc);
+    double ddf_an = finite_difference_Fornberg(f,x,t,N,2,fd_acc);
+    
+    printf("|df_an  - df_nu|  = %0.6e\n", fabs(fp_t(t)  - df_an));
+    printf("|ddf_an - ddf_nu| = %0.6e\n", fabs(fpp_t(t) - ddf_an));
+  }
+  
+  Free(x);
+  Free(f);
+  Free(fp);
+  Free(fpp);
+
+  UNUSED(grid);
+  return EXIT_SUCCESS;
+}
+
 /* testing:
 // ========
 //
@@ -1291,7 +1350,7 @@ static int interpolation_tests_XYZ(Field_T *const field,const double *const X,co
 // note: only those patches that use basis will be compared.
 // ->return value: EXIT_SUCCESS;
 */
-int derivative_tests(Grid_T *const grid)
+static int derivative_tests_spectral_method(Grid_T *const grid)
 {
   sFunc_Patch2Pdouble_T **DataBase_func;
   
@@ -1812,6 +1871,12 @@ static double f_poly_3deg1(const double x)
 // the 1st derivative of an arbitray 3rd degree polynomial
 static double df_poly_3deg1(const double x)
 {
-  return 3.*1.33*pow(x,2.) + 2.*0.33*pow(x,1.);
+  return 3.*1.33*pow(x,2.) + 2.*0.33*x;
+}
+
+// the 2nd derivative of an arbitray 3rd degree polynomial
+static double ddf_poly_3deg1(const double x)
+{
+  return 2*3.*1.33*x + 2.*0.33;
 }
 
