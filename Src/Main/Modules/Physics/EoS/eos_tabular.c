@@ -333,7 +333,7 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   Interpolation_T *interp_p = init_interpolation();
   interp_p->method = "Hermite1D";
   interp_p->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"Hermite1D_FD_accuracy");
-  interp_p->Hermite_1d->spline_order      = (Uint)Geti(P_"Hermite1D_order");
+  interp_p->Hermite_1d->num_points = (Uint)Geti(P_"Hermite1D_num_points");
   interp_p->Hermite_1d->f = eos->spline->p_log;
   interp_p->Hermite_1d->x = eos->spline->h_log;
   interp_p->Hermite_1d->N = sample_size;
@@ -345,7 +345,7 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   Interpolation_T *interp_e = init_interpolation();
   interp_e->method = "Hermite1D";
   interp_e->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"Hermite1D_FD_accuracy");
-  interp_e->Hermite_1d->spline_order      = (Uint)Geti(P_"Hermite1D_order");
+  interp_e->Hermite_1d->num_points = (Uint)Geti(P_"Hermite1D_num_points");
   interp_e->Hermite_1d->f = eos->spline->e_log;
   interp_e->Hermite_1d->x = eos->spline->h_log;
   interp_e->Hermite_1d->N = sample_size;
@@ -357,7 +357,7 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   Interpolation_T *interp_rho0 = init_interpolation();
   interp_rho0->method = "Hermite1D";
   interp_rho0->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"Hermite1D_FD_accuracy");
-  interp_rho0->Hermite_1d->spline_order      = (Uint)Geti(P_"Hermite1D_order");
+  interp_rho0->Hermite_1d->num_points = (Uint)Geti(P_"Hermite1D_num_points");
   interp_rho0->Hermite_1d->f = eos->spline->rho0_log;
   interp_rho0->Hermite_1d->x = eos->spline->h_log;
   interp_rho0->Hermite_1d->N = sample_size;
@@ -392,7 +392,7 @@ void eos_tab_set_hermite(EoS_T* const eos)
   Interpolation_T *interp_p = init_interpolation();
   interp_p->method = "Hermite1D";
   interp_p->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"Hermite1D_FD_accuracy");
-  interp_p->Hermite_1d->spline_order      = (Uint)Geti(P_"Hermite1D_order");
+  interp_p->Hermite_1d->num_points = (Uint)Geti(P_"Hermite1D_num_points");
   interp_p->Hermite_1d->f = eos->spline->p_sample;
   interp_p->Hermite_1d->x = eos->spline->h_sample;
   interp_p->Hermite_1d->N = sample_size;
@@ -404,7 +404,7 @@ void eos_tab_set_hermite(EoS_T* const eos)
   Interpolation_T *interp_e = init_interpolation();
   interp_e->method = "Hermite1D";
   interp_e->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"Hermite1D_FD_accuracy");
-  interp_e->Hermite_1d->spline_order      = (Uint)Geti(P_"Hermite1D_order");
+  interp_e->Hermite_1d->num_points = (Uint)Geti(P_"Hermite1D_num_points");
   interp_e->Hermite_1d->f = eos->spline->e_sample;
   interp_e->Hermite_1d->x = eos->spline->h_sample;
   interp_e->Hermite_1d->N = sample_size;
@@ -416,7 +416,7 @@ void eos_tab_set_hermite(EoS_T* const eos)
   Interpolation_T *interp_rho0 = init_interpolation();
   interp_rho0->method = "Hermite1D";
   interp_rho0->Hermite_1d->fd_accuracy_order = (Uint)Geti(P_"Hermite1D_FD_accuracy");
-  interp_rho0->Hermite_1d->spline_order      = (Uint)Geti(P_"Hermite1D_order");
+  interp_rho0->Hermite_1d->num_points = (Uint)Geti(P_"Hermite1D_num_points");
   interp_rho0->Hermite_1d->f = eos->spline->rho0_sample;
   interp_rho0->Hermite_1d->x = eos->spline->h_sample;
   interp_rho0->Hermite_1d->N = sample_size;

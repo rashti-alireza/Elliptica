@@ -84,10 +84,11 @@ typedef struct INTERPOLATION_T
    Uint N;// number of grid points
    Uint fd_accuracy_order;// order of finite difference accuracy
    Uint fd_derivative_order;// order of derivative required from finite difference method
-   Uint spline_order;// here we mean the number of points being used for the interpolant, 
-                     // namely, polynomial of order (2*spline_order+1)
+   Uint num_points;// the number of points being used for the interpolant, 
+                   // namely, polynomial degree = (2*num_points-1)
    Uint Order: 1;// 1 if x array in order
-   Uint Alloc_Mem: 1;// internal memory flag
+   Uint Alloc_fx: 1;// if f and x ordered 1
+   Uint Alloc_fp: 1;// if fp allocated 1
    Uint No_Warn: 1;// emit warning if 0
   }Hermite_1d[1];
 }Interpolation_T;
