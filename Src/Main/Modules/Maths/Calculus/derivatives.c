@@ -1090,6 +1090,7 @@ static double *make_1Dcollocation_ChebNodes(const Uint N)
 }
 
 /* finite difference using Fornberg method
+// NOTE: we assume x is in increasing order.
 // -> return : derivative evaluated at the coordinate value = h. */
 double finite_difference_Fornberg(const double *const x, const double *const f, 
                     const double h, const Uint M, const Uint n, const Uint N)
