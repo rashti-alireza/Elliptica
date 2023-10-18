@@ -1103,7 +1103,7 @@ double finite_difference_Fornberg(
   const double *const x /* ordered 1D coordinate grid */,
   const double x0 /* d^m f(x)/dx^m| x=x0 */,
   const Uint Nx /* length of x and f arrays */,
-  const Uint fd_order /* finite diff order */,
+  const Uint fd_order /* finite diff. order */,
   const Uint fd_acc /* finite diff. accuracy */ )
 {
   const Uint M = fd_order;
