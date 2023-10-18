@@ -1138,18 +1138,18 @@ double finite_difference_Fornberg(
 
   // Excises smaller grid {alpha[0], alpha[1], ..., alpha[N]} out of
   // {x[0], x[1], ..., x[K-1]}, such that:
-  // 	alpha[0] = x[left_pt]
-  // 	alpha[j] = x[left_pt + j]
-  // 	alpha[N] = x[right_pt]
+  // 	alpha[0] = x[offset]
+  // 	alpha[j] = x[offset + j]
+  // 	alpha[N] = x[fence]
   //
   // The Fornberg algorithm acts only on alpha[].
 
-  // If we have enough points on either side of the desired point h,
+  // If we have enough points on either side of the desired point x0,
   // we can use a central finite difference. Otherwise, we must
   // use a shifted finite difference (e.g. the forward finite difference
-  // if x[0] < = h < x[1]).
+  // if x[0] <= x0 < x[1]).
   // Note: If the desired accuracy order is an odd integer, we assign the
-  // 'extra' point to the left of the point h.
+  // 'extra' point to the left of the point x0.
 
   // Selects subset of 'x' array to use for finite difference method,
   int offset = (int)indx  - (int)N/2;
@@ -1168,36 +1168,13 @@ double finite_difference_Fornberg(
   assert(offset>=0);
   al = x + offset;
 
-  /* Useful for debugging grid excision */
-#if 0
-  printf("\n/////////////////FORNBERG METHOD//////////////////\n");
-  printf("Global grid:\n");
-  printf("|    x[0]    | ... |    x[%i]    |      h     "
-         "|    x[%i]    | ... |    x[%i]    |\n", i, i+1, K-1);
-  printf("| %.4E | ... | %.4E | %.4E | %.4E | ... | %.4E |\n",
-         x[0], x[i], h, x[i+1], x[K-1]);
-  printf("Local grid:\n");
-  printf("|");
-  for (Uint u = 0; u <= N; u++)
-  {
-    printf(" al[%i] |", u);
-  }
-  printf("\n|");
-  for (Uint u = 0; u <= N; u++)
-  {
-    printf(" %.4E |", al[u]);
-  }
-  printf("\n\n");
-#endif
-
-
   // find delta's
   delta[0][0][0] = 1.;
   c1 = 1.;
   for (Uint n = 1; n <= N; n++) // For n=1 to N
   {
     Uint m;
-    c2 = 1;
+    c2 = 1.;
     for (Uint v = 0; v < n; v++) // For nu=0 to n-1
     {
       c3 = al[n] - al[v];
@@ -1229,7 +1206,6 @@ double finite_difference_Fornberg(
     }
     c1 = c2;
   }// end for (Uint n=1; n<=N; n++)
-
 
   // d^m f(x) / dx^m = sum_{0}^{n} delta^{m}_{n,nu} f(x_{nu})
   ret = 0.;
