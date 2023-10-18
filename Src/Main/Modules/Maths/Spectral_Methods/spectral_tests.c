@@ -1298,7 +1298,7 @@ int derivative_tests(Grid_T *const grid)
 static void derivative_tests_finite_diff_method(Grid_T *const grid)
 {
   const Uint N = (Uint)Pgeti("n_a");
-  const Uint fd_acc = 3;
+  const Uint fd_acc = 3; // note: we are using 3rd order polynomial
   double *f   = alloc_double(N);
   double *fp  = alloc_double(N);
   double *fpp = alloc_double(N);
