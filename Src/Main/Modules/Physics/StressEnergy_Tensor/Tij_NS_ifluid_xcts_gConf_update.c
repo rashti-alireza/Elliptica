@@ -128,6 +128,13 @@ void Tij_NS_eos_update_rho0(Patch_T *const patch,EoS_T *const eos)
       rho0[ijk] = 0;
     }
   }
+  
+  spectral_filter_T args;
+  args.patch     = patch;
+  args.field     = "rho0";
+  args.filter    = "erfclog";
+  args.erfclog_p = 8;
+  spectral_filter(&args);
 }
 
 /* after finding new NS surface, root finder might find h ~ 1
