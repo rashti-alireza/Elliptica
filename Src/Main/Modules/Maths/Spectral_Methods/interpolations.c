@@ -588,7 +588,7 @@ static double interpolation_Chebyshev_Tn_XYZ(Interpolation_T *const interp_s)
 // for ease of using at interpolation implementation.
 // ->return value: value of this compound basis at specific point.
 */
-static double T(const Uint n,const Uint i,const double x)
+double T_cheb_combined(const Uint n,const Uint i,const double x)
 {
   double t = 0;
   
