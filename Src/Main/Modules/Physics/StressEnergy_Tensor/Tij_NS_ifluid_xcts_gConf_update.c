@@ -52,25 +52,34 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
       dField_di(du0_D0);
       dField_di(du0_D1);
       dField_di(du0_D2);
-      /* NOTE: rho0 for pwp eos is C^0 continuous so it is prone to Gibbs phenomenon
-      // in particular where h ~ 1, i.e., close to NS's surface. hence, calculating 
-      // drho0 using analytical values and thus chain rule is preferable. */
-      READ_v(enthalpy)
-      READ_v(denthalpy_D0)
-      READ_v(denthalpy_D1)
-      READ_v(denthalpy_D2)
-      
-      REALLOC_v_WRITE_v(drho0_D0)
-      REALLOC_v_WRITE_v(drho0_D1)
-      REALLOC_v_WRITE_v(drho0_D2)
-      
-      FOR_ALL_ijk
+      if (Pcmps("rho0_derivative","chain"))
       {
-        eos->h          = enthalpy[ijk];
-        double drho0_dh = eos->drho0_dh(eos);
-        drho0_D0[ijk] = drho0_dh*denthalpy_D0[ijk];
-        drho0_D1[ijk] = drho0_dh*denthalpy_D1[ijk];
-        drho0_D2[ijk] = drho0_dh*denthalpy_D2[ijk];
+        /* NOTE: rho0 for pwp eos is C^0 continuous so it is prone to Gibbs phenomenon
+        // in particular where h ~ 1, i.e., close to NS's surface. hence, calculating 
+        // drho0 using analytical values and thus chain rule is preferable. */
+        READ_v(enthalpy)
+        READ_v(denthalpy_D0)
+        READ_v(denthalpy_D1)
+        READ_v(denthalpy_D2)
+        
+        REALLOC_v_WRITE_v(drho0_D0)
+        REALLOC_v_WRITE_v(drho0_D1)
+        REALLOC_v_WRITE_v(drho0_D2)
+        
+        FOR_ALL_ijk
+        {
+          eos->h          = enthalpy[ijk];
+          double drho0_dh = eos->drho0_dh(eos);
+          drho0_D0[ijk] = drho0_dh*denthalpy_D0[ijk];
+          drho0_D1[ijk] = drho0_dh*denthalpy_D1[ijk];
+          drho0_D2[ijk] = drho0_dh*denthalpy_D2[ijk];
+        }
+      }
+      else
+      {
+        dField_di(drho0_D0);
+        dField_di(drho0_D1);
+        dField_di(drho0_D2);
       }
     }
     else/* the following not using chain rule for rho0 */
@@ -129,12 +138,15 @@ void Tij_NS_eos_update_rho0(Patch_T *const patch,EoS_T *const eos)
     }
   }
   
-  spectral_filter_T args;
-  args.patch     = patch;
-  args.field     = "rho0";
-  args.filter    = "erfclog";
-  args.erfclog_p = 8;
-  spectral_filter(&args);
+  if (Pcmps("rho0_filter","yes"))
+  {
+    spectral_filter_T args;
+    args.patch     = patch;
+    args.field     = "rho0";
+    args.filter    = "erfclog";
+    args.erfclog_p = Pgeti("erfclog_p");
+    spectral_filter(&args);
+  }
 }
 
 /* after finding new NS surface, root finder might find h ~ 1
