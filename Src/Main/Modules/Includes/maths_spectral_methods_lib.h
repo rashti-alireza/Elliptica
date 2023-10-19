@@ -15,7 +15,7 @@
 
 struct INTERPOLATION_T;
 struct FIELD_T;
-
+struct PATCH_T;
 
 /* interpolation function typedef */
 typedef double fInterpolation_T(struct INTERPOLATION_T *const interp_s);
@@ -192,6 +192,16 @@ r2cft_2d_df_dtheta_S2
   const Uint Nphi/* number of point in phi direction */
 );
 
+// encapsulate filter args.
+typedef struct SPECTRAL_FILTER_T
+{
+ struct PATCH_T *patch;// patch that has the field
+ const char *field;// field name, e.g., "rho0".
+ const char *filter;// name of the filter, e.g., erfclog
+ int erfclog_p;// p arg for erfclog filter.
+}spectral_filter_T;
+
+void spectral_filter(const spectral_filter_T *const args);
 
 #endif
 
