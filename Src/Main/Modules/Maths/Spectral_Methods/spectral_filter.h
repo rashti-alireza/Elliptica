@@ -1,5 +1,6 @@
 #include "core_lib.h"
 #include "maths_general_lib.h"
+#include "manifold_lib.h"
 #include "fields_lib.h"
 #include "maths_spectral_methods_lib.h"
 #include "maths_special_functions_lib.h"

@@ -47,14 +47,16 @@ static void filter_erfclog(const spectral_filter_T *const args)
   // now rewrite the field
   for (i = 0; i < n[0]; ++i)
   {
+    double X = 
+      General2ChebyshevExtrema(patch->node[i_j_k_to_ijk(n,i,0,0)]->X[0],0,patch);
     for (j = 0; j < n[1]; ++j)
     {
+      double Y = 
+        General2ChebyshevExtrema(patch->node[i_j_k_to_ijk(n,0,j,0)]->X[1],1,patch);
       for (k = 0; k < n[2]; ++k)
       {
         Uint ijk = i_j_k_to_ijk(n,i,j,k);
-        double X = patch->node[ijk]->X[0];
-        double Y = patch->node[ijk]->X[1];
-        double Z = patch->node[ijk]->X[2];
+        double Z = General2ChebyshevExtrema(patch->node[ijk]->X[2],2,patch);
         v[ijk] = C[ijk]*Tx(i,X)*Ty(j,Y)*Tz(k,Z);
       }
     }
