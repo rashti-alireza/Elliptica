@@ -43,21 +43,24 @@ static void filter_erfclog(const spectral_filter_T *const args)
       }
     }
   }
-  
+
   // now rewrite the field
-  for (i = 0; i < n[0]; ++i)
+  for (Uint ijk_ = 0; ijk_ < patch->nn; ++ijk_)
   {
-    double X = 
-      General2ChebyshevExtrema(patch->node[i_j_k_to_ijk(n,i,0,0)]->X[0],0,patch);
-    for (j = 0; j < n[1]; ++j)
+    double X = General2ChebyshevExtrema(patch->node[ijk_]->X[0],0,patch);
+    double Y = General2ChebyshevExtrema(patch->node[ijk_]->X[1],1,patch);
+    double Z = General2ChebyshevExtrema(patch->node[ijk_]->X[2],2,patch);
+    v[ijk_]  = 0.;
+    for (i = 0; i < n[0]; ++i)
     {
-      double Y = 
-        General2ChebyshevExtrema(patch->node[i_j_k_to_ijk(n,0,j,0)]->X[1],1,patch);
-      for (k = 0; k < n[2]; ++k)
+      for (j = 0; j < n[1]; ++j)
       {
-        Uint ijk = i_j_k_to_ijk(n,i,j,k);
-        double Z = General2ChebyshevExtrema(patch->node[ijk]->X[2],2,patch);
-        v[ijk] = C[ijk]*Tx(i,X)*Ty(j,Y)*Tz(k,Z);
+        for (k = 0; k < n[2]; ++k)
+        {
+          Uint ijk = i_j_k_to_ijk(n,i,j,k);
+          
+          v[ijk_] += C[ijk]*Tx(i,X)*Ty(j,Y)*Tz(k,Z);
+        }
       }
     }
   }
