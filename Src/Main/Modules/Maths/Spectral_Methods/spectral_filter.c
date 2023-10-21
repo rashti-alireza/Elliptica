@@ -32,38 +32,41 @@ static void filter_erfclog(const spectral_filter_T *const args)
   // adjust coeffs
   for (i = 0; i < n[0]; ++i)
   {
-    double th1 = (double)i/n[0];
+    double th1 = (double)i/(n[0]-1.);
     for (j = 0; j < n[1]; ++j)
     {
-      double th2 = (double)j/n[1];
+      double th2 = (double)j/(n[1]-1.);
       for (k = 0; k < n[2]; ++k)
       {
-        double th3 = (double)k/n[2];
+        double th3 = (double)k/(n[2]-1.);
         C[i_j_k_to_ijk(n,i,j,k)] *= erfclog(th1,p)*erfclog(th2,p)*erfclog(th3,p);
       }
     }
   }
 
-  // now rewrite the field
+  // now rewrite the field with new coeffs
   for (Uint ijk_ = 0; ijk_ < patch->nn; ++ijk_)
   {
     double X = General2ChebyshevExtrema(patch->node[ijk_]->X[0],0,patch);
     double Y = General2ChebyshevExtrema(patch->node[ijk_]->X[1],1,patch);
     double Z = General2ChebyshevExtrema(patch->node[ijk_]->X[2],2,patch);
     v[ijk_]  = 0.;
+    
     for (i = 0; i < n[0]; ++i)
     {
+      double tx = Tx(i,X);
       for (j = 0; j < n[1]; ++j)
       {
+        double ty = Ty(j,Y);
         for (k = 0; k < n[2]; ++k)
         {
           Uint ijk = i_j_k_to_ijk(n,i,j,k);
           
-          v[ijk_] += C[ijk]*Tx(i,X)*Ty(j,Y)*Tz(k,Z);
+          v[ijk_] += C[ijk]*tx*ty*Tz(k,Z);
         }
       }
     }
-  }
+  }// end of for (Uint ijk_ = 0; ijk_ < patch->nn; ++ijk_)
 }
 
 /* logerfc filter (adapted from whisky THC)
@@ -78,6 +81,8 @@ static void filter_erfclog(const spectral_filter_T *const args)
  *  equation (15).
  *
  *  u(x) = sum_{j=0}^{N} filter_erfclog(j/N , p)  c_j  base_j(x)
+ * 
+ *  note: the smaller the p the wider the Gaussian part of the erfclog.
  */
 static double erfclog(const double th, const int p/* e.g., p = 8 */)
 {
