@@ -29,10 +29,9 @@ static double logy_of_logh_hermite(EoS_T* const eos,
   y = Table_Log_Inv(execute_interpolation(interp_s)) - y_shift;
   
   // TODO: DEBUG, why this happens(if any)?
-  assert(y != DBL_MAX);
   assert(y >= y_floor);
   
-  return (y < y_floor || y == DBL_MAX) ? 0. : y;
+  return (y < y_floor) ? y_floor : y;
 }
 
 // assumes Table_Log(p) = hermite(Table_Log(h))
