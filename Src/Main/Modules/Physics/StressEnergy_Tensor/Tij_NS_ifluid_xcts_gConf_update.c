@@ -41,6 +41,7 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
       Tij_NS_neat_enthalpy(patch);
     
     Tij_NS_eos_update_rho0(patch,eos);
+    Tij_NS_eos_update_e0(patch,eos);
     Tij_NS_IF_XCTS_gConf_u0(patch);
     
     /* update derivatives */
@@ -143,6 +144,39 @@ void Tij_NS_eos_update_rho0(Patch_T *const patch,EoS_T *const eos)
     spectral_filter_T args;
     args.patch     = patch;
     args.field     = "rho0";
+    args.filter    = "erfclog";
+    args.erfclog_p = Pgeti("erfclog_p");
+    spectral_filter(&args);
+  }
+}
+
+/* updating e0 using eos */
+void Tij_NS_eos_update_e0(Patch_T *const patch,EoS_T *const eos)
+{
+  READ_v(enthalpy)
+  REALLOC_v_WRITE_v(e0)
+  const Uint nn = patch->nn;
+  Uint ijk;
+
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    eos->h  = enthalpy[ijk];
+    e0[ijk] = eos->specific_internal_energy(eos);
+    
+    /* make sure e0 won't get nan due to Gibbs phenomena or 
+    // when finding NS surface. */
+    if (!isfinite(e0[ijk]))
+    {
+      //printf("Put e0(h = %g) = 0.\n",enthalpy[ijk]);
+      e0[ijk] = 0.;
+    }
+  }
+  
+  if (Pcmps("e0_filter","yes"))
+  {
+    spectral_filter_T args;
+    args.patch     = patch;
+    args.field     = "e0";
     args.filter    = "erfclog";
     args.erfclog_p = Pgeti("erfclog_p");
     spectral_filter(&args);
