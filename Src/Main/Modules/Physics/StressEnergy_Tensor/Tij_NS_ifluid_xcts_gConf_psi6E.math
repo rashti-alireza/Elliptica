@@ -70,6 +70,8 @@ Declare =
 
    EbarP = psi6*p*(enthalpy*(u0*alpha)**2 - p_o_rho0);
 
+## note: EConf = EConfP/EConfC
+
 `  EConfP[ijk] = EbarP;`
 `  EConfC[ijk] = p_o_rho0;`
 
