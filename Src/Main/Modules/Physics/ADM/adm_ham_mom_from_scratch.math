@@ -116,7 +116,13 @@ Declare =
  (obj = Field,name = dGamma, rank = UDDD, C_macro4);
 
  # EConf
- (obj = Field,name = EConf, rank = 0, C_macro1);
+ #(obj = Field,name = EConf, rank = 0, C_macro1);
+
+ # EConfP
+ (obj = Field,name = EConfP, rank = 0, C_macro1);
+
+ # EConfC
+ (obj = Field,name = EConfC, rank = 0, C_macro1);
 
  # conformal momentum current
  (obj = Field,name = JConf, rank = U, C_macro1);
@@ -145,7 +151,8 @@ Symm[dGamma(i,j,k,l)  = dGamma(i,k,j,l)];
 #################################################################
 psim6  = psi**(-6);
 J(i)   = psim6*JConf(i);
-E      = psim6*EConf;
+#E      = psim6*EConf;
+Ep      = psim6*EConfP;
 
 Ric1(-a,-b)    =   dGamma(c,ap,bp,i)*KD(-i,-c)*KD(-ap,a)*KD(-bp,b);
 Symm[Ric1(i,j) = Ric1(j,i)];
@@ -172,7 +179,9 @@ DjKij(i) = dadm_KIJ(i,j,l)*KD(-j,-l)+\
 
 
 #### Hamiltonian:
-Ham_Constraint =  R-KijKij+trK**2-16*pi*E;
+#Ham_Constraint =  R-KijKij+trK**2-16*pi*E;
+
+Ham_Constraint =  EConfC*(R-KijKij+trK**2)-16*pi*Ep;
 
 
 #### Momentum:
