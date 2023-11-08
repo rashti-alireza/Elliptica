@@ -66,6 +66,7 @@ SRC+=("${PROJ_DIR}/Initial_Data_Reader")
 SRC+=("${PROJ_DIR}/BH_NS_Binary_Initial_Data")
 SRC+=("${PROJ_DIR}/NS_NS_Binary_Initial_Data")
 SRC+=("${PROJ_DIR}/BH_BH_Binary_Initial_Data")
+SRC+=("${PROJ_DIR}/Single_NS_Initial_Data")
 SRC+=("${PROJ_DIR}/TOV_star")
 
 ## src dir
@@ -104,6 +105,10 @@ rm -v ${IDR_TOP}/src/nsns_solve_eqs.?
 rm -v ${IDR_TOP}/src/bhbh_analyze.?
 rm -v ${IDR_TOP}/src/bhbh_main.?
 rm -v ${IDR_TOP}/src/bhbh_solve_eqs.?
+
+rm -v ${IDR_TOP}/src/sns_analyze.?
+rm -v ${IDR_TOP}/src/sns_main.?
+rm -v ${IDR_TOP}/src/sns_solve_eqs.?
 
 rm -v ${IDR_TOP}/src/projects_data_base_MADE_BY_MAKE.?
 rm -v ${IDR_TOP}/src/pr_for_fields.?
@@ -194,6 +199,27 @@ int BH_BH_Binary_Initial_Data(void *vp)
 
 EOF
 
+## create Single_NS_Initial_Data function since we deleted this file and we need
+## the following pieces to ensure the ID reader works.
+cd ${IDR_TOP}/src
+cat << EOF > sns_main.c
+#include "sns_header.h"
+
+int Single_NS_Initial_Data(void *vp);
+void sns_export_id_generic(void *vp);
+
+int Single_NS_Initial_Data(void *vp)
+{
+  /* if this is a generic ID reader call */
+  if (strcmp_i(PgetsEZ("IDR_SNS_export_id"),"generic"))
+    sns_export_id_generic(vp);
+  else
+    Error1(NO_OPTION);
+
+  return EXIT_SUCCESS;
+}
+
+EOF
 
 ## resolving known name conflicts
 cd ${IDR_TOP}/src
