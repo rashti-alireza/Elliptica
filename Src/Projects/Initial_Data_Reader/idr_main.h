@@ -5,6 +5,7 @@
 int BH_NS_Binary_Initial_Data(void *vp);
 int NS_NS_Binary_Initial_Data(void *vp);
 int BH_BH_Binary_Initial_Data(void *vp);
+int Single_NS_Initial_Data(void *vp);
 
 int Initial_Data_Reader(void *vp);
 Elliptica_ID_Reader_T *elliptica_id_reader_init (

@@ -311,6 +311,12 @@ int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr)
     Psets(P_"BHBH_export_id","generic");
     BH_BH_Binary_Initial_Data(idr);
   }
+  else if (strcmp_i(idr->system,"Single_NS_initial_data") &&
+           strcmp_i(idr->option,"generic"))
+  {
+    Psets(P_"SNS_export_id","generic");
+    Single_NS_Initial_Data(idr);
+  }
   else
   {
     Error1(NO_OPTION);

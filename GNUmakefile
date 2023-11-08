@@ -172,6 +172,7 @@ required_pro += $(PROJECT_DIR)/Approximate_Killing_Vector
 required_pro += $(PROJECT_DIR)/BH_NS_Binary_Initial_Data
 required_pro += $(PROJECT_DIR)/NS_NS_Binary_Initial_Data
 required_pro += $(PROJECT_DIR)/BH_BH_Binary_Initial_Data
+required_pro += $(PROJECT_DIR)/Single_NS_Initial_Data
 
 SPECIAL_PR_PROJECT_NAMES = $(notdir $(filter-out $(PROJECT),$(required_pro)))
 
