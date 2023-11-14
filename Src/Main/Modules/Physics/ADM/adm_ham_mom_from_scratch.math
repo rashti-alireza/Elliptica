@@ -125,7 +125,11 @@ Declare =
  (obj = Field,name = EConfC, rank = 0, C_macro1);
 
  # conformal momentum current
- (obj = Field,name = JConf, rank = U, C_macro1);
+ #(obj = Field,name = JConf, rank = U, C_macro1);
+
+ # conformal momentum current
+ (obj = Field,name = JConfP, rank = U, C_macro1);
+ (obj = Field,name = JConfC, rank = 0, C_macro1);
 
  # trKij
  (obj = Field,name = trK, rank = 0, C_macro1);
@@ -150,7 +154,8 @@ Symm[dGamma(i,j,k,l)  = dGamma(i,k,j,l)];
 ## Calculate Hamiltonian and Momentum constraints:
 #################################################################
 psim6  = psi**(-6);
-J(i)   = psim6*JConf(i);
+#J(i)   = psim6*JConf(i);
+Jp(i)  = psim6*JConfP(i);
 #E      = psim6*EConf;
 Ep      = psim6*EConfP;
 
@@ -181,11 +186,16 @@ DjKij(i) = dadm_KIJ(i,j,l)*KD(-j,-l)+\
 #### Hamiltonian:
 #Ham_Constraint =  R-KijKij+trK**2-16*pi*E;
 
+## smooth version:
 Ham_Constraint =  EConfC*(R-KijKij+trK**2)-16*pi*Ep;
 
 
 #### Momentum:
-Mom_constraint(i) = DjKij(i)-adm_ig(i,j)*dtrK(-j)-8*pi*J(i);
+#Mom_constraint(i) = DjKij(i)-adm_ig(i,j)*dtrK(-j)-8*pi*J(i);
+
+## smooth version:
+Mom_constraint(i) = JConfC*(DjKij(i)-adm_ig(i,j)*dtrK(-j)-8*pi*Jp(i));
+
 
 
 ### populate:

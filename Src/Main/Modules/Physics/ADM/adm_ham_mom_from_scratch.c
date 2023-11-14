@@ -221,9 +221,10 @@ void adm_ham_and_mom_from_scratch(Patch_T *const patch,
   add_dfield_and_get_v(dGamma_U2D2D2D2)
   READ_v(EConfP)
   READ_v(EConfC)
-  READ_v(JConf_U0)
-  READ_v(JConf_U1)
-  READ_v(JConf_U2)
+  READ_v(JConfP_U0)
+  READ_v(JConfP_U1)
+  READ_v(JConfP_U2)
+  READ_v(JConfC)
   READ_v(trK)
   READ_v(dtrK_D0)
   READ_v(dtrK_D1)
@@ -235,14 +236,14 @@ FOR_ALL_ijk
   double psim6 =
 pow(psi[ijk], -6);
 
-  double J_U0 =
-JConf_U0[ijk]*psim6;
+  double Jp_U0 =
+JConfP_U0[ijk]*psim6;
 
-  double J_U1 =
-JConf_U1[ijk]*psim6;
+  double Jp_U1 =
+JConfP_U1[ijk]*psim6;
 
-  double J_U2 =
-JConf_U2[ijk]*psim6;
+  double Jp_U2 =
+JConfP_U2[ijk]*psim6;
 
   double Ep =
 EConfP[ijk]*psim6;
@@ -463,16 +464,16 @@ EConfC[ijk]*(-KijKij + R + pow(trK[ijk], 2)) - 16*M_PI*
 Ep;
 
   double Mom_constraint_U0 =
-DjKij_U0 - 8*M_PI*J_U0 - adm_ig_U0U0[ijk]*dtrK_D0[ijk] -
-adm_ig_U0U1[ijk]*dtrK_D1[ijk] - adm_ig_U0U2[ijk]*dtrK_D2[ijk];
+-JConfC[ijk]*(-DjKij_U0 + 8*M_PI*Jp_U0 + adm_ig_U0U0[ijk]*dtrK_D0[ijk] +
+adm_ig_U0U1[ijk]*dtrK_D1[ijk] + adm_ig_U0U2[ijk]*dtrK_D2[ijk]);
 
   double Mom_constraint_U1 =
-DjKij_U1 - 8*M_PI*J_U1 - adm_ig_U0U1[ijk]*dtrK_D0[ijk] -
-adm_ig_U1U1[ijk]*dtrK_D1[ijk] - adm_ig_U1U2[ijk]*dtrK_D2[ijk];
+-JConfC[ijk]*(-DjKij_U1 + 8*M_PI*Jp_U1 + adm_ig_U0U1[ijk]*dtrK_D0[ijk] +
+adm_ig_U1U1[ijk]*dtrK_D1[ijk] + adm_ig_U1U2[ijk]*dtrK_D2[ijk]);
 
   double Mom_constraint_U2 =
-DjKij_U2 - 8*M_PI*J_U2 - adm_ig_U0U2[ijk]*dtrK_D0[ijk] -
-adm_ig_U1U2[ijk]*dtrK_D1[ijk] - adm_ig_U2U2[ijk]*dtrK_D2[ijk];
+-JConfC[ijk]*(-DjKij_U2 + 8*M_PI*Jp_U2 + adm_ig_U0U2[ijk]*dtrK_D0[ijk] +
+adm_ig_U1U2[ijk]*dtrK_D1[ijk] + adm_ig_U2U2[ijk]*dtrK_D2[ijk]);
 
 
   mom_U0[ijk] = Mom_constraint_U0;
