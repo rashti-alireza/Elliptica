@@ -464,16 +464,19 @@ EConfC[ijk]*(-KijKij + R + pow(trK[ijk], 2)) - 16*M_PI*
 Ep;
 
   double Mom_constraint_U0 =
--JConfC[ijk]*(-DjKij_U0 + 8*M_PI*Jp_U0 + adm_ig_U0U0[ijk]*dtrK_D0[ijk] +
-adm_ig_U0U1[ijk]*dtrK_D1[ijk] + adm_ig_U0U2[ijk]*dtrK_D2[ijk]);
+-JConfC[ijk]*(-DjKij_U0 + adm_ig_U0U0[ijk]*dtrK_D0[ijk] +
+adm_ig_U0U1[ijk]*dtrK_D1[ijk] + adm_ig_U0U2[ijk]*dtrK_D2[ijk]) - 8*M_PI*
+Jp_U0;
 
   double Mom_constraint_U1 =
--JConfC[ijk]*(-DjKij_U1 + 8*M_PI*Jp_U1 + adm_ig_U0U1[ijk]*dtrK_D0[ijk] +
-adm_ig_U1U1[ijk]*dtrK_D1[ijk] + adm_ig_U1U2[ijk]*dtrK_D2[ijk]);
+-JConfC[ijk]*(-DjKij_U1 + adm_ig_U0U1[ijk]*dtrK_D0[ijk] +
+adm_ig_U1U1[ijk]*dtrK_D1[ijk] + adm_ig_U1U2[ijk]*dtrK_D2[ijk]) - 8*M_PI*
+Jp_U1;
 
   double Mom_constraint_U2 =
--JConfC[ijk]*(-DjKij_U2 + 8*M_PI*Jp_U2 + adm_ig_U0U2[ijk]*dtrK_D0[ijk] +
-adm_ig_U1U2[ijk]*dtrK_D1[ijk] + adm_ig_U2U2[ijk]*dtrK_D2[ijk]);
+-JConfC[ijk]*(-DjKij_U2 + adm_ig_U0U2[ijk]*dtrK_D0[ijk] +
+adm_ig_U1U2[ijk]*dtrK_D1[ijk] + adm_ig_U2U2[ijk]*dtrK_D2[ijk]) - 8*M_PI*
+Jp_U2;
 
 
   mom_U0[ijk] = Mom_constraint_U0;

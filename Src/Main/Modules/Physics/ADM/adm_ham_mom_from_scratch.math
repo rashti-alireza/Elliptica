@@ -187,15 +187,14 @@ DjKij(i) = dadm_KIJ(i,j,l)*KD(-j,-l)+\
 #Ham_Constraint =  R-KijKij+trK**2-16*pi*E;
 
 ## smooth version:
-Ham_Constraint =  EConfC*(R-KijKij+trK**2)-16*pi*Ep;
+Ham_Constraint =  EConfC*( R-KijKij+trK**2 ) - 16*pi*Ep;
 
 
 #### Momentum:
 #Mom_constraint(i) = DjKij(i)-adm_ig(i,j)*dtrK(-j)-8*pi*J(i);
 
 ## smooth version:
-Mom_constraint(i) = JConfC*(DjKij(i)-adm_ig(i,j)*dtrK(-j)-8*pi*Jp(i));
-
+Mom_constraint(i) = JConfC*( DjKij(i)-adm_ig(i,j)*dtrK(-j) ) - 8*pi*Jp(i);
 
 
 ### populate:
