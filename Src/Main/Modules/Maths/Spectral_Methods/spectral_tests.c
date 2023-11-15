@@ -714,6 +714,12 @@ int interpolation_tests(Grid_T *const grid)
       status = interpolation_tests_N_cubic_spline_1d();
       check_test_result(status);
   }
+  if (DO)
+  {
+      printf("Interpolation test:            Hermite 1D Method =>");
+      status = interpolation_tests_Hermite_1d();
+      check_test_result(status);
+  }
   
   FUNC_TOC
   return EXIT_SUCCESS;
@@ -727,7 +733,7 @@ static int interpolation_tests_N_cubic_spline_1d(void)
   const Uint N = (Uint)Pgeti("n_a");
   double *f = alloc_double(N);
   double *x = alloc_double(N);
-  const double a = -M_PI, b = 3/4*M_PI;/* an arbitrary interval  */
+  const double a = -M_PI, b = 3./4.*M_PI;/* an arbitrary interval  */
   double *hs = make_random_number(N,a,b);
   double s = (b-a)/(N-1);
   double t,interp;
@@ -814,7 +820,7 @@ static int interpolation_tests_Neville_1d(void)
   const Uint N = (Uint)Pgeti("n_a");
   double *f = alloc_double(N);
   double *x = alloc_double(N);
-  const double a = -M_PI, b = 3/4*M_PI;/* an arbitrary interval  */
+  const double a = -M_PI, b = 3./4.*M_PI;/* an arbitrary interval  */
   double *hs = make_random_number(N,a,b);
   const double s = (b-a)/(N-1);
   double t,interp;
@@ -1274,6 +1280,63 @@ static int interpolation_tests_XYZ(Field_T *const field,const double *const X,co
   return TEST_SUCCESSFUL;
 }
 
+int derivative_tests(Grid_T *const grid)
+{
+  if (DO)
+  {
+    derivative_tests_spectral_method(grid);
+  }
+  if (DO)
+  {
+    derivative_tests_finite_diff_method(grid);
+  }
+  
+  return EXIT_SUCCESS;
+}
+
+// testing finite difference derivatives
+static void derivative_tests_finite_diff_method(Grid_T *const grid)
+{
+  const Uint N = (Uint)Pgeti("n_a");
+  const Uint fd_acc = 3; // note: we are using 3rd order polynomial
+  double *f   = alloc_double(N);
+  double *fp  = alloc_double(N);
+  double *fpp = alloc_double(N);
+  double *x   = alloc_double(N);
+  double (*f_t)(const double x) = f_poly_3deg1;
+  double (*fp_t)(const double x) = df_poly_3deg1;
+  double (*fpp_t)(const double x) = ddf_poly_3deg1;
+  const double a = -M_PI, b = 3./4.*M_PI;/* an arbitrary interval  */
+  double s = (b-a)/(N-1);
+  double t;
+  Uint i;
+  
+  for (i = 0; i < N; ++i)
+  {
+    x[i]   = 
+    t      = a+i*s;
+    f[i]   = f_t(t);
+    fp[i]  = fp_t(t);
+    fpp[i] = fpp_t(t);
+  }
+  
+  for (i = 0; i < N; ++i)
+  {
+    t = a+i*s;
+    double df_an  = finite_difference_Fornberg(f,x,t,N,1,fd_acc);
+    double ddf_an = finite_difference_Fornberg(f,x,t,N,2,fd_acc);
+    
+    printf("|df_an  - df_nu|  = %0.6e\n", fabs(fp_t(t)  - df_an));
+    printf("|ddf_an - ddf_nu| = %0.6e\n", fabs(fpp_t(t) - ddf_an));
+  }
+  
+  Free(x);
+  Free(f);
+  Free(fp);
+  Free(fpp);
+  UNUSED(grid);
+}
+
 /* testing:
 // ========
 //
@@ -1283,9 +1346,8 @@ static int interpolation_tests_XYZ(Field_T *const field,const double *const X,co
 // note: the results will be printed accordingly in 
 // "Derivative_Tests" folder.
 // note: only those patches that use basis will be compared.
-// ->return value: EXIT_SUCCESS;
 */
-int derivative_tests(Grid_T *const grid)
+static void derivative_tests_spectral_method(Grid_T *const grid)
 {
   sFunc_Patch2Pdouble_T **DataBase_func;
   
@@ -1467,8 +1529,6 @@ int derivative_tests(Grid_T *const grid)
   
   free_func_Patch2Pdouble(DataBase_func);
   free(path);
-  
-  return EXIT_SUCCESS;
 }
 
 /* get a function and based on its name, find all of its 
@@ -1695,5 +1755,123 @@ static void free_func_Patch2Pdouble(sFunc_Patch2Pdouble_T **func)
   }
   
   free(func);
+}
+
+/* test Hermite 1-d method
+// ->return value: result of test. */
+static int interpolation_tests_Hermite_1d(void)
+{
+  Interpolation_T *interp_s = init_interpolation();
+  const Uint N = (Uint)Pgeti("n_a");
+  const Uint Nh = N/2; assert(N>2);// num tests
+  const Uint n_pnt  = 3;
+  const Uint fd_acc = 3;
+  double *f = alloc_double(N);
+  double *fp = alloc_double(N);
+  double *x = alloc_double(N);
+  double (*f_t)(const double x) = f_poly_3deg1;
+  double (*fp_t)(const double x) = df_poly_3deg1;
+  const double a = -M_PI, b = 3./4.*M_PI;/* an arbitrary interval  */
+  double *hs = make_random_number(Nh,a,b/5.); // b/5 so not too close to the end
+  double s = (b-a)/(N-1);
+  double t,interp;
+  Flag_T flg = NONE;
+  Uint i;
+  
+  for (i = 0; i < N; ++i)
+  {
+    t = x[i] = a+i*s;
+    f[i] = f_t(t);
+  }
+  
+  // with the internal derivatives  
+  interp_s->method = "Hermite1D";
+  interp_s->Hermite_1d->f = f;
+  interp_s->Hermite_1d->x = x;
+  interp_s->Hermite_1d->N = N;
+  interp_s->Hermite_1d->fd_accuracy_order = fd_acc;
+  interp_s->Hermite_1d->num_points = n_pnt;
+  plan_interpolation(interp_s);
+  
+  for (i = 0; i < Nh; ++i)
+  {
+    double diff;
+    t = hs[i];
+    interp_s->Hermite_1d->h = t;
+    interp = execute_interpolation(interp_s);
+    diff = interp-f_t(t);
+    
+    if (GRT(fabs(diff),s))
+    {
+      fprintf(stderr,"diff = %g\n",diff);
+      flg = FOUND;
+      break;
+    }
+  }
+  free_interpolation(interp_s);
+  
+  /* let's test the reveres order for x's */
+  s = -(b-a)/(N-1);
+  interp_s = init_interpolation();
+  for (i = 0; i < N; ++i)
+  {
+    t = x[i] = b+i*s;
+    f[i] = f_t(t);
+    fp[i] = fp_t(t);
+  }
+  
+  // with given derivative
+  interp_s->method = "Hermite1D";
+  interp_s->Hermite_1d->f = f;
+  interp_s->Hermite_1d->fp = fp;
+  interp_s->Hermite_1d->x = x;
+  interp_s->Hermite_1d->N = N;
+  interp_s->Hermite_1d->num_points = n_pnt;
+  plan_interpolation(interp_s);
+  
+  for (i = 0; i < Nh; ++i)
+  {
+    double diff;
+    t = hs[i];
+    interp_s->Hermite_1d->h = t;
+    interp = execute_interpolation(interp_s);
+    diff = interp-f_t(t);
+    
+    if (GRT(fabs(diff),-s))
+    {
+      fprintf(stderr,"diff = %g\n",diff);
+      flg = FOUND;
+      break;
+    }
+  }
+  
+  free_interpolation(interp_s);
+  free(f);
+  free(fp);
+  free(x);
+  free(hs);
+  
+  if (flg == FOUND)
+    return TEST_UNSUCCESSFUL;
+    
+  return TEST_SUCCESSFUL;
+}
+
+// an arbitray 3rd degree polynomial
+static double f_poly_3deg1(const double x)
+{
+  return 1.33*pow(x,3.) + 0.33*pow(x,2.) + 5.2;
+}
+
+// the 1st derivative of an arbitray 3rd degree polynomial
+static double df_poly_3deg1(const double x)
+{
+  return 3.*1.33*pow(x,2.) + 2.*0.33*x;
+}
+
+// the 2nd derivative of an arbitray 3rd degree polynomial
+static double ddf_poly_3deg1(const double x)
+{
+  return 2*3.*1.33*x + 2.*0.33;
 }
 

@@ -86,6 +86,8 @@ Symm[igConf(i,j)  = igConf(j,i)];
 
 `  JConfC[ijk] = p_o_rho0;`
 
+## note: JConf = JConfP/JConfC
+
 `}`
 
 ## set JConfP = JConf, and JConfC somewhere else is set 1.:

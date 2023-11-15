@@ -44,3 +44,11 @@ static void get_SpecDerivative_func_1stOrder(const Patch_T *const patch,SpecDeri
 static void get_SpecDerivative_func_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **func);
 static Uint IsSecondOrderFormula(Field_T *const f,const Dd_T *const dir_e,const Uint Ndir);
 static Uint JacobianFormat_2ndOrder(const Patch_T *const patch,const Dd_T dir,Dd_T dp);
+
+double finite_difference_Fornberg(
+  const double *const f /* function values such that f[j] = f(x[j]) */, 
+  const double *const x /* ordered 1D coordinate grid */, 
+  const double x0 /* d^m f(x)/dx^m| x=x0 */,
+  const Uint Nx /*length of x and f arrays*/,
+  const Uint fd_order /* finite diff order */,
+  const Uint fd_acc /*finite diff. accuracy */ );

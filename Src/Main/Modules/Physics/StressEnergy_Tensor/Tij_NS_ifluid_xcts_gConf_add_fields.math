@@ -40,6 +40,9 @@ Declare =
  # drho0
  (obj = Field,name = drho0, rank = D, C_macro);
 
+ # e0
+ (obj = Field,name = e0, rank = 0, C_macro);
+
  # EConf
  (obj = Field,name = EConf, rank = 0, C_macro2);
 

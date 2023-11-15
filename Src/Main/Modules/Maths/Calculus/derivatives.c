@@ -8,6 +8,9 @@
 #define COMMA ','
 #define MAX_STR_LEN (100)
 
+// find min{a,b}
+#define MIN(a,b) ( (a) < (b) ? (a) : (b) )
+
 /* taking partial derivatives using a regex comma separated list.
 // using the regex, it finds the field->name match and take derivative
 // according to the name. please read notes about partial_derivative.
@@ -22,7 +25,7 @@ void partial_derivative_regex(Patch_T *const patch,
 {
   char **regex = read_separated_items_in_string(regex_list,',');
   Uint i = 0;
-  
+
   while (regex[i])
   {
     Uint f;
@@ -35,14 +38,14 @@ void partial_derivative_regex(Patch_T *const patch,
     }
     i++;
   }
-  
+
   free_2d(regex);
 }
 
-/* this function parses the dfield->name and then takes partial derivative 
+/* this function parses the dfield->name and then takes partial derivative
 // in Cartesian coords (this can be changend lated by a if statement)
 // some conventions:
-// 1. each order of derivative shown by 'd' char at the 
+// 1. each order of derivative shown by 'd' char at the
 //    beginning of field name:
 //    e.g. dddpsi_D0D0D0 means 3rd order derivative of psi;
 // 2. the derivatives are all lower indexed(covariant)
@@ -57,16 +60,16 @@ double *partial_derivative(struct FIELD_T *const dfield)
   /* some checks */
   if(!dfield->name)
     Error0("No field name!");
-    
+
   Patch_T *const patch = dfield->patch;
   char dfield_name[MAX_STR_LEN];/* dpsi_D0 */
   Field_T *field = 0;
   int deriv_type = -1;/* d/dx = 0, d/dy = 1, d/dz = 2 */
   char *D, *stem;
   Uint slen;
-  
+
   sprintf(dfield_name,"%s",dfield->name);
-  
+
   /* parse the dfield_name: */
   /* deriv_type: */
   slen = (Uint) strlen(dfield_name);
@@ -80,11 +83,11 @@ double *partial_derivative(struct FIELD_T *const dfield)
   stem = &dfield_name[slen-3];/* rewind 3 chars back */
   /* if stem -> _ in dpsi_ */
   if (stem[0] != '_') stem++;
-  
+
   stem[0] = '\0';/* kill last index */
   stem = dfield_name;
   /* for quantities like: _d3g00_D1 */
-  if(stem[0] == '_') 
+  if(stem[0] == '_')
   {
     stem++;
     assert(stem[0] == 'd');
@@ -96,7 +99,7 @@ double *partial_derivative(struct FIELD_T *const dfield)
     stem[0] = '\0';/* kill first d */
     stem++;
   }
-  
+
   /* field */
   field = patch->fields[Ind(stem)];
   if(!field->v)
@@ -104,7 +107,7 @@ double *partial_derivative(struct FIELD_T *const dfield)
     Errors("No field values for '%s'",field->name);
   }
   empty_field(dfield);
-    
+
   /* take derivatives */
   if (deriv_type == 0)
     dfield->v = Partial_Derivative(field,"x");
@@ -115,13 +118,13 @@ double *partial_derivative(struct FIELD_T *const dfield)
   else
     Error0(NO_OPTION);
 
-  return dfield->v;  
+  return dfield->v;
 }
 
 /* Covariant Derivative function.
 // it takes covariant derivative of a given field.
 //
-// usage examples: 
+// usage examples:
 // ==============
 // double *Dphi     = Covariant_Derivative(phi,"x");// => d(phi)/dx
 // double *DxA_U2   = Covariant_Derivative(A_U2,"x");// => D(A_U2)/Dx = d(A(2))/dx + Gamma(2,0,k)*A(-k)
@@ -134,7 +137,7 @@ double *partial_derivative(struct FIELD_T *const dfield)
 double *Covariant_Derivative(Field_T *const f,const char *task)
 {
   /* The idea is to take the name of the field and then make the possible
-  // strings from its different components, e.g, in case f->name = "A_U1D2" 
+  // strings from its different components, e.g, in case f->name = "A_U1D2"
   // we need all component "A_U?D?", having made strings then
   // a function can calculate the partial derivativce part and a loop can calculate
   // Gamma*A_U?D? parts for each index. */
@@ -153,7 +156,7 @@ double *Covariant_Derivative(Field_T *const f,const char *task)
 //
 //
 // NOTE1 : each field has been defined on just one patch.
-// NOTE2 : this function also in case of spectral derivative makes the 
+// NOTE2 : this function also in case of spectral derivative makes the
 // spectral coefficients and save them in f->v2;
 // NOTE3 : this function allocate memory for the result.
 //
@@ -169,7 +172,7 @@ double *Covariant_Derivative(Field_T *const f,const char *task)
 // Cartesian xx derivative => *task = "x,x"
 // and so forth. furthermore for derivative in curvilinear coords we have:
 // Curvilinear 'a' derivative followed by 'b' followed by 'c' => *task ="a,b,c"
-// if one wants to override the default derivative method defined in 
+// if one wants to override the default derivative method defined in
 // the input file, they can append the task by " DELIMIT derivative type"; e.g.
 // Cartesian x derivative with finite difference:
 // => *task = "x DELIMIT Finite_Difference", DELIMIT is a macro defined above.
@@ -183,7 +186,7 @@ double *Partial_Derivative(Field_T *const f,const char *task)
   /* check up */
   if (!f)
     Error0("The field is empty!\n");
-  if (!f->v && !f->v2)  
+  if (!f->v && !f->v2)
     Error0("The field is empty!\n");
   if (!task)
     Error0("The task is empty!\n");
@@ -193,17 +196,17 @@ double *Partial_Derivative(Field_T *const f,const char *task)
   Uint Ndir;
   Method_T method_e = derivative_method(der_par,task);
   Dd_T  *dir_e = derivative_direction(task,&Ndir);
-  
+
   if (method_e == SPECTRAL)
     r = take_spectral_derivative(f,dir_e,Ndir);
   else
     Error0("There is no such derivative method defined for this function.\n");
-    
+
   free(dir_e);
   return r;
 }
 
-/* taking spectral derivative of the given field 
+/* taking spectral derivative of the given field
 // based on direction of derivative.
 // ->return value: values of the resultant.
 */
@@ -215,9 +218,9 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
   Patch_T p_tmp1 = make_temp_patch(f->patch);
   Patch_T p_tmp2 = make_temp_patch(f->patch);
   Uint i;
-  
+
   assert(Ndir);
-  
+
   /* 3-D fields */
   if (strstr(f->attr,"(3dim)"))
   {
@@ -230,7 +233,7 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
     {
       ff[0] = add_field("tmp1","(3dim)",&p_tmp1,NO);
       ff[1] = add_field("tmp2","(3dim)",&p_tmp2,NO);
-      
+
       deriv = spectral_derivative_1stOrder(f,dir_e[0]);
       ff[0]->v = deriv;
       frd = 0;
@@ -239,25 +242,25 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
         frd = i%2;
         bck = i/2;
         deriv = spectral_derivative_1stOrder(ff[bck],dir_e[i]);
-        
+
         /* make next ff ready */
         ff[frd]->v = deriv;
         free_v(ff[bck]);
         free_v2(ff[bck]);
       }
-      
+
       ff[frd]->v = 0;
       /* free leftovers */
       remove_field(ff[0]);
       remove_field(ff[1]);
-      
+
       free_temp_patch(&p_tmp1);
       free_temp_patch(&p_tmp2);
     }
   }/* end of if (strstr(f->attr,"(3dim)")) */
   else
     Error0("No such Dimension is defined for this function.\n");
-  
+
   return deriv;
 }
 
@@ -272,7 +275,7 @@ static Uint IsSecondOrderFormula(Field_T *const f,const Dd_T *const dir_e,const 
   Dd_T dp[3];
   int c;
   Uint d;
-  
+
   if (Ndir != 2)/* if it doesn't have 2 derivatives */
     return 0;
   else if (dir_e[0] != dir_e[1])/* if directions are not matched */
@@ -283,7 +286,7 @@ static Uint IsSecondOrderFormula(Field_T *const f,const Dd_T *const dir_e,const 
     c = get_dp_2ndOrder(f->patch,df,dir_e[0],dp);
     if (c > 1)/* if it depends more than 1 variable */
       return 0;
-    
+
     c = -1;
     for (d = 0; d < 3; ++d)
     {
@@ -301,7 +304,7 @@ static Uint IsSecondOrderFormula(Field_T *const f,const Dd_T *const dir_e,const 
       r = JacobianFormat_2ndOrder(f->patch,dir_e[0],dp[c]);
     }
   }
-  
+
   return r;
 }
 
@@ -313,7 +316,7 @@ static Uint IsSecondOrderFormula(Field_T *const f,const Dd_T *const dir_e,const 
 static Uint JacobianFormat_2ndOrder(const Patch_T *const patch,const Dd_T dir,Dd_T dp)
 {
   Uint r = 0;
-  
+
   if (patch->coordsys == Cartesian)
   {
     if (dir%3 == dp%3)
@@ -321,25 +324,25 @@ static Uint JacobianFormat_2ndOrder(const Patch_T *const patch,const Dd_T dir,Dd
   }
   else
      Error0(NO_JOB);
-  
+
   return r;
 }
 
 /* based on basis and collocation,
-// get the pertinent function for second order spectral derivative. 
+// get the pertinent function for second order spectral derivative.
 */
 static void get_SpecDerivative_func_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **func)
 {
   Uint i;
-  
+
   for (i = 0; i < 3; ++i)
   {
-    if (patch->basis[i] == Chebyshev_Tn_BASIS 
+    if (patch->basis[i] == Chebyshev_Tn_BASIS
         && patch->collocation[i] == Chebyshev_Extrema)
     {
       func[i] = derivative_ChebyshevExtrema_Tn_2ndOrder;
     }
-    else if (patch->basis[i] == Chebyshev_Tn_BASIS 
+    else if (patch->basis[i] == Chebyshev_Tn_BASIS
         && patch->collocation[i] == Chebyshev_Nodes)
     {
       func[i] = derivative_ChebyshevNodes_Tn_2ndOrder;
@@ -349,7 +352,7 @@ static void get_SpecDerivative_func_2ndOrder(const Patch_T *const patch,SpecDeri
   }
 }
 
-/* based on second order spectral derivative function and dependencies 
+/* based on second order spectral derivative function and dependencies
 // it finds the Dd_T dp used for direction of partial derivative.
 // also it returns the number of dependecy of dir on a,b,c, which obviously
 // if it greaters than 1, it means that 2nd order formula is not applicable.
@@ -360,9 +363,9 @@ static int get_dp_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **fu
   Uint depend[3];
   Uint i;
   int cnt;
-  
+
   get_dependency(patch,dir,depend);
-  
+
   cnt = 0;
   for (i = 0; i < 3; ++i)
   {
@@ -384,13 +387,13 @@ static int get_dp_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **fu
 
     }
   }
-  
+
   return cnt;
 }
 
-/* taking second order 3-D spectral derivative in 
+/* taking second order 3-D spectral derivative in
 // the specified direction dir_e on the patch determined by field.
-// it is worth explaining that some bases are expanded in 
+// it is worth explaining that some bases are expanded in
 // different coordinate than x,y and z or a,b and c; for example Chebyshev Tn
 // which expanded in normal coords N0,N1 and N2. so in taking
 // derivative one needs to consider this. the variable being used
@@ -413,10 +416,10 @@ static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e)
   Uint i ,c;
   Dd_T d;
   Flag_T flg[3];
-  
+
   get_SpecDerivative_func_2ndOrder(patch,df);
   get_dp_2ndOrder(patch,df,dir_e,dp);
-  
+
   c = 0;
   for (d = _N0_; d <= _N2_; ++d)
   {
@@ -429,10 +432,10 @@ static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e)
       c++;
     }
   }
-  
+
   /* since this is second order, we have to have only one direction */
   assert(c == 1);
-  
+
   if (flg[0] == YES)
   {
     /* OpenMP_1d_Pragma(omp parallel for) */
@@ -457,7 +460,7 @@ static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e)
     for (i = 0; i < nn; ++i)
     {
       double j = dq2_dq1(patch,dp[2],dir_e,i);
-      der[i] = df_dp[2][i]*Pow2(j); 
+      der[i] = df_dp[2][i]*Pow2(j);
     }
   }
 
@@ -465,11 +468,11 @@ static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e)
   for (d = _N0_; d <= _N2_; ++d)
     if (df_dp[d])
       free(df_dp[d]);
-  
+
   return der;
 }
 
-/* finding all of types of derivatives and put them into 
+/* finding all of types of derivatives and put them into
 // an array of Dd_T with size *n in order that they have been written.
 // note: this function allocate memory.
 // ->return value: array of Dd_T and number of this arrays
@@ -479,12 +482,12 @@ static Dd_T *derivative_direction(const char *const task,Uint *const n)
   Dd_T *e = 0;
   char *savestr,*str = dup_s(task);
   char *tok = tok_s(str,DELIMIT,&savestr);
-  
+
   if (!tok)
     Errors("There is No direction in %s.\n",task);
-  
+
   *n = 0;
-  tok = tok_s(tok,COMMA,&savestr);  
+  tok = tok_s(tok,COMMA,&savestr);
   while (tok)
   {
     e = realloc(e,(*n+1)*sizeof(*e));
@@ -493,9 +496,9 @@ static Dd_T *derivative_direction(const char *const task,Uint *const n)
     tok = tok_s(0,COMMA,&savestr);
     ++(*n);
   }
-  
+
   free(str);
-  
+
   return e;
 }
 
@@ -508,42 +511,42 @@ static Method_T derivative_method(const char *const par,const char *const task)
   Method_T type = UNDEFINED_METHOD;
   char *s = dup_s(task);
   char *rs = 0;
-  
+
   tok_s(s,DELIMIT,&rs);
   type = str2enum_method(rs);
   free(s);
-  
+
   /* check parameter if no info is in task */
   if (type == UNDEFINED_METHOD)
   {
     type = str2enum_method(par);
-  } 
-  
+  }
+
   /* if still no type has been found => no info in parameter and task */
   if (type == UNDEFINED_METHOD)
     Error0("No Derivative Method is defined "
       "in parameter file or in function task.\n");
-  
+
   return type;
 }
 
-/* getting a derivative method in string format and 
+/* getting a derivative method in string format and
 // returing the Method_T.
 // ->return value: Method_T and if not found UNDEFINED_Method.
 */
 static Method_T str2enum_method(const char *const str)
 {
   Method_T type = UNDEFINED_METHOD;
-  
+
   if (strstr_i(str,"Spectral"))
     type = SPECTRAL;
   //else if (strcmp_i(str,"Finite_Difference"))
     //type = FINITE_DIFF;
-  
+
   return type;
 }
 
-/* getting a derivative direction in string format and 
+/* getting a derivative direction in string format and
 // returning the Dd_T.
 // ->return value: Dd_T and if not found error.
 */
@@ -563,13 +566,13 @@ static Dd_T str2enum_direction(const char *const str)
     return _c_;
   else
     Errors("There is no such %s derivative defined!\n",str);
-  
+
   return UNDEFINED_DIR;
 }
 
-/* taking 3-D spectral derivative in the specified direction dir_e 
+/* taking 3-D spectral derivative in the specified direction dir_e
 // on a patch determined by field.
-// it is worth explaining that some bases are expanded in 
+// it is worth explaining that some bases are expanded in
 // different coordinate than x,y and z or a,b and c; for example Chebyshev Tn
 // which expanded in normal coords N0,N1 and N2. so in taking
 // derivative one needs to consider this. the variable being used
@@ -588,10 +591,10 @@ static double *spectral_derivative_1stOrder(Field_T *const f,const Dd_T dir_e)
   Uint i;
   Dd_T d;
   Flag_T flg[3];
-  
+
   get_SpecDerivative_func_1stOrder(patch,df);
   get_dp_1stOrder(patch,df,dir_e,dp);
-  
+
   for (d = _N0_; d <= _N2_; ++d)
   {
     flg[d] = NO;
@@ -602,12 +605,12 @@ static double *spectral_derivative_1stOrder(Field_T *const f,const Dd_T dir_e)
       flg[d] = YES;
     }
   }
-  
+
   if (flg[0] == YES && flg[1] == YES && flg[2] == YES)
   {
     /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
-      der[i] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
+      der[i] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) +
                df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) +
                df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
   }
@@ -615,14 +618,14 @@ static double *spectral_derivative_1stOrder(Field_T *const f,const Dd_T dir_e)
   {
     /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
-      der[i] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
+      der[i] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) +
                df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i);
   }
   else if (flg[1] == YES && flg[2] == YES)
   {
     /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
-      der[i] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) + 
+      der[i] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) +
                df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
   }
   else if (flg[0] == YES)
@@ -635,20 +638,20 @@ static double *spectral_derivative_1stOrder(Field_T *const f,const Dd_T dir_e)
   {
     /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
-      der[i] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i); 
+      der[i] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i);
   }
   else if (flg[2] == YES)
   {
     /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
-      der[i] = df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i); 
+      der[i] = df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
   }
 
 
   for (d = _N0_; d <= _N2_; ++d)
     if (df_dp[d])
       free(df_dp[d]);
-  
+
   return der;
 }
 
@@ -661,7 +664,7 @@ static double *derivative_ChebyshevExtrema_Tn_1stOrder(Field_T *const f,const Dd
 {
   assert(dir <= _N2_);
   make_coeffs_1d(f,dir);
-  
+
   Patch_T *const patch = f->patch;
   const Uint *const n = patch->n;
   const Uint nn = total_nodes_patch(patch);
@@ -670,7 +673,7 @@ static double *derivative_ChebyshevExtrema_Tn_1stOrder(Field_T *const f,const Dd
   double *x = make_1Dcollocation_ChebExtrema(n[dir]);
   const double *const coeffs = f->v2;
   Uint l;
-  
+
   if (dir == 0)
   {
     /* OpenMP_2d_Pragma(omp parallel for) */
@@ -678,9 +681,9 @@ static double *derivative_ChebyshevExtrema_Tn_1stOrder(Field_T *const f,const Dd
     {
       Uint i,j,k;
       Uint c;
-      
+
       ijk_to_i_j_k(l,n,&i,&j,&k);
-      
+
       for (c = 1; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,c,j,k);//coeff_ind(i,j,k,c,n,dir);
@@ -697,9 +700,9 @@ static double *derivative_ChebyshevExtrema_Tn_1stOrder(Field_T *const f,const Dd
     {
       Uint i,j,k;
       Uint c;
-      
+
       ijk_to_i_j_k(l,n,&i,&j,&k);
-      
+
       for (c = 1; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,i,c,k);//coeff_ind(i,j,k,c,n,dir);
@@ -716,9 +719,9 @@ static double *derivative_ChebyshevExtrema_Tn_1stOrder(Field_T *const f,const Dd
     {
       Uint i,j,k;
       Uint c;
-      
+
       ijk_to_i_j_k(l,n,&i,&j,&k);
-      
+
       for (c = 1; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,i,j,c);//coeff_ind(i,j,k,c,n,dir);
@@ -729,7 +732,7 @@ static double *derivative_ChebyshevExtrema_Tn_1stOrder(Field_T *const f,const Dd
     }
   }
   free(x);
-  
+
   return der;
 }
 
@@ -742,7 +745,7 @@ static double *derivative_ChebyshevNodes_Tn_1stOrder(Field_T *const f,const Dd_T
 {
   assert(dir <= _N2_);
   make_coeffs_1d(f,dir);
-  
+
   Patch_T *const patch = f->patch;
   const Uint *const n = patch->n;
   const Uint nn = patch->nn;
@@ -751,7 +754,7 @@ static double *derivative_ChebyshevNodes_Tn_1stOrder(Field_T *const f,const Dd_T
   double *x = make_1Dcollocation_ChebNodes(n[dir]);
   const double *const coeffs = f->v2;
   Uint l;
-  
+
   if (dir == 0)
   {
     /* OpenMP_2d_Pragma(omp parallel for) */
@@ -759,9 +762,9 @@ static double *derivative_ChebyshevNodes_Tn_1stOrder(Field_T *const f,const Dd_T
     {
       Uint i,j,k;
       Uint c;
-      
+
       ijk_to_i_j_k(l,n,&i,&j,&k);
-      
+
       for (c = 1; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,c,j,k);//coeff_ind(i,j,k,c,n,dir);
@@ -777,9 +780,9 @@ static double *derivative_ChebyshevNodes_Tn_1stOrder(Field_T *const f,const Dd_T
     {
       Uint i,j,k;
       Uint c;
-      
+
       ijk_to_i_j_k(l,n,&i,&j,&k);
-      
+
       for (c = 1; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,i,c,k);//coeff_ind(i,j,k,c,n,dir);
@@ -795,9 +798,9 @@ static double *derivative_ChebyshevNodes_Tn_1stOrder(Field_T *const f,const Dd_T
     {
       Uint i,j,k;
       Uint c;
-      
+
       ijk_to_i_j_k(l,n,&i,&j,&k);
-      
+
       for (c = 1; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,i,j,c);//coeff_ind(i,j,k,c,n,dir);
@@ -807,7 +810,7 @@ static double *derivative_ChebyshevNodes_Tn_1stOrder(Field_T *const f,const Dd_T
     }
   }
   free(x);
-  
+
   return der;
 }
 
@@ -820,7 +823,7 @@ static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd
 {
   assert(dir <= _N2_);
   make_coeffs_1d(f,dir);
-  
+
   Patch_T *const patch = f->patch;
   const Uint *const n = patch->n;
   const Uint nn = total_nodes_patch(patch);
@@ -829,7 +832,7 @@ static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd
   double *x = make_1Dcollocation_ChebExtrema(n[dir]);
   const double *const coeffs = f->v2;
   Uint l;
-  
+
   if (dir == 0)
   {
     /* OpenMP_2d_Pragma(omp parallel for) */
@@ -837,9 +840,9 @@ static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd
     {
       Uint i,j,k;
       Uint c;
-      
+
       ijk_to_i_j_k(l,n,&i,&j,&k);
-      
+
       for (c = 2; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,c,j,k);
@@ -856,9 +859,9 @@ static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd
     {
       Uint i,j,k;
       Uint c;
-      
+
       ijk_to_i_j_k(l,n,&i,&j,&k);
-      
+
       for (c = 2; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,i,c,k);
@@ -875,9 +878,9 @@ static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd
     {
       Uint i,j,k;
       Uint c;
-      
+
       ijk_to_i_j_k(l,n,&i,&j,&k);
-      
+
       for (c = 2; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,i,j,c);
@@ -888,7 +891,7 @@ static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd
     }
   }
   free(x);
-  
+
   return der;
 }
 
@@ -901,7 +904,7 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
 {
   assert(dir <= _N2_);
   make_coeffs_1d(f,dir);
-  
+
   Patch_T *const patch = f->patch;
   const Uint *const n = patch->n;
   const Uint nn = total_nodes_patch(patch);
@@ -910,7 +913,7 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
   double *x = make_1Dcollocation_ChebNodes(n[dir]);
   const double *const coeffs = f->v2;
   Uint l;
-  
+
   if (dir == 0)
   {
     /* OpenMP_2d_Pragma(omp parallel for) */
@@ -918,9 +921,9 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
     {
       Uint i,j,k;
       Uint c;
-      
+
       ijk_to_i_j_k(l,n,&i,&j,&k);
-      
+
       for (c = 2; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,c,j,k);
@@ -936,9 +939,9 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
     {
       Uint i,j,k;
       Uint c;
-      
+
       ijk_to_i_j_k(l,n,&i,&j,&k);
-      
+
       for (c = 2; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,i,c,k);
@@ -954,9 +957,9 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
     {
       Uint i,j,k;
       Uint c;
-      
+
       ijk_to_i_j_k(l,n,&i,&j,&k);
-      
+
       for (c = 2; c < B; ++c)
       {
         Uint C = i_j_k_to_ijk(n,i,j,c);
@@ -966,26 +969,26 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
     }
   }
   free(x);
-  
+
   return der;
 }
 
 
 /* based on basis and collocation,
-// get the pertinent function for spectral derivative. 
+// get the pertinent function for spectral derivative.
 */
 static void get_SpecDerivative_func_1stOrder(const Patch_T *const patch,SpecDerivative_Func_T **func)
 {
   Uint i;
-  
+
   for (i = 0; i < 3; ++i)
   {
-    if (patch->basis[i] == Chebyshev_Tn_BASIS 
+    if (patch->basis[i] == Chebyshev_Tn_BASIS
         && patch->collocation[i] == Chebyshev_Extrema)
     {
       func[i] = derivative_ChebyshevExtrema_Tn_1stOrder;
     }
-    else if (patch->basis[i] == Chebyshev_Tn_BASIS 
+    else if (patch->basis[i] == Chebyshev_Tn_BASIS
         && patch->collocation[i] == Chebyshev_Nodes)
     {
       func[i] = derivative_ChebyshevNodes_Tn_1stOrder;
@@ -1004,24 +1007,24 @@ static void get_SpecDerivative_func_1stOrder(const Patch_T *const patch,SpecDeri
 //
 // in spherical coords, if (dir == r) => r = r(r)= r(a)
 // in spherical coords, if (dir == x) => x = x(r,theta,phi) = x(a,b,c)
-// Notation: dep[?] = 1 means dir depends on ?. 
+// Notation: dep[?] = 1 means dir depends on ?.
 // and if dep[?] = 0 it means it is not depended.
 */
 static void get_dependency(const Patch_T *const patch,const Dd_T dir, Uint *dep)
 {
   Uint i;
-  
+
   for (i = 0; i < 3; i++)
   {
     dep[i] = 0;
   }
-  
+
   if (patch->coordsys == Cartesian)
   {
     dep[dir%3] = 1;/* means that for example _y_%3 = 1 = _b_ */
   }
   /* x(a,b,c), y(a,b,c), z(a,b,c) */
-  else if (patch->coordsys == CubedSpherical) 
+  else if (patch->coordsys == CubedSpherical)
   {
     dep[0] = 1;
     dep[1] = 1;
@@ -1031,16 +1034,16 @@ static void get_dependency(const Patch_T *const patch,const Dd_T dir, Uint *dep)
      Error0("There is no coordinate defined for this function.\n");
 }
 
-/* based on spectral derivative function and dependencies 
+/* based on spectral derivative function and dependencies
 // it finds the Dd_T dp used for direction of partial derivative.
 */
 static void get_dp_1stOrder(const Patch_T *const patch,SpecDerivative_Func_T **func,const Dd_T dir,Dd_T *dp)
 {
   Uint depend[3];
   Uint i;
-  
+
   get_dependency(patch,dir,depend);
-  
+
   for (i = 0; i < 3; ++i)
   {
     dp[i] = UNDEFINED_DIR;
@@ -1066,7 +1069,7 @@ static double *make_1Dcollocation_ChebExtrema(const Uint N)
     const double t0 = M_PI/(N-1);
     double *x = alloc_double(N);
     Uint i;
-    
+
     for (i = 0; i < N; i++)
       x[i] = cos(i*t0);
 
@@ -1082,10 +1085,134 @@ static double *make_1Dcollocation_ChebNodes(const Uint N)
     const double t0 = M_PI/N;
     double *x = alloc_double(N);
     Uint i;
-    
+
     for (i = 0; i < N; i++)
       x[i] = cos((i+0.5)*t0);
 
   return x;
 }
 
+/* finite difference using Fornberg method
+// ref: MATHEMATICS OF COMPUTATION, VOLUME 51, NUMBER 184, OCTOBER 1988, PAGES 699-706
+//      Generation of Finite Difference Formulas on Arbitrarily Spaced Grids by Bengt Fornberg
+// NOTE: we assume x is in increasing order.
+// NOTE: x0 must be one of the grid points.
+// -> return : derivative evaluated at the coordinate value = h. */
+double finite_difference_Fornberg(
+  const double *const f /* function values such that f[j] = f(x[j]) */,
+  const double *const x /* ordered 1D coordinate grid */,
+  const double x0 /* d^m f(x)/dx^m| x=x0 */,
+  const Uint Nx /* length of x and f arrays */,
+  const Uint fd_order /* finite diff. order */,
+  const Uint fd_acc /* finite diff. accuracy */ )
+{
+  const Uint M = fd_order;
+  const Uint N = fd_acc + M -1;
+  Uint indx    = UINT_MAX;
+  const double *al = 0;// alpha array
+  double delta[M+1][N+1][N+1];// delta^{m}_{n,nu}
+  double c1,c2,c3;
+  double ret = DBL_MAX;
+
+  // a quick test if we need dynamic allocation for delta
+  assert(N < 100);
+
+  // Checks if we have enough data points for given order of accuracy and derivative.
+  if (Nx <= N+1)
+  {
+    Error0("Not enough points for desired accuracy.\n");
+  }
+
+  // Finds the segment such that x[indx] <= h < x[indx+1].
+  for (indx = 0; indx < Nx-1; indx++)
+  {
+    if ( x0 >= x[indx] && x0 <= x[indx+1] )
+    {
+      break;
+    }
+  }
+  if (indx == UINT_MAX)
+  {
+    Error0("The given point for the interpolation is out of the domain.\n");
+  }
+
+  // Excises smaller grid {alpha[0], alpha[1], ..., alpha[N]} out of
+  // {x[0], x[1], ..., x[K-1]}, such that:
+  // 	alpha[0] = x[offset]
+  // 	alpha[j] = x[offset + j]
+  // 	alpha[N] = x[fence]
+  //
+  // The Fornberg algorithm acts only on alpha[].
+
+  // If we have enough points on either side of the desired point x0,
+  // we can use a central finite difference. Otherwise, we must
+  // use a shifted finite difference (e.g. the forward finite difference
+  // if x[0] <= x0 < x[1]).
+  // Note: If the desired accuracy order is an odd integer, we assign the
+  // 'extra' point to the left of the point x0.
+
+  // Selects subset of 'x' array to use for finite difference method,
+  int offset = (int)indx  - (int)N/2;
+  int fence  = (int)(indx + (N+1)/2);
+  // Shifts right if sub-array is too far left:
+  while (offset < 0)
+  {
+    offset++;
+    fence++;
+  }
+  while ((Uint)fence > (Nx-1))
+  {
+    offset--;
+    fence--;
+  }
+  assert(offset>=0);
+  al = x + offset;
+
+  // find delta's
+  delta[0][0][0] = 1.;
+  c1 = 1.;
+  for (Uint n = 1; n <= N; n++) // For n=1 to N
+  {
+    Uint m;
+    c2 = 1.;
+    for (Uint v = 0; v < n; v++) // For nu=0 to n-1
+    {
+      c3 = al[n] - al[v];
+      c2 *= c3;
+      if (n <= M)
+      {
+        delta[n][n-1][v] = 0.;
+      }
+
+      // for m = 0
+      m = 0.;
+      delta[m][n][v] = (al[n] - x0) * delta[m][n-1][v]/c3;
+      for (m = 1; m <= MIN(n,M); m++) // For m=0 to min(n,M)
+      {
+        delta[m][n][v] =
+        (
+          ( al[n] - x0 ) * delta[m][n-1][v] - m * delta[m-1][n-1][v]
+        )/c3;
+      }
+    } // end of for (Uint v=0; v<n; v++)
+
+    // for m = 0;
+    m = 0;
+    delta[m][n][n] = -(c1/c2)*(al[n-1]-x0) * delta[m][n-1][n-1];
+    for (m = 1; m <= MIN(n,M); m++) //For m=0 to min(n,M)
+    {
+      delta[m][n][n] =
+        (c1/c2)*(m*delta[m-1][n-1][n-1] - (al[n-1]-x0) * delta[m][n-1][n-1]);
+    }
+    c1 = c2;
+  }// end for (Uint n=1; n<=N; n++)
+
+  // d^m f(x) / dx^m = sum_{0}^{n} delta^{m}_{n,nu} f(x_{nu})
+  ret = 0.;
+  for (Uint v = 0; v <= N; v++)
+  {
+    ret += delta[M][N][v] * f[offset+(int)v];
+  }
+
+  return ret;
+}

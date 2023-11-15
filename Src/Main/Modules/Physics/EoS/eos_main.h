@@ -1,5 +1,6 @@
 #include "eos_header.h"
 #include "maths_spectral_methods_lib.h"
+#include "maths_equation_solvings_lib.h"
 
 #define MAX_STR (400)
 
@@ -18,6 +19,9 @@ double EoS_de_dh_h_p(EoS_T *const eos);
 double EoS_p_h_pwp_ncs(EoS_T *const eos);
 double EoS_e_h_pwp_ncs(EoS_T *const eos);
 double EoS_rho0_h_pwp_ncs(EoS_T *const eos);
+void eos_tab_read_table(EoS_T* const eos);
+void eos_tab_set_hermite(EoS_T* const eos);
+void eos_tab_set_hermite_log(EoS_T* const eos);
 EoS_T *init_EoS(Physics_T *const phys);
 void free_EoS(EoS_T *eos);
 static void populate_EoS(EoS_T *const eos);
@@ -26,8 +30,3 @@ static void fill_a(EoS_T *const eos);
 static void fill_n(EoS_T *const eos);
 static void fill_K(EoS_T *const eos);
 static double *read_EoS_in_parameter_file(const char *const par,Uint *const N);
-
-
-
-
-

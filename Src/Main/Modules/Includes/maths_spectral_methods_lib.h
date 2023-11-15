@@ -15,7 +15,7 @@
 
 struct INTERPOLATION_T;
 struct FIELD_T;
-
+struct PATCH_T;
 
 /* interpolation function typedef */
 typedef double fInterpolation_T(struct INTERPOLATION_T *const interp_s);
@@ -24,8 +24,13 @@ typedef double fInterpolation_T(struct INTERPOLATION_T *const interp_s);
 typedef struct INTERPOLATION_T
 {
   const char *method;
+  fInterpolation_T *interpolation_func;/* interpolation function (interpolant) */
+  fInterpolation_T *interpolation_1st_deriv;/* first derivative of the interpolant(if available) */
+
+  //////////////
+  // spectral //
+  //////////////
   struct FIELD_T *field;/* interesting field for interpolation */
-  fInterpolation_T *interpolation_func;/* interpolation function */
   double X,Y,Z;/* where interpolant calculated. 
                // MUST be provided in coords sys. used by patch.
                */
@@ -39,6 +44,10 @@ typedef struct INTERPOLATION_T
   Uint I;/* the index held constant in case of interpolation in 1-D and 2-D */
   Uint J;/* the index held constant in case of interpolation in 1-D and 2-D */
   Uint K;/* the index held constant in case of interpolation in 1-D and 2-D */
+  
+  /////////////
+  // Neville //
+  /////////////
   struct
   {
    const double *f;/* f(xi)'s */
@@ -47,6 +56,10 @@ typedef struct INTERPOLATION_T
    Uint N;/* number of xi's */
    Uint max;/* desired number of xi to be used, if 0 then the value N is picked */
   }Neville_1d[1];/* the method is Neville's iterated interpolation */
+  
+  //////////////////
+  // cubic spline //
+  //////////////////
   struct
   {
    double *f;/* f(xi)'s */
@@ -58,6 +71,26 @@ typedef struct INTERPOLATION_T
    Uint Alloc_Mem: 1;/* if it allocates memory for x and f */
    Uint No_Warn: 1;/* if 1 it prints NO warning in case of an error */
   }N_cubic_spline_1d[1];/* natural cubic spline 1d */
+  
+  ////////////////////
+  // Hermite spline //
+  ////////////////////
+  struct
+  { 
+   double *f;// f(xi)
+   double *fp;// df(xi)/dx
+   double *x;// coordinate grid
+   double h;// point to interpolate
+   Uint N;// number of grid points
+   Uint fd_accuracy_order;// order of finite difference accuracy
+   Uint fd_derivative_order;// order of derivative required from finite difference method
+   Uint num_points;// the number of points being used for the interpolant, 
+                   // namely, polynomial degree = (2*num_points-1)
+   Uint Order: 1;// 1 if x array in order
+   Uint Alloc_fx: 1;// if f and x ordered 1
+   Uint Alloc_fp: 1;// if fp allocated 1
+   Uint No_Warn: 1;// emit warning if 0
+  }Hermite_1d[1];
 }Interpolation_T;
 
 void rft_1d_ChebyshevExtrema_coeffs(double *const values ,double *const coeffs,const Uint n);
@@ -70,6 +103,7 @@ int fourier_transformation_tests(Grid_T *const grid);
 int Ylm_transformation_tests(Grid_T *const grid);
 Interpolation_T *init_interpolation(void);
 double execute_interpolation(Interpolation_T *const interp_s);
+double execute_1st_deriv_interpolation(Interpolation_T *const interp_s);
 void plan_interpolation(Interpolation_T *const interp_s);
 void get_Ylm_coeffs(double *const realClm,double *const imagClm,const double *const f,const Uint Ntheta,const Uint Nphi,const Uint Lmax);
 double interpolation_Ylm(const double *const realClm,const double *const imagClm,const Uint Lmax, const double theta, const double phi);
@@ -158,6 +192,16 @@ r2cft_2d_df_dtheta_S2
   const Uint Nphi/* number of point in phi direction */
 );
 
+// encapsulate filter args.
+typedef struct SPECTRAL_FILTER_T
+{
+ struct PATCH_T *patch;// patch that has the field
+ const char *field;// field name, e.g., "rho0".
+ const char *filter;// name of the filter, e.g., erfclog
+ int erfclog_p;// p arg for erfclog filter.
+}spectral_filter_T;
+
+void spectral_filter(const spectral_filter_T *const args);
 
 #endif
 
