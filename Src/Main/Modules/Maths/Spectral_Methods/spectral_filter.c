@@ -1,5 +1,15 @@
 #include "spectral_filter.h"
 
+/* a quick tutorial by example:
+  // filter rho0 field in the given patch using "erfclog" method
+  spectral_filter_T args;
+  args.patch     = patch;
+  args.field     = "rho0";
+  args.filter    = "erfclog";
+  args.erfclog_p = 12;
+  spectral_filter(&args);
+*/
+
 // filter the field of interest from high wave-numbers
 void spectral_filter(const spectral_filter_T *const args)
 {
