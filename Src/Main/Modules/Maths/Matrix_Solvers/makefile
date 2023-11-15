@@ -1,0 +1,136 @@
+##################
+# Alireza Rashti #
+#                #
+# April 2020     #
+##################
+
+# a general submake file for each module or project.
+# this make file gathers all of c files and make object files
+# from them and put them in the specified directory. finally,
+# by using (AR) command, it archive all of the object files to later
+# be linked.
+# NOTE: local variables are in small words and exported variables
+# by the main Makefile are with capital words.
+#######################################################################
+#############
+## variables:
+#############
+# where I am:
+top   := $(shell pwd)
+# c directory
+c_dir := $(top)
+# find all of c files to be compiled in this directory
+c_files := $(wildcard $(top)/*.c)
+# find all of h files in this directory
+h_files := $(wildcard $(top)/*.h)
+# make directory name correspond to this directory
+o_dir := $(notdir $(top))
+o_dir := $(O_TOP)/$(o_dir)
+# library name for this directory this is a standard name
+lib_name := lib$(notdir $(top)).a
+# collect all o files related to all of the c files in this directory
+o_files:= \
+       $(foreach f,$(c_files),\
+         $(join\
+           $(addprefix \
+             $(O_TOP)/, $(notdir $(top))\
+            )/,\
+           $(notdir $(f:.c=.o))\
+          )\
+        )
+# dependency directory
+#d_dir := $(top)/.dep
+# dependency files
+#d_files := \
+#       $(foreach f,$(c_files),\
+#         $(join\
+#	   $(d_dir)/,\
+#           $(notdir $(f:.c=.d))\
+#          )\
+#        )
+#######################################################################
+###########
+## targets:
+###########
+
+## default target to make libaries out of object files
+make_lib: $(LIB_DIR)/$(lib_name)
+	@true
+.PHONY: make_lib
+
+## building the library
+.DELETE_ON_ERROR:
+$(LIB_DIR)/$(lib_name): $(o_files) #$(d_files)
+	@$(call build_and_print_func, $(AR) $(ARFLAGS) $(LIB_DIR)/$(lib_name) $(o_files), $(lib_name))
+
+## using string % to make the object file according to its c file.
+# then put the resultant into $(o_dir)/$*.o.
+$(o_dir)/%.o :$(c_dir)/%.c $(h_files) $(DEPENDENCY_FILES) #$(d_files)
+	@$(call build_and_print_func, $(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<, $*.o)
+	
+## figuring out the inter dependencies, since some compiler might not
+## have -M flag, this command is skipped if error takes place.
+#%.o : %.c
+#$(d_dir)/%.d : $(c_dir)/%.c | $(d_dir)
+#	@set -e; rm -f $@;\
+#	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$ || true; \
+#	$(SED) 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+#	rm -f $@.$$$$
+##
+## clean dependecy folder:
+clean:
+	@true
+#	@$(call pr_task_relpath,"rm -rf",$(d_dir))
+#	@-rm -rf $(d_dir)
+.PHONY: clean
+# making dep_dir if does not exist
+#$(d_dir):
+#	@mkdir -p $@
+#
+#include $(wildcard $(d_dir)/*.d)
+
+########################################################################
+#############
+## functions:
+#############
+
+# build and print objects, print error if happens otherwise succinctly.
+# useage:
+#
+# $(call build_and_print_func, command, print_this)
+# $(1) refers to command and $(2) refers to print_this.
+define build_and_print_func
+$(strip $(1)) 2> $@.COMPILE_ERROR ; \
+ret=$$? ; \
+if [ $$ret -eq 0 ]; \
+   then \
+   printf "%s %s %-45s %s\n" $(PR_F0) "make" $(strip $(2)) "=> [SUCCESSFUL] <="; \
+else \
+   if [ -f $(LIB_DIR)/$(lib_name) ]; \
+   then \
+   rm -rf $(LIB_DIR)/$(lib_name); \
+   fi; \
+   printf "%s\n"$(PR_L0) ; \
+   printf "%s\n"$(PR_ERROR)"\n" ; \
+   cat $@.COMPILE_ERROR ; \
+   printf "\n%s %s %-45s %s\n" $(PR_F0) "make" $(strip $(2)) "=> [FAILED] <="; \
+   echo $(PR_L0) ;\
+fi ; \
+rm -rf $@.COMPILE_ERROR; \
+exit $$ret ;
+endef
+
+# get a string s1 and a path p1, it makes the p1 relative path and
+# then prints --> "s1 p1"
+define pr_task_relpath
+p=$$(echo $(2) | $(SED) 's,$(TOP),.,g' | $(SED) "s,\(.*\),'\1',g");\
+if [ $$? -eq 0 ]; \
+then \
+echo $(PR_F0) $(1) $$p; \
+else  \
+echo $(PR_F0) $(1) $(2); \
+fi;
+endef
+
+# no export 
+unexport

@@ -10,8 +10,8 @@
 #include "maths_complex_lib.h"
 #include "fields_lib.h"
 
-#define DO 1
-#define DO_NOT 0
+#define DO (1)
+#define DO_NOT (0)
 #define IJ(i,j,n)  ((j)+(i)*(n))
 #define Cos(a) cos(a)
 #define Sin(a) sin(a)
@@ -69,7 +69,12 @@ static int Ylm_derivatives_test(Grid_T *const grid);
 static void free_func_Patch2Pdouble(sFunc_Patch2Pdouble_T **func);
 static int r2cft_2d_EquiSpaced_test(Grid_T *const grid);
 static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid);
-
+static int interpolation_tests_Hermite_1d(void);
+static double f_poly_3deg1(const double x) __attribute__((unused));
+static double df_poly_3deg1(const double x) __attribute__((unused));
+static double ddf_poly_3deg1(const double x) __attribute__((unused));
+static void derivative_tests_spectral_method(Grid_T *const grid);
+static void derivative_tests_finite_diff_method(Grid_T *const grid);
 
 
 

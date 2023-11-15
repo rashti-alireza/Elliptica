@@ -1,0 +1,91 @@
+#-----------------------------------------------------------------------#
+# Project:                                                              #
+#-----------------------------------------------------------------------#
+
+Project                               = Modules_Test
+Test_Derivative                       = no
+Test_CubedSpherical_Coordinates       = no
+Test_Interpolation                    = no
+Test_d(interp_a)/df                   = no
+Test_Jacobian_Spectral_vs_Analytic    = no
+Test_Jacobian_Spectral_vs_FiniteDiff  = no
+Test_Jacobian_Spectral_vs_Spectral    = no
+Test_Jacobian_Elements_Js_Consistency = no
+Test_Matrix_Consistency               = no
+Test_Solver_Consistency               = no
+Test_Math_General                     = no
+Test_EoS                              = yes
+Test_Integration                      = no
+Test_Ylm_Transformation               = no
+Test_FourierTransformation            = no
+
+#-----------------------------------------------------------------------#
+# EoS:                                                                  #
+#-----------------------------------------------------------------------#
+
+NS_EoS_description          = some_description
+NS_EoS_type                 = tabular
+NS_EoS_unit                 = geo
+NS_EoS_table_name           = /path/to/eos/table
+NS_EoS_table_format         = choose[Elliptica,Lorene]
+NS_EoS_log_approach         = yes
+NS_EoS_enthalpy_floor       = 1.0
+NS_Eos_enthalpy_ceiling     = 2.0
+NS_EoS_interpolation_method = Hermite
+NS_EoS_finite_diff_order    = 5
+NS_EoS_spline_order         = 3
+
+#NS_EoS_description  = SLy
+#NS_EoS_type         = piecewise_polytropic
+#NS_EoS_unit         = geo
+#NS_EoS_K0           = [8.9493e-02]
+#NS_EoS_rho0_th      = [0, 2.3674e-04, 8.1147e-04, 1.6191e-03]
+#NS_EoS_Gamma        = [1.3569e+00, 3.0050e+00, 2.9880e+00, 2.8510e+00]
+
+#NS_EoS_description  = K123
+#NS_EoS_type         = polytropic
+#NS_EoS_unit         = geo
+#NS_EoS_K0           = [123.6489]
+#NS_EoS_Gamma        = [2]
+
+#-----------------------------------------------------------------------#
+# Grid and Geometry:                                                    #
+#-----------------------------------------------------------------------#
+
+grid_kind                     = SplitCubedSpherical(NS)
+grid_set_NS                   = center
+grid_around_box_length        = 30
+grid_box_length_ratio_NS      = 0.25
+grid_outermost_radius         = 1E2
+grid_verbose                  = no
+#### resolutions:
+grid_SplitCS_max_n_a          = 40
+grid_SplitCS_max_n_b          = 40
+grid_SplitCS_max_n_c          = 40
+n_a                           = 8
+n_b                           = 8
+n_c                           = 12
+
+#### NS:
+NS_radius                     = 6
+
+#-----------------------------------------------------------------------#
+# Solving_Settings and Methods:                                         #
+#-----------------------------------------------------------------------#
+
+Solve_Order                     = alpha
+Derivative_Method               = Spectral
+Interpolation_Method            = Spectral
+Fourier_Transformation_Method   = RFT 
+dF/du_for_Newton_Method         = Spectral 
+
+#-----------------------------------------------------------------------#
+# Print:                                                                #
+#-----------------------------------------------------------------------#
+
+print_coords     = no
+print_interfaces = no
+
+#-----------------------------------------------------------------------#
+# The End                                                               #
+#-----------------------------------------------------------------------#

@@ -41,6 +41,7 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
       Tij_NS_neat_enthalpy(patch);
     
     Tij_NS_eos_update_rho0(patch,eos);
+    Tij_NS_eos_update_e0(patch,eos);
     Tij_NS_IF_XCTS_gConf_u0(patch);
     
     /* update derivatives */
@@ -52,25 +53,34 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
       dField_di(du0_D0);
       dField_di(du0_D1);
       dField_di(du0_D2);
-      /* NOTE: rho0 for pwp eos is C^0 continuous so it is prone to Gibbs phenomenon
-      // in particular where h ~ 1, i.e., close to NS's surface. hence, calculating 
-      // drho0 using analytical values and thus chain rule is preferable. */
-      READ_v(enthalpy)
-      READ_v(denthalpy_D0)
-      READ_v(denthalpy_D1)
-      READ_v(denthalpy_D2)
-      
-      REALLOC_v_WRITE_v(drho0_D0)
-      REALLOC_v_WRITE_v(drho0_D1)
-      REALLOC_v_WRITE_v(drho0_D2)
-      
-      FOR_ALL_ijk
+      if (1)
       {
-        eos->h          = enthalpy[ijk];
-        double drho0_dh = eos->drho0_dh(eos);
-        drho0_D0[ijk] = drho0_dh*denthalpy_D0[ijk];
-        drho0_D1[ijk] = drho0_dh*denthalpy_D1[ijk];
-        drho0_D2[ijk] = drho0_dh*denthalpy_D2[ijk];
+        /* NOTE: rho0 for pwp eos is C^0 continuous so it is prone to Gibbs phenomenon
+        // in particular where h ~ 1, i.e., close to NS's surface. hence, calculating 
+        // drho0 using analytical values and thus chain rule is preferable. */
+        READ_v(enthalpy)
+        READ_v(denthalpy_D0)
+        READ_v(denthalpy_D1)
+        READ_v(denthalpy_D2)
+        
+        REALLOC_v_WRITE_v(drho0_D0)
+        REALLOC_v_WRITE_v(drho0_D1)
+        REALLOC_v_WRITE_v(drho0_D2)
+        
+        FOR_ALL_ijk
+        {
+          eos->h          = enthalpy[ijk];
+          double drho0_dh = eos->drho0_dh(eos);
+          drho0_D0[ijk] = drho0_dh*denthalpy_D0[ijk];
+          drho0_D1[ijk] = drho0_dh*denthalpy_D1[ijk];
+          drho0_D2[ijk] = drho0_dh*denthalpy_D2[ijk];
+        }
+      }
+      else
+      {
+        dField_di(drho0_D0);
+        dField_di(drho0_D1);
+        dField_di(drho0_D2);
       }
     }
     else/* the following not using chain rule for rho0 */
@@ -127,6 +137,49 @@ void Tij_NS_eos_update_rho0(Patch_T *const patch,EoS_T *const eos)
       //printf("Put rho0(h = %g) = 0.\n",enthalpy[ijk]);
       rho0[ijk] = 0;
     }
+  }
+  
+  if (strstr_i(PgetsEZ("spectral_filter"),"rho0"))
+  {
+    spectral_filter_T args;
+    args.patch     = patch;
+    args.field     = "rho0";
+    args.filter    = "erfclog";
+    args.erfclog_p = Pgeti("erfclog_p");
+    spectral_filter(&args);
+  }
+}
+
+/* updating e0 using eos */
+void Tij_NS_eos_update_e0(Patch_T *const patch,EoS_T *const eos)
+{
+  READ_v(enthalpy)
+  REALLOC_v_WRITE_v(e0)
+  const Uint nn = patch->nn;
+  Uint ijk;
+
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    eos->h  = enthalpy[ijk];
+    e0[ijk] = eos->specific_internal_energy(eos);
+    
+    /* make sure e0 won't get nan due to Gibbs phenomena or 
+    // when finding NS surface. */
+    if (!isfinite(e0[ijk]))
+    {
+      //printf("Put e0(h = %g) = 0.\n",enthalpy[ijk]);
+      e0[ijk] = 0.;
+    }
+  }
+  
+  if (strstr_i(PgetsEZ("spectral_filter"),"e0"))
+  {
+    spectral_filter_T args;
+    args.patch     = patch;
+    args.field     = "e0";
+    args.filter    = "erfclog";
+    args.erfclog_p = Pgeti("erfclog_p");
+    spectral_filter(&args);
   }
 }
 
