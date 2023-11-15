@@ -53,7 +53,7 @@ void Tij_NS_idealfluid_XCTS_gConf_update(Physics_T *const phys)
       dField_di(du0_D0);
       dField_di(du0_D1);
       dField_di(du0_D2);
-      if (Pcmps("rho0_derivative","chain"))
+      if (1)
       {
         /* NOTE: rho0 for pwp eos is C^0 continuous so it is prone to Gibbs phenomenon
         // in particular where h ~ 1, i.e., close to NS's surface. hence, calculating 
