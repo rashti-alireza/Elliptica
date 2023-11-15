@@ -1,3 +1,8 @@
+/*
+// Andrew Noe & Alireza Rashti
+// October 2023
+*/
+
 #include "eos_tabular.h"
 
 // Implements thermodynamic functions for a tabular equation of state.
