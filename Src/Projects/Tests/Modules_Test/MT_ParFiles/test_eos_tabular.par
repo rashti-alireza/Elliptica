@@ -23,18 +23,20 @@ Test_FourierTransformation            = no
 # EoS:                                                                  #
 #-----------------------------------------------------------------------#
 
+## tabular
 NS_EoS_description          = some_description
 NS_EoS_type                 = tabular
 NS_EoS_unit                 = geo
-NS_EoS_table_name           = /path/to/eos/table
-NS_EoS_table_format         = choose[Elliptica,Lorene]
-NS_EoS_log_approach         = yes
-NS_EoS_enthalpy_floor       = 1.0
+NS_EoS_table_path           = /path/to/eos/table
+NS_EoS_table_format         = rest_mass_density,specific_internal_energy,pressure
+NS_EoS_interpolation_method = Hermite1D
+NS_EoS_interpolation_use_log= yes
+NS_EoS_Hermite1D_FD_accuracy= 3
+NS_EoS_Hermite1D_num_points = 2
+NS_EoS_enthalpy_floor       = +1.0021
 NS_Eos_enthalpy_ceiling     = 2.0
-NS_EoS_interpolation_method = Hermite
-NS_EoS_finite_diff_order    = 5
-NS_EoS_spline_order         = 3
 
+## pwp
 #NS_EoS_description  = SLy
 #NS_EoS_type         = piecewise_polytropic
 #NS_EoS_unit         = geo
@@ -42,6 +44,7 @@ NS_EoS_spline_order         = 3
 #NS_EoS_rho0_th      = [0, 2.3674e-04, 8.1147e-04, 1.6191e-03]
 #NS_EoS_Gamma        = [1.3569e+00, 3.0050e+00, 2.9880e+00, 2.8510e+00]
 
+## single polytrope
 #NS_EoS_description  = K123
 #NS_EoS_type         = polytropic
 #NS_EoS_unit         = geo
