@@ -13,7 +13,6 @@ TOV_star_mass_radius_curve     = yes
 TOV_star_baryonic_mass_initial = 1.0
 TOV_star_baryonic_mass_final   = 1.4
 TOV_star_baryonic_mass_step    = 0.1
-TOV_star_n                     = 51  # resolution
 
 #### EoS:
 NS_EoS_description = SLy
