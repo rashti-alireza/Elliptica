@@ -139,7 +139,7 @@ void Tij_NS_eos_update_rho0(Patch_T *const patch,EoS_T *const eos)
     }
   }
   
-  if (Pcmps("rho0_filter","yes"))
+  if (strstr_i(PgetsEZ("spectral_filter"),"rho0"))
   {
     spectral_filter_T args;
     args.patch     = patch;
@@ -172,7 +172,7 @@ void Tij_NS_eos_update_e0(Patch_T *const patch,EoS_T *const eos)
     }
   }
   
-  if (Pcmps("e0_filter","yes"))
+  if (strstr_i(PgetsEZ("spectral_filter"),"e0"))
   {
     spectral_filter_T args;
     args.patch     = patch;
