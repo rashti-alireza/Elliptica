@@ -40,4 +40,13 @@ void
      const char *const fields_name_str/* comma separated */,
      const char *const evo_fields_name_str/* comma separated */);
  
- 
+double idr_interpolate_field_thread_safe(
+  Elliptica_ID_Reader_T *const idr, 
+  const char *const field_name, const double x,const double y, const double z);
+
+
+void 
+  idr_set_ifield_coeffs(Elliptica_ID_Reader_T *const idr,
+  const char *const fields_name_str/* comma separated */)
+
+static double interpolate_at_this_pnt(Field_T *const field, const double X[3]);
