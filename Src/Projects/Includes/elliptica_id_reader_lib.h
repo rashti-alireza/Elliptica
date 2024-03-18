@@ -35,7 +35,7 @@ typedef struct ELLIPTICA_ID_READER_T
   double id_CM[3];// the initial data code center of mass
   char **id_field_names;// the corresponding field name in the ID code to ifield in evo code.
   double (*fieldx)(// interpolate point wise
-      Elliptica_ID_Reader_T *const idr,
+      struct ELLIPTICA_ID_READER_T *const idr,
       const char *const evo_field_name, const double x,const double y, const double z);
   void *grid;// pointer to the ID code grid
 }Elliptica_ID_Reader_T;

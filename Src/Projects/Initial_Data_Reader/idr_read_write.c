@@ -413,23 +413,23 @@ double idr_interpolate_field_thread_safe(
 {
   Grid_T *const grid = idr->grid;
   Patch_T *patch = 0;
-  double X[3];
-  double x_ell[3]; // x coords in the ID coord. system
+  double X[3] = {0.};
+  double x_ell[3] = {0.}; // x coords in the ID coord. system
 
   // shift coords and find X
   x_ell[0] = x + idr->id_CM[0];
   x_ell[1] = y + idr->id_CM[1];
   x_ell[2] = z + idr->id_CM[2];
-  patch = x_in_which_patch(x,grid->patch,grid->np);
-  if (!patch || !X_of_x(X,x,patch))
+  patch = x_in_which_patch(x_ell,grid->patch,grid->np);
+  if (!patch || !X_of_x(X,x_ell,patch))
   {
     char errmsg[STR_LEN_MAX] = {'\0'};
-    sprintf(errmsg,"It could not find X(%f,%f,%f)!\n",x[0],x[1],x[2]);
+    sprintf(errmsg,"It could not find X(%f,%f,%f)!\n",x_ell[0],x_ell[1],x_ell[2]);
     Error1(errmsg);
   }
   
   // find field
-  Uint f_indx = Ind( idr->id_field_names[idr->indx(field_name)] );
+  int f_indx = Ind( idr->id_field_names[idr->indx(field_name)] );
   
   // interpolate and return
   return interpolate_at_this_pnt(patch->fields[f_indx],X);
@@ -446,8 +446,8 @@ static double interpolate_at_this_pnt(Field_T *const field, const double X[3])
   interp_s->field = field;
   interp_s->XYZ_dir_flag = 1;
   interp_s->X = X[0];
-  interp_s->Y = Y[1];
-  interp_s->Z = Z[2];
+  interp_s->Y = X[1];
+  interp_s->Z = X[2];
   plan_interpolation(interp_s);
   ret = execute_interpolation(interp_s);
   free_interpolation(interp_s);
