@@ -37,6 +37,7 @@ typedef struct ELLIPTICA_ID_READER_T
   double (*fieldx)(// interpolate point wise
       Elliptica_ID_Reader_T *const idr,
       const char *const evo_field_name, const double x,const double y, const double z);
+  void *grid;// pointer to the ID code grid
 }Elliptica_ID_Reader_T;
 
 Elliptica_ID_Reader_T *elliptica_id_reader_init (
