@@ -32,6 +32,11 @@ typedef struct ELLIPTICA_ID_READER_T
   char **params_lv;// left value,  params[0]="force_balance"
   char **params_rv;// right value, params[0]="on"
   unsigned nparams;// number of params
+  double id_CM[3];// the initial data code center of mass
+  char **id_field_names;// the corresponding field name in the ID code to ifield in evo code.
+  double (*fieldx)(// interpolate point wise
+      Elliptica_ID_Reader_T *const idr,
+      const char *const evo_field_name, const double x,const double y, const double z);
 }Elliptica_ID_Reader_T;
 
 Elliptica_ID_Reader_T *elliptica_id_reader_init (

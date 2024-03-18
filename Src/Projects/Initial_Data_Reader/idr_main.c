@@ -102,6 +102,41 @@ const int iell_grhd_vx   = idr->indx("grhd_vx");
 const int iell_grhd_vy   = idr->indx("grhd_vy");
 const int iell_grhd_vz   = idr->indx("grhd_vz");
 
+----------------------------------------------------------------------
+if you want a thread safe interpolation
+----------------------------------------------------------------------
+
+// initialize (not thread safe)
+Elliptica_ID_Reader_T *idr = elliptica_id_reader_init(checkpnt_path,"generic_MT_safe");
+
+// this is needed only for BHNS system
+idr->set_param("BH_filler_method","ChebTn_Ylm_perfect_s2",idr);
+
+// this is needed for both BHNS and BNS systems
+idr->set_param("ADM_B1I_form","zero",idr);
+
+// preparation and setting some interpolation settings (not thread safe)
+elliptica_id_reader_interpolate(idr);
+
+// now in an evolution code one can get interpolated values as follows:
+for(i,j,k)
+{
+    // set x,y,z coord of the evolution code.
+    double x = x_coord_of_evo_code(...);
+    double y = y_coord_of_evo_code(...);
+    double z = z_coord_of_evo_code(...);
+    
+    // populate point wise. (THREAD SAFE)
+    double g_xx  = idr->fieldx(idr,"adm_gxx",x,y,z);
+    double betax = idr->fieldx(idr,"betax",x,y,z);
+    double alpha = idr->fieldx(idr,"alpha",x,y,z);
+    
+    ijk++;
+}
+
+// free (thread safe)
+elliptica_id_reader_free(idr);
+
 */
 
 // for adding project
@@ -121,6 +156,8 @@ int Initial_Data_Reader(void *vp)
 // note: it is case insensitive.
 // options include:
 // generic: a standard (default) method for exporting ID, what is done for BAM. 
+// generic_MT_safe: a standard (default) method for exporting ID, what is done for BAM 
+//                  and multi thread safe.
 //
 // --> return value: alloc and return a pointer to workspace for ID reader struct */
 Elliptica_ID_Reader_T *elliptica_id_reader_init (
@@ -272,8 +309,6 @@ static Uint find_field_index(const char *const fname)
   return indx;
 }
 
-
-
 /* call the pertinent exporter to interpolate fields. */
 /* ->return: success */
 int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr)
@@ -297,6 +332,12 @@ int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr)
       strcmp_i(idr->option,"generic"))
   {
     Psets(P_"BHNS_export_id","generic");
+    BH_NS_Binary_Initial_Data(idr);
+  }
+  else if (strcmp_i(idr->system,"BH_NS_binary_initial_data") &&
+           strcmp_i(idr->option,"generic_MT_safe"))
+  {
+    Psets(P_"BHNS_export_id","generic_MT_safe");
     BH_NS_Binary_Initial_Data(idr);
   }
   else if (strcmp_i(idr->system,"NS_NS_binary_initial_data") &&
@@ -343,6 +384,7 @@ int elliptica_id_reader_free(Elliptica_ID_Reader_T *idr)
   Free(idr->checkpoint_path);
   Free(idr->system);
   Free(idr->option);
+  free_2d(idr->id_field_names);
   
   // free fields
   for (n = 0; n < idr->nfield; n++)
