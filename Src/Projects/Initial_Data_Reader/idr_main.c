@@ -318,43 +318,46 @@ int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr)
 
   FUNC_TIC
 
-  // some sanity checks:
-  if (!idr->ifields)
-  {
-    Error1("No field is set!");
-  }
-  if (!idr->x_coords || !idr->y_coords || !idr->z_coords || idr->npoints == 0)
-  {
-    Error1("Coordinate(s) is empty!");
-  }
-
   if (strcmp_i(idr->system,"BH_NS_binary_initial_data") &&
       strcmp_i(idr->option,"generic"))
   {
+    SANITY_CHECK
     Psets(P_"BHNS_export_id","generic");
     BH_NS_Binary_Initial_Data(idr);
   }
   else if (strcmp_i(idr->system,"BH_NS_binary_initial_data") &&
            strcmp_i(idr->option,"generic_MT_safe"))
   {
+    // if not set, set the defaults values
+    if (!idr->ifields)
+    {
+      idr->ifields = "alpha,betax,betay,betaz,"
+                     "adm_gxx,adm_gxy,adm_gxz,adm_gyy,adm_gyz,adm_gzz,"
+                     "adm_Kxx,adm_Kxy,adm_Kxz,adm_Kyy,adm_Kyz,adm_Kzz,"
+                     "grhd_rho,grhd_p,grhd_epsl,"
+                     "grhd_vx,grhd_vy,grhd_vz";
+    }
     Psets(P_"BHNS_export_id","generic_MT_safe");
     BH_NS_Binary_Initial_Data(idr);
   }
   else if (strcmp_i(idr->system,"NS_NS_binary_initial_data") &&
            strcmp_i(idr->option,"generic"))
   {
+    SANITY_CHECK
     Psets(P_"NSNS_export_id","generic");
     NS_NS_Binary_Initial_Data(idr);
   }
   else if (strcmp_i(idr->system,"BH_BH_binary_initial_data") &&
            strcmp_i(idr->option,"generic"))
   {
+    SANITY_CHECK
     Psets(P_"BHBH_export_id","generic");
     BH_BH_Binary_Initial_Data(idr);
   }
   else if (strcmp_i(idr->system,"Single_NS_initial_data") &&
            strcmp_i(idr->option,"generic"))
   {
+    SANITY_CHECK
     Psets(P_"SNS_export_id","generic");
     Single_NS_Initial_Data(idr);
   }

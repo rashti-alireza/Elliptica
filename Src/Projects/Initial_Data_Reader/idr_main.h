@@ -1,6 +1,17 @@
 #include "idr_header.h"
 #include "checkpoint_lib.h"
 
+// a sanity check shorthand notation
+#define SANITY_CHECK \
+  if (!idr->ifields)\
+  {\
+    Error1("No field is set!");\
+  }\
+  if (!idr->x_coords || !idr->y_coords || !idr->z_coords || idr->npoints == 0)\
+  {\
+    Error1("Coordinate(s) is empty!");\
+  }
+
 // add new projects here:
 int BH_NS_Binary_Initial_Data(void *vp);
 int NS_NS_Binary_Initial_Data(void *vp);
