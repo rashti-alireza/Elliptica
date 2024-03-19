@@ -34,6 +34,7 @@ typedef struct ELLIPTICA_ID_READER_T
   unsigned nparams;// number of params
   double id_CM[3];// the initial data code center of mass
   char **id_field_names;// the corresponding field name in the ID code to ifield in evo code.
+                        // e.g, betax == evo_beta_U0, etc.
   double (*fieldx)(// interpolate point wise
       struct ELLIPTICA_ID_READER_T *const idr,
       const char *const evo_field_name, const double x,const double y, const double z);

@@ -366,16 +366,11 @@ void
 
 /* populate ifield coeffs for a MT safe interpolation.
 // NOTE: this function itself is not MT safe. */
-void 
-  idr_set_ifield_coeffs(Elliptica_ID_Reader_T *const idr,
-  const char *const fields_name_str/* comma separated */)
+void idr_set_ifield_coeffs(Elliptica_ID_Reader_T *const idr)
 {
   Grid_T *const grid = idr->grid;
-  const char *const evo_fields_name_str = idr->ifields;
-  char **fields_name = 
-    read_separated_items_in_string(fields_name_str,',');
-  char **evo_fields   = 
-    read_separated_items_in_string(evo_fields_name_str,',');
+  char **fields_name = idr->id_field_names;
+  char **evo_fields  = read_separated_items_in_string(idr->ifields,',');
   Uint p;
   
   /* some checks */
@@ -402,6 +397,8 @@ void
       fn++;
     }
   }
+
+  free_2d(evo_fields);
 }
 
 /* interpolate thread safely for ID reader and for the given field and points

@@ -55,8 +55,6 @@ double idr_interpolate_field_thread_safe(
   const char *const field_name, const double x,const double y, const double z);
 
 
-void 
-  idr_set_ifield_coeffs(struct ELLIPTICA_ID_READER_T *const idr,
-  const char *const fields_name_str/* comma separated */);
+void idr_set_ifield_coeffs(struct ELLIPTICA_ID_READER_T *const idr);
 
 #endif
