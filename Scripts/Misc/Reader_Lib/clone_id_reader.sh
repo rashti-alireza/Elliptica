@@ -163,6 +163,7 @@ cat << EOF > bhns_main.c
 
 int BH_NS_Binary_Initial_Data(void *vp);
 void bhns_export_id_generic(void *vp);
+void bhns_export_id_generic_mt_safe(void *vp);
 
 int BH_NS_Binary_Initial_Data(void *vp)
 {
