@@ -369,8 +369,7 @@ void
 void idr_set_ifield_coeffs(Elliptica_ID_Reader_T *const idr)
 {
   Grid_T *const grid = idr->grid;
-  char **fields_name = idr->id_field_names;
-  char **evo_fields  = read_separated_items_in_string(idr->ifields,',');
+  char **fields_name = idr->id_field_names;// elliptica field names we need
   Uint p;
   
   /* some checks */
@@ -378,9 +377,6 @@ void idr_set_ifield_coeffs(Elliptica_ID_Reader_T *const idr)
     Error1("Grid is empty!");
   
   if (!fields_name)
-    Error1("No fields given!");
-  
-  if (!evo_fields)
     Error1("No fields given!");
 
   /* to avoid race condition between threads write all coeffs */
@@ -397,12 +393,11 @@ void idr_set_ifield_coeffs(Elliptica_ID_Reader_T *const idr)
       fn++;
     }
   }
-
-  free_2d(evo_fields);
 }
 
-/* interpolate thread safely for ID reader and for the given field and points
+/* this is an MT safe interpolatation when use for ID reader routine 
 // note: x,y,z are Cartesian coords of the evolution code.
+// ex: double gxx = idr->fieldx(idr,"adm_gxx",x,y,z);
 // ->return: interpolated value of the field at the given points. */
 double idr_interpolate_field_thread_safe(
   Elliptica_ID_Reader_T *const idr, 
