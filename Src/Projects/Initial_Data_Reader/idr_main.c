@@ -360,12 +360,7 @@ int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr)
   }
   
   FUNC_TOC
-  
-  /* free parameter data base */  
-  free_parameter_db();
-  /* free grid data base */
-  free_grid_db();
-
+ 
   return EXIT_SUCCESS;
 }
 
@@ -373,6 +368,11 @@ int elliptica_id_reader_interpolate(Elliptica_ID_Reader_T *const idr)
 int elliptica_id_reader_free(Elliptica_ID_Reader_T *idr)
 {
   Uint n;
+
+  /* free parameter data base */  
+  free_parameter_db();
+  /* free grid data base */
+  free_grid_db();
   
   if (!idr)
     return EXIT_SUCCESS;
