@@ -4,7 +4,7 @@
 # A VisIt script to visualize patch, scalar, and vector in Elliptica.
 # How to invoke the script:
 # invoke:
-# $ visit_plot.py -h
+# $ visit -cli -s visit_plot.py -h
 
 
 
