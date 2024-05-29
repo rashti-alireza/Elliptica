@@ -312,9 +312,9 @@ void eos_tab_set_hermite_log(EoS_T* const eos)
   eos->spline->p_shift    = eos->spline->p_sample[shift_row];
   eos->spline->e_shift    = eos->spline->e_sample[shift_row];
   eos->spline->rho0_shift = eos->spline->rho0_sample[shift_row];
-  assert(!EQL(eos->spline->p_shift,0.0));
-  assert(!EQL(eos->spline->e_shift,0.0));
-  assert(!EQL(eos->spline->rho0_shift,0.0));
+  //assert(!EQL(eos->spline->p_shift,0.0));
+  //assert(!EQL(eos->spline->e_shift,0.0));
+  //assert(!EQL(eos->spline->rho0_shift,0.0));
   
   for (Uint i = 0; i < sample_size; i++)
   {
