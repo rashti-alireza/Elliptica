@@ -27,5 +27,8 @@ Run:
 `$ ./Exe/elliptica /path/to/the/parameter/file`
 
 
+Please cite:
+
+inspirehep.net citation key = `{Rashti:2021ihv}`
 
 
