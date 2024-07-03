@@ -29,6 +29,6 @@ Run:
 
 Please cite:
 
-inspirehep.net citation key = `{Rashti:2021ihv}`
+inspirehep.net citation key = `{Rashti:2021ihv,Rashti:2024drr}`
 
 
