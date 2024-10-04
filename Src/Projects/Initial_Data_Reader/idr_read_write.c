@@ -319,6 +319,10 @@ void
     for (p = 0; p < npoints; ++p)
     {
       Patch_T *patch  = grid->patch[pnt->patchn[p]];
+      Interpolation_T *interp_s = pnt->interp_s[p];
+      // each point can take different field
+      interp_s->field = patch->fields[pnt->f_index[patch->pn][f]];
+      /*
       Interpolation_T *interp_s = init_interpolation();
       interp_s->field = patch->fields[pnt->f_index[patch->pn][f]];
       interp_s->XYZ_dir_flag = 1;
@@ -326,8 +330,9 @@ void
       interp_s->Y = pnt->Y[p];
       interp_s->Z = pnt->Z[p];
       plan_interpolation(interp_s);
+      */
       interp_v[p] = execute_interpolation(interp_s);
-      free_interpolation(interp_s);
+      //free_interpolation(interp_s);
     }
     
     for (p = 0; p < npoints; ++p)
@@ -506,7 +511,15 @@ void idr_free(ID_Reader_T *pnt)
   Free(pnt->patchn);
   free_2d_mem(pnt->f_index,pnt->grid->np);
   pnt->f_index = 0;
-  
+	
+	if (pnt->interp_s)
+	{
+		for (Uint p = 0; p < pnt->npoints; ++p)
+		{
+			free_interpolation(pnt->interp_s[p]);
+		}
+		Free(pnt->interp_s);
+	}
   Free(pnt);
 }
 
@@ -533,9 +546,11 @@ void idr_find_XYZ_from_xyz(Elliptica_ID_Reader_T *const idr,
   pnt->npoints = npoints = (Uint)idr->npoints;
   pnt->X       = alloc_double(npoints);
   pnt->Y       = alloc_double(npoints);
-  pnt->Z       = alloc_double(npoints);  
+  pnt->Z       = alloc_double(npoints);
   pnt->patchn  = calloc(npoints,sizeof(*pnt->patchn));
   IsNull(pnt->patchn);
+  pnt->interp_s = calloc(npoints,sizeof(*pnt->interp_s));
+  IsNull(pnt->interp_s);
   printf(Pretty0"number of points to interpolate = %u\n",npoints);
 
   /* populating pnt->(X,Y,Z) and pnt->patchn */
@@ -557,6 +572,17 @@ void idr_find_XYZ_from_xyz(Elliptica_ID_Reader_T *const idr,
       pnt->Y[p]      = X[1];
       pnt->Z[p]      = X[2];
       pnt->patchn[p] = patch->pn;
+      // setup interpolation scheme
+      pnt->interp_s[p] = init_interpolation();
+      // choose the very first field of this patch, NOT ideal!
+      assert(patch->fields);
+      assert(patch->fields[0]);
+      pnt->interp_s[p]->field = patch->fields[0];
+      pnt->interp_s[p]->XYZ_dir_flag = 1;
+      pnt->interp_s[p]->X = pnt->X[p];
+      pnt->interp_s[p]->Y = pnt->Y[p];
+      pnt->interp_s[p]->Z = pnt->Z[p];
+      plan_interpolation(pnt->interp_s[p]);
     }
     else
     {

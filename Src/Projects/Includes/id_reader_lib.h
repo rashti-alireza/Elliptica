@@ -5,6 +5,7 @@
 /* forward declaration */
 struct GRID_T;
 struct ELLIPTICA_ID_READER_T;
+struct INTERPOLATION_T;
 
 /* strcut for initial data exporting  */
 typedef struct ID_READER_T
@@ -16,6 +17,7 @@ typedef struct ID_READER_T
   Uint npoints;/* number of coords */
   int **f_index;/* field index for each patch and for each field
                 // ex: f_index[p][f] = for patch p and field f. */
+  struct INTERPOLATION_T **interp_s; // interpolation setup for point p, interp_s[p]
 }ID_Reader_T;
 
 void 
