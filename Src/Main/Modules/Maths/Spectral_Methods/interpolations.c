@@ -575,9 +575,17 @@ static double interpolation_Chebyshev_Tn_XYZ(Interpolation_T *const interp_s)
   C = field->v2;
   
   for (i = 0; i < n[0]; ++i)
+  {
+    double tx = Tx(i,X);
     for (j = 0; j < n[1]; ++j)
+    {
+      double Tx_Ty = tx*Ty(j,Y);
       for (k = 0; k < n[2]; ++k)
-        interp_v += C[i_j_k_to_ijk(n,i,j,k)]*Tx(i,X)*Ty(j,Y)*Tz(k,Z);
+      {
+        interp_v += C[i_j_k_to_ijk(n,i,j,k)]*Tx_Ty*Tz(k,Z);
+      }
+    }
+  }
   
   return interp_v;
 }
