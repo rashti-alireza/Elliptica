@@ -230,7 +230,9 @@ void eos_tab_read_table(EoS_T* const eos)
     * Calculates rest-mass density (total) energy density, 
     * and specific enthalpy, and converts to geometrized units.
     *
-    * Physical constants from 2018 CODATA values.
+    * Physical constants from 2018 CODATA values,
+    * https://physics.nist.gov/cuu/Constants/Table/allascii.txt
+    *
     * G_const = 6.67430E-11;          // Gravitational constant in m^3/(kg s^2)
     * c_const = 299792458;            // Speed of light in m/s
     * M_const = 1.98841E30;           // Solar mass in kg
