@@ -294,7 +294,16 @@ static void populate_EoS(EoS_T *const eos)
            strcmp_i(eos->type, "tab")     || 
            strcmp_i(eos->type, "table"))
   {
-    eos_tab_read_table(eos);
+    // check if the eos params already exists, other wise add them.
+    
+    if (strcmp_i(Gets(P_"tab_values"), "no"))
+    {
+      eos_tab_read_table(eos);
+    }
+    else
+    {
+      eos_tab_read_value_params(eos);
+    }
     
     if (strcmp_i(Gets(P_"Interpolation_Method"), "Hermite1D"))
     {

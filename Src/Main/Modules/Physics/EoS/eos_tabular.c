@@ -281,6 +281,9 @@ void eos_tab_read_table(EoS_T* const eos)
   h_tab = 0;
   p_tab = 0;
   rho0_tab = 0;
+  
+  // now save eos tables
+  eos_tab_set_value_params(eos);
 }
 
 // set spline eos struct for Hermite interpolation method
@@ -429,4 +432,16 @@ void eos_tab_set_hermite(EoS_T* const eos)
   //interp_rho0->Hermite_1d->No_Warn = 1;/* suppress warning */
   eos->spline->interp_rho0 = interp_rho0;
   plan_interpolation(interp_rho0);
+}
+
+
+// assuming the eos tabulated params are set, populates the table using 
+// these params.
+void eos_tab_read_value_params(EoS_T* const eos)
+{
+}
+
+// given a tabulated eos struct, populate the eos tabulated params.
+void eos_tab_set_value_params(EoS_T* const eos)
+{
 }

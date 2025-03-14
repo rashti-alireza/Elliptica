@@ -24,6 +24,8 @@ void eos_tab_set_hermite(EoS_T* const eos);
 void eos_tab_set_hermite_log(EoS_T* const eos);
 EoS_T *init_EoS(Physics_T *const phys);
 void free_EoS(EoS_T *eos);
+void eos_tab_read_value_params(EoS_T* const eos);
+void eos_tab_set_value_params(EoS_T* const eos);
 static void populate_EoS(EoS_T *const eos);
 static void fill_h_th(EoS_T *const eos);
 static void fill_a(EoS_T *const eos);
