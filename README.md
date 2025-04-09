@@ -28,6 +28,7 @@ Requirements:
 
 ```bash
 git clone --depth=1 git@github.com:rashti-alireza/Elliptica.git
+cd Elliptica
 make MyConfig
 make git_clone
 make -j4
