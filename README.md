@@ -26,13 +26,12 @@ Requirements:
 - A compatible `openmp` library with the compiler.
 - The `UMFPACK` library (`suitesparse`).
 
-`$ git clone --depth=1 git@github.com:rashti-alireza/Elliptica.git`
-
-`$ make MyConfig`
-
-`$ make git_clone`
-
-`$ make -j4`
+```bash
+git clone --depth=1 git@github.com:rashti-alireza/Elliptica.git
+make MyConfig
+make git_clone
+make -j4
+```
 
 You can see the list of available projects after issuing `make git_clone` in `Src/Projects`.
 
