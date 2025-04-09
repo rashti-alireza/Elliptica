@@ -16,13 +16,13 @@ EXEC_DIR := $(TOP)/Exe
 ## Projects of interest to compile ##
 #####################################
 
-#PROJECT += $(PROJECT_DIR)/Poissons/Poisson0
-#PROJECT += $(PROJECT_DIR)/Tests/Modules_Test
-#PROJECT += $(PROJECT_DIR)/BH_NS_Binary_Initial_Data
-#PROJECT += $(PROJECT_DIR)/NS_NS_Binary_Initial_Data
-#PROJECT += $(PROJECT_DIR)/BH_BH_Binary_Initial_Data
-#PROJECT += $(PROJECT_DIR)/Single_BH_Initial_Data
-#PROJECT += $(PROJECT_DIR)/Single_NS_Initial_Data
+PROJECT += $(PROJECT_DIR)/Poissons/Poisson0
+PROJECT += $(PROJECT_DIR)/Tests/Modules_Test
+PROJECT += $(PROJECT_DIR)/BH_NS_Binary_Initial_Data
+PROJECT += $(PROJECT_DIR)/NS_NS_Binary_Initial_Data
+PROJECT += $(PROJECT_DIR)/BH_BH_Binary_Initial_Data
+PROJECT += $(PROJECT_DIR)/Single_BH_Initial_Data
+PROJECT += $(PROJECT_DIR)/Single_NS_Initial_Data
 
 PROJECT += $(PROJECT_DIR)/Initial_Data_Reader
 PROJECT += $(PROJECT_DIR)/TOV_star

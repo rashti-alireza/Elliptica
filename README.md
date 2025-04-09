@@ -41,7 +41,7 @@ You can see the list of available projects after issuing `make git_clone` in `Sr
 In each project there is a directory named `XXXX_ParFiles`, where `XXXX` denotes the project name, 
 e.g., `NSNS_ParFiles`.
 One can find various parameter files for different gravitational systems. 
-Having set the parameters of interest, one invoke the code:
+Having set the parameters of interest, one invokes the code:
 
 `$ ./Exe/elliptica /path/to/the/parameter/file`
 
