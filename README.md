@@ -1,4 +1,23 @@
-# A quick installation
+Welcome to
+
+```ascii
+EEEEEEEEEEEE  ll  ll
+EE            ll  ll
+EE            ll  ll  O                       O
+EE            ll  ll                   tt
+EEEEEEEEEEEE  ll  ll  ii  pppppppp. tttttttt  ii    .ccccc   .aaaaa.
+EE            ll  ll  ii  pp      p.   tt     ii   .c       .a     a.
+EE            ll  ll  ii  pp       p.  tt     ii  .c       .a       a.
+EE            ll  ll  ii  pp      p.   tt     ii   .c       .a     .a
+EEEEEEEEEEEE  ll  ll  ii  pppppppp.    tt     ii    .ccccc   .aaaaa.aa
+                          pp                                          aa
+                          pp
+                          pp
+                          pp
+
+```
+
+# Installation
 
 Requirements:
 - GNU make.
@@ -11,23 +30,23 @@ Requirements:
 
 `$ make MyConfig`
 
-Activate the projects of interest and link UMFPACK library in the `MyConfig` file.
-You should also activate the project's repositories if you need to clone them.
-
-Clone the added projects:
-
 `$ make git_clone`
-
-Install:
 
 `$ make -j4`
 
-Run:
+You can see the list of available projects after issuing `make git_clone` in `Src/Projects`.
+
+# Run
+
+In each project there is a directory named `XXXX_ParFiles`, where `XXXX` denotes the project name, 
+e.g., `NSNS_ParFiles`.
+One can find various parameter files for different gravitaional systems. 
+Having set the parameters of interest, one invoke the code:
 
 `$ ./Exe/elliptica /path/to/the/parameter/file`
 
 
-Please cite:
+# Citation
 
 inspirehep.net citation key = `{Rashti:2021ihv,Rashti:2024drr}`
 
